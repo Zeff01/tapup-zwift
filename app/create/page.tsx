@@ -2,24 +2,58 @@
 import { useState, FormEvent, ChangeEvent } from "react";
 import Image from "next/image";
 import { useRouter } from "next/navigation";
-import { addUser } from "@/src/lib/firebase/store/users.action";
+import { addUser, uploadImage } from "@/src/lib/firebase/store/users.action";
 import { Photo } from "@/src/lib/firebase/store/users.type";
 import { LoaderCircle } from "lucide-react";
 import Cropper from "../../components/Cropper";
 import { Switch } from "@/components/ui/switch";
-import { uploadImage } from "@/src/lib/firebase/store/users.action";
-import { inputs } from "@/src/lib/data";
 import Navbar from "@/components/ui/Navbar";
+import CustomInput from "@/components/CustomInput";
+import { Form, FormProvider } from "react-hook-form";
+import { useForm } from "react-hook-form";
+import { zodResolver } from "@hookform/resolvers/zod";
+import { z } from "zod";
+import { createPortfolioSchema } from "@/lib/utils";
+import CustomTextArea from "@/components/CustomTextarea";
+import { TemplateCarousel } from "@/components/TemplateCarousel";
 
 export default function Create() {
   const [photo, setPhoto] = useState<Photo | null>(null);
   const [imageUrl, setImageUrl] = useState<string | null>(null);
-  const [formErrors, setFormErrors] = useState<Record<string, string>>({}); // Properly typed as Record<string, string>
+  const [coverPhoto, setCoverPhoto] = useState<Photo | null>(null);
+  const [coverPhotoUrl, setCoverPhotoUrl] = useState<string | null>(null);
+
   const [loading, setLoading] = useState(false);
   const router = useRouter();
   const [imagePickerType, setImagePickerType] = useState<"advanced" | "basic">(
     "advanced"
   );
+
+  // 1. Define your form.
+  const methods = useForm<z.infer<typeof createPortfolioSchema>>({
+    resolver: zodResolver(createPortfolioSchema),
+    defaultValues: {
+      coverPhotoUrl: "",
+      profilePictureUrl: "",
+      position: "",
+      company: "",
+      companyBackground: "",
+      serviceDescription: "",
+      servicePhotos: [],
+      chosenTemplate: "template1",
+      firstName: "",
+      lastName: "",
+      email: "",
+      number: "",
+      facebookUrl: "",
+      youtubeUrl: "",
+      instagramUrl: "",
+      twitterUrl: "",
+      linkedinUrl: "",
+      whatsappUrl: "",
+      websiteUrl: "",
+    },
+  });
 
   const validateForm = (elements: HTMLFormControlsCollection) => {
     const newErrors: Record<string, string> = {};
@@ -33,11 +67,9 @@ export default function Create() {
   const handleSubmit = async (event: FormEvent<HTMLFormElement>) => {
     event.preventDefault();
     const form = event.currentTarget;
+    console.log("form:", form);
     const errors = validateForm(form.elements);
-    if (Object.keys(errors).length > 0) {
-      setFormErrors(errors);
-      return;
-    }
+
     setLoading(true); // load start
     const userInfo = await addUser({
       company: form.company.value,
@@ -45,7 +77,7 @@ export default function Create() {
       firstName: form.firstName.value,
       lastName: form.lastName.value,
       email: form.email.value,
-      phoneNumber: form.phoneNumber.value,
+      phoneNumber: form.number.value,
       image: imageUrl || "",
       printStatus: false,
     });
@@ -76,133 +108,249 @@ export default function Create() {
     }
   };
 
+  const handleCoverPhotoChange = async (
+    event: ChangeEvent<HTMLInputElement>
+  ) => {
+    if (event.target.files && event.target.files[0]) {
+      const file = event.target.files[0];
+      setCoverPhoto({
+        preview: URL.createObjectURL(file),
+        raw: file,
+      });
+
+      const downloadUrl = await uploadImage({
+        preview: URL.createObjectURL(file),
+        raw: file,
+      });
+      if (downloadUrl) setCoverPhotoUrl(downloadUrl);
+    }
+  };
+
+  const templates = [
+    {
+      id: 1,
+      name: "Default",
+      description: "Basic Style",
+      imageUrl: "/path/to/default-template.jpg",
+    },
+    {
+      id: 2,
+      name: "Minimalist",
+      description: "Minimalist Style",
+      imageUrl: "/path/to/minimalist-template.jpg",
+    },
+    {
+      id: 3,
+      name: "Modern",
+      description: "Modern Style",
+      imageUrl: "/path/to/modern-template.jpg",
+    },
+  ];
+
   return (
-    <main className="flex min-h-screen bg-[#1E1E1E] text-white flex-col items-center pt-12 p-6 ">
-      <Navbar />
-      <div className="w-full flex flex-row justify-end">
-        <div className="flex flex-col w-[150px] bg-custom-purple p-1 rounded-md">
-          <p>Image Picker Type</p>
-          <div className="w-full flex flex-row justify-between gap-x-1">
-            <p>{imagePickerType}</p>
-            <Switch
-              checked={Boolean(imagePickerType === "advanced")}
-              onCheckedChange={(c) => {
-                if (c) {
-                  setImagePickerType("advanced");
-                  return;
-                }
-                setImagePickerType("basic");
-              }}
-            />
+    <FormProvider {...methods}>
+      <main className="flex min-h-screen bg-[#1E1E1E] text-white flex-col items-center pt-12 p-6  overflow-x-hidden">
+        <Navbar />
+        <div className="w-full flex flex-row justify-end ">
+          <div className="flex flex-col w-[150px] bg-custom-purple p-1 rounded-md">
+            <p>Image Picker Type</p>
+            <div className="w-full flex flex-row justify-between gap-x-1">
+              <p>{imagePickerType}</p>
+              <Switch
+                checked={Boolean(imagePickerType === "advanced")}
+                onCheckedChange={(c) => {
+                  if (c) {
+                    setImagePickerType("advanced");
+                    return;
+                  }
+                  setImagePickerType("basic");
+                }}
+              />
+            </div>
           </div>
         </div>
-      </div>
-      <div className="w-full max-w-sm">
-        <div className="text-center mb-6 ">
-          <Image
-            src="/assets/zwift-logo.png"
-            alt="Company Logo"
-            width={150}
-            height={150}
-            priority
-            className="mx-auto mb-8"
-          />
-          <h2 className="text-lg font-semibold mt-2">Company Profile</h2>
-        </div>
-        <form className="space-y-6" onSubmit={handleSubmit}>
-          {Object.keys(formErrors).length > 0 && (
-            <div className="error-messages">
-              {Object.entries(formErrors).map(([key, value]) => (
-                <div key={key} className="text-red-500">
-                  {value as string}
+        <div className="w-full max-w-sm ">
+          <div className="text-center mb-6 ">
+            <Image
+              src="/assets/zwift-logo.png"
+              alt="Company Logo"
+              width={150}
+              height={150}
+              priority
+              className="mx-auto mb-8"
+            />
+            <h2 className="text-lg font-semibold mt-2">Company Profile</h2>
+          </div>
+
+          <form className="space-y-6" onSubmit={handleSubmit}>
+            {/* Cover Photo Upload Section */}
+            <div className="flex flex-col items-center relative">
+              <div className="w-full h-64">
+                <Cropper
+                  imageUrl={coverPhotoUrl}
+                  setImageUrl={setCoverPhotoUrl}
+                  photo={coverPhoto}
+                  setPhoto={setCoverPhoto}
+                  type="coverPic"
+                  changeImage={(img) => console.log("New Cover Image:", img)}
+                />
+                <div className="absolute -bottom-12 left-1/2 transform -translate-x-1/2  ">
+                  <Cropper
+                    imageUrl={imageUrl}
+                    setImageUrl={setImageUrl}
+                    photo={photo}
+                    setPhoto={setPhoto}
+                    type="profilePic"
+                    changeImage={(img) =>
+                      console.log("New Profile Image:", img)
+                    }
+                  />
                 </div>
-              ))}
+              </div>
             </div>
-          )}
-          <div className="flex flex-col items-center">
-            {imagePickerType === "advanced" ? (
-              <Cropper
-                setImageUrl={setImageUrl}
-                setPhoto={setPhoto}
-                photo={photo}
-                aspect={1}
-                changeImage={(i) => console.log(i)}
-                circularCrop
+            {/* Profile Picture Upload Section */}
+            <div className="flex flex-col items-center"></div>
+
+            {/* Company Information Inputs */}
+            <div className="space-y-6">
+              <CustomInput
+                control={methods.control}
+                name="position"
+                label="Position"
+                placeholder="Enter your position"
+                required={true}
               />
-            ) : (
-              <div className="relative">
-                <div className="rounded-full border border-border-input  p-1">
-                  {photo ? (
-                    <Image
-                      src={photo.preview}
-                      alt="Profile"
-                      className="w-28 h-28 rounded-full"
-                      width={30}
-                      height={30}
-                    />
-                  ) : (
-                    <div className="w-28 h-28 rounded-full bg-background-input border-border-input flex items-center justify-center">
-                      <Image
-                        src="/assets/imageicon.png"
-                        alt="Company Logo"
-                        width={30}
-                        height={30}
-                        priority
-                        className="mx-auto"
-                      />
-                      <div className="flex justify-center items-center w-8 h-8 border rounded-full absolute bottom-0 right-0 bg-background-input border-border-input">
-                        <Image
-                          src="/assets/plusicon.png"
-                          alt="Add Icon"
-                          width={14}
-                          height={14}
-                          priority
-                        />
-                      </div>
-                    </div>
-                  )}
-                </div>
-                <input
-                  type="file"
-                  accept="image/*"
-                  onChange={handlePhotoChange}
-                  className="absolute inset-0 w-full h-full opacity-0 cursor-pointer"
+              <CustomInput
+                control={methods.control}
+                name="company"
+                label="Company"
+                placeholder="Enter your company name"
+                required={true}
+              />
+              <CustomTextArea
+                control={methods.control}
+                name="companyBackground"
+                label="Company Background"
+                placeholder="Describe your company background"
+                required={true}
+              />
+              <CustomTextArea
+                control={methods.control}
+                name="serviceDescription"
+                label="Service Description"
+                placeholder="Describe the services you offer"
+              />
+
+              {/* TODO: Add photo for services */}
+
+              <h1>Add Photo For Services: (Optional)</h1>
+              <div className="flex flex-col items-center">
+                <Cropper
+                  imageUrl={coverPhotoUrl}
+                  setImageUrl={setCoverPhotoUrl}
+                  photo={coverPhoto}
+                  setPhoto={setCoverPhoto}
+                  type="servicePhoto"
+                  changeImage={(img) => console.log("New Cover Image:", img)}
                 />
               </div>
-            )}
-          </div>
 
-          {inputs.map((field) => (
-            <div key={field.name}>
-              <label className="block">
-                {field.label}
-                <input
-                  type={field.type || "text"}
-                  name={field.name}
-                  required
-                  className="mt-1 placeholder-placeholder-input block w-full px-4 py-2 bg-background-input border border-border-input rounded-md"
-                  placeholder={field.placeholder}
-                  pattern={field.pattern}
-                />
-              </label>
+              {/* TODO: Choose Templates */}
+              <h1>Choose Templates</h1>
+              <TemplateCarousel />
+
+              {/* Personal Information Inputs */}
+              <h1>Personal Information</h1>
+              <CustomInput
+                control={methods.control}
+                name="firstName"
+                label="First Name"
+                placeholder="Enter your first name"
+                required={true}
+              />
+              <CustomInput
+                control={methods.control}
+                name="lastName"
+                label="Last Name"
+                placeholder="Enter your last name"
+                required={true}
+              />
+              <CustomInput
+                control={methods.control}
+                name="email"
+                label="Email Address"
+                placeholder="Enter your email address"
+                required={true}
+              />
+              <CustomInput
+                control={methods.control}
+                name="number"
+                label="Phone Number"
+                placeholder="Enter your phone number"
+                required={true}
+              />
+
+              {/* Social Links Inputs */}
+              <h1>Social Links</h1>
+              <CustomInput
+                control={methods.control}
+                name="facebookUrl"
+                label="Facebook URL"
+                placeholder="Enter your Facebook URL"
+              />
+              <CustomInput
+                control={methods.control}
+                name="youtubeUrl"
+                label="YouTube URL"
+                placeholder="Enter your YouTube URL"
+              />
+              <CustomInput
+                control={methods.control}
+                name="instagramUrl"
+                label="Instagram URL"
+                placeholder="Enter your Instagram URL"
+              />
+              <CustomInput
+                control={methods.control}
+                name="twitterUrl"
+                label="Twitter URL"
+                placeholder="Enter your Twitter URL"
+              />
+              <CustomInput
+                control={methods.control}
+                name="linkedinUrl"
+                label="LinkedIn URL"
+                placeholder="Enter your LinkedIn URL"
+              />
+              <CustomInput
+                control={methods.control}
+                name="whatsappUrl"
+                label="WhatsApp URL"
+                placeholder="Enter your WhatsApp URL"
+              />
+              <CustomInput
+                control={methods.control}
+                name="websiteUrl"
+                label="Website URL"
+                placeholder="Enter your website URL"
+              />
             </div>
-          ))}
-
-          <button
-            type="submit"
-            className="w-full px-4 py-4 bg-[#6150EB] hover:bg-[#6250ebc0] rounded-md font-bold disabled:opacity-50 disabled:cursor-not-allowed"
-            disabled={loading}
-          >
-            {loading ? (
-              <span className="w-full flex items-center justify-center">
-                <LoaderCircle className="animate-spin" />
-              </span>
-            ) : (
-              "Submit"
-            )}
-          </button>
-        </form>
-      </div>
-    </main>
+            <button
+              type="submit"
+              className="w-full px-4 py-4 bg-[#6150EB] hover:bg-[#6250ebc0] rounded-md font-bold disabled:opacity-50 disabled:cursor-not-allowed"
+              disabled={loading}
+            >
+              {loading ? (
+                <span className="w-full flex items-center justify-center">
+                  <LoaderCircle className="animate-spin" />
+                </span>
+              ) : (
+                "Submit"
+              )}
+            </button>
+          </form>
+        </div>
+      </main>
+    </FormProvider>
   );
 }
