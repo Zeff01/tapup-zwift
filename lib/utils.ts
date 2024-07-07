@@ -41,5 +41,6 @@ export const createPortfolioSchema = z.object({
   twitterUrl: z.string().url().optional(),
   linkedinUrl: z.string().url().optional(),
   whatsappUrl: z.string().url().optional(),
+  skypeUrl: z.string().url().optional(),
   websiteUrl: z.string().url().optional(),
 });

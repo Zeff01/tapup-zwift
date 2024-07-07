@@ -20,7 +20,7 @@ function TemplatePage() {
   const TemplateComponent = templates[params.id]; // Dynamically select the template component
 
   return (
-    <main className=" min-h-screen bg-[#1E1E1E] text-white    overflow-x-hidden">
+    <main className=" min-h-screen bg-black overflow-x-hidden flex justify-center items-center mx-auto ">
       {/* <h1>Template {params.id}</h1>
       <p>This is the template page for template {params.id}.</p> */}
       {TemplateComponent ? <TemplateComponent /> : <p>Template not found.</p>}

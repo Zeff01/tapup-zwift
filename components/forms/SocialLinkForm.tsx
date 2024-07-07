@@ -47,6 +47,12 @@ const SocialLinksForm: React.FC<SocialLinksFormProps> = ({ control }) => {
       />
       <CustomInput
         control={control}
+        name="skypeUrl"
+        label="Skype URL"
+        placeholder="Enter your Skype URL"
+      />
+      <CustomInput
+        control={control}
         name="websiteUrl"
         label="Website URL"
         placeholder="Enter your website URL"
