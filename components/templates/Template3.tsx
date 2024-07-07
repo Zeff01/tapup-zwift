@@ -12,7 +12,7 @@ import {
   FaGlobe,
 } from "react-icons/fa6";
 
-const Template1 = ({
+const Template3 = ({
   profilePictureUrl,
   coverPhotoUrl,
   position,
@@ -34,32 +34,34 @@ const Template1 = ({
   websiteUrl,
 }: UserProfile) => {
   return (
-    <div className="bg-white text-black p-4 flex flex-col items-center justify-between  min-h-screen">
-      <div className=" w-full mx-auto  max-w-[480px]">
+    <div className="bg-black text-white  flex flex-col items-center justify-between  min-h-screen  ">
+      <div className=" w-full mx-auto  max-w-[480px] ">
         {/* COVERPHOTO AND PROFILE PIC */}
-        <div className="mt-2  flex flex-col relative rounded-4xl mx-4 ">
-          <div className="w-full h-48">
+        <div className=" flex flex-col relative w-full  ">
+          <div className="w-full  h-40 overflow-hidden">
             {coverPhotoUrl ? (
               <Image
                 src={coverPhotoUrl}
                 alt="Cover Image"
                 width={400} // Adjust width and height as necessary
                 height={200}
-                className="mx-auto"
+                className="mx-auto "
+                layout="fill"
+                objectFit="cover"
               />
             ) : (
               <Image
-                src={"/assets/template1coverphoto.png"}
+                src={"/assets/template2coverphoto.png"}
                 alt="Cover Image"
-                width={400} // Adjust width and height as necessary
-                height={200}
+                width={400}
+                height={100}
                 className="mx-auto"
               />
             )}
           </div>
-          <div className="absolute -bottom-6 left-1/2 transform -translate-x-1/2  ">
+          <div className="absolute -bottom-16 left-1/2 transform -translate-x-1/2  ">
             {profilePictureUrl ? (
-              <div className="w-20 h-20 rounded-full mx-auto overflow-hidden">
+              <div className="w-[90px] h-40 rounded-full mx-auto overflow-hidden">
                 <Image
                   src={profilePictureUrl}
                   alt="Profile Image"
@@ -69,72 +71,85 @@ const Template1 = ({
                 />
               </div>
             ) : (
-              <div className="bg-purple-500 w-20 h-20 rounded-full mx-auto flex items-center justify-center">
-                <span className="text-white font-bold text-xl">HW</span>
+              <div className=" w-[90px] h-40 rounded-full mx-auto flex items-center justify-center">
+                <Image
+                  src={"/assets/template3samplepic.png"}
+                  alt="Profile Image"
+                  width={80}
+                  height={80}
+                  className="rounded-full"
+                  objectFit="cover"
+                />
               </div>
             )}
           </div>
         </div>
 
         {/* PERSONAL INFORMATION */}
-        <div className="text-center mt-8 space-y-.5">
+        <div className="text-center mt-20 space-y-1">
           {firstName ? (
-            <h1 className="text-xl font-bold mt-2 ">{firstName + lastName}</h1>
+            <h1 className="text-xl font-bold mt-2 text-[#6fdc00] ">
+              {firstName + lastName}
+            </h1>
           ) : (
-            <h1 className="text-xl font-bold mt-2 ">Hussain Watkins</h1>
+            <h1 className="text-xl font-bold mt-2 text-[#6fdc00]">
+              Hussain Watkins
+            </h1>
           )}
           {position ?? (
-            <p className="font-semibold text-gray-900 text-xs">
+            <p className="font-semibold text-white text-xs">
               Chief Technology Officer
             </p>
           )}
           {email ?? (
-            <p className=" text-gray-500 text-xs">H.Watkins@gmail.com</p>
+            <p className=" text-gray-600 text-xs">H.Watkins@gmail.com</p>
           )}
-          {number ?? <p className=" text-gray-500 text-xs">+639123456789</p>}
+          {number ?? <p className=" text-gray-600 text-xs">+639123456789</p>}
+        </div>
+
+        {/* //TODO ADD URL HERE FOR ICONS; NULL if no url */}
+        {/* SOCIAL MEDIA ICONS */}
+        <div className="flex justify-center items-center my-4 ">
+          <div className="grid grid-cols-4 gap-5">
+            {facebookUrl ?? <FaFacebook size={24} />}
+            {twitterUrl ?? <FaXTwitter size={24} />}
+            {youtubeUrl ?? <FaYoutube size={24} />}
+            {instagramUrl ?? <FaInstagram size={24} />}
+            {linkedinUrl ?? <FaLinkedin size={24} />}
+            {whatsappUrl ?? <FaWhatsapp size={24} />}
+            {skypeUrl ?? <FaSkype size={24} />}
+            {websiteUrl ?? <FaGlobe size={24} />}
+          </div>
         </div>
 
         {/* CTA BUTTONS */}
         <div className="flex justify-center space-x-4 mt-2">
           {/* Icon buttons */}
-          <div className="flex flex-col justify-center items-center">
-            <CiCirclePlus size={32} className="cursor-pointer" />
-            <p className="text-xs">Add</p>
-          </div>
-          <div className="flex flex-col justify-center items-center">
-            <CiSaveDown2 size={32} className="cursor-pointer" />
-            <p className="text-xs">Save</p>
-          </div>
-        </div>
 
-        {/* SOCIAL MEDIA ICONS */}
-        <div className="flex justify-center gap-6 my-4">
-          {facebookUrl ?? <FaFacebook size={24} />}
-          {twitterUrl ?? <FaXTwitter size={24} />}
-          {youtubeUrl ?? <FaYoutube size={24} />}
-          {instagramUrl ?? <FaInstagram size={24} />}
-          {linkedinUrl ?? <FaLinkedin size={24} />}
-          {whatsappUrl ?? <FaWhatsapp size={24} />}
-          {skypeUrl ?? <FaSkype size={24} />}
-          {websiteUrl ?? <FaGlobe size={24} />}
+          <div className="flex flex-col justify-center items-center border-2 rounded-full py-2 px-8">
+            <p className="text-xs">Save Contact</p>
+          </div>
         </div>
-        <hr />
 
         {/* COMPANY INFORMATION */}
         {company ?? (
-          <h2 className="text-4xl font-extrabold mx-auto w-full text-center mt-6">
+          <h2 className="text-4xl font-extrabold mx-auto w-full text-center mt-6 text-[#6fdc00]">
             COMPANY
           </h2>
         )}
         <div className="mt-6">
-          <h2 className="text-sm font-bold">Company Background</h2>
+          <h2 className="text-sm font-bold text-[#6fdc00]">
+            Company Background
+          </h2>
           <p className="text-xs mt-1">
             {companyBackground ??
               "Lorem Ipsum is simply dummy text of the printing and typesetting industry."}
           </p>
 
           {/* SERVICE INFORMATION */}
-          <h3 className="text-sm font-bold mt-6">Our Services</h3>
+          <h3 className="text-sm font-bold mt-6 text-[#6fdc00]">
+            Our Services
+          </h3>
           <p className="text-xs mt-1">
             {serviceDescription ??
               "Lorem Ipsum is simply dummy text of the printing and typesetting industry."}
@@ -170,11 +185,11 @@ const Template1 = ({
         </div>
       </div>
       {/* FOOTER */}
-      <div className="text-center text-xs text-gray-800 mt-8 mb-2">
+      <div className="text-center text-xs text-gray-400 mt-8 mb-2">
         © 2024 ZwiftTech. All Right Reserved.
       </div>
     </div>
   );
 };
 
-export default Template1;
+export default Template3;

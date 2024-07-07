@@ -34,8 +34,8 @@ const Template1 = ({
   websiteUrl,
 }: UserProfile) => {
   return (
-    <div className="bg-white text-black p-4 flex flex-col items-center justify-between  min-h-screen">
-      <div className=" w-full mx-auto  max-w-[480px]">
+    <div className="bg-black text-white p-4 flex flex-col items-center justify-between  min-h-screen">
+      <div className=" w-full mx-auto max-w-[480px] ">
         {/* COVERPHOTO AND PROFILE PIC */}
         <div className="mt-2  flex flex-col relative rounded-4xl mx-4 ">
           <div className="w-full h-48">
@@ -84,7 +84,7 @@ const Template1 = ({
             <h1 className="text-xl font-bold mt-2 ">Hussain Watkins</h1>
           )}
           {position ?? (
-            <p className="font-semibold text-gray-900 text-xs">
+            <p className="font-semibold text-white text-xs">
               Chief Technology Officer
             </p>
           )}
@@ -141,7 +141,7 @@ const Template1 = ({
           </p>
         </div>
 
-        <div className="grid grid-cols-2 gap-4 mt-6 ">
+        <div className="grid grid-cols-2 gap-4 mt-6  ">
           {servicePhotos
             ? servicePhotos.map((photo, index) => (
                 <div key={index} className="col-span-1">
@@ -170,7 +170,7 @@ const Template1 = ({
         </div>
       </div>
       {/* FOOTER */}
-      <div className="text-center text-xs text-gray-800 mt-8 mb-2">
+      <div className="text-center text-xs text-gray-400 mt-8 mb-2">
         © 2024 ZwiftTech. All Right Reserved.
       </div>
     </div>

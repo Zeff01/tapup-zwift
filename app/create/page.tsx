@@ -54,6 +54,7 @@ export default function Create() {
       twitterUrl: "",
       linkedinUrl: "",
       whatsappUrl: "",
+      skypeUrl: "",
       websiteUrl: "",
     },
   });
