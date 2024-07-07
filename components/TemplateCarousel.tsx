@@ -16,21 +16,21 @@ const templates = [
     name: "Default",
     description: "Basic Style",
     imageUrl: "/path/to/default.jpg",
-    route: "/template1",
+    route: "/create/template/1",
   },
   {
     id: 2,
     name: "Minimalist",
     description: "Minimalist Style",
     imageUrl: "/path/to/minimalist.jpg",
-    route: "/template2",
+    route: "/create/template/2",
   },
   {
     id: 3,
     name: "Modern",
     description: "Modern Style",
     imageUrl: "/path/to/modern.jpg",
-    route: "/template3",
+    route: "/create/template/3",
   },
 ];
 
@@ -41,14 +41,11 @@ export function TemplateCarousel() {
 
       <Carousel
         opts={{ align: "start" }}
-        className="w-full max-w-screen-lg mx-auto overflow-hidden "
+        className="w-full max-w-screen-lg mx-auto overflow-hidden"
       >
         <CarouselContent className="flex justify-start items-center">
           {templates.map((template) => (
-            <CarouselItem
-              key={template.id}
-              className="flex-none w-1/2 p-2" // Ensure this matches the expected width
-            >
+            <CarouselItem key={template.id} className="flex-none w-1/2 p-2">
               <Link href={template.route} passHref>
                 <div className="block transform hover:scale-105 transition-transform duration-300 cursor-pointer">
                   <Card className="h-full w-full bg-gray-800 rounded-lg overflow-hidden">
