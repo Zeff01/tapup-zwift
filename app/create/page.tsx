@@ -23,14 +23,23 @@ import CompanyInfoForm from "@/components/forms/CompanyInfoForm";
 export default function Create() {
   const [photo, setPhoto] = useState<Photo | null>(null);
   const [imageUrl, setImageUrl] = useState<string | null>(null);
+
   const [coverPhoto, setCoverPhoto] = useState<Photo | null>(null);
-  const [coverPhotoUrl, setCoverPhotoUrl] = useState<string | null>(null);
+  const [coverPhotoUrl, setCoverPhotoUrl] = useState<string | null>(null);  
+
+  const [servicePhotos, setServicePhotos] = useState<Photo[]>([])  
+  const [serviceImageUrls, setServiceImageUrls] = useState<string[]>([])
 
   const [loading, setLoading] = useState(false);
   const router = useRouter();
-  const [imagePickerType, setImagePickerType] = useState<"advanced" | "basic">(
-    "advanced"
-  );
+
+  const addServicePhoto = (photo:Photo) => {
+    setServicePhotos([...servicePhotos, photo])
+  }
+
+  const addServiceImageUrl = (imageUrl:string) => {
+    setServiceImageUrls([...serviceImageUrls, imageUrl])
+  }
 
   // 1. Define your form.
   const methods = useForm<z.infer<typeof createPortfolioSchema>>({
@@ -133,25 +142,7 @@ export default function Create() {
   return (
     <FormProvider {...methods}>
       <main className="flex min-h-screen bg-[#1E1E1E] text-white flex-col items-center pt-12 p-6  overflow-x-hidden">
-        <Navbar />
-        <div className="w-full flex flex-row justify-end ">
-          <div className="flex flex-col w-[150px] bg-custom-purple p-1 rounded-md">
-            <p>Image Picker Type</p>
-            <div className="w-full flex flex-row justify-between gap-x-1">
-              <p>{imagePickerType}</p>
-              <Switch
-                checked={Boolean(imagePickerType === "advanced")}
-                onCheckedChange={(c) => {
-                  if (c) {
-                    setImagePickerType("advanced");
-                    return;
-                  }
-                  setImagePickerType("basic");
-                }}
-              />
-            </div>
-          </div>
-        </div>
+        <Navbar />      
         <div className="w-full max-w-sm ">
           {/* HEADER */}
           <div className="text-center mb-6 ">
@@ -167,25 +158,43 @@ export default function Create() {
 
           <form className="space-y-6" onSubmit={handleSubmit}>
             {/* Cover Photo and Profile Pic Upload Section */}
-            <div className="flex flex-col items-center relative border-2 border-orange-500 mb-20">
+            <div className="flex flex-col items-center relative mb-16">
               <div className="w-full h-64">
                 <Cropper
                   imageUrl={coverPhotoUrl}
                   setImageUrl={setCoverPhotoUrl}
                   photo={coverPhoto}
+                  aspect={16/9}                  
                   setPhoto={setCoverPhoto}
-                  type="coverPic"
                   changeImage={(img) => console.log("New Cover Image:", img)}
+                  className="w-full aspect-[16/9] rounded-2xl"
+                  imageClassName="rounded-2xl"
+                  fallback={
+                    <div className="w-full aspect-[16/9] flex flex-col items-center justify-center pb-4 gap-y-4 bg-[#222224]">
+                      <Image src={"/assets/plus.svg"} width={50} height={50} alt="plus" />
+                      <p className="text-[#767676]">Upload a Cover Photo</p>
+                    </div>
+                  }
                 />
                 <div className="absolute -bottom-12 left-1/2 transform -translate-x-1/2  ">
                   <Cropper
                     imageUrl={imageUrl}
                     setImageUrl={setImageUrl}
                     photo={photo}
+                    aspect={1}
                     setPhoto={setPhoto}
-                    type="profilePic"
                     changeImage={(img) =>
                       console.log("New Profile Image:", img)
+                    }
+                    circularCrop
+                    className="w-[150px] h-[150px] rounded-full"
+                    fallback={
+                      <div className="relative w-full h-full rounded-full flex items-center justify-center bg-[#222224]">
+                        <Image src={"/assets/gallery.svg"} width={50} height={50} alt="gallery" />
+                        <div className="absolute bottom-0 right-0 bg-[#222224] rounded-full">
+                          <Image src={"/assets/plus-dark.svg"} width={50} height={50} alt="plus-dark"  />
+                        </div>
+                      </div>
                     }
                   />
                 </div>
@@ -201,15 +210,41 @@ export default function Create() {
                 <h1 className="text-lg font-semibold mt-2">
                   Add Photo For Services: (Optional)
                 </h1>
-                <div className="flex flex-col items-center">
+                <div className="flex flex-col items-center gap-y-6">
+                  <p className="text-[#767676]">Upload an  image</p>
                   <Cropper
-                    imageUrl={coverPhotoUrl}
-                    setImageUrl={setCoverPhotoUrl}
-                    photo={coverPhoto}
-                    setPhoto={setCoverPhoto}
-                    type="servicePhoto"
+                    imageUrl={null}
+                    photo={null}
+                    aspect={1}
+                    setImageUrl={addServiceImageUrl}
+                    setPhoto={addServicePhoto}
                     changeImage={(img) => console.log("New Cover Image:", img)}
+                    className="w-[128px] h-[128px] rounded-[10px]"
+                    disablePreview // only shows the fallback
+                    fallback={
+                      <div className="relative w-full h-full flex items-center justify-center bg-[#222224]">
+                        <Image src={"/assets/gallery.svg"} width={50} height={50} alt="gallery" />
+                        <div className="absolute bottom-0 right-0 translate-x-1/2 translate-y-1/4 bg-[#222224] rounded-full">
+                          <Image src={"/assets/plus-dark.svg"} width={50} height={50} alt="plus-dark"  />
+                        </div>
+                      </div>
+                    }
                   />
+                  <p className="text-[#767676]">Please select at least 2 images</p>
+                  <div className="flex flex-row items-center justify-center gap-2 flex-wrap">
+                    {
+                      serviceImageUrls.map(url => (
+                        <Image 
+                        key={url} 
+                        src={url} 
+                        width={80}
+                        height={80} 
+                        alt="service" 
+                        className="rounded-md" 
+                        />
+                      ))
+                    }
+                  </div>
                 </div>
               </div>
 
