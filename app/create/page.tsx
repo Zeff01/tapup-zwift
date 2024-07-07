@@ -9,13 +9,16 @@ import Cropper from "../../components/Cropper";
 import { Switch } from "@/components/ui/switch";
 import Navbar from "@/components/ui/Navbar";
 import CustomInput from "@/components/CustomInput";
-import { Form, FormProvider } from "react-hook-form";
+import { FormProvider } from "react-hook-form";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { z } from "zod";
 import { createPortfolioSchema } from "@/lib/utils";
-import CustomTextArea from "@/components/CustomTextarea";
+import CustomTextArea from "@/components/CustomTextArea";
 import { TemplateCarousel } from "@/components/TemplateCarousel";
+import SocialLinksForm from "@/components/forms/SocialLinkForm";
+import PersonalInfoForm from "@/components/forms/PersonalInfoForm";
+import CompanyInfoForm from "@/components/forms/CompanyInfoForm";
 
 export default function Create() {
   const [photo, setPhoto] = useState<Photo | null>(null);
@@ -126,27 +129,6 @@ export default function Create() {
     }
   };
 
-  const templates = [
-    {
-      id: 1,
-      name: "Default",
-      description: "Basic Style",
-      imageUrl: "/path/to/default-template.jpg",
-    },
-    {
-      id: 2,
-      name: "Minimalist",
-      description: "Minimalist Style",
-      imageUrl: "/path/to/minimalist-template.jpg",
-    },
-    {
-      id: 3,
-      name: "Modern",
-      description: "Modern Style",
-      imageUrl: "/path/to/modern-template.jpg",
-    },
-  ];
-
   return (
     <FormProvider {...methods}>
       <main className="flex min-h-screen bg-[#1E1E1E] text-white flex-col items-center pt-12 p-6  overflow-x-hidden">
@@ -170,6 +152,7 @@ export default function Create() {
           </div>
         </div>
         <div className="w-full max-w-sm ">
+          {/* HEADER */}
           <div className="text-center mb-6 ">
             <Image
               src="/assets/zwift-logo.png"
@@ -179,12 +162,11 @@ export default function Create() {
               priority
               className="mx-auto mb-8"
             />
-            <h2 className="text-lg font-semibold mt-2">Company Profile</h2>
           </div>
 
           <form className="space-y-6" onSubmit={handleSubmit}>
-            {/* Cover Photo Upload Section */}
-            <div className="flex flex-col items-center relative">
+            {/* Cover Photo and Profile Pic Upload Section */}
+            <div className="flex flex-col items-center relative border-2 border-orange-500 mb-20">
               <div className="w-full h-64">
                 <Cropper
                   imageUrl={coverPhotoUrl}
@@ -208,132 +190,36 @@ export default function Create() {
                 </div>
               </div>
             </div>
-            {/* Profile Picture Upload Section */}
-            <div className="flex flex-col items-center"></div>
 
             {/* Company Information Inputs */}
-            <div className="space-y-6">
-              <CustomInput
-                control={methods.control}
-                name="position"
-                label="Position"
-                placeholder="Enter your position"
-                required={true}
-              />
-              <CustomInput
-                control={methods.control}
-                name="company"
-                label="Company"
-                placeholder="Enter your company name"
-                required={true}
-              />
-              <CustomTextArea
-                control={methods.control}
-                name="companyBackground"
-                label="Company Background"
-                placeholder="Describe your company background"
-                required={true}
-              />
-              <CustomTextArea
-                control={methods.control}
-                name="serviceDescription"
-                label="Service Description"
-                placeholder="Describe the services you offer"
-              />
+            <div className="space-y-6 ">
+              <CompanyInfoForm control={methods.control} />
 
-              {/* TODO: Add photo for services */}
-
-              <h1>Add Photo For Services: (Optional)</h1>
-              <div className="flex flex-col items-center">
-                <Cropper
-                  imageUrl={coverPhotoUrl}
-                  setImageUrl={setCoverPhotoUrl}
-                  photo={coverPhoto}
-                  setPhoto={setCoverPhoto}
-                  type="servicePhoto"
-                  changeImage={(img) => console.log("New Cover Image:", img)}
-                />
+              {/* //TODO: Add photo for services */}
+              <div className="border-2 border-yellow-500">
+                <h1 className="text-lg font-semibold mt-2">
+                  Add Photo For Services: (Optional)
+                </h1>
+                <div className="flex flex-col items-center">
+                  <Cropper
+                    imageUrl={coverPhotoUrl}
+                    setImageUrl={setCoverPhotoUrl}
+                    photo={coverPhoto}
+                    setPhoto={setCoverPhoto}
+                    type="servicePhoto"
+                    changeImage={(img) => console.log("New Cover Image:", img)}
+                  />
+                </div>
               </div>
 
-              {/* TODO: Choose Templates */}
-              <h1>Choose Templates</h1>
+              {/* //TODO: Choose Templates */}
               <TemplateCarousel />
 
               {/* Personal Information Inputs */}
-              <h1>Personal Information</h1>
-              <CustomInput
-                control={methods.control}
-                name="firstName"
-                label="First Name"
-                placeholder="Enter your first name"
-                required={true}
-              />
-              <CustomInput
-                control={methods.control}
-                name="lastName"
-                label="Last Name"
-                placeholder="Enter your last name"
-                required={true}
-              />
-              <CustomInput
-                control={methods.control}
-                name="email"
-                label="Email Address"
-                placeholder="Enter your email address"
-                required={true}
-              />
-              <CustomInput
-                control={methods.control}
-                name="number"
-                label="Phone Number"
-                placeholder="Enter your phone number"
-                required={true}
-              />
+              <PersonalInfoForm control={methods.control} />
 
               {/* Social Links Inputs */}
-              <h1>Social Links</h1>
-              <CustomInput
-                control={methods.control}
-                name="facebookUrl"
-                label="Facebook URL"
-                placeholder="Enter your Facebook URL"
-              />
-              <CustomInput
-                control={methods.control}
-                name="youtubeUrl"
-                label="YouTube URL"
-                placeholder="Enter your YouTube URL"
-              />
-              <CustomInput
-                control={methods.control}
-                name="instagramUrl"
-                label="Instagram URL"
-                placeholder="Enter your Instagram URL"
-              />
-              <CustomInput
-                control={methods.control}
-                name="twitterUrl"
-                label="Twitter URL"
-                placeholder="Enter your Twitter URL"
-              />
-              <CustomInput
-                control={methods.control}
-                name="linkedinUrl"
-                label="LinkedIn URL"
-                placeholder="Enter your LinkedIn URL"
-              />
-              <CustomInput
-                control={methods.control}
-                name="whatsappUrl"
-                label="WhatsApp URL"
-                placeholder="Enter your WhatsApp URL"
-              />
-              <CustomInput
-                control={methods.control}
-                name="websiteUrl"
-                label="Website URL"
-                placeholder="Enter your website URL"
-              />
+              <SocialLinksForm control={methods.control} />
             </div>
             <button
               type="submit"

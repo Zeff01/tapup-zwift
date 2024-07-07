@@ -36,41 +36,45 @@ const templates = [
 
 export function TemplateCarousel() {
   return (
-    <Carousel
-      opts={{ align: "start" }}
-      className="w-full max-w-screen-lg mx-auto overflow-hidden"
-    >
-      <CarouselContent className="flex justify-start items-center">
-        {templates.map((template) => (
-          <CarouselItem
-            key={template.id}
-            className="flex-none w-1/2 p-2" // Ensure this matches the expected width
-          >
-            <Link href={template.route} passHref>
-              <div className="block transform hover:scale-105 transition-transform duration-300 cursor-pointer">
-                <Card className="h-full w-full bg-gray-800 rounded-lg overflow-hidden">
-                  <CardContent className="flex flex-col items-center justify-center p-4 text-white">
-                    <Image
-                      src={template.imageUrl}
-                      alt={template.name}
-                      width={200}
-                      height={120}
-                      className="rounded-md"
-                      layout="responsive"
-                    />
-                    <h3 className="text-xl font-semibold mt-2">
-                      {template.name}
-                    </h3>
-                    <p>{template.description}</p>
-                  </CardContent>
-                </Card>
-              </div>
-            </Link>
-          </CarouselItem>
-        ))}
-      </CarouselContent>
-      <CarouselPrevious />
-      <CarouselNext />
-    </Carousel>
+    <div className="border-2 border-green-500">
+      <h1 className="text-lg font-semibold mb-6">Choose Templates</h1>
+
+      <Carousel
+        opts={{ align: "start" }}
+        className="w-full max-w-screen-lg mx-auto overflow-hidden "
+      >
+        <CarouselContent className="flex justify-start items-center">
+          {templates.map((template) => (
+            <CarouselItem
+              key={template.id}
+              className="flex-none w-1/2 p-2" // Ensure this matches the expected width
+            >
+              <Link href={template.route} passHref>
+                <div className="block transform hover:scale-105 transition-transform duration-300 cursor-pointer">
+                  <Card className="h-full w-full bg-gray-800 rounded-lg overflow-hidden">
+                    <CardContent className="flex flex-col items-center justify-center p-4 text-white">
+                      <Image
+                        src={template.imageUrl}
+                        alt={template.name}
+                        width={200}
+                        height={120}
+                        className="rounded-md"
+                        layout="responsive"
+                      />
+                      <h3 className="text-xl font-semibold mt-2">
+                        {template.name}
+                      </h3>
+                      <p>{template.description}</p>
+                    </CardContent>
+                  </Card>
+                </div>
+              </Link>
+            </CarouselItem>
+          ))}
+        </CarouselContent>
+        <CarouselPrevious />
+        <CarouselNext />
+      </Carousel>
+    </div>
   );
 }
