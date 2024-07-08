@@ -6,6 +6,7 @@ import Template1 from "@/components/templates/Template1";
 import Template2 from "@/components/templates/Template2";
 import Template3 from "@/components/templates/Template3";
 import Template4 from "@/components/templates/Template4";
+import Template5 from "@/components/templates/Template5";
 // Continue importing all templates...
 
 // Mapping of templates
@@ -14,6 +15,7 @@ const templates = {
   "2": Template2,
   "3": Template3,
   "4": Template4,
+  "5": Template5,
   // Continue mapping all templates...
 };
 

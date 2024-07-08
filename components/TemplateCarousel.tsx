@@ -13,24 +13,38 @@ import Image from "next/image";
 const templates = [
   {
     id: 1,
-    name: "Default",
+    name: "Plain White",
     description: "Basic Style",
     imageUrl: "/path/to/default.jpg",
     route: "/create/template/1",
   },
   {
     id: 2,
-    name: "Minimalist",
+    name: "Plain Black",
     description: "Minimalist Style",
     imageUrl: "/path/to/minimalist.jpg",
     route: "/create/template/2",
   },
   {
     id: 3,
-    name: "Modern",
+    name: "Viper",
     description: "Modern Style",
     imageUrl: "/path/to/modern.jpg",
     route: "/create/template/3",
+  },
+  {
+    id: 4,
+    name: "Minimalist",
+    description: "Modern Style",
+    imageUrl: "/path/to/modern.jpg",
+    route: "/create/template/4",
+  },
+  {
+    id: 5,
+    name: "Floral",
+    description: "Modern Style",
+    imageUrl: "/path/to/modern.jpg",
+    route: "/create/template/5",
   },
 ];
 
