@@ -25,21 +25,21 @@ export default function Create() {
   const [imageUrl, setImageUrl] = useState<string | null>(null);
 
   const [coverPhoto, setCoverPhoto] = useState<Photo | null>(null);
-  const [coverPhotoUrl, setCoverPhotoUrl] = useState<string | null>(null);  
+  const [coverPhotoUrl, setCoverPhotoUrl] = useState<string | null>(null);
 
-  const [servicePhotos, setServicePhotos] = useState<Photo[]>([])  
-  const [serviceImageUrls, setServiceImageUrls] = useState<string[]>([])
+  const [servicePhotos, setServicePhotos] = useState<Photo[]>([]);
+  const [serviceImageUrls, setServiceImageUrls] = useState<string[]>([]);
 
   const [loading, setLoading] = useState(false);
   const router = useRouter();
 
-  const addServicePhoto = (photo:Photo) => {
-    setServicePhotos([...servicePhotos, photo])
-  }
+  const addServicePhoto = (photo: Photo) => {
+    setServicePhotos([...servicePhotos, photo]);
+  };
 
-  const addServiceImageUrl = (imageUrl:string) => {
-    setServiceImageUrls([...serviceImageUrls, imageUrl])
-  }
+  const addServiceImageUrl = (imageUrl: string) => {
+    setServiceImageUrls([...serviceImageUrls, imageUrl]);
+  };
 
   // 1. Define your form.
   const methods = useForm<z.infer<typeof createPortfolioSchema>>({
@@ -83,26 +83,26 @@ export default function Create() {
     console.log("form:", form);
     const errors = validateForm(form.elements);
 
-    setLoading(true); // load start
-    const userInfo = await addUser({
-      company: form.company.value,
-      position: form.position.value,
-      firstName: form.firstName.value,
-      lastName: form.lastName.value,
-      email: form.email.value,
-      phoneNumber: form.number.value,
-      image: imageUrl || "",
-      printStatus: false,
-    });
-    console.log(typeof userInfo, userInfo);
-    setLoading(false); // load ends
-    if (userInfo) {
-      localStorage.setItem("userLink", userInfo.user_link);
-      localStorage.setItem("userCode", userInfo.userCode);
-      router.push(`/action?userCode=${userInfo.userCode}`);
-    } else {
-      console.error("userLink is undefined or not valid.");
-    }
+    // setLoading(true); // load start
+    // const userInfo = await addUser({
+    //   company: form.company.value,
+    //   position: form.position.value,
+    //   firstName: form.firstName.value,
+    //   lastName: form.lastName.value,
+    //   email: form.email.value,
+    //   phoneNumber: form.number.value,
+    //   image: imageUrl || "",
+    //   printStatus: false,
+    // });
+    // console.log(typeof userInfo, userInfo);
+    // setLoading(false); // load ends
+    // if (userInfo) {
+    //   localStorage.setItem("userLink", userInfo.user_link);
+    //   localStorage.setItem("userCode", userInfo.userCode);
+    //   router.push(`/action?userCode=${userInfo.userCode}`);
+    // } else {
+    //   console.error("userLink is undefined or not valid.");
+    // }
   };
 
   const handlePhotoChange = async (event: ChangeEvent<HTMLInputElement>) => {
@@ -142,7 +142,7 @@ export default function Create() {
   return (
     <FormProvider {...methods}>
       <main className="flex min-h-screen bg-[#1E1E1E] text-white flex-col items-center pt-12 p-6  overflow-x-hidden">
-        <Navbar />      
+        <Navbar />
         <div className="w-full max-w-sm ">
           {/* HEADER */}
           <div className="text-center mb-6 ">
@@ -164,14 +164,19 @@ export default function Create() {
                   imageUrl={coverPhotoUrl}
                   setImageUrl={setCoverPhotoUrl}
                   photo={coverPhoto}
-                  aspect={16/9}                  
+                  aspect={16 / 9}
                   setPhoto={setCoverPhoto}
                   changeImage={(img) => console.log("New Cover Image:", img)}
                   className="w-full aspect-[16/9] rounded-2xl"
                   imageClassName="rounded-2xl"
                   fallback={
                     <div className="w-full aspect-[16/9] flex flex-col items-center justify-center pb-4 gap-y-4 bg-[#222224]">
-                      <Image src={"/assets/plus.svg"} width={50} height={50} alt="plus" />
+                      <Image
+                        src={"/assets/plus.svg"}
+                        width={50}
+                        height={50}
+                        alt="plus"
+                      />
                       <p className="text-[#767676]">Upload a Cover Photo</p>
                     </div>
                   }
@@ -190,9 +195,19 @@ export default function Create() {
                     className="w-[150px] h-[150px] rounded-full"
                     fallback={
                       <div className="relative w-full h-full rounded-full flex items-center justify-center bg-[#222224]">
-                        <Image src={"/assets/gallery.svg"} width={50} height={50} alt="gallery" />
+                        <Image
+                          src={"/assets/gallery.svg"}
+                          width={50}
+                          height={50}
+                          alt="gallery"
+                        />
                         <div className="absolute bottom-0 right-0 bg-[#222224] rounded-full">
-                          <Image src={"/assets/plus-dark.svg"} width={50} height={50} alt="plus-dark"  />
+                          <Image
+                            src={"/assets/plus-dark.svg"}
+                            width={50}
+                            height={50}
+                            alt="plus-dark"
+                          />
                         </div>
                       </div>
                     }
@@ -211,7 +226,7 @@ export default function Create() {
                   Add Photo For Services: (Optional)
                 </h1>
                 <div className="flex flex-col items-center gap-y-6">
-                  <p className="text-[#767676]">Upload an  image</p>
+                  <p className="text-[#767676]">Upload an image</p>
                   <Cropper
                     imageUrl={null}
                     photo={null}
@@ -223,27 +238,37 @@ export default function Create() {
                     disablePreview // only shows the fallback
                     fallback={
                       <div className="relative w-full h-full flex items-center justify-center bg-[#222224]">
-                        <Image src={"/assets/gallery.svg"} width={50} height={50} alt="gallery" />
+                        <Image
+                          src={"/assets/gallery.svg"}
+                          width={50}
+                          height={50}
+                          alt="gallery"
+                        />
                         <div className="absolute bottom-0 right-0 translate-x-1/2 translate-y-1/4 bg-[#222224] rounded-full">
-                          <Image src={"/assets/plus-dark.svg"} width={50} height={50} alt="plus-dark"  />
+                          <Image
+                            src={"/assets/plus-dark.svg"}
+                            width={50}
+                            height={50}
+                            alt="plus-dark"
+                          />
                         </div>
                       </div>
                     }
                   />
-                  <p className="text-[#767676]">Please select at least 2 images</p>
+                  <p className="text-[#767676]">
+                    Please select at least 2 images
+                  </p>
                   <div className="flex flex-row items-center justify-center gap-2 flex-wrap">
-                    {
-                      serviceImageUrls.map(url => (
-                        <Image 
-                        key={url} 
-                        src={url} 
+                    {serviceImageUrls.map((url) => (
+                      <Image
+                        key={url}
+                        src={url}
                         width={80}
-                        height={80} 
-                        alt="service" 
-                        className="rounded-md" 
-                        />
-                      ))
-                    }
+                        height={80}
+                        alt="service"
+                        className="rounded-md"
+                      />
+                    ))}
                   </div>
                 </div>
               </div>
