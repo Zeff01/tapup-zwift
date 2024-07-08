@@ -5,7 +5,7 @@ import React, {
   Dispatch,
   SetStateAction,
   useEffect,
-  useCallback,
+  HTMLAttributes,
 } from "react";
 import { Slider } from "@/components/ui/slider";
 import { createPortal } from "react-dom";
@@ -21,6 +21,7 @@ import ReactCrop, {
   makeAspectCrop,
   Crop,
   PixelCrop,
+  //   convertToPixelCrop,
 } from "react-image-crop";
 import { canvasPreview } from "@/lib/canvasPreview";
 import { useDebounceEffect } from "@/hooks/useDebounceEffect";
@@ -28,84 +29,87 @@ import { useDebounceEffect } from "@/hooks/useDebounceEffect";
 import "react-image-crop/dist/ReactCrop.css";
 import { Button } from "@/components/ui/button";
 import { toast } from "react-toastify";
+import { cn } from "@/lib/utils";
+import { ReactNode } from "react";
 
-function centerAspectCrop(mediaWidth, mediaHeight, aspect) {
-  const unit = "%";
-  const width = 90;
-  // Calculate center position
-  const x = (100 - width) / 2;
-  const y = (100 - width / aspect) / 2;
-  return {
-    unit: unit,
-    width: width,
-    height: width / aspect,
-    x: x,
-    y: y,
-    aspect: aspect,
-  };
+// This is to demonstate how to make and center a % aspect crop
+// which is a bit trickier so we use some helper functions.
+function centerAspectCrop(
+  mediaWidth: number,
+  mediaHeight: number,
+  aspect: number
+) {
+  return centerCrop(
+    makeAspectCrop(
+      {
+        unit: "%",
+        width: 90,
+      },
+      aspect,
+      mediaWidth,
+      mediaHeight
+    ),
+    mediaWidth,
+    mediaHeight
+  );
 }
 
-interface CropperProps {
-  imageUrl?: string | null;
-  setImageUrl: Dispatch<SetStateAction<string | null>>;
-  photo: Photo | null;
-  setPhoto: Dispatch<SetStateAction<Photo | null>>;
-  type: "profilePic" | "coverPic" | "servicePhoto";
-  changeImage: (imageUrl: string) => void;
+interface CropperProps extends HTMLAttributes<HTMLDivElement> {
+  imageUrl?: string|null;
+  photo: null | Photo;
+  setImageUrl: Dispatch<SetStateAction<string | null>> | ((imageUrl:string) => void);
+  setPhoto: Dispatch<SetStateAction<Photo | null>> | ((photo:Photo) => void);
+  aspect: number;
+  changeImage(img: string): void;
   maxHeight?: number;
-  initialScale?: number;
-  minScale?: number;
-  maxScale?: number;
-  loadingText?: string | React.ReactNode;
-  onComplete?: () => void;
-  onError?: (error: Error) => void;
-}
+  circularCrop?: boolean;
+  fallback: ReactNode;
+  disablePreview?: boolean;
+  imageClassName?: string;  
+};
 
-const Cropper: React.FC<CropperProps> = ({
+export default function Cropper({
   imageUrl,
   setImageUrl,
   photo,
   setPhoto,
-  type,
-  changeImage,
+  aspect,
   maxHeight,
-  initialScale = 1,
-  minScale = 0.5,
-  maxScale = 3,
-  loadingText = "Loading...",
-  onComplete,
-  onError,
-}) => {
-  const aspect =
-    type === "profilePic" ? 1 : type === "coverPic" ? 16 / 9 : 4 / 3;
-  const circularCrop = type === "profilePic";
+  circularCrop = false,
+  fallback,
+  className,
+  disablePreview=false,
+  imageClassName,
+  ...rest
+}: CropperProps) {
   const [imgSrc, setImgSrc] = useState("");
+  const previewCanvasRef = useRef<HTMLCanvasElement>(null);
+  const imgRef = useRef<HTMLImageElement>(null);
+  const hiddenAnchorRef = useRef<HTMLAnchorElement>(null);
+  const blobUrlRef = useRef("");
   const [crop, setCrop] = useState<Crop>();
   const [completedCrop, setCompletedCrop] = useState<PixelCrop>();
   const [scale, setScale] = useState(1);
+  //   const [aspect, setAspect] = useState<number | undefined>(16 / 6)
   const [showModal, setShowModal] = useState(false);
+  const [csr, SetCsr] = useState(false);
   const [loading, setLoading] = useState(false);
-
-  const imgRef = useRef<HTMLImageElement>(null);
-  const hiddenAnchorRef = useRef<HTMLAnchorElement>(null);
-  const previewCanvasRef = useRef<HTMLCanvasElement>(null);
-
-  const blobUrlRef = useRef("");
 
   function toggleModal() {
     setShowModal((m) => !m);
   }
 
-  const onSelectFile = useCallback((event) => {
-    if (event.target.files && event.target.files[0]) {
+  function onSelectFile(e: React.ChangeEvent<HTMLInputElement>) {
+    if (e.target.files && e.target.files.length > 0) {
+      setCrop(undefined); // Makes crop preview update between images.
+      //   toggleModal()
       const reader = new FileReader();
-      reader.addEventListener("load", () =>
-        setImgSrc(reader.result.toString())
-      );
-      reader.readAsDataURL(event.target.files[0]);
-      setShowModal(true);
+      reader.addEventListener("load", () => {
+        setImgSrc(reader.result?.toString() || "");
+      });
+      reader.readAsDataURL(e.target.files[0]);
     }
-  }, []);
+  }
 
   function onImageLoad(e: React.SyntheticEvent<HTMLImageElement>) {
     if (aspect) {
@@ -164,10 +168,10 @@ const Cropper: React.FC<CropperProps> = ({
           });
           setPhoto({ preview: fileAsDataURL, raw: file });
           if (dl_url) setImageUrl(dl_url);
-          toast.success("Image cropped and uploaded.");
+          toast.success("Image cropped and uploaded.")
         } catch (error) {
           console.error(error, "failed to upload image");
-          toast.error("Failed to crop and upload image");
+          toast.error("Failed to crop and upload image")
         } finally {
           setLoading(false);
           toggleModal();
@@ -202,98 +206,38 @@ const Cropper: React.FC<CropperProps> = ({
     100,
     [completedCrop, scale]
   );
-  const containerClass =
-    type === "profilePic"
-      ? "relative w-32 h-32 rounded-full bg-background-input border border-border-input flex items-center justify-center"
-      : type === "coverPic"
-      ? "relative w-full h-52 bg-background-input border border-border-input flex items-center justify-center"
-      : "relative w-40 h-40  bg-background-input border border-border-input flex items-center justify-center"; //
 
-  const chosenPictureClass =
-    type === "profilePic"
-      ? "rounded-full w-28 h-28"
-      : type === "coverPic"
-      ? "w-full h-64"
-      : "w-full h-64";
+  useEffect(() => {
+    SetCsr(true);
+  }, []);
+
+  if (!csr) {
+    return null;
+  }
 
   return (
-    <div className={containerClass}>
-      <div>
+    <div className="cropper">
+      <div className={cn("relative w-full h-full border border-[#2c2c2c]", className)} {...rest}>
         <Input
           type="file"
           accept="image/*"
           onChange={onSelectFile}
-          className="w-full h-full absolute top-0 left-0 opacity-0 "
+          className="w-full h-full absolute top-0 left-0 opacity-0 z-10"
           onClick={toggleModal}
           placeholder="cropper"
         />
-        {photo || imageUrl ? (
-          <Image
+          {
+            ((photo?.preview ?? imageUrl) && !disablePreview) ?
+            <Image
             src={photo?.preview ?? imageUrl ?? ""}
             alt="Profile"
-            className={chosenPictureClass}
-            width={70}
-            height={70}
-          />
-        ) : (
-          <>
-            {type === "profilePic" ? (
-              <>
-                <Image
-                  src="/assets/imageicon.png"
-                  alt="Company Logo"
-                  width={50}
-                  height={50}
-                  priority
-                  className="mx-auto pointer-events-none "
-                />
-
-                <div className=" pointer-events-none flex justify-center items-center w-12 h-12 border rounded-full absolute -bottom-0 -right-4 bg-background-input border-border-input">
-                  <Image
-                    src="/assets/plusicon.png"
-                    alt="Add Icon"
-                    width={20}
-                    height={20}
-                    priority
-                  />
-                </div>
-              </>
-            ) : type === "coverPic" ? (
-              <div className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 flex flex-col justify-center items-center gap-4">
-                <div className=" pointer-events-none flex justify-center items-center w-16 h-16 border rounded-full  bg-background-input border-border-input">
-                  <Image
-                    src="/assets/plusicon.png"
-                    alt="Add Icon"
-                    width={30}
-                    height={30}
-                    priority
-                  />
-                </div>
-                <div>Upload a Cover Photo</div>
-              </div>
-            ) : (
-              <div className=" pointer-events-none flex justify-center items-center w-16 h-16 border rounded-full  bg-background-input border-border-input">
-                <Image
-                  src="/assets/imageicon.png"
-                  alt="Company Logo"
-                  width={50}
-                  height={50}
-                  priority
-                  className="mx-auto pointer-events-none "
-                />
-                <div className=" pointer-events-none flex justify-center items-center w-12 h-12 border rounded-full absolute -bottom-4 -right-4 bg-background-input border-border-input">
-                  <Image
-                    src="/assets/plusicon.png"
-                    alt="Add Icon"
-                    width={20}
-                    height={20}
-                    priority
-                  />
-                </div>
-              </div>
-            )}
-          </>
-        )}
+            className={cn(`w-full h-full pointer-events-none ${circularCrop ? "rounded-full" : ""}`, imageClassName)}
+            width={500}
+            height={500}
+          /> :
+            fallback
+          }
+                      
       </div>
 
       {createPortal(
@@ -303,6 +247,7 @@ const Cropper: React.FC<CropperProps> = ({
               <div className="z-20 w-full h-full bg-black opacity-80" />
               <div className=" z-30 absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[500px] h-full bg-custom-light flex flex-col items-center gap-y-8 overflow-y-scroll  justify-between">
                 <div className="pt-8 w-full flex flex-col items-center">
+                  {/* <input type="file" accept="image/*" onChange={onSelectFile} /> */}
                   <div className="w-[400px] flex flex-col items-center gap-y-2">
                     <p className="pb-4 font-bold text-2xl">Select the Image</p>
                     <label htmlFor="scale" className="text-xl font-semibold">
@@ -349,6 +294,11 @@ const Cropper: React.FC<CropperProps> = ({
                       </Button>
                     )}
                   </div>
+                  {/* <div>
+                            <button onClick={handleToggleAspectClick}>
+                                Toggle aspect {aspect ? 'off' : 'on'}
+                            </button>
+                        </div> */}
                 </div>
                 <div className="px-2">
                   {!!imgSrc && (
@@ -389,6 +339,10 @@ const Cropper: React.FC<CropperProps> = ({
                       />
                     </div>
                     <div>
+                      {/* <div style={{ fontSize: 12, color: '#666' }}>
+                                If you get a security error when downloading try opening the
+                                Preview in a new tab (icon near top right).
+                                </div> */}
                       <a
                         href="#hidden"
                         ref={hiddenAnchorRef}
@@ -412,5 +366,4 @@ const Cropper: React.FC<CropperProps> = ({
       )}
     </div>
   );
-};
-export default Cropper;
+}
