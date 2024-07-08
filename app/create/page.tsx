@@ -1,5 +1,5 @@
 "use client";
-import { useState, FormEvent, ChangeEvent } from "react";
+import { useState, FormEvent, ChangeEvent, useEffect } from "react";
 import Image from "next/image";
 import { useRouter } from "next/navigation";
 import { addUser, uploadImage } from "@/src/lib/firebase/store/users.action";
@@ -9,8 +9,8 @@ import Cropper from "../../components/Cropper";
 import { Switch } from "@/components/ui/switch";
 import Navbar from "@/components/ui/Navbar";
 import CustomInput from "@/components/CustomInput";
-import { FormProvider } from "react-hook-form";
-import { useForm } from "react-hook-form";
+import { useForm, FormProvider } from "react-hook-form";
+import { Form } from "@/components/ui/form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { z } from "zod";
 import { createPortfolioSchema } from "@/lib/utils";
@@ -68,25 +68,57 @@ export default function Create() {
     },
   });
 
-  const handleSubmit = async (event: FormEvent<HTMLFormElement>) => {
-    event.preventDefault();
-
-    const formData = methods.getValues();
-    console.log("Form Data from React Hook Form:", formData);
-
-    setLoading(true); // load start
-    const userInfo = await addUser({
-      ...formData,
-      printStatus: false,
-    });
-    setLoading(false); // load ends
-    if (userInfo) {
-      localStorage.setItem("userLink", userInfo.user_link);
-      localStorage.setItem("userCode", userInfo.userCode);
-      router.push(`/action?userCode=${userInfo.userCode}`);
-    } else {
-      console.error("userLink is undefined or not valid.");
+  useEffect(() => {
+    if (imageUrl) {
+      methods.setValue("profilePictureUrl", imageUrl || "");
     }
+    if (coverPhotoUrl) {
+      methods.setValue("coverPhotoUrl", coverPhotoUrl || "");
+    }
+    if (serviceImageUrls.length > 0) {
+      methods.setValue("servicePhotos", serviceImageUrls || []);
+    }
+  }, [coverPhotoUrl, imageUrl, serviceImageUrls]);
+
+  // console.log(methods.getValues());
+
+  const formSubmit = async (data: z.infer<typeof createPortfolioSchema>) => {
+    {
+      /*
+       *  When there's an error during form validation it will not execute
+       *  the rest of the code. It will display to the ui the error messages.
+       *
+       *  I slightly change the zodSchema to handle the optional fields
+       *  because for some reason the z.string().url().optional() combination
+       *  gives an error if the url is ("") an empty string.
+       *
+       *  Also rather than using the onSubmit native method of the form I utilize
+       *  the handleSubmit function of the react-hook-form library and implemented
+       *  based from the documentation, no need for the event.preventDefault(),
+       *  as it was built in within the handleSubmit function.
+       *
+       *  Right now the {data} object is the values submitted from the form.
+       */
+    }
+    console.log("data", data);
+
+    // methods.clearErrors();
+    // const formData = methods.getValues();
+    // console.log("Form Data from React Hook Form:", formData);
+
+    // setLoading(true); // load start
+    // const userInfo = await addUser({
+    //   ...formData,
+    //   printStatus: false,
+    // });
+    // setLoading(false); // load ends
+    // if (userInfo) {
+    //   localStorage.setItem("userLink", userInfo.user_link);
+    //   localStorage.setItem("userCode", userInfo.userCode);
+    //   router.push(`/action?userCode=${userInfo.userCode}`);
+    // } else {
+    //   console.error("userLink is undefined or not valid.");
+    // }
   };
 
   const handlePhotoChange = async (event: ChangeEvent<HTMLInputElement>) => {
@@ -124,7 +156,7 @@ export default function Create() {
   };
 
   return (
-    <FormProvider {...methods}>
+    <Form {...methods}>
       <main className="flex min-h-screen bg-[#1E1E1E] text-white flex-col items-center pt-12 p-6  overflow-x-hidden">
         <Navbar />
         <div className="w-full max-w-sm ">
@@ -140,8 +172,11 @@ export default function Create() {
             />
           </div>
 
-          <form className="space-y-6" onSubmit={handleSubmit}>
-            {/* Cover Photo and Profile Pic Upload Section */}
+          <form
+            className="space-y-6"
+            onSubmit={methods.handleSubmit(formSubmit)}
+          >
+            Cover Photo and Profile Pic Upload Section
             <div className="flex flex-col items-center relative mb-16">
               <div className="w-full h-64">
                 <Cropper
@@ -200,7 +235,11 @@ export default function Create() {
                 </div>
               </div>
             </div>
-
+            <span className="text-sm text-red-500">
+              {imageUrl
+                ? methods.formState.errors.profilePictureUrl?.message ?? ""
+                : "Profile Image Required"}
+            </span>
             {/* Company Information Inputs */}
             <div className="space-y-6 ">
               <CompanyInfoForm control={methods.control} />
@@ -283,6 +322,6 @@ export default function Create() {
           </form>
         </div>
       </main>
-    </FormProvider>
+    </Form>
   );
 }
