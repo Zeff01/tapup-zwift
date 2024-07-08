@@ -68,41 +68,25 @@ export default function Create() {
     },
   });
 
-  const validateForm = (elements: HTMLFormControlsCollection) => {
-    const newErrors: Record<string, string> = {};
-    const emailElement = elements.namedItem("email") as HTMLInputElement;
-    if (emailElement && !emailElement.value.includes("@")) {
-      newErrors.email = 'Email must include an "@" symbol.';
-    }
-    return newErrors;
-  };
-
   const handleSubmit = async (event: FormEvent<HTMLFormElement>) => {
     event.preventDefault();
-    const form = event.currentTarget;
-    console.log("form:", form);
-    const errors = validateForm(form.elements);
 
-    // setLoading(true); // load start
-    // const userInfo = await addUser({
-    //   company: form.company.value,
-    //   position: form.position.value,
-    //   firstName: form.firstName.value,
-    //   lastName: form.lastName.value,
-    //   email: form.email.value,
-    //   phoneNumber: form.number.value,
-    //   image: imageUrl || "",
-    //   printStatus: false,
-    // });
-    // console.log(typeof userInfo, userInfo);
-    // setLoading(false); // load ends
-    // if (userInfo) {
-    //   localStorage.setItem("userLink", userInfo.user_link);
-    //   localStorage.setItem("userCode", userInfo.userCode);
-    //   router.push(`/action?userCode=${userInfo.userCode}`);
-    // } else {
-    //   console.error("userLink is undefined or not valid.");
-    // }
+    const formData = methods.getValues();
+    console.log("Form Data from React Hook Form:", formData);
+
+    setLoading(true); // load start
+    const userInfo = await addUser({
+      ...formData,
+      printStatus: false,
+    });
+    setLoading(false); // load ends
+    if (userInfo) {
+      localStorage.setItem("userLink", userInfo.user_link);
+      localStorage.setItem("userCode", userInfo.userCode);
+      router.push(`/action?userCode=${userInfo.userCode}`);
+    } else {
+      console.error("userLink is undefined or not valid.");
+    }
   };
 
   const handlePhotoChange = async (event: ChangeEvent<HTMLInputElement>) => {
@@ -181,6 +165,7 @@ export default function Create() {
                     </div>
                   }
                 />
+
                 <div className="absolute -bottom-12 left-1/2 transform -translate-x-1/2  ">
                   <Cropper
                     imageUrl={imageUrl}

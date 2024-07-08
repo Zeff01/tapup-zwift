@@ -55,18 +55,20 @@ function centerAspectCrop(
 }
 
 interface CropperProps extends HTMLAttributes<HTMLDivElement> {
-  imageUrl?: string|null;
+  imageUrl?: string | null;
   photo: null | Photo;
-  setImageUrl: Dispatch<SetStateAction<string | null>> | ((imageUrl:string) => void);
-  setPhoto: Dispatch<SetStateAction<Photo | null>> | ((photo:Photo) => void);
+  setImageUrl:
+    | Dispatch<SetStateAction<string | null>>
+    | ((imageUrl: string) => void);
+  setPhoto: Dispatch<SetStateAction<Photo | null>> | ((photo: Photo) => void);
   aspect: number;
   changeImage(img: string): void;
   maxHeight?: number;
   circularCrop?: boolean;
   fallback: ReactNode;
   disablePreview?: boolean;
-  imageClassName?: string;  
-};
+  imageClassName?: string;
+}
 
 export default function Cropper({
   imageUrl,
@@ -78,10 +80,11 @@ export default function Cropper({
   circularCrop = false,
   fallback,
   className,
-  disablePreview=false,
+  disablePreview = false,
   imageClassName,
   ...rest
 }: CropperProps) {
+  console.log("imageUrl:", imageUrl);
   const [imgSrc, setImgSrc] = useState("");
   const previewCanvasRef = useRef<HTMLCanvasElement>(null);
   const imgRef = useRef<HTMLImageElement>(null);
@@ -168,10 +171,10 @@ export default function Cropper({
           });
           setPhoto({ preview: fileAsDataURL, raw: file });
           if (dl_url) setImageUrl(dl_url);
-          toast.success("Image cropped and uploaded.")
+          toast.success("Image cropped and uploaded.");
         } catch (error) {
           console.error(error, "failed to upload image");
-          toast.error("Failed to crop and upload image")
+          toast.error("Failed to crop and upload image");
         } finally {
           setLoading(false);
           toggleModal();
@@ -217,7 +220,13 @@ export default function Cropper({
 
   return (
     <div className="cropper">
-      <div className={cn("relative w-full h-full border border-[#2c2c2c]", className)} {...rest}>
+      <div
+        className={cn(
+          "relative w-full h-full border border-[#2c2c2c]",
+          className
+        )}
+        {...rest}
+      >
         <Input
           type="file"
           accept="image/*"
@@ -226,18 +235,22 @@ export default function Cropper({
           onClick={toggleModal}
           placeholder="cropper"
         />
-          {
-            ((photo?.preview ?? imageUrl) && !disablePreview) ?
-            <Image
+        {(photo?.preview ?? imageUrl) && !disablePreview ? (
+          <Image
             src={photo?.preview ?? imageUrl ?? ""}
             alt="Profile"
-            className={cn(`w-full h-full pointer-events-none ${circularCrop ? "rounded-full" : ""}`, imageClassName)}
+            className={cn(
+              `w-full h-full pointer-events-none ${
+                circularCrop ? "rounded-full" : ""
+              }`,
+              imageClassName
+            )}
             width={500}
             height={500}
-          /> :
-            fallback
-          }
-                      
+          />
+        ) : (
+          fallback
+        )}
       </div>
 
       {createPortal(
