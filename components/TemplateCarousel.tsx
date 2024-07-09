@@ -9,9 +9,10 @@ import {
 } from "@/components/ui/carousel";
 import { Card, CardContent } from "@/components/ui/card";
 import Image from "next/image";
+import { ChosenTemplateType } from "@/app/create/page";
 
 interface Template {
-  id: string;
+  id: ChosenTemplateType;
   name: string;
   imageUrl: string;
   route: string;
@@ -51,8 +52,8 @@ const templates: Template[] = [
 ];
 
 interface TemplateCarouselProps {
-  selectedTemplateId: number;
-  setSelectedTemplateId: (id: number) => void;
+  selectedTemplateId: ChosenTemplateType;
+  setSelectedTemplateId: (id: ChosenTemplateType) => void;
 }
 
 export function TemplateCarousel({

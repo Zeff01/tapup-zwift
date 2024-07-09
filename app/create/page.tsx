@@ -17,6 +17,10 @@ import SocialLinksForm from "@/components/forms/SocialLinkForm";
 import PersonalInfoForm from "@/components/forms/PersonalInfoForm";
 import CompanyInfoForm from "@/components/forms/CompanyInfoForm";
 
+export type ChosenTemplateType = z.infer<
+  typeof createPortfolioSchema
+>["chosenTemplate"];
+
 export default function Create() {
   const [photo, setPhoto] = useState<Photo | null>(null);
   const [imageUrl, setImageUrl] = useState<string | null>(null);
@@ -27,7 +31,8 @@ export default function Create() {
   const [servicePhotos, setServicePhotos] = useState<Photo[]>([]);
   const [serviceImageUrls, setServiceImageUrls] = useState<string[]>([]);
 
-  const [selectedTemplateId, setSelectedTemplateId] = useState("template1");
+  const [selectedTemplateId, setSelectedTemplateId] =
+    useState<ChosenTemplateType>("template1");
 
   const [loading, setLoading] = useState(false);
   const router = useRouter();
@@ -80,7 +85,6 @@ export default function Create() {
     methods.setValue("chosenTemplate", selectedTemplateId);
   }, [coverPhotoUrl, imageUrl, serviceImageUrls, selectedTemplateId, methods]);
 
-  // console.log(methods.getValues());
   console.log(methods.formState.errors);
 
   const formSubmit = async (data: z.infer<typeof createPortfolioSchema>) => {
@@ -220,9 +224,7 @@ export default function Create() {
               </div>
             </div>
             <span className="text-sm text-red-500">
-              {imageUrl
-                ? methods.formState.errors.profilePictureUrl?.message ?? ""
-                : "Profile Image Required"}
+              {methods.formState.errors.profilePictureUrl?.message ?? ""}
             </span>
             {/* Company Information Inputs */}
             <div className="space-y-6 ">

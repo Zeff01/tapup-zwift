@@ -1,4 +1,5 @@
 export type Users = {
+  id?: string;
   coverPhotoUrl?: string;
   profilePictureUrl: string;
   position: string;
