@@ -92,7 +92,7 @@ export function TemplateCarousel({
                     <h3 className="text-sm font-semibold mt-2">
                       {template.name}
                     </h3>
-                    <Link href={`create/template/${template.id}`} passHref>
+                    <Link href={`/create/template/${template.id}`} passHref>
                       <button className="mt-2 bg-green-500 text-white py-1 px-2 text-xs rounded hover:bg-green-600">
                         Preview
                       </button>
