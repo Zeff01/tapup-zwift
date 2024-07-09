@@ -14,7 +14,7 @@ import { uploadImage } from "@/src/lib/firebase/store/users.action";
 import { useRouter } from "next/navigation";
 import Navbar from "@/components/ui/Navbar";
 import { LoaderCircle } from "lucide-react";
-import { inputs } from "@/src/lib/data";
+// import { inputs } from "@/src/lib/data";
 
 export default function Update({ params }: { params: { id: string } }) {
   const { id } = params;
@@ -35,7 +35,7 @@ export default function Update({ params }: { params: { id: string } }) {
       if (!getUser) return;
 
       setUser(getUser);
-      setImageUrl(getUser.image);
+      // setImageUrl(getUser.image);
       setIsLoading(false);
     };
     getUser();
@@ -71,8 +71,8 @@ export default function Update({ params }: { params: { id: string } }) {
       firstName: form.firstName.value,
       lastName: form.lastName.value,
       email: form.email.value,
-      phoneNumber: form.phoneNumber.value,
-      image: imageUrl || "",
+      // phoneNumber: form.phoneNumber.value,
+      // image: imageUrl || "",
       printStatus: false,
     });
 
@@ -157,6 +157,17 @@ export default function Update({ params }: { params: { id: string } }) {
                 aspect={1}
                 changeImage={(i) => console.log(i)}
                 circularCrop
+                fallback={
+                  <div className="w-full aspect-[16/9] flex flex-col items-center justify-center pb-4 gap-y-4 bg-[#222224]">
+                    <Image
+                      src={"/assets/plus.svg"}
+                      width={50}
+                      height={50}
+                      alt="plus"
+                    />
+                    <p className="text-[#767676]">Upload a Cover Photo</p>
+                  </div>
+                }
               />
             ) : (
               <div className="relative">
@@ -200,7 +211,7 @@ export default function Update({ params }: { params: { id: string } }) {
               </div>
             )}
           </div>
-          {inputs.map((field) =>
+          {/* {inputs.map((field) =>
             user ? (
               <div key={field.name}>
                 <label className="block">
@@ -223,21 +234,20 @@ export default function Update({ params }: { params: { id: string } }) {
                 <Skeleton className="w-full h-[47px] rounded-md" />
               </div>
             )
-          )}
+          )} */}
 
           <button
             type="submit"
             disabled={isLoading}
             className="w-full px-4 py-4 bg-[#6150EB] disabled:bg-[#6150EB]/50 disabled:cursor-not-allowed hover:bg-[#6250ebc0] rounded-md font-bold"
           >
-            {
-              isLoading ?
+            {isLoading ? (
               <span className="w-full flex items-center justify-center">
                 <LoaderCircle className="animate-spin" />
-              </span> :
+              </span>
+            ) : (
               "Update"
-            }
-            
+            )}
           </button>
         </form>
       </div>

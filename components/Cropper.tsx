@@ -84,7 +84,6 @@ export default function Cropper({
   imageClassName,
   ...rest
 }: CropperProps) {
-  console.log("imageUrl:", imageUrl);
   const [imgSrc, setImgSrc] = useState("");
   const previewCanvasRef = useRef<HTMLCanvasElement>(null);
   const imgRef = useRef<HTMLImageElement>(null);

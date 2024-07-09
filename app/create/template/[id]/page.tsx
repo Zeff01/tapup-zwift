@@ -9,8 +9,12 @@ import Template4 from "@/components/templates/Template4";
 import Template5 from "@/components/templates/Template5";
 // Continue importing all templates...
 
+interface templateType {
+  [key: string]: any;
+}
+
 // Mapping of templates
-const templates = {
+const templates: templateType = {
   "1": Template1,
   "2": Template2,
   "3": Template3,
@@ -21,7 +25,7 @@ const templates = {
 
 function TemplatePage() {
   const params = useParams();
-  const TemplateComponent = templates[params.id];
+  const TemplateComponent = templates[`${params.id}`];
 
   return (
     <main className=" min-h-screen bg-black overflow-x-hidden flex justify-center items-center mx-auto ">

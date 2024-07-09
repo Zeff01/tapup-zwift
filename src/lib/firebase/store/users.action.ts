@@ -30,6 +30,7 @@ export const addUser = async (
 
     const snapshot = await getCountFromServer(userCollection);
     const totalUsers = snapshot.data().count;
+
     let userCode = "",
       user_link = "";
     if (totalUsers >= 0) {
@@ -55,6 +56,7 @@ export const addUser = async (
       user_link,
     };
     revalidateUserPath("/users");
+
     return userCodeLink;
   } catch (error) {
     console.error("Error adding document: ", error);

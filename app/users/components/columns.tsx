@@ -51,12 +51,12 @@ export const columns: ColumnDef<Users>[] = [
     header: () => <div className="text-center ">Actions</div>,
     cell: ({ row }) => {
       const link = row.original;
-      console.log("link:", link);
-      if (link.id === "LanXgtZFYp7je3p9imBE") console.log(link);
+      // console.log("link:", link);
+      // if (link.userCode === "LanXgtZFYp7je3p9imBE") console.log(link);
 
       return (
         <div className="flex gap-2 justify-center flex-nowrap ">
-          <Link href={`/update/${link.id}`}>
+          {/* <Link href={`/update/${link.id}`}>
             <Button
               onClick={() => {}}
               className="h-8 w-8 rounded-full"
@@ -65,8 +65,7 @@ export const columns: ColumnDef<Users>[] = [
             >
               <Edit size={15} />
             </Button>
-          </Link>
-
+          </Link> */}
           <Button
             variant="ghost"
             size="icon"
