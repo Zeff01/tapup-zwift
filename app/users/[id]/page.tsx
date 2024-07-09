@@ -12,6 +12,7 @@ import BounceLoader from "react-spinners/BounceLoader";
 const UserPage = ({ params }: { params: { id: string } }) => {
   const { id } = params;
   const [userData, setUserData] = useState<Users | null>(null);
+  console.log("userData:zzz", userData);
   const [user, setUser] = useState<string | undefined>();
   const [imageLoaded, setImageLoaded] = useState(false);
 
