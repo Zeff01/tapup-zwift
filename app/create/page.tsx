@@ -102,23 +102,20 @@ export default function Create() {
     }
     console.log("data", data);
 
-    // methods.clearErrors();
-    // const formData = methods.getValues();
-    // console.log("Form Data from React Hook Form:", formData);
-
-    // setLoading(true); // load start
-    // const userInfo = await addUser({
-    //   ...formData,
-    //   printStatus: false,
-    // });
-    // setLoading(false); // load ends
-    // if (userInfo) {
-    //   localStorage.setItem("userLink", userInfo.user_link);
-    //   localStorage.setItem("userCode", userInfo.userCode);
-    //   router.push(`/action?userCode=${userInfo.userCode}`);
-    // } else {
-    //   console.error("userLink is undefined or not valid.");
-    // }
+    setLoading(true); // load start
+    const userInfo = await addUser({
+      ...data,
+      printStatus: false,
+    });
+    setLoading(false); // load ends
+    methods.reset();
+    if (userInfo) {
+      localStorage.setItem("userLink", userInfo.user_link);
+      localStorage.setItem("userCode", userInfo.userCode);
+      router.push(`/action?userCode=${userInfo.userCode}`);
+    } else {
+      console.error("userLink is undefined or not valid.");
+    }
   };
 
   const handlePhotoChange = async (event: ChangeEvent<HTMLInputElement>) => {
