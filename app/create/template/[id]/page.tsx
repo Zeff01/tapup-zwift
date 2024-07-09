@@ -15,11 +15,11 @@ interface templateType {
 
 // Mapping of templates
 const templates: templateType = {
-  "1": Template1,
-  "2": Template2,
-  "3": Template3,
-  "4": Template4,
-  "5": Template5,
+  template1: Template1,
+  template2: Template2,
+  template3: Template3,
+  template4: Template4,
+  template5: Template5,
   // Continue mapping all templates...
 };
 

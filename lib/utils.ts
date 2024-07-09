@@ -23,7 +23,12 @@ export const createPortfolioSchema = z.object({
       message: "Invalid Coverphoto URL",
     })
     .optional(),
-  profilePictureUrl: z.string().url(), // Profile picture URL is required
+  profilePictureUrl: z
+    .string()
+    .min(3, "Profile Picture is required")
+    .refine((value) => value === "" || /^https?:\/\/[^ "]+$/.test(value), {
+      message: "Invalid Coverphoto URL",
+    }), // Profile picture URL is required
   position: z.string().min(3, "Position is required"),
   company: z.string().min(3, "Company name is required"),
   companyBackground: z
@@ -35,7 +40,13 @@ export const createPortfolioSchema = z.object({
     .min(3, "Service description is required")
     .optional(),
   servicePhotos: z.array(z.string().url()).optional(),
-  chosenTemplate: z.enum(["template1", "template2", "template3"]),
+  chosenTemplate: z.enum([
+    "template1",
+    "template2",
+    "template3",
+    "template4",
+    "template5",
+  ]),
   firstName: z.string().min(3, "First name must be at least 3 characters"),
   lastName: z.string().min(3, "Last name must be at least 3 characters"),
   email: z.string().email("Invalid email address"),

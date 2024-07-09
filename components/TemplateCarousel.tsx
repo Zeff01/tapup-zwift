@@ -9,9 +9,10 @@ import {
 } from "@/components/ui/carousel";
 import { Card, CardContent } from "@/components/ui/card";
 import Image from "next/image";
+import { ChosenTemplateType } from "@/app/create/page";
 
 interface Template {
-  id: string;
+  id: ChosenTemplateType;
   name: string;
   imageUrl: string;
   route: string;
@@ -51,8 +52,8 @@ const templates: Template[] = [
 ];
 
 interface TemplateCarouselProps {
-  selectedTemplateId: number;
-  setSelectedTemplateId: (id: number) => void;
+  selectedTemplateId: ChosenTemplateType;
+  setSelectedTemplateId: (id: ChosenTemplateType) => void;
 }
 
 export function TemplateCarousel({
@@ -91,7 +92,7 @@ export function TemplateCarousel({
                     <h3 className="text-sm font-semibold mt-2">
                       {template.name}
                     </h3>
-                    <Link href={`create/template/${template.id}`} passHref>
+                    <Link href={`/create/template/${template.id}`} passHref>
                       <button className="mt-2 bg-green-500 text-white py-1 px-2 text-xs rounded hover:bg-green-600">
                         Preview
                       </button>

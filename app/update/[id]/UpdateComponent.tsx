@@ -2,10 +2,13 @@
 import { useState, ChangeEvent, useEffect } from "react";
 import Image from "next/image";
 import { useRouter } from "next/navigation";
-import { addUser, uploadImage } from "@/src/lib/firebase/store/users.action";
-import { Photo } from "@/src/lib/firebase/store/users.type";
+import {
+  uploadImage,
+  updateUserById,
+} from "@/src/lib/firebase/store/users.action";
+import { Photo, Users } from "@/src/lib/firebase/store/users.type";
 import { LoaderCircle } from "lucide-react";
-import Cropper from "../../components/Cropper";
+import Cropper from "@/components/Cropper";
 import Navbar from "@/components/ui/Navbar";
 import { useForm } from "react-hook-form";
 import { Form } from "@/components/ui/form";
@@ -16,23 +19,31 @@ import { TemplateCarousel } from "@/components/TemplateCarousel";
 import SocialLinksForm from "@/components/forms/SocialLinkForm";
 import PersonalInfoForm from "@/components/forms/PersonalInfoForm";
 import CompanyInfoForm from "@/components/forms/CompanyInfoForm";
+import { toast } from "react-toastify";
 
 export type ChosenTemplateType = z.infer<
   typeof createPortfolioSchema
 >["chosenTemplate"];
 
-export default function Create() {
+export default function UpdateComponent({ userData }: { userData: Users }) {
+  console.log(userData);
   const [photo, setPhoto] = useState<Photo | null>(null);
-  const [imageUrl, setImageUrl] = useState<string | null>(null);
+  const [imageUrl, setImageUrl] = useState<string | null>(
+    userData.profilePictureUrl || null
+  );
 
   const [coverPhoto, setCoverPhoto] = useState<Photo | null>(null);
-  const [coverPhotoUrl, setCoverPhotoUrl] = useState<string | null>(null);
+  const [coverPhotoUrl, setCoverPhotoUrl] = useState<string | null>(
+    userData.coverPhotoUrl || null
+  );
 
   const [servicePhotos, setServicePhotos] = useState<Photo[]>([]);
-  const [serviceImageUrls, setServiceImageUrls] = useState<string[]>([]);
+  const [serviceImageUrls, setServiceImageUrls] = useState<string[]>(
+    userData.servicePhotos || []
+  );
 
   const [selectedTemplateId, setSelectedTemplateId] =
-    useState<ChosenTemplateType>("template1");
+    useState<ChosenTemplateType>(userData.chosenTemplate as ChosenTemplateType);
 
   const [loading, setLoading] = useState(false);
   const router = useRouter();
@@ -49,26 +60,27 @@ export default function Create() {
   const methods = useForm<z.infer<typeof createPortfolioSchema>>({
     resolver: zodResolver(createPortfolioSchema),
     defaultValues: {
-      coverPhotoUrl: "",
-      profilePictureUrl: "",
-      position: "",
-      company: "",
-      companyBackground: "",
-      serviceDescription: "",
-      servicePhotos: [],
-      chosenTemplate: "template1",
-      firstName: "",
-      lastName: "",
-      email: "",
-      number: "",
-      facebookUrl: "",
-      youtubeUrl: "",
-      instagramUrl: "",
-      twitterUrl: "",
-      linkedinUrl: "",
-      whatsappUrl: "",
-      skypeUrl: "",
-      websiteUrl: "",
+      coverPhotoUrl: userData.coverPhotoUrl || "",
+      profilePictureUrl: userData.profilePictureUrl || "",
+      position: userData.position || "",
+      company: userData.company || "",
+      companyBackground: userData.companyBackground || "",
+      serviceDescription: userData.serviceDescription || "",
+      servicePhotos: userData.servicePhotos || [],
+      chosenTemplate:
+        (userData.chosenTemplate as ChosenTemplateType) || "template1",
+      firstName: userData.firstName || "",
+      lastName: userData.lastName || "",
+      email: userData.email || "",
+      number: userData.number || "",
+      facebookUrl: userData.facebookUrl || "",
+      youtubeUrl: userData.youtubeUrl || "",
+      instagramUrl: userData.instagramUrl || "",
+      twitterUrl: userData.twitterUrl || "",
+      linkedinUrl: userData.linkedinUrl || "",
+      whatsappUrl: userData.whatsappUrl || "",
+      skypeUrl: userData.skypeUrl || "",
+      websiteUrl: userData.websiteUrl || "",
     },
   });
 
@@ -88,24 +100,18 @@ export default function Create() {
   console.log(methods.formState.errors);
 
   const formSubmit = async (data: z.infer<typeof createPortfolioSchema>) => {
-    console.log("data", data);
-    console.log("Form submit called", data);
     setLoading(true); // load start
 
-    console.log("About to call addUser with data:", data);
-    const userInfo = await addUser({
+    const userInfo = await updateUserById(userData.id!, {
       ...data,
-      printStatus: false,
     });
     console.log("addUser response:", userInfo);
     setLoading(false); // load ends
     methods.reset();
     if (userInfo) {
-      localStorage.setItem("userLink", userInfo.user_link);
-      localStorage.setItem("userCode", userInfo.userCode);
-      router.push(`/action?userCode=${userInfo.userCode}`);
+      toast.success(userInfo.message);
     } else {
-      console.error("userLink is undefined or not valid.");
+      toast.error("Something went wrong");
     }
   };
 
@@ -305,7 +311,7 @@ export default function Create() {
                   <LoaderCircle className="animate-spin" />
                 </span>
               ) : (
-                "Submit"
+                "Update"
               )}
             </button>
           </form>
