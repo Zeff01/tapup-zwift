@@ -28,7 +28,6 @@ export default function Create() {
   const [serviceImageUrls, setServiceImageUrls] = useState<string[]>([]);
 
   const [selectedTemplateId, setSelectedTemplateId] = useState("template1");
-  console.log("selectedTemplateId:", selectedTemplateId);
 
   const [loading, setLoading] = useState(false);
   const router = useRouter();
@@ -78,7 +77,7 @@ export default function Create() {
     if (serviceImageUrls.length > 0) {
       methods.setValue("servicePhotos", serviceImageUrls || []);
     }
-    methods.setValue("chosenTemplate", `${selectedTemplateId}`);
+    methods.setValue("chosenTemplate", selectedTemplateId);
   }, [coverPhotoUrl, imageUrl, serviceImageUrls, selectedTemplateId, methods]);
 
   // console.log(methods.getValues());

@@ -8,207 +8,58 @@ import Link from "next/link";
 import CodibilityLogo from "@/components/CodibilityLogo";
 import { getUserDataByUserCode } from "@/src/lib/firebase/store/users.action";
 import BounceLoader from "react-spinners/BounceLoader";
+// Assume that you have different components for each template:
+import Template1 from "@/components/templates/Template1";
+import Template2 from "@/components/templates/Template2";
+import Template3 from "@/components/templates/Template3";
+import Template4 from "@/components/templates/Template4";
+import Template5 from "@/components/templates/Template5";
+import Navbar from "@/components/ui/Navbar";
+import LoadingLogo from "@/components/LoadingLogo";
 
 const UserPage = ({ params }: { params: { id: string } }) => {
   const { id } = params;
+
   const [userData, setUserData] = useState<Users | null>(null);
-  console.log("userData:zzz", userData);
-  const [user, setUser] = useState<string | undefined>();
-  const [imageLoaded, setImageLoaded] = useState(false);
+  const [isLoading, setIsLoading] = useState(true);
 
   useEffect(() => {
-    const storedUser = localStorage.getItem("userCode");
-    if (storedUser) {
-      setUser(storedUser);
-      return;
-    }
-    setUser(id);
+    const fetchData = async () => {
+      const data = await getUserDataByUserCode(id);
+      if (data) {
+        setUserData(data);
+      }
+      setIsLoading(false);
+    };
+    fetchData();
   }, [id]);
 
-  const fetchUserData = async () => {
-    try {
-      console.log("Fetching user data...");
-      const response = await getUserDataByUserCode(id);
-      if (!response) {
-        throw new Error("Invalid user code.");
-      }
-      console.log("User data: ", response);
-      setUserData(response);
-    } catch (error) {
-      console.error("Error fetching user data: ", error);
-      // when user data is invalid
-      // setUserData({
-      //   // id: "",
-      //   company: "Unknown company",
-      //   position: "Unknown position",
-      //   firstName: "Invalid",
-      //   lastName: "Id",
-      //   email: "unknown email",
-      //   number: "+639*********",
-      //   image: "",
-      //   printStatus: false,
-      //   userCode: "",
-      //   user_link: ""
-      // })
+  if (isLoading) {
+    return <LoadingLogo />;
+  }
+
+  if (!userData) {
+    return <div>User not found.</div>;
+  }
+
+  const renderTemplate = () => {
+    switch (userData.chosenTemplate) {
+      case "template1":
+        return <Template1 {...userData} />;
+      case "template2":
+        return <Template2 {...userData} />;
+      case "template3":
+        return <Template3 {...userData} />;
+      case "template4":
+        return <Template4 {...userData} />;
+      case "template5":
+        return <Template5 {...userData} />;
+      default:
+        return <div>No template selected.</div>;
     }
   };
 
-  useEffect(() => {
-    if (user) {
-      fetchUserData();
-    }
-  }, [user]);
-
-  const downloadVCard = () => {
-    if (!userData) return;
-
-    // Manually create vCard data
-    let vCardString = "BEGIN:VCARD\n";
-    vCardString += "VERSION:3.0\n";
-    vCardString += `FN:${userData.firstName} ${userData.lastName}\n`;
-    vCardString += `N:${userData.lastName};${userData.firstName};;;\n`;
-    vCardString += `ORG:${userData.company}\n`;
-    vCardString += `TITLE:${userData.position}\n`;
-    vCardString += `TEL;TYPE=CELL:${userData.number}\n`;
-    vCardString += `EMAIL:${userData.email}\n`;
-    if (userData.profilePictureUrl) {
-      vCardString += `PHOTO;TYPE=JPEG;ENCODING=b:${userData.profilePictureUrl}\n`;
-    }
-    vCardString += "END:VCARD";
-
-    // Create a Blob from the vCard String
-    const blob = new Blob([vCardString], { type: "text/vcard;charset=utf-8" });
-    const link = document.createElement("a");
-    link.href = window.URL.createObjectURL(blob);
-    link.download = "contact.vcf";
-    document.body.appendChild(link);
-    link.click();
-    document.body.removeChild(link);
-  };
-
-  return (
-    <>
-      <main className="flex min-h-screen bg-[#1E1E1E] text-white flex-col items-center pt-12 p-6 ">
-        <div className="w-full max-w-sm">
-          <div className="text-center mb-6 ">
-            <Link
-              href={process.env.NEXT_PUBLIC_ZWIFT_TECH_LINK ?? ""}
-              target="_blank"
-            >
-              <Image
-                src="/assets/zwift-logo.png"
-                alt="Company Logo"
-                width={150}
-                height={150}
-                priority
-                className="mx-auto mb-12"
-              />
-            </Link>
-            <h2 className="text-lg font-semibold mt-2">Personal Portfolio</h2>
-          </div>
-          {userData ? (
-            <div className="text-center mb-6">
-              {userData.profilePictureUrl ? (
-                <div className="relative w-32 h-32 rounded-full mx-auto flex items-center justify-center">
-                  <Image
-                    src={userData.profilePictureUrl}
-                    alt="Profile"
-                    className="w-32 h-32 rounded-full z-50 absolute top-0 left-0"
-                    width={128}
-                    height={128}
-                    onLoad={() => setImageLoaded(true)}
-                  />
-                  <BounceLoader
-                    size={80}
-                    color="#6150EB"
-                    className={`${imageLoaded ? "opacity-0" : "opacity-1"}`}
-                  />
-                </div>
-              ) : (
-                <CircleUser size={120} className="mx-auto text-[#767676]" />
-              )}
-
-              <h1 className="text-xl font-semibold mt-4">
-                {userData.firstName} {userData.lastName}
-              </h1>
-              <h1 className="text-base sm:text-lg font-semibold text-[#767676]">
-                {userData.email}
-              </h1>
-
-              <div className="flex flex-col  mx-auto my-8 ">
-                <div className="mx-auto flex flex-col gap-8">
-                  <FieldwithLogo
-                    imgUrl={"/assets/phoneLogo.png"}
-                    value={userData.number}
-                  />
-                  <FieldwithLogo
-                    imgUrl={"/assets/companyLogo.png"}
-                    value={userData.company}
-                  />
-                  <FieldwithLogo
-                    imgUrl={"/assets/positionLogo.png"}
-                    value={userData.position}
-                  />
-                </div>
-              </div>
-
-              <div className="mt-8 flex flex-col items-center justify-center">
-                <button
-                  className="w-full px-4 py-4 bg-[#6150EB] hover:bg-[#6250ebc0] rounded-md font-bold mt-8 disabled:opacity-50 disabled:cursor-not-allowed"
-                  disabled={!userData || !userData.userCode}
-                  onClick={downloadVCard}
-                >
-                  Save Contact
-                </button>
-              </div>
-            </div>
-          ) : (
-            <div className="bg-custom-black max-w-sm max-h-[596px]">
-              <div className="text-center mb-6">
-                <CircleUser size={120} className="mx-auto text-[#767676]" />
-                <h1 className="w-fit text-transparent text-xl font-semibold mt-4 bg-[#767676] rounded-xl mx-auto mb-[6px]">
-                  User Loading...
-                </h1>
-                <h1 className="w-fit text-base sm:text-lg text-transparent font-semibold bg-[#767676] rounded-xl mx-auto">
-                  Email Loading...
-                </h1>
-
-                <div className="flex flex-col my-8 ">
-                  <div className="mx-auto flex flex-col gap-8">
-                    <FieldwithLogo
-                      imgUrl={"/assets/phoneLogo.png"}
-                      value={"+639*********"}
-                    />
-                    <FieldwithLogo
-                      imgUrl={"/assets/companyLogo.png"}
-                      value={".........."}
-                    />
-                    <FieldwithLogo
-                      imgUrl={"/assets/positionLogo.png"}
-                      value={".........."}
-                    />
-                  </div>
-                </div>
-
-                <div className="mt-8 flex flex-col items-center justify-center">
-                  <button
-                    className="w-full px-4 py-4 bg-[#6150EB] hover:bg-[#6250ebc0] rounded-md font-bold mt-8 disabled:opacity-50 disabled:cursor-not-allowed"
-                    disabled
-                  >
-                    Save Contact
-                  </button>
-                </div>
-              </div>
-            </div>
-          )}
-        </div>
-        <div className="flex flex-col items-start pt-16 w-fit self-end ">
-          <p className="text-[10px]">partnered by</p>
-          <CodibilityLogo />
-        </div>
-      </main>
-    </>
-  );
+  return <div>{renderTemplate()}</div>;
 };
 
 export default UserPage;
