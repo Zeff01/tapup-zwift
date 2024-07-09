@@ -28,6 +28,7 @@ export default function Create() {
   const [serviceImageUrls, setServiceImageUrls] = useState<string[]>([]);
 
   const [selectedTemplateId, setSelectedTemplateId] = useState("template1");
+  console.log("selectedTemplateId:", selectedTemplateId);
 
   const [loading, setLoading] = useState(false);
   const router = useRouter();
@@ -77,36 +78,23 @@ export default function Create() {
     if (serviceImageUrls.length > 0) {
       methods.setValue("servicePhotos", serviceImageUrls || []);
     }
-    methods.setValue("chosenTemplate", `template${selectedTemplateId}`);
+    methods.setValue("chosenTemplate", `${selectedTemplateId}`);
   }, [coverPhotoUrl, imageUrl, serviceImageUrls, selectedTemplateId, methods]);
 
   // console.log(methods.getValues());
+  console.log(methods.formState.errors);
 
   const formSubmit = async (data: z.infer<typeof createPortfolioSchema>) => {
-    {
-      /*
-       *  When there's an error during form validation it will not execute
-       *  the rest of the code. It will display to the ui the error messages.
-       *
-       *  I slightly change the zodSchema to handle the optional fields
-       *  because for some reason the z.string().url().optional() combination
-       *  gives an error if the url is ("") an empty string.
-       *
-       *  Also rather than using the onSubmit native method of the form I utilize
-       *  the handleSubmit function of the react-hook-form library and implemented
-       *  based from the documentation, no need for the event.preventDefault(),
-       *  as it was built in within the handleSubmit function.
-       *
-       *  Right now the {data} object is the values submitted from the form.
-       */
-    }
     console.log("data", data);
-
+    console.log("Form submit called", data);
     setLoading(true); // load start
+
+    console.log("About to call addUser with data:", data);
     const userInfo = await addUser({
       ...data,
       printStatus: false,
     });
+    console.log("addUser response:", userInfo);
     setLoading(false); // load ends
     methods.reset();
     if (userInfo) {

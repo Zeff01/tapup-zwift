@@ -49,7 +49,7 @@ export const createPortfolioSchema = z.object({
   coverPhotoUrl: z
     .string()
     .refine((value) => value === "" || /^https?:\/\/[^ "]+$/.test(value), {
-      message: "Invalid URL",
+      message: "Invalid Coverphoto URL",
     })
     .optional(),
   profilePictureUrl: z.string().url(), // Profile picture URL is required
