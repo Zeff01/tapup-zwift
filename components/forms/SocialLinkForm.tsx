@@ -7,7 +7,7 @@ interface SocialLinksFormProps {
 
 const SocialLinksForm: React.FC<SocialLinksFormProps> = ({ control }) => {
   return (
-    <div className="border-2 border-red-500">
+    <div>
       <h1 className="text-lg font-semibold mb-6">Social Links</h1>
       <CustomInput
         control={control}

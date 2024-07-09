@@ -7,7 +7,7 @@ interface PersonalInfoFormProps {
 
 const PersonalInfoForm: React.FC<PersonalInfoFormProps> = ({ control }) => {
   return (
-    <div className="border-2 border-blue-500">
+    <div>
       <h1 className="text-lg font-semibold mb-6">Personal Information</h1>
       <CustomInput
         control={control}

@@ -1,20 +1,17 @@
 "use client";
-import { useState, FormEvent, ChangeEvent, useEffect } from "react";
+import { useState, ChangeEvent, useEffect } from "react";
 import Image from "next/image";
 import { useRouter } from "next/navigation";
 import { addUser, uploadImage } from "@/src/lib/firebase/store/users.action";
 import { Photo } from "@/src/lib/firebase/store/users.type";
 import { LoaderCircle } from "lucide-react";
 import Cropper from "../../components/Cropper";
-import { Switch } from "@/components/ui/switch";
 import Navbar from "@/components/ui/Navbar";
-import CustomInput from "@/components/CustomInput";
-import { useForm, FormProvider } from "react-hook-form";
+import { useForm } from "react-hook-form";
 import { Form } from "@/components/ui/form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { z } from "zod";
 import { createPortfolioSchema } from "@/lib/utils";
-import CustomTextArea from "@/components/CustomTextArea";
 import { TemplateCarousel } from "@/components/TemplateCarousel";
 import SocialLinksForm from "@/components/forms/SocialLinkForm";
 import PersonalInfoForm from "@/components/forms/PersonalInfoForm";
@@ -29,6 +26,8 @@ export default function Create() {
 
   const [servicePhotos, setServicePhotos] = useState<Photo[]>([]);
   const [serviceImageUrls, setServiceImageUrls] = useState<string[]>([]);
+
+  const [selectedTemplateId, setSelectedTemplateId] = useState("template1");
 
   const [loading, setLoading] = useState(false);
   const router = useRouter();
@@ -78,7 +77,8 @@ export default function Create() {
     if (serviceImageUrls.length > 0) {
       methods.setValue("servicePhotos", serviceImageUrls || []);
     }
-  }, [coverPhotoUrl, imageUrl, serviceImageUrls]);
+    methods.setValue("chosenTemplate", `template${selectedTemplateId}`);
+  }, [coverPhotoUrl, imageUrl, serviceImageUrls, selectedTemplateId, methods]);
 
   // console.log(methods.getValues());
 
@@ -295,7 +295,10 @@ export default function Create() {
               </div>
 
               {/* //TODO: Choose Templates */}
-              <TemplateCarousel />
+              <TemplateCarousel
+                selectedTemplateId={selectedTemplateId}
+                setSelectedTemplateId={setSelectedTemplateId}
+              />
 
               {/* Personal Information Inputs */}
               <PersonalInfoForm control={methods.control} />
