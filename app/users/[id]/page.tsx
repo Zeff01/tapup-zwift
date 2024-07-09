@@ -1,20 +1,15 @@
 "use client";
 import { useEffect, useState } from "react";
-import Image from "next/image";
 import { Users } from "@/src/lib/firebase/store/users.type";
-import FieldwithLogo from "@/components/FieldwithLogo";
-import { CircleUser } from "lucide-react";
-import Link from "next/link";
-import CodibilityLogo from "@/components/CodibilityLogo";
+
 import { getUserDataByUserCode } from "@/src/lib/firebase/store/users.action";
-import BounceLoader from "react-spinners/BounceLoader";
+
 // Assume that you have different components for each template:
 import Template1 from "@/components/templates/Template1";
 import Template2 from "@/components/templates/Template2";
 import Template3 from "@/components/templates/Template3";
 import Template4 from "@/components/templates/Template4";
 import Template5 from "@/components/templates/Template5";
-import Navbar from "@/components/ui/Navbar";
 import LoadingLogo from "@/components/LoadingLogo";
 
 const UserPage = ({ params }: { params: { id: string } }) => {
