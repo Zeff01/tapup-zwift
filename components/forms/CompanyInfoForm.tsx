@@ -8,7 +8,7 @@ interface CompanyInfoFormProps {
 
 const CompanyInfoForm: React.FC<CompanyInfoFormProps> = ({ control }) => {
   return (
-    <div className="border-2 border-violet-500">
+    <div className="space-y-4">
       <h1 className="text-lg font-semibold mb-6">Company Information</h1>
       <CustomInput
         control={control}
@@ -36,6 +36,7 @@ const CompanyInfoForm: React.FC<CompanyInfoFormProps> = ({ control }) => {
         name="serviceDescription"
         label="Service Description"
         placeholder="Describe the services you offer"
+        required={true}
       />
     </div>
   );

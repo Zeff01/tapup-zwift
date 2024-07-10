@@ -19,16 +19,26 @@ export const createUserLink = (userCode: string) => {
 export const createPortfolioSchema = z.object({
   coverPhotoUrl: z
     .string()
-    .refine((value) => value === "" || /^https?:\/\/[^ "]+$/.test(value), {
-      message: "Invalid Coverphoto URL",
-    })
+    .refine(
+      (value) =>
+        value === "" ||
+        /^\b(?:https?:\/\/)?(?:www\.)?[^ "]+\.[a-zA-Z]{2,}\b/.test(value),
+      {
+        message: "Invalid Coverphoto URL",
+      }
+    )
     .optional(),
   profilePictureUrl: z
     .string()
     .min(3, "Profile Picture is required")
-    .refine((value) => value === "" || /^https?:\/\/[^ "]+$/.test(value), {
-      message: "Invalid Coverphoto URL",
-    }), // Profile picture URL is required
+    .refine(
+      (value) =>
+        value === "" ||
+        /^\b(?:https?:\/\/)?(?:www\.)?[^ "]+\.[a-zA-Z]{2,}\b/.test(value),
+      {
+        message: "Invalid Coverphoto URL",
+      }
+    ), // Profile picture URL is required
   position: z.string().min(3, "Position is required"),
   company: z.string().min(3, "Company name is required"),
   companyBackground: z
@@ -53,51 +63,71 @@ export const createPortfolioSchema = z.object({
   number: z.string().min(10, "Phone number must be at least 10 digits"),
   facebookUrl: z
     .string()
-    .refine((value) => value === "" || /^https?:\/\/[^ "]+$/.test(value), {
-      message: "Invalid URL",
-      // specify the field path for error
-    })
+    .refine(
+      (value) =>
+        value === "" ||
+        /^\b(?:https?:\/\/)?(?:www\.)?[^ "]+\.[a-zA-Z]{2,}\b/.test(value),
+      {
+        message: "Invalid URL",
+        // specify the field path for error
+      }
+    )
     .optional(),
   youtubeUrl: z
     .string()
-    .refine((value) => value === "" || /^https?:\/\/[^ "]+$/.test(value), {
-      message: "Invalid URL",
-    })
+    .refine(
+      (value) =>
+        value === "" ||
+        /^\b(?:https?:\/\/)?(?:www\.)?[^ "]+\.[a-zA-Z]{2,}\b/.test(value),
+      {
+        message: "Invalid URL",
+      }
+    )
     .optional(),
   instagramUrl: z
     .string()
-    .refine((value) => value === "" || /^https?:\/\/[^ "]+$/.test(value), {
-      message: "Invalid URL",
-    })
+    .refine(
+      (value) =>
+        value === "" ||
+        /^\b(?:https?:\/\/)?(?:www\.)?[^ "]+\.[a-zA-Z]{2,}\b/.test(value),
+      {
+        message: "Invalid URL",
+      }
+    )
     .optional(),
   twitterUrl: z
     .string()
-    .refine((value) => value === "" || /^https?:\/\/[^ "]+$/.test(value), {
-      message: "Invalid URL",
-    })
+    .refine(
+      (value) =>
+        value === "" ||
+        /^\b(?:https?:\/\/)?(?:www\.)?[^ "]+\.[a-zA-Z]{2,}\b/.test(value),
+      {
+        message: "Invalid URL",
+      }
+    )
     .optional(),
   linkedinUrl: z
     .string()
-    .refine((value) => value === "" || /^https?:\/\/[^ "]+$/.test(value), {
-      message: "Invalid URL",
-    })
+    .refine(
+      (value) =>
+        value === "" ||
+        /^\b(?:https?:\/\/)?(?:www\.)?[^ "]+\.[a-zA-Z]{2,}\b/.test(value),
+      {
+        message: "Invalid URL",
+      }
+    )
     .optional(),
-  whatsappUrl: z
-    .string()
-    .refine((value) => value === "" || /^https?:\/\/[^ "]+$/.test(value), {
-      message: "Invalid URL",
-    })
-    .optional(),
-  skypeUrl: z
-    .string()
-    .refine((value) => value === "" || /^https?:\/\/[^ "]+$/.test(value), {
-      message: "Invalid URL",
-    })
-    .optional(),
+  whatsappUrl: z.string().optional(),
+  skypeUrl: z.string().optional(),
   websiteUrl: z
     .string()
-    .refine((value) => value === "" || /^https?:\/\/[^ "]+$/.test(value), {
-      message: "Invalid URL",
-    })
+    .refine(
+      (value) =>
+        value === "" ||
+        /^\b(?:https?:\/\/)?(?:www\.)?[^ "]+\.[a-zA-Z]{2,}\b/.test(value),
+      {
+        message: "Invalid URL",
+      }
+    )
     .optional(),
 });

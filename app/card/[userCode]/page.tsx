@@ -61,7 +61,6 @@ export default function Card() {
   };
 
   useEffect(() => {
-    console.log("card effect");
     if (!userCode) return;
     userDataHandler();
   }, []);

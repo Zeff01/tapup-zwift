@@ -169,6 +169,7 @@ export default function Cropper({
             raw: file,
           });
           setPhoto({ preview: fileAsDataURL, raw: file });
+          console.log(dl_url);
           if (dl_url) setImageUrl(dl_url);
           toast.success("Image cropped and uploaded.");
         } catch (error) {

@@ -7,7 +7,7 @@ interface SocialLinksFormProps {
 
 const SocialLinksForm: React.FC<SocialLinksFormProps> = ({ control }) => {
   return (
-    <div>
+    <div className="space-y-4">
       <h1 className="text-lg font-semibold mb-6">Social Links</h1>
       <CustomInput
         control={control}
@@ -42,14 +42,14 @@ const SocialLinksForm: React.FC<SocialLinksFormProps> = ({ control }) => {
       <CustomInput
         control={control}
         name="whatsappUrl"
-        label="WhatsApp URL"
-        placeholder="Enter your WhatsApp URL"
+        label="WhatsApp Number"
+        placeholder="Enter your WhatsApp Number"
       />
       <CustomInput
         control={control}
         name="skypeUrl"
-        label="Skype URL"
-        placeholder="Enter your Skype URL"
+        label="Skype Name"
+        placeholder="Enter your Skype Name"
       />
       <CustomInput
         control={control}

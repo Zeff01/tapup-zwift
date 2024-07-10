@@ -7,7 +7,7 @@ import {
   updateUserById,
 } from "@/src/lib/firebase/store/users.action";
 import { Photo, Users } from "@/src/lib/firebase/store/users.type";
-import { LoaderCircle } from "lucide-react";
+import { Loader2, LoaderCircle } from "lucide-react";
 import Cropper from "@/components/Cropper";
 import Navbar from "@/components/ui/Navbar";
 import { useForm } from "react-hook-form";
@@ -20,13 +20,13 @@ import SocialLinksForm from "@/components/forms/SocialLinkForm";
 import PersonalInfoForm from "@/components/forms/PersonalInfoForm";
 import CompanyInfoForm from "@/components/forms/CompanyInfoForm";
 import { toast } from "react-toastify";
+import ImageLoaded from "@/components/ImageLoaded";
 
 export type ChosenTemplateType = z.infer<
   typeof createPortfolioSchema
 >["chosenTemplate"];
 
 export default function UpdateComponent({ userData }: { userData: Users }) {
-  console.log(userData);
   const [photo, setPhoto] = useState<Photo | null>(null);
   const [imageUrl, setImageUrl] = useState<string | null>(
     userData.profilePictureUrl || null
@@ -97,8 +97,6 @@ export default function UpdateComponent({ userData }: { userData: Users }) {
     methods.setValue("chosenTemplate", selectedTemplateId);
   }, [coverPhotoUrl, imageUrl, serviceImageUrls, selectedTemplateId, methods]);
 
-  console.log(methods.formState.errors);
-
   const formSubmit = async (data: z.infer<typeof createPortfolioSchema>) => {
     setLoading(true); // load start
 
@@ -151,11 +149,11 @@ export default function UpdateComponent({ userData }: { userData: Users }) {
 
   return (
     <Form {...methods}>
-      <main className="flex min-h-screen bg-[#1E1E1E] text-white flex-col items-center pt-12 p-6  overflow-x-hidden">
+      <main className="flex min-h-screen bg-[#1E1E1E] text-white flex-col items-center pt-12 p-6 overflow-x-hidden">
         <Navbar />
         <div className="w-full max-w-sm ">
           {/* HEADER */}
-          <div className="text-center mb-6 ">
+          <div className="text-center mt-8 mb-16 ">
             <Image
               src="/assets/zwift-logo.png"
               alt="Company Logo"
@@ -170,126 +168,201 @@ export default function UpdateComponent({ userData }: { userData: Users }) {
             className="space-y-6"
             onSubmit={methods.handleSubmit(formSubmit)}
           >
-            Cover Photo and Profile Pic Upload Section
-            <div className="flex flex-col items-center relative mb-16">
-              <div className="w-full h-64">
-                <Cropper
-                  imageUrl={coverPhotoUrl}
-                  setImageUrl={setCoverPhotoUrl}
-                  photo={coverPhoto}
-                  aspect={16 / 9}
-                  setPhoto={setCoverPhoto}
-                  changeImage={(img) => console.log("New Cover Image:", img)}
-                  className="w-full aspect-[16/9] rounded-2xl"
-                  imageClassName="rounded-2xl"
-                  fallback={
-                    <div className="w-full aspect-[16/9] flex flex-col items-center justify-center pb-4 gap-y-4 bg-[#222224]">
-                      <Image
-                        src={"/assets/plus.svg"}
-                        width={50}
-                        height={50}
-                        alt="plus"
-                      />
-                      <p className="text-[#767676]">Upload a Cover Photo</p>
-                    </div>
-                  }
-                />
-
-                <div className="absolute -bottom-12 left-1/2 transform -translate-x-1/2  ">
-                  <Cropper
-                    imageUrl={imageUrl}
-                    setImageUrl={setImageUrl}
-                    photo={photo}
-                    aspect={1}
-                    setPhoto={setPhoto}
-                    changeImage={(img) =>
-                      console.log("New Profile Image:", img)
-                    }
-                    circularCrop
-                    className="w-[150px] h-[150px] rounded-full"
-                    fallback={
-                      <div className="relative w-full h-full rounded-full flex items-center justify-center bg-[#222224]">
-                        <Image
-                          src={"/assets/gallery.svg"}
-                          width={50}
-                          height={50}
-                          alt="gallery"
-                        />
-                        <div className="absolute bottom-0 right-0 bg-[#222224] rounded-full">
+            <div className="">
+              <p className="text-lg font-semibold mb-6">
+                Cover Photo and Profile Pic Upload Section
+              </p>
+              <div className="flex aspect-[16/9] w-full flex-col items-center relative mb-20">
+                <div className="rounded-lg animate-pulse bg-[#222224] absolute w-full h-full" />
+                <div className="w-[120px] h-[120px] lg:w-[150px] lg:h-[150px] rounded-full bg-[#222224] absolute bottom-[-35%] left-1/2 transform -translate-x-1/2" />
+                <div className="flex flex-col items-center relative w-full">
+                  <div className="w-full">
+                    <Cropper
+                      imageUrl={coverPhotoUrl}
+                      setImageUrl={setCoverPhotoUrl}
+                      photo={coverPhoto}
+                      aspect={16 / 9}
+                      setPhoto={setCoverPhoto}
+                      changeImage={(img) =>
+                        console.log("New Cover Image:", img)
+                      }
+                      className="w-full aspect-[16/9] rounded-2xl overflow-hidden"
+                      imageClassName="rounded-2xl"
+                      fallback={
+                        <div className="w-full aspect-[16/9] flex flex-col items-center gap-y-2 bg-[#222224]">
                           <Image
-                            src={"/assets/plus-dark.svg"}
+                            src={"/assets/plus.svg"}
                             width={50}
                             height={50}
-                            alt="plus-dark"
+                            alt="plus"
+                            className="size-10 lg:size-auto mt-8"
                           />
+                          <p className="text-[#767676] text-sm">
+                            Upload a Cover Photo
+                          </p>
                         </div>
-                      </div>
-                    }
-                  />
+                      }
+                    />
+
+                    <div className="absolute bottom-[-35%] left-1/2 transform -translate-x-1/2  ">
+                      <Cropper
+                        imageUrl={imageUrl}
+                        setImageUrl={setImageUrl}
+                        photo={photo}
+                        aspect={1}
+                        setPhoto={setPhoto}
+                        changeImage={(img) =>
+                          console.log("New Profile Image:", img)
+                        }
+                        circularCrop
+                        className="w-[120px] h-[120px] lg:w-[150px] lg:h-[150px] rounded-full"
+                        fallback={
+                          <div className="relative w-full h-full rounded-full flex items-center justify-center bg-[#222224]">
+                            <Image
+                              src={"/assets/gallery.svg"}
+                              width={50}
+                              height={50}
+                              className="size-8 lg:size-auto"
+                              alt="gallery"
+                            />
+                            <div className="absolute bottom-0 right-0 bg-[#222224] rounded-full">
+                              <Image
+                                src={"/assets/plus-dark.svg"}
+                                width={50}
+                                height={50}
+                                alt="plus-dark"
+                                className="size-10 lg:size-auto"
+                              />
+                            </div>
+                          </div>
+                        }
+                      />
+                    </div>
+                  </div>
                 </div>
               </div>
             </div>
+
             <span className="text-sm text-red-500">
               {methods.formState.errors.profilePictureUrl?.message ?? ""}
             </span>
             {/* Company Information Inputs */}
-            <div className="space-y-6 ">
+            <div className="space-y-6">
               <CompanyInfoForm control={methods.control} />
 
               {/* //TODO: Add photo for services */}
-              <div className="border-2 border-yellow-500">
+              <div className="">
                 <h1 className="text-lg font-semibold mt-2">
                   Add Photo For Services: (Optional)
                 </h1>
-                <div className="flex flex-col items-center gap-y-6">
-                  <p className="text-[#767676]">Upload an image</p>
-                  <Cropper
-                    imageUrl={null}
-                    photo={null}
-                    aspect={1}
-                    setImageUrl={addServiceImageUrl}
-                    setPhoto={addServicePhoto}
-                    changeImage={(img) => console.log("New Cover Image:", img)}
-                    className="w-[128px] h-[128px] rounded-[10px]"
-                    disablePreview // only shows the fallback
-                    fallback={
-                      <div className="relative w-full h-full flex items-center justify-center bg-[#222224]">
-                        <Image
-                          src={"/assets/gallery.svg"}
-                          width={50}
-                          height={50}
-                          alt="gallery"
-                        />
-                        <div className="absolute bottom-0 right-0 translate-x-1/2 translate-y-1/4 bg-[#222224] rounded-full">
-                          <Image
-                            src={"/assets/plus-dark.svg"}
-                            width={50}
-                            height={50}
-                            alt="plus-dark"
-                          />
-                        </div>
-                      </div>
-                    }
-                  />
-                  <p className="text-[#767676]">
+                <div className="flex flex-col p-4 items-center justify-center overflow-hidden rounded-2xl bg-[#222224] mt-4 border border-[#2c2c2c]">
+                  {/* <p className="text-[#767676] my-4">
                     Please select at least 2 images
-                  </p>
-                  <div className="flex flex-row items-center justify-center gap-2 flex-wrap">
-                    {serviceImageUrls.map((url) => (
-                      <Image
-                        key={url}
-                        src={url}
-                        width={80}
-                        height={80}
-                        alt="service"
-                        className="rounded-md"
-                      />
-                    ))}
+                  </p> */}
+                  <div
+                    className="flex image-preview text-[#767676] rounded-2xl w-full min-h-48 p-2 gap-2 flex-wrap"
+                    style={{
+                      alignItems:
+                        serviceImageUrls.length > 0 ? "flex-start" : "center",
+                    }}
+                  >
+                    <div
+                      className="flex justify-center text-[#767676] rounded-2xl w-full min-h-48 p-2 gap-2 flex-wrap"
+                      style={{
+                        alignItems:
+                          serviceImageUrls.length > 0 ? "flex-start" : "center",
+                      }}
+                    >
+                      <div
+                        className="gap-1 grid-cols-3 lg:grid-cols-4"
+                        style={{
+                          display:
+                            serviceImageUrls.length > 0 ? "grid" : "flex",
+                        }}
+                      >
+                        {serviceImageUrls.length === 0 ? (
+                          <div className="w-full flex items-center justify-center">
+                            <Cropper
+                              imageUrl={null}
+                              photo={null}
+                              aspect={1}
+                              setImageUrl={addServiceImageUrl}
+                              setPhoto={addServicePhoto}
+                              changeImage={(img) =>
+                                console.log("New Cover Image:", img)
+                              }
+                              className="w-[128px] h-[128px] rounded-md"
+                              disablePreview // only shows the fallback
+                              fallback={
+                                <div className="relative w-full h-full flex items-center justify-center bg-[#222224] rounded-md">
+                                  <Image
+                                    src={"/assets/gallery.svg"}
+                                    width={50}
+                                    height={50}
+                                    alt="gallery"
+                                  />
+                                  <div className="absolute bottom-0 right-0 translate-x-1/2 translate-y-1/4 bg-[#222224] rounded-full">
+                                    <Image
+                                      src={"/assets/plus-dark.svg"}
+                                      width={50}
+                                      height={50}
+                                      alt="plus-dark"
+                                    />
+                                  </div>
+                                </div>
+                              }
+                            />
+                          </div>
+                        ) : (
+                          <>
+                            {serviceImageUrls.map((url) => {
+                              return (
+                                <div className="flex items-center justify-center rounded-md h-[77px] w-[77px] overflow-hidden relative bg-[#222224] border border-[#2c2c2c]">
+                                  <Loader2 className="animate-spin" />
+                                  <ImageLoaded url={url} />
+                                </div>
+                              );
+                            })}
+                            <div className="flex items-center justify-center">
+                              <Cropper
+                                imageUrl={null}
+                                photo={null}
+                                aspect={1}
+                                setImageUrl={addServiceImageUrl}
+                                setPhoto={addServicePhoto}
+                                changeImage={(img) =>
+                                  console.log("New Cover Image:", img)
+                                }
+                                className="w-[77px] h-[77px] rounded-md"
+                                disablePreview // only shows the fallback
+                                fallback={
+                                  <div className="relative w-full h-full flex items-center justify-center bg-[#222224] rounded-md">
+                                    <Image
+                                      src={"/assets/gallery.svg"}
+                                      width={20}
+                                      height={20}
+                                      alt="gallery"
+                                    />
+                                    <div className="absolute bottom-0 right-0 translate-x-1/2 translate-y-1/4 bg-[#222224] rounded-full">
+                                      <Image
+                                        src={"/assets/plus-dark.svg"}
+                                        width={30}
+                                        height={30}
+                                        alt="plus-dark"
+                                      />
+                                    </div>
+                                  </div>
+                                }
+                              />
+                            </div>
+                          </>
+                        )}
+                      </div>
+                    </div>
                   </div>
                 </div>
               </div>
 
-              {/* //TODO: Choose Templates */}
               <TemplateCarousel
                 selectedTemplateId={selectedTemplateId}
                 setSelectedTemplateId={setSelectedTemplateId}
@@ -311,7 +384,7 @@ export default function UpdateComponent({ userData }: { userData: Users }) {
                   <LoaderCircle className="animate-spin" />
                 </span>
               ) : (
-                "Update"
+                "Submit"
               )}
             </button>
           </form>
