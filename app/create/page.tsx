@@ -306,9 +306,12 @@ export default function Create() {
                           </div>
                         ) : (
                           <>
-                            {serviceImageUrls.map((url) => {
+                            {serviceImageUrls.map((url, key) => {
                               return (
-                                <div className="flex items-center justify-center rounded-md h-[77px] w-[77px] overflow-hidden relative bg-[#222224] border border-[#2c2c2c]">
+                                <div
+                                  key={`index-${key}`}
+                                  className="flex items-center justify-center rounded-md h-[77px] w-[77px] overflow-hidden relative bg-[#222224] border border-[#2c2c2c]"
+                                >
                                   <Loader2 className="animate-spin" />
                                   <ImageLoaded url={url} />
                                 </div>
