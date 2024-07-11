@@ -1,3 +1,4 @@
+"use client";
 import React from "react";
 import { getAllUsers } from "@/src/lib/firebase/store/users.action";
 import TableComponent from "./components/TableComponent";
