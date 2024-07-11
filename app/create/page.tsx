@@ -76,6 +76,9 @@ export default function Create() {
   useEffect(() => {
     if (imageUrl) {
       methods.setValue("profilePictureUrl", imageUrl || "");
+      if (methods.formState.errors.profilePictureUrl) {
+        methods.clearErrors("profilePictureUrl");
+      }
     }
     if (coverPhotoUrl) {
       methods.setValue("coverPhotoUrl", coverPhotoUrl || "");
@@ -85,7 +88,6 @@ export default function Create() {
     }
     methods.setValue("chosenTemplate", selectedTemplateId);
   }, [coverPhotoUrl, imageUrl, serviceImageUrls, selectedTemplateId, methods]);
-
   const formSubmit = async (data: z.infer<typeof createPortfolioSchema>) => {
     setLoading(true); // load start
 
@@ -104,7 +106,8 @@ export default function Create() {
     }
   };
 
-  console.log(methods.getValues());
+  console.log("values", methods.getValues());
+  console.log("error", methods.formState.errors);
 
   const handlePhotoChange = async (event: ChangeEvent<HTMLInputElement>) => {
     if (event.target.files && event.target.files[0]) {

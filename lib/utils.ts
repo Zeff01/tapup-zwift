@@ -18,6 +18,13 @@ export const createUserLink = (userCode: string) => {
   }
 };
 
+const refinePhoneNumber = (phoneNumber: string) => {
+  if (phoneNumber.trim() === "") {
+    return true; // Allow empty string
+  }
+  return isValidPhoneNumber(phoneNumber);
+};
+
 export const createPortfolioSchema = z.object({
   coverPhotoUrl: z
     .string()
@@ -123,7 +130,7 @@ export const createPortfolioSchema = z.object({
     .optional(),
   whatsappNumber: z
     .string()
-    .refine(isValidPhoneNumber, { message: "Invalid phone number" }),
+    .refine(refinePhoneNumber, { message: "Invalid phone number" }),
   skypeInviteUrl: z
     .string()
     .refine(

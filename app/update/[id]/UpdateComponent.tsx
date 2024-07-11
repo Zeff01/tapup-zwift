@@ -87,6 +87,9 @@ export default function UpdateComponent({ userData }: { userData: Users }) {
   useEffect(() => {
     if (imageUrl) {
       methods.setValue("profilePictureUrl", imageUrl || "");
+      if (methods.formState.errors.profilePictureUrl) {
+        methods.clearErrors("profilePictureUrl");
+      }
     }
     if (coverPhotoUrl) {
       methods.setValue("coverPhotoUrl", coverPhotoUrl || "");
