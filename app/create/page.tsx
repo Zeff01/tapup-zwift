@@ -152,8 +152,8 @@ export default function Create() {
             <Image
               src="/assets/zwift-logo.png"
               alt="Company Logo"
-              width={150}
-              height={150}
+              width={140}
+              height={41}
               priority
               className="mx-auto mb-8"
             />
