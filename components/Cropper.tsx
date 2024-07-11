@@ -5,6 +5,7 @@ import React, {
   Dispatch,
   SetStateAction,
   useEffect,
+  HTMLAttributes,
 } from "react";
 import { Slider } from "@/components/ui/slider";
 import { createPortal } from "react-dom";
@@ -28,6 +29,8 @@ import { useDebounceEffect } from "@/hooks/useDebounceEffect";
 import "react-image-crop/dist/ReactCrop.css";
 import { Button } from "@/components/ui/button";
 import { toast } from "react-toastify";
+import { cn } from "@/lib/utils";
+import { ReactNode } from "react";
 
 // This is to demonstate how to make and center a % aspect crop
 // which is a bit trickier so we use some helper functions.
@@ -51,16 +54,21 @@ function centerAspectCrop(
   );
 }
 
-type CropperProps = {
-  imageUrl?: string|null;
-  setImageUrl: Dispatch<SetStateAction<string | null>>;
+interface CropperProps extends HTMLAttributes<HTMLDivElement> {
+  imageUrl?: string | null;
   photo: null | Photo;
-  setPhoto: Dispatch<SetStateAction<Photo | null>>;
+  setImageUrl:
+    | Dispatch<SetStateAction<string | null>>
+    | ((imageUrl: string) => void);
+  setPhoto: Dispatch<SetStateAction<Photo | null>> | ((photo: Photo) => void);
   aspect: number;
   changeImage(img: string): void;
   maxHeight?: number;
   circularCrop?: boolean;
-};
+  fallback: ReactNode;
+  disablePreview?: boolean;
+  imageClassName?: string;
+}
 
 export default function Cropper({
   imageUrl,
@@ -70,6 +78,11 @@ export default function Cropper({
   aspect,
   maxHeight,
   circularCrop = false,
+  fallback,
+  className,
+  disablePreview = false,
+  imageClassName,
+  ...rest
 }: CropperProps) {
   const [imgSrc, setImgSrc] = useState("");
   const previewCanvasRef = useRef<HTMLCanvasElement>(null);
@@ -156,11 +169,12 @@ export default function Cropper({
             raw: file,
           });
           setPhoto({ preview: fileAsDataURL, raw: file });
+          console.log(dl_url);
           if (dl_url) setImageUrl(dl_url);
-          toast.success("Image cropped and uploaded.")
+          toast.success("Image cropped and uploaded.");
         } catch (error) {
           console.error(error, "failed to upload image");
-          toast.error("Failed to crop and upload image")
+          toast.error("Failed to crop and upload image");
         } finally {
           setLoading(false);
           toggleModal();
@@ -206,43 +220,36 @@ export default function Cropper({
 
   return (
     <div className="cropper">
-      <div className="relative w-28 h-28 rounded-full  bg-background-input border border-border-input flex items-center justify-center">
+      <div
+        className={cn(
+          "relative w-full h-full border border-[#2c2c2c]",
+          className
+        )}
+        {...rest}
+      >
         <Input
           type="file"
           accept="image/*"
           onChange={onSelectFile}
-          className="w-full h-full absolute top-0 left-0 opacity-0"
+          className="w-full h-full absolute top-0 left-0 opacity-0 z-10"
           onClick={toggleModal}
           placeholder="cropper"
         />
-        {(photo || imageUrl)  ? (
+        {(photo?.preview ?? imageUrl) && !disablePreview ? (
           <Image
             src={photo?.preview ?? imageUrl ?? ""}
             alt="Profile"
-            className="w-28 h-28 rounded-full"
-            width={70}
-            height={70}
+            className={cn(
+              `w-full h-full pointer-events-none ${
+                circularCrop ? "rounded-full" : ""
+              }`,
+              imageClassName
+            )}
+            width={500}
+            height={500}
           />
         ) : (
-          <>
-            <Image
-              src="/assets/imageicon.png"
-              alt="Company Logo"
-              width={30}
-              height={30}
-              priority
-              className="mx-auto pointer-events-none "
-            />
-            <div className=" pointer-events-none flex justify-center items-center w-8 h-8 border rounded-full absolute bottom-0 right-0 bg-background-input border-border-input">
-              <Image
-                src="/assets/plusicon.png"
-                alt="Add Icon"
-                width={14}
-                height={14}
-                priority
-              />
-            </div>
-          </>
+          fallback
         )}
       </div>
 

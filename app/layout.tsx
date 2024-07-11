@@ -8,7 +8,8 @@ const lato = Lato({ weight: "400", subsets: ["latin"] });
 
 export const metadata: Metadata = {
   title: "TapUp",
-  description: "Transform your business interactions with TapUp Cards. Our app allows you to create, share, and manage digital business cards effortlessly. With customizable designs, instant updates, and seamless integration across devices, you can leave a lasting impression. Elevate your professional networking to the next level with TapUp Cards.",  
+  description:
+    "Transform your business interactions with TapUp Cards. Our app allows you to create, share, and manage digital business cards effortlessly. With customizable designs, instant updates, and seamless integration across devices, you can leave a lasting impression. Elevate your professional networking to the next level with TapUp Cards.",
 };
 
 export default function RootLayout({

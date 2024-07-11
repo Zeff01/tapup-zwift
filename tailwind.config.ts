@@ -18,7 +18,9 @@ const config = {
     },
     extend: {
       colors: {
-        placeholder: { input: "#353535" },
+        grayDescription: "#767676",
+        greenTitle: "#6fdc00",
+        placeholder: { input: "#383839" },
         border: { DEFAULT: "hsl(var(--border))", input: "#282828" },
         input: "hsl(var(--input))",
         ring: "hsl(var(--ring))",
@@ -55,8 +57,8 @@ const config = {
         custom: {
           black: "rgb(30,30,30)",
           purple: "#6150EB",
-          light: "#978deb"
-        }
+          light: "#978deb",
+        },
       },
       backgroundImage: {
         "gradient-radial": "radial-gradient(var(--tw-gradient-stops))",

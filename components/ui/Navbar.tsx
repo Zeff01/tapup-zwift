@@ -11,8 +11,6 @@ export default function Navbar() {
   const router = useRouter();
   const pathname = usePathname();
 
-  console.log(pathname);
-
   return (
     <nav className="bg-custom-black text-white items-center fixed top-0 left-0 flex flex-row gap-x-4 z-10 w-full py-1 px-6 ">
       <button

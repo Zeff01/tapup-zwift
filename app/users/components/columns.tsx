@@ -12,7 +12,6 @@ import {
 import { Button } from "@/components/ui/button";
 import { toast } from "react-toastify";
 import Link from "next/link";
-import { createUserLink } from "@/lib/utils";
 
 export const columns: ColumnDef<Users>[] = [
   {
@@ -51,8 +50,8 @@ export const columns: ColumnDef<Users>[] = [
     header: () => <div className="text-center ">Actions</div>,
     cell: ({ row }) => {
       const link = row.original;
-      console.log("link:", link);
-      if (link.id === "LanXgtZFYp7je3p9imBE") console.log(link);
+      // console.log("link:", link);
+      // if (link.userCode === "LanXgtZFYp7je3p9imBE") console.log(link);
 
       return (
         <div className="flex gap-2 justify-center flex-nowrap ">
@@ -66,7 +65,6 @@ export const columns: ColumnDef<Users>[] = [
               <Edit size={15} />
             </Button>
           </Link>
-
           <Button
             variant="ghost"
             size="icon"
@@ -78,7 +76,7 @@ export const columns: ColumnDef<Users>[] = [
           >
             <Copy size={15} />
           </Button>
-          <Link href={createUserLink(link.userCode as string)}>
+          <Link href={`/users/${link.userCode}`}>
             <Button
               variant="ghost"
               size="icon"

@@ -30,6 +30,7 @@ export const addUser = async (
 
     const snapshot = await getCountFromServer(userCollection);
     const totalUsers = snapshot.data().count;
+
     let userCode = "",
       user_link = "";
     if (totalUsers >= 0) {
@@ -55,6 +56,7 @@ export const addUser = async (
       user_link,
     };
     revalidateUserPath("/users");
+
     return userCodeLink;
   } catch (error) {
     console.error("Error adding document: ", error);
@@ -89,6 +91,7 @@ export const updateUserById = async (
     await setDoc(userRef, { ...user }, { merge: true });
     console.log("Document updated with ID: ", user_id);
     revalidateUserPath("/users");
+    revalidateUserPath(`/update/${user_id}`);
     return { success: true, message: `Document updated with ID: ${user_id}` };
   } catch (error: any) {
     console.error("Error updating document: ", error);
