@@ -73,7 +73,7 @@ const Template1 = ({
               />
             )}
           </div>
-          <div className="absolute -bottom-8 left-1/2 transform -translate-x-1/2">
+          <div className="absolute -bottom-12 left-1/2 transform -translate-x-1/2">
             {profilePictureUrl ? (
               <div className="w-24 h-24 rounded-full mx-auto overflow-hidden">
                 <Image
@@ -81,11 +81,11 @@ const Template1 = ({
                   alt="Profile Image"
                   width={80}
                   height={80}
-                  className="rounded-full w-24 h-24"
+                  className="rounded-full w-28 h-28"
                 />
               </div>
             ) : (
-              <div className="bg-purple-500 w-20 h-20 rounded-full mx-auto flex items-center justify-center">
+              <div className="bg-purple-500 w-28 h-28 rounded-full mx-auto flex items-center justify-center">
                 <span className="text-white font-bold text-xl">HW</span>
               </div>
             )}

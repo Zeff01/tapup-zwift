@@ -68,9 +68,9 @@ const Template1 = ({
               />
             )}
           </div>
-          <div className="absolute -bottom-8 left-1/2 transform -translate-x-1/2">
+          <div className="absolute -bottom-12 left-1/2 transform -translate-x-1/2">
             {profilePictureUrl ? (
-              <div className="w-24 h-24 rounded-full mx-auto overflow-hidden">
+              <div className="w-28 h-28 rounded-full mx-auto overflow-hidden">
                 <Image
                   src={profilePictureUrl}
                   alt="Profile Image"
@@ -80,7 +80,7 @@ const Template1 = ({
                 />
               </div>
             ) : (
-              <div className="bg-purple-500 w-20 h-20 rounded-full mx-auto flex items-center justify-center">
+              <div className="bg-purple-500 w-28 h-28 rounded-full mx-auto flex items-center justify-center">
                 <span className="text-white font-bold text-xl">HW</span>
               </div>
             )}
@@ -88,7 +88,7 @@ const Template1 = ({
         </div>
 
         {/* PERSONAL INFORMATION */}
-        <div className="text-center mt-10 space-y-1 ">
+        <div className="text-center mt-14 space-y-1 ">
           {firstName ? (
             <h1 className="text-xl font-bold mt-4 ">
               {firstName + " " + lastName}
@@ -188,7 +188,6 @@ const Template1 = ({
         <hr />
 
         {/* COMPANY INFORMATION */}
-
         <h2 className="text-4xl font-extrabold mx-auto w-full text-center mt-6">
           {company ?? "COMPANY"}
         </h2>

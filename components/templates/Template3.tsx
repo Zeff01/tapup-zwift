@@ -59,7 +59,7 @@ const Template3 = ({
               />
             ) : (
               <Image
-                src={"/assets/template1coverphoto.png"}
+                src={"/assets/template2coverphoto.png"}
                 alt="Cover Image"
                 width={400}
                 height={200}
@@ -78,12 +78,11 @@ const Template3 = ({
                 />
               </div>
             ) : (
-              <div className=" w-[90px] h-40 rounded-full mx-auto flex items-center justify-center">
+              <div className=" w-32 h-32 rounded-full mx-auto flex items-center justify-center">
                 <Image
-                  src={"/assets/template3samplepic.png"}
+                  src={"/assets/template4samplepic.png"}
                   alt="Profile Image"
-                  width={80}
-                  height={80}
+                  fill
                   className="rounded-full"
                   objectFit="cover"
                 />
@@ -118,9 +117,8 @@ const Template3 = ({
           </p>
         </div>
 
-        {/* //TODO ADD URL HERE FOR ICONS; NULL if no url */}
         {/* SOCIAL MEDIA ICONS */}
-        <div className="flex justify-center gap-6 my-4">
+        <div className="grid grid-cols-4 justify-center gap-4 my-4  w-40 mx-auto">
           {facebookUrl && (
             <a href={facebookUrl} target="_blank" rel="noopener noreferrer">
               <FaFacebook size={24} />
