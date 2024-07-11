@@ -32,6 +32,7 @@ import {
   DropdownMenuContent,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
+import { Skeleton } from "@/components/ui/skeleton";
 
 interface DataTableProps<TData, TValue> {
   columns: ColumnDef<TData, TValue>[];
@@ -124,18 +125,32 @@ export function DataTable<TData, TValue>({
               ))}
             </TableHeader>
             <TableBody className="">
-              {isLoading && (
-                <TableRow>
-                  <TableCell
-                    colSpan={columns.length}
-                    className="h-24 text-center"
-                  >
-                    <p className="flex justify-center">
-                      <Loader2 className="animate-spin opacity-50" />
-                    </p>
-                  </TableCell>
-                </TableRow>
-              )}
+              {isLoading &&
+                Array.from({ length: 5 }).map((_, i) => (
+                  <TableRow key={`loading-${i}`}>
+                    <TableCell className="py-[26px]">
+                      <Skeleton className="w-[165px] h-3" />
+                    </TableCell>
+                    <TableCell className="py-[26px]">
+                      <Skeleton className="w-36 h-3" />
+                    </TableCell>
+                    <TableCell className="py-[26px]">
+                      <Skeleton className="w-36 h-3" />
+                    </TableCell>
+                    <TableCell className="py-[26px]">
+                      <Skeleton className="w-36 h-3" />
+                    </TableCell>
+                    <TableCell className="py-[26px] ">
+                      <Skeleton className="w-36 h-3" />
+                    </TableCell>
+                    <TableCell className="flex gap-5 justify-center  py-[21px]">
+                      <Skeleton className="size-5 rounded-full" />
+                      <Skeleton className="size-5 rounded-full" />
+                      <Skeleton className="size-5 rounded-full" />
+                      <Skeleton className="size-5 rounded-full" />
+                    </TableCell>
+                  </TableRow>
+                ))}
               {!isLoading && table.getRowModel().rows?.length === 0 && (
                 <TableRow>
                   <TableCell

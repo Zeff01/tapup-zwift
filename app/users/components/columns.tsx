@@ -47,7 +47,6 @@ export const columns: ColumnDef<Users>[] = [
 
   {
     id: "actions",
-    header: () => <div className="text-center ">Actions</div>,
     cell: ({ row }) => {
       const link = row.original;
       // console.log("link:", link);
