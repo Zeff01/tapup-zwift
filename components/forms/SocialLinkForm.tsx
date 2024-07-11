@@ -41,12 +41,6 @@ const SocialLinksForm: React.FC<SocialLinksFormProps> = ({ control }) => {
         label="LinkedIn URL"
         placeholder="Enter your LinkedIn URL"
       />
-      {/* <CustomInput
-        control={control}
-        name="whatsappNumber"
-        label="WhatsApp Number"
-        placeholder="Enter your WhatsApp Number"
-      /> */}
       <FormField
         control={control}
         name="whatsappNumber"
@@ -70,9 +64,9 @@ const SocialLinksForm: React.FC<SocialLinksFormProps> = ({ control }) => {
       />
       <CustomInput
         control={control}
-        name="skypeNumber"
-        label="Skype Number"
-        placeholder="Enter your Skype Number"
+        name="skypeInviteUrl"
+        label="Skype Invite Url"
+        placeholder="Enter your Skype Invite Url"
       />
       <CustomInput
         control={control}

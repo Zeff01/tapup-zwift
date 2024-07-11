@@ -124,7 +124,7 @@ export const createPortfolioSchema = z.object({
   whatsappNumber: z
     .string()
     .refine(isValidPhoneNumber, { message: "Invalid phone number" }),
-  skypeNumber: z
+  skypeInviteUrl: z
     .string()
     .refine(
       (value) =>

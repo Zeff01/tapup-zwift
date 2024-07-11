@@ -68,7 +68,7 @@ export default function Create() {
       twitterUrl: "",
       linkedinUrl: "",
       whatsappNumber: "",
-      skypeNumber: "",
+      skypeInviteUrl: "",
       websiteUrl: "",
     },
   });
