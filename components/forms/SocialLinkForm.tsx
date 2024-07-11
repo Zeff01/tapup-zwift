@@ -1,5 +1,7 @@
 import React from "react";
 import CustomInput from "@/components/CustomInput";
+import { FormControl, FormField, FormLabel, FormMessage } from "../ui/form";
+import { PhoneInput } from "../PhoneInput";
 
 interface SocialLinksFormProps {
   control: any;
@@ -39,17 +41,38 @@ const SocialLinksForm: React.FC<SocialLinksFormProps> = ({ control }) => {
         label="LinkedIn URL"
         placeholder="Enter your LinkedIn URL"
       />
-      <CustomInput
+      {/* <CustomInput
         control={control}
         name="whatsappNumber"
         label="WhatsApp Number"
         placeholder="Enter your WhatsApp Number"
+      /> */}
+      <FormField
+        control={control}
+        name="whatsappNumber"
+        render={({ field }) => (
+          <div className="flex flex-col gap-2">
+            <FormLabel className="text-14 w-full max-w-[280px] font-medium ">
+              {"WhatsApp Number"}:
+              {true && <span className="text-red-500 ml-1">*</span>}
+            </FormLabel>
+            <div className="flex w-full flex-col">
+              <FormControl>
+                <PhoneInput
+                  placeholder="Enter your WhatsApp Number"
+                  {...field}
+                />
+              </FormControl>
+              <FormMessage className="text-12 text-red-500 mt-2" />
+            </div>
+          </div>
+        )}
       />
       <CustomInput
         control={control}
         name="skypeNumber"
-        label="Skype Name"
-        placeholder="Enter your Skype Name"
+        label="Skype Number"
+        placeholder="Enter your Skype Number"
       />
       <CustomInput
         control={control}

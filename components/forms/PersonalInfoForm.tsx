@@ -1,6 +1,7 @@
 import React from "react";
 import CustomInput from "@/components/CustomInput";
-
+import { FormControl, FormField, FormLabel, FormMessage } from "../ui/form";
+import { PhoneInput } from "../PhoneInput";
 interface PersonalInfoFormProps {
   control: any;
 }
@@ -30,12 +31,23 @@ const PersonalInfoForm: React.FC<PersonalInfoFormProps> = ({ control }) => {
         placeholder="Enter your email address"
         required={true}
       />
-      <CustomInput
+      <FormField
         control={control}
         name="number"
-        label="Phone Number"
-        placeholder="Enter your phone number"
-        required={true}
+        render={({ field }) => (
+          <div className="flex flex-col gap-2">
+            <FormLabel className="text-14 w-full max-w-[280px] font-medium ">
+              {"Phone Number"}:
+              {true && <span className="text-red-500 ml-1">*</span>}
+            </FormLabel>
+            <div className="flex w-full flex-col">
+              <FormControl>
+                <PhoneInput placeholder="Enter your phone number" {...field} />
+              </FormControl>
+              <FormMessage className="text-12 text-red-500 mt-2" />
+            </div>
+          </div>
+        )}
       />
     </div>
   );

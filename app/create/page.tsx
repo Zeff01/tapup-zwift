@@ -104,6 +104,8 @@ export default function Create() {
     }
   };
 
+  console.log(methods.getValues());
+
   const handlePhotoChange = async (event: ChangeEvent<HTMLInputElement>) => {
     if (event.target.files && event.target.files[0]) {
       const file = event.target.files[0];
