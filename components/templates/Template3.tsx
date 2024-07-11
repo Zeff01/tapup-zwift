@@ -48,14 +48,14 @@ const Template3 = ({
       <div className=" w-full mx-auto  max-w-[480px] ">
         {/* COVERPHOTO AND PROFILE PIC */}
         <div className=" flex flex-col relative w-full  ">
-          <div className="w-full  h-40 overflow-hidden">
+          <div className="w-full  h-48 overflow-hidden ">
             {coverPhotoUrl ? (
               <Image
                 src={coverPhotoUrl}
                 alt="Cover Image"
                 width={400}
                 height={200}
-                className="mx-auto w-full h-48 object-cover overflow-hidden"
+                className="mx-auto w-full h-48 object-cover overflow-hidden rounded-md"
               />
             ) : (
               <Image

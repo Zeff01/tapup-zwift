@@ -49,7 +49,7 @@ const Template4 = ({
       <div className=" w-full mx-auto  max-w-[480px] bg-[#f8f8f8]">
         {/* COVERPHOTO AND PROFILE PIC */}
         <div className=" flex flex-col relative w-full  ">
-          <div className="w-full  h-40 overflow-hidden">
+          <div className="w-full  h-48 overflow-hidden">
             {coverPhotoUrl ? (
               <Image
                 src={coverPhotoUrl}
