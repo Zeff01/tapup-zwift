@@ -50,7 +50,7 @@ export default function Home() {
         animate="visible"
         className="text-center max-w-2xl"
       >
-        Experience the future of networking with TapUp's NFC digital business
+        Experience the future of networking with TapUp NFC digital business
         cards. Perfect for professionals and entrepreneurs looking to make a
         lasting impact without the paper waste.
       </motion.p>
