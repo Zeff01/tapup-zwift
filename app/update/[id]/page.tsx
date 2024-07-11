@@ -1,3 +1,5 @@
+"use client";
+
 import { getUserBySubId } from "@/src/lib/firebase/store/users.action";
 import UpdateComponent from "./UpdateComponent";
 

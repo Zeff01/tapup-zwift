@@ -79,7 +79,7 @@ export default function UpdateComponent({ userData }: { userData: Users }) {
       twitterUrl: userData.twitterUrl || "",
       linkedinUrl: userData.linkedinUrl || "",
       whatsappNumber: userData.whatsappNumber || "",
-      skypeNumber: userData.skypeNumber || "",
+      skypeInviteUrl: userData.skypeInviteUrl || "",
       websiteUrl: userData.websiteUrl || "",
     },
   });

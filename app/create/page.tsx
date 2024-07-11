@@ -68,7 +68,7 @@ export default function Create() {
       twitterUrl: "",
       linkedinUrl: "",
       whatsappNumber: "",
-      skypeNumber: "",
+      skypeInviteUrl: "",
       websiteUrl: "",
     },
   });
@@ -103,6 +103,8 @@ export default function Create() {
       console.error("userLink is undefined or not valid.");
     }
   };
+
+  console.log(methods.getValues());
 
   const handlePhotoChange = async (event: ChangeEvent<HTMLInputElement>) => {
     if (event.target.files && event.target.files[0]) {

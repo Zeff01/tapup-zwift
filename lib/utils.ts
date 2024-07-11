@@ -1,6 +1,8 @@
 import { type ClassValue, clsx } from "clsx";
 import { twMerge } from "tailwind-merge";
 import { z } from "zod";
+import { isValidPhoneNumber } from "react-phone-number-input";
+
 export function cn(...inputs: ClassValue[]) {
   return twMerge(clsx(inputs));
 }
@@ -60,7 +62,9 @@ export const createPortfolioSchema = z.object({
   firstName: z.string().min(3, "First name must be at least 3 characters"),
   lastName: z.string().min(3, "Last name must be at least 3 characters"),
   email: z.string().email("Invalid email address"),
-  number: z.string().min(10, "Phone number must be at least 10 digits"),
+  number: z
+    .string()
+    .refine(isValidPhoneNumber, { message: "Invalid phone number" }),
   facebookUrl: z
     .string()
     .refine(
@@ -117,8 +121,22 @@ export const createPortfolioSchema = z.object({
       }
     )
     .optional(),
-  whatsappNumber: z.string().optional(),
-  skypeNumber: z.string().optional(),
+  whatsappNumber: z
+    .string()
+    .refine(isValidPhoneNumber, { message: "Invalid phone number" }),
+  skypeInviteUrl: z
+    .string()
+    .refine(
+      (value) =>
+        value === "" ||
+        /^(?:https?:\/\/)?(?:join\.skype\.com\/invite\/[a-zA-Z0-9_-]+)$/.test(
+          value
+        ),
+      {
+        message: "Invalid URL",
+      }
+    )
+    .optional(),
   websiteUrl: z
     .string()
     .refine(

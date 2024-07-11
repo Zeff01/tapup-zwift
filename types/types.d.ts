@@ -17,7 +17,7 @@ export type UserProfile = {
   twitterUrl?: string;
   linkedinUrl?: string;
   whatsappNumber?: string;
-  skypeNumber?: string;
+  skypeInviteUrl?: string;
   websiteUrl?: string;
 };
 
