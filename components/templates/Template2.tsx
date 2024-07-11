@@ -191,15 +191,15 @@ const Template1 = ({
           {company ?? "COMPANY"}
         </h2>
         <div className="mt-6">
-          <h2 className="text-sm font-bold">Company Background</h2>
-          <p className="text-xs mt-1">
+          <h2 className="text-md font-bold">Company Background</h2>
+          <p className="text-xs mt-4 text-gray-300">
             {companyBackground ??
               "Lorem Ipsum is simply dummy text of the printing and typesetting industry."}
           </p>
 
           {/* SERVICE INFORMATION */}
-          <h3 className="text-sm font-bold mt-6">Our Services</h3>
-          <p className="text-xs mt-1">
+          <h3 className="text-md font-bold mt-6">Our Services</h3>
+          <p className="text-xs mt-4 text-gray-300">
             {serviceDescription ??
               "Lorem Ipsum is simply dummy text of the printing and typesetting industry."}
           </p>

@@ -1,6 +1,7 @@
+import { downloadVCard } from "@/lib/vCardUtils";
 import { UserProfile } from "@/types/types";
 import Image from "next/image";
-import { CiCirclePlus, CiSaveDown2 } from "react-icons/ci";
+import { CiCirclePlus, CiMail, CiPhone, CiSaveDown2 } from "react-icons/ci";
 import {
   FaXTwitter,
   FaFacebook,
@@ -33,9 +34,19 @@ const Template4 = ({
   skypeNumber,
   websiteUrl,
 }: UserProfile) => {
+  const userProfile = {
+    firstName,
+    lastName,
+    email,
+    number,
+    company,
+    position,
+    websiteUrl,
+  };
+
   return (
     <div className="bg-white text-black flex flex-col items-center justify-between  min-h-screen">
-      <div className=" w-full mx-auto  max-w-[480px]">
+      <div className=" w-full mx-auto  max-w-[480px] bg-[#f8f8f8]">
         {/* COVERPHOTO AND PROFILE PIC */}
         <div className=" flex flex-col relative w-full  ">
           <div className="w-full  h-40 overflow-hidden">
@@ -43,18 +54,15 @@ const Template4 = ({
               <Image
                 src={coverPhotoUrl}
                 alt="Cover Image"
-                width={400} // Adjust width and height as necessary
-                height={200}
-                className="mx-auto "
-                layout="fill"
-                objectFit="cover"
+                fill
+                className="mx-auto w-full h-48 object-cover   overflow-hidden"
               />
             ) : (
               <Image
-                src={"/assets/template2coverphoto.png"}
+                src={"/assets/template1coverphoto.png"}
                 alt="Cover Image"
                 width={400}
-                height={100}
+                height={200}
                 className="mx-auto"
               />
             )}
@@ -85,10 +93,26 @@ const Template4 = ({
         </div>
 
         {/* CTA BUTTONS */}
-        <div className="flex justify-end space-x-4 pr-4 pt-2">
+        <div className="flex justify-end space-x-3 pr-4 pt-2">
           {/* Icon buttons */}
           <div className="flex flex-col justify-center items-center">
-            <CiSaveDown2 size={32} className="cursor-pointer" />
+            <a href={`tel:${number}`} className="text-decoration-none">
+              <CiPhone size={28} className="cursor-pointer" />
+            </a>
+            <p className="text-xs">Call</p>
+          </div>
+          <div className="flex flex-col justify-center items-center">
+            <a href={`mailto:${email}`}>
+              <CiMail size={28} className="cursor-pointer" />
+            </a>
+            <p className="text-xs">Email</p>
+          </div>
+          <div className="flex flex-col justify-center items-center">
+            <CiSaveDown2
+              size={28}
+              className="cursor-pointer"
+              onClick={() => downloadVCard(userProfile)}
+            />
             <p className="text-xs">Save</p>
           </div>
         </div>
@@ -96,41 +120,37 @@ const Template4 = ({
         {/* PERSONAL INFORMATION */}
         <div className="mt-4 space-y-1 px-4 mb-4">
           {firstName ? (
-            <h1 className="text-xl font-bold mt-2 ">{firstName + lastName}</h1>
+            <h1 className="text-2xl font-bold mt-4 ">
+              {firstName + " " + lastName}
+            </h1>
           ) : (
-            <h1 className="text-xl font-bold mt-2 ">Hussain Watkins</h1>
+            <h1 className="text-2xl font-bold mt-2 ">Hussain Watkins</h1>
           )}
-          {position ?? (
-            <p className="font-semibold text-gray-500 text-xs">SALES MANAGER</p>
-          )}
-          {email ?? (
-            <p className="font-semibold text-gray-500 text-xs">
-              H.Watkins@gmail.com
-            </p>
-          )}
-          {number ?? (
-            <p className="font-semibold text-gray-500 text-xs">+639123456789</p>
-          )}
+          <p className="font-semibold text-gray-600 text-xl">
+            {position ?? "Chief Technology Officer"}
+          </p>
+          <p className=" text-gray-600 text-md">
+            {email ?? "H.Watkins@gmail.com"}
+          </p>
+          <p className=" text-gray-600 text-md"> {number ?? +639123456789}</p>
         </div>
 
         <hr />
 
         {/* COMPANY INFORMATION */}
-        {company ?? (
-          <h2 className="text-4xl font-bold mx-auto w-full px-4 mt-6">
-            COMPANY
-          </h2>
-        )}
+        <h2 className="text-4xl font-extrabold mx-auto w-full mt-6 px-4">
+          {company ?? "COMPANY"}
+        </h2>
         <div className="mt-6 px-4">
           <h2 className="text-md font-bold">Company Background</h2>
-          <p className="text-xs mt-1">
+          <p className="text-xs text-gray-600 mt-4">
             {companyBackground ??
               "Lorem Ipsum is simply dummy text of the printing and typesetting industry."}
           </p>
 
           {/* SERVICE INFORMATION */}
           <h3 className="text-md font-bold mt-6">Our Services</h3>
-          <p className="text-xs mt-1">
+          <p className="text-xs text-gray-600 mt-4">
             {serviceDescription ??
               "Lorem Ipsum is simply dummy text of the printing and typesetting industry."}
           </p>
@@ -165,21 +185,64 @@ const Template4 = ({
         </div>
       </div>
       {/* SOCIAL MEDIA ICONS */}
-      <div className="flex flex-col justify-center items-center my-4 mt-8">
+      <div className="flex flex-col justify-center items-center mt-8">
         <h1 className="font-bold mb-2">Socials</h1>
-        <div className="flex   gap-6">
-          {facebookUrl ?? <FaFacebook size={24} />}
-          {twitterUrl ?? <FaXTwitter size={24} />}
-          {youtubeUrl ?? <FaYoutube size={24} />}
-          {instagramUrl ?? <FaInstagram size={24} />}
-          {linkedinUrl ?? <FaLinkedin size={24} />}
-          {whatsappNumber ?? <FaWhatsapp size={24} />}
-          {skypeNumber ?? <FaSkype size={24} />}
-          {websiteUrl ?? <FaGlobe size={24} />}
+        <div className="flex justify-center gap-4 mb-2">
+          {facebookUrl && (
+            <a href={facebookUrl} target="_blank" rel="noopener noreferrer">
+              <FaFacebook size={24} />
+            </a>
+          )}
+          {twitterUrl && (
+            <a href={twitterUrl} target="_blank" rel="noopener noreferrer">
+              <FaXTwitter size={24} />
+            </a>
+          )}
+          {youtubeUrl && (
+            <a href={youtubeUrl} target="_blank" rel="noopener noreferrer">
+              <FaYoutube size={24} />
+            </a>
+          )}
+          {instagramUrl && (
+            <a href={instagramUrl} target="_blank" rel="noopener noreferrer">
+              <FaInstagram size={24} />
+            </a>
+          )}
+          {linkedinUrl && (
+            <a href={linkedinUrl} target="_blank" rel="noopener noreferrer">
+              <FaLinkedin size={24} />
+            </a>
+          )}
+          {whatsappNumber && (
+            <a
+              href={`https://wa.me/${whatsappNumber}`}
+              target="_blank"
+              rel="noopener noreferrer"
+            >
+              <FaWhatsapp size={24} />
+            </a>
+          )}
+          {skypeNumber && (
+            <a
+              href={`skype:${skypeNumber}?chat`}
+              target="_blank"
+              rel="noopener noreferrer"
+            >
+              <FaSkype size={24} />
+            </a>
+          )}
+          {websiteUrl && (
+            <a href={websiteUrl} target="_blank" rel="noopener noreferrer">
+              <FaGlobe size={24} />
+            </a>
+          )}
         </div>
       </div>
       {/* FOOTER */}
-      <div className="text-center text-xs text-gray-800 mt-8 mb-2">
+      <h2 className="text-xs font-extrabold mx-auto w-full text-center mb-2">
+        {company ?? "COMPANY"}
+      </h2>
+      <div className="text-center text-xs text-gray-800  mb-2">
         © 2024 ZwiftTech. All Right Reserved.
       </div>
     </div>
