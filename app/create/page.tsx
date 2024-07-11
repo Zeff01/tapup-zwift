@@ -143,7 +143,6 @@ export default function Create() {
   return (
     <Form {...methods}>
       <main className="flex min-h-screen bg-[#1E1E1E] text-white flex-col items-center pt-12 p-6 overflow-x-hidden">
-        <Navbar />
         <div className="w-full max-w-sm ">
           {/* HEADER */}
           <div className="text-center mt-8 mb-16 ">

@@ -18,6 +18,8 @@ const config = {
     },
     extend: {
       colors: {
+        grayDescription: "#767676",
+        greenTitle: "#6fdc00",
         placeholder: { input: "#383839" },
         border: { DEFAULT: "hsl(var(--border))", input: "#282828" },
         input: "hsl(var(--input))",

@@ -1,3 +1,4 @@
+import { downloadVCard } from "@/lib/vCardUtils";
 import { UserProfile } from "@/types/types";
 import Image from "next/image";
 import { CiCirclePlus, CiSaveDown2 } from "react-icons/ci";
@@ -33,6 +34,15 @@ const Template3 = ({
   skypeInviteUrl,
   websiteUrl,
 }: UserProfile) => {
+  const userProfile = {
+    firstName,
+    lastName,
+    email,
+    number,
+    company,
+    position,
+    websiteUrl,
+  };
   return (
     <div className="bg-black text-white  flex flex-col items-center justify-between  min-h-screen  ">
       <div className=" w-full mx-auto  max-w-[480px] ">
@@ -43,38 +53,36 @@ const Template3 = ({
               <Image
                 src={coverPhotoUrl}
                 alt="Cover Image"
-                className="mx-auto "
-                layout="fill"
-                objectFit="cover"
+                width={400}
+                height={200}
+                className="mx-auto w-full h-48 object-cover overflow-hidden"
               />
             ) : (
               <Image
                 src={"/assets/template2coverphoto.png"}
                 alt="Cover Image"
                 width={400}
-                height={100}
+                height={200}
                 className="mx-auto"
               />
             )}
           </div>
           <div className="absolute -bottom-16 left-1/2 transform -translate-x-1/2  ">
             {profilePictureUrl ? (
-              <div className="w-[90px] h-40 rounded-full mx-auto overflow-hidden">
+              <div className="w-32 h-32  rounded-full mx-auto overflow-hidden ">
                 <Image
                   src={profilePictureUrl}
                   alt="Profile Image"
-                  width={80}
-                  height={80}
+                  fill
                   className="rounded-full"
                 />
               </div>
             ) : (
-              <div className=" w-[90px] h-40 rounded-full mx-auto flex items-center justify-center">
+              <div className=" w-32 h-32 rounded-full mx-auto flex items-center justify-center">
                 <Image
-                  src={"/assets/template3samplepic.png"}
+                  src={"/assets/template4samplepic.png"}
                   alt="Profile Image"
-                  width={80}
-                  height={80}
+                  fill
                   className="rounded-full"
                   objectFit="cover"
                 />
@@ -84,71 +92,118 @@ const Template3 = ({
         </div>
 
         {/* PERSONAL INFORMATION */}
-        <div className="text-center mt-20 space-y-1">
+        <div className="text-center mt-20 space-y-1 ">
           {firstName ? (
-            <h1 className="text-xl font-bold mt-2 text-[#6fdc00] ">
-              {firstName + lastName}
+            <h1 className="text-xl font-bold mt-4 text-greenTitle">
+              {firstName + " " + lastName}
             </h1>
           ) : (
-            <h1 className="text-xl font-bold mt-2 text-[#6fdc00]">
+            <h1 className="text-xl font-bold mt-2 text-greenTitle">
               Hussain Watkins
             </h1>
           )}
-          {position ?? (
-            <p className="font-semibold text-white text-xs">
-              Chief Technology Officer
-            </p>
-          )}
-          {email ?? (
-            <p className=" text-gray-600 text-xs">H.Watkins@gmail.com</p>
-          )}
-          {number ?? <p className=" text-gray-600 text-xs">+639123456789</p>}
+
+          <p className="font-semibold text-white text-xl">
+            {position ?? "Chief Technology Officer"}
+          </p>
+
+          <p className=" text-grayDescription text-sm">
+            {email ?? "H.Watkins@gmail.com"}
+          </p>
+
+          <p className=" text-grayDescription text-sm">
+            {" "}
+            {number ?? +639123456789}
+          </p>
         </div>
 
-        {/* //TODO ADD URL HERE FOR ICONS; NULL if no url */}
         {/* SOCIAL MEDIA ICONS */}
-        <div className="flex justify-center items-center my-4 ">
-          <div className="grid grid-cols-4 gap-5">
-            {facebookUrl ?? <FaFacebook size={24} />}
-            {twitterUrl ?? <FaXTwitter size={24} />}
-            {youtubeUrl ?? <FaYoutube size={24} />}
-            {instagramUrl ?? <FaInstagram size={24} />}
-            {linkedinUrl ?? <FaLinkedin size={24} />}
-            {whatsappNumber ?? <FaWhatsapp size={24} />}
-            {skypeInviteUrl ?? <FaSkype size={24} />}
-            {websiteUrl ?? <FaGlobe size={24} />}
-          </div>
+        <div className="grid grid-cols-4 justify-center gap-4 my-4  w-40 mx-auto">
+          {facebookUrl && (
+            <a href={facebookUrl} target="_blank" rel="noopener noreferrer">
+              <FaFacebook size={24} />
+            </a>
+          )}
+          {twitterUrl && (
+            <a href={twitterUrl} target="_blank" rel="noopener noreferrer">
+              <FaXTwitter size={24} />
+            </a>
+          )}
+          {youtubeUrl && (
+            <a href={youtubeUrl} target="_blank" rel="noopener noreferrer">
+              <FaYoutube size={24} />
+            </a>
+          )}
+          {instagramUrl && (
+            <a href={instagramUrl} target="_blank" rel="noopener noreferrer">
+              <FaInstagram size={24} />
+            </a>
+          )}
+          {linkedinUrl && (
+            <a href={linkedinUrl} target="_blank" rel="noopener noreferrer">
+              <FaLinkedin size={24} />
+            </a>
+          )}
+          {whatsappNumber && (
+            <a
+              href={`https://wa.me/${whatsappNumber}`}
+              target="_blank"
+              rel="noopener noreferrer"
+            >
+              <FaWhatsapp size={24} />
+            </a>
+          )}
+          {skypeNumber && (
+            <a
+              href={`skype:${skypeNumber}?chat`}
+              target="_blank"
+              rel="noopener noreferrer"
+            >
+              <FaSkype size={24} />
+            </a>
+          )}
+          {websiteUrl && (
+            <a href={websiteUrl} target="_blank" rel="noopener noreferrer">
+              <FaGlobe size={24} />
+            </a>
+          )}
         </div>
 
         {/* CTA BUTTONS */}
-        <div className="flex justify-center space-x-4 mt-2">
+        <div className="flex justify-center space-x-4 mt-2 font-bold">
           {/* Icon buttons */}
-
-          <div className="flex flex-col justify-center items-center border-2 rounded-full py-2 px-8">
+          <div className="flex flex-col justify-center items-center border-2 rounded-full py-2 px-8 bg-white cursor-pointer">
+            <a href={`mailto:${email}`}>
+              <p className="text-xs text-black ">Email Me</p>
+            </a>
+          </div>
+          <div
+            className="flex flex-col justify-center items-center border-2 rounded-full py-2 px-8 cursor-pointer"
+            onClick={() => downloadVCard(userProfile)}
+          >
             <p className="text-xs">Save Contact</p>
           </div>
         </div>
 
         {/* COMPANY INFORMATION */}
-        {company ?? (
-          <h2 className="text-4xl font-extrabold mx-auto w-full text-center mt-6 text-[#6fdc00]">
-            COMPANY
-          </h2>
-        )}
+
+        <h2 className="text-4xl font-extrabold mx-auto w-full text-center mt-6 text-greenTitle">
+          {company ?? "COMPANY"}
+        </h2>
         <div className="mt-6">
-          <h2 className="text-sm font-bold text-[#6fdc00]">
+          <h2 className="text-md font-bold text-greenTitle">
             Company Background
           </h2>
-          <p className="text-xs mt-1">
+          <p className="text-xs text-grayDescription mt-4">
             {companyBackground ??
               "Lorem Ipsum is simply dummy text of the printing and typesetting industry."}
           </p>
 
           {/* SERVICE INFORMATION */}
-          <h3 className="text-sm font-bold mt-6 text-[#6fdc00]">
+          <h3 className="text-md font-bold mt-6 text-greenTitle">
             Our Services
           </h3>
-          <p className="text-xs mt-1">
+          <p className="text-xs text-grayDescription mt-4">
             {serviceDescription ??
               "Lorem Ipsum is simply dummy text of the printing and typesetting industry."}
           </p>
@@ -183,7 +238,7 @@ const Template3 = ({
         </div>
       </div>
       {/* FOOTER */}
-      <div className="text-center text-xs text-gray-400 mt-8 mb-2">
+      <div className="text-center text-xs text-grayDescription mt-8 mb-2">
         © 2024 ZwiftTech. All Right Reserved.
       </div>
     </div>
