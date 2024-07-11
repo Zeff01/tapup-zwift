@@ -3,6 +3,7 @@ import React, { useEffect, useState } from "react";
 import { getAllUsers } from "@/src/lib/firebase/store/users.action";
 import TableComponent from "./components/TableComponent";
 import Navbar from "@/components/ui/Navbar";
+import LoadingLogo from "@/components/LoadingLogo";
 
 export default function UsersPage() {
   const [data, setData] = useState([]);

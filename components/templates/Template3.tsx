@@ -45,7 +45,7 @@ const Template3 = ({
   };
   return (
     <div className="bg-black text-white  flex flex-col items-center justify-between  min-h-screen  ">
-      <div className=" w-full mx-auto  max-w-[480px] ">
+      <div className=" w-full mx-auto  max-w-[480px]">
         {/* COVERPHOTO AND PROFILE PIC */}
         <div className=" flex flex-col relative w-full  ">
           <div className="w-full  h-48 overflow-hidden ">
@@ -187,10 +187,10 @@ const Template3 = ({
 
         {/* COMPANY INFORMATION */}
 
-        <h2 className="text-4xl font-extrabold mx-auto w-full text-center mt-6 text-greenTitle">
+        <h2 className="text-4xl font-extrabold mx-auto w-full text-center mt-6 text-greenTitle px-4">
           {company ?? "COMPANY"}
         </h2>
-        <div className="mt-6">
+        <div className="mt-6 px-4">
           <h2 className="text-md font-bold text-greenTitle">
             Company Background
           </h2>
