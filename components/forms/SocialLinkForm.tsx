@@ -41,13 +41,13 @@ const SocialLinksForm: React.FC<SocialLinksFormProps> = ({ control }) => {
       />
       <CustomInput
         control={control}
-        name="whatsappUrl"
+        name="whatsappNumber"
         label="WhatsApp Number"
         placeholder="Enter your WhatsApp Number"
       />
       <CustomInput
         control={control}
-        name="skypeUrl"
+        name="skypeNumber"
         label="Skype Name"
         placeholder="Enter your Skype Name"
       />

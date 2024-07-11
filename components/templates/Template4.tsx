@@ -29,8 +29,8 @@ const Template4 = ({
   instagramUrl,
   twitterUrl,
   linkedinUrl,
-  whatsappUrl,
-  skypeUrl,
+  whatsappNumber,
+  skypeNumber,
   websiteUrl,
 }: UserProfile) => {
   return (
@@ -173,8 +173,8 @@ const Template4 = ({
           {youtubeUrl ?? <FaYoutube size={24} />}
           {instagramUrl ?? <FaInstagram size={24} />}
           {linkedinUrl ?? <FaLinkedin size={24} />}
-          {whatsappUrl ?? <FaWhatsapp size={24} />}
-          {skypeUrl ?? <FaSkype size={24} />}
+          {whatsappNumber ?? <FaWhatsapp size={24} />}
+          {skypeNumber ?? <FaSkype size={24} />}
           {websiteUrl ?? <FaGlobe size={24} />}
         </div>
       </div>

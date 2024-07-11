@@ -78,8 +78,8 @@ export default function UpdateComponent({ userData }: { userData: Users }) {
       instagramUrl: userData.instagramUrl || "",
       twitterUrl: userData.twitterUrl || "",
       linkedinUrl: userData.linkedinUrl || "",
-      whatsappUrl: userData.whatsappUrl || "",
-      skypeUrl: userData.skypeUrl || "",
+      whatsappNumber: userData.whatsappNumber || "",
+      skypeNumber: userData.skypeNumber || "",
       websiteUrl: userData.websiteUrl || "",
     },
   });

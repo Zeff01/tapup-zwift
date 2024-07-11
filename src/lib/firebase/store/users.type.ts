@@ -17,8 +17,8 @@ export type Users = {
   instagramUrl?: string;
   twitterUrl?: string;
   linkedinUrl?: string;
-  whatsappUrl?: string;
-  skypeUrl?: string;
+  whatsappNumber?: string;
+  skypeNumber?: string;
   websiteUrl?: string;
   printStatus: boolean;
   userCode?: string;

@@ -11,6 +11,7 @@ import {
   FaSkype,
   FaGlobe,
 } from "react-icons/fa6";
+import { downloadVCard } from "@/lib/vCardUtils";
 
 const Template1 = ({
   profilePictureUrl,
@@ -29,36 +30,18 @@ const Template1 = ({
   instagramUrl,
   twitterUrl,
   linkedinUrl,
-  whatsappUrl,
-  skypeUrl,
+  whatsappNumber,
+  skypeNumber,
   websiteUrl,
 }: UserProfile) => {
-  const handleSaveVCard = () => {
-    if (!email) {
-      console.error("No email available for vCard");
-      return;
-    }
-
-    // Manually create vCard data
-    let vCardString = "BEGIN:VCARD\n";
-    vCardString += "VERSION:3.0\n";
-    vCardString += `FN:${firstName} ${lastName}\n`;
-    vCardString += `N:${lastName};${firstName};;;\n`;
-    vCardString += `ORG:${company}\n`;
-    vCardString += `TITLE:${position}\n`;
-    vCardString += `TEL;TYPE=CELL:${number}\n`;
-    vCardString += `EMAIL:${email}\n`;
-    vCardString += `URL:${websiteUrl}\n`;
-    vCardString += "END:VCARD";
-
-    // Create a Blob from the vCard String
-    const blob = new Blob([vCardString], { type: "text/vcard;charset=utf-8" });
-    const link = document.createElement("a");
-    link.href = window.URL.createObjectURL(blob);
-    link.download = `${firstName}_${lastName}_contact.vcf`;
-    document.body.appendChild(link);
-    link.click();
-    document.body.removeChild(link);
+  const userProfile = {
+    firstName,
+    lastName,
+    email,
+    number,
+    company,
+    position,
+    websiteUrl,
   };
 
   return (
@@ -144,7 +127,7 @@ const Template1 = ({
             <CiSaveDown2
               size={32}
               className="cursor-pointer"
-              onClick={handleSaveVCard}
+              onClick={() => downloadVCard(userProfile)}
             />
             <p className="text-xs">Save</p>
           </div>
@@ -177,18 +160,18 @@ const Template1 = ({
               <FaLinkedin size={24} />
             </a>
           )}
-          {whatsappUrl && (
+          {whatsappNumber && (
             <a
-              href={`https://wa.me/${whatsappUrl}`}
+              href={`https://wa.me/${whatsappNumber}`}
               target="_blank"
               rel="noopener noreferrer"
             >
               <FaWhatsapp size={24} />
             </a>
           )}
-          {skypeUrl && (
+          {skypeNumber && (
             <a
-              href={`skype:${skypeUrl}?call`}
+              href={`skype:${skypeNumber}?chat`}
               target="_blank"
               rel="noopener noreferrer"
             >

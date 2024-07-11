@@ -117,8 +117,8 @@ export const createPortfolioSchema = z.object({
       }
     )
     .optional(),
-  whatsappUrl: z.string().optional(),
-  skypeUrl: z.string().optional(),
+  whatsappNumber: z.string().optional(),
+  skypeNumber: z.string().optional(),
   websiteUrl: z
     .string()
     .refine(
