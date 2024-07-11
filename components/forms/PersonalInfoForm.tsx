@@ -42,7 +42,11 @@ const PersonalInfoForm: React.FC<PersonalInfoFormProps> = ({ control }) => {
             </FormLabel>
             <div className="flex w-full flex-col">
               <FormControl>
-                <PhoneInput placeholder="Enter your phone number" {...field} />
+                <PhoneInput
+                  defaultCountry="PH"
+                  placeholder="Enter your phone number"
+                  {...field}
+                />
               </FormControl>
               <FormMessage className="text-12 text-red-500 mt-2" />
             </div>

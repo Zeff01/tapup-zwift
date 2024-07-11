@@ -53,6 +53,7 @@ const SocialLinksForm: React.FC<SocialLinksFormProps> = ({ control }) => {
             <div className="flex w-full flex-col">
               <FormControl>
                 <PhoneInput
+                  defaultCountry="PH"
                   placeholder="Enter your WhatsApp Number"
                   {...field}
                 />
