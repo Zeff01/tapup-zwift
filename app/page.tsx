@@ -14,10 +14,6 @@ export default function Home() {
     visible: { y: 0, opacity: 1, transition: { delay: 0.8, duration: 0.8 } },
   };
 
-  const buttonVariants = {
-    hover: { scale: 1.05, transition: { yoyo: Infinity } },
-  };
-
   return (
     <main className="flex flex-col min-h-screen justify-between bg-[#1E1E1E] text-white items-center pt-12 p-6 space-y-6">
       <motion.div
