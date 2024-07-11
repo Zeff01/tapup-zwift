@@ -45,7 +45,7 @@ const Template1 = ({
   };
 
   return (
-    <div className="bg-white text-black  flex flex-col items-center justify-between  min-h-screen">
+    <div className="bg-white text-black flex flex-col items-center justify-between  min-h-screen">
       <div
         className=" w-full mx-auto  max-w-[480px]"
         style={{
@@ -118,7 +118,7 @@ const Template1 = ({
         </div>
 
         {/* SOCIAL MEDIA ICONS */}
-        <div className="flex justify-center gap-6 my-4 text-pink-400">
+        <div className="flex justify-center sm:gap-6 gap-4 my-4 text-pink-400">
           {facebookUrl && (
             <a href={facebookUrl} target="_blank" rel="noopener noreferrer">
               <FaFacebook size={24} />
@@ -205,7 +205,7 @@ const Template1 = ({
           </p>
         </div>
 
-        <div className="grid grid-cols-2 gap-4 mt-6 ">
+        <div className="grid grid-cols-2 gap-2 p-2 mt-6">
           {servicePhotos
             ? servicePhotos.map((photo, index) => (
                 <div key={index} className="col-span-1">

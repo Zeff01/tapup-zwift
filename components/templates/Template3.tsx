@@ -209,7 +209,7 @@ const Template3 = ({
           </p>
         </div>
 
-        <div className="grid grid-cols-2 gap-4 mt-6 ">
+        <div className="grid grid-cols-2 gap-2 mt-6  p-2">
           {servicePhotos
             ? servicePhotos.map((photo, index) => (
                 <div key={index} className="col-span-1">

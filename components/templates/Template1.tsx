@@ -134,7 +134,7 @@ const Template1 = ({
         </div>
 
         {/* SOCIAL MEDIA ICONS */}
-        <div className="flex justify-center gap-6 my-4">
+        <div className="flex justify-center gap-4 sm:gap-6 my-4">
           {facebookUrl && (
             <a href={facebookUrl} target="_blank" rel="noopener noreferrer">
               <FaFacebook size={24} />
