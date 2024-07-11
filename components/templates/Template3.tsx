@@ -153,9 +153,9 @@ const Template3 = ({
               <FaWhatsapp size={24} />
             </a>
           )}
-          {skypeNumber && (
+          {skypeInviteUrl && (
             <a
-              href={`skype:${skypeNumber}?chat`}
+              href={`skype:${skypeInviteUrl}?chat`}
               target="_blank"
               rel="noopener noreferrer"
             >
