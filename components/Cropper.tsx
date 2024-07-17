@@ -62,7 +62,7 @@ interface CropperProps extends HTMLAttributes<HTMLDivElement> {
     | ((imageUrl: string) => void);
   setPhoto: Dispatch<SetStateAction<Photo | null>> | ((photo: Photo) => void);
   aspect: number;
-  changeImage(img: string): void;
+  changeImage?: (img: string) => void;
   maxHeight?: number;
   circularCrop?: boolean;
   fallback: ReactNode;
@@ -121,6 +121,7 @@ export default function Cropper({
   }
 
   async function onDownloadCropClick() {
+    setLoading(true);
     const image = imgRef.current;
     const previewCanvas = previewCanvasRef.current;
     if (!image || !previewCanvas || !completedCrop) {
@@ -163,7 +164,6 @@ export default function Cropper({
           type: "image/png",
         });
         try {
-          setLoading(true);
           const dl_url = await uploadImage({
             preview: URL.createObjectURL(file),
             raw: file,
@@ -294,7 +294,7 @@ export default function Cropper({
                       <Button
                         type="button"
                         onClick={onDownloadCropClick}
-                        className="w-20 disabled:opacity-50 disabled:cursor-not-allowed"
+                        className="w-20 z-[500] disabled:opacity-50 disabled:cursor-not-allowed"
                         disabled={loading}
                       >
                         {loading ? (
@@ -307,11 +307,6 @@ export default function Cropper({
                       </Button>
                     )}
                   </div>
-                  {/* <div>
-                            <button onClick={handleToggleAspectClick}>
-                                Toggle aspect {aspect ? 'off' : 'on'}
-                            </button>
-                        </div> */}
                 </div>
                 <div className="px-2">
                   {!!imgSrc && (
@@ -352,10 +347,6 @@ export default function Cropper({
                       />
                     </div>
                     <div>
-                      {/* <div style={{ fontSize: 12, color: '#666' }}>
-                                If you get a security error when downloading try opening the
-                                Preview in a new tab (icon near top right).
-                                </div> */}
                       <a
                         href="#hidden"
                         ref={hiddenAnchorRef}
