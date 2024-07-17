@@ -122,71 +122,80 @@ export default function Cropper({
 
   async function onDownloadCropClick() {
     setLoading(true);
-    const image = imgRef.current;
-    const previewCanvas = previewCanvasRef.current;
-    if (!image || !previewCanvas || !completedCrop) {
-      throw new Error("Crop canvas does not exist");
-    }
 
-    const scaleX = image.naturalWidth / image.width;
-    const scaleY = image.naturalHeight / image.height;
-
-    const offscreen = new OffscreenCanvas(
-      completedCrop.width * scaleX,
-      completedCrop.height * scaleY
-    );
-    const ctx = offscreen.getContext("2d");
-    if (!ctx) {
-      throw new Error("No 2d context");
-    }
-
-    ctx.drawImage(
-      previewCanvas,
-      0,
-      0,
-      previewCanvas.width,
-      previewCanvas.height,
-      0,
-      0,
-      offscreen.width,
-      offscreen.height
-    );
-
-    const blob = await offscreen.convertToBlob({
-      type: "image/png",
-    });
-
-    const reader = new FileReader();
-    reader.onload = async (event) => {
-      const fileAsDataURL = event.target?.result;
-      if (typeof fileAsDataURL === "string") {
-        const file = new File([blob], "cropped-image.png", {
-          type: "image/png",
-        });
-        try {
-          const dl_url = await uploadImage({
-            preview: URL.createObjectURL(file),
-            raw: file,
-          });
-          setPhoto({ preview: fileAsDataURL, raw: file });
-          console.log(dl_url);
-          if (dl_url) setImageUrl(dl_url);
-          toast.success("Image cropped and uploaded.");
-        } catch (error) {
-          console.error(error, "failed to upload image");
-          toast.error("Failed to crop and upload image");
-        } finally {
-          setLoading(false);
-          toggleModal();
-        }
+    try {
+      const image = imgRef.current;
+      const previewCanvas = previewCanvasRef.current;
+      if (!image || !previewCanvas || !completedCrop) {
+        throw new Error("Crop canvas does not exist");
       }
-    };
-    reader.readAsDataURL(blob);
 
-    if (blobUrlRef.current) {
-      URL.revokeObjectURL(blobUrlRef.current);
+      const scaleX = image.naturalWidth / image.width;
+      const scaleY = image.naturalHeight / image.height;
+
+      const offscreen = new OffscreenCanvas(
+        completedCrop.width * scaleX,
+        completedCrop.height * scaleY
+      );
+      const ctx = offscreen.getContext("2d");
+      if (!ctx) {
+        throw new Error("No 2d context");
+      }
+
+      ctx.drawImage(
+        previewCanvas,
+        0,
+        0,
+        previewCanvas.width,
+        previewCanvas.height,
+        0,
+        0,
+        offscreen.width,
+        offscreen.height
+      );
+
+      const blob = await offscreen.convertToBlob({
+        type: "image/png",
+      });
+
+      const reader = new FileReader();
+      reader.onload = async (event) => {
+        const fileAsDataURL = event.target?.result;
+        if (typeof fileAsDataURL === "string") {
+          const file = new File([blob], "cropped-image.png", {
+            type: "image/png",
+          });
+          try {
+            const dl_url = await uploadImage({
+              preview: URL.createObjectURL(file),
+              raw: file,
+            });
+            setPhoto({ preview: fileAsDataURL, raw: file });
+            console.log(dl_url);
+            if (dl_url) setImageUrl(dl_url);
+            toast.success("Image cropped and uploaded.");
+          } catch (error) {
+            console.error(error, "failed to upload image");
+            toast.error("Failed to crop and upload image");
+          } finally {
+            setLoading(false);
+            toggleModal();
+          }
+        }
+      };
+      reader.readAsDataURL(blob);
+
+      if (blobUrlRef.current) {
+        URL.revokeObjectURL(blobUrlRef.current);
+      }
+      blobUrlRef.current = URL.createObjectURL(blob);
+    } catch (err) {
+      console.error(err, "Something Went Wrong");
+      toast.error("Failed to crop");
+    } finally {
+      setLoading(false);
+      toggleModal();
     }
-    blobUrlRef.current = URL.createObjectURL(blob);
   }
 
   useDebounceEffect(
