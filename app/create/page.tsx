@@ -106,43 +106,6 @@ export default function Create() {
     }
   };
 
-  console.log("values", methods.getValues());
-  console.log("error", methods.formState.errors);
-
-  const handlePhotoChange = async (event: ChangeEvent<HTMLInputElement>) => {
-    if (event.target.files && event.target.files[0]) {
-      const file = event.target.files[0];
-      setPhoto({
-        preview: URL.createObjectURL(file),
-        raw: file,
-      });
-
-      const dl_url = await uploadImage({
-        preview: URL.createObjectURL(file),
-        raw: file,
-      });
-      if (dl_url) setImageUrl(dl_url);
-    }
-  };
-
-  const handleCoverPhotoChange = async (
-    event: ChangeEvent<HTMLInputElement>
-  ) => {
-    if (event.target.files && event.target.files[0]) {
-      const file = event.target.files[0];
-      setCoverPhoto({
-        preview: URL.createObjectURL(file),
-        raw: file,
-      });
-
-      const downloadUrl = await uploadImage({
-        preview: URL.createObjectURL(file),
-        raw: file,
-      });
-      if (downloadUrl) setCoverPhotoUrl(downloadUrl);
-    }
-  };
-
   return (
     <Form {...methods}>
       <main className="flex min-h-screen bg-[#1E1E1E] text-white flex-col items-center pt-12 p-6 overflow-x-hidden">
@@ -178,9 +141,6 @@ export default function Create() {
                       photo={coverPhoto}
                       aspect={16 / 9}
                       setPhoto={setCoverPhoto}
-                      changeImage={(img) =>
-                        console.log("New Cover Image:", img)
-                      }
                       className="w-full aspect-[16/9] rounded-2xl overflow-hidden"
                       imageClassName="rounded-2xl"
                       fallback={
@@ -206,9 +166,6 @@ export default function Create() {
                         photo={photo}
                         aspect={1}
                         setPhoto={setPhoto}
-                        changeImage={(img) =>
-                          console.log("New Profile Image:", img)
-                        }
                         circularCrop
                         className="w-[120px] h-[120px] lg:w-[150px] lg:h-[150px] rounded-full"
                         fallback={
@@ -283,9 +240,6 @@ export default function Create() {
                               aspect={1}
                               setImageUrl={addServiceImageUrl}
                               setPhoto={addServicePhoto}
-                              changeImage={(img) =>
-                                console.log("New Cover Image:", img)
-                              }
                               className="w-[128px] h-[128px] rounded-md"
                               disablePreview // only shows the fallback
                               fallback={
@@ -328,9 +282,6 @@ export default function Create() {
                                 aspect={1}
                                 setImageUrl={addServiceImageUrl}
                                 setPhoto={addServicePhoto}
-                                changeImage={(img) =>
-                                  console.log("New Cover Image:", img)
-                                }
                                 className="w-[77px] h-[77px] rounded-md"
                                 disablePreview // only shows the fallback
                                 fallback={
