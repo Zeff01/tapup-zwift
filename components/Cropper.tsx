@@ -171,7 +171,6 @@ export default function Cropper({
               raw: file,
             });
             setPhoto({ preview: fileAsDataURL, raw: file });
-            console.log(dl_url);
             if (dl_url) setImageUrl(dl_url);
             toast.success("Image cropped and uploaded.");
           } catch (error) {
@@ -287,20 +286,19 @@ export default function Cropper({
                     </div>
                   </div>
                   <div className="w-full flex flex-row gap-6 justify-center items-center">
-                    <Button
-                      variant={"outline"}
+                    <button
                       type="button"
                       onClick={toggleModal}
-                      className="w-20 text-white disabled:opacity-50 disabled:cursor-not-allowed"
+                      className="w-20 text-white border disabled:cursor-not-allowed items-center justify-center whitespace-nowrap rounded-md text-sm font-medium ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 border-input bg-transparent hover:bg-accent py-2 hover:text-accent-foreground"
                       disabled={loading}
                     >
                       Cancel
-                    </Button>
+                    </button>
                     {!!imgSrc && (
-                      <Button
+                      <button
                         type="button"
                         onClick={onDownloadCropClick}
-                        className="w-20 z-[500] disabled:opacity-50 disabled:cursor-not-allowed"
+                        className="w-20 z-[500] disabled:opacity-50 disabled:cursor-not-allowed bg-primary text-primary-foreground hover:bg-primary/90 py-2 rounded-md"
                         disabled={loading}
                       >
                         {loading ? (
@@ -310,7 +308,7 @@ export default function Cropper({
                         ) : (
                           "Save"
                         )}
-                      </Button>
+                      </button>
                     )}
                   </div>
                 </div>
