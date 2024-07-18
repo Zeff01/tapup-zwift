@@ -192,9 +192,6 @@ export default function Cropper({
     } catch (err) {
       console.error(err, "Something Went Wrong");
       toast.error("Failed to crop");
-    } finally {
-      setLoading(false);
-      toggleModal();
     }
   }
 
