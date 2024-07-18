@@ -173,9 +173,9 @@ export default function Cropper({
             setPhoto({ preview: fileAsDataURL, raw: file });
             if (dl_url) setImageUrl(dl_url);
             toast.success("Image cropped and uploaded.");
-          } catch (error) {
+          } catch (error: any) {
             console.error(error, "failed to upload image");
-            toast.error("Failed to crop and upload image");
+            toast.error(JSON.stringify(error.message));
           } finally {
             setLoading(false);
             toggleModal();
@@ -188,9 +188,11 @@ export default function Cropper({
         URL.revokeObjectURL(blobUrlRef.current);
       }
       blobUrlRef.current = URL.createObjectURL(blob);
-    } catch (err) {
-      console.error(err, "Something Went Wrong");
-      toast.error("Failed to crop");
+    } catch (err: any) {
+      console.error(err.message, "Something Went Wrong");
+      toast.error(JSON.stringify(err.message));
+      setLoading(false);
+      toggleModal();
     }
   }
 
