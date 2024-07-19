@@ -108,7 +108,6 @@ export default function Cropper({
 
   function onSelectFile(e: React.ChangeEvent<HTMLInputElement>) {
     if (e.target.files && e.target.files.length > 0) {
-      console.log(e.target.files);
       setCrop(undefined); // Makes crop preview update between images.
       //   toggleModal()
       const reader = new FileReader();
