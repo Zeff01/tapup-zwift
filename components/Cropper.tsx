@@ -97,13 +97,18 @@ export default function Cropper({
   const [showModal, setShowModal] = useState(false);
   const [csr, SetCsr] = useState(false);
   const [loading, setLoading] = useState(false);
+  const [imageLoaded, setImageLoaded] = useState(false);
 
   function toggleModal() {
+    setCrop(undefined);
+    setImageLoaded(false);
+    setImgSrc("");
     setShowModal((m) => !m);
   }
 
   function onSelectFile(e: React.ChangeEvent<HTMLInputElement>) {
     if (e.target.files && e.target.files.length > 0) {
+      console.log(e.target.files);
       setCrop(undefined); // Makes crop preview update between images.
       //   toggleModal()
       const reader = new FileReader();
@@ -111,10 +116,13 @@ export default function Cropper({
         setImgSrc(reader.result?.toString() || "");
       });
       reader.readAsDataURL(e.target.files[0]);
+      e.target.value = "";
     }
   }
 
+  // TODO: Loaded Bug
   function onImageLoad(e: React.SyntheticEvent<HTMLImageElement>) {
+    setImageLoaded(true);
     if (aspect) {
       const { width, height } = e.currentTarget;
       setCrop(centerAspectCrop(width, height, aspect));
@@ -178,7 +186,9 @@ export default function Cropper({
             console.error(error, "failed to upload image");
             toast.error(JSON.stringify(error.message));
           } finally {
+            setImageLoaded(false);
             setLoading(false);
+            setCrop(undefined);
             setImgSrc("");
             toggleModal();
           }
@@ -226,7 +236,6 @@ export default function Cropper({
   if (!csr) {
     return null;
   }
-  console.log({ imageUrl, photoPreview: photo?.preview });
   return (
     <div className="cropper">
       <div
@@ -244,6 +253,7 @@ export default function Cropper({
           className="w-full h-full absolute top-0 left-0 opacity-0 z-10"
           onClick={toggleModal}
           placeholder="cropper"
+          // style={{ display: "none" }}
         />
         {(photo?.preview ?? imageUrl) && !disablePreview ? (
           <div className="flex items-center justify-center  overflow-hidden relative bg-[#222224] h-full">
@@ -261,18 +271,6 @@ export default function Cropper({
             />
           </div>
         ) : (
-          // <Image
-          //   src={photo?.preview ?? imageUrl ?? ""}
-          //   alt="Profile"
-          // className={cn(
-          //   `w-full h-full pointer-events-none ${
-          //     circularCrop ? "rounded-full" : ""
-          //   }`,
-          //   imageClassName
-          // )}
-          //   width={500}
-          //   height={500}
-          // />
           fallback
         )}
       </div>
@@ -313,7 +311,7 @@ export default function Cropper({
                     >
                       Cancel
                     </button>
-                    {!!imgSrc && (
+                    {!!imgSrc && imageLoaded && (
                       <button
                         type="button"
                         onClick={onDownloadCropClick}
@@ -343,15 +341,21 @@ export default function Cropper({
                       maxHeight={maxHeight}
                       circularCrop={circularCrop}
                     >
-                      <Image
-                        ref={imgRef}
-                        alt="Crop me"
-                        src={imgSrc}
-                        style={{ transform: `scale(${scale})` }}
-                        onLoad={onImageLoad}
-                        width={400}
-                        height={400}
-                      />
+                      <div className="relative flex items-center justify-center bg-black/30">
+                        <Loader2 className="animate-spin size-20 absolute " />
+                        <Image
+                          ref={imgRef}
+                          alt="Crop me"
+                          src={imgSrc || "/assets/zwift-logo.png"}
+                          style={{
+                            transform: `scale(${scale})`,
+                            opacity: imageLoaded ? "100" : "0",
+                          }}
+                          onLoad={onImageLoad}
+                          width={400}
+                          height={400}
+                        />
+                      </div>
                     </ReactCrop>
                   )}
                 </div>
