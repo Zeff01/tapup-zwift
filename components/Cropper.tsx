@@ -32,6 +32,10 @@ import { toast } from "react-toastify";
 import { cn } from "@/lib/utils";
 import { ReactNode } from "react";
 import ImageLoaded from "./ImageLoaded";
+import {
+  firebaseDb,
+  firebaseStorage,
+} from "@/src/lib/firebase/config/firebase";
 
 // This is to demonstate how to make and center a % aspect crop
 // which is a bit trickier so we use some helper functions.
@@ -93,7 +97,6 @@ export default function Cropper({
   const [crop, setCrop] = useState<Crop>();
   const [completedCrop, setCompletedCrop] = useState<PixelCrop>();
   const [scale, setScale] = useState(1);
-  //   const [aspect, setAspect] = useState<number | undefined>(16 / 6)
   const [showModal, setShowModal] = useState(false);
   const [csr, SetCsr] = useState(false);
   const [loading, setLoading] = useState(false);
@@ -130,72 +133,85 @@ export default function Cropper({
 
   async function onDownloadCropClick() {
     setLoading(true);
-
     try {
       const image = imgRef.current;
       const previewCanvas = previewCanvasRef.current;
       if (!image || !previewCanvas || !completedCrop) {
         throw new Error("Crop canvas does not exist");
       }
-
-      const scaleX = image.naturalWidth / image.width;
-      const scaleY = image.naturalHeight / image.height;
-
-      const offscreen = new OffscreenCanvas(
-        completedCrop.width * scaleX,
-        completedCrop.height * scaleY
-      );
-      const ctx = offscreen.getContext("2d");
+      const ctx = previewCanvas.getContext("2d");
       if (!ctx) {
         throw new Error("No 2d context");
       }
+      previewCanvas.toBlob((blob) => {
+        if (blob) {
+          const reader = new FileReader();
+          reader.onload = async (event) => {
+            const fileAsDataURL = event.target?.result;
+            if (typeof fileAsDataURL === "string") {
+              const file = new File([blob], "cropped-image.png", {
+                type: "image/png",
+              });
+              try {
+                const dl_url = await uploadImage({
+                  preview: URL.createObjectURL(file),
+                  raw: file,
+                });
+                setPhoto({ preview: fileAsDataURL, raw: file });
+                if (dl_url) setImageUrl(dl_url);
+                toast.success("Image cropped and uploaded.");
+              } catch (error: any) {
+                console.error(error, "failed to upload image");
+                toast.error(JSON.stringify(error.message));
+              } finally {
+                setLoading(false);
+                toggleModal();
+              }
+            }
+          };
+          reader.readAsDataURL(blob);
 
-      ctx.drawImage(
-        previewCanvas,
-        0,
-        0,
-        previewCanvas.width,
-        previewCanvas.height,
-        0,
-        0,
-        offscreen.width,
-        offscreen.height
-      );
-
-      const blob = await offscreen.convertToBlob({
-        type: "image/png",
-      });
-
-      const reader = new FileReader();
-      reader.onload = async (event) => {
-        const fileAsDataURL = event.target?.result;
-        if (typeof fileAsDataURL === "string") {
-          const file = new File([blob], "cropped-image.png", {
-            type: "image/png",
-          });
-          try {
-            const dl_url = await uploadImage({
-              preview: URL.createObjectURL(file),
-              raw: file,
-            });
-            setPhoto({ preview: fileAsDataURL, raw: file });
-            if (dl_url) setImageUrl(dl_url);
-            toast.success("Image cropped and uploaded.");
-          } catch (error: any) {
-            console.error(error, "failed to upload image");
-            toast.error(JSON.stringify(error.message));
-          } finally {
-            setLoading(false);
-            toggleModal();
+          if (blobUrlRef.current) {
+            URL.revokeObjectURL(blobUrlRef.current);
           }
+          blobUrlRef.current = URL.createObjectURL(blob);
         }
-      };
-      reader.readAsDataURL(blob);
+      }, "image/png");
 
-      if (blobUrlRef.current) {
-        URL.revokeObjectURL(blobUrlRef.current);
-      }
-      blobUrlRef.current = URL.createObjectURL(blob);
+      //   const blob = await offscreen.convertToBlob({
+      //     type: "image/png",
+      //   });
+
+      //   const reader = new FileReader();
+      //   reader.onload = async (event) => {
+      //     const fileAsDataURL = event.target?.result;
+      //     if (typeof fileAsDataURL === "string") {
+      //       const file = new File([blob], "cropped-image.png", {
+      //         type: "image/png",
+      //       });
+      //       try {
+      //         const dl_url = await uploadImage({
+      //           preview: URL.createObjectURL(file),
+      //           raw: file,
+      //         });
+      //         setPhoto({ preview: fileAsDataURL, raw: file });
+      //         if (dl_url) setImageUrl(dl_url);
+      //         toast.success("Image cropped and uploaded.");
+      //       } catch (error: any) {
+      //         console.error(error, "failed to upload image");
+      //         toast.error(JSON.stringify(error.message));
+      //       } finally {
+      //         setLoading(false);
+      //         toggleModal();
+      //       }
+      //     }
+      //   };
+      //   reader.readAsDataURL(blob);
+
+      //   if (blobUrlRef.current) {
+      //     URL.revokeObjectURL(blobUrlRef.current);
+      //   }
+      //   blobUrlRef.current = URL.createObjectURL(blob);
     } catch (err: any) {
       console.error(err.message, "Something Went Wrong");
       toast.error(JSON.stringify(err.message));
@@ -298,6 +314,7 @@ export default function Cropper({
                       <Plus />
                     </div>
                   </div>
+
                   <div className="w-full flex flex-row gap-6 justify-center items-center">
                     <button
                       type="button"
