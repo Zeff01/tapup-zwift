@@ -1,17 +1,28 @@
+import { cn } from "@/lib/utils";
 import Image from "next/image";
 import React from "react";
 
-const ImageLoaded = ({ url }: { url: string }) => {
+const ImageLoaded = ({
+  url,
+  className,
+  width,
+  height,
+}: {
+  url: string;
+  className?: string;
+  width?: number;
+  height?: number;
+}) => {
   const [loading, setLoading] = React.useState(true);
   return (
     <Image
       key={url}
       src={url}
-      width={77}
-      height={77}
+      width={width || 77}
+      height={height || 77}
       alt={`service-${url}`}
       onLoad={() => setLoading(false)}
-      className="rounded-md absolute top-0 left-0"
+      className={cn(className)}
       style={{
         backgroundColor: !loading ? "white" : "",
       }}

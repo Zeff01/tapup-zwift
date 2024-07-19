@@ -21,6 +21,7 @@ import PersonalInfoForm from "@/components/forms/PersonalInfoForm";
 import CompanyInfoForm from "@/components/forms/CompanyInfoForm";
 import { toast } from "react-toastify";
 import ImageLoaded from "@/components/ImageLoaded";
+import revalidateUserPath from "@/src/lib/firebase/store/user.revalidate";
 
 export type ChosenTemplateType = z.infer<
   typeof createPortfolioSchema
@@ -108,7 +109,6 @@ export default function UpdateComponent({ userData }: { userData: Users }) {
     });
     console.log("addUser response:", userInfo);
     setLoading(false); // load ends
-    methods.reset();
     if (userInfo) {
       toast.success(userInfo.message);
     } else {
@@ -282,7 +282,10 @@ export default function UpdateComponent({ userData }: { userData: Users }) {
                                   className="flex items-center justify-center rounded-md h-[77px] w-[77px] overflow-hidden relative bg-[#222224] border border-[#2c2c2c]"
                                 >
                                   <Loader2 className="animate-spin" />
-                                  <ImageLoaded url={url} />
+                                  <ImageLoaded
+                                    className="rounded-md absolute top-0 left-0"
+                                    url={url}
+                                  />
                                 </div>
                               );
                             })}
@@ -344,7 +347,7 @@ export default function UpdateComponent({ userData }: { userData: Users }) {
                   <LoaderCircle className="animate-spin" />
                 </span>
               ) : (
-                "Submit"
+                "Update"
               )}
             </button>
           </form>

@@ -271,7 +271,10 @@ export default function Create() {
                                   className="flex items-center justify-center rounded-md h-[77px] w-[77px] overflow-hidden relative bg-[#222224] border border-[#2c2c2c]"
                                 >
                                   <Loader2 className="animate-spin" />
-                                  <ImageLoaded url={url} />
+                                  <ImageLoaded
+                                    className="rounded-md absolute top-0 left-0"
+                                    url={url}
+                                  />
                                 </div>
                               );
                             })}
