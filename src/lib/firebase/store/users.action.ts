@@ -91,7 +91,6 @@ export const updateUserById = async (
     await setDoc(userRef, { ...user }, { merge: true });
     console.log("Document updated with ID: ", user_id);
     revalidateUserPath("/users");
-    revalidateUserPath(`/update/${user_id}`);
     return { success: true, message: `Document updated with ID: ${user_id}` };
   } catch (error: any) {
     console.error("Error updating document: ", error);

@@ -10,7 +10,7 @@ import React, {
 import { Slider } from "@/components/ui/slider";
 import { createPortal } from "react-dom";
 import { Input } from "@/components/ui/input";
-import { Minus, Plus } from "lucide-react";
+import { Loader2, Minus, Plus } from "lucide-react";
 import Image from "next/image";
 import { Photo } from "@/src/lib/firebase/store/users.type";
 import { uploadImage } from "@/src/lib/firebase/store/users.action";
@@ -31,6 +31,7 @@ import { Button } from "@/components/ui/button";
 import { toast } from "react-toastify";
 import { cn } from "@/lib/utils";
 import { ReactNode } from "react";
+import ImageLoaded from "./ImageLoaded";
 
 // This is to demonstate how to make and center a % aspect crop
 // which is a bit trickier so we use some helper functions.
@@ -178,6 +179,7 @@ export default function Cropper({
             toast.error(JSON.stringify(error.message));
           } finally {
             setLoading(false);
+            setImgSrc("");
             toggleModal();
           }
         }
@@ -224,13 +226,14 @@ export default function Cropper({
   if (!csr) {
     return null;
   }
-
+  console.log({ imageUrl, photoPreview: photo?.preview });
   return (
     <div className="cropper">
       <div
         className={cn(
           "relative w-full h-full border border-[#2c2c2c]",
-          className
+          className,
+          (imageUrl || photo?.preview) && "overflow-hidden"
         )}
         {...rest}
       >
@@ -243,19 +246,33 @@ export default function Cropper({
           placeholder="cropper"
         />
         {(photo?.preview ?? imageUrl) && !disablePreview ? (
-          <Image
-            src={photo?.preview ?? imageUrl ?? ""}
-            alt="Profile"
-            className={cn(
-              `w-full h-full pointer-events-none ${
-                circularCrop ? "rounded-full" : ""
-              }`,
-              imageClassName
-            )}
-            width={500}
-            height={500}
-          />
+          <div className="flex items-center justify-center  overflow-hidden relative bg-[#222224] h-full">
+            <Loader2 className="animate-spin" />
+            <ImageLoaded
+              className={cn(
+                `w-full h-full pointer-events-none absolute top-0 left-0 ${
+                  circularCrop ? "rounded-full" : ""
+                }`,
+                imageClassName
+              )}
+              width={500}
+              height={500}
+              url={photo?.preview ?? imageUrl ?? ""}
+            />
+          </div>
         ) : (
+          // <Image
+          //   src={photo?.preview ?? imageUrl ?? ""}
+          //   alt="Profile"
+          // className={cn(
+          //   `w-full h-full pointer-events-none ${
+          //     circularCrop ? "rounded-full" : ""
+          //   }`,
+          //   imageClassName
+          // )}
+          //   width={500}
+          //   height={500}
+          // />
           fallback
         )}
       </div>
