@@ -186,10 +186,7 @@ export default function Cropper({
             console.error(error, "failed to upload image");
             toast.error(JSON.stringify(error.message));
           } finally {
-            setImageLoaded(false);
             setLoading(false);
-            setCrop(undefined);
-            setImgSrc("");
             toggleModal();
           }
         }
