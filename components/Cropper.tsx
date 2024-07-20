@@ -36,6 +36,7 @@ import {
   firebaseDb,
   firebaseStorage,
 } from "@/src/lib/firebase/config/firebase";
+import { m } from "framer-motion";
 
 // This is to demonstate how to make and center a % aspect crop
 // which is a bit trickier so we use some helper functions.
@@ -143,6 +144,17 @@ export default function Cropper({
       if (!ctx) {
         throw new Error("No 2d context");
       }
+      ctx.drawImage(
+        previewCanvas,
+        0,
+        0,
+        completedCrop.width,
+        completedCrop.height,
+        0,
+        0,
+        completedCrop.width,
+        completedCrop.height
+      );
       previewCanvas.toBlob((blob) => {
         if (blob) {
           const reader = new FileReader();
