@@ -121,7 +121,6 @@ export default function Create() {
               className="mx-auto mb-8"
             />
           </div>
-
           <form
             className="space-y-6"
             onSubmit={methods.handleSubmit(formSubmit)}

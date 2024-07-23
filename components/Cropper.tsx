@@ -140,91 +140,72 @@ export default function Cropper({
       if (!image || !previewCanvas || !completedCrop) {
         throw new Error("Crop canvas does not exist");
       }
-      const ctx = previewCanvas.getContext("2d");
-      if (!ctx) {
-        throw new Error("No 2d context");
-      }
-      ctx.drawImage(
-        previewCanvas,
-        0,
-        0,
-        completedCrop.width,
-        completedCrop.height,
-        0,
-        0,
-        completedCrop.width,
-        completedCrop.height
-      );
       previewCanvas.toBlob((blob) => {
         if (blob) {
-          const reader = new FileReader();
-          reader.onload = async (event) => {
-            const fileAsDataURL = event.target?.result;
-            if (typeof fileAsDataURL === "string") {
-              const file = new File([blob], "cropped-image.png", {
-                type: "image/png",
-              });
-              try {
-                const dl_url = await uploadImage({
-                  preview: URL.createObjectURL(file),
-                  raw: file,
-                });
-                setPhoto({ preview: fileAsDataURL, raw: file });
-                if (dl_url) setImageUrl(dl_url);
-                toast.success("Image cropped and uploaded.");
-              } catch (error: any) {
-                console.error(error, "failed to upload image");
-                toast.error(JSON.stringify(error.message));
-              } finally {
-                setLoading(false);
-                toggleModal();
-              }
-            }
-          };
-          reader.readAsDataURL(blob);
+          try {
+            const reader = new FileReader();
+            reader.readAsDataURL(blob);
+            reader.onload = async (event) => {
+              const imgElement = document.createElement("img");
+              imgElement.src = event.target?.result as string;
+              imgElement.onload = async function (e: any) {
+                const canvas = document.createElement("canvas");
+                const MAX_WIDTH = 400;
 
-          if (blobUrlRef.current) {
-            URL.revokeObjectURL(blobUrlRef.current);
+                const scaleSize = MAX_WIDTH / e.target.width;
+                canvas.width = MAX_WIDTH;
+                canvas.height = e.target.height * scaleSize;
+
+                const ctx = canvas.getContext("2d");
+
+                ctx?.drawImage(e.target, 0, 0, canvas.width, canvas.height);
+
+                canvas.toBlob((newBlob) => {
+                  if (newBlob) {
+                    const newreader = new FileReader();
+                    newreader.readAsDataURL(newBlob);
+                    newreader.onload = async (newevent) => {
+                      const fileAsDataURL = newevent.target?.result;
+                      if (typeof fileAsDataURL === "string") {
+                        const file = new File([newBlob], "cropped-image.png", {
+                          type: "image/png",
+                        });
+                        try {
+                          const dl_url = await uploadImage({
+                            preview: URL.createObjectURL(file),
+                            raw: file,
+                          });
+
+                          setPhoto({ preview: fileAsDataURL, raw: file });
+                          if (dl_url) setImageUrl(dl_url);
+                          toast.success("Image cropped and uploaded.");
+                        } catch (error: any) {
+                          // upload failed
+                          console.error(error, "failed to upload image");
+                          toast.error(JSON.stringify(error.message));
+                        } finally {
+                          setLoading(false);
+                          toggleModal();
+                        }
+                      }
+                    };
+                  }
+                }, "image/png");
+              };
+            };
+            if (blobUrlRef.current) {
+              URL.revokeObjectURL(blobUrlRef.current);
+            }
+            blobUrlRef.current = URL.createObjectURL(blob);
+          } catch (err: any) {
+            // compression failed
+            console.error("failed to compress image:", err);
+            toast.error(JSON.stringify(err.message));
           }
-          blobUrlRef.current = URL.createObjectURL(blob);
         }
       }, "image/png");
-
-      //   const blob = await offscreen.convertToBlob({
-      //     type: "image/png",
-      //   });
-
-      //   const reader = new FileReader();
-      //   reader.onload = async (event) => {
-      //     const fileAsDataURL = event.target?.result;
-      //     if (typeof fileAsDataURL === "string") {
-      //       const file = new File([blob], "cropped-image.png", {
-      //         type: "image/png",
-      //       });
-      //       try {
-      //         const dl_url = await uploadImage({
-      //           preview: URL.createObjectURL(file),
-      //           raw: file,
-      //         });
-      //         setPhoto({ preview: fileAsDataURL, raw: file });
-      //         if (dl_url) setImageUrl(dl_url);
-      //         toast.success("Image cropped and uploaded.");
-      //       } catch (error: any) {
-      //         console.error(error, "failed to upload image");
-      //         toast.error(JSON.stringify(error.message));
-      //       } finally {
-      //         setLoading(false);
-      //         toggleModal();
-      //       }
-      //     }
-      //   };
-      //   reader.readAsDataURL(blob);
-
-      //   if (blobUrlRef.current) {
-      //     URL.revokeObjectURL(blobUrlRef.current);
-      //   }
-      //   blobUrlRef.current = URL.createObjectURL(blob);
     } catch (err: any) {
+      // initialization failed
       console.error(err.message, "Something Went Wrong");
       toast.error(JSON.stringify(err.message));
       setLoading(false);
