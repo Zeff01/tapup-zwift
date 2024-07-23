@@ -6,6 +6,7 @@ import {
   uploadImage,
   updateUserById,
 } from "@/src/lib/firebase/store/users.action";
+import { IoMdClose } from "react-icons/io";
 import { Photo, Users } from "@/src/lib/firebase/store/users.type";
 import { Loader2, LoaderCircle } from "lucide-react";
 import Cropper from "@/components/Cropper";
@@ -213,15 +214,11 @@ export default function UpdateComponent({ userData }: { userData: Users }) {
             <div className="space-y-6">
               <CompanyInfoForm control={methods.control} />
 
-              {/* //TODO: Add photo for services */}
               <div className="">
                 <h1 className="text-lg font-semibold mt-2">
                   Add Photo For Services: (Optional)
                 </h1>
                 <div className="flex flex-col p-4 items-center justify-center overflow-hidden rounded-2xl bg-[#222224] mt-4 border border-[#2c2c2c]">
-                  {/* <p className="text-[#767676] my-4">
-                    Please select at least 2 images
-                  </p> */}
                   <div
                     className="flex image-preview text-[#767676] rounded-2xl w-full min-h-48 p-2 gap-2 flex-wrap"
                     style={{
@@ -281,6 +278,16 @@ export default function UpdateComponent({ userData }: { userData: Users }) {
                                   key={`index-${key}`}
                                   className="flex items-center justify-center rounded-md h-[77px] w-[77px] overflow-hidden relative bg-[#222224] border border-[#2c2c2c]"
                                 >
+                                  <div
+                                    className="absolute flex items-center justify-center top-1 right-1 h-4 rounded-full w-4 bg-gray-900 z-[100] cursor-pointer"
+                                    onClick={() =>
+                                      setServiceImageUrls((prev) =>
+                                        prev.filter((_, index) => index !== key)
+                                      )
+                                    }
+                                  >
+                                    <IoMdClose className="size-2" />
+                                  </div>
                                   <Loader2 className="animate-spin" />
                                   <ImageLoaded
                                     className="rounded-md absolute top-0 left-0"
