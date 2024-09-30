@@ -10,6 +10,7 @@ import {
 import { Card, CardContent } from "@/components/ui/card";
 import Image from "next/image";
 import { ChosenTemplateType } from "@/app/create/page";
+import { EyeIcon } from "lucide-react";
 
 interface Template {
   id: ChosenTemplateType;
@@ -73,9 +74,7 @@ export function TemplateCarousel({
             <CarouselItem key={template.id} className="flex-none w-1/2 p-2">
               <div
                 className={`block transform hover:scale-105 transition-transform duration-300 cursor-pointer  ${
-                  selectedTemplateId === template.id
-                    ? "border-2 rounded-lg border-green-500"
-                    : ""
+                  selectedTemplateId === template.id ? "border-2 rounded-lg border-green-500" : ""
                 }`}
                 onClick={() => setSelectedTemplateId(template.id)}
               >
@@ -89,14 +88,23 @@ export function TemplateCarousel({
                       className="rounded-md h-full w-full object-cover"
                       layout="responsive"
                     />
-                    <h3 className="text-sm font-semibold mt-2">
-                      {template.name}
-                    </h3>
-                    <Link href={`/create/template/${template.id}`} passHref>
-                      <button className="mt-2 bg-green-500 text-white py-1 px-2 text-xs rounded hover:bg-green-600">
-                        Preview
-                      </button>
-                    </Link>
+                    <h3 className="text-sm font-semibold mt-2">{template.name}</h3>
+                    <div className="flex items-center gap-4 mt-2">
+                      <div
+                        className="bg-green-500 text-white py-1 px-2 text-xs rounded hover:bg-green-600"
+                        onClick={() => setSelectedTemplateId(template.id)}
+                      >
+                        Select
+                      </div>
+                      <Link
+                        href={`/create/template/${template.id}`}
+                        passHref
+                        className="flex items-center hover:text-white/70 duration-300"
+                        target="_blank"
+                      >
+                        <EyeIcon className="w-4 h-4" />
+                      </Link>
+                    </div>
                   </CardContent>
                 </Card>
               </div>
