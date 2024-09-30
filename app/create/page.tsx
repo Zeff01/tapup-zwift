@@ -19,9 +19,7 @@ import CompanyInfoForm from "@/components/forms/CompanyInfoForm";
 import ImageLoaded from "@/components/ImageLoaded";
 import { IoMdClose } from "react-icons/io";
 
-export type ChosenTemplateType = z.infer<
-  typeof createPortfolioSchema
->["chosenTemplate"];
+export type ChosenTemplateType = z.infer<typeof createPortfolioSchema>["chosenTemplate"];
 
 export default function Create() {
   const [photo, setPhoto] = useState<Photo | null>(null);
@@ -33,8 +31,7 @@ export default function Create() {
   const [servicePhotos, setServicePhotos] = useState<Photo[]>([]);
   const [serviceImageUrls, setServiceImageUrls] = useState<string[]>([]);
 
-  const [selectedTemplateId, setSelectedTemplateId] =
-    useState<ChosenTemplateType>("template1");
+  const [selectedTemplateId, setSelectedTemplateId] = useState<ChosenTemplateType>("template1");
 
   const [loading, setLoading] = useState(false);
   const router = useRouter();
@@ -75,6 +72,23 @@ export default function Create() {
   });
 
   useEffect(() => {
+    const savedData = localStorage.getItem("portfolioFormData");
+    if (savedData) {
+      const parsedData = JSON.parse(savedData);
+      Object.keys(parsedData).forEach((key) => {
+        methods.setValue(key as any, parsedData[key]);
+      });
+    }
+  }, [methods]);
+
+  useEffect(() => {
+    const subscription = methods.watch((data) => {
+      localStorage.setItem("portfolioFormData", JSON.stringify(data));
+    });
+    return () => subscription.unsubscribe();
+  }, [methods]);
+
+  useEffect(() => {
     if (imageUrl) {
       methods.setValue("profilePictureUrl", imageUrl || "");
       if (methods.formState.errors.profilePictureUrl) {
@@ -105,6 +119,8 @@ export default function Create() {
     } else {
       console.error("userLink is undefined or not valid.");
     }
+
+    localStorage.removeItem("portfolioFormData");
   };
 
   return (
@@ -122,10 +138,7 @@ export default function Create() {
               className="mx-auto mb-8"
             />
           </div>
-          <form
-            className="space-y-6"
-            onSubmit={methods.handleSubmit(formSubmit)}
-          >
+          <form className="space-y-6" onSubmit={methods.handleSubmit(formSubmit)}>
             <div className="">
               <p className="text-lg font-semibold mb-6">
                 Cover Photo and Profile Pic Upload Section
@@ -152,9 +165,7 @@ export default function Create() {
                             alt="plus"
                             className="size-10 lg:size-auto mt-8"
                           />
-                          <p className="text-[#767676] text-sm">
-                            Upload a Cover Photo
-                          </p>
+                          <p className="text-[#767676] text-sm">Upload a Cover Photo</p>
                         </div>
                       }
                     />
@@ -203,29 +214,24 @@ export default function Create() {
               <CompanyInfoForm control={methods.control} />
 
               <div className="">
-                <h1 className="text-lg font-semibold mt-2">
-                  Add Photo For Services: (Optional)
-                </h1>
+                <h1 className="text-lg font-semibold mt-2">Add Photo For Services: (Optional)</h1>
                 <div className="flex flex-col p-4 items-center justify-center overflow-hidden rounded-2xl bg-[#222224] mt-4 border border-[#2c2c2c]">
                   <div
                     className="flex image-preview text-[#767676] rounded-2xl w-full min-h-48 p-2 gap-2 flex-wrap"
                     style={{
-                      alignItems:
-                        serviceImageUrls.length > 0 ? "flex-start" : "center",
+                      alignItems: serviceImageUrls.length > 0 ? "flex-start" : "center",
                     }}
                   >
                     <div
                       className="flex justify-center text-[#767676] rounded-2xl w-full min-h-48 p-2 gap-2 flex-wrap"
                       style={{
-                        alignItems:
-                          serviceImageUrls.length > 0 ? "flex-start" : "center",
+                        alignItems: serviceImageUrls.length > 0 ? "flex-start" : "center",
                       }}
                     >
                       <div
                         className="gap-1 grid-cols-3 lg:grid-cols-4"
                         style={{
-                          display:
-                            serviceImageUrls.length > 0 ? "grid" : "flex",
+                          display: serviceImageUrls.length > 0 ? "grid" : "flex",
                         }}
                       >
                         {serviceImageUrls.length === 0 ? (
