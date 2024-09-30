@@ -29,9 +29,7 @@ export const createPortfolioSchema = z.object({
   coverPhotoUrl: z
     .string()
     .refine(
-      (value) =>
-        value === "" ||
-        /^\b(?:https?:\/\/)?(?:www\.)?[^ "]+\.[a-zA-Z]{2,}\b/.test(value),
+      (value) => value === "" || /^\b(?:https?:\/\/)?(?:www\.)?[^ "]+\.[a-zA-Z]{2,}\b/.test(value),
       {
         message: "Invalid Coverphoto URL",
       }
@@ -41,43 +39,25 @@ export const createPortfolioSchema = z.object({
     .string()
     .min(3, "Profile Picture is required")
     .refine(
-      (value) =>
-        value === "" ||
-        /^\b(?:https?:\/\/)?(?:www\.)?[^ "]+\.[a-zA-Z]{2,}\b/.test(value),
+      (value) => value === "" || /^\b(?:https?:\/\/)?(?:www\.)?[^ "]+\.[a-zA-Z]{2,}\b/.test(value),
       {
         message: "Invalid Coverphoto URL",
       }
     ), // Profile picture URL is required
   position: z.string().min(3, "Position is required"),
   company: z.string().min(3, "Company name is required"),
-  companyBackground: z
-    .string()
-    .min(3, "Company background is required")
-    .optional(),
-  serviceDescription: z
-    .string()
-    .min(3, "Service description is required")
-    .optional(),
+  companyBackground: z.string().min(3, "Company background is required").optional(),
+  serviceDescription: z.string().min(3, "Service description is required").optional(),
   servicePhotos: z.array(z.string().url()).optional(),
-  chosenTemplate: z.enum([
-    "template1",
-    "template2",
-    "template3",
-    "template4",
-    "template5",
-  ]),
+  chosenTemplate: z.enum(["template1", "template2", "template3", "template4", "template5"]),
   firstName: z.string().min(3, "First name must be at least 3 characters"),
   lastName: z.string().min(3, "Last name must be at least 3 characters"),
   email: z.string().email("Invalid email address"),
-  number: z
-    .string()
-    .refine(isValidPhoneNumber, { message: "Invalid phone number" }),
+  number: z.string().refine(isValidPhoneNumber, { message: "Invalid phone number" }),
   facebookUrl: z
     .string()
     .refine(
-      (value) =>
-        value === "" ||
-        /^\b(?:https?:\/\/)?(?:www\.)?[^ "]+\.[a-zA-Z]{2,}\b/.test(value),
+      (value) => value === "" || /^\b(?:https?:\/\/)?(?:www\.)?[^ "]+\.[a-zA-Z]{2,}\b/.test(value),
       {
         message: "Invalid URL",
         // specify the field path for error
@@ -87,9 +67,7 @@ export const createPortfolioSchema = z.object({
   youtubeUrl: z
     .string()
     .refine(
-      (value) =>
-        value === "" ||
-        /^\b(?:https?:\/\/)?(?:www\.)?[^ "]+\.[a-zA-Z]{2,}\b/.test(value),
+      (value) => value === "" || /^\b(?:https?:\/\/)?(?:www\.)?[^ "]+\.[a-zA-Z]{2,}\b/.test(value),
       {
         message: "Invalid URL",
       }
@@ -98,9 +76,7 @@ export const createPortfolioSchema = z.object({
   instagramUrl: z
     .string()
     .refine(
-      (value) =>
-        value === "" ||
-        /^\b(?:https?:\/\/)?(?:www\.)?[^ "]+\.[a-zA-Z]{2,}\b/.test(value),
+      (value) => value === "" || /^\b(?:https?:\/\/)?(?:www\.)?[^ "]+\.[a-zA-Z]{2,}\b/.test(value),
       {
         message: "Invalid URL",
       }
@@ -109,9 +85,7 @@ export const createPortfolioSchema = z.object({
   twitterUrl: z
     .string()
     .refine(
-      (value) =>
-        value === "" ||
-        /^\b(?:https?:\/\/)?(?:www\.)?[^ "]+\.[a-zA-Z]{2,}\b/.test(value),
+      (value) => value === "" || /^\b(?:https?:\/\/)?(?:www\.)?[^ "]+\.[a-zA-Z]{2,}\b/.test(value),
       {
         message: "Invalid URL",
       }
@@ -120,9 +94,7 @@ export const createPortfolioSchema = z.object({
   linkedinUrl: z
     .string()
     .refine(
-      (value) =>
-        value === "" ||
-        /^\b(?:https?:\/\/)?(?:www\.)?[^ "]+\.[a-zA-Z]{2,}\b/.test(value),
+      (value) => value === "" || /^\b(?:https?:\/\/)?(?:www\.)?[^ "]+\.[a-zA-Z]{2,}\b/.test(value),
       {
         message: "Invalid URL",
       }
@@ -130,15 +102,14 @@ export const createPortfolioSchema = z.object({
     .optional(),
   whatsappNumber: z
     .string()
-    .refine(refinePhoneNumber, { message: "Invalid phone number" }),
+    .refine(refinePhoneNumber, { message: "Invalid phone number" })
+    .optional(),
   skypeInviteUrl: z
     .string()
     .refine(
       (value) =>
         value === "" ||
-        /^(?:https?:\/\/)?(?:join\.skype\.com\/invite\/[a-zA-Z0-9_-]+)$/.test(
-          value
-        ),
+        /^(?:https?:\/\/)?(?:join\.skype\.com\/invite\/[a-zA-Z0-9_-]+)$/.test(value),
       {
         message: "Invalid URL",
       }
@@ -147,9 +118,7 @@ export const createPortfolioSchema = z.object({
   websiteUrl: z
     .string()
     .refine(
-      (value) =>
-        value === "" ||
-        /^\b(?:https?:\/\/)?(?:www\.)?[^ "]+\.[a-zA-Z]{2,}\b/.test(value),
+      (value) => value === "" || /^\b(?:https?:\/\/)?(?:www\.)?[^ "]+\.[a-zA-Z]{2,}\b/.test(value),
       {
         message: "Invalid URL",
       }

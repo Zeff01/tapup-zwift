@@ -48,7 +48,6 @@ const SocialLinksForm: React.FC<SocialLinksFormProps> = ({ control }) => {
           <div className="flex flex-col gap-2">
             <FormLabel className="text-14 w-full max-w-[280px] font-medium ">
               {"WhatsApp Number"}:
-              {true && <span className="text-red-500 ml-1">*</span>}
             </FormLabel>
             <div className="flex w-full flex-col">
               <FormControl>
