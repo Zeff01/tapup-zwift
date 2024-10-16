@@ -34,7 +34,8 @@ export function LogInForm() {
       headerLabel="Login"
       backButtonHref="/auth/register"
       backButtonMessage="Don't Have an Account?"
-      backButtonLabel="Sign Up"
+      backButtonLabel="Sign In"
+      method="Sign Up"
     >
       <Form {...form}>
         <form onSubmit={form.handleSubmit(handleSubmit)}>

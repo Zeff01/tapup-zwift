@@ -15,19 +15,21 @@ interface CardWrapperProps {
   headerLabel: string;
   backButtonMessage: string;
   backButtonLabel: string;
+  method: string;
   backButtonHref: string;
 }
 
 export default function CardWrapper({
   children,
+  method,
   backButtonLabel,
   headerLabel,
   backButtonHref,
   backButtonMessage,
 }: CardWrapperProps) {
   return (
-    <Card className="w-full h-full flex flex-col justify-center px-[128px] rounded-none ">
-      <CardHeader className="px-6 py-0 leading-tight pb-[35px]">
+    <Card className="w-full h-full flex justify-center flex-col px-[80px] rounded-none ">
+      <CardHeader className="px-6 py-0 leading-tight ">
         <Header label={headerLabel} />
       </CardHeader>
       <CardContent className="pb-0 ">{children}</CardContent>
@@ -37,7 +39,7 @@ export default function CardWrapper({
       </CardFooter>
       <Divider />
       <CardFooter>
-        <Social />
+        <Social method={method} />
       </CardFooter>
     </Card>
   );

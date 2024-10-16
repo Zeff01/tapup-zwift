@@ -1,11 +1,11 @@
-import { LogInForm } from "@/components/auth/LoginForm";
+import { RegisterForm } from "@/components/auth/RegisterForm";
 
-export default function Login() {
+export default function Register() {
   return (
     <div className="flex min-h-screen">
       <div className="flex-1 h-full">left</div>
       <div className="flex-1 min-h-screen">
-        <LogInForm />
+        <RegisterForm />
       </div>
     </div>
   );
