@@ -143,7 +143,7 @@ export function RegisterForm() {
             variant={"default"}
             size={"lg"}
           >
-            Sign In
+            Sign Up
           </Button>
         </form>
       </Form>

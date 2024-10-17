@@ -34,7 +34,7 @@ export function LogInForm() {
       headerLabel="Login"
       backButtonHref="/auth/register"
       backButtonMessage="Don't Have an Account?"
-      backButtonLabel="Sign In"
+      backButtonLabel="Sign Up"
       method="Sign Up"
     >
       <Form {...form}>
