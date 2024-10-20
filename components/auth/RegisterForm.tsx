@@ -24,7 +24,7 @@ export function RegisterForm() {
       lastName: "",
       email: "",
       password: "",
-      retypePassword: "",
+      confirmPassword: "",
     },
   });
 
@@ -32,121 +32,124 @@ export function RegisterForm() {
     console.log(values);
   };
   return (
-    <CardWrapper
-      headerLabel="Create Account"
-      backButtonHref="/auth/login"
-      backButtonMessage="Already Have an Account?"
-      method="Sign Up"
-      backButtonLabel="Sign In"
-    >
-      <Form {...form}>
-        <form onSubmit={form.handleSubmit(handleSubmit)}>
-          <div className="space-y-[20px] ">
-            <div className="flex gap-x-[20px]">
-              <FormField
-                control={form.control}
-                name="name"
-                render={({ field }) => (
-                  <FormItem className="flex-1">
-                    <FormLabel className="mb-[2px]">First Name</FormLabel>
-                    <FormControl>
-                      <Input
-                        {...field}
-                        type="text"
-                        placeholder="First Name"
-                        className="h-[47px] flex-1"
-                      />
-                    </FormControl>
-                    <FormMessage />
-                  </FormItem>
-                )}
-              />
-              <FormField
-                control={form.control}
-                name="lastName"
-                render={({ field }) => (
-                  <FormItem className="flex-1">
-                    <FormLabel className="mb-[2px]">Last Name</FormLabel>
-                    <FormControl>
-                      <Input
-                        {...field}
-                        type="text"
-                        placeholder="Last Name"
-                        className="h-[47px] "
-                      />
-                    </FormControl>
-                    <FormMessage />
-                  </FormItem>
-                )}
-              />
-            </div>
-
+    <Form {...form}>
+      <h1 className=" text-3xl md:text-4xl font-semibold mb-2 md:mb-4">
+        Create Account
+      </h1>
+      <form onSubmit={form.handleSubmit(handleSubmit)}>
+        <div className="space-y-2 ">
+          <div className="flex gap-x-[20px]">
             <FormField
               control={form.control}
-              name="email"
+              name="name"
               render={({ field }) => (
-                <FormItem>
-                  <FormLabel className="mb-[2px]">Email Address</FormLabel>
+                <FormItem className="flex-1">
+                  <FormLabel className="text-black font-mono">
+                    First Name
+                  </FormLabel>
                   <FormControl>
                     <Input
                       {...field}
-                      type="email"
-                      placeholder="Email"
-                      className="h-[47px]"
+                      type="text"
+                      placeholder="First Name"
+                      className="text-xs"
                     />
                   </FormControl>
-                  <FormMessage />
+                  <FormMessage className="text-xs" />
                 </FormItem>
               )}
             />
             <FormField
               control={form.control}
-              name="password"
+              name="lastName"
               render={({ field }) => (
-                <FormItem>
-                  <FormLabel className="mb-[2px] ">Password</FormLabel>
+                <FormItem className="flex-1">
+                  <FormLabel className="text-black font-mono">
+                    Last Name
+                  </FormLabel>
                   <FormControl>
                     <Input
                       {...field}
-                      type="password"
-                      placeholder="Password"
-                      className="h-[47px]"
+                      type="text"
+                      placeholder="Last Name"
+                      className="text-xs"
                     />
                   </FormControl>
-                  <FormMessage />
-                </FormItem>
-              )}
-            />
-            <FormField
-              control={form.control}
-              name="retypePassword"
-              render={({ field }) => (
-                <FormItem>
-                  <FormLabel className="mb-[2px] ">Retype Password</FormLabel>
-                  <FormControl>
-                    <Input
-                      {...field}
-                      type="password"
-                      placeholder="Retype Password"
-                      className="h-[47px]"
-                    />
-                  </FormControl>
-                  <FormMessage />
+                  <FormMessage className="text-xs" />
                 </FormItem>
               )}
             />
           </div>
 
-          <Button
-            type="submit"
-            className="w-full rounded-full bg-[#21C15C] hover:bg-[#1eb746] font-light mt-[20px]"
-            variant={"default"}
-            size={"lg"}
-          >
-            Sign Up
-          </Button>
-        </form>
-      </Form>
-    </CardWrapper>
+          <FormField
+            control={form.control}
+            name="email"
+            render={({ field }) => (
+              <FormItem>
+                <FormLabel className="text-black font-mono">
+                  Email Address
+                </FormLabel>
+                <FormControl>
+                  <Input
+                    {...field}
+                    type="email"
+                    placeholder="Email"
+                    className="text-xs"
+                  />
+                </FormControl>
+                <FormMessage className="text-xs" />
+              </FormItem>
+            )}
+          />
+          <FormField
+            control={form.control}
+            name="password"
+            render={({ field }) => (
+              <FormItem>
+                <FormLabel className="text-black font-mono">Password</FormLabel>
+                <FormControl>
+                  <Input
+                    {...field}
+                    type="password"
+                    placeholder="Password"
+                    className="text-xs"
+                  />
+                </FormControl>
+                <FormMessage className="text-xs" />
+              </FormItem>
+            )}
+          />
+          <FormField
+            control={form.control}
+            name="confirmPassword"
+            render={({ field }) => (
+              <FormItem>
+                <FormLabel className="text-black font-mono">
+                  Confirm Password
+                </FormLabel>
+                <FormControl>
+                  <Input
+                    {...field}
+                    type="password"
+                    placeholder="Confirm Password"
+                    className="text-xs"
+                  />
+                </FormControl>
+                <FormMessage className="text-xs" />
+              </FormItem>
+            )}
+          />
+        </div>
+
+        <Button
+          type="submit"
+          className="w-full rounded-md text-lg bg-[#21C15C] hover:bg-[#1eb746] font-light mt-[20px] transform transition-colors duration-300"
+          variant={"default"}
+          size={"lg"}
+        >
+          Register
+        </Button>
+      </form>
+    </Form>
   );
 }
