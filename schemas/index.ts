@@ -9,10 +9,10 @@ export const registerSchema = z
   .object({
     name: z
       .string({ message: "Please provide a name" })
-      .min(3, { message: "More than 2 characters required" }),
+      .min(3, { message: "Invalid name" }),
     lastName: z
       .string({ message: "Please provide your last name" })
-      .min(2, { message: "Minimum 2 characters required" }),
+      .min(2, { message: "Invalid last name" }),
     email: z
       .string()
       .email({ message: "Please provide a valid email address" }),
