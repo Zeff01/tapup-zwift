@@ -1,8 +1,10 @@
 "use client";
 
 import { Divider } from "@/components/auth/Divider";
+import { LoginForm } from "@/components/auth/LoginForm";
 import Navigator from "@/components/auth/Navigator";
 import { RegisterForm } from "@/components/auth/RegisterForm";
+import { RememberButton } from "@/components/auth/RememberButton";
 import { Social } from "@/components/auth/Social";
 import { useState } from "react";
 
@@ -46,9 +48,12 @@ export default function AuthPage() {
             style={{
               transform: toggle ? "translateX(100%)" : "translateX(0)",
             }}
-            className={`bg-pink-300 w-full  transition-transform duration-500 ease-in-out`}
+            className={`px-10 md:px-20 w-full absolute transition-transform duration-500 ease-in-out`}
           >
-            <button>Content 2</button>
+            <LoginForm />
+            <RememberButton />
+            <Divider />
+            <Social />
           </div>
         </div>
       </div>
