@@ -9,19 +9,19 @@ export const registerSchema = z
   .object({
     name: z
       .string({ message: "Please provide a name" })
-      .min(2, { message: "Please provide at least two characters" }),
+      .min(3, { message: "More than 2 characters required" }),
     lastName: z
       .string({ message: "Please provide your last name" })
-      .min(3, { message: "Please provide at least three characters" }),
+      .min(2, { message: "Minimum 2 characters required" }),
     email: z
       .string()
       .email({ message: "Please provide a valid email address" }),
     password: z
       .string()
       .min(8, { message: "Password must be at least 8 characters" }),
-    retypePassword: z.string({ message: "Please retype your password" }),
+    confirmPassword: z.string({ message: "Please confirm your password" }),
   })
-  .refine((data) => data.password === data.retypePassword, {
-    path: ["retypePassword"],
+  .refine((data) => data.password === data.confirmPassword, {
+    path: ["confirmPassword"],
     message: "Passwords do not match",
   });
