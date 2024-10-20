@@ -17,7 +17,7 @@ import { Button } from "../ui/button";
 
 export function LoginForm() {
   const form = useForm<z.infer<typeof loginSchema>>({
-    resolver: zodResolver(registerSchema),
+    resolver: zodResolver(loginSchema),
     defaultValues: {
       email: "",
       password: "",
@@ -30,7 +30,7 @@ export function LoginForm() {
   return (
     <Form {...form}>
       <h1 className=" text-3xl md:text-4xl font-semibold mb-2 md:mb-4">
-        Create Account
+        Sign In
       </h1>
       <form onSubmit={form.handleSubmit(handleSubmit)}>
         <div className="space-y-2 ">
@@ -80,7 +80,7 @@ export function LoginForm() {
           variant={"default"}
           size={"lg"}
         >
-          Register
+          Sign In
         </Button>
       </form>
     </Form>
