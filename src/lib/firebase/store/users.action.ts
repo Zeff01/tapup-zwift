@@ -12,7 +12,7 @@ import {
   query,
   limit,
 } from "firebase/firestore";
-import { firebaseDb, firebaseStorage } from "../config/firebase";
+import { firebaseAuth, firebaseDb, firebaseStorage } from "../config/firebase";
 import { Photo, Users } from "./users.type";
 import { createUserLink } from "@/lib/utils";
 import { getDownloadURL, ref, uploadBytesResumable } from "firebase/storage";
@@ -23,9 +23,16 @@ type UserCodeLink = {
   user_link: string;
 };
 export const addUser = async (
-  user: Omit<Users, "user_link">
+  user: Omit<Users, "user_link" | "uid">
 ): Promise<UserCodeLink | null> => {
   try {
+    const currentUser = firebaseAuth.currentUser;
+
+    if (!currentUser) {
+      throw new Error("No authenticated user found");
+    }
+
+    const userUID = currentUser.uid;
     const userCollection = collection(firebaseDb, "users");
 
     const snapshot = await getCountFromServer(userCollection);
@@ -34,27 +41,30 @@ export const addUser = async (
     let userCode = "",
       user_link = "";
     if (totalUsers >= 0) {
-      // get last 4 characters of the docRef.id
-
+      // Add the user document to Firestore and include the UID
       const docRef = await addDoc(userCollection, {
         ...user,
+        uid: userUID, // Linking the user profile to the authenticated user's UID
         createdAt: serverTimestamp(),
       });
+
       const sub_id = docRef.id.slice(-3);
       const full_id = docRef.id;
 
       userCode = (totalUsers + 1).toString() + sub_id;
 
-      // update the user with the final_subId
+      // Update the user document with a user code and id
       const userRef = doc(userCollection, docRef.id);
       await updateDoc(userRef, { userCode, id: full_id });
     }
+
     console.log("Document written with ID: ", userCode, user_link);
 
     const userCodeLink = {
       userCode,
       user_link,
     };
+
     revalidateUserPath("/users");
 
     return userCodeLink;
@@ -63,7 +73,6 @@ export const addUser = async (
     return null;
   }
 };
-
 // get all users from the database
 export const getAllUsers = async (): Promise<Users[]> => {
   try {
@@ -114,9 +123,7 @@ export const getUserBySubId = async (id: string): Promise<Users | null> => {
   }
 };
 
-export const uploadImage = async (
-  image: Photo | null
-): Promise<string | null> => {
+export const uploadImage = async (image: Photo | null): Promise<string | null> => {
   try {
     const filename = self.crypto.randomUUID();
     const imageRaw = image?.raw;
@@ -147,9 +154,7 @@ export const updateUserPrintStatusById = async (id: string): Promise<void> => {
   }
 };
 
-export const getUserDataByUserCode = async (
-  userCode: string
-): Promise<Users | null> => {
+export const getUserDataByUserCode = async (userCode: string): Promise<Users | null> => {
   try {
     const userCol = collection(firebaseDb, "users");
     const q = query(userCol, where("userCode", "==", userCode), limit(1));
