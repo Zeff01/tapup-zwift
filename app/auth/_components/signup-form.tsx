@@ -26,8 +26,6 @@ import { FcGoogle } from "react-icons/fc";
 import { FaFacebookF } from "react-icons/fa";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
-import { FirebaseError } from "firebase/app";
-import { toast } from "react-toastify";
 import {
   signInWithFacebook,
   signInWithGoogle,
@@ -35,9 +33,6 @@ import {
 } from "@/src/lib/firebase/config/auth";
 import { useState } from "react";
 import { EyeOff, Eye } from "lucide-react";
-import { setDoc, doc, serverTimestamp } from "firebase/firestore";
-import { firebaseDb } from "@/src/lib/firebase/config/firebase";
-import { createSession } from "@/src/lib/firebase/config/session";
 
 export default function SignupForm() {
   const [showPassword, setShowPassword] = useState(false);
@@ -52,64 +47,17 @@ export default function SignupForm() {
   });
 
   const onSubmit = async (data: SignupData) => {
-    try {
-      const userId = await signUpHandler(data.email, data.password);
-      await setDoc(doc(firebaseDb, "user-account", userId), {
-        email: data.email,
-        timestamp: serverTimestamp(),
-      });
-      toast.success("User registration successful!");
-      form.reset();
-      router.push("/auth/login");
-    } catch (error) {
-      if (error instanceof FirebaseError) {
-        switch (error.code) {
-          case "auth/email-already-in-use":
-            toast.error("Email already exists!");
-            break;
-          default:
-            toast.error("Something went wrong!");
-        }
-      }
-    }
+    await signUpHandler(data.email, data.password);
   };
 
   const handleGoogleSignIn = async () => {
-    try {
-      const user = await signInWithGoogle();
-      if (user.uid) {
-        await createSession(user.uid);
-      }
-      await setDoc(doc(firebaseDb, "user-account", user.uid), {
-        email: user.email,
-        timestamp: serverTimestamp(),
-      });
-      toast.success("Login successful!");
-      router.push("/create");
-    } catch (error) {
-      if (error instanceof FirebaseError) {
-        toast.error(error.code);
-      }
-    }
+    await signInWithGoogle();
+    router.push("/create");
   };
 
   const handleFacebookSignIn = async () => {
-    try {
-      const user = await signInWithFacebook();
-      if (user.uid) {
-        await createSession(user.uid);
-      }
-      await setDoc(doc(firebaseDb, "user-account", user.uid), {
-        email: user.email,
-        timestamp: serverTimestamp(),
-      });
-      toast.success("Login successful!");
-      router.push("/create");
-    } catch (error) {
-      if (error instanceof FirebaseError) {
-        toast.error(error.code);
-      }
-    }
+    await signInWithFacebook();
+    router.push("/create");
   };
 
   return (

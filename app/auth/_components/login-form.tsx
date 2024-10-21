@@ -27,13 +27,8 @@ import { Eye, EyeOff } from "lucide-react";
 import { LoginData } from "@/types/auth-types";
 import { loginSchema } from "@/schema";
 import Link from "next/link";
-import { FirebaseError } from "firebase/app";
-import { toast } from "react-toastify";
 import { loginHandler, signInWithFacebook, signInWithGoogle } from "@/src/lib/firebase/config/auth";
 import { useRouter } from "next/navigation";
-import { createSession } from "@/src/lib/firebase/config/session";
-import { firebaseDb } from "@/src/lib/firebase/config/firebase";
-import { setDoc, doc, serverTimestamp } from "firebase/firestore";
 
 export default function LoginForm() {
   const router = useRouter();
@@ -47,63 +42,17 @@ export default function LoginForm() {
   });
 
   const onSubmit = async (data: LoginData) => {
-    try {
-      const userUid = await loginHandler(data.email, data.password);
-      if (userUid) {
-        await createSession(userUid);
-      }
-      toast.success("Login successful!");
-      form.reset();
-      router.push("/create");
-    } catch (error) {
-      if (error instanceof FirebaseError) {
-        switch (error.code) {
-          case "auth/invalid-credential":
-            toast.error("Invalid credentials");
-            break;
-          default:
-            toast.error("Something went wrong!");
-        }
-      }
-    }
+    await loginHandler(data.email, data.password);
+    router.push("/create");
   };
-
   const handleGoogleSignIn = async () => {
-    try {
-      const user = await signInWithGoogle();
-      if (user.uid) {
-        await createSession(user.uid);
-      }
-      await setDoc(doc(firebaseDb, "user-account", user.uid), {
-        email: user.email,
-        timestamp: serverTimestamp(),
-      });
-      toast.success("Login successful!");
-      router.push("/create");
-    } catch (error) {
-      if (error instanceof FirebaseError) {
-        toast.error(error.code);
-      }
-    }
+    await signInWithGoogle();
+    router.push("/create");
   };
 
   const handleFacebookSignIn = async () => {
-    try {
-      const user = await signInWithFacebook();
-      if (user.uid) {
-        await createSession(user.uid);
-      }
-      await setDoc(doc(firebaseDb, "user-account", user.uid), {
-        email: user.email,
-        timestamp: serverTimestamp(),
-      });
-      toast.success("Login successful!");
-      router.push("/create");
-    } catch (error) {
-      if (error instanceof FirebaseError) {
-        toast.error(error.code);
-      }
-    }
+    await signInWithFacebook();
+    router.push("/create");
   };
 
   return (
