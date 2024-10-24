@@ -3,7 +3,7 @@
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import * as z from "zod";
-import { loginSchema, registerSchema } from "@/schemas";
+import { loginSchema } from "@/schemas";
 import {
   Form,
   FormControl,
@@ -14,8 +14,9 @@ import {
 } from "@/components/ui/form";
 import { Input } from "../ui/input";
 import { Button } from "../ui/button";
+import Link from "next/link";
 
-export function LoginForm() {
+export function LogInForm() {
   const form = useForm<z.infer<typeof loginSchema>>({
     resolver: zodResolver(loginSchema),
     defaultValues: {
@@ -29,9 +30,6 @@ export function LoginForm() {
   };
   return (
     <Form {...form}>
-      <h1 className=" text-3xl md:text-4xl font-semibold mb-2 md:mb-4">
-        Sign In
-      </h1>
       <form onSubmit={form.handleSubmit(handleSubmit)}>
         <div className="space-y-2 ">
           <FormField
@@ -39,18 +37,20 @@ export function LoginForm() {
             name="email"
             render={({ field }) => (
               <FormItem>
-                <FormLabel className="text-black font-mono">
-                  Email Address
-                </FormLabel>
+                <div className="flex items-center justify-between">
+                  <FormLabel className="text-black text-xs">
+                    Email Address
+                  </FormLabel>
+                  <FormMessage className="text-xs" />
+                </div>
                 <FormControl>
                   <Input
                     {...field}
                     type="email"
                     placeholder="Email"
-                    className="text-xs"
+                    className="text-xs h-8"
                   />
                 </FormControl>
-                <FormMessage className="text-xs" />
               </FormItem>
             )}
           />
@@ -59,29 +59,43 @@ export function LoginForm() {
             name="password"
             render={({ field }) => (
               <FormItem>
-                <FormLabel className="text-black font-mono">Password</FormLabel>
+                <div className="flex items-center justify-between">
+                  <FormLabel className="text-black text-xs">Password</FormLabel>
+                  <FormMessage className="text-xs" />
+                </div>
                 <FormControl>
                   <Input
                     {...field}
                     type="password"
                     placeholder="Password"
-                    className="text-xs"
+                    className="text-xs h-8"
                   />
                 </FormControl>
-                <FormMessage className="text-xs" />
               </FormItem>
             )}
           />
         </div>
-
+        <div className="flex justify-between pt-2">
+          <div className="flex gap-x-2 text-xs items-center">
+            <input type="checkbox" />
+            <span>Remember Password</span>
+          </div>
+          <p className="text-xs text-[#21C15C]">Forgot your password?</p>
+        </div>
         <Button
           type="submit"
-          className="w-full rounded-md text-lg bg-[#21C15C] hover:bg-[#1eb746] font-light mt-[20px] transform transition-colors duration-300"
+          className="w-full rounded-full h-8 bg-[#21C15C] hover:bg-[#1eb746] font-light mt-[20px] transform transition-colors duration-300"
           variant={"default"}
           size={"lg"}
         >
           Sign In
         </Button>
+        <p className="flex gap-x-1 items-center justify-center text-xs text-muted-foreground w-full pt-2">
+          <span>Don&#39;t Have an Account?</span>
+          <Link className="text-[#21C15C]" href={"/sign-up-page"}>
+            Sign Up
+          </Link>
+        </p>
       </form>
     </Form>
   );
