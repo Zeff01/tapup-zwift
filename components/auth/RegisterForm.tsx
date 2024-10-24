@@ -1,6 +1,5 @@
 "use client";
 
-import CardWrapper from "./CardWrapper";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import * as z from "zod";
@@ -15,6 +14,7 @@ import {
 } from "@/components/ui/form";
 import { Input } from "../ui/input";
 import { Button } from "../ui/button";
+import Link from "next/link";
 
 export function RegisterForm() {
   const form = useForm<z.infer<typeof registerSchema>>({
@@ -33,9 +33,6 @@ export function RegisterForm() {
   };
   return (
     <Form {...form}>
-      <h1 className=" text-3xl md:text-4xl font-semibold mb-2 md:mb-4">
-        Create Account
-      </h1>
       <form onSubmit={form.handleSubmit(handleSubmit)}>
         <div className="space-y-2 ">
           <div className="flex gap-x-[20px]">
@@ -44,18 +41,20 @@ export function RegisterForm() {
               name="name"
               render={({ field }) => (
                 <FormItem className="flex-1">
-                  <FormLabel className="text-black font-mono">
-                    First Name
-                  </FormLabel>
+                  <div className="flex items-center justify-between">
+                    <FormLabel className="text-black text-xs">
+                      First Name
+                    </FormLabel>
+                    <FormMessage className="text-xs" />
+                  </div>
                   <FormControl>
                     <Input
                       {...field}
                       type="text"
                       placeholder="First Name"
-                      className="text-xs"
+                      className="text-xs h-8"
                     />
                   </FormControl>
-                  <FormMessage className="text-xs" />
                 </FormItem>
               )}
             />
@@ -64,18 +63,20 @@ export function RegisterForm() {
               name="lastName"
               render={({ field }) => (
                 <FormItem className="flex-1">
-                  <FormLabel className="text-black font-mono">
-                    Last Name
-                  </FormLabel>
+                  <div className="flex items-center justify-between">
+                    <FormLabel className="text-black text-xs">
+                      Last Name
+                    </FormLabel>
+                    <FormMessage className="text-xs" />
+                  </div>
                   <FormControl>
                     <Input
                       {...field}
                       type="text"
                       placeholder="Last Name"
-                      className="text-xs"
+                      className="text-xs h-8"
                     />
                   </FormControl>
-                  <FormMessage className="text-xs" />
                 </FormItem>
               )}
             />
@@ -86,18 +87,20 @@ export function RegisterForm() {
             name="email"
             render={({ field }) => (
               <FormItem>
-                <FormLabel className="text-black font-mono">
-                  Email Address
-                </FormLabel>
+                <div className="flex items-center justify-between">
+                  <FormLabel className="text-black text-xs">
+                    Email Address
+                  </FormLabel>
+                  <FormMessage className="text-xs" />
+                </div>
                 <FormControl>
                   <Input
                     {...field}
                     type="email"
                     placeholder="Email"
-                    className="text-xs"
+                    className="text-xs h-8"
                   />
                 </FormControl>
-                <FormMessage className="text-xs" />
               </FormItem>
             )}
           />
@@ -106,16 +109,18 @@ export function RegisterForm() {
             name="password"
             render={({ field }) => (
               <FormItem>
-                <FormLabel className="text-black font-mono">Password</FormLabel>
+                <div className="flex items-center justify-between">
+                  <FormLabel className="text-black text-xs">Password</FormLabel>
+                  <FormMessage className="text-xs" />
+                </div>
                 <FormControl>
                   <Input
                     {...field}
                     type="password"
                     placeholder="Password"
-                    className="text-xs"
+                    className="text-xs h-8"
                   />
                 </FormControl>
-                <FormMessage className="text-xs" />
               </FormItem>
             )}
           />
@@ -124,18 +129,20 @@ export function RegisterForm() {
             name="confirmPassword"
             render={({ field }) => (
               <FormItem>
-                <FormLabel className="text-black font-mono">
-                  Confirm Password
-                </FormLabel>
+                <div className="flex items-center justify-between">
+                  <FormLabel className="text-black text-xs">
+                    Confirm Password
+                  </FormLabel>
+                  <FormMessage className="text-xs" />
+                </div>
                 <FormControl>
                   <Input
                     {...field}
                     type="password"
                     placeholder="Confirm Password"
-                    className="text-xs"
+                    className="text-xs h-8"
                   />
                 </FormControl>
-                <FormMessage className="text-xs" />
               </FormItem>
             )}
           />
@@ -143,12 +150,18 @@ export function RegisterForm() {
 
         <Button
           type="submit"
-          className="w-full rounded-md text-lg bg-[#21C15C] hover:bg-[#1eb746] font-light mt-[20px] transform transition-colors duration-300"
+          className="w-full rounded-full h-8 bg-[#21C15C] hover:bg-[#1eb746] font-light mt-[20px] transform transition-colors duration-300"
           variant={"default"}
           size={"lg"}
         >
-          Register
+          Sign Up
         </Button>
+        <p className="flex gap-x-1 items-center justify-center text-xs text-muted-foreground w-full pt-2">
+          <span>Already Have an Account?</span>
+          <Link className="text-[#21C15C]" href={"/log-in-page"}>
+            Sign In
+          </Link>
+        </p>
       </form>
     </Form>
   );
