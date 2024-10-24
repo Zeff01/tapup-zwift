@@ -1,19 +1,25 @@
-
 import AboutTapup from "./about-tapup";
-import CompanyList from "./company-list";
+import TapUpCarousel from "./carouselCard";
+import FeaturedBusiness from "./feature-business";
+import CompanyList from "./feature-company";
+import Footer from "./footer";
 import Hero from "./hero";
 import HowItWorks from "./how-it-works";
 import ShoppingCard from "./shopping-card";
 
+
 const LandingPage = () => {
   return (
-      <section className="overflow-hidden">
+      <div className="overflow-hidden">
       <Hero />
       <CompanyList />
       <AboutTapup />
       <ShoppingCard />
-      <HowItWorks/>
-      </section>
+      <HowItWorks />
+      <TapUpCarousel />
+      <FeaturedBusiness />
+      <Footer />
+      </div>
   )
 }
 
