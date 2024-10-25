@@ -28,7 +28,7 @@ export default function SignUpPage() {
         <div className="hidden sm:flex flex-1 items-center justify-center">
           <BackGround />
         </div>
-        <div className="flex flex-1 items-center justify-center">
+        <div className="flex flex-1 items-center justify-center z-10">
           <Card className="w-full rounded-none p-5  md:p-10 shadow-md ">
             <CardHeader
               className={cn(fonts.className, "text-5xl font-black pb-4 pt-0 ")}

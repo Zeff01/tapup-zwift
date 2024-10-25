@@ -30,7 +30,7 @@ export default function LogInPage() {
         <div className="hidden sm:flex flex-1 items-center">
           <BackGround />
         </div>
-        <div className="flex flex-1 items-center justify-center">
+        <div className="flex flex-1 items-center justify-center z-10">
           <Card className="w-full rounded-none shadow-md p-5  md:p-10 h-full flex flex-col justify-center">
             <CardHeader
               className={cn(fonts.className, "text-5xl font-black pb-4 pt-0 ")}
