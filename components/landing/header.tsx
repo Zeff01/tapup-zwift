@@ -1,49 +1,48 @@
 "use client";
+import { useState } from "react";
 import Link from "next/link";
 import { Button } from "../ui/button";
 import { RxHamburgerMenu } from "react-icons/rx";
-import { IoMdClose } from "react-icons/io";
+import { Sheet, SheetTrigger, SheetContent } from "../ui/sheet"; // Adjust this import according to your actual path
 import { usePathname } from "next/navigation";
-import { useState } from "react";
+import tapUpLogo from '@/public/assets/tap-up-header-logo.png';
+import Image from "next/image"; 
 
 const navbarItems = [
-  { label: "Main", href: "/" },
-  { label: "About", href: "/about" },
-  { label: "Testimonials", href: "/testimonials" },
-  { label: "Features", href: "/features" },
+  { href: "/", label: "Main" },
+  { href: "/about", label: "About" },
+  { href: "/testimonials", label: "Testimonials" },
+  { href: "/features", label: "Features" },
 ];
 
 const Header = () => {
-  const [openMenu, setOpenMenu] = useState(false);
   const pathname = usePathname();
-
+  const [openMenu, setOpenMenu] = useState(false);
   const handleMobileMenu = () => {
     setOpenMenu(!openMenu);
   };
 
   return (
-    <header className="flex justify-between items-center h-[105px] shadow-xl">
-      <div className="container">
-        <Link href="/" rel="preload">
-          <h2 className="text-[40px]">
-            Tap <span className="text-greenTitle">Up</span>
-          </h2>
-        </Link>
-      </div>
+    <header className="flex justify-between items-center md:px-10 p-4 shadow-xl">
+      <div className="w-full md:px-4">
+        <div className="relative h-[5rem] w-[8rem]">
 
+        <Link href="/" rel="preload" className="w-full h-[4rem]">
+          
+          <Image src={tapUpLogo} alt='logo' fill className="object-contain" />
+            </Link>
+        </div>
+      </div>
       <div
-        className={`flex flex-col lg:flex-row lg:justify-evenly gap-3 absolute lg:static lg:bg-transparent bg-slate-100 w-full items-center transition-all duration-300 ease-in ${
-          openMenu ? "top-[6rem]" : "top-[-400px]"
-        }`}
+        className={`lg:flex lg:flex-row lg:justify-evenly gap-3 hidden w-full items-center`}
       >
-        <nav
-          className={`flex flex-col lg:flex-row gap-3 lg:gap-8 items-center text-xl`}
-        >
+        <nav className="flex lg:flex-row gap-3 lg:gap-8 items-center text-xl">
           {navbarItems.map((item, index) => (
             <Link
               className={`${
-                item.href === pathname &&
-                "text-green-600 border-b-2 border-greenTitle"
+                item.href === pathname
+                  ? "text-green-600 border-b-2 border-greenTitle"
+                  : ""
               } hover:text-green-500`}
               key={index}
               href={item.href}
@@ -57,11 +56,42 @@ const Header = () => {
         </Button>
       </div>
 
-      <div className="lg:hidden cursor-pointer mr-4" onClick={handleMobileMenu}>
-        {openMenu ? <IoMdClose size={40} /> : <RxHamburgerMenu size={40} />}
-      </div>
+      <Sheet>
+        <SheetTrigger asChild>
+          <div
+            className="lg:hidden cursor-pointer mr-4"
+            onClick={handleMobileMenu}
+          >
+            {<RxHamburgerMenu size={40} />}
+          </div>
+        </SheetTrigger>
+        <SheetContent className="" side="top">
+          <nav className="flex flex-col gap-3 items-center text-xl">
+            {navbarItems.map((item, index) => (
+              <Link
+                className={`${
+                  item.href === pathname
+                    ? "text-green-600 border-b-2 border-greenTitle"
+                    : ""
+                } hover:text-green-500`}
+                key={index}
+                href={item.href}
+                onClick={()=> setOpenMenu(false)}
+              >
+                {item.label}
+              </Link>
+            ))}
+            <Button
+              className="bg-green-500 hover:bg-green-700"
+            >
+              Activate
+            </Button>
+          </nav>
+        </SheetContent>
+      </Sheet>
     </header>
-  );
+    );
+
 };
 
 export default Header;
