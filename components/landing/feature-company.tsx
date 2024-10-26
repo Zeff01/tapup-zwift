@@ -10,10 +10,10 @@ const companyListItem = [company1, company2, company3, company4, company5];
 
 const CompanyList = () => {
   return (
-    <ul className="flex items-center justify-evenly w-[100%] p-5 bg-gradient-to-r from-[#F7F6F633] to-[#1FAE3A33] lg:h-[30vh]">
+    <ul className="flex items-center justify-evenly w-[100%] p-2 md:p-5 bg-gradient-to-r from-[#F7F6F633] to-[#1FAE3A33] lg:h-[30vh]">
       {companyListItem.map((item, index) => (
-        <li key={index}>
-          <Image src={item} loading="lazy" alt={`Company ${index + 1}`} />
+        <li key={index} className="relative w-[5rem] h-[5rem] lg:h-[12rem] lg:w-[12rem]">
+          <Image src={item} alt={`Company ${index + 1}`} fill className="object-contain" />
         </li>
       ))}
     </ul>
