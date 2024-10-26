@@ -27,10 +27,14 @@ import { Eye, EyeOff } from "lucide-react";
 import { LoginData } from "@/types/auth-types";
 import { loginSchema } from "@/schema";
 import Link from "next/link";
-import { loginHandler, signInWithFacebook, signInWithGoogle } from "@/src/lib/firebase/config/auth";
+import {
+  loginHandler,
+  signInWithFacebook,
+  signInWithGoogle,
+} from "@/src/lib/firebase/config/auth";
 import { useRouter } from "next/navigation";
 
-export default function LoginForm() {
+export default function OldLoginForm() {
   const router = useRouter();
   const [showPassword, setShowPassword] = useState(false);
   const form = useForm<LoginData>({
@@ -61,7 +65,10 @@ export default function LoginForm() {
         <CardTitle className="text-2xl font-bold ">Log in</CardTitle>
         <CardDescription>
           Don&apos;t have an account?{" "}
-          <Link href={"/auth/signup"} className="text-green-500 hover:underline duration-300">
+          <Link
+            href={"/auth/signup"}
+            className="text-green-500 hover:underline duration-300"
+          >
             Sign up
           </Link>
         </CardDescription>
@@ -74,9 +81,15 @@ export default function LoginForm() {
               name="email"
               render={({ field }) => (
                 <FormItem>
-                  <FormLabel className="text-sm text-black font-semibold">Email</FormLabel>
+                  <FormLabel className="text-sm text-black font-semibold">
+                    Email
+                  </FormLabel>
                   <FormControl>
-                    <Input type="email" placeholder="Enter your email" {...field} />
+                    <Input
+                      type="email"
+                      placeholder="Enter your email"
+                      {...field}
+                    />
                   </FormControl>
                   <FormMessage />
                 </FormItem>
@@ -87,7 +100,9 @@ export default function LoginForm() {
               name="password"
               render={({ field }) => (
                 <FormItem>
-                  <FormLabel className="text-sm text-black font-semibold">Password</FormLabel>
+                  <FormLabel className="text-sm text-black font-semibold">
+                    Password
+                  </FormLabel>
                   <FormControl>
                     <div className="relative">
                       <Input
