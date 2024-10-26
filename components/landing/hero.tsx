@@ -5,9 +5,9 @@ import { HiArrowRightEndOnRectangle } from "react-icons/hi2";
 
 const Hero = () => {
   return (
-    <section className="flex flex-col lg:flex-row w-full lg:w-full justify-between gap-8 mb-5 xl:ml-[7rem] lg:ml-[5rem]">
-      <div className="lg:w-1/2 my-[8rem] w-[80%] m-auto">
-        <h2 className="font-bold text-[1.5rem] xl:text-[3.5rem] leading-[2rem] xl:leading-[4rem]">
+    <section className="flex flex-col lg:flex-row justify-between gap-8 mb-5 lg:pl-[5rem]">
+      <div className="xl:w-1/2 lg:w-[40rem] lg:pt-[5rem] lg:px-0 px-10 pt-10 w-full">
+        <h2 className="font-bold md:text-[2rem] text-xl xl:text-[3.5rem] leading-[2rem] xl:leading-[4rem]">
           The <span className="text-green-500">Ultimate Tool</span> to Boost
           Your Productivity Connect with Tap{" "}
           <span className="text-green-500">Up</span>
@@ -22,13 +22,12 @@ const Hero = () => {
           Get a card <HiArrowRightEndOnRectangle className="ml-3 w-4 h-7" />
         </Button>
       </div>
-      <div className="lg:w-1/2 w-[70%] m-auto ">
+      <div className="md:w-[34rem] 2xl:h-[40rem] md:h-[30rem] w-[18rem] h-[20rem] aspect-square relative m-auto ">
         <Image
-          width={630}
-          height={550}
           src={tapupImg}
           alt="tap up image"
-          loading="lazy"
+          fill
+          className="object-contain"
         />
       </div>
     </section>
