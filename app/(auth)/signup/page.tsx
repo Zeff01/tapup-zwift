@@ -1,5 +1,5 @@
-import BackGround from "../components/back-ground";
-import { RegisterForm } from "../components/RegisterForm";
+import BackGround from "../_components/auth-background";
+import { RegisterForm } from "../_components/signup-form";
 
 export default function SignUpPage() {
   return (

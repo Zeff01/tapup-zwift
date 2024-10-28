@@ -8,12 +8,7 @@ import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 
 //shadcn cards and fonts
-import {
-  Card,
-  CardContent,
-  CardFooter,
-  CardHeader,
-} from "@/components/ui/card";
+import { Card, CardContent, CardFooter, CardHeader } from "@/components/ui/card";
 import { Roboto_Condensed } from "next/font/google";
 import { cn } from "@/lib/utils";
 const fonts = Roboto_Condensed({
@@ -25,7 +20,7 @@ const fonts = Roboto_Condensed({
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import * as z from "zod";
-import { registerSchema } from "@/schemas";
+import { signupSchema } from "@/schema";
 import {
   Form,
   FormControl,
@@ -34,13 +29,15 @@ import {
   FormLabel,
   FormMessage,
 } from "@/components/ui/form";
-import Social from "./Social";
+import Social from "./social-buttons";
+import { SignupData } from "@/types/auth-types";
+import { signUpHandler } from "@/src/lib/firebase/config/auth";
 
 export function RegisterForm() {
-  const form = useForm<z.infer<typeof registerSchema>>({
-    resolver: zodResolver(registerSchema),
+  const form = useForm<z.infer<typeof signupSchema>>({
+    resolver: zodResolver(signupSchema),
     defaultValues: {
-      name: "",
+      firstName: "",
       lastName: "",
       email: "",
       password: "",
@@ -48,30 +45,26 @@ export function RegisterForm() {
     },
   });
 
-  const handleSubmit = (values: z.infer<typeof registerSchema>) => {
-    console.log(values);
+  const onSubmit = async (data: SignupData) => {
+    await signUpHandler(data);
   };
   return (
     <Card className="w-full  p-5  md:p-10 shadow-md rounded-md">
-      <CardHeader
-        className={cn(fonts.className, "text-5xl font-black pb-4 pt-0 ")}
-      >
+      <CardHeader className={cn(fonts.className, "text-5xl font-black pb-4 pt-0 ")}>
         Create Account
       </CardHeader>
       <CardContent className="pb-0">
         <Form {...form}>
-          <form onSubmit={form.handleSubmit(handleSubmit)}>
+          <form onSubmit={form.handleSubmit(onSubmit)}>
             <div className="space-y-2 ">
               <div className="flex gap-x-[20px]">
                 <FormField
                   control={form.control}
-                  name="name"
+                  name="firstName"
                   render={({ field }) => (
                     <FormItem className="flex-1">
                       <div className="flex items-center justify-between">
-                        <FormLabel className="text-black text-xs">
-                          First Name
-                        </FormLabel>
+                        <FormLabel className="text-black text-xs">First Name</FormLabel>
                         <FormMessage className="text-xs" />
                       </div>
                       <FormControl>
@@ -91,9 +84,7 @@ export function RegisterForm() {
                   render={({ field }) => (
                     <FormItem className="flex-1">
                       <div className="flex items-center justify-between">
-                        <FormLabel className="text-black text-xs">
-                          Last Name
-                        </FormLabel>
+                        <FormLabel className="text-black text-xs">Last Name</FormLabel>
                         <FormMessage className="text-xs" />
                       </div>
                       <FormControl>
@@ -115,18 +106,11 @@ export function RegisterForm() {
                 render={({ field }) => (
                   <FormItem>
                     <div className="flex items-center justify-between">
-                      <FormLabel className="text-black text-xs">
-                        Email Address
-                      </FormLabel>
+                      <FormLabel className="text-black text-xs">Email Address</FormLabel>
                       <FormMessage className="text-xs" />
                     </div>
                     <FormControl>
-                      <Input
-                        {...field}
-                        type="email"
-                        placeholder="Email"
-                        className="text-xs h-8"
-                      />
+                      <Input {...field} type="email" placeholder="Email" className="text-xs h-8" />
                     </FormControl>
                   </FormItem>
                 )}
@@ -137,9 +121,7 @@ export function RegisterForm() {
                 render={({ field }) => (
                   <FormItem>
                     <div className="flex items-center justify-between">
-                      <FormLabel className="text-black text-xs">
-                        Password
-                      </FormLabel>
+                      <FormLabel className="text-black text-xs">Password</FormLabel>
                       <FormMessage className="text-xs" />
                     </div>
                     <FormControl>
@@ -159,9 +141,7 @@ export function RegisterForm() {
                 render={({ field }) => (
                   <FormItem>
                     <div className="flex items-center justify-between">
-                      <FormLabel className="text-black text-xs">
-                        Confirm Password
-                      </FormLabel>
+                      <FormLabel className="text-black text-xs">Confirm Password</FormLabel>
                       <FormMessage className="text-xs" />
                     </div>
                     <FormControl>
