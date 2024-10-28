@@ -1,5 +1,6 @@
 import type { Config } from "tailwindcss";
 
+
 const config = {
   darkMode: ["class"],
   content: [
@@ -17,6 +18,10 @@ const config = {
       },
     },
     extend: {
+      fontFamily: {
+        inter: ['Inter', 'sans-serif'],
+        racing:['Racing Sans One']
+      },
       colors: {
         grayDescription: "#767676",
         greenTitle: "#6fdc00",
@@ -83,6 +88,12 @@ const config = {
       animation: {
         "accordion-down": "accordion-down 0.2s ease-out",
         "accordion-up": "accordion-up 0.2s ease-out",
+      },
+      boxShadow: {
+        'xl': "0px 2px 2px 0px #0000000D"
+      },
+      lineClamp: {
+        2: '2',
       },
     },
   },
