@@ -1,6 +1,6 @@
 export const ROOT_ROUTE = "/";
-export const LOGIN_ROUTE = "/auth/login";
-export const SIGNUP_ROUTE = "/auth/signup";
+export const LOGIN_ROUTE = "/login";
+export const SIGNUP_ROUTE = "/signup";
 export const SESSION_COOKIE_NAME = "user_session";
 export const CREATE_ROUTE = "/create";
 export const SECRET_ROUTE = "/secretzxc";
