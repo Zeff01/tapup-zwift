@@ -4,6 +4,7 @@ import "./globals.css";
 import { ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import Head from "next/head";
+import Header from "@/components/landing/header";
 
 const lato = Lato({ weight: "400", subsets: ["latin"] });
 
@@ -23,7 +24,9 @@ export default function RootLayout({
       <Head>
         <link rel="icon" href="/favicon.ico" />
       </Head>
+      
       <body className={lato.className}>
+        <Header/>
         <main>{children}</main>
         <ToastContainer />
       </body>
