@@ -3,48 +3,71 @@ import {
   CarouselContent,
   CarouselItem,
 } from "@/components/ui/carousel";
-import tapUpCard from "@/public/assets/tapUp-card1.png";
-import tapUpCard2 from "@/public/assets/tapUp-card2.png";
-import tapUpCard3 from "@/public/assets/tapUp-card3.png";
-import tapUpCard4 from "@/public/assets/tapUp-card4.png";
-import tapUpCard5 from "@/public/assets/tapUp-card5.png";
 import Image from "next/image";
 import CardDetails from "./card-details";
+import { useState } from "react";
 
 const carouselCards = [
-  tapUpCard,
-  tapUpCard2,
-  tapUpCard3,
-  tapUpCard4,
-  tapUpCard5,
+  {
+    title: "Standard Black Card",
+    image: "/assets/tapUp-card1.png"
+  },
+  {
+    title: "Standard Yellow Card",
+    image: "/assets/tapUp-card2.png"
+  },
+  {
+    title: "Standard Blue Card",
+    image: "/assets/tapUp-card3.png"
+  },
+  {
+    title: "Standard Dark Blue Card",
+    image: "/assets/tapUp-card4.png"
+  },
+  {
+    title: "Standard Special Card",
+    image: "/assets/tapUp-card5.png"
+  }
 ];
 
-const TapUpCarousel = () => {
+interface CarouselCard{
+  title: string;
+  image: string;
+}
+
+const TapUpCarousel: React.FC = () => {
+  const [currentCard, setCurrentCard] = useState<CarouselCard>(carouselCards[0]);
+
+  const handleClickCard = (card:CarouselCard) => {
+    setCurrentCard(card);
+  }
   return (
-    <section className="py-[7rem] shadow-xl">
-      <div className="w-full mx-auto flex items-center justify-center">
+    <section className="py-[5rem] shadow-xl">
+      <div className="w-full">
         <Carousel opts={{ align: "start" }}>
           <CarouselContent>
             {carouselCards.map((item, index) => (
               <CarouselItem
                 key={index}
-                className={`md:basis-1/2 lg:basis-1/3 flex items-center rounded-md`}
+                className={`md:basis-1/2 lg:basis-1/3 flex items-center justify-center rounded-md`}
               >
-                <div className="cursor-pointer">
+                <div className="cursor-pointer relative xl:w-[24rem] w-[20rem] xl:h-[20rem] h-[18rem] aspect-video"
+                onClick={()=>handleClickCard(item)}>
                   <Image
-                    src={item}
-                    alt={`card ${index}`}
-                    width={600}
-                    height={400}
-                    loading="lazy"
+                    src={item.image}
+                    alt={item.title}
+                    fill
+                    className="object-contain"
+                   
                   />
                 </div>
+                
               </CarouselItem>
             ))}
           </CarouselContent>
         </Carousel>
       </div>
-      <CardDetails />
+      <CardDetails title={currentCard.title} />
     </section>
   );
 };
