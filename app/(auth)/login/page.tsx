@@ -1,5 +1,5 @@
-import BackGround from "../components/back-ground";
-import { LogInForm } from "../components/LoginForm";
+import BackGround from "../_components/auth-background";
+import { LogInForm } from "../_components/login-form";
 
 export default function LogInPage() {
   return (
