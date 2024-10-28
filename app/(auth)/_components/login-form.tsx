@@ -1,19 +1,14 @@
 "use client";
 
 import Link from "next/link";
-import { Separator } from "@/app/(auth)/components/Separator";
+import { Separator } from "@/app/(auth)/_components/auth-separator";
 
 //shadcn components
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 
 //shadcn cards and fonts
-import {
-  Card,
-  CardContent,
-  CardFooter,
-  CardHeader,
-} from "@/components/ui/card";
+import { Card, CardContent, CardFooter, CardHeader } from "@/components/ui/card";
 import { Roboto_Condensed } from "next/font/google";
 import { cn } from "@/lib/utils";
 const fonts = Roboto_Condensed({
@@ -25,7 +20,7 @@ const fonts = Roboto_Condensed({
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import * as z from "zod";
-import { loginSchema } from "@/schemas";
+import { loginSchema } from "@/schema";
 import {
   Form,
   FormControl,
@@ -34,9 +29,13 @@ import {
   FormLabel,
   FormMessage,
 } from "@/components/ui/form";
-import Social from "./Social";
+import Social from "./social-buttons";
+import { loginHandler } from "@/src/lib/firebase/config/auth";
+import { LoginData } from "@/types/auth-types";
+import { useRouter } from "next/navigation";
 
 export function LogInForm() {
+  const router = useRouter();
   const form = useForm<z.infer<typeof loginSchema>>({
     resolver: zodResolver(loginSchema),
     defaultValues: {
@@ -45,19 +44,19 @@ export function LogInForm() {
     },
   });
 
-  const handleSubmit = (values: z.infer<typeof loginSchema>) => {
-    console.log(values);
+  const onSubmit = async (data: LoginData) => {
+    await loginHandler(data.email, data.password);
+    router.push("/create");
   };
+
   return (
     <Card className="w-full shadow-md p-5  md:p-10 h-full flex flex-col justify-center rounded-md">
-      <CardHeader
-        className={cn(fonts.className, "text-5xl font-black pb-4 pt-0 ")}
-      >
+      <CardHeader className={cn(fonts.className, "text-5xl font-black pb-4 pt-0 ")}>
         Sign In
       </CardHeader>
       <CardContent className="pb-0 ">
         <Form {...form}>
-          <form onSubmit={form.handleSubmit(handleSubmit)}>
+          <form onSubmit={form.handleSubmit(onSubmit)}>
             <div className="space-y-2 ">
               <FormField
                 control={form.control}
@@ -65,18 +64,11 @@ export function LogInForm() {
                 render={({ field }) => (
                   <FormItem>
                     <div className="flex items-center justify-between">
-                      <FormLabel className="text-black text-xs">
-                        Email Address
-                      </FormLabel>
+                      <FormLabel className="text-black text-xs">Email Address</FormLabel>
                       <FormMessage className="text-xs" />
                     </div>
                     <FormControl>
-                      <Input
-                        {...field}
-                        type="email"
-                        placeholder="Email"
-                        className="text-xs h-8"
-                      />
+                      <Input {...field} type="email" placeholder="Email" className="text-xs h-8" />
                     </FormControl>
                   </FormItem>
                 )}
@@ -87,9 +79,7 @@ export function LogInForm() {
                 render={({ field }) => (
                   <FormItem>
                     <div className="flex items-center justify-between">
-                      <FormLabel className="text-black text-xs">
-                        Password
-                      </FormLabel>
+                      <FormLabel className="text-black text-xs">Password</FormLabel>
                       <FormMessage className="text-xs" />
                     </div>
                     <FormControl>
