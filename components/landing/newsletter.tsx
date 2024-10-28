@@ -21,10 +21,10 @@ const listItem = [
 
 const Newsletter = () => {
   return (
-    <section className="flex flex-col md:flex-row justify-evenly gap-6 md:pb-[4rem] shadow-xl">
-      <div className="lg:w-[25rem] md:w-[20rem] mx-auto w-[15rem] p-5 flex gap-4 flex-col border-gray-200 rounded-md border-2">
+    <section className="flex flex-col md:flex-row justify-evenly gap-3 lg:gap-6 md:pb-[4rem] shadow-xl pb-2">
+      <div className="lg:w-[25rem] md:w-[18rem] mx-auto md:mx-2  w-[15rem] p-5 flex gap-4 flex-col border-gray-200 rounded-md border-2">
         <h5 className="font-semibold text-xl">Subscribe</h5>
-        <div className="flex w-full max-w-sm items-center space-x-2">
+        <div className="flex w-full max-w-xs items-center space-x-2">
           <Input
             type="email"
             placeholder="Email Address"
@@ -44,11 +44,11 @@ const Newsletter = () => {
         </p>
       </div>
       {listItem.map((item, index) => (
-        <div key={index} className="w-12 mx-auto">
+        <div key={index} className="text-center md:text-left">
           <h4 className="font-semibold">{item.title}</h4>
           <ul>
             {item.list.map((item, index) => (
-              <li key={index} className="pt-3">
+              <li key={index} className="pt-3 w-[8rem]  mx-auto  md:text-left">
                 <Link href="/" className="my-3 text-base text-[#14131399]">
                   {item}
                 </Link>

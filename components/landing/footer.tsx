@@ -2,13 +2,22 @@ import Link from "next/link";
 import Newsletter from "./newsletter";
 import logo from "@/public/assets/tapUp-logo.png";
 import Image from "next/image";
-import instagramIcon from "@/public/assets/Icon-instagram.png";
-import facebookIcon from "@/public/assets/icon-facebook.png";
-import linkedinIcon from "@/public/assets/Icon-linkedin.png";
-import discordIcon from "@/public/assets/icon-discord.png";
 
 const list = ["Terms", "Privacy", "Cookies"];
-const socials = [instagramIcon, facebookIcon, linkedinIcon, discordIcon];
+const socials = [{
+  title: 'Instagram',
+  image: '/assets/Icon-instagram.png',
+},
+    {title: 'Facebook',
+  image: '/assets/icon-facebook.png',
+},
+  {title: 'linkedin',
+  image: '/assets/Icon-linkedin.png',
+},
+  {title: 'Discord',
+  image: '/assets/icon-discord.png',
+},
+];
 const Footer = () => {
   return (
     <footer className="py-[4rem]">
@@ -28,9 +37,9 @@ const Footer = () => {
         </div>
         <ul className="flex gap-4 mx-auto">
           {socials.map((item, index) => (
-            <li key={index} className="">
+            <li key={index} className="relative w-6 h-6">
               <Link href="/">
-                <Image src={item} alt="social icon" loading="lazy" />
+                <Image src={item.image} alt={item.title} fill className="object-contain"/>
               </Link>
             </li>
           ))}
