@@ -6,6 +6,8 @@ import { RxHamburgerMenu } from "react-icons/rx";
 import { Sheet, SheetTrigger, SheetContent } from "../ui/sheet";
 import { usePathname } from "next/navigation";
 import Image from "next/image";
+import { useUserSession } from "@/hooks/useUserSession";
+import LogoutButton from "@/app/(auth)/_components/auth-logout";
 
 const navbarItems = [
   { href: "/", label: "Main" },
@@ -20,6 +22,8 @@ const Header = () => {
   const handleMobileMenu = () => {
     setOpenMenu(!openMenu);
   };
+
+  const { user } = useUserSession();
 
   return (
     <header className="flex justify-between items-center md:px-10 p-4 shadow-xl">
@@ -44,11 +48,15 @@ const Header = () => {
           ))}
         </nav>
         <Button className="hidden lg:block bg-green-500 hover:bg-green-700">Activate</Button>
-
+        {user && (
+          <div className="sm:block hidden">
+            <LogoutButton />
+          </div>
+        )}
         <Sheet>
           <SheetTrigger asChild>
             <div className="lg:hidden cursor-pointer mr-4" onClick={handleMobileMenu}>
-              <RxHamburgerMenu size={40} />
+              <RxHamburgerMenu size={20} />
             </div>
           </SheetTrigger>
           <SheetContent side="top">
@@ -66,6 +74,11 @@ const Header = () => {
                 </Link>
               ))}
               <Button className="bg-green-500 hover:bg-green-700">Activate</Button>
+              {user && (
+                <div className="sm:hidden block">
+                  <LogoutButton />
+                </div>
+              )}
             </nav>
           </SheetContent>
         </Sheet>
