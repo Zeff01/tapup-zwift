@@ -7,6 +7,8 @@ export const loginSchema = z.object({
 
 export const signupSchema = z
   .object({
+    firstName: z.string(),
+    lastName: z.string(),
     email: z.string().email({ message: "Invalid email address" }),
     password: z
       .string()
