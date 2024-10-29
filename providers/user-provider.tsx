@@ -33,7 +33,6 @@ export const UserContextProvider = ({ children }: any) => {
   firebaseAuth.onAuthStateChanged(async (authUser) => {
     setAuthUser(authUser);
   });
-
   useEffect(() => {
     (async () => {
       console.log(authUser);
