@@ -35,6 +35,7 @@ import {
   FormMessage,
 } from "@/components/ui/form";
 import Social from "./Social";
+import { loginHandler } from "@/src/lib/firebase/config/auth";
 
 export function LogInForm() {
   const form = useForm<z.infer<typeof loginSchema>>({
@@ -45,8 +46,9 @@ export function LogInForm() {
     },
   });
 
-  const handleSubmit = (values: z.infer<typeof loginSchema>) => {
-    console.log(values);
+  const handleSubmit = async (values: z.infer<typeof loginSchema>) => {
+    const { email, password } = values;
+    await loginHandler(email, password);
   };
   return (
     <Card className="w-full shadow-md p-5  md:p-10 h-full flex flex-col justify-center rounded-md">

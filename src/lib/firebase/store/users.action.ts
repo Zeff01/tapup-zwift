@@ -123,7 +123,9 @@ export const getUserBySubId = async (id: string): Promise<Users | null> => {
   }
 };
 
-export const uploadImage = async (image: Photo | null): Promise<string | null> => {
+export const uploadImage = async (
+  image: Photo | null
+): Promise<string | null> => {
   try {
     const filename = self.crypto.randomUUID();
     const imageRaw = image?.raw;
@@ -154,7 +156,9 @@ export const updateUserPrintStatusById = async (id: string): Promise<void> => {
   }
 };
 
-export const getUserDataByUserCode = async (userCode: string): Promise<Users | null> => {
+export const getUserDataByUserCode = async (
+  userCode: string
+): Promise<Users | null> => {
   try {
     const userCol = collection(firebaseDb, "users");
     const q = query(userCol, where("userCode", "==", userCode), limit(1));

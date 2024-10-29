@@ -13,21 +13,27 @@ import { createSession, deleteSession } from "./session";
 import { setDoc, doc, serverTimestamp } from "firebase/firestore";
 import { toast } from "react-toastify";
 import { FirebaseError } from "firebase/app";
+import { USER_ROLE_ENUMS } from "@/constants";
 export const onAuthStateChanged = (callback: (user: User | null) => void) => {
   return _onAuthStateChanged(firebaseAuth, callback);
 };
 
 export const signUpHandler = async (email: string, password: string) => {
   try {
-    const res = await createUserWithEmailAndPassword(firebaseAuth, email, password);
+    const res = await createUserWithEmailAndPassword(
+      firebaseAuth,
+      email,
+      password
+    );
     const userID = res.user.uid;
     await setDoc(doc(firebaseDb, "user-account", userID), {
+      role: USER_ROLE_ENUMS.USER,
       email: res.user.email,
       timestamp: serverTimestamp(),
     });
     toast.success("User registration successful!");
     setTimeout(() => {
-      window.location.href = "/auth/login";
+      window.location.href = "/login";
     }, 2000);
   } catch (error) {
     if (error instanceof FirebaseError) {
@@ -107,4 +113,21 @@ export const signInWithFacebook = async () => {
 export const signOutHandler = async () => {
   await signOut(firebaseAuth);
   await deleteSession();
+};
+
+export const currentAuthUserDetails = async () => {
+  try {
+    // const currentUser = firebaseAuth.currentUser;
+    // console.log("firebasseAuth", currentUser);
+    // // if (!currentUser) {
+    // //   throw new Error("No authenticated user found");
+    // // }
+    console.log("wew");
+  } catch (error) {
+    if (error instanceof FirebaseError) {
+      toast.error(error.code);
+      return;
+    }
+    console.log(error);
+  }
 };

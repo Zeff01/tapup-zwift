@@ -35,6 +35,7 @@ import {
   FormMessage,
 } from "@/components/ui/form";
 import Social from "./Social";
+import { signUpHandler } from "@/src/lib/firebase/config/auth";
 
 export function RegisterForm() {
   const form = useForm<z.infer<typeof registerSchema>>({
@@ -48,8 +49,10 @@ export function RegisterForm() {
     },
   });
 
-  const handleSubmit = (values: z.infer<typeof registerSchema>) => {
-    console.log(values);
+  const handleSubmit = async (values: z.infer<typeof registerSchema>) => {
+    const { name, lastName, email, password } = values;
+    const fullName = `${name} ${lastName}`;
+    await signUpHandler(email, password);
   };
   return (
     <Card className="w-full  p-5  md:p-10 shadow-md rounded-md">
