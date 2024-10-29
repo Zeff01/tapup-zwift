@@ -1,7 +1,7 @@
 "use client";
 
 import Link from "next/link";
-import { Separator } from "@/app/(auth)/components/Separator";
+import { Separator } from "@/app/(auth)/_components/auth-separator";
 
 //shadcn components
 import { Input } from "@/components/ui/input";
@@ -25,7 +25,7 @@ const fonts = Roboto_Condensed({
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import * as z from "zod";
-import { loginSchema } from "@/schemas";
+import { loginSchema } from "@/schema";
 import {
   Form,
   FormControl,
@@ -34,10 +34,13 @@ import {
   FormLabel,
   FormMessage,
 } from "@/components/ui/form";
-import Social from "./Social";
+import Social from "./social-buttons";
 import { loginHandler } from "@/src/lib/firebase/config/auth";
+import { LoginData } from "@/types/auth-types";
+import { useRouter } from "next/navigation";
 
 export function LogInForm() {
+  const router = useRouter();
   const form = useForm<z.infer<typeof loginSchema>>({
     resolver: zodResolver(loginSchema),
     defaultValues: {
@@ -46,10 +49,11 @@ export function LogInForm() {
     },
   });
 
-  const handleSubmit = async (values: z.infer<typeof loginSchema>) => {
-    const { email, password } = values;
-    await loginHandler(email, password);
+  const onSubmit = async (data: LoginData) => {
+    await loginHandler(data.email, data.password);
+    router.push("/create");
   };
+
   return (
     <Card className="w-full shadow-md p-5  md:p-10 h-full flex flex-col justify-center rounded-md">
       <CardHeader
@@ -59,7 +63,7 @@ export function LogInForm() {
       </CardHeader>
       <CardContent className="pb-0 ">
         <Form {...form}>
-          <form onSubmit={form.handleSubmit(handleSubmit)}>
+          <form onSubmit={form.handleSubmit(onSubmit)}>
             <div className="space-y-2 ">
               <FormField
                 control={form.control}
