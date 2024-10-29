@@ -1,147 +1,15 @@
-"use client";
-import { useState, ChangeEvent, useEffect } from "react";
-import Image from "next/image";
-import { useRouter } from "next/navigation";
-import { addUser, uploadImage } from "@/src/lib/firebase/store/users.action";
-import { Photo } from "@/src/lib/firebase/store/users.type";
-import { Loader2, LoaderCircle } from "lucide-react";
-import Cropper from "../../components/Cropper";
-import Navbar from "@/components/ui/Navbar";
-import { useForm } from "react-hook-form";
-import { Form } from "@/components/ui/form";
-import { zodResolver } from "@hookform/resolvers/zod";
-import { z } from "zod";
-import { createPortfolioSchema } from "@/lib/utils";
-import { TemplateCarousel } from "@/components/TemplateCarousel";
-import SocialLinksForm from "@/components/forms/SocialLinkForm";
-import PersonalInfoForm from "@/components/forms/PersonalInfoForm";
-import CompanyInfoForm from "@/components/forms/CompanyInfoForm";
-import ImageLoaded from "@/components/ImageLoaded";
-import { IoMdClose } from "react-icons/io";
-import { useUserContext } from "@/providers/user-provider";
-import { firebaseAuth } from "@/src/lib/firebase/config/firebase";
-
-export type ChosenTemplateType = z.infer<
-  typeof createPortfolioSchema
->["chosenTemplate"];
-
-export default function Create() {
-  const [photo, setPhoto] = useState<Photo | null>(null);
-  const [imageUrl, setImageUrl] = useState<string | null>(null);
-
-  const [coverPhoto, setCoverPhoto] = useState<Photo | null>(null);
-  const [coverPhotoUrl, setCoverPhotoUrl] = useState<string | null>(null);
-
-  const [servicePhotos, setServicePhotos] = useState<Photo[]>([]);
-  const [serviceImageUrls, setServiceImageUrls] = useState<string[]>([]);
-
-  const [selectedTemplateId, setSelectedTemplateId] =
-    useState<ChosenTemplateType>("template1");
-
-  const [loading, setLoading] = useState(false);
-  const router = useRouter();
-
-  const addServicePhoto = (photo: Photo) => {
-    setServicePhotos([...servicePhotos, photo]);
-  };
-
-  const addServiceImageUrl = (imageUrl: string) => {
-    setServiceImageUrls([...serviceImageUrls, imageUrl]);
-  };
-
-  // 1. Define your form.
-  const methods = useForm<z.infer<typeof createPortfolioSchema>>({
-    resolver: zodResolver(createPortfolioSchema),
-    defaultValues: {
-      coverPhotoUrl: "",
-      profilePictureUrl: "",
-      position: "",
-      company: "",
-      companyBackground: "",
-      serviceDescription: "",
-      servicePhotos: [],
-      chosenTemplate: "template1",
-      firstName: "",
-      lastName: "",
-      email: "",
-      number: "",
-      facebookUrl: "",
-      youtubeUrl: "",
-      instagramUrl: "",
-      twitterUrl: "",
-      linkedinUrl: "",
-      whatsappNumber: "",
-      skypeInviteUrl: "",
-      websiteUrl: "",
-    },
-  });
-
-  useEffect(() => {
-    const savedData = localStorage.getItem("portfolioFormData");
-    if (savedData) {
-      const parsedData = JSON.parse(savedData);
-      Object.keys(parsedData).forEach((key) => {
-        methods.setValue(key as any, parsedData[key]);
-      });
-    }
-  }, [methods]);
-
-  useEffect(() => {
-    const subscription = methods.watch((data) => {
-      localStorage.setItem("portfolioFormData", JSON.stringify(data));
-    });
-    return () => subscription.unsubscribe();
-  }, [methods]);
-
-  useEffect(() => {
-    console.log(imageUrl);
-    if (imageUrl) {
-      methods.setValue("profilePictureUrl", imageUrl || "");
-      if (methods.formState.errors.profilePictureUrl) {
-        methods.clearErrors("profilePictureUrl");
-      }
-    }
-    if (coverPhotoUrl) {
-      methods.setValue("coverPhotoUrl", coverPhotoUrl || "");
-    }
-    if (serviceImageUrls.length > 0) {
-      methods.setValue("servicePhotos", serviceImageUrls || []);
-    }
-    methods.setValue("chosenTemplate", selectedTemplateId);
-  }, [coverPhotoUrl, imageUrl, serviceImageUrls, selectedTemplateId, methods]);
-  const formSubmit = async (data: z.infer<typeof createPortfolioSchema>) => {
-    setLoading(true); // load start
-
-    const userInfo = await addUser({
-      ...data,
-      printStatus: false,
-    });
-    setLoading(false); // load ends
-    methods.reset();
-    if (userInfo) {
-      localStorage.setItem("userLink", userInfo.user_link);
-      localStorage.setItem("userCode", userInfo.userCode);
-      router.push(`/action?userCode=${userInfo.userCode}`);
-    } else {
-      console.error("userLink is undefined or not valid.");
-    }
-
-    localStorage.removeItem("portfolioFormData");
-  };
-
-  return (
-    // <></>
-    <main className="flex flex-col overflow-auto py-8 text-white bg-[#1E1E1E] h-full">
-      <div className="w-full mx-auto max-w-sm">
-        <Image
-          src="/assets/zwift-logo.png"
-          alt="Company Logo"
-          width={140}
-          height={41}
-          priority
-          className="mx-auto mb-8"
-        />
-        <Form {...methods}>
+<Form {...methods}>
+        <div className="w-full max-w-sm ">
+          <div className="text-center mt-8 mb-16 ">
+            <Image
+              src="/assets/zwift-logo.png"
+              alt="Company Logo"
+              width={140}
+              height={41}
+              priority
+              className="mx-auto mb-8"
+            />
+          </div>
           <form
             className="space-y-6"
             onSubmit={methods.handleSubmit(formSubmit)}
@@ -221,6 +89,7 @@ export default function Create() {
             {/* Company Information Inputs */}
             <div className="space-y-6">
               <CompanyInfoForm control={methods.control} />
+
               <div className="">
                 <h1 className="text-lg font-semibold mt-2">
                   Add Photo For Services: (Optional)
@@ -339,11 +208,16 @@ export default function Create() {
                   </div>
                 </div>
               </div>
+
               <TemplateCarousel
                 selectedTemplateId={selectedTemplateId}
                 setSelectedTemplateId={setSelectedTemplateId}
-              />{" "}
+              />
+
+              {/* Personal Information Inputs */}
               <PersonalInfoForm control={methods.control} />
+
+              {/* Social Links Inputs */}
               <SocialLinksForm control={methods.control} />
             </div>
             <button
@@ -360,8 +234,5 @@ export default function Create() {
               )}
             </button>
           </form>
-        </Form>
-      </div>
-    </main>
-  );
-}
+        </div>
+      </Form>

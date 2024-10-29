@@ -1,4 +1,5 @@
 "use client";
+
 import { useState } from "react";
 import Link from "next/link";
 import { Button } from "../ui/button";
@@ -6,7 +7,6 @@ import { RxHamburgerMenu } from "react-icons/rx";
 import { Sheet, SheetTrigger, SheetContent } from "../ui/sheet";
 import { usePathname } from "next/navigation";
 import Image from "next/image";
-import LogoutButton from "@/app/(auth)/_components/auth-logout";
 import { headerItems } from "@/constants";
 import { useUserContext } from "@/providers/user-provider";
 import AvatarIcon from "../AvatarIcon";
@@ -20,7 +20,7 @@ const Header = () => {
   };
 
   return (
-    <header className="flex justify-between items-center md:px-10 p-4 shadow-xl">
+    <header className="flex justify-between items-center md:px-10 shadow-xl p-4">
       <div className="flex-grow-0 h-8 w-24 relative">
         <Link href="/" rel="preload">
           <Image
@@ -51,12 +51,10 @@ const Header = () => {
         <Button className="hidden lg:block bg-green-500 hover:bg-green-700">
           Activate
         </Button>
-        {isAuthenticated && (
-          <AvatarIcon
-            className="hidden lg:block"
-            img={user?.profilePictureUrl}
-          />
-        )}
+        <AvatarIcon
+          className="hidden lg:block"
+          img={user?.profilePictureUrl || "https://github.com/shadcn.png"}
+        />
         <Sheet>
           <SheetTrigger asChild>
             <div
@@ -85,7 +83,9 @@ const Header = () => {
               <Button className="bg-green-500 hover:bg-green-700">
                 Activate
               </Button>
-              {isAuthenticated && <AvatarIcon img={user?.profilePictureUrl} />}
+              <AvatarIcon
+                img={user?.profilePictureUrl || "https://github.com/shadcn.png"}
+              />
             </nav>
           </SheetContent>
         </Sheet>

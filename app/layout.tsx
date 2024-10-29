@@ -26,10 +26,12 @@ export default function RootLayout({
         <link rel="icon" href="/favicon.ico" />
       </Head>
 
-      <body className={lato.className}>
+      <body className={`${lato.className} overflow-hidden h-screen`}>
         <UserContextProvider>
-          <Header />
-          <main>{children}</main>
+          <main className="h-full flex flex-col">
+            <Header />
+            {children}
+          </main>
           <ToastContainer />
         </UserContextProvider>
       </body>

@@ -118,22 +118,17 @@ export default function UpdateComponent({ userData }: { userData: Users }) {
   };
 
   return (
-    <Form {...methods}>
-      <main className="flex min-h-screen bg-[#1E1E1E] text-white flex-col items-center pt-12 p-6 overflow-x-hidden">
-        <Navbar />
-        <div className="w-full max-w-sm ">
-          {/* HEADER */}
-          <div className="text-center mt-8 mb-16 ">
-            <Image
-              src="/assets/zwift-logo.png"
-              alt="Company Logo"
-              width={140}
-              height={41}
-              priority
-              className="mx-auto mb-8"
-            />
-          </div>
-
+    <main className="flex flex-col overflow-auto py-8 text-white bg-[#1E1E1E] h-full">
+      <div className="w-full mx-auto max-w-sm">
+        <Image
+          src="/assets/zwift-logo.png"
+          alt="Company Logo"
+          width={140}
+          height={41}
+          priority
+          className="mx-auto mb-8"
+        />
+        <Form {...methods}>
           <form
             className="space-y-6"
             onSubmit={methods.handleSubmit(formSubmit)}
@@ -358,8 +353,8 @@ export default function UpdateComponent({ userData }: { userData: Users }) {
               )}
             </button>
           </form>
-        </div>
-      </main>
-    </Form>
+        </Form>
+      </div>
+    </main>
   );
 }

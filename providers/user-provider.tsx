@@ -1,20 +1,13 @@
 "use client";
 
+import useLocalStorage from "@/hooks/useLocalStorage";
+import { useUserSession } from "@/hooks/useUserSession";
 import {
   currentAuthUserDetails,
   signOutHandler,
 } from "@/src/lib/firebase/config/auth";
-import { firebaseAuth } from "@/src/lib/firebase/config/firebase";
-import { getSession } from "@/src/lib/firebase/config/session";
 import { Users } from "@/src/lib/firebase/store/users.type";
-import {
-  createContext,
-  useContext,
-  useEffect,
-  useMemo,
-  useRef,
-  useState,
-} from "react";
+import { createContext, useContext, useEffect, useMemo, useState } from "react";
 
 interface ExtendedUserInterface extends Users {
   uid: string;
@@ -40,28 +33,16 @@ export const UserProviderContext = createContext<
 
 export const UserContextProvider = ({ children }: any) => {
   const [user, setUser] = useState<UserState>(null);
-  const [authUserId, setAuthUserId] = useState<string | null>(null);
   const [isLoading, setIsLoading] = useState(false);
-  const [isAuthenticated, setIsAuthenticated] = useState(
-    localStorage.getItem("isAuthencitated") === "true"
-  );
 
-  firebaseAuth.onAuthStateChanged(async (authUser) => {
-    if (!authUser) {
-      localStorage.removeItem("isAuthencitated");
-      setIsAuthenticated(false);
-      return;
-    }
-    localStorage.setItem("isAuthencitated", "true");
-    setIsAuthenticated(true);
-    setAuthUserId(authUser?.uid ?? null);
-  });
+  const { userUid } = useUserSession();
+  const isAuthenticated = useMemo(() => Boolean(userUid), [userUid]);
 
   useEffect(() => {
     (async () => {
-      if (!authUserId) return;
+      if (!userUid) return;
       setIsLoading(true);
-      const userData = await currentAuthUserDetails(authUserId);
+      const userData = await currentAuthUserDetails(userUid);
       if (!userData) {
         setIsLoading(false);
         return;
@@ -69,12 +50,12 @@ export const UserContextProvider = ({ children }: any) => {
       setUser({
         email: userData.email,
         role: userData.role,
-        uid: authUserId,
+        uid: userUid,
       });
 
       setIsLoading(false);
     })();
-  }, [authUserId]);
+  }, [userUid]);
 
   const updateUser = async () => {};
 
@@ -82,7 +63,6 @@ export const UserContextProvider = ({ children }: any) => {
     await signOutHandler();
     localStorage.removeItem("isAuthencitated");
     setUser(null);
-    setAuthUserId(null);
   };
 
   const value = {

@@ -20,9 +20,11 @@ export default function UsersPage() {
     fetch();
   }, []);
 
+  console.log(data);
+
   return (
-    <main className="flex min-h-screen bg-[#1E1E1E] text-white flex-col items-center pt-12 p-6 ">
-      <Navbar />
+    <main className="flex h-full bg-[#1E1E1E] text-white flex-col items-center pt-12 p-6 ">
+      {/* <Navbar /> */}
       <TableComponent users={data} isLoading={isLoading} />
     </main>
   );

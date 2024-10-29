@@ -12,6 +12,7 @@ export const CARD_PATH = "/card(/.*)?";
 export const USER_PATH = "/users(/.*)?";
 export const UPDATE_PATH = "/update(/.*)?";
 export const CREATE_PATH = "/create(/.*)?";
+export const LOCAL_STORAGE_NAME = "isAuthenticated";
 
 /**
  * Enum for user roles.
