@@ -5,9 +5,16 @@ import {
   signOutHandler,
 } from "@/src/lib/firebase/config/auth";
 import { firebaseAuth } from "@/src/lib/firebase/config/firebase";
+import { getSession } from "@/src/lib/firebase/config/session";
 import { Users } from "@/src/lib/firebase/store/users.type";
-import { User } from "firebase/auth";
-import { createContext, useContext, useEffect, useMemo, useState } from "react";
+import {
+  createContext,
+  useContext,
+  useEffect,
+  useMemo,
+  useRef,
+  useState,
+} from "react";
 
 interface ExtendedUserInterface extends Users {
   uid: string;
@@ -21,6 +28,10 @@ export type UserProviderContextType = {
   setUser: React.Dispatch<
     React.SetStateAction<UserProviderContextType["user"]>
   >;
+  isAuthenticated: boolean;
+  isLoading: boolean;
+  updateUser: () => void;
+  logOutUser: () => void;
 };
 
 export const UserProviderContext = createContext<
@@ -29,20 +40,58 @@ export const UserProviderContext = createContext<
 
 export const UserContextProvider = ({ children }: any) => {
   const [user, setUser] = useState<UserState>(null);
-  const [authUser, setAuthUser] = useState<User | null>(null);
+  const [authUserId, setAuthUserId] = useState<string | null>(null);
+  const [isLoading, setIsLoading] = useState(false);
+  const [isAuthenticated, setIsAuthenticated] = useState(
+    localStorage.getItem("isAuthencitated") === "true"
+  );
+
   firebaseAuth.onAuthStateChanged(async (authUser) => {
-    setAuthUser(authUser);
+    if (!authUser) {
+      localStorage.removeItem("isAuthencitated");
+      setIsAuthenticated(false);
+      return;
+    }
+    localStorage.setItem("isAuthencitated", "true");
+    setIsAuthenticated(true);
+    setAuthUserId(authUser?.uid ?? null);
   });
+
   useEffect(() => {
     (async () => {
-      console.log(authUser);
+      if (!authUserId) return;
+      setIsLoading(true);
+      const userData = await currentAuthUserDetails(authUserId);
+      if (!userData) {
+        setIsLoading(false);
+        return;
+      }
+      setUser({
+        email: userData.email,
+        role: userData.role,
+        uid: authUserId,
+      });
 
-      // await signOutHandler();
+      setIsLoading(false);
     })();
-  }, [authUser]);
+  }, [authUserId]);
+
+  const updateUser = async () => {};
+
+  const logOutUser = async () => {
+    await signOutHandler();
+    localStorage.removeItem("isAuthencitated");
+    setUser(null);
+    setAuthUserId(null);
+  };
+
   const value = {
     user,
     setUser,
+    isAuthenticated,
+    isLoading,
+    updateUser,
+    logOutUser,
   };
   return (
     <UserProviderContext.Provider value={value}>

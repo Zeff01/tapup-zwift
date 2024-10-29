@@ -8,8 +8,8 @@ export type Users = {
   serviceDescription?: string;
   servicePhotos?: string[];
   chosenTemplate?: string;
-  firstName: string;
-  lastName: string;
+  firstName?: string;
+  lastName?: string;
   email: string;
   number?: string;
   facebookUrl?: string;

@@ -10,7 +10,7 @@ import {
 } from "firebase/auth";
 import { firebaseAuth, firebaseDb } from "@/src/lib/firebase/config/firebase";
 import { createSession, deleteSession } from "./session";
-import { setDoc, doc, serverTimestamp } from "firebase/firestore";
+import { setDoc, doc, serverTimestamp, getDoc } from "firebase/firestore";
 import { toast } from "react-toastify";
 import { FirebaseError } from "firebase/app";
 import { z } from "zod";
@@ -120,14 +120,15 @@ export const signOutHandler = async () => {
   await deleteSession();
 };
 
-export const currentAuthUserDetails = async () => {
+export const currentAuthUserDetails = async (id: string) => {
   try {
-    // const currentUser = firebaseAuth.currentUser;
-    // console.log("firebasseAuth", currentUser);
-    // // if (!currentUser) {
-    // //   throw new Error("No authenticated user found");
-    // // }
-    console.log("wew");
+    const userRef = doc(firebaseDb, "user-account", id);
+    const docSnap = await getDoc(userRef);
+    if (!docSnap.exists()) {
+      console.log("No such document");
+      return;
+    }
+    return docSnap.data();
   } catch (error) {
     if (error instanceof FirebaseError) {
       toast.error(error.code);

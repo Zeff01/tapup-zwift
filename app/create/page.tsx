@@ -26,7 +26,8 @@ export type ChosenTemplateType = z.infer<
 >["chosenTemplate"];
 
 export default function Create() {
-  const { user } = useUserContext();
+  const { user, isLoading, updateUser } = useUserContext();
+  console.log(user, isLoading);
 
   const [photo, setPhoto] = useState<Photo | null>(null);
   const [imageUrl, setImageUrl] = useState<string | null>(null);

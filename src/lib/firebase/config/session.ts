@@ -18,3 +18,9 @@ export const deleteSession = async () => {
   cookies().delete(SESSION_COOKIE_NAME);
   redirect(ROOT_ROUTE);
 };
+
+export const getSession = async () => {
+  const sessionCookie = await cookies().get(SESSION_COOKIE_NAME);
+  if (!sessionCookie) return;
+  return sessionCookie.value;
+};
