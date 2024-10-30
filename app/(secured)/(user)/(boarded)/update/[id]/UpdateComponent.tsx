@@ -39,8 +39,6 @@ export default function UpdateComponent({
     userData.profilePictureUrl || null
   );
 
-  console.log(imageUrl);
-
   const [coverPhoto, setCoverPhoto] = useState<Photo | null>(null);
   const [coverPhotoUrl, setCoverPhotoUrl] = useState<string | null>(
     userData.coverPhotoUrl || null
