@@ -3,15 +3,53 @@
 import { getUserBySubId } from "@/src/lib/firebase/store/users.action";
 import UpdateComponent from "./UpdateComponent";
 import { useEffect, useState } from "react";
-import { Users } from "@/src/lib/firebase/store/users.type";
 import Loading from "./loading";
-import { useUserContext } from "@/providers/user-provider";
+import {
+  ExtendedUserInterface,
+  useUserContext,
+} from "@/providers/user-provider";
+import { ADMIN_ONLY_ROUTE, USER_ROLE_ENUMS } from "@/constants";
+import { toast } from "react-toastify";
+import { redirect } from "next/navigation";
+import Error from "next/error";
 
-export default function UpdatePage() {
-  const { user, isLoading } = useUserContext();
+export default function UpdatePage({ params }: { params: { id: string } }) {
+  const { user } = useUserContext();
+  const [fetchUser, setFetchUser] = useState<ExtendedUserInterface | null>(
+    null
+  );
+  const [status, setStatus] = useState<"normal" | "fetching" | "error">(
+    "normal"
+  );
 
-  if (!user || (!user && isLoading)) {
+  useEffect(() => {
+    (async () => {
+      setStatus("fetching");
+      const firebaseUser = await getUserBySubId(params.id);
+      if (!firebaseUser) {
+        setStatus("error");
+        return;
+      }
+      setFetchUser(firebaseUser as ExtendedUserInterface);
+      setStatus("normal");
+    })();
+  }, []);
+
+  if (status === "error" && user?.role === USER_ROLE_ENUMS.ADMIN) {
+    toast.error("User not found");
+    return redirect(ADMIN_ONLY_ROUTE);
+  }
+
+  if (status === "error" && user?.role === USER_ROLE_ENUMS.USER) {
+    return <Error statusCode={404} />;
+  }
+
+  if (!fetchUser || (!fetchUser && status === "fetching")) {
     return <Loading />;
   }
-  return <UpdateComponent userData={user} />;
+
+  if (user?.role === USER_ROLE_ENUMS.ADMIN && params.id !== user.uid)
+    return <UpdateComponent currentUser={false} userData={fetchUser} />;
+
+  return <UpdateComponent userData={user!} />;
 }

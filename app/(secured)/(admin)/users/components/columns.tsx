@@ -12,6 +12,7 @@ import {
 import { Button } from "@/components/ui/button";
 import { toast } from "react-toastify";
 import Link from "next/link";
+import { createUserLink } from "@/lib/utils";
 
 export const columns: ColumnDef<Users>[] = [
   {
@@ -69,13 +70,15 @@ export const columns: ColumnDef<Users>[] = [
             size="icon"
             className="h-8 w-8 rounded-full"
             onClick={() => {
-              navigator.clipboard.writeText(link.user_link as string);
+              navigator.clipboard.writeText(
+                createUserLink(link.id as string) as string
+              );
               toast.success("Copied to clipboard");
             }}
           >
             <Copy size={15} />
           </Button>
-          <Link href={`/users/${link.userCode}`}>
+          <Link href={`/user/${link.id}`}>
             <Button
               variant="ghost"
               size="icon"
@@ -84,7 +87,7 @@ export const columns: ColumnDef<Users>[] = [
               <UserRoundSearch size={15} />
             </Button>
           </Link>
-          <Link href={`/card/${link.userCode}`}>
+          <Link href={`/card/${link.id}`}>
             <Button
               variant="ghost"
               size="icon"

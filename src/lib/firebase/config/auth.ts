@@ -80,6 +80,7 @@ export const signInWithGoogle = async () => {
     const userID = res.user.uid;
 
     await setDoc(doc(firebaseDb, "user-account", userID), {
+      role: USER_ROLE_ENUMS.USER,
       email: res.user.email,
       timestamp: serverTimestamp(),
     });
@@ -100,6 +101,7 @@ export const signInWithFacebook = async () => {
     const res = await signInWithPopup(firebaseAuth, provider);
     const userID = res.user.uid;
     await setDoc(doc(firebaseDb, "user-account", userID), {
+      role: USER_ROLE_ENUMS.USER,
       email: res.user.email,
       timestamp: serverTimestamp(),
     });
