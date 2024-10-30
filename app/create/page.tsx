@@ -94,7 +94,6 @@ export default function Create() {
   }, [methods]);
 
   useEffect(() => {
-    console.log(imageUrl);
     if (imageUrl) {
       methods.setValue("profilePictureUrl", imageUrl || "");
       if (methods.formState.errors.profilePictureUrl) {

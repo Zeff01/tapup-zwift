@@ -1,6 +1,5 @@
 "use client";
 
-import useLocalStorage from "@/hooks/useLocalStorage";
 import { useUserSession } from "@/hooks/useUserSession";
 import {
   currentAuthUserDetails,
@@ -61,7 +60,6 @@ export const UserContextProvider = ({ children }: any) => {
 
   const logOutUser = async () => {
     await signOutHandler();
-    localStorage.removeItem("isAuthencitated");
     setUser(null);
   };
 

@@ -1,7 +1,7 @@
 "use server";
 import { cookies } from "next/headers";
 import { redirect } from "next/navigation";
-import { CREATE_ROUTE, ROOT_ROUTE, SESSION_COOKIE_NAME } from "@/constants";
+import { CREATE_ROUTE, SESSION_COOKIE_NAME } from "@/constants";
 
 export const createSession = async (uid: string) => {
   cookies().set(SESSION_COOKIE_NAME, uid, {
@@ -16,7 +16,7 @@ export const createSession = async (uid: string) => {
 
 export const deleteSession = async () => {
   cookies().delete(SESSION_COOKIE_NAME);
-  redirect(ROOT_ROUTE);
+  // redirect(ROOT_ROUTE);
 };
 
 export const getSession = async () => {
