@@ -75,7 +75,7 @@ export default function Card() {
 
   return (
     <div className="bg-custom-black w-full h-screen flex flex-col items-center px-2 py-16 gap-y-4 overflow-y-hidden">
-      <Navbar />
+      {/* <Navbar /> */}
       <div
         ref={cardRef}
         className={`text-black dark:text-black relative w-[400px] aspect-[1.5882] p-2 shadow-md rounded-md`}

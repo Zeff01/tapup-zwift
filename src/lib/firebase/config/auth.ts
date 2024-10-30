@@ -10,20 +10,26 @@ import {
 } from "firebase/auth";
 import { firebaseAuth, firebaseDb } from "@/src/lib/firebase/config/firebase";
 import { createSession, deleteSession } from "./session";
-import { setDoc, doc, serverTimestamp } from "firebase/firestore";
+import { setDoc, doc, serverTimestamp, getDoc } from "firebase/firestore";
 import { toast } from "react-toastify";
 import { FirebaseError } from "firebase/app";
 import { z } from "zod";
 import { signupSchema } from "@/schema";
+import { USER_ROLE_ENUMS } from "@/constants";
 export const onAuthStateChanged = (callback: (user: User | null) => void) => {
   return _onAuthStateChanged(firebaseAuth, callback);
 };
 
 export const signUpHandler = async (data: z.infer<typeof signupSchema>) => {
   try {
-    const res = await createUserWithEmailAndPassword(firebaseAuth, data.email, data.password);
+    const res = await createUserWithEmailAndPassword(
+      firebaseAuth,
+      data.email,
+      data.password
+    );
     const userID = res.user.uid;
     await setDoc(doc(firebaseDb, "user-account", userID), {
+      role: USER_ROLE_ENUMS.USER,
       email: res.user.email,
       firstname: data.firstName,
       lastname: data.lastName,
@@ -112,4 +118,22 @@ export const signInWithFacebook = async () => {
 export const signOutHandler = async () => {
   await signOut(firebaseAuth);
   await deleteSession();
+};
+
+export const currentAuthUserDetails = async (id: string) => {
+  try {
+    const userRef = doc(firebaseDb, "user-account", id);
+    const docSnap = await getDoc(userRef);
+    if (!docSnap.exists()) {
+      console.log("No such document");
+      return;
+    }
+    return docSnap.data();
+  } catch (error) {
+    if (error instanceof FirebaseError) {
+      toast.error(error.code);
+      return;
+    }
+    console.log(error);
+  }
 };

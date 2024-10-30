@@ -1,12 +1,11 @@
 "use client";
-import { useState, ChangeEvent, useEffect } from "react";
+import { useState, useEffect } from "react";
 import Image from "next/image";
-import { useRouter } from "next/navigation";
-import { addUser, uploadImage } from "@/src/lib/firebase/store/users.action";
+import { redirect } from "next/navigation";
+import { updateUserById } from "@/src/lib/firebase/store/users.action";
 import { Photo } from "@/src/lib/firebase/store/users.type";
 import { Loader2, LoaderCircle } from "lucide-react";
-import Cropper from "../../components/Cropper";
-import Navbar from "@/components/ui/Navbar";
+import Cropper from "../../../../../components/Cropper";
 import { useForm } from "react-hook-form";
 import { Form } from "@/components/ui/form";
 import { zodResolver } from "@hookform/resolvers/zod";
@@ -18,10 +17,16 @@ import PersonalInfoForm from "@/components/forms/PersonalInfoForm";
 import CompanyInfoForm from "@/components/forms/CompanyInfoForm";
 import ImageLoaded from "@/components/ImageLoaded";
 import { IoMdClose } from "react-icons/io";
+import { useUserContext } from "@/providers/user-provider";
+import { DASHBOARD_ROUTE } from "@/constants";
 
-export type ChosenTemplateType = z.infer<typeof createPortfolioSchema>["chosenTemplate"];
+export type ChosenTemplateType = z.infer<
+  typeof createPortfolioSchema
+>["chosenTemplate"];
 
 export default function Create() {
+  const { user, isLoading } = useUserContext();
+
   const [photo, setPhoto] = useState<Photo | null>(null);
   const [imageUrl, setImageUrl] = useState<string | null>(null);
 
@@ -31,10 +36,10 @@ export default function Create() {
   const [servicePhotos, setServicePhotos] = useState<Photo[]>([]);
   const [serviceImageUrls, setServiceImageUrls] = useState<string[]>([]);
 
-  const [selectedTemplateId, setSelectedTemplateId] = useState<ChosenTemplateType>("template1");
+  const [selectedTemplateId, setSelectedTemplateId] =
+    useState<ChosenTemplateType>("template1");
 
   const [loading, setLoading] = useState(false);
-  const router = useRouter();
 
   const addServicePhoto = (photo: Photo) => {
     setServicePhotos([...servicePhotos, photo]);
@@ -75,6 +80,15 @@ export default function Create() {
     const savedData = localStorage.getItem("portfolioFormData");
     if (savedData) {
       const parsedData = JSON.parse(savedData);
+      if (!imageUrl) {
+        setImageUrl(parsedData?.profilePictureUrl);
+      }
+      if (!coverPhotoUrl) {
+        setCoverPhotoUrl(parsedData?.coverPhotoUrl);
+      }
+      if (!serviceImageUrls.length) {
+        setServiceImageUrls(parsedData?.servicePhotos || []);
+      }
       Object.keys(parsedData).forEach((key) => {
         methods.setValue(key as any, parsedData[key]);
       });
@@ -102,43 +116,45 @@ export default function Create() {
       methods.setValue("servicePhotos", serviceImageUrls || []);
     }
     methods.setValue("chosenTemplate", selectedTemplateId);
-  }, [coverPhotoUrl, imageUrl, serviceImageUrls, selectedTemplateId, methods]);
+    methods.setValue("email", user?.email || "");
+  }, [
+    coverPhotoUrl,
+    imageUrl,
+    serviceImageUrls,
+    selectedTemplateId,
+    methods,
+    user,
+  ]);
   const formSubmit = async (data: z.infer<typeof createPortfolioSchema>) => {
+    if (!user) return;
     setLoading(true); // load start
 
-    const userInfo = await addUser({
-      ...data,
-      printStatus: false,
-    });
+    await updateUserById(user.uid, data);
     setLoading(false); // load ends
     methods.reset();
-    if (userInfo) {
-      localStorage.setItem("userLink", userInfo.user_link);
-      localStorage.setItem("userCode", userInfo.userCode);
-      router.push(`/action?userCode=${userInfo.userCode}`);
-    } else {
-      console.error("userLink is undefined or not valid.");
-    }
 
     localStorage.removeItem("portfolioFormData");
+
+    redirect(DASHBOARD_ROUTE);
   };
 
   return (
-    <Form {...methods}>
-      <main className="flex min-h-screen bg-[#1E1E1E] text-white flex-col items-center pt-12 p-6 overflow-x-hidden">
-        <div className="w-full max-w-sm ">
-          {/* HEADER */}
-          <div className="text-center mt-8 mb-16 ">
-            <Image
-              src="/assets/zwift-logo.png"
-              alt="Company Logo"
-              width={140}
-              height={41}
-              priority
-              className="mx-auto mb-8"
-            />
-          </div>
-          <form className="space-y-6" onSubmit={methods.handleSubmit(formSubmit)}>
+    // <></>
+    <main className="flex flex-col overflow-auto py-8 text-white bg-[#1E1E1E] h-full">
+      <div className="w-full mx-auto max-w-sm">
+        <Image
+          src="/assets/zwift-logo.png"
+          alt="Company Logo"
+          width={140}
+          height={41}
+          priority
+          className="mx-auto mb-8"
+        />
+        <Form {...methods}>
+          <form
+            className="space-y-6"
+            onSubmit={methods.handleSubmit(formSubmit)}
+          >
             <div className="">
               <p className="text-lg font-semibold mb-6">
                 Cover Photo and Profile Pic Upload Section
@@ -165,7 +181,9 @@ export default function Create() {
                             alt="plus"
                             className="size-10 lg:size-auto mt-8"
                           />
-                          <p className="text-[#767676] text-sm">Upload a Cover Photo</p>
+                          <p className="text-[#767676] text-sm">
+                            Upload a Cover Photo
+                          </p>
                         </div>
                       }
                     />
@@ -212,26 +230,30 @@ export default function Create() {
             {/* Company Information Inputs */}
             <div className="space-y-6">
               <CompanyInfoForm control={methods.control} />
-
               <div className="">
-                <h1 className="text-lg font-semibold mt-2">Add Photo For Services: (Optional)</h1>
+                <h1 className="text-lg font-semibold mt-2">
+                  Add Photo For Services: (Optional)
+                </h1>
                 <div className="flex flex-col p-4 items-center justify-center overflow-hidden rounded-2xl bg-[#222224] mt-4 border border-[#2c2c2c]">
                   <div
                     className="flex image-preview text-[#767676] rounded-2xl w-full min-h-48 p-2 gap-2 flex-wrap"
                     style={{
-                      alignItems: serviceImageUrls.length > 0 ? "flex-start" : "center",
+                      alignItems:
+                        serviceImageUrls.length > 0 ? "flex-start" : "center",
                     }}
                   >
                     <div
                       className="flex justify-center text-[#767676] rounded-2xl w-full min-h-48 p-2 gap-2 flex-wrap"
                       style={{
-                        alignItems: serviceImageUrls.length > 0 ? "flex-start" : "center",
+                        alignItems:
+                          serviceImageUrls.length > 0 ? "flex-start" : "center",
                       }}
                     >
                       <div
                         className="gap-1 grid-cols-3 lg:grid-cols-4"
                         style={{
-                          display: serviceImageUrls.length > 0 ? "grid" : "flex",
+                          display:
+                            serviceImageUrls.length > 0 ? "grid" : "flex",
                         }}
                       >
                         {serviceImageUrls.length === 0 ? (
@@ -326,16 +348,11 @@ export default function Create() {
                   </div>
                 </div>
               </div>
-
               <TemplateCarousel
                 selectedTemplateId={selectedTemplateId}
                 setSelectedTemplateId={setSelectedTemplateId}
-              />
-
-              {/* Personal Information Inputs */}
+              />{" "}
               <PersonalInfoForm control={methods.control} />
-
-              {/* Social Links Inputs */}
               <SocialLinksForm control={methods.control} />
             </div>
             <button
@@ -352,8 +369,8 @@ export default function Create() {
               )}
             </button>
           </form>
-        </div>
-      </main>
-    </Form>
+        </Form>
+      </div>
+    </main>
   );
 }

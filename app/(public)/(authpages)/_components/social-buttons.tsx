@@ -1,7 +1,10 @@
 "use client";
 
 import { Button } from "@/components/ui/button";
-import { signInWithGoogle, signInWithFacebook } from "@/src/lib/firebase/config/auth";
+import {
+  signInWithGoogle,
+  signInWithFacebook,
+} from "@/src/lib/firebase/config/auth";
 import { useRouter } from "next/navigation";
 import { FaFacebook } from "react-icons/fa6";
 import { FcGoogle } from "react-icons/fc";
@@ -10,12 +13,12 @@ export default function Social({ label }: { label: string }) {
   const router = useRouter();
   const handleGoogleSignIn = async () => {
     await signInWithGoogle();
-    router.push("/create");
+    router.push("/onboarding");
   };
 
   const handleFacebookSignIn = async () => {
     await signInWithFacebook();
-    router.push("/create");
+    router.push("/onboarding");
   };
   return (
     <>

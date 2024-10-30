@@ -8,7 +8,12 @@ import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 
 //shadcn cards and fonts
-import { Card, CardContent, CardFooter, CardHeader } from "@/components/ui/card";
+import {
+  Card,
+  CardContent,
+  CardFooter,
+  CardHeader,
+} from "@/components/ui/card";
 import { Roboto_Condensed } from "next/font/google";
 import { cn } from "@/lib/utils";
 const fonts = Roboto_Condensed({
@@ -50,7 +55,9 @@ export function RegisterForm() {
   };
   return (
     <Card className="w-full  p-5  md:p-10 shadow-md rounded-md">
-      <CardHeader className={cn(fonts.className, "text-5xl font-black pb-4 pt-0 ")}>
+      <CardHeader
+        className={cn(fonts.className, "text-5xl font-black pb-4 pt-0 ")}
+      >
         Create Account
       </CardHeader>
       <CardContent className="pb-0">
@@ -64,7 +71,9 @@ export function RegisterForm() {
                   render={({ field }) => (
                     <FormItem className="flex-1">
                       <div className="flex items-center justify-between">
-                        <FormLabel className="text-black text-xs">First Name</FormLabel>
+                        <FormLabel className="text-black text-xs">
+                          First Name
+                        </FormLabel>
                         <FormMessage className="text-xs" />
                       </div>
                       <FormControl>
@@ -84,7 +93,9 @@ export function RegisterForm() {
                   render={({ field }) => (
                     <FormItem className="flex-1">
                       <div className="flex items-center justify-between">
-                        <FormLabel className="text-black text-xs">Last Name</FormLabel>
+                        <FormLabel className="text-black text-xs">
+                          Last Name
+                        </FormLabel>
                         <FormMessage className="text-xs" />
                       </div>
                       <FormControl>
@@ -106,11 +117,18 @@ export function RegisterForm() {
                 render={({ field }) => (
                   <FormItem>
                     <div className="flex items-center justify-between">
-                      <FormLabel className="text-black text-xs">Email Address</FormLabel>
+                      <FormLabel className="text-black text-xs">
+                        Email Address
+                      </FormLabel>
                       <FormMessage className="text-xs" />
                     </div>
                     <FormControl>
-                      <Input {...field} type="email" placeholder="Email" className="text-xs h-8" />
+                      <Input
+                        {...field}
+                        type="email"
+                        placeholder="Email"
+                        className="text-xs h-8"
+                      />
                     </FormControl>
                   </FormItem>
                 )}
@@ -121,7 +139,9 @@ export function RegisterForm() {
                 render={({ field }) => (
                   <FormItem>
                     <div className="flex items-center justify-between">
-                      <FormLabel className="text-black text-xs">Password</FormLabel>
+                      <FormLabel className="text-black text-xs">
+                        Password
+                      </FormLabel>
                       <FormMessage className="text-xs" />
                     </div>
                     <FormControl>
@@ -141,7 +161,9 @@ export function RegisterForm() {
                 render={({ field }) => (
                   <FormItem>
                     <div className="flex items-center justify-between">
-                      <FormLabel className="text-black text-xs">Confirm Password</FormLabel>
+                      <FormLabel className="text-black text-xs">
+                        Confirm Password
+                      </FormLabel>
                       <FormMessage className="text-xs" />
                     </div>
                     <FormControl>

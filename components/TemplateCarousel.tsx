@@ -9,7 +9,7 @@ import {
 } from "@/components/ui/carousel";
 import { Card, CardContent } from "@/components/ui/card";
 import Image from "next/image";
-import { ChosenTemplateType } from "@/app/create/page";
+import { ChosenTemplateType } from "@/app/(secured)/(user)/(boarding)/onboarding/page";
 import { EyeIcon } from "lucide-react";
 
 interface Template {
@@ -74,7 +74,9 @@ export function TemplateCarousel({
             <CarouselItem key={template.id} className="flex-none w-1/2 p-2">
               <div
                 className={`block transform hover:scale-105 transition-transform duration-300 cursor-pointer  ${
-                  selectedTemplateId === template.id ? "border-2 rounded-lg border-green-500" : ""
+                  selectedTemplateId === template.id
+                    ? "border-2 rounded-lg border-green-500"
+                    : ""
                 }`}
                 onClick={() => setSelectedTemplateId(template.id)}
               >
@@ -88,7 +90,9 @@ export function TemplateCarousel({
                       className="rounded-md h-full w-full object-cover"
                       layout="responsive"
                     />
-                    <h3 className="text-sm font-semibold mt-2">{template.name}</h3>
+                    <h3 className="text-sm font-semibold mt-2">
+                      {template.name}
+                    </h3>
                     <div className="flex items-center gap-4 mt-2">
                       <div
                         className="bg-green-500 text-white py-1 px-2 text-xs rounded hover:bg-green-600"

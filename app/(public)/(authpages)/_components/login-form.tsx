@@ -1,14 +1,19 @@
 "use client";
 
 import Link from "next/link";
-import { Separator } from "@/app/(auth)/_components/auth-separator";
+import { Separator } from "@/app/(public)/(authpages)/_components/auth-separator";
 
 //shadcn components
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 
 //shadcn cards and fonts
-import { Card, CardContent, CardFooter, CardHeader } from "@/components/ui/card";
+import {
+  Card,
+  CardContent,
+  CardFooter,
+  CardHeader,
+} from "@/components/ui/card";
 import { Roboto_Condensed } from "next/font/google";
 import { cn } from "@/lib/utils";
 const fonts = Roboto_Condensed({
@@ -46,12 +51,14 @@ export function LogInForm() {
 
   const onSubmit = async (data: LoginData) => {
     await loginHandler(data.email, data.password);
-    router.push("/create");
+    router.push("/onboarding");
   };
 
   return (
     <Card className="w-full shadow-md p-5  md:p-10 h-full flex flex-col justify-center rounded-md">
-      <CardHeader className={cn(fonts.className, "text-5xl font-black pb-4 pt-0 ")}>
+      <CardHeader
+        className={cn(fonts.className, "text-5xl font-black pb-4 pt-0 ")}
+      >
         Sign In
       </CardHeader>
       <CardContent className="pb-0 ">
@@ -64,11 +71,18 @@ export function LogInForm() {
                 render={({ field }) => (
                   <FormItem>
                     <div className="flex items-center justify-between">
-                      <FormLabel className="text-black text-xs">Email Address</FormLabel>
+                      <FormLabel className="text-black text-xs">
+                        Email Address
+                      </FormLabel>
                       <FormMessage className="text-xs" />
                     </div>
                     <FormControl>
-                      <Input {...field} type="email" placeholder="Email" className="text-xs h-8" />
+                      <Input
+                        {...field}
+                        type="email"
+                        placeholder="Email"
+                        className="text-xs h-8"
+                      />
                     </FormControl>
                   </FormItem>
                 )}
@@ -79,7 +93,9 @@ export function LogInForm() {
                 render={({ field }) => (
                   <FormItem>
                     <div className="flex items-center justify-between">
-                      <FormLabel className="text-black text-xs">Password</FormLabel>
+                      <FormLabel className="text-black text-xs">
+                        Password
+                      </FormLabel>
                       <FormMessage className="text-xs" />
                     </div>
                     <FormControl>
