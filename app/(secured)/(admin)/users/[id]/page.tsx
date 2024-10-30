@@ -37,24 +37,24 @@ const UserPage = ({ params }: { params: { id: string } }) => {
     return <div>User not found.</div>;
   }
 
-  const renderTemplate = () => {
-    switch (userData.chosenTemplate) {
-      case "template1":
-        return <Template1 {...userData} />;
-      case "template2":
-        return <Template2 {...userData} />;
-      case "template3":
-        return <Template3 {...userData} />;
-      case "template4":
-        return <Template4 {...userData} />;
-      case "template5":
-        return <Template5 {...userData} />;
-      default:
-        return <div>No template selected.</div>;
-    }
-  };
+  // const renderTemplate = () => {
+  //   switch (userData.chosenTemplate) {
+  //     case "template1":
+  //       return <Template1 {...userData} />;
+  //     case "template2":
+  //       return <Template2 {...userData} />;
+  //     case "template3":
+  //       return <Template3 {...userData} />;
+  //     case "template4":
+  //       return <Template4 {...userData} />;
+  //     case "template5":
+  //       return <Template5 {...userData} />;
+  //     default:
+  //       return <div>No template selected.</div>;
+  //   }
+  // };
 
-  return <div>{renderTemplate()}</div>;
+  return <div></div>;
 };
 
 export default UserPage;
