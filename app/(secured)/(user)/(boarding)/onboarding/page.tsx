@@ -1,7 +1,6 @@
 "use client";
 import { useState, useEffect } from "react";
 import Image from "next/image";
-import { redirect } from "next/navigation";
 import { updateUserById } from "@/src/lib/firebase/store/users.action";
 import { Photo } from "@/src/lib/firebase/store/users.type";
 import { Loader2, LoaderCircle } from "lucide-react";
@@ -135,7 +134,7 @@ export default function Create() {
 
     localStorage.removeItem("portfolioFormData");
 
-    redirect(DASHBOARD_ROUTE);
+    window.location.reload();
   };
 
   return (
