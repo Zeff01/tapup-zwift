@@ -24,13 +24,6 @@ const PersonalInfoForm: React.FC<PersonalInfoFormProps> = ({ control }) => {
         placeholder="Enter your last name"
         required={true}
       />
-      <CustomInput
-        control={control}
-        name="email"
-        label="Email Address"
-        placeholder="Enter your email address"
-        required={true}
-      />
       <FormField
         control={control}
         name="number"

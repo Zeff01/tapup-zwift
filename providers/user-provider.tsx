@@ -11,6 +11,7 @@ import { createContext, useContext, useEffect, useMemo, useState } from "react";
 interface ExtendedUserInterface extends Users {
   uid: string;
   role: string;
+  onboarding: boolean;
 }
 
 type UserState = ExtendedUserInterface | null;
@@ -47,8 +48,7 @@ export const UserContextProvider = ({ children }: any) => {
         return;
       }
       setUser({
-        email: userData.email,
-        role: userData.role,
+        ...(userData as ExtendedUserInterface),
         uid: userUid,
       });
 

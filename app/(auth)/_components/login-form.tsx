@@ -51,7 +51,7 @@ export function LogInForm() {
 
   const onSubmit = async (data: LoginData) => {
     await loginHandler(data.email, data.password);
-    router.push("/create");
+    router.push("/onboarding");
   };
 
   return (

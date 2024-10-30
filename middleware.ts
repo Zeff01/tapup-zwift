@@ -3,22 +3,22 @@ import {
   SESSION_COOKIE_NAME,
   LOGIN_ROUTE,
   SIGNUP_ROUTE,
-  CREATE_ROUTE,
+  ONBOARDING_ROUTE,
   CARD_ROUTE,
-  SECRET_ROUTE,
+  DASHBOARD_ROUTE,
   USER_ROUTE,
   UPDATE_ROUTE,
   CARD_PATH,
-  USER_PATH,
+  ADMIN_ONLY_PATH,
   UPDATE_PATH,
-  CREATE_PATH,
+  ONBOARDING_PATH,
   ACTION_ROUTE,
 } from "@/constants";
 
 const protectedRoutes = [
-  CREATE_ROUTE,
+  ONBOARDING_ROUTE,
   CARD_ROUTE,
-  SECRET_ROUTE,
+  DASHBOARD_ROUTE,
   USER_ROUTE,
   UPDATE_ROUTE,
   ACTION_ROUTE,
@@ -36,8 +36,8 @@ export default async function middleware(request: NextRequest) {
     return NextResponse.next();
   }
   if (authRoutes.some((route) => pathname === route)) {
-    const createRouterUrl = new URL(CREATE_ROUTE, request.url);
-    return NextResponse.redirect(createRouterUrl);
+    const onboardingRoute = new URL(ONBOARDING_ROUTE, request.url);
+    return NextResponse.redirect(onboardingRoute);
   }
   return NextResponse.next();
 }
@@ -45,9 +45,9 @@ export default async function middleware(request: NextRequest) {
 export const config = {
   matcher: [
     "/((?!api|_next/static|_next/image|favicon.ico).*)",
-    CREATE_PATH,
+    ONBOARDING_PATH,
     CARD_PATH,
-    USER_PATH,
+    ADMIN_ONLY_PATH,
     UPDATE_PATH,
   ],
 };

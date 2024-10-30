@@ -2,10 +2,13 @@
 import React, { useEffect, useState } from "react";
 import { getAllUsers } from "@/src/lib/firebase/store/users.action";
 import TableComponent from "./components/TableComponent";
-import Navbar from "@/components/ui/Navbar";
-import LoadingLogo from "@/components/LoadingLogo";
+import { useUserContext } from "@/providers/user-provider";
+import { redirect } from "next/navigation";
+import Loading from "./loading";
+import { DASHBOARD_ROUTE, USER_ROLE_ENUMS } from "@/constants";
 
 export default function UsersPage() {
+  const { user, isLoading: userContextLoading } = useUserContext();
   const [data, setData] = useState([]);
   const [isLoading, setIsLoading] = useState(true);
   useEffect(() => {
@@ -20,7 +23,13 @@ export default function UsersPage() {
     fetch();
   }, []);
 
-  console.log(data);
+  if (!user || (!user && userContextLoading)) {
+    return <Loading />;
+  }
+
+  if (user.role !== USER_ROLE_ENUMS.ADMIN) {
+    redirect(DASHBOARD_ROUTE);
+  }
 
   return (
     <main className="flex h-full bg-[#1E1E1E] text-white flex-col items-center pt-12 p-6 ">

@@ -17,6 +17,7 @@ import { Photo, Users } from "./users.type";
 import { createUserLink } from "@/lib/utils";
 import { getDownloadURL, ref, uploadBytesResumable } from "firebase/storage";
 import revalidateUserPath from "./user.revalidate";
+import { toast } from "react-toastify";
 
 type UserCodeLink = {
   userCode: string;
@@ -90,20 +91,21 @@ export const getAllUsers = async (): Promise<Users[]> => {
   }
 };
 
-export const updateUserById = async (
-  user_id: string,
-  user: Partial<Users>
-): Promise<{ success: boolean; message: any }> => {
+export const updateUserById = async (user_id: string, user: Partial<Users>) => {
   try {
-    const userCollection = collection(firebaseDb, "users");
+    const userCollection = collection(firebaseDb, "user-account");
     const userRef = doc(userCollection, user_id);
-    await setDoc(userRef, { ...user }, { merge: true });
+    await setDoc(
+      userRef,
+      { ...user, onboarding: true, timestamp: serverTimestamp() },
+      { merge: true }
+    );
     console.log("Document updated with ID: ", user_id);
     revalidateUserPath("/users");
-    return { success: true, message: `Document updated with ID: ${user_id}` };
+    toast.success("User updated successfully");
   } catch (error: any) {
+    toast.error("Something went wrong");
     console.error("Error updating document: ", error);
-    return { success: false, message: error };
   }
 };
 export const getUserBySubId = async (id: string): Promise<Users | null> => {

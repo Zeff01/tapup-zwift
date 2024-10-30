@@ -1,8 +1,12 @@
 "use client";
 import { useState, ChangeEvent, useEffect } from "react";
 import Image from "next/image";
-import { useRouter } from "next/navigation";
-import { addUser, uploadImage } from "@/src/lib/firebase/store/users.action";
+import { redirect, useRouter } from "next/navigation";
+import {
+  addUser,
+  updateUserById,
+  uploadImage,
+} from "@/src/lib/firebase/store/users.action";
 import { Photo } from "@/src/lib/firebase/store/users.type";
 import { Loader2, LoaderCircle } from "lucide-react";
 import Cropper from "../../components/Cropper";
@@ -19,13 +23,16 @@ import CompanyInfoForm from "@/components/forms/CompanyInfoForm";
 import ImageLoaded from "@/components/ImageLoaded";
 import { IoMdClose } from "react-icons/io";
 import { useUserContext } from "@/providers/user-provider";
-import { firebaseAuth } from "@/src/lib/firebase/config/firebase";
+import { DASHBOARD_ROUTE, USER_ROLE_ENUMS } from "@/constants";
+import Loading from "../loading";
 
 export type ChosenTemplateType = z.infer<
   typeof createPortfolioSchema
 >["chosenTemplate"];
 
 export default function Create() {
+  const { user, isLoading } = useUserContext();
+
   const [photo, setPhoto] = useState<Photo | null>(null);
   const [imageUrl, setImageUrl] = useState<string | null>(null);
 
@@ -39,7 +46,6 @@ export default function Create() {
     useState<ChosenTemplateType>("template1");
 
   const [loading, setLoading] = useState(false);
-  const router = useRouter();
 
   const addServicePhoto = (photo: Photo) => {
     setServicePhotos([...servicePhotos, photo]);
@@ -80,6 +86,15 @@ export default function Create() {
     const savedData = localStorage.getItem("portfolioFormData");
     if (savedData) {
       const parsedData = JSON.parse(savedData);
+      if (!imageUrl) {
+        setImageUrl(parsedData?.profilePictureUrl);
+      }
+      if (!coverPhotoUrl) {
+        setCoverPhotoUrl(parsedData?.coverPhotoUrl);
+      }
+      if (!serviceImageUrls.length) {
+        setServiceImageUrls(parsedData?.servicePhotos || []);
+      }
       Object.keys(parsedData).forEach((key) => {
         methods.setValue(key as any, parsedData[key]);
       });
@@ -107,26 +122,31 @@ export default function Create() {
       methods.setValue("servicePhotos", serviceImageUrls || []);
     }
     methods.setValue("chosenTemplate", selectedTemplateId);
-  }, [coverPhotoUrl, imageUrl, serviceImageUrls, selectedTemplateId, methods]);
+    methods.setValue("email", user?.email || "");
+  }, [
+    coverPhotoUrl,
+    imageUrl,
+    serviceImageUrls,
+    selectedTemplateId,
+    methods,
+    user,
+  ]);
   const formSubmit = async (data: z.infer<typeof createPortfolioSchema>) => {
+    if (!user) return;
     setLoading(true); // load start
 
-    const userInfo = await addUser({
-      ...data,
-      printStatus: false,
-    });
+    await updateUserById(user.uid, data);
     setLoading(false); // load ends
     methods.reset();
-    if (userInfo) {
-      localStorage.setItem("userLink", userInfo.user_link);
-      localStorage.setItem("userCode", userInfo.userCode);
-      router.push(`/action?userCode=${userInfo.userCode}`);
-    } else {
-      console.error("userLink is undefined or not valid.");
-    }
 
     localStorage.removeItem("portfolioFormData");
   };
+
+  if (!user || (!user && isLoading)) return <Loading />;
+
+  if (user && user.onboarding === true) {
+    redirect(DASHBOARD_ROUTE);
+  }
 
   return (
     // <></>
