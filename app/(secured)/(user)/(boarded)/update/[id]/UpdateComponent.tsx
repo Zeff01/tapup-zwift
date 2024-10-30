@@ -1,12 +1,12 @@
 "use client";
-import { useState, ChangeEvent, useEffect } from "react";
+import { useState, useEffect } from "react";
 import Image from "next/image";
 import { useRouter } from "next/navigation";
-import { addUser, uploadImage } from "@/src/lib/firebase/store/users.action";
+import { updateUserById } from "@/src/lib/firebase/store/users.action";
+import { IoMdClose } from "react-icons/io";
 import { Photo } from "@/src/lib/firebase/store/users.type";
 import { Loader2, LoaderCircle } from "lucide-react";
-import Cropper from "../../components/Cropper";
-import Navbar from "@/components/ui/Navbar";
+import Cropper from "@/components/Cropper";
 import { useForm } from "react-hook-form";
 import { Form } from "@/components/ui/form";
 import { zodResolver } from "@hookform/resolvers/zod";
@@ -16,25 +16,41 @@ import { TemplateCarousel } from "@/components/TemplateCarousel";
 import SocialLinksForm from "@/components/forms/SocialLinkForm";
 import PersonalInfoForm from "@/components/forms/PersonalInfoForm";
 import CompanyInfoForm from "@/components/forms/CompanyInfoForm";
+import { toast } from "react-toastify";
 import ImageLoaded from "@/components/ImageLoaded";
-import { IoMdClose } from "react-icons/io";
+import {
+  ExtendedUserInterface,
+  useUserContext,
+} from "@/providers/user-provider";
 
-export type ChosenTemplateType = z.infer<typeof createPortfolioSchema>["chosenTemplate"];
+export type ChosenTemplateType = z.infer<
+  typeof createPortfolioSchema
+>["chosenTemplate"];
 
-export default function Create() {
+export default function UpdateComponent({
+  userData,
+}: {
+  userData: ExtendedUserInterface;
+}) {
+  const { updateUser, isLoading } = useUserContext();
+
   const [photo, setPhoto] = useState<Photo | null>(null);
-  const [imageUrl, setImageUrl] = useState<string | null>(null);
+  const [imageUrl, setImageUrl] = useState<string | null>(
+    userData.profilePictureUrl || null
+  );
 
   const [coverPhoto, setCoverPhoto] = useState<Photo | null>(null);
-  const [coverPhotoUrl, setCoverPhotoUrl] = useState<string | null>(null);
+  const [coverPhotoUrl, setCoverPhotoUrl] = useState<string | null>(
+    userData.coverPhotoUrl || null
+  );
 
   const [servicePhotos, setServicePhotos] = useState<Photo[]>([]);
-  const [serviceImageUrls, setServiceImageUrls] = useState<string[]>([]);
+  const [serviceImageUrls, setServiceImageUrls] = useState<string[]>(
+    userData.servicePhotos || []
+  );
 
-  const [selectedTemplateId, setSelectedTemplateId] = useState<ChosenTemplateType>("template1");
-
-  const [loading, setLoading] = useState(false);
-  const router = useRouter();
+  const [selectedTemplateId, setSelectedTemplateId] =
+    useState<ChosenTemplateType>(userData.chosenTemplate as ChosenTemplateType);
 
   const addServicePhoto = (photo: Photo) => {
     setServicePhotos([...servicePhotos, photo]);
@@ -48,45 +64,29 @@ export default function Create() {
   const methods = useForm<z.infer<typeof createPortfolioSchema>>({
     resolver: zodResolver(createPortfolioSchema),
     defaultValues: {
-      coverPhotoUrl: "",
-      profilePictureUrl: "",
-      position: "",
-      company: "",
-      companyBackground: "",
-      serviceDescription: "",
-      servicePhotos: [],
-      chosenTemplate: "template1",
-      firstName: "",
-      lastName: "",
-      email: "",
-      number: "",
-      facebookUrl: "",
-      youtubeUrl: "",
-      instagramUrl: "",
-      twitterUrl: "",
-      linkedinUrl: "",
-      whatsappNumber: "",
-      skypeInviteUrl: "",
-      websiteUrl: "",
+      coverPhotoUrl: userData.coverPhotoUrl || "",
+      profilePictureUrl: userData.profilePictureUrl || "",
+      position: userData.position || "",
+      company: userData.company || "",
+      companyBackground: userData.companyBackground || "",
+      serviceDescription: userData.serviceDescription || "",
+      servicePhotos: userData.servicePhotos || [],
+      chosenTemplate:
+        (userData.chosenTemplate as ChosenTemplateType) || "template1",
+      firstName: userData.firstName || "",
+      lastName: userData.lastName || "",
+      email: userData.email || "",
+      number: userData.number || "",
+      facebookUrl: userData.facebookUrl || "",
+      youtubeUrl: userData.youtubeUrl || "",
+      instagramUrl: userData.instagramUrl || "",
+      twitterUrl: userData.twitterUrl || "",
+      linkedinUrl: userData.linkedinUrl || "",
+      whatsappNumber: userData.whatsappNumber || "",
+      skypeInviteUrl: userData.skypeInviteUrl || "",
+      websiteUrl: userData.websiteUrl || "",
     },
   });
-
-  useEffect(() => {
-    const savedData = localStorage.getItem("portfolioFormData");
-    if (savedData) {
-      const parsedData = JSON.parse(savedData);
-      Object.keys(parsedData).forEach((key) => {
-        methods.setValue(key as any, parsedData[key]);
-      });
-    }
-  }, [methods]);
-
-  useEffect(() => {
-    const subscription = methods.watch((data) => {
-      localStorage.setItem("portfolioFormData", JSON.stringify(data));
-    });
-    return () => subscription.unsubscribe();
-  }, [methods]);
 
   useEffect(() => {
     if (imageUrl) {
@@ -103,42 +103,28 @@ export default function Create() {
     }
     methods.setValue("chosenTemplate", selectedTemplateId);
   }, [coverPhotoUrl, imageUrl, serviceImageUrls, selectedTemplateId, methods]);
+
   const formSubmit = async (data: z.infer<typeof createPortfolioSchema>) => {
-    setLoading(true); // load start
-
-    const userInfo = await addUser({
-      ...data,
-      printStatus: false,
-    });
-    setLoading(false); // load ends
-    methods.reset();
-    if (userInfo) {
-      localStorage.setItem("userLink", userInfo.user_link);
-      localStorage.setItem("userCode", userInfo.userCode);
-      router.push(`/action?userCode=${userInfo.userCode}`);
-    } else {
-      console.error("userLink is undefined or not valid.");
-    }
-
-    localStorage.removeItem("portfolioFormData");
+    if (!userData) return;
+    await updateUser(userData.uid, data as ExtendedUserInterface);
   };
 
   return (
-    <Form {...methods}>
-      <main className="flex min-h-screen bg-[#1E1E1E] text-white flex-col items-center pt-12 p-6 overflow-x-hidden">
-        <div className="w-full max-w-sm ">
-          {/* HEADER */}
-          <div className="text-center mt-8 mb-16 ">
-            <Image
-              src="/assets/zwift-logo.png"
-              alt="Company Logo"
-              width={140}
-              height={41}
-              priority
-              className="mx-auto mb-8"
-            />
-          </div>
-          <form className="space-y-6" onSubmit={methods.handleSubmit(formSubmit)}>
+    <main className="flex flex-col overflow-auto py-8 text-white bg-[#1E1E1E] h-full">
+      <div className="w-full mx-auto max-w-sm">
+        <Image
+          src="/assets/zwift-logo.png"
+          alt="Company Logo"
+          width={140}
+          height={41}
+          priority
+          className="mx-auto mb-8"
+        />
+        <Form {...methods}>
+          <form
+            className="space-y-6"
+            onSubmit={methods.handleSubmit(formSubmit)}
+          >
             <div className="">
               <p className="text-lg font-semibold mb-6">
                 Cover Photo and Profile Pic Upload Section
@@ -165,7 +151,9 @@ export default function Create() {
                             alt="plus"
                             className="size-10 lg:size-auto mt-8"
                           />
-                          <p className="text-[#767676] text-sm">Upload a Cover Photo</p>
+                          <p className="text-[#767676] text-sm">
+                            Upload a Cover Photo
+                          </p>
                         </div>
                       }
                     />
@@ -214,24 +202,29 @@ export default function Create() {
               <CompanyInfoForm control={methods.control} />
 
               <div className="">
-                <h1 className="text-lg font-semibold mt-2">Add Photo For Services: (Optional)</h1>
+                <h1 className="text-lg font-semibold mt-2">
+                  Add Photo For Services: (Optional)
+                </h1>
                 <div className="flex flex-col p-4 items-center justify-center overflow-hidden rounded-2xl bg-[#222224] mt-4 border border-[#2c2c2c]">
                   <div
                     className="flex image-preview text-[#767676] rounded-2xl w-full min-h-48 p-2 gap-2 flex-wrap"
                     style={{
-                      alignItems: serviceImageUrls.length > 0 ? "flex-start" : "center",
+                      alignItems:
+                        serviceImageUrls.length > 0 ? "flex-start" : "center",
                     }}
                   >
                     <div
                       className="flex justify-center text-[#767676] rounded-2xl w-full min-h-48 p-2 gap-2 flex-wrap"
                       style={{
-                        alignItems: serviceImageUrls.length > 0 ? "flex-start" : "center",
+                        alignItems:
+                          serviceImageUrls.length > 0 ? "flex-start" : "center",
                       }}
                     >
                       <div
                         className="gap-1 grid-cols-3 lg:grid-cols-4"
                         style={{
-                          display: serviceImageUrls.length > 0 ? "grid" : "flex",
+                          display:
+                            serviceImageUrls.length > 0 ? "grid" : "flex",
                         }}
                       >
                         {serviceImageUrls.length === 0 ? (
@@ -341,19 +334,19 @@ export default function Create() {
             <button
               type="submit"
               className="w-full px-4 py-4 bg-[#6150EB] hover:bg-[#6250ebc0] rounded-md font-bold disabled:opacity-50 disabled:cursor-not-allowed"
-              disabled={loading}
+              disabled={isLoading}
             >
-              {loading ? (
+              {isLoading ? (
                 <span className="w-full flex items-center justify-center">
                   <LoaderCircle className="animate-spin" />
                 </span>
               ) : (
-                "Submit"
+                "Update"
               )}
             </button>
           </form>
-        </div>
-      </main>
-    </Form>
+        </Form>
+      </div>
+    </main>
   );
 }

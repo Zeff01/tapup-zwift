@@ -1,16 +1,10 @@
 "use client";
-import { useState, ChangeEvent, useEffect } from "react";
+import { useState, useEffect } from "react";
 import Image from "next/image";
-import { useRouter } from "next/navigation";
-import {
-  uploadImage,
-  updateUserById,
-} from "@/src/lib/firebase/store/users.action";
-import { IoMdClose } from "react-icons/io";
-import { Photo, Users } from "@/src/lib/firebase/store/users.type";
+import { updateUserById } from "@/src/lib/firebase/store/users.action";
+import { Photo } from "@/src/lib/firebase/store/users.type";
 import { Loader2, LoaderCircle } from "lucide-react";
-import Cropper from "@/components/Cropper";
-import Navbar from "@/components/ui/Navbar";
+import Cropper from "../../../../../components/Cropper";
 import { useForm } from "react-hook-form";
 import { Form } from "@/components/ui/form";
 import { zodResolver } from "@hookform/resolvers/zod";
@@ -20,35 +14,31 @@ import { TemplateCarousel } from "@/components/TemplateCarousel";
 import SocialLinksForm from "@/components/forms/SocialLinkForm";
 import PersonalInfoForm from "@/components/forms/PersonalInfoForm";
 import CompanyInfoForm from "@/components/forms/CompanyInfoForm";
-import { toast } from "react-toastify";
 import ImageLoaded from "@/components/ImageLoaded";
-import revalidateUserPath from "@/src/lib/firebase/store/user.revalidate";
+import { IoMdClose } from "react-icons/io";
+import { useUserContext } from "@/providers/user-provider";
+import { DASHBOARD_ROUTE } from "@/constants";
 
 export type ChosenTemplateType = z.infer<
   typeof createPortfolioSchema
 >["chosenTemplate"];
 
-export default function UpdateComponent({ userData }: { userData: Users }) {
+export default function Create() {
+  const { user, isLoading } = useUserContext();
+
   const [photo, setPhoto] = useState<Photo | null>(null);
-  const [imageUrl, setImageUrl] = useState<string | null>(
-    userData.profilePictureUrl || null
-  );
+  const [imageUrl, setImageUrl] = useState<string | null>(null);
 
   const [coverPhoto, setCoverPhoto] = useState<Photo | null>(null);
-  const [coverPhotoUrl, setCoverPhotoUrl] = useState<string | null>(
-    userData.coverPhotoUrl || null
-  );
+  const [coverPhotoUrl, setCoverPhotoUrl] = useState<string | null>(null);
 
   const [servicePhotos, setServicePhotos] = useState<Photo[]>([]);
-  const [serviceImageUrls, setServiceImageUrls] = useState<string[]>(
-    userData.servicePhotos || []
-  );
+  const [serviceImageUrls, setServiceImageUrls] = useState<string[]>([]);
 
   const [selectedTemplateId, setSelectedTemplateId] =
-    useState<ChosenTemplateType>(userData.chosenTemplate as ChosenTemplateType);
+    useState<ChosenTemplateType>("template1");
 
   const [loading, setLoading] = useState(false);
-  const router = useRouter();
 
   const addServicePhoto = (photo: Photo) => {
     setServicePhotos([...servicePhotos, photo]);
@@ -62,29 +52,54 @@ export default function UpdateComponent({ userData }: { userData: Users }) {
   const methods = useForm<z.infer<typeof createPortfolioSchema>>({
     resolver: zodResolver(createPortfolioSchema),
     defaultValues: {
-      coverPhotoUrl: userData.coverPhotoUrl || "",
-      profilePictureUrl: userData.profilePictureUrl || "",
-      position: userData.position || "",
-      company: userData.company || "",
-      companyBackground: userData.companyBackground || "",
-      serviceDescription: userData.serviceDescription || "",
-      servicePhotos: userData.servicePhotos || [],
-      chosenTemplate:
-        (userData.chosenTemplate as ChosenTemplateType) || "template1",
-      firstName: userData.firstName || "",
-      lastName: userData.lastName || "",
-      email: userData.email || "",
-      number: userData.number || "",
-      facebookUrl: userData.facebookUrl || "",
-      youtubeUrl: userData.youtubeUrl || "",
-      instagramUrl: userData.instagramUrl || "",
-      twitterUrl: userData.twitterUrl || "",
-      linkedinUrl: userData.linkedinUrl || "",
-      whatsappNumber: userData.whatsappNumber || "",
-      skypeInviteUrl: userData.skypeInviteUrl || "",
-      websiteUrl: userData.websiteUrl || "",
+      coverPhotoUrl: "",
+      profilePictureUrl: "",
+      position: "",
+      company: "",
+      companyBackground: "",
+      serviceDescription: "",
+      servicePhotos: [],
+      chosenTemplate: "template1",
+      firstName: "",
+      lastName: "",
+      email: "",
+      number: "",
+      facebookUrl: "",
+      youtubeUrl: "",
+      instagramUrl: "",
+      twitterUrl: "",
+      linkedinUrl: "",
+      whatsappNumber: "",
+      skypeInviteUrl: "",
+      websiteUrl: "",
     },
   });
+
+  useEffect(() => {
+    const savedData = localStorage.getItem("portfolioFormData");
+    if (savedData) {
+      const parsedData = JSON.parse(savedData);
+      if (!imageUrl) {
+        setImageUrl(parsedData?.profilePictureUrl);
+      }
+      if (!coverPhotoUrl) {
+        setCoverPhotoUrl(parsedData?.coverPhotoUrl);
+      }
+      if (!serviceImageUrls.length) {
+        setServiceImageUrls(parsedData?.servicePhotos || []);
+      }
+      Object.keys(parsedData).forEach((key) => {
+        methods.setValue(key as any, parsedData[key]);
+      });
+    }
+  }, [methods]);
+
+  useEffect(() => {
+    const subscription = methods.watch((data) => {
+      localStorage.setItem("portfolioFormData", JSON.stringify(data));
+    });
+    return () => subscription.unsubscribe();
+  }, [methods]);
 
   useEffect(() => {
     if (imageUrl) {
@@ -100,40 +115,41 @@ export default function UpdateComponent({ userData }: { userData: Users }) {
       methods.setValue("servicePhotos", serviceImageUrls || []);
     }
     methods.setValue("chosenTemplate", selectedTemplateId);
-  }, [coverPhotoUrl, imageUrl, serviceImageUrls, selectedTemplateId, methods]);
-
+    methods.setValue("email", user?.email || "");
+  }, [
+    coverPhotoUrl,
+    imageUrl,
+    serviceImageUrls,
+    selectedTemplateId,
+    methods,
+    user,
+  ]);
   const formSubmit = async (data: z.infer<typeof createPortfolioSchema>) => {
+    if (!user) return;
     setLoading(true); // load start
 
-    const userInfo = await updateUserById(userData.id!, {
-      ...data,
-    });
-    console.log("addUser response:", userInfo);
+    await updateUserById(user.uid, data);
     setLoading(false); // load ends
-    if (userInfo) {
-      toast.success(userInfo.message);
-    } else {
-      toast.error("Something went wrong");
-    }
+    methods.reset();
+
+    localStorage.removeItem("portfolioFormData");
+
+    window.location.reload();
   };
 
   return (
-    <Form {...methods}>
-      <main className="flex min-h-screen bg-[#1E1E1E] text-white flex-col items-center pt-12 p-6 overflow-x-hidden">
-        <Navbar />
-        <div className="w-full max-w-sm ">
-          {/* HEADER */}
-          <div className="text-center mt-8 mb-16 ">
-            <Image
-              src="/assets/zwift-logo.png"
-              alt="Company Logo"
-              width={140}
-              height={41}
-              priority
-              className="mx-auto mb-8"
-            />
-          </div>
-
+    // <></>
+    <main className="flex flex-col overflow-auto py-8 text-white bg-[#1E1E1E] h-full">
+      <div className="w-full mx-auto max-w-sm">
+        <Image
+          src="/assets/zwift-logo.png"
+          alt="Company Logo"
+          width={140}
+          height={41}
+          priority
+          className="mx-auto mb-8"
+        />
+        <Form {...methods}>
           <form
             className="space-y-6"
             onSubmit={methods.handleSubmit(formSubmit)}
@@ -213,7 +229,6 @@ export default function UpdateComponent({ userData }: { userData: Users }) {
             {/* Company Information Inputs */}
             <div className="space-y-6">
               <CompanyInfoForm control={methods.control} />
-
               <div className="">
                 <h1 className="text-lg font-semibold mt-2">
                   Add Photo For Services: (Optional)
@@ -332,16 +347,11 @@ export default function UpdateComponent({ userData }: { userData: Users }) {
                   </div>
                 </div>
               </div>
-
               <TemplateCarousel
                 selectedTemplateId={selectedTemplateId}
                 setSelectedTemplateId={setSelectedTemplateId}
-              />
-
-              {/* Personal Information Inputs */}
+              />{" "}
               <PersonalInfoForm control={methods.control} />
-
-              {/* Social Links Inputs */}
               <SocialLinksForm control={methods.control} />
             </div>
             <button
@@ -354,12 +364,12 @@ export default function UpdateComponent({ userData }: { userData: Users }) {
                   <LoaderCircle className="animate-spin" />
                 </span>
               ) : (
-                "Update"
+                "Submit"
               )}
             </button>
           </form>
-        </div>
-      </main>
-    </Form>
+        </Form>
+      </div>
+    </main>
   );
 }

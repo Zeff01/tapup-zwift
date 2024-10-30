@@ -7,10 +7,9 @@ import Hero from "./hero";
 import HowItWorks from "./how-it-works";
 import ShoppingCard from "./shopping-card";
 
-
 const LandingPage = () => {
   return (
-      <div className="overflow-hidden">
+    <div className="overflow-y-auto">
       <Hero />
       <CompanyList />
       <AboutTapup />
@@ -19,8 +18,8 @@ const LandingPage = () => {
       <TapUpCarousel />
       <FeaturedBusiness />
       <Footer />
-      </div>
-  )
-}
+    </div>
+  );
+};
 
-export default LandingPage
+export default LandingPage;

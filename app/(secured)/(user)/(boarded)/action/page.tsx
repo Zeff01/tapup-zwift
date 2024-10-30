@@ -20,7 +20,7 @@ const ActionPage = () => {
 
   return (
     <main className="flex min-h-screen bg-[#1E1E1E] text-white flex-col items-center pt-12 p-6 ">
-      <Navbar />
+      {/* <Navbar /> */}
       <div className="p-6  rounded-lg">
         <Image
           src="/assets/zwift-logo.png"
