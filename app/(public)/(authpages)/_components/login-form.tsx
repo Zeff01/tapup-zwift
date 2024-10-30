@@ -1,7 +1,7 @@
 "use client";
 
 import Link from "next/link";
-import { Separator } from "@/app/(authpages)/_components/auth-separator";
+import { Separator } from "@/app/(public)/(authpages)/_components/auth-separator";
 
 //shadcn components
 import { Input } from "@/components/ui/input";

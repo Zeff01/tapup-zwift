@@ -9,7 +9,7 @@ import {
 } from "@/components/ui/carousel";
 import { Card, CardContent } from "@/components/ui/card";
 import Image from "next/image";
-import { ChosenTemplateType } from "@/app/(secured)/(onboarded)/onboarding/page";
+import { ChosenTemplateType } from "@/app/(secured)/(user)/(boarding)/onboarding/page";
 import { EyeIcon } from "lucide-react";
 
 interface Template {

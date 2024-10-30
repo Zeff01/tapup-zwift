@@ -23,14 +23,6 @@ export default function UsersPage() {
     fetch();
   }, []);
 
-  if (!user || (!user && userContextLoading)) {
-    return <Loading />;
-  }
-
-  if (user.role !== USER_ROLE_ENUMS.ADMIN) {
-    redirect(DASHBOARD_ROUTE);
-  }
-
   return (
     <main className="flex h-full bg-[#1E1E1E] text-white flex-col items-center pt-12 p-6 ">
       {/* <Navbar /> */}
