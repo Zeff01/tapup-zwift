@@ -10,7 +10,8 @@ export function cn(...inputs: ClassValue[]) {
 export const createUserLink = (userCode: string) => {
   try {
     if (!userCode) return "";
-    const user_link = `${process.env.NEXT_PUBLIC_BASE_LINK}/users/${userCode}`;
+    const baseLink = window.location.origin;
+    const user_link = `${baseLink}/user/${userCode}`;
     return user_link;
   } catch (error) {
     console.error("Error creating link: ", error);

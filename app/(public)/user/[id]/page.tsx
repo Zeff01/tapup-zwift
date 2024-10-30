@@ -2,7 +2,7 @@
 import { useEffect, useState } from "react";
 import { Users } from "@/src/lib/firebase/store/users.type";
 
-import { getUserDataByUserCode } from "@/src/lib/firebase/store/users.action";
+import { getUserBySubId } from "@/src/lib/firebase/store/users.action";
 
 // Assume that you have different components for each template:
 import Template1 from "@/components/templates/Template1";
@@ -11,6 +11,8 @@ import Template3 from "@/components/templates/Template3";
 import Template4 from "@/components/templates/Template4";
 import Template5 from "@/components/templates/Template5";
 import LoadingLogo from "@/components/LoadingLogo";
+import { UserProfile } from "@/types/types";
+import Error from "next/error";
 
 const UserPage = ({ params }: { params: { id: string } }) => {
   const { id } = params;
@@ -20,7 +22,7 @@ const UserPage = ({ params }: { params: { id: string } }) => {
 
   useEffect(() => {
     const fetchData = async () => {
-      const data = await getUserDataByUserCode(id);
+      const data = await getUserBySubId(id);
       if (data) {
         setUserData(data);
       }
@@ -34,27 +36,29 @@ const UserPage = ({ params }: { params: { id: string } }) => {
   }
 
   if (!userData) {
-    return <div>User not found.</div>;
+    return <Error statusCode={404} />;
   }
 
-  // const renderTemplate = () => {
-  //   switch (userData.chosenTemplate) {
-  //     case "template1":
-  //       return <Template1 {...userData} />;
-  //     case "template2":
-  //       return <Template2 {...userData} />;
-  //     case "template3":
-  //       return <Template3 {...userData} />;
-  //     case "template4":
-  //       return <Template4 {...userData} />;
-  //     case "template5":
-  //       return <Template5 {...userData} />;
-  //     default:
-  //       return <div>No template selected.</div>;
-  //   }
-  // };
+  const renderTemplate = {
+    template1: <Template1 {...(userData as UserProfile)} />,
+    template2: <Template2 {...(userData as UserProfile)} />,
+    template3: <Template3 {...(userData as UserProfile)} />,
+    template4: <Template4 {...(userData as UserProfile)} />,
+    template5: <Template5 {...(userData as UserProfile)} />,
+  };
 
-  return <div></div>;
+  interface ChosenTemplateType {
+    chosenTemplate: keyof typeof renderTemplate;
+  }
+  return (
+    <main className="h-full overflow-y-auto">
+      {(userData as ChosenTemplateType).chosenTemplate in renderTemplate ? (
+        renderTemplate[(userData as ChosenTemplateType).chosenTemplate]
+      ) : (
+        <div>Invalid template</div>
+      )}
+    </main>
+  );
 };
 
 export default UserPage;
