@@ -13,6 +13,7 @@ import {
 import { useUserContext } from "@/providers/user-provider";
 import { cn } from "@/lib/utils";
 import Link from "next/link";
+import { DASHBOARD_ROUTE } from "@/constants";
 
 type Props = {
   img?: string;
@@ -20,7 +21,7 @@ type Props = {
 };
 
 const AvatarIcon = ({ img, className }: Props) => {
-  const { logOutUser, isAuthenticated } = useUserContext();
+  const { logOutUser, isAuthenticated, user } = useUserContext();
   return (
     <DropdownMenu>
       <DropdownMenuTrigger>
@@ -35,7 +36,17 @@ const AvatarIcon = ({ img, className }: Props) => {
         <DropdownMenuContent>
           <DropdownMenuLabel>My Account</DropdownMenuLabel>
           <DropdownMenuSeparator />
-          <DropdownMenuItem>Profile</DropdownMenuItem>
+          <Link href={DASHBOARD_ROUTE}>
+            <DropdownMenuItem>Dashboard</DropdownMenuItem>
+          </Link>
+          <DropdownMenuSeparator />
+          <Link href={`#`}>
+            <DropdownMenuItem>Profile</DropdownMenuItem>
+          </Link>
+          <Link href={`/update/${user?.uid}`}>
+            <DropdownMenuItem>User Settings</DropdownMenuItem>
+          </Link>
+          <DropdownMenuSeparator />
           <DropdownMenuItem
             onClick={logOutUser}
             className="bg-red-500 font-bold text-white cursor-pointer hover:!bg-red-400 hover:!text-white"

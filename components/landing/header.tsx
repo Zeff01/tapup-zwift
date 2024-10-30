@@ -12,7 +12,7 @@ import { useUserContext } from "@/providers/user-provider";
 import AvatarIcon from "../AvatarIcon";
 
 const Header = () => {
-  const { user, isAuthenticated } = useUserContext();
+  const { user } = useUserContext();
   const pathname = usePathname();
   const [openMenu, setOpenMenu] = useState(false);
   const handleMobileMenu = () => {

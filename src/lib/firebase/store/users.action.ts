@@ -101,16 +101,17 @@ export const updateUserById = async (user_id: string, user: Partial<Users>) => {
       { merge: true }
     );
     console.log("Document updated with ID: ", user_id);
-    revalidateUserPath("/users");
     toast.success("User updated successfully");
+    return true;
   } catch (error: any) {
     toast.error("Something went wrong");
     console.error("Error updating document: ", error);
+    return false;
   }
 };
 export const getUserBySubId = async (id: string): Promise<Users | null> => {
   try {
-    const userRef = doc(firebaseDb, "users", id);
+    const userRef = doc(firebaseDb, "user-account", id);
     const docSnap = await getDoc(userRef);
     if (docSnap.exists()) {
       const user = docSnap.data() as Users;

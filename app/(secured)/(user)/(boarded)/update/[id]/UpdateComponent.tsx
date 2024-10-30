@@ -1,16 +1,12 @@
 "use client";
-import { useState, ChangeEvent, useEffect } from "react";
+import { useState, useEffect } from "react";
 import Image from "next/image";
 import { useRouter } from "next/navigation";
-import {
-  uploadImage,
-  updateUserById,
-} from "@/src/lib/firebase/store/users.action";
+import { updateUserById } from "@/src/lib/firebase/store/users.action";
 import { IoMdClose } from "react-icons/io";
-import { Photo, Users } from "@/src/lib/firebase/store/users.type";
+import { Photo } from "@/src/lib/firebase/store/users.type";
 import { Loader2, LoaderCircle } from "lucide-react";
 import Cropper from "@/components/Cropper";
-import Navbar from "@/components/ui/Navbar";
 import { useForm } from "react-hook-form";
 import { Form } from "@/components/ui/form";
 import { zodResolver } from "@hookform/resolvers/zod";
@@ -22,17 +18,28 @@ import PersonalInfoForm from "@/components/forms/PersonalInfoForm";
 import CompanyInfoForm from "@/components/forms/CompanyInfoForm";
 import { toast } from "react-toastify";
 import ImageLoaded from "@/components/ImageLoaded";
-import revalidateUserPath from "@/src/lib/firebase/store/user.revalidate";
+import {
+  ExtendedUserInterface,
+  useUserContext,
+} from "@/providers/user-provider";
 
 export type ChosenTemplateType = z.infer<
   typeof createPortfolioSchema
 >["chosenTemplate"];
 
-export default function UpdateComponent({ userData }: { userData: Users }) {
+export default function UpdateComponent({
+  userData,
+}: {
+  userData: ExtendedUserInterface;
+}) {
+  const { updateUser, isLoading } = useUserContext();
+
   const [photo, setPhoto] = useState<Photo | null>(null);
   const [imageUrl, setImageUrl] = useState<string | null>(
     userData.profilePictureUrl || null
   );
+
+  console.log(imageUrl);
 
   const [coverPhoto, setCoverPhoto] = useState<Photo | null>(null);
   const [coverPhotoUrl, setCoverPhotoUrl] = useState<string | null>(
@@ -46,9 +53,6 @@ export default function UpdateComponent({ userData }: { userData: Users }) {
 
   const [selectedTemplateId, setSelectedTemplateId] =
     useState<ChosenTemplateType>(userData.chosenTemplate as ChosenTemplateType);
-
-  const [loading, setLoading] = useState(false);
-  const router = useRouter();
 
   const addServicePhoto = (photo: Photo) => {
     setServicePhotos([...servicePhotos, photo]);
@@ -103,18 +107,8 @@ export default function UpdateComponent({ userData }: { userData: Users }) {
   }, [coverPhotoUrl, imageUrl, serviceImageUrls, selectedTemplateId, methods]);
 
   const formSubmit = async (data: z.infer<typeof createPortfolioSchema>) => {
-    setLoading(true); // load start
-
-    const userInfo = await updateUserById(userData.id!, {
-      ...data,
-    });
-    console.log("addUser response:", userInfo);
-    setLoading(false); // load ends
-    if (userInfo) {
-      toast.success(userInfo.message);
-    } else {
-      toast.error("Something went wrong");
-    }
+    if (!userData) return;
+    await updateUser(userData.uid, data as ExtendedUserInterface);
   };
 
   return (
@@ -342,9 +336,9 @@ export default function UpdateComponent({ userData }: { userData: Users }) {
             <button
               type="submit"
               className="w-full px-4 py-4 bg-[#6150EB] hover:bg-[#6250ebc0] rounded-md font-bold disabled:opacity-50 disabled:cursor-not-allowed"
-              disabled={loading}
+              disabled={isLoading}
             >
-              {loading ? (
+              {isLoading ? (
                 <span className="w-full flex items-center justify-center">
                   <LoaderCircle className="animate-spin" />
                 </span>

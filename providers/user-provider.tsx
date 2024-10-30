@@ -5,16 +5,17 @@ import {
   currentAuthUserDetails,
   signOutHandler,
 } from "@/src/lib/firebase/config/auth";
+import { updateUserById } from "@/src/lib/firebase/store/users.action";
 import { Users } from "@/src/lib/firebase/store/users.type";
 import { createContext, useContext, useEffect, useMemo, useState } from "react";
 
-interface ExtendedUserInterface extends Users {
+export interface ExtendedUserInterface extends Users {
   uid: string;
   role: string;
   onboarding: boolean;
 }
 
-type UserState = ExtendedUserInterface | null;
+export type UserState = ExtendedUserInterface | null;
 
 export type UserProviderContextType = {
   user: UserState;
@@ -23,7 +24,7 @@ export type UserProviderContextType = {
   >;
   isAuthenticated: boolean;
   isLoading: boolean;
-  updateUser: () => void;
+  updateUser: (uid: string, userData: ExtendedUserInterface) => void;
   logOutUser: () => void;
 };
 
@@ -56,7 +57,16 @@ export const UserContextProvider = ({ children }: any) => {
     })();
   }, [userUid]);
 
-  const updateUser = async () => {};
+  const updateUser = async (uid: string, userData: ExtendedUserInterface) => {
+    setIsLoading(true);
+    const updateStatus = await updateUserById(uid, userData);
+    if (!updateStatus) {
+      setIsLoading(false);
+      return;
+    }
+    setUser((prev) => ({ ...prev, ...userData }));
+    setIsLoading(false);
+  };
 
   const logOutUser = async () => {
     await signOutHandler();

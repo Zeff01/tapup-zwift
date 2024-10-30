@@ -1,16 +1,11 @@
 "use client";
-import { useState, ChangeEvent, useEffect } from "react";
+import { useState, useEffect } from "react";
 import Image from "next/image";
-import { redirect, useRouter } from "next/navigation";
-import {
-  addUser,
-  updateUserById,
-  uploadImage,
-} from "@/src/lib/firebase/store/users.action";
+import { redirect } from "next/navigation";
+import { updateUserById } from "@/src/lib/firebase/store/users.action";
 import { Photo } from "@/src/lib/firebase/store/users.type";
 import { Loader2, LoaderCircle } from "lucide-react";
 import Cropper from "../../../../../components/Cropper";
-import Navbar from "@/components/ui/Navbar";
 import { useForm } from "react-hook-form";
 import { Form } from "@/components/ui/form";
 import { zodResolver } from "@hookform/resolvers/zod";
@@ -23,8 +18,7 @@ import CompanyInfoForm from "@/components/forms/CompanyInfoForm";
 import ImageLoaded from "@/components/ImageLoaded";
 import { IoMdClose } from "react-icons/io";
 import { useUserContext } from "@/providers/user-provider";
-import { DASHBOARD_ROUTE, USER_ROLE_ENUMS } from "@/constants";
-import Loading from "../../../../loading";
+import { DASHBOARD_ROUTE } from "@/constants";
 
 export type ChosenTemplateType = z.infer<
   typeof createPortfolioSchema
@@ -140,13 +134,9 @@ export default function Create() {
     methods.reset();
 
     localStorage.removeItem("portfolioFormData");
+
+    redirect(DASHBOARD_ROUTE);
   };
-
-  // if (!user || (!user && isLoading)) return <Loading />;
-
-  // if (user && user.onboarding === true) {
-  //   redirect(DASHBOARD_ROUTE);
-  // }
 
   return (
     // <></>
