@@ -1,10 +1,8 @@
 "use client";
 import { useState, useEffect } from "react";
 import Image from "next/image";
-import { useRouter } from "next/navigation";
-import { updateUserById } from "@/src/lib/firebase/store/users.action";
 import { IoMdClose } from "react-icons/io";
-import { Photo } from "@/src/lib/firebase/store/users.type";
+import { Photo, Users } from "@/src/lib/firebase/store/users.type";
 import { Loader2, LoaderCircle } from "lucide-react";
 import Cropper from "@/components/Cropper";
 import { useForm } from "react-hook-form";
@@ -16,7 +14,6 @@ import { TemplateCarousel } from "@/components/TemplateCarousel";
 import SocialLinksForm from "@/components/forms/SocialLinkForm";
 import PersonalInfoForm from "@/components/forms/PersonalInfoForm";
 import CompanyInfoForm from "@/components/forms/CompanyInfoForm";
-import { toast } from "react-toastify";
 import ImageLoaded from "@/components/ImageLoaded";
 import {
   ExtendedUserInterface,
@@ -29,8 +26,10 @@ export type ChosenTemplateType = z.infer<
 
 export default function UpdateComponent({
   userData,
+  currentUser = true,
 }: {
   userData: ExtendedUserInterface;
+  currentUser?: boolean;
 }) {
   const { updateUser, isLoading } = useUserContext();
 
@@ -106,7 +105,8 @@ export default function UpdateComponent({
 
   const formSubmit = async (data: z.infer<typeof createPortfolioSchema>) => {
     if (!userData) return;
-    await updateUser(userData.uid, data as ExtendedUserInterface);
+    const id = currentUser ? userData.uid : userData.id;
+    await updateUser(id as string, data as ExtendedUserInterface, currentUser);
   };
 
   return (

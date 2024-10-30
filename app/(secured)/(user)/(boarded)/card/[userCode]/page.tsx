@@ -3,11 +3,10 @@ import { QRCodeSVG } from "qrcode.react";
 import Image from "next/image";
 import { useEffect, useRef, useState } from "react";
 import html2canvas from "html2canvas";
-import { getUserDataByUserCode } from "@/src/lib/firebase/store/users.action";
+import { getUserBySubId } from "@/src/lib/firebase/store/users.action";
 import { Users } from "@/src/lib/firebase/store/users.type";
 import { useParams, useRouter } from "next/navigation";
 import MoonLoader from "react-spinners/MoonLoader";
-import Navbar from "@/components/ui/Navbar";
 import { toast } from "react-toastify";
 
 export default function Card() {
@@ -18,7 +17,7 @@ export default function Card() {
   const router = useRouter();
 
   const userDataHandler = async () => {
-    const data = await getUserDataByUserCode(userCode);
+    const data = await getUserBySubId(userCode);
     if (!data) {
       toast.error("user not found.");
       setTimeout(() => {
@@ -75,7 +74,6 @@ export default function Card() {
 
   return (
     <div className="bg-custom-black w-full h-screen flex flex-col items-center px-2 py-16 gap-y-4 overflow-y-hidden">
-      {/* <Navbar /> */}
       <div
         ref={cardRef}
         className={`text-black dark:text-black relative w-[400px] aspect-[1.5882] p-2 shadow-md rounded-md`}

@@ -40,8 +40,11 @@ const AvatarIcon = ({ img, className }: Props) => {
             <DropdownMenuItem>Dashboard</DropdownMenuItem>
           </Link>
           <DropdownMenuSeparator />
-          <Link href={`#`}>
+          <Link href={`/user/${user?.uid}`}>
             <DropdownMenuItem>Profile</DropdownMenuItem>
+          </Link>
+          <Link href={`/card/${user?.uid}`}>
+            <DropdownMenuItem>Card</DropdownMenuItem>
           </Link>
           <Link href={`/update/${user?.uid}`}>
             <DropdownMenuItem>User Settings</DropdownMenuItem>

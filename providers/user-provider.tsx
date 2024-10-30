@@ -24,7 +24,11 @@ export type UserProviderContextType = {
   >;
   isAuthenticated: boolean;
   isLoading: boolean;
-  updateUser: (uid: string, userData: ExtendedUserInterface) => void;
+  updateUser: (
+    uid: string,
+    userData: ExtendedUserInterface,
+    currentUser?: boolean
+  ) => void;
   logOutUser: () => void;
 };
 
@@ -57,10 +61,18 @@ export const UserContextProvider = ({ children }: any) => {
     })();
   }, [userUid]);
 
-  const updateUser = async (uid: string, userData: ExtendedUserInterface) => {
+  const updateUser = async (
+    uid: string,
+    userData: ExtendedUserInterface,
+    currentUser = true
+  ) => {
     setIsLoading(true);
     const updateStatus = await updateUserById(uid, userData);
     if (!updateStatus) {
+      setIsLoading(false);
+      return;
+    }
+    if (!currentUser) {
       setIsLoading(false);
       return;
     }

@@ -77,9 +77,13 @@ export const addUser = async (
 // get all users from the database
 export const getAllUsers = async (): Promise<Users[]> => {
   try {
-    const userCollection = collection(firebaseDb, "users");
+    const userCollection = collection(firebaseDb, "user-account");
     const snapshot = await getDocs(userCollection);
-    const users: Users[] = snapshot.docs.map((doc) => doc.data() as Users);
+
+    const users: Users[] = snapshot.docs.map((doc) => ({
+      ...(doc.data() as Users),
+      id: doc.id,
+    }));
     // change link to user_link
     users.forEach(async (user) => {
       user.user_link = await createUserLink(user.userCode ?? "");
@@ -94,12 +98,15 @@ export const getAllUsers = async (): Promise<Users[]> => {
 export const updateUserById = async (user_id: string, user: Partial<Users>) => {
   try {
     const userCollection = collection(firebaseDb, "user-account");
+    console.log({ user_id, user });
     const userRef = doc(userCollection, user_id);
+
     await setDoc(
       userRef,
       { ...user, onboarding: true, timestamp: serverTimestamp() },
       { merge: true }
     );
+
     console.log("Document updated with ID: ", user_id);
     toast.success("User updated successfully");
     return true;
@@ -114,7 +121,7 @@ export const getUserBySubId = async (id: string): Promise<Users | null> => {
     const userRef = doc(firebaseDb, "user-account", id);
     const docSnap = await getDoc(userRef);
     if (docSnap.exists()) {
-      const user = docSnap.data() as Users;
+      const user = { ...docSnap.data(), id: docSnap.id } as Users;
       return user;
     } else {
       console.log("No such document!");
