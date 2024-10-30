@@ -9,7 +9,7 @@ import {
 } from "@/src/lib/firebase/store/users.action";
 import { Photo } from "@/src/lib/firebase/store/users.type";
 import { Loader2, LoaderCircle } from "lucide-react";
-import Cropper from "../../components/Cropper";
+import Cropper from "../../../../components/Cropper";
 import Navbar from "@/components/ui/Navbar";
 import { useForm } from "react-hook-form";
 import { Form } from "@/components/ui/form";
@@ -24,7 +24,7 @@ import ImageLoaded from "@/components/ImageLoaded";
 import { IoMdClose } from "react-icons/io";
 import { useUserContext } from "@/providers/user-provider";
 import { DASHBOARD_ROUTE, USER_ROLE_ENUMS } from "@/constants";
-import Loading from "../loading";
+import Loading from "../../../loading";
 
 export type ChosenTemplateType = z.infer<
   typeof createPortfolioSchema
