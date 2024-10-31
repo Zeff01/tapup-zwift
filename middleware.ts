@@ -13,6 +13,8 @@ import {
 	UPDATE_PATH,
 	ONBOARDING_PATH,
 	ACTION_ROUTE,
+	PASSWORD_RESET_ROUTE,
+	FORGOT_PASSWORD_ROUTE,
 } from "@/constants";
 
 const protectedRoutes = [
@@ -23,7 +25,12 @@ const protectedRoutes = [
 	UPDATE_ROUTE,
 	ACTION_ROUTE,
 ];
-const authRoutes = [LOGIN_ROUTE, SIGNUP_ROUTE];
+const authRoutes = [
+	LOGIN_ROUTE,
+	SIGNUP_ROUTE,
+	PASSWORD_RESET_ROUTE,
+	FORGOT_PASSWORD_ROUTE,
+];
 
 export default async function middleware(request: NextRequest) {
 	const session = request.cookies.get(SESSION_COOKIE_NAME)?.value || "";
