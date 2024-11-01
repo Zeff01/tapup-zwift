@@ -8,7 +8,6 @@ import {
 	signOut,
 	FacebookAuthProvider,
 	sendPasswordResetEmail,
-	verifyPasswordResetCode,
 	confirmPasswordReset,
 } from "firebase/auth";
 import { firebaseAuth, firebaseDb } from "@/src/lib/firebase/config/firebase";
@@ -149,6 +148,9 @@ export const forgotPasswordHandler = async (email: string) => {
 			url: "http://localhost:3000/reset-password",
 		});
 		toast.success("Password reset email sent!");
+		setTimeout(() => {
+			window.location.href = "/login";
+		}, 3000);
 	} catch (error) {
 		if (error instanceof FirebaseError) {
 			switch (error.code) {
@@ -168,7 +170,7 @@ export const resetPasswordHandler = async (
 ) => {
 	try {
 		await confirmPasswordReset(firebaseAuth, oobCode, newPassword);
-		toast.success("Password reset successful!");
+		toast.success("Your password has been reset successfully!");
 	} catch (error) {
 		if (error instanceof FirebaseError) {
 			switch (error.code) {
