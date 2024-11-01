@@ -28,12 +28,10 @@ import {
 } from "@/components/ui/form";
 import { forgotPasswordHandler } from "@/src/lib/firebase/config/auth";
 import { ForgotPasswordData } from "@/types/auth-types";
-import { useRouter } from "next/navigation";
 import fingerprint from "@/public/assets/fingerprint.png";
 import Image from "next/image";
 
 export function ForgotPasswordForm() {
-	const router = useRouter();
 	const form = useForm<z.infer<typeof forgotPasswordSchema>>({
 		resolver: zodResolver(forgotPasswordSchema),
 		defaultValues: {
@@ -43,7 +41,6 @@ export function ForgotPasswordForm() {
 
 	const onSubmit = async (data: ForgotPasswordData) => {
 		await forgotPasswordHandler(data.email);
-		router.push("/login");
 	};
 
 	return (
