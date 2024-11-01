@@ -10,7 +10,7 @@ export const OnboardingIndicator: React.FC<OnboardingIndicatorProps> = ({
 	totalSteps = 4,
 }) => {
 	return (
-		<div className="absolute bottom-0 flex gap-x-8 mb-4 justify-center items-center">
+		<div className="flex gap-x-8 mb-4 justify-center w-full absolute bottom-0">
 			{[...Array(totalSteps)].map((_, index) => (
 				<span
 					key={index}
