@@ -38,33 +38,29 @@ export default async function middleware(request: NextRequest) {
 	const session = request.cookies.get(SESSION_COOKIE_NAME)?.value || "";
 	const { pathname, searchParams } = request.nextUrl;
 
+	const redirectTo = (route: string) => new URL(route, request.url);
 	if (!session) {
 		if (protectedRoutes.some((route) => pathname.startsWith(route))) {
-			const loginURL = new URL(LOGIN_ROUTE, request.url);
-			return NextResponse.redirect(loginURL);
+			return NextResponse.redirect(redirectTo(LOGIN_ROUTE));
 		}
 		if (pathname.startsWith(RESET_PASSWORD_ROUTE)) {
-			const oobCode = searchParams.get("oobCode");
-			const continueURL = searchParams.get("continueURL");
-			const mode = searchParams.get("mode");
-			const apiKey = searchParams.get("apiKey");
+			const { oobCode, continueURL, mode, apiKey } =
+				Object.fromEntries(searchParams);
+
 			if (!oobCode && !continueURL && !mode && !apiKey) {
-				const loginURL = new URL(LOGIN_ROUTE, request.url);
-				return NextResponse.redirect(loginURL);
+				return NextResponse.redirect(redirectTo(LOGIN_ROUTE));
 			}
 			try {
 				await verifyPasswordResetCode(firebaseAuth, oobCode as string);
 			} catch (error) {
-				const loginURL = new URL(LOGIN_ROUTE, request.url);
-				return NextResponse.redirect(loginURL);
+				return NextResponse.redirect(redirectTo(LOGIN_ROUTE));
 			}
 		}
 		return NextResponse.next();
 	}
 
 	if (authRoutes.some((route) => pathname === route)) {
-		const onboardingRoute = new URL(ONBOARDING_ROUTE, request.url);
-		return NextResponse.redirect(onboardingRoute);
+		return NextResponse.redirect(redirectTo(ONBOARDING_ROUTE));
 	}
 
 	return NextResponse.next();
