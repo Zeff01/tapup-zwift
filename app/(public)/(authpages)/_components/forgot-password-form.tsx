@@ -1,19 +1,11 @@
 "use client";
 
 import Link from "next/link";
-import { Separator } from "@/app/(public)/(authpages)/_components/auth-separator";
-
 //shadcn components
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
-
 //shadcn cards and fonts
-import {
-	Card,
-	CardContent,
-	CardFooter,
-	CardHeader,
-} from "@/components/ui/card";
+import { Card, CardContent, CardHeader } from "@/components/ui/card";
 import { Roboto_Condensed } from "next/font/google";
 import { cn } from "@/lib/utils";
 const fonts = Roboto_Condensed({
@@ -25,7 +17,7 @@ const fonts = Roboto_Condensed({
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import * as z from "zod";
-import { loginSchema } from "@/schema";
+import { forgotPasswordSchema } from "@/schema";
 import {
 	Form,
 	FormControl,
@@ -34,26 +26,24 @@ import {
 	FormLabel,
 	FormMessage,
 } from "@/components/ui/form";
-import Social from "./social-buttons";
-import { loginHandler } from "@/src/lib/firebase/config/auth";
-import { LoginData } from "@/types/auth-types";
+import { forgotPasswordHandler } from "@/src/lib/firebase/config/auth";
+import { ForgotPasswordData } from "@/types/auth-types";
 import { useRouter } from "next/navigation";
 import fingerprint from "@/public/assets/fingerprint.png";
 import Image from "next/image";
 
 export function ForgotPasswordForm() {
 	const router = useRouter();
-	const form = useForm<z.infer<typeof loginSchema>>({
-		resolver: zodResolver(loginSchema),
+	const form = useForm<z.infer<typeof forgotPasswordSchema>>({
+		resolver: zodResolver(forgotPasswordSchema),
 		defaultValues: {
 			email: "",
-			password: "",
 		},
 	});
 
-	const onSubmit = async (data: LoginData) => {
-		await loginHandler(data.email, data.password);
-		router.push("/onboarding");
+	const onSubmit = async (data: ForgotPasswordData) => {
+		await forgotPasswordHandler(data.email);
+		router.push("/login");
 	};
 
 	return (
