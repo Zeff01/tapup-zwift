@@ -146,7 +146,7 @@ export const currentAuthUserDetails = async (id: string) => {
 export const forgotPasswordHandler = async (email: string) => {
 	try {
 		await sendPasswordResetEmail(firebaseAuth, email, {
-			url: "http://localhost:3000/auth/reset-password",
+			url: "http://localhost:3000/reset-password",
 		});
 		toast.success("Password reset email sent!");
 	} catch (error) {
@@ -167,7 +167,6 @@ export const resetPasswordHandler = async (
 	newPassword: string
 ) => {
 	try {
-		await verifyPasswordResetCode(firebaseAuth, oobCode);
 		await confirmPasswordReset(firebaseAuth, oobCode, newPassword);
 		toast.success("Password reset successful!");
 	} catch (error) {
