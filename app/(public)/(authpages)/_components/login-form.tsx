@@ -115,7 +115,7 @@ export function LogInForm() {
 								<input type="checkbox" />
 								<span>Remember Password</span>
 							</div>
-							<Link href="/forgot-password" className="text-xs text-[#21C15C]">
+							<Link href="/forgotPassword" className="text-xs text-[#21C15C]">
 								Forgot your password?
 							</Link>
 						</div>

@@ -55,7 +55,7 @@ export function ForgotPasswordForm() {
 				<div className="text-center">
 					<h1 className="text-4xl font-black">Forgot Password</h1>
 					<p className="text-xs text-muted-foreground">
-						No worries, we'll send you reset instruction
+						No worries, we&apos;ll send you reset instruction
 					</p>
 				</div>
 			</CardHeader>
