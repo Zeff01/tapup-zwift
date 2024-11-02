@@ -1,6 +1,8 @@
 export const ROOT_ROUTE = "/";
 export const LOGIN_ROUTE = "/login";
 export const SIGNUP_ROUTE = "/signup";
+export const RESET_PASSWORD_ROUTE = "/reset-password";
+export const FORGOT_PASSWORD_ROUTE = "/forgot-password";
 export const SESSION_COOKIE_NAME = "user_session";
 export const ONBOARDING_ROUTE = "/onboarding";
 export const DASHBOARD_ROUTE = "/dashboard";
@@ -20,13 +22,13 @@ export const LOCAL_STORAGE_NAME = "isAuthenticated";
  * @readonly
  */
 export const USER_ROLE_ENUMS = Object.freeze({
-  ADMIN: "admin",
-  USER: "user",
+	ADMIN: "admin",
+	USER: "user",
 });
 
 export const headerItems = [
-  { href: "/", label: "Main" },
-  { href: "/about", label: "About" },
-  { href: "/testimonials", label: "Testimonials" },
-  { href: "/features", label: "Features" },
+	{ href: "/", label: "Main" },
+	{ href: "/about", label: "About" },
+	{ href: "/testimonials", label: "Testimonials" },
+	{ href: "/features", label: "Features" },
 ];
