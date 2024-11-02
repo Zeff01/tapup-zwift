@@ -1,9 +1,9 @@
-import ProfileInfo from "./_component/profile-info";
+import ProfilePage from "@/app/profile/_component/profile-page";
 
 const page = () => {
   return (
       <>
-          <ProfileInfo/>
+       <ProfilePage/>
       </>
   );
 };
