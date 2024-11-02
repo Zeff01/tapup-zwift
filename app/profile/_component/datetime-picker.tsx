@@ -23,7 +23,7 @@ import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
  
 import { toast } from "@/components/ui/use-toast";
-import TimePickerDemo from "../timepicker/time-picker-demo";
+import TimePickerDemo from "../../../components/timepicker/time-picker-demo";
  
 const formSchema = z.object({
   dateTime: z.date(),
@@ -50,7 +50,7 @@ export default function DateTimePickerForm() {
   return (
     <Form {...form}>
       <form
-        className="flex items-center gap-4 justify-center pt-5 flex-col"
+        className="flex items-center gap-4 justify-center flex-col"
         onSubmit={form.handleSubmit(onSubmit)}
       >
         <FormField
