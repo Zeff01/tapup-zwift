@@ -1,8 +1,8 @@
 export const ROOT_ROUTE = "/";
 export const LOGIN_ROUTE = "/login";
 export const SIGNUP_ROUTE = "/signup";
-export const RESET_PASSWORD_ROUTE = "/reset-password";
-export const FORGOT_PASSWORD_ROUTE = "/forgot-password";
+export const RESET_PASSWORD_ROUTE = "/resetPassword";
+export const FORGOT_PASSWORD_ROUTE = "/forgotPassword";
 export const SESSION_COOKIE_NAME = "user_session";
 export const ONBOARDING_ROUTE = "/onboarding";
 export const DASHBOARD_ROUTE = "/dashboard";
