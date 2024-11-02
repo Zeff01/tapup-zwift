@@ -50,15 +50,16 @@ export default function DateTimePickerForm() {
   return (
     <Form {...form}>
       <form
-        className="flex items-center gap-4 justify-center flex-col"
+        className="flex flex-col gap-4 justify-center"
         onSubmit={form.handleSubmit(onSubmit)}
       >
+        <h2 className="text-left text-xl md:text-2xl ml-3 md:ml-10">Make an appointment:</h2>
         <FormField
           control={form.control}
           name="dateTime"
           render={({ field }) => (
-            <FormItem className="flex flex-col">
-              <FormLabel className="text-left text-xl">Make an appointment:</FormLabel>
+            <FormItem className="flex flex-col mx-auto">
+              <FormLabel className="text-left text-sm">Date and Time:</FormLabel>
               <Popover>
                 <FormControl>
                   <PopoverTrigger asChild>
@@ -73,7 +74,7 @@ export default function DateTimePickerForm() {
                       {field.value ? (
                         format(field.value, "PPP HH:mm:ss")
                       ) : (
-                        <span>Pick a date</span>
+                        <span>Select date</span>
                       )}
                     </Button>
                   </PopoverTrigger>
@@ -97,7 +98,9 @@ export default function DateTimePickerForm() {
             </FormItem>
           )}
         />
-        <Button type="submit">Set appointment</Button>
+        <div className="relative w-full pb-5">
+        <Button type="submit" className="w-[120px] absolute right-4">Set appointment</Button>
+        </div>
       </form>
     </Form>
   );
