@@ -145,7 +145,7 @@ export const currentAuthUserDetails = async (id: string) => {
 export const forgotPasswordHandler = async (email: string) => {
 	try {
 		await sendPasswordResetEmail(firebaseAuth, email, {
-			url: "http://localhost:3000/reset-password",
+			url: "http://localhost:3000/resetPassword",
 		});
 		toast.success("Password reset email sent!");
 		setTimeout(() => {
