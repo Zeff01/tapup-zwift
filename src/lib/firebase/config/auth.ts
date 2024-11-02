@@ -144,8 +144,16 @@ export const currentAuthUserDetails = async (id: string) => {
 
 export const forgotPasswordHandler = async (email: string) => {
 	try {
+		const resetPasswordUrl =
+			process.env.NODE_ENV === "development"
+				? process.env.NEXT_PUBLIC_RESET_PASSWORD_URL_DEV
+				: process.env.NEXT_PUBLIC_RESET_PASSWORD_URL_PROD;
+		if (!resetPasswordUrl) {
+			throw new Error("Reset password URL is not defined");
+		}
+
 		await sendPasswordResetEmail(firebaseAuth, email, {
-			url: "http://localhost:3000/resetPassword",
+			url: resetPasswordUrl,
 		});
 		toast.success("Password reset email sent!");
 		setTimeout(() => {
