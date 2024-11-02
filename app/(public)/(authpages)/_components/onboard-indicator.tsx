@@ -7,7 +7,7 @@ interface OnboardingIndicatorProps {
 
 export const OnboardingIndicator: React.FC<OnboardingIndicatorProps> = ({
 	currentStep,
-	totalSteps = 4,
+	totalSteps = 3,
 }) => {
 	return (
 		<div className="flex gap-x-8 mb-4 justify-center w-full absolute bottom-0">
@@ -15,7 +15,7 @@ export const OnboardingIndicator: React.FC<OnboardingIndicatorProps> = ({
 				<span
 					key={index}
 					className={`block w-[70px] h-[8px] rounded-[8px] text-3xl ${
-						index === currentStep ? "bg-green-500" : "bg-black"
+						index === currentStep ? "bg-[#21C15C]" : "bg-[#E6E7EB]"
 					}`}
 				></span>
 			))}
