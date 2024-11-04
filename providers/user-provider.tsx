@@ -19,9 +19,6 @@ export type UserState = ExtendedUserInterface | null;
 
 export type UserProviderContextType = {
   user: UserState;
-  setUser: React.Dispatch<
-    React.SetStateAction<UserProviderContextType["user"]>
-  >;
   isAuthenticated: boolean;
   isLoading: boolean;
   updateUser: (
@@ -87,7 +84,6 @@ export const UserContextProvider = ({ children }: any) => {
 
   const value = {
     user,
-    setUser,
     isAuthenticated,
     isLoading,
     updateUser,
