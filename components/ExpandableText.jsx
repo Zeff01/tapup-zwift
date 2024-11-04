@@ -1,6 +1,5 @@
 import { useState } from "react";
 
-
 const ExpandableText = ({ children, descriptionLength }) => {
   const fullText = children;
 
@@ -13,10 +12,13 @@ const ExpandableText = ({ children, descriptionLength }) => {
   };
 
   return (
-    <span className=''>
+    <span className="">
       {isExpanded ? fullText : `${fullText.slice(0, descriptionLength)}...`}
-      <span onClick={toggleText} className='cursor-pointer text-xs font-semibold'>
-        {isExpanded ? 'Read less' : 'Read more'}
+      <span
+        onClick={toggleText}
+        className="cursor-pointer text-xs font-semibold"
+      >
+        {isExpanded ? "Read less" : "Read more"}
       </span>
     </span>
   );

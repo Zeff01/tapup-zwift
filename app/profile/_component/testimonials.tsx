@@ -42,7 +42,9 @@ const Testimonials = () => {
                 ))}
               </div>
               <div>
-                <p className="text-[10px] text-justify md:text-base">{item.comment}</p>
+                <p className="text-[10px] text-justify md:text-base">
+                  {item.comment}
+                </p>
               </div>
             </div>
           </li>

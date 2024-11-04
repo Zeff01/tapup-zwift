@@ -2,7 +2,7 @@ import { Button } from "../ui/button";
 import { HiArrowRightEndOnRectangle } from "react-icons/hi2";
 
 interface CardDetailsProps {
-    title: string;
+  title: string;
 }
 
 const CardDetails: React.FC<CardDetailsProps> = ({ title }) => {

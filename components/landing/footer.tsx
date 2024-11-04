@@ -4,19 +4,14 @@ import logo from "@/public/assets/tapUp-logo.png";
 import Image from "next/image";
 
 const list = ["Terms", "Privacy", "Cookies"];
-const socials = [{
-  title: 'Instagram',
-  image: '/assets/Icon-instagram.png',
-},
-    {title: 'Facebook',
-  image: '/assets/icon-facebook.png',
-},
-  {title: 'linkedin',
-  image: '/assets/Icon-linkedin.png',
-},
-  {title: 'Discord',
-  image: '/assets/icon-discord.png',
-},
+const socials = [
+  {
+    title: "Instagram",
+    image: "/assets/Icon-instagram.png",
+  },
+  { title: "Facebook", image: "/assets/icon-facebook.png" },
+  { title: "linkedin", image: "/assets/Icon-linkedin.png" },
+  { title: "Discord", image: "/assets/icon-discord.png" },
 ];
 const Footer = () => {
   return (
@@ -39,7 +34,12 @@ const Footer = () => {
           {socials.map((item, index) => (
             <li key={index} className="relative w-6 h-6">
               <Link href="/">
-                <Image src={item.image} alt={item.title} fill className="object-contain"/>
+                <Image
+                  src={item.image}
+                  alt={item.title}
+                  fill
+                  className="object-contain"
+                />
               </Link>
             </li>
           ))}

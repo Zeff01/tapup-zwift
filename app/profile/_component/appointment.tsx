@@ -1,13 +1,11 @@
 import DateTimePickerForm from "./datetime-picker";
 
-
 const Appointment = () => {
   return (
     <section className="py-10 shadow-xl">
-      <DateTimePickerForm/>
+      <DateTimePickerForm />
     </section>
   );
 };
 
 export default Appointment;
- 
