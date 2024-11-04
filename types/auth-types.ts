@@ -1,9 +1,9 @@
 import { z } from "zod";
 import {
-	signupSchema,
-	loginSchema,
-	forgotPasswordSchema,
-	resetPasswordSchema,
+  signupSchema,
+  loginSchema,
+  forgotPasswordSchema,
+  resetPasswordSchema,
 } from "@/schema";
 
 export type LoginData = z.infer<typeof loginSchema>;

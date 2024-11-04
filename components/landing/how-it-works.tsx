@@ -39,27 +39,26 @@ const HowItWorks = () => {
     <section className="py-[5rem] px-4 shadow-xl gap-2 relative overflow-hidden">
       <div className="absolute md:top-[-10rem] top-[-15rem] md:left-[60%] -z-10 ">
         <div className="relative w-[30rem] h-[20rem]">
-        <Image src={card} alt="card image" fill className="object-contain" />
+          <Image src={card} alt="card image" fill className="object-contain" />
         </div>
       </div>
       <div className="w-full pt-[-4rem]">
-        
-      <h2 className="text-4xl text-center uppercase italic font-racing mb-8 z-99">
-        How It <span className="text-green-600">Works</span>
-      </h2>
-   
-      <ul className=" grid lg:grid-rows-3 lg:grid-flow-col  gap-y-12 mx-auto w-full">
-        {stepItem.map((item, index) => (
-          <li
-          key={index}
-            className="xl:w-[34rem]  w-[15rem] md:w-[30rem] mx-auto p-2 shadow-xl"
+        <h2 className="text-4xl text-center uppercase italic font-racing mb-8 z-99">
+          How It <span className="text-green-600">Works</span>
+        </h2>
+
+        <ul className=" grid lg:grid-rows-3 lg:grid-flow-col  gap-y-12 mx-auto w-full">
+          {stepItem.map((item, index) => (
+            <li
+              key={index}
+              className="xl:w-[34rem]  w-[15rem] md:w-[30rem] mx-auto p-2 shadow-xl"
             >
-            <h3 className="text-xl font-semibold">{item.title}</h3>
-            <p className="font-inter text-xl pt-3">{item.description}</p>
-          </li>
-        ))}
-      </ul>
-        </div>
+              <h3 className="text-xl font-semibold">{item.title}</h3>
+              <p className="font-inter text-xl pt-3">{item.description}</p>
+            </li>
+          ))}
+        </ul>
+      </div>
     </section>
   );
 };

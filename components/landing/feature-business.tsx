@@ -28,7 +28,10 @@ const FeaturedBusiness = () => {
 
         <div className="flex justify-evenly items-center">
           {businessList.map((item, index) => (
-            <div key={index} className="relative md:w-[12rem] md:h-[8rem] h-[6rem] w-[8rem]">
+            <div
+              key={index}
+              className="relative md:w-[12rem] md:h-[8rem] h-[6rem] w-[8rem]"
+            >
               <Image
                 src={item.image}
                 alt={item.title}

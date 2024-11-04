@@ -1,5 +1,5 @@
 "use client";
- 
+
 import { format } from "date-fns";
 import { Calendar as CalendarIcon } from "lucide-react";
 import { cn } from "@/lib/utils";
@@ -21,21 +21,21 @@ import {
 import { z } from "zod";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
- 
+
 import { toast } from "@/components/ui/use-toast";
 import TimePickerDemo from "../../../components/timepicker/time-picker-demo";
- 
+
 const formSchema = z.object({
   dateTime: z.date(),
 });
- 
+
 type FormSchemaType = z.infer<typeof formSchema>;
- 
+
 export default function DateTimePickerForm() {
   const form = useForm<FormSchemaType>({
     resolver: zodResolver(formSchema),
   });
- 
+
   function onSubmit(data: FormSchemaType) {
     toast({
       title: "You submitted the following values:",
@@ -46,20 +46,24 @@ export default function DateTimePickerForm() {
       ),
     });
   }
- 
+
   return (
     <Form {...form}>
       <form
         className="flex flex-col gap-4 justify-center"
         onSubmit={form.handleSubmit(onSubmit)}
       >
-        <h2 className="text-left text-xl md:text-2xl ml-3 md:ml-10">Make an appointment:</h2>
+        <h2 className="text-left text-xl md:text-2xl ml-3 md:ml-10">
+          Make an appointment:
+        </h2>
         <FormField
           control={form.control}
           name="dateTime"
           render={({ field }) => (
             <FormItem className="flex flex-col mx-auto">
-              <FormLabel className="text-left text-sm">Date and Time:</FormLabel>
+              <FormLabel className="text-left text-sm">
+                Date and Time:
+              </FormLabel>
               <Popover>
                 <FormControl>
                   <PopoverTrigger asChild>
@@ -85,7 +89,6 @@ export default function DateTimePickerForm() {
                     selected={field.value}
                     onSelect={field.onChange}
                     className="w-auto"
-                                        
                   />
                   <div className="p-3 border-t border-border">
                     <TimePickerDemo
@@ -99,7 +102,9 @@ export default function DateTimePickerForm() {
           )}
         />
         <div className="relative w-full pb-5">
-        <Button type="submit" className="w-[120px] absolute right-4">Set appointment</Button>
+          <Button type="submit" className="w-[120px] absolute right-4">
+            Set appointment
+          </Button>
         </div>
       </form>
     </Form>

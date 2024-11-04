@@ -7,7 +7,12 @@ const AboutTapup = () => {
   return (
     <section className="flex flex-col lg:flex-row items-center justify-center lg:py-[79px] py-[3rem] shadow-xl">
       <div className="xl:w-[50%] lg:h-[70vh]  md:h-[50vh] h-[20vh] w-[60%] relative lg:right-[15%]">
-        <Image src={cardImg} alt="Tap up card Image" fill className="object-cover"/>
+        <Image
+          src={cardImg}
+          alt="Tap up card Image"
+          fill
+          className="object-cover"
+        />
       </div>
       <div className="flex flex-col gap-3 lg:w-[40%] w-[60vw]">
         <h2 className="text-4xl lg:text-[3rem] font-semibold italic font-sans pb-3">
@@ -30,7 +35,12 @@ const AboutTapup = () => {
           Learn More
         </Button>
         <div className="relative w-[60vw] aspect-video lg:w-[30vw] h-[14rem]">
-        <Image src={demoCard} alt="Demo Card Image" fill className="object-contain" />
+          <Image
+            src={demoCard}
+            alt="Demo Card Image"
+            fill
+            className="object-contain"
+          />
         </div>
       </div>
     </section>
