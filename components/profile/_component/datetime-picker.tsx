@@ -23,7 +23,7 @@ import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 
 import { toast } from "@/components/ui/use-toast";
-import TimePickerDemo from "../../../components/timepicker/time-picker-demo";
+import TimePickerDemo from "../../timepicker/time-picker-demo";
 
 const formSchema = z.object({
   dateTime: z.date(),
