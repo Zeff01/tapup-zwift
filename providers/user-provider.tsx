@@ -23,7 +23,7 @@ export type UserProviderContextType = {
   isLoading: boolean;
   updateUser: (
     uid: string,
-    userData: "ExtendedUserInerface",
+    userData: ExtendedUserInerface,
     currentUser?: boolean
   ) => void;
   logOutUser: () => void;
