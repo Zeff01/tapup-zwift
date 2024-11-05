@@ -167,7 +167,7 @@ const ProfileInfo = ({ profilePictureUrl,
               <div>
                 <BiLogOut />
               </div>
-              Logout
+              Sign out
             </Link>
           </div>
         </SheetContent>
