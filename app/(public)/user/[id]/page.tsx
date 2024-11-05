@@ -14,6 +14,8 @@ import LoadingLogo from "@/components/LoadingLogo";
 import { UserProfile } from "@/types/types";
 import Error from "next/error";
 
+import ProfilePage from "@/components/profile/profile-page";
+
 const UserPage = ({ params }: { params: { id: string } }) => {
   const { id } = params;
 
@@ -38,9 +40,10 @@ const UserPage = ({ params }: { params: { id: string } }) => {
   if (!userData) {
     return <Error statusCode={404} />;
   }
-
+  
   const renderTemplate = {
-    template1: <Template1 {...(userData as UserProfile)} />,
+    // template1: <ProfilePage {...(userData as UserProfile)} />,
+    template1: <ProfilePage userData={userData as UserProfile}/>,
     template2: <Template2 {...(userData as UserProfile)} />,
     template3: <Template3 {...(userData as UserProfile)} />,
     template4: <Template4 {...(userData as UserProfile)} />,
