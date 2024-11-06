@@ -24,7 +24,7 @@ const Header = () => {
       <div className="flex-grow-0 h-8 w-24 relative">
         <Link href="/" rel="preload">
           <Image
-            src="/assets/tap-up-header-logo.png"
+            src="/assets/tap-up-logo-white.png"
             alt="logo"
             className="object-contain"
             fill
@@ -52,30 +52,32 @@ const Header = () => {
           Activate
         </Button>
         <AvatarIcon
-          className="hidden lg:block"
+          className="hidden lg:block text-black"
           img={user?.profilePictureUrl || "https://github.com/shadcn.png"}
         />
-        <Sheet>
-          <SheetTrigger asChild>
+
+
+        <Sheet >
+                  <SheetTrigger asChild>
             <div
               className="lg:hidden cursor-pointer mr-4"
               onClick={handleMobileMenu}
-            >
+              >
               <RxHamburgerMenu size={20} />
             </div>
           </SheetTrigger>
-          <SheetContent side="top">
+          <SheetContent side="top" className="bg-black">
             <nav className="flex flex-col gap-3 items-center text-xl">
               {headerItems.map((item, index) => (
                 <Link
-                  key={index}
-                  href={item.href}
-                  className={`${
-                    item.href === pathname
-                      ? "text-green-600 border-b-2 border-greenTitle"
-                      : ""
-                  } hover:text-green-500`}
-                  onClick={() => setOpenMenu(false)}
+                key={index}
+                href={item.href}
+                className={`${
+                  item.href === pathname
+                  ? "text-green-600 border-b-2 border-greenTitle"
+                  : ""
+                } hover:text-green-500`}
+                onClick={() => setOpenMenu(false)}
                 >
                   {item.label}
                 </Link>
@@ -85,10 +87,12 @@ const Header = () => {
               </Button>
               <AvatarIcon
                 img={user?.profilePictureUrl || "https://github.com/shadcn.png"}
-              />
+                className="text-black"
+                />
             </nav>
           </SheetContent>
-        </Sheet>
+         </Sheet>
+               
       </div>
     </header>
   );
