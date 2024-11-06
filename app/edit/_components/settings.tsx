@@ -488,7 +488,7 @@ const ImageControls = ({ ...props }: EditorSidebarProps) => {
     <>
       <div className="size-24 relative">
         <Image
-          src={objects.image}
+          src={"https://www.tapup.tech/images/default.jpg"}
           className="object-contain h-full w-full"
           alt="image-preview"
           fill
