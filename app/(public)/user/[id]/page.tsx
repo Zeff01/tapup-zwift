@@ -14,7 +14,7 @@ import LoadingLogo from "@/components/LoadingLogo";
 import { UserProfile } from "@/types/types";
 import Error from "next/error";
 
-import ProfilePage from "@/components/profile/profile-page";
+import Template6 from "@/components/templates/Template6";
 
 const UserPage = ({ params }: { params: { id: string } }) => {
   const { id } = params;
@@ -42,12 +42,12 @@ const UserPage = ({ params }: { params: { id: string } }) => {
   }
   
   const renderTemplate = {
-    // template1: <ProfilePage {...(userData as UserProfile)} />,
-    template1: <ProfilePage userData={userData as UserProfile}/>,
+    template1: <Template1 {...(userData as UserProfile)} />,
     template2: <Template2 {...(userData as UserProfile)} />,
     template3: <Template3 {...(userData as UserProfile)} />,
     template4: <Template4 {...(userData as UserProfile)} />,
     template5: <Template5 {...(userData as UserProfile)} />,
+    template6: <Template6 userData={userData as UserProfile}/>,
   };
 
   interface ChosenTemplateType {
