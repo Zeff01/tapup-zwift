@@ -23,7 +23,8 @@ import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 
 import { toast } from "@/components/ui/use-toast";
-import TimePickerDemo from "../timepicker/time-picker-demo";
+
+import { TimePicker12Demo } from "../timepicker/time-picker-12h";
 
 const formSchema = z.object({
   dateTime: z.date(),
@@ -76,7 +77,7 @@ export default function DateTimePickerForm() {
                     >
                       <CalendarIcon className="mr-2 h-4 w-4" />
                       {field.value ? (
-                        format(field.value, "PPP HH:mm:ss")
+                        format(field.value, "PPP hh:mm:ss a")
                       ) : (
                         <span>Select date</span>
                       )}
@@ -91,7 +92,7 @@ export default function DateTimePickerForm() {
                     className="w-auto"
                   />
                   <div className="p-3 border-t border-border">
-                    <TimePickerDemo
+                    <TimePicker12Demo
                       setDate={field.onChange}
                       date={field.value}
                     />
