@@ -14,6 +14,12 @@ const nextConfig = {
         port: "3000",
         pathname: "/**",
       },
+      {
+        protocol: "https",
+        hostname: "www.tapup.tech",
+        port: "",
+        pathname: "/**",
+      },
     ],
   },
   experimental: {
