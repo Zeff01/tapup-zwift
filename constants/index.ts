@@ -1,3 +1,11 @@
+import {
+  Circle,
+  Image,
+  RectangleHorizontal,
+  Text,
+  Triangle,
+} from "lucide-react";
+
 export const ROOT_ROUTE = "/";
 export const LOGIN_ROUTE = "/login";
 export const SIGNUP_ROUTE = "/signup";
@@ -16,6 +24,34 @@ export const ADMIN_ONLY_PATH = "/users(/.*)?";
 export const UPDATE_PATH = "/update(/.*)?";
 export const ONBOARDING_PATH = "/onboarding(/.*)?";
 export const LOCAL_STORAGE_NAME = "isAuthenticated";
+
+export const cardEditorUtils = {
+  text: {
+    icon: Text,
+    name: "Text",
+    functionName: "addText",
+  },
+  image: {
+    icon: Image,
+    name: "Image",
+    functionName: "addImage",
+  },
+  circle: {
+    icon: Circle,
+    name: "Circle",
+    functionName: "addCircle",
+  },
+  rectangle: {
+    icon: RectangleHorizontal,
+    name: "Rectangle",
+    functionName: "addRectangle",
+  },
+  triangle: {
+    icon: Triangle,
+    name: "Triangle",
+    functionName: "addTriangle",
+  },
+};
 
 /**
  * Enum for user roles.
