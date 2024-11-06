@@ -19,7 +19,7 @@ const testimonialList = [
 ];
 const Testimonials = () => {
   return (
-    <section className="max-w-[320px] mx-auto py-4 shadow-xl">
+    <section className="max-w-[320px] mx-auto py-4 shadow-xl text-black">
       <h2 className="text-xl md:text-2xl pl-4">Testimonials</h2>
       <ul className="pt-4">
         {testimonialList.map((item, index) => (

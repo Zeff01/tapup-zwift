@@ -78,7 +78,7 @@ const ProfileInfo = ({ profilePictureUrl,
               className="object-cover rounded-full"
             />
           </div>
-          <div className="px-5 relative bottom-8">
+          <div className="px-5 relative bottom-8 text-black">
             <h3 className="font-bold text-2xl">{firstName ? firstName + " " + lastName : "Anonymous"}</h3>
             <p className="font-medium text-base">{position || "CEO" }</p>
             <p className="font-medium text-base">{company || "Stark Industries" }</p>

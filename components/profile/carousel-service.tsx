@@ -41,7 +41,7 @@ const CarouselService: React.FC<{servicePhotos: string[],serviceDescription: str
 
 
   return (
-    <section className="flex flex-col items-center justify-center pt-5 shadow-xl pb-8 mx-auto ">
+    <section className="flex flex-col items-center justify-center pt-5 shadow-xl pb-8 mx-auto text-black">
       <h2 className="w-full text-left font-semibold pb-4 pl-8 text-2xl">
         Services
       </h2>
