@@ -3,6 +3,7 @@ import { Textarea } from "@/components/ui/textarea";
 import { Canvas, FabricObject } from "fabric";
 import Image from "next/image";
 import React, { useState, useEffect } from "react";
+import { object } from "zod";
 
 function Settings({ canvas }: { canvas: Canvas | null }) {
   const [selectedObject, setSelectedObject] = useState<any>(null);
@@ -488,7 +489,7 @@ const ImageControls = ({ ...props }: EditorSidebarProps) => {
     <>
       <div className="size-24 relative">
         <Image
-          src={"https://www.tapup.tech/images/default.jpg"}
+          src={objects.image}
           className="object-contain h-full w-full"
           alt="image-preview"
           fill
