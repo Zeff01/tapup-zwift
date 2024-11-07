@@ -8,10 +8,10 @@ interface CardDetailsProps {
 const CardDetails: React.FC<CardDetailsProps> = ({ title }) => {
   return (
     <section className="mt-[2rem]  mx-auto w-[80vw]">
-      <h2 className="text-center text-3xl font-inter uppercase text-[#3B3636]">
+      <h2 className="text-center text-3xl font-inter uppercase ">
         {title}
       </h2>
-      <p className="pt-[3rem] text-xl text-justify md:text-2xl text-[#524E4E] items-center">
+      <p className="pt-[3rem] text-xl text-justify md:text-2xl  items-center">
         Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod
         consectetur adipiscing elit, sed do tempor incididunt ut labore et
         dolore magna aliqua. Ut enim ad minim incididunt ut labore et dolore
@@ -20,7 +20,7 @@ const CardDetails: React.FC<CardDetailsProps> = ({ title }) => {
         ad minim incididunt ut labore et dolore magna consectetur adipiscing
         elit
       </p>
-      <p className="pt-[3rem] text-xl text-justify md:text-2xl text-[#524E4E] items-center">
+      <p className="pt-[3rem] text-xl text-justify md:text-2xl dark:text-gray-300 items-center">
         ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod
         consectetur adipiscing elit, sed do sed adipiscing elit, sed do eiusmod
         consectetur adipiscing elit, sed do dolore magna aliqua. Ut enim ad

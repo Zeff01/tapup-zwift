@@ -25,7 +25,7 @@ const companyListItem = [
 
 const CompanyList = () => {
   return (
-    <ul className="flex items-center justify-evenly w-[100%] p-2 md:p-5 bg-gradient-to-r from-[#F7F6F633] to-[#1FAE3A33] lg:h-[30vh]">
+    <ul className="flex items-center justify-evenly w-[100%] p-2 md:p-5 bg-gradient-to-r from-[#f7f6f6] to-[#56ff75c1] lg:h-[30vh]">
       {companyListItem.map((item, index) => (
         <li
           key={index}
