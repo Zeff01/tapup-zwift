@@ -7,6 +7,7 @@ import Template2 from "@/components/templates/Template2";
 import Template3 from "@/components/templates/Template3";
 import Template4 from "@/components/templates/Template4";
 import Template5 from "@/components/templates/Template5";
+import Template6 from "@/components/templates/Template6";
 // Continue importing all templates...
 
 interface templateType {
@@ -20,6 +21,7 @@ const templates: templateType = {
   template3: Template3,
   template4: Template4,
   template5: Template5,
+  template6: Template6,
   // Continue mapping all templates...
 };
 

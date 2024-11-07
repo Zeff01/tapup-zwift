@@ -1,4 +1,7 @@
 "use client";
+import { UserProfile } from "@/types/types";
+import { downloadVCard } from "@/lib/vCardUtils";
+
 import Image from "next/image";
 import profilePic from "@/public/assets/template4samplepic.png";
 import { FiPhoneCall } from "react-icons/fi";
@@ -19,6 +22,7 @@ import { RxDashboard } from "react-icons/rx";
 import { CgProfile } from "react-icons/cg";
 import { TbCards } from "react-icons/tb";
 import { BiLogOut } from "react-icons/bi";
+import { Button } from "@/components/ui/button";
 
 const menuItems = [
   { icon: <RxDashboard />, title: "Dashboard", href: "/dashboard" },
@@ -26,53 +30,85 @@ const menuItems = [
   { icon: <TbCards />, title: "Cards", href: "/cards" },
 ];
 
-const ProfileInfo = () => {
+
+
+const ProfileInfo = ({ profilePictureUrl,
+  coverPhotoUrl,
+  position,
+  company,
+  firstName,
+  lastName,
+  email,
+  number,
+  websiteUrl }: UserProfile) => {
+  
   const [openMenu, setOpenMenu] = useState(false);
   const handleOpenMenu = () => {
     setOpenMenu(!openMenu);
   };
+
+   const userProfile = {
+    firstName,
+    lastName,
+    email,
+    number,
+    company,
+    position,
+    websiteUrl,
+  };
+
+
   return (
-    <section className="flex flex-col items-center relative justify-center shadow-xl">
-      <div className="relative w-full h-[10rem] md:h-[15rem] lg:h-[25rem] p-0 m-0">
+    <section className="flex flex-col items-center relative justify-center max-w-[320px] mx-auto shadow-xl">
+      <div className="relative w-full h-[13rem] p-0 m-0">
         <Image
-          src={profileBgImage}
+          src={coverPhotoUrl || profileBgImage}
           alt="Profile image"
           fill
           className="object-cover"
         />
       </div>
-      <div className="flex md:w-full md:px-[5rem] justify-between gap-8">
-        <div className="flex flex-col justify-center w-[11rem] md:w-[20rem]">
-          <div className="w-[7rem] md:w-[10rem] md:h-[10rem] relative h-[7rem] bottom-[4rem] left-[1rem]">
+      <div className="flex max-w-[440px] w-full justify-between">
+        <div className="flex flex-col">
+          <div className="w-[7rem] relative h-[7rem] bottom-[4rem] left-[2rem]">
             <Image
-              src={profilePic}
+              src={profilePictureUrl ||  profilePic}
               alt="user image"
               fill
-              className="object-cover"
+              className="object-cover rounded-full"
             />
           </div>
-          <div className="px-2 relative bottom-10">
-            <h3 className="font-bold text-xl md:text-2xl">Paul Castellano</h3>
-            <p className="font-medium text-base md:text-xl">CEO</p>
-            <p className="font-medium text-base md:text-xl">Stark Industries</p>
+          <div className="px-5 relative bottom-8 text-black">
+            <h3 className="font-bold text-2xl">{firstName ? firstName + " " + lastName : "Anonymous"}</h3>
+            <p className="font-medium text-base">{position || "CEO" }</p>
+            <p className="font-medium text-base">{company || "Stark Industries" }</p>
           </div>
         </div>
-        <div className="flex gap-4 justify-center pt-4">
-          <FiPhoneCall className="w-6 h-5 md:w-8 md:h-8" />
-          <MdOutlineEmail className="w-6 h-5 md:w-8 md:h-8" />
-          <BsBoxArrowInDown className="w-6 h-5 md:w-8 md:h-8" />
+        <div className="flex flex-col gap-[4rem] pt-5 pr-5">
+        <Button className="bg-transparent border-2 border-black rounded-full text-black px-[8px] py-[6px] hover:bg-green-500 text-base">Edit Profile</Button>
+          <div className="flex gap-4 justify-center items-center">
+            <Link href={`tel:${number}`}>
+          <FiPhoneCall className="w-7 h-7 text-[#1A1919CC] cursor-pointer" />
+            </Link>
+            <Link href={`emailto:${email}`}>
+          <MdOutlineEmail className="w-7 h-7 text-[#1A1919CC] cursor-pointer" />
+            </Link>
+            <div>
+          <BsBoxArrowInDown className="w-7 h-7 text-[#1A1919CC] cursor-pointer" onClick={()=>downloadVCard(userProfile)}  />
+            </div>
+        </div>
         </div>
       </div>
 
       <Sheet>
         <SheetTrigger asChild>
           <div
-            className="lg:hidden cursor-pointer z-10 absolute top-[1rem] left-[2rem] w-4 h-4 "
+            className="cursor-pointer z-10 absolute top-[2rem] left-[2rem] w-6 h-6 "
             onClick={handleOpenMenu}
           >
             <HiMenuAlt3
               size={20}
-              className="bg-[#D9D9D985] rounded-sm p-1 w-8 h-8"
+              className="bg-[#D9D9D985] rounded-sm p-1 w-10 h-10"
             />
           </div>
         </SheetTrigger>
@@ -90,7 +126,7 @@ const ProfileInfo = () => {
               />
             </div>
             <SheetClose
-              className="lg:hidden cursor-pointer w-12 h-12"
+              className="cursor-pointer w-12 h-12"
               onClick={handleOpenMenu}
             >
               <HiMenuAlt3
@@ -99,18 +135,18 @@ const ProfileInfo = () => {
                 style={{ color: "white" }}
               />
             </SheetClose>
-            <div className="relative w-[4rem] h-[4rem] rounded-full outline-white outline-2">
+            <div className="relative w-[6rem] h-[6rem] rounded-full outline-white outline-2">
               <Image
-                src={profilePic}
+                src={profilePictureUrl || profilePic}
                 alt="user image"
                 fill
-                className="object-cover"
+                className="object-cover rounded-full"
               />
             </div>
             <div>
-              <h3 className="font-bold text-white text-xl">Paul Castellano</h3>
+              <h3 className="font-bold text-white text-xl">{firstName ? firstName + " " + lastName : "Anonymous"}</h3>
               <p className="text-[#FFFFFF80] text-sm pt-2 pb-5">
-                paulcastellano@gmail.com
+                {email || "anonymous@mail.com"}
               </p>
             </div>
 
@@ -131,7 +167,7 @@ const ProfileInfo = () => {
               <div>
                 <BiLogOut />
               </div>
-              Logout
+              Sign out
             </Link>
           </div>
         </SheetContent>

@@ -23,7 +23,8 @@ import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 
 import { toast } from "@/components/ui/use-toast";
-import TimePickerDemo from "../../../components/timepicker/time-picker-demo";
+
+import { TimePicker12Demo } from "../timepicker/time-picker-12h";
 
 const formSchema = z.object({
   dateTime: z.date(),
@@ -50,10 +51,10 @@ export default function DateTimePickerForm() {
   return (
     <Form {...form}>
       <form
-        className="flex flex-col gap-4 justify-center"
+        className="flex flex-col gap-4 justify-center px-4"
         onSubmit={form.handleSubmit(onSubmit)}
       >
-        <h2 className="text-left text-xl md:text-2xl ml-3 md:ml-10">
+        <h2 className="text-left text-xl">
           Make an appointment:
         </h2>
         <FormField
@@ -76,7 +77,7 @@ export default function DateTimePickerForm() {
                     >
                       <CalendarIcon className="mr-2 h-4 w-4" />
                       {field.value ? (
-                        format(field.value, "PPP HH:mm:ss")
+                        format(field.value, "PPP hh:mm:ss a")
                       ) : (
                         <span>Select date</span>
                       )}
@@ -91,7 +92,7 @@ export default function DateTimePickerForm() {
                     className="w-auto"
                   />
                   <div className="p-3 border-t border-border">
-                    <TimePickerDemo
+                    <TimePicker12Demo
                       setDate={field.onChange}
                       date={field.value}
                     />

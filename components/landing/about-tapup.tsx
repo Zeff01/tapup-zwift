@@ -18,16 +18,16 @@ const AboutTapup = () => {
         <h2 className="text-4xl lg:text-[3rem] font-semibold italic font-sans pb-3">
           Tap<span className="text-green-600"> Up</span>
         </h2>
-        <p className="text-base text-justify text-[#524E4E] leading-[28px]">
+        <p className="text-base text-justify  leading-[28px]">
           Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do
           eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad
           minim.
         </p>
-        <p className="text-base text-justify text-[#524E4E] leading-[28px]">
+        <p className="text-base text-justify  leading-[28px]">
           Ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod it
           tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim
         </p>
-        <p className="text-base text-justify text-[#524E4E] leading-[28px]">
+        <p className="text-base text-justify leading-[28px]">
           Dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor
           incididunt ut labore et dolore magna aliqua. Ut enim ad minim
         </p>

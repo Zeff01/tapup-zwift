@@ -1,6 +1,6 @@
 import Link from "next/link";
 import Newsletter from "./newsletter";
-import logo from "@/public/assets/tapUp-logo.png";
+import logo from "@/public/assets/tap-up-logo-white.png";
 import Image from "next/image";
 
 const list = ["Terms", "Privacy", "Cookies"];
