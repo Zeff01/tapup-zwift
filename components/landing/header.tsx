@@ -7,7 +7,7 @@ import { RxHamburgerMenu } from "react-icons/rx";
 import { Sheet, SheetTrigger, SheetContent } from "../ui/sheet";
 import { usePathname } from "next/navigation";
 import Image from "next/image";
-import { headerItems } from "@/constants";
+import { headerItems, LOGIN_ROUTE } from "@/constants";
 import { useUserContext } from "@/providers/user-provider";
 import AvatarIcon from "../AvatarIcon";
 
@@ -48,13 +48,15 @@ const Header = () => {
             </Link>
           ))}
         </nav>
+        <Link href={LOGIN_ROUTE}>
         <Button className="hidden lg:block bg-green-500 hover:bg-green-700">
           Activate
         </Button>
-        <AvatarIcon
+        </Link>
+        {/* <AvatarIcon
           className="hidden lg:block text-black"
           img={user?.profilePictureUrl || "https://github.com/shadcn.png"}
-        />
+        /> */}
 
 
         <Sheet >
