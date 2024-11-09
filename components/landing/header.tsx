@@ -53,12 +53,6 @@ const Header = () => {
           Activate
         </Button>
         </Link>
-        {/* <AvatarIcon
-          className="hidden lg:block text-black"
-          img={user?.profilePictureUrl || "https://github.com/shadcn.png"}
-        /> */}
-
-
         <Sheet >
                   <SheetTrigger asChild>
             <div
