@@ -39,9 +39,11 @@
     --ring: 222.2 84% 4.9%;
 
     --radius: 0.5rem;
+
+    --text-description: rgb(95, 91, 105);
   }
 
-  @media (prefers-color-scheme: light) {
+  @media (prefers-color-scheme: dark) {
     :root {
       --foreground-rgb: 255, 255, 255;
       --background-start-rgb: 0, 0, 0;
@@ -77,6 +79,8 @@
     --border: 217.2 32.6% 17.5%;
     --input: 217.2 32.6% 17.5%;
     --ring: 212.7 26.8% 83.9%;
+
+    --text-description: 210 40% 98%;
   }
 }
 
@@ -95,6 +99,12 @@
         rgb(var(--background-end-rgb))
       )
       rgb(var(--background-start-rgb));
+  }
+
+  input[type="number"]::-webkit-inner-spin-button,
+  input[type="number"]::-webkit-outer-spin-button {
+    -webkit-appearance: none;
+    margin: 0;
   }
 
   /* Style the scrollbar track */
@@ -135,5 +145,9 @@
 @layer utilities {
   .text-balance {
     text-wrap: balance;
+  }
+
+  .check {
+    @apply border-red-500 border-2 bg-red-500/10;
   }
 }

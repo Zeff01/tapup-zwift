@@ -6,9 +6,9 @@ import Link from "next/link";
 import { Button } from "@/components/ui/button";
 
 const menuItems = [
-  { title: "Dashboard", href: "/" },
-  { title: "Profile", href: "/profile" },
-  { title: "Settings", href: "/settings" },
+  { label: "Dashboard", href: "/dashboard" },
+  { label: "Profile", href: "/profile" },
+  { label: "My Cards", href: "/cards" },
 ];
 
 interface Props {
@@ -38,7 +38,7 @@ const OverlayMenu: React.FC<Props> = ({ handleMobileMenu }) => {
                 className={`${item.href === pathname ? "text-green-600 border-b-2 border-greenTitle" : ""} hover:text-green-500`}
                 onClick={handleMobileMenu}
               >
-                {item.title}
+                {item.label}
               </Link>
             ))}
             <Button className="bg-green-500 hover:bg-green-700">

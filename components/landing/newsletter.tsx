@@ -37,7 +37,7 @@ const Newsletter = () => {
             <FaArrowRight />
           </Button>
         </div>
-        <p className="font-inter text-xs  text-[#3F3D3D]">
+        <p className="font-inter text-xs ">
           Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do
           eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad
           minim veniam, temtempor incididunt ut labore.
@@ -49,7 +49,7 @@ const Newsletter = () => {
           <ul>
             {item.list.map((item, index) => (
               <li key={index} className="pt-3 w-[8rem]  mx-auto  md:text-left">
-                <Link href="/" className="my-3 text-base text-[#14131399]">
+                <Link href="/" className="my-3 text-base">
                   {item}
                 </Link>
               </li>

@@ -19,21 +19,21 @@ const testimonialList = [
 ];
 const Testimonials = () => {
   return (
-    <section className="container py-4 shadow-xl">
-      <h2 className="text-xl md:text-2xl">Testimonials</h2>
+    <section className="max-w-[320px] mx-auto py-4 shadow-xl text-black">
+      <h2 className="text-xl md:text-2xl pl-4">Testimonials</h2>
       <ul className="pt-4">
         {testimonialList.map((item, index) => (
-          <li key={index} className="flex w-full gap-4 py-3 pl-4">
-            <div className="relative w-[3.5rem] rounded-full h-[3.5rem] md:w-[6rem] md:h-[6rem] ">
+          <li key={index} className="flex w-full items-center justify-between py-3">
+            <div className="relative w-[30%]  h-[4rem]">
               <Image
                 src={item.image}
                 alt={`image ${index}`}
                 fill
-                className="object-contain"
+                className="object-contain rounded-full"
               />
             </div>
 
-            <div className="flex flex-col gap-2 w-[70vw]">
+            <div className="flex flex-col gap-2 w-[70%]">
               <div className="flex">
                 {[1, 1, 1, 1, 1].map((_, index) => (
                   <div className="" key={index}>
@@ -42,7 +42,7 @@ const Testimonials = () => {
                 ))}
               </div>
               <div>
-                <p className="text-[10px] text-justify md:text-base">
+                <p className="text-xs text-justify pr-2">
                   {item.comment}
                 </p>
               </div>
