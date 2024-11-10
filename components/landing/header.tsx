@@ -58,7 +58,7 @@ const Header = () => {
 
 
         <Sheet >
-                  <SheetTrigger asChild>
+            <SheetTrigger asChild>
             <div
               className="lg:hidden cursor-pointer mr-4"
               onClick={handleMobileMenu}
@@ -66,7 +66,7 @@ const Header = () => {
               <RxHamburgerMenu size={20} />
             </div>
           </SheetTrigger>
-          <SheetContent side="top" className="bg-black">
+          <SheetContent side="top" className="bg-primaryBackground">
             <nav className="flex flex-col gap-3 items-center text-xl">
               {headerItems.map((item, index) => (
                 <Link

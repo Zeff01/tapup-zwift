@@ -12,7 +12,7 @@ const Hero = () => {
           Your Productivity Connect with Tap{" "}
           <span className="text-green-500">Up</span>
         </h2>
-        <p className="font-semibold text-sm leading-6 mt-3">
+        <p className="font-semibold text-sm leading-6 mt-3  text-grayDescription">
           Lorem ipsum dolor sit amet consectetur, adipisicing elit. Nisi
           voluptatem temporibus, animi laborum ratione soluta quo quod iure
           optio sapiente quibusdam molestias minus impedit repellat voluptas
