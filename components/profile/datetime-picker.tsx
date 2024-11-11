@@ -54,9 +54,7 @@ export default function DateTimePickerForm() {
         className="flex flex-col gap-4 justify-center px-4"
         onSubmit={form.handleSubmit(onSubmit)}
       >
-        <h2 className="text-left text-xl">
-          Make an appointment:
-        </h2>
+        <h2 className="text-left text-xl">Make an appointment:</h2>
         <FormField
           control={form.control}
           name="dateTime"

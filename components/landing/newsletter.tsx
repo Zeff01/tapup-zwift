@@ -37,14 +37,14 @@ const Newsletter = () => {
             <FaArrowRight />
           </Button>
         </div>
-        <p className="font-inter text-xs ">
+        <p className="font-inter text-xs text-grayDescription">
           Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do
           eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad
           minim veniam, temtempor incididunt ut labore.
         </p>
       </div>
       {listItem.map((item, index) => (
-        <div key={index} className="text-center md:text-left">
+        <div key={index} className="text-center md:text-left pt-4 sm:pt-0">
           <h4 className="font-semibold">{item.title}</h4>
           <ul>
             {item.list.map((item, index) => (
