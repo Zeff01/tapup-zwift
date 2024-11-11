@@ -56,28 +56,27 @@ const Header = () => {
           img={user?.profilePictureUrl || "https://github.com/shadcn.png"}
         />
 
-
-        <Sheet >
-                  <SheetTrigger asChild>
+        <Sheet>
+          <SheetTrigger asChild>
             <div
               className="lg:hidden cursor-pointer mr-4"
               onClick={handleMobileMenu}
-              >
+            >
               <RxHamburgerMenu size={20} />
             </div>
           </SheetTrigger>
-          <SheetContent side="top" className="bg-black">
+          <SheetContent side="top" className="bg-primaryBackground">
             <nav className="flex flex-col gap-3 items-center text-xl">
               {headerItems.map((item, index) => (
                 <Link
-                key={index}
-                href={item.href}
-                className={`${
-                  item.href === pathname
-                  ? "text-green-600 border-b-2 border-greenTitle"
-                  : ""
-                } hover:text-green-500`}
-                onClick={() => setOpenMenu(false)}
+                  key={index}
+                  href={item.href}
+                  className={`${
+                    item.href === pathname
+                      ? "text-green-600 border-b-2 border-greenTitle"
+                      : ""
+                  } hover:text-green-500`}
+                  onClick={() => setOpenMenu(false)}
                 >
                   {item.label}
                 </Link>
@@ -88,11 +87,10 @@ const Header = () => {
               <AvatarIcon
                 img={user?.profilePictureUrl || "https://github.com/shadcn.png"}
                 className="text-black"
-                />
+              />
             </nav>
           </SheetContent>
-         </Sheet>
-               
+        </Sheet>
       </div>
     </header>
   );

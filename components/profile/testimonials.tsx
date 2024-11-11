@@ -23,7 +23,10 @@ const Testimonials = () => {
       <h2 className="text-xl md:text-2xl pl-4">Testimonials</h2>
       <ul className="pt-4">
         {testimonialList.map((item, index) => (
-          <li key={index} className="flex w-full items-center justify-between py-3">
+          <li
+            key={index}
+            className="flex w-full items-center justify-between py-3"
+          >
             <div className="relative w-[30%]  h-[4rem]">
               <Image
                 src={item.image}
@@ -42,9 +45,7 @@ const Testimonials = () => {
                 ))}
               </div>
               <div>
-                <p className="text-xs text-justify pr-2">
-                  {item.comment}
-                </p>
+                <p className="text-xs text-justify pr-2">{item.comment}</p>
               </div>
             </div>
           </li>

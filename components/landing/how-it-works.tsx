@@ -54,7 +54,9 @@ const HowItWorks = () => {
               className="xl:w-[34rem]  w-[15rem] md:w-[30rem] mx-auto p-4 flex flex-col gap-y-4  shadow-xl"
             >
               <h3 className="text-xl font-semibold">{item.title}</h3>
-              <p className="font-inter text-base 2xl:text-xl  leading-6">{item.description}</p>
+              <p className="font-inter text-base 2xl:text-xl  leading-6">
+                {item.description}
+              </p>
             </li>
           ))}
         </ul>

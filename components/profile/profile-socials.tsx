@@ -13,18 +13,18 @@ const style = {
 const ProfileSocials = ({
   facebookUrl,
   linkedinUrl,
-  instagramUrl
+  instagramUrl,
 }: UserProfile) => {
   return (
     <section className="flex gap-3 w-[15rem] pt-5 pl-2">
-      <Link href={facebookUrl || '/'}>
-      <RiFacebookFill style={style} />
+      <Link href={facebookUrl || "/"}>
+        <RiFacebookFill style={style} />
       </Link>
-      <Link href={linkedinUrl || '/'}>
-      <FaLinkedinIn style={style} />
+      <Link href={linkedinUrl || "/"}>
+        <FaLinkedinIn style={style} />
       </Link>
-      <Link href={instagramUrl || '/'}>
-      <FiInstagram style={style} />
+      <Link href={instagramUrl || "/"}>
+        <FiInstagram style={style} />
       </Link>
     </section>
   );

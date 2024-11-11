@@ -22,13 +22,14 @@ const config = {
         racing: ["Racing Sans One"],
       },
       colors: {
-        grayDescription: "#767676",
+        grayDescription: "hsl(var(--text-description))",
         greenTitle: "#6fdc00",
         placeholder: { input: "#383839" },
         border: { DEFAULT: "hsl(var(--border))", input: "#282828" },
         input: "hsl(var(--input))",
         ring: "hsl(var(--ring))",
         background: { DEFAULT: "hsl(var(--background))", input: "#1f1f1f" },
+        primaryBackground: "rgb(var(--background-start-rgb))",
         foreground: "hsl(var(--foreground))",
         primary: {
           DEFAULT: "hsl(var(--primary))",

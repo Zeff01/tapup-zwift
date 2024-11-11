@@ -40,14 +40,14 @@ const UserPage = ({ params }: { params: { id: string } }) => {
   if (!userData) {
     return <Error statusCode={404} />;
   }
-  
+
   const renderTemplate = {
     template1: <Template1 {...(userData as UserProfile)} />,
     template2: <Template2 {...(userData as UserProfile)} />,
     template3: <Template3 {...(userData as UserProfile)} />,
     template4: <Template4 {...(userData as UserProfile)} />,
     template5: <Template5 {...(userData as UserProfile)} />,
-    template6: <Template6 userData={userData as UserProfile}/>,
+    template6: <Template6 userData={userData as UserProfile} />,
   };
 
   interface ChosenTemplateType {
