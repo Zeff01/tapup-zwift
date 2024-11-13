@@ -1,26 +1,9 @@
-import amazon from "@/public/assets/amazon-gray.png";
-import pay from "@/public/assets/pay-gray.png";
-import paypal from "@/public/assets/paypal-gray.png";
+import { businessList } from "@/constants";
 import Image from "next/image";
-
-const businessList = [
-  {
-    title: "Amazon",
-    image: "/assets/amazon-gray.png",
-  },
-  {
-    title: "Pay",
-    image: "/assets/pay-gray.png",
-  },
-  {
-    title: "Paypal",
-    image: "/assets/paypal-gray.png",
-  },
-];
 
 const FeaturedBusiness = () => {
   return (
-    <section className="bg-gradient-to-tr  from-[#1AA845] to-white py-8">
+    <section className="bg-gradient-to-tr from-[#a0ffbd] to-white py-8">
       <div className="">
         <h4 className="text-center uppercase font-inter text-2xl tracking-widest text-custom-black">
           trusted by 30+ businesses

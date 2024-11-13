@@ -1,3 +1,5 @@
+"use client";
+
 import {
   Carousel,
   CarouselContent,
@@ -5,57 +7,69 @@ import {
 } from "@/components/ui/carousel";
 import Image from "next/image";
 import CardDetails from "./card-details";
-import { useState } from "react";
+import React from "react";
+import { carouselCards } from "@/constants";
+import { cn } from "@/lib/utils";
+import Autoplay from "embla-carousel-autoplay";
+import { useMediaQuery } from "usehooks-ts";
 
-const carouselCards = [
-  {
-    title: "Standard Black Card",
-    image: "/assets/tapUp-card1.png",
-  },
-  {
-    title: "Standard Yellow Card",
-    image: "/assets/tapUp-card2.png",
-  },
-  {
-    title: "Standard Blue Card",
-    image: "/assets/tapUp-card3.png",
-  },
-  {
-    title: "Standard Dark Blue Card",
-    image: "/assets/tapUp-card4.png",
-  },
-  {
-    title: "Standard Special Card",
-    image: "/assets/tapUp-card5.png",
-  },
-];
-
-interface CarouselCard {
-  title: string;
-  image: string;
-}
+import { type CarouselApi } from "@/components/ui/carousel";
+import { CarouselCardKey } from "@/types/types";
 
 const TapUpCarousel: React.FC = () => {
-  const [currentCard, setCurrentCard] = useState<CarouselCard>(
-    carouselCards[0]
+  const [api, setApi] = React.useState<CarouselApi>();
+  const [current, setCurrent] = React.useState(2);
+
+  const media = useMediaQuery("(max-width: 1024px)");
+
+  const plugin = React.useRef(
+    Autoplay({ delay: 5000, stopOnInteraction: true })
   );
 
-  const handleClickCard = (card: CarouselCard) => {
-    setCurrentCard(card);
-  };
+  React.useEffect(() => {
+    if (!api) {
+      return;
+    }
+    if (media) {
+      setCurrent(api.selectedScrollSnap() + 1);
+    } else {
+      setCurrent(api.selectedScrollSnap() + 2);
+    }
+    api.on("select", () => {
+      if (media) {
+        setCurrent(api.selectedScrollSnap() + 1);
+        return;
+      }
+      setCurrent(() => {
+        if (api.selectedScrollSnap() === api.scrollSnapList().length - 1) {
+          return 1;
+        }
+        return api.selectedScrollSnap() + 2;
+      });
+    });
+  }, [api, media]);
+
   return (
-    <section className="py-[5rem] shadow-xl">
+    <section className="py-16 px-4 md:px-16 ">
       <div className="w-full">
-        <Carousel opts={{ align: "start" }}>
+        <Carousel
+          setApi={setApi}
+          onMouseEnter={plugin.current.stop}
+          onMouseLeave={plugin.current.reset}
+          plugins={[plugin.current]}
+          opts={{ align: "start", loop: true }}
+        >
           <CarouselContent>
-            {carouselCards.map((item, index) => (
+            {Object.values(carouselCards).map((item, index) => (
               <CarouselItem
                 key={index}
                 className={`md:basis-1/2 lg:basis-1/3 flex items-center justify-center rounded-md`}
               >
                 <div
-                  className="cursor-pointer relative xl:w-[24rem] w-[20rem] xl:h-[20rem] h-[18rem] aspect-video"
-                  onClick={() => handleClickCard(item)}
+                  className={cn(
+                    "cursor-pointer relative xl:w-[24rem] w-[20rem] xl:h-[20rem] h-[18rem] aspect-video transition-all duration-500 ease-in-out",
+                    index + 1 === current && "scale-125"
+                  )}
                 >
                   <Image
                     src={item.image}
@@ -69,7 +83,10 @@ const TapUpCarousel: React.FC = () => {
           </CarouselContent>
         </Carousel>
       </div>
-      <CardDetails title={currentCard.title} />
+      <CardDetails
+        key={current}
+        card={carouselCards[`card${current}` as CarouselCardKey]}
+      />
     </section>
   );
 };

@@ -65,7 +65,7 @@ const ProfileInfo = ({
           </div>
         </div>
         <div className="flex flex-col gap-[4rem] pt-5 pr-5">
-          <Button className="bg-transparent border-2 border-black rounded-full text-black px-[8px] py-[6px] hover:bg-green-500 text-base">
+          <Button className="bg-transparent border-2 border-black rounded-full text-black px-[8px] py-[6px] hover:bg-green-600 text-base">
             Edit Profile
           </Button>
           <div className="flex gap-4 justify-center items-center">

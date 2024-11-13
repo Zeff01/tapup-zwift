@@ -9,7 +9,7 @@ import ShoppingCard from "./shopping-card";
 
 const LandingPage = () => {
   return (
-    <div className="overflow-y-auto">
+    <>
       <Hero />
       <CompanyList />
       <AboutTapup />
@@ -18,7 +18,7 @@ const LandingPage = () => {
       <TapUpCarousel />
       <FeaturedBusiness />
       <Footer />
-    </div>
+    </>
   );
 };
 

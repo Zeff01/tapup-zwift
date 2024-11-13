@@ -9,58 +9,7 @@ import {
 } from "@/components/ui/card";
 import { Button } from "../ui/button";
 import ExpandableText from "../ExpandableText";
-
-interface CardItem {
-  image: string;
-  title: string;
-  description: string;
-  price: number;
-}
-
-const cardItems: CardItem[] = [
-  {
-    image: "/assets/tapUp-card1.png",
-    title: "Standard Black Card",
-    description:
-      "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt elweofsaj ",
-    price: 3000,
-  },
-  {
-    image: "/assets/tapUp-card2.png",
-    title: "Standard Yellow Card",
-    description:
-      "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt elweofsaj sed do eiusmod tempor incididunt elweofsaj sed do eiusmod tempor incididunt elweofsaj ",
-    price: 3000,
-  },
-  {
-    image: "/assets/tapUp-card3.png",
-    title: "Standard Light Blue Card",
-    description:
-      "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt elweofsaj ",
-    price: 4000,
-  },
-  {
-    image: "/assets/tapUp-card4.png",
-    title: "Standard Blue Card",
-    description:
-      "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt elweofsaj ",
-    price: 2500,
-  },
-  {
-    image: "/assets/tapUp-card5.png",
-    title: "Standard White Card",
-    description:
-      "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt elweofsaj ",
-    price: 3600,
-  },
-  {
-    image: "/assets/tapUp-card2.png",
-    title: "Standard Yellow Card",
-    description:
-      "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt elweofsaj ",
-    price: 3000,
-  },
-];
+import { cardItems } from "@/constants";
 
 const ShoppingCard = () => {
   const formatPrice = (price: number): string => {
@@ -68,15 +17,15 @@ const ShoppingCard = () => {
   };
 
   return (
-    <section className="py-[4rem] shadow-xl">
-      <h2 className="text-center italic font-medium font-inter text-[2.5rem]">
+    <section className="py-16">
+      <h2 className="text-3xl sm:text-4xl md:text-5xl lg:text-[3.5vw] leading-tight md:leading-none text-center font-black">
         Shopping Card
       </h2>
-      <div className="lg:mt-[6rem] mt-10 flex flex-wrap relative justify-center gap-7">
+      <div className="lg:mt-[6rem] mt-10 flex flex-wrap w-full max-w-7xl relative justify-center gap-8 mx-auto">
         {cardItems.map((item, index) => (
           <Card
             key={index}
-            className="border rounded-lg md:w-[24rem] w-[18rem] shadow-md justify-center"
+            className="border overflow-hidden rounded-lg md:w-[24rem] w-[18rem] shadow-md justify-center"
           >
             <CardHeader className="relative w-full aspect-video p-0 mt-2">
               <Image
@@ -86,21 +35,19 @@ const ShoppingCard = () => {
                 className="object-cover"
               />
             </CardHeader>
-            <CardContent className="p-0">
-              <CardTitle className="text-lg font-bold mt-2 px-5">
-                {item.title}
-              </CardTitle>
-              <CardDescription className="text-xs px-4">
-                <ExpandableText descriptionLength={100}>
+            <CardContent className="py-4">
+              <CardTitle className="text-lg font-bold">{item.title}</CardTitle>
+              <CardDescription className="mt-2 h-20 overflow-y-auto no-scrollbar">
+                <ExpandableText descriptionLength={90}>
                   {item.description}
                 </ExpandableText>
               </CardDescription>
             </CardContent>
-            <CardFooter className="flex justify-between pt-5 px-4">
-              <span className="lg:text-3xl text-xl font-semibold">
+            <CardFooter className="flex justify-between py-4 items-center border-t">
+              <span className="lg:text-3xl text-xl">
                 &#x20B1;{formatPrice(item.price)}
               </span>
-              <Button className="bg-[#575E59]">Add to Cart</Button>
+              <Button className="bg-green-600">Add to Cart</Button>
             </CardFooter>
           </Card>
         ))}

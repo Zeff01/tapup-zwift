@@ -43,16 +43,12 @@
     --text-description: 257, 7%, 38%;
   }
 
-  @media (prefers-color-scheme: dark) {
-    :root {
-      --foreground-rgb: 255, 255, 255;
-      --background-start-rgb: 0, 0, 0;
-      --background-end-rgb: 0, 0, 0;
-      --text-description: 0%, 0%, 100%;
-    }
-  }
-
   .dark {
+    --foreground-rgb: 255, 255, 255;
+    --background-start-rgb: 0, 0, 0;
+    --background-end-rgb: 0, 0, 0;
+    --text-description: 0%, 0%, 100%;
+
     --background: 222.2 84% 4.9%;
     --foreground: 210 40% 98%;
 
@@ -148,5 +144,16 @@
 
   .check {
     @apply border-red-500 border-2 bg-red-500/10;
+  }
+
+  .no-scrollbar {
+    /* Hide the scrollbar but keep scrolling functionality */
+    overflow: scroll;
+    scrollbar-width: none; /* Firefox */
+    -ms-overflow-style: none; /* Internet Explorer 10+ */
+  }
+
+  .no-scrollbar::-webkit-scrollbar {
+    display: none; /* Chrome, Safari, and Opera */
   }
 }
