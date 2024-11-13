@@ -146,8 +146,9 @@ export const forgotPasswordHandler = async (email: string) => {
   try {
     const resetPasswordUrl =
       process.env.NODE_ENV === "development"
-        ? process.env.NEXT_PUBLIC_URL_DEV
-        : process.env.NEXT_PUBLIC_URL_PROD;
+        ? process.env.NEXT_PUBLIC_RESET_PASSWORD_URL_DEV
+        : process.env.NEXT_PUBLIC_RESET_PASSWORD_URL_PROD;
+
     if (!resetPasswordUrl) {
       throw new Error("Reset password URL is not defined");
     }
