@@ -81,14 +81,27 @@ export const signInWithGoogle = async () => {
     const res = await signInWithPopup(firebaseAuth, provider);
     const userID = res.user.uid;
 
+    if (!userID) {
+      toast.error("User not found");
+      return;
+    }
+
+    const userAccountRef = doc(firebaseDb, "user-account", userID);
+    const docSnap = await getDoc(userAccountRef);
+
+    if (docSnap.exists()) {
+      await createSession(userID);
+      toast.success("Login successful!");
+      return;
+    }
     await setDoc(doc(firebaseDb, "user-account", userID), {
       role: USER_ROLE_ENUMS.USER,
       email: res.user.email,
       timestamp: serverTimestamp(),
     });
-    if (userID) {
-      await createSession(userID);
-    }
+
+    await createSession(userID);
+
     toast.success("Login successful!");
   } catch (error) {
     if (error instanceof FirebaseError) {
