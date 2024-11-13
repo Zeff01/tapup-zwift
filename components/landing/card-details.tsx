@@ -1,32 +1,24 @@
+import { CarouselCard } from "@/types/types";
 import { Button } from "../ui/button";
 import { HiArrowRightEndOnRectangle } from "react-icons/hi2";
 
 interface CardDetailsProps {
-  title: string;
+  card: CarouselCard;
 }
 
-const CardDetails: React.FC<CardDetailsProps> = ({ title }) => {
+const CardDetails: React.FC<CardDetailsProps> = ({ card }) => {
   return (
     <section className="mt-[2rem]  mx-auto w-[80vw]">
-      <h2 className="text-center text-3xl font-inter uppercase ">{title}</h2>
-      <p className="pt-[3rem] text-xl text-justify md:text-2xl  items-center">
-        Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod
-        consectetur adipiscing elit, sed do tempor incididunt ut labore et
-        dolore magna aliqua. Ut enim ad minim incididunt ut labore et dolore
-        magna adipiscing elit, sed do eiusmod consectetur adipiscing elit, sed
-        do dolore magna aliqua. Ut enim ad minim et dolore magna aliqua. Ut enim
-        ad minim incididunt ut labore et dolore magna consectetur adipiscing
-        elit
-      </p>
-      <p className="pt-[3rem] text-xl text-justify md:text-2xl dark:text-gray-300 items-center">
-        ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod
-        consectetur adipiscing elit, sed do sed adipiscing elit, sed do eiusmod
-        consectetur adipiscing elit, sed do dolore magna aliqua. Ut enim ad
-        minim labore et dolore magna consectetur adipiscing elit Ut enim ad
-        minim incididunt ut labore et dolore magna
-      </p>
-      <Button className="uppercase w-[193px] bg-green-500 mt-[4rem] font-semibold flex items-center hover:bg-green-700">
-        Get a card <HiArrowRightEndOnRectangle className="ml-3 w-4 h-7" />
+      <h2 className="text-3xl sm:text-4xl md:text-5xl lg:text-[3.5vw] leading-tight md:leading-none text-center font-black">
+        {card?.title}
+      </h2>
+
+      <pre className="text-lg w-full max-w-lg leading-snug md:leading-8 sm:text-xl text-muted-foreground text-justify mt-6 whitespace-pre-line font-sans mx-auto h-56 p-4 rounded-md border shadow-lg">
+        {card?.description}
+      </pre>
+
+      <Button className="uppercase max-w-[15rem] py-6 w-full bg-green-600 mt-[27px] font-bold flex text-background items-center mx-auto hover:bg-green-700">
+        Get a card
       </Button>
     </section>
   );

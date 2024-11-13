@@ -98,7 +98,7 @@ const OverlayMenu = ({
               <Link
                 key={index}
                 href={item.href}
-                className="text-sm flex items-center gap-2 pl-4 w-[90%] bg-[#1d1c1cac] text-white p-3 rounded-sm hover:bg-green-500"
+                className="text-sm flex items-center gap-2 pl-4 w-[90%] bg-[#1d1c1cac] text-white p-3 rounded-sm hover:bg-green-600"
                 onClick={handleOpenMenu}
               >
                 <div>{item.icon}</div>
@@ -108,7 +108,7 @@ const OverlayMenu = ({
 
             <Link
               href="/"
-              className="text-sm flex items-center gap-2 pl-4 w-[90%] bg-[#1d1c1cac] text-white p-3 rounded-sm mt-[4rem] hover:bg-green-500"
+              className="text-sm flex items-center gap-2 pl-4 w-[90%] bg-[#1d1c1cac] text-white p-3 rounded-sm mt-[4rem] hover:bg-green-600"
             >
               <div>
                 <BiLogOut />

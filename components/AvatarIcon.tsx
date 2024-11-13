@@ -27,8 +27,8 @@ const AvatarIcon = ({ img, className }: Props) => {
       <DropdownMenuTrigger>
         <Avatar className={cn(className)}>
           <AvatarImage src={isAuthenticated ? img : ""} />
-          <AvatarFallback>
-            <UserIcon />
+          <AvatarFallback className="bg-secondary">
+            <UserIcon className="text-primary" />
           </AvatarFallback>
         </Avatar>
       </DropdownMenuTrigger>
