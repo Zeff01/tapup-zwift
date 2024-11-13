@@ -30,9 +30,8 @@ const menuItems = [
   { icon: <TbCards />, title: "Cards", href: "/cards" },
 ];
 
-
-
-const ProfileInfo = ({ profilePictureUrl,
+const ProfileInfo = ({
+  profilePictureUrl,
   coverPhotoUrl,
   position,
   company,
@@ -40,14 +39,14 @@ const ProfileInfo = ({ profilePictureUrl,
   lastName,
   email,
   number,
-  websiteUrl }: UserProfile) => {
-  
+  websiteUrl,
+}: UserProfile) => {
   const [openMenu, setOpenMenu] = useState(false);
   const handleOpenMenu = () => {
     setOpenMenu(!openMenu);
   };
 
-   const userProfile = {
+  const userProfile = {
     firstName,
     lastName,
     email,
@@ -56,7 +55,6 @@ const ProfileInfo = ({ profilePictureUrl,
     position,
     websiteUrl,
   };
-
 
   return (
     <section className="flex flex-col items-center relative justify-center max-w-[320px] mx-auto shadow-xl">
@@ -72,31 +70,40 @@ const ProfileInfo = ({ profilePictureUrl,
         <div className="flex flex-col">
           <div className="w-[7rem] relative h-[7rem] bottom-[4rem] left-[2rem]">
             <Image
-              src={profilePictureUrl ||  profilePic}
+              src={profilePictureUrl || profilePic}
               alt="user image"
               fill
               className="object-cover rounded-full"
             />
           </div>
           <div className="px-5 relative bottom-8 text-black">
-            <h3 className="font-bold text-2xl">{firstName ? firstName + " " + lastName : "Anonymous"}</h3>
-            <p className="font-medium text-base">{position || "CEO" }</p>
-            <p className="font-medium text-base">{company || "Stark Industries" }</p>
+            <h3 className="font-bold text-2xl">
+              {firstName ? firstName + " " + lastName : "Anonymous"}
+            </h3>
+            <p className="font-medium text-base">{position || "CEO"}</p>
+            <p className="font-medium text-base">
+              {company || "Stark Industries"}
+            </p>
           </div>
         </div>
         <div className="flex flex-col gap-[4rem] pt-5 pr-5">
-        <Button className="bg-transparent border-2 border-black rounded-full text-black px-[8px] py-[6px] hover:bg-green-500 text-base">Edit Profile</Button>
+          <Button className="bg-transparent border-2 border-black rounded-full text-black px-[8px] py-[6px] hover:bg-green-500 text-base">
+            Edit Profile
+          </Button>
           <div className="flex gap-4 justify-center items-center">
             <Link href={`tel:${number}`}>
-          <FiPhoneCall className="w-7 h-7 text-[#1A1919CC] cursor-pointer" />
+              <FiPhoneCall className="w-7 h-7 text-[#1A1919CC] cursor-pointer" />
             </Link>
             <Link href={`emailto:${email}`}>
-          <MdOutlineEmail className="w-7 h-7 text-[#1A1919CC] cursor-pointer" />
+              <MdOutlineEmail className="w-7 h-7 text-[#1A1919CC] cursor-pointer" />
             </Link>
             <div>
-          <BsBoxArrowInDown className="w-7 h-7 text-[#1A1919CC] cursor-pointer" onClick={()=>downloadVCard(userProfile)}  />
+              <BsBoxArrowInDown
+                className="w-7 h-7 text-[#1A1919CC] cursor-pointer"
+                onClick={() => downloadVCard(userProfile)}
+              />
             </div>
-        </div>
+          </div>
         </div>
       </div>
 
@@ -144,7 +151,9 @@ const ProfileInfo = ({ profilePictureUrl,
               />
             </div>
             <div>
-              <h3 className="font-bold text-white text-xl">{firstName ? firstName + " " + lastName : "Anonymous"}</h3>
+              <h3 className="font-bold text-white text-xl">
+                {firstName ? firstName + " " + lastName : "Anonymous"}
+              </h3>
               <p className="text-[#FFFFFF80] text-sm pt-2 pb-5">
                 {email || "anonymous@mail.com"}
               </p>

@@ -3,15 +3,11 @@ import { MdOutlineEmail } from "react-icons/md";
 import { FiPhoneCall } from "react-icons/fi";
 import { UserProfile } from "@/types/types";
 
-const Footer = ({ 
-  firstName,
-  lastName,
-  number,
-}: UserProfile) => {
+const Footer = ({ firstName, lastName, number }: UserProfile) => {
   return (
     <footer className="flex justify-evenly h-[4rem] max-w-[320px] mx-auto shadow-xl text-black">
       <div className="flex items-center gap-1 ">
-        <MdOutlineEmail/>
+        <MdOutlineEmail />
         <h2 className=" text-xs md:text-base">
           {firstName ? firstName + " " + lastName : "Anonymous"}
         </h2>

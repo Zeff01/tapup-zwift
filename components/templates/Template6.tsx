@@ -8,17 +8,20 @@ import Testimonials from "../profile/testimonials";
 import Footer from "../profile/footer";
 
 interface ProfilePageProps {
-  userData: UserProfile; 
+  userData: UserProfile;
 }
 
 const Template6: React.FC<ProfilePageProps> = ({ userData }) => {
   const { servicePhotos = [], serviceDescription } = userData;
   return (
     <div className="overflow-y-auto overflow-x-hidden max-w-[320px] mx-auto bg-white">
-          <ProfileInfo {...userData} />
+      <ProfileInfo {...userData} />
       <div className="shadow-xl max-w-[320px] mx-auto">
-      <ProfileSocials {...userData} />
-   <CarouselService servicePhotos={servicePhotos} serviceDescription={serviceDescription || "No Description"} />
+        <ProfileSocials {...userData} />
+        <CarouselService
+          servicePhotos={servicePhotos}
+          serviceDescription={serviceDescription || "No Description"}
+        />
       </div>
       <Appointment />
       <Testimonials />

@@ -8,9 +8,7 @@ interface CardDetailsProps {
 const CardDetails: React.FC<CardDetailsProps> = ({ title }) => {
   return (
     <section className="mt-[2rem]  mx-auto w-[80vw]">
-      <h2 className="text-center text-3xl font-inter uppercase ">
-        {title}
-      </h2>
+      <h2 className="text-center text-3xl font-inter uppercase ">{title}</h2>
       <p className="pt-[3rem] text-xl text-justify md:text-2xl  items-center">
         Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod
         consectetur adipiscing elit, sed do tempor incididunt ut labore et
