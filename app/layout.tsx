@@ -32,6 +32,7 @@ export default function RootLayout({
           attribute="class"
           defaultTheme="dark"
           enableSystem
+          forcedTheme="dark"
           disableTransitionOnChange
         >
           <UserContextProvider>
