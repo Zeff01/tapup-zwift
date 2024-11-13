@@ -10,6 +10,7 @@ import Image from "next/image";
 import { headerItems } from "@/constants";
 import { useUserContext } from "@/providers/user-provider";
 import AvatarIcon from "../AvatarIcon";
+import TapupLogo from "../svgs/TapupLogo";
 
 const Header = () => {
   const { user } = useUserContext();
@@ -20,15 +21,10 @@ const Header = () => {
   };
 
   return (
-    <header className="flex justify-between items-center md:px-10 shadow-xl p-4">
+    <header className="flex sticky top-0 z-50 bg-background justify-between items-center md:px-10 shadow-xl p-4">
       <div className="flex-grow-0 h-8 w-24 relative">
         <Link href="/" rel="preload">
-          <Image
-            src="/assets/tap-up-logo-white.png"
-            alt="logo"
-            className="object-contain"
-            fill
-          />
+          <TapupLogo />
         </Link>
       </div>
 
@@ -48,7 +44,7 @@ const Header = () => {
             </Link>
           ))}
         </nav>
-        <Button className="hidden lg:block bg-green-500 hover:bg-green-700">
+        <Button className="hidden lg:block bg-green-600 hover:bg-green-700">
           Activate
         </Button>
         <AvatarIcon
@@ -81,7 +77,7 @@ const Header = () => {
                   {item.label}
                 </Link>
               ))}
-              <Button className="bg-green-500 hover:bg-green-700">
+              <Button className="bg-green-600 hover:bg-green-700">
                 Activate
               </Button>
               <AvatarIcon

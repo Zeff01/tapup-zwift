@@ -2,6 +2,7 @@ import Link from "next/link";
 import Newsletter from "./newsletter";
 import logo from "@/public/assets/tap-up-logo-white.png";
 import Image from "next/image";
+import TapupLogo from "../svgs/TapupLogo";
 
 const list = ["Terms", "Privacy", "Cookies"];
 const socials = [
@@ -15,12 +16,12 @@ const socials = [
 ];
 const Footer = () => {
   return (
-    <footer className="py-[4rem]">
+    <footer className="pb-8 pt-16">
       <Newsletter />
-      <div className="flex flex-col md:flex-row w-full gap-4 justify-around pt-6">
-        <div className="mx-auto">
+      <div className="flex mt-8 flex-col sm:flex-row w-full gap-4 justify-around pt-6 items-center">
+        <div className="mx-auto aspect-[3.63] h-9">
           <Link href="/">
-            <Image src={logo} alt="logo" />
+            <TapupLogo className="w-full h-full" />
           </Link>
         </div>
         <div className="flex gap-5 mx-auto">

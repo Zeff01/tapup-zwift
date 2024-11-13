@@ -145,4 +145,15 @@
   .check {
     @apply border-red-500 border-2 bg-red-500/10;
   }
+
+  .no-scrollbar {
+    /* Hide the scrollbar but keep scrolling functionality */
+    overflow: scroll;
+    scrollbar-width: none; /* Firefox */
+    -ms-overflow-style: none; /* Internet Explorer 10+ */
+  }
+
+  .no-scrollbar::-webkit-scrollbar {
+    display: none; /* Chrome, Safari, and Opera */
+  }
 }

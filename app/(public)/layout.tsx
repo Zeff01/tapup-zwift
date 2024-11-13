@@ -9,7 +9,6 @@ const PublicRouteLayout = ({ children }: Props) => {
   return (
     <>
       <Header />
-      Wew
       {children}
     </>
   );

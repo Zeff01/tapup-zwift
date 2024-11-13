@@ -1,3 +1,5 @@
+import { carouselCards } from "@/constants";
+
 export type UserProfile = {
   coverPhotoUrl?: string;
   profilePictureUrl: string;
@@ -28,3 +30,13 @@ export type Template = {
   imageUrl: string;
   route: string;
 };
+
+export interface CardItem {
+  image: string;
+  title: string;
+  description: string;
+  price: number;
+}
+
+export type CarouselCardKey = keyof typeof carouselCards;
+export type CarouselCard = (typeof carouselCards)[CarouselCardKey];

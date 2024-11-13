@@ -101,7 +101,7 @@ export function TemplateCarousel({
                     </h3>
                     <div className="flex items-center gap-4 mt-2">
                       <div
-                        className="bg-green-500 text-white py-1 px-2 text-xs rounded hover:bg-green-600"
+                        className="bg-green-600 text-white py-1 px-2 text-xs rounded hover:bg-green-700"
                         onClick={() => setSelectedTemplateId(template.id)}
                       >
                         Select
