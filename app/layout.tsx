@@ -4,8 +4,8 @@ import "./globals.css";
 import { ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import Head from "next/head";
-import Header from "@/components/landing/header";
 import { UserContextProvider } from "@/providers/user-provider";
+import { ThemeProvider } from "@/providers/theme-provider";
 
 const lato = Lato({ weight: "400", subsets: ["latin"] });
 
@@ -26,14 +26,19 @@ export default function RootLayout({
         <link rel="icon" href="/favicon.ico" />
       </Head>
 
-      <body className={`${lato.className} overflow-hidden h-screen`}>
-        <UserContextProvider>
-          <main className="h-full flex flex-col">
-            <Header />
-            {children}
-          </main>
-          <ToastContainer />
-        </UserContextProvider>
+      <body className={`${lato.className}`}>
+        <ThemeProvider
+          attribute="class"
+          defaultTheme="system"
+          enableSystem
+          disableTransitionOnChange
+        >
+          <UserContextProvider>
+            weweew
+            <main className="min-h-screen bg-background">{children}</main>
+            <ToastContainer />
+          </UserContextProvider>
+        </ThemeProvider>
       </body>
     </html>
   );
