@@ -28,12 +28,7 @@ export default function RootLayout({
       </Head>
 
       <body className={`${lato.className}`}>
-        <ThemeProvider
-          attribute="class"
-          defaultTheme="system"
-          enableSystem
-          disableTransitionOnChange
-        >
+        <ThemeProvider attribute="class" enableSystem disableTransitionOnChange>
           <UserContextProvider>
             <main className="min-h-screen bg-background">{children}</main>
             {isDev && (
