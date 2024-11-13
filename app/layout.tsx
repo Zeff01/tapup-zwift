@@ -30,9 +30,9 @@ export default function RootLayout({
       <body className={`${lato.className}`}>
         <ThemeProvider
           attribute="class"
-          defaultTheme="dark"
+          defaultTheme="system"
           enableSystem
-          forcedTheme="dark"
+          //forcedTheme="dark"
           disableTransitionOnChange
         >
           <UserContextProvider>
