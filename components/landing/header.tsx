@@ -24,7 +24,7 @@ const Header = () => {
     <header className="flex sticky top-0 z-50 bg-background justify-between items-center md:px-10 shadow-xl p-4">
       <div className="flex-grow-0 h-8 w-24 relative">
         <Link href="/" rel="preload">
-          <TapupLogo className="" />
+          <TapupLogo />
         </Link>
       </div>
 
