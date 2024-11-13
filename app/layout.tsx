@@ -22,13 +22,19 @@ export default function RootLayout({
 }>) {
   const isDev = process.env.NODE_ENV === "development";
   return (
-    <html lang="en">
+    <html lang="en" suppressHydrationWarning>
       <Head>
         <link rel="icon" href="/favicon.ico" />
       </Head>
 
       <body className={`${lato.className}`}>
-        <ThemeProvider attribute="class" enableSystem disableTransitionOnChange>
+        <ThemeProvider
+          attribute="class"
+          defaultTheme="system"
+          enableSystem
+          forcedTheme="dark"
+          disableTransitionOnChange
+        >
           <UserContextProvider>
             <main className="min-h-screen bg-background">{children}</main>
             {isDev && (
