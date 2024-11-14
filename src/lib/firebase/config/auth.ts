@@ -9,10 +9,24 @@ import {
   FacebookAuthProvider,
   sendPasswordResetEmail,
   confirmPasswordReset,
+  EmailAuthProvider,
+  getAuth,
+  fetchSignInMethodsForEmail,
+  linkWithPopup,
 } from "firebase/auth";
 import { firebaseAuth, firebaseDb } from "@/src/lib/firebase/config/firebase";
 import { createSession, deleteSession } from "./session";
-import { setDoc, doc, serverTimestamp, getDoc } from "firebase/firestore";
+import {
+  setDoc,
+  doc,
+  serverTimestamp,
+  getDoc,
+  collection,
+  query,
+  where,
+  limit,
+  getDocs,
+} from "firebase/firestore";
 import { toast } from "react-toastify";
 import { FirebaseError } from "firebase/app";
 import { z } from "zod";
@@ -29,6 +43,7 @@ export const signUpHandler = async (data: z.infer<typeof signupSchema>) => {
       data.email,
       data.password
     );
+
     const userID = res.user.uid;
     await setDoc(doc(firebaseDb, "user-account", userID), {
       role: USER_ROLE_ENUMS.USER,
@@ -92,6 +107,8 @@ export const signInWithGoogle = async () => {
     if (docSnap.exists()) {
       await createSession(userID);
       toast.success("Login successful!");
+      console.log("wewew");
+
       return;
     }
     await setDoc(doc(firebaseDb, "user-account", userID), {
@@ -99,7 +116,6 @@ export const signInWithGoogle = async () => {
       email: res.user.email,
       timestamp: serverTimestamp(),
     });
-
     await createSession(userID);
 
     toast.success("Login successful!");

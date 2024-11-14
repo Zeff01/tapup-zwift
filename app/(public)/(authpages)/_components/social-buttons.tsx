@@ -24,7 +24,7 @@ export default function Social({ label }: { label: string }) {
     <>
       <Button
         onClick={handleGoogleSignIn}
-        className="w-full flex gap-x-1 border-black h-8 rounded-full text-muted-foreground"
+        className="w-full flex gap-x-1 border-gray-500 dark:border h-8 rounded-full text-muted-foreground"
         size={"lg"}
         variant={"outline"}
       >
@@ -33,7 +33,7 @@ export default function Social({ label }: { label: string }) {
       </Button>
       <Button
         onClick={handleFacebookSignIn}
-        className="w-full flex gap-x-1 border-black h-8 rounded-full text-muted-foreground"
+        className="w-full flex gap-x-1 border-gray-500 dark:border h-8 rounded-full text-muted-foreground"
         size={"lg"}
         variant={"outline"}
       >

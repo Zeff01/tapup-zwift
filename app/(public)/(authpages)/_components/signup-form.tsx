@@ -1,7 +1,7 @@
 "use client";
 
 import Link from "next/link";
-import { Separator } from "@radix-ui/react-dropdown-menu";
+import { Separator } from "@/app/(public)/(authpages)/_components/auth-separator";
 
 //shadcn components
 import { Input } from "@/components/ui/input";
@@ -54,26 +54,24 @@ export function RegisterForm() {
     await signUpHandler(data);
   };
   return (
-    <Card className="w-full  p-5  md:p-10 shadow-md rounded-md">
+    <Card className="w-full py-8 px-6 md:p-16 shadow-md rounded-md">
       <CardHeader
-        className={cn(fonts.className, "text-5xl font-black pb-4 pt-0 ")}
+        className={cn(fonts.className, "text-3xl md:text-5xl font-black p-0")}
       >
         Create Account
       </CardHeader>
-      <CardContent className="pb-0">
+      <CardContent className="p-0 mt-6">
         <Form {...form}>
           <form onSubmit={form.handleSubmit(onSubmit)}>
-            <div className="space-y-2 ">
-              <div className="flex gap-x-[20px]">
+            <div className="space-y-4 ">
+              <div className="flex gap-x-2">
                 <FormField
                   control={form.control}
                   name="firstName"
                   render={({ field }) => (
                     <FormItem className="flex-1">
                       <div className="flex items-center justify-between">
-                        <FormLabel className="text-black text-xs">
-                          First Name
-                        </FormLabel>
+                        <FormLabel className="text-xs">First Name</FormLabel>
                         <FormMessage className="text-xs" />
                       </div>
                       <FormControl>
@@ -93,9 +91,7 @@ export function RegisterForm() {
                   render={({ field }) => (
                     <FormItem className="flex-1">
                       <div className="flex items-center justify-between">
-                        <FormLabel className="text-black text-xs">
-                          Last Name
-                        </FormLabel>
+                        <FormLabel className="text-xs">Last Name</FormLabel>
                         <FormMessage className="text-xs" />
                       </div>
                       <FormControl>
@@ -117,9 +113,7 @@ export function RegisterForm() {
                 render={({ field }) => (
                   <FormItem>
                     <div className="flex items-center justify-between">
-                      <FormLabel className="text-black text-xs">
-                        Email Address
-                      </FormLabel>
+                      <FormLabel className=" text-xs">Email Address</FormLabel>
                       <FormMessage className="text-xs" />
                     </div>
                     <FormControl>
@@ -139,9 +133,7 @@ export function RegisterForm() {
                 render={({ field }) => (
                   <FormItem>
                     <div className="flex items-center justify-between">
-                      <FormLabel className="text-black text-xs">
-                        Password
-                      </FormLabel>
+                      <FormLabel className=" text-xs">Password</FormLabel>
                       <FormMessage className="text-xs" />
                     </div>
                     <FormControl>
@@ -161,7 +153,7 @@ export function RegisterForm() {
                 render={({ field }) => (
                   <FormItem>
                     <div className="flex items-center justify-between">
-                      <FormLabel className="text-black text-xs">
+                      <FormLabel className=" text-xs">
                         Confirm Password
                       </FormLabel>
                       <FormMessage className="text-xs" />
@@ -196,10 +188,8 @@ export function RegisterForm() {
           </form>
         </Form>
       </CardContent>
-      <CardFooter className="flex flex-col pb-0">
-        <Separator />
-      </CardFooter>
-      <CardFooter className="flex flex-col gap-y-3">
+      <Separator />
+      <CardFooter className="flex flex-col gap-y-3 p-0">
         <Social label="Sign up" />
       </CardFooter>
     </Card>

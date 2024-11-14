@@ -50,7 +50,7 @@ const TapUpCarousel: React.FC = () => {
   }, [api, media]);
 
   return (
-    <section className="py-16 px-4 md:px-16 ">
+    <section className="py-16">
       <div className="w-full">
         <Carousel
           setApi={setApi}
@@ -67,7 +67,7 @@ const TapUpCarousel: React.FC = () => {
               >
                 <div
                   className={cn(
-                    "cursor-pointer relative xl:w-[24rem] w-[20rem] xl:h-[20rem] h-[18rem] aspect-video transition-all duration-500 ease-in-out",
+                    "cursor-pointer relative xl:w-[24rem] xl:h-[20rem] h-[16rem] w-[18rem] aspect-video transition-all duration-500 ease-in-out",
                     index + 1 === current && "scale-125"
                   )}
                 >

@@ -22,11 +22,9 @@ const Header = () => {
 
   return (
     <header className="flex sticky top-0 z-50 bg-background justify-between items-center md:px-10 shadow-xl p-4">
-      <div className="flex-grow-0 h-8 w-24 relative">
-        <Link href="/" rel="preload">
-          <TapupLogo />
-        </Link>
-      </div>
+      <Link href="/" rel="preload">
+        <TapupLogo className="w-20 lg:w-auto" />
+      </Link>
 
       <div className="flex items-center gap-4 lg:gap-8">
         <nav className="hidden lg:flex gap-6 text-xl">

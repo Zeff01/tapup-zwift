@@ -12,7 +12,7 @@ const TapupLogo = ({ className }: Props) => (
     height="27"
     fill="none"
     viewBox="0 0 98 27"
-    className={cn(className)}
+    className={cn("aspect-[98/27]", className)}
   >
     <path
       className="fill-foreground"

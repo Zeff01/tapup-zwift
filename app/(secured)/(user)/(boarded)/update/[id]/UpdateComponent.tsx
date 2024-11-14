@@ -110,7 +110,7 @@ export default function UpdateComponent({
   };
 
   return (
-    <main className="flex flex-col overflow-auto py-8 text-white bg-[#1E1E1E] h-full">
+    <main className="flex flex-col overflow-auto py-8 px-6 sm:px-0 text-white bg-[#1E1E1E] h-full">
       <div className="w-full mx-auto max-w-sm">
         <Image
           src="/assets/zwift-logo.png"

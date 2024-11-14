@@ -55,25 +55,23 @@ export function LogInForm() {
   };
 
   return (
-    <Card className="w-full shadow-md p-5  md:p-10 h-full flex flex-col justify-center rounded-md">
+    <Card className="w-full shadow-md md:p-10 h-full flex flex-col justify-center rounded-md py-8">
       <CardHeader
-        className={cn(fonts.className, "text-5xl font-black pb-4 pt-0 ")}
+        className={cn(fonts.className, "text-2xl md:text-5xl font-black py-0")}
       >
         Sign In
       </CardHeader>
-      <CardContent className="pb-0 ">
+      <CardContent className="py-2 mt-4">
         <Form {...form}>
           <form onSubmit={form.handleSubmit(onSubmit)}>
-            <div className="space-y-2 ">
+            <div className="space-y-4">
               <FormField
                 control={form.control}
                 name="email"
                 render={({ field }) => (
                   <FormItem>
                     <div className="flex items-center justify-between">
-                      <FormLabel className="text-black text-xs">
-                        Email Address
-                      </FormLabel>
+                      <FormLabel className="text-xs">Email Address</FormLabel>
                       <FormMessage className="text-xs" />
                     </div>
                     <FormControl>
@@ -93,9 +91,7 @@ export function LogInForm() {
                 render={({ field }) => (
                   <FormItem>
                     <div className="flex items-center justify-between">
-                      <FormLabel className="text-black text-xs">
-                        Password
-                      </FormLabel>
+                      <FormLabel className="text-xs">Password</FormLabel>
                       <FormMessage className="text-xs" />
                     </div>
                     <FormControl>
@@ -127,7 +123,7 @@ export function LogInForm() {
             >
               Sign In
             </Button>
-            <p className="flex gap-x-1 items-center justify-center text-xs text-muted-foreground w-full pt-2">
+            <p className="flex gap-x-1 items-center justify-center text-xs text-muted-foreground w-full mt-2">
               <span>Don&#39;t Have an Account?</span>
               <Link className="text-[#21C15C]" href={"/signup"}>
                 Sign Up
@@ -136,10 +132,8 @@ export function LogInForm() {
           </form>
         </Form>
       </CardContent>
-      <CardFooter className="flex flex-col pb-0">
-        <Separator />
-      </CardFooter>
-      <CardFooter className="flex flex-col gap-y-3">
+      <Separator />
+      <CardFooter className="flex flex-col gap-y-3 py-0">
         <Social label="Sign In" />
       </CardFooter>
     </Card>
