@@ -36,7 +36,9 @@ export default function RootLayout({
           disableTransitionOnChange
         >
           <UserContextProvider>
-            <main className="min-h-screen bg-background">{children}</main>
+            <main className="min-h-screen flex flex-col bg-background">
+              {children}
+            </main>
             {isDev && (
               <div className="z-50 fixed bottom-4 right-4 bg-foreground size-6 rounded-full flex items-center justify-center font-bold text-background text-xs">
                 <span className="block sm:hidden">xs</span>
