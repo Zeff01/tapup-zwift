@@ -13,7 +13,6 @@ import AvatarIcon from "../AvatarIcon";
 import TapupLogo from "../svgs/TapupLogo";
 
 const Header = () => {
-  const { user } = useUserContext();
   const pathname = usePathname();
   const [openMenu, setOpenMenu] = useState(false);
   const handleMobileMenu = () => {
@@ -42,13 +41,11 @@ const Header = () => {
             </Link>
           ))}
         </nav>
-        <Button className="hidden lg:block bg-green-600 hover:bg-green-700">
-          Activate
-        </Button>
-        <AvatarIcon
-          className="hidden lg:block text-black"
-          img={user?.profilePictureUrl || "https://github.com/shadcn.png"}
-        />
+        <Link href="/login">
+          <Button className="hidden lg:block bg-green-600 hover:bg-green-700">
+            Activate
+          </Button>
+        </Link>
 
         <Sheet>
           <SheetTrigger asChild>
@@ -75,13 +72,11 @@ const Header = () => {
                   {item.label}
                 </Link>
               ))}
-              <Button className="bg-green-600 hover:bg-green-700">
-                Activate
-              </Button>
-              <AvatarIcon
-                img={user?.profilePictureUrl || "https://github.com/shadcn.png"}
-                className="text-black"
-              />
+              <Link href="/login">
+                <Button className="bg-green-600 hover:bg-green-700">
+                  Activate
+                </Button>
+              </Link>
             </nav>
           </SheetContent>
         </Sheet>
