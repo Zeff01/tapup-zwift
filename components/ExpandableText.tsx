@@ -1,7 +1,12 @@
 import { useState } from "react";
 
-const ExpandableText = ({ children, descriptionLength }) => {
-  const fullText = children;
+type Props = {
+  children: React.ReactNode;
+  descriptionLength: number;
+};
+
+const ExpandableText = ({ children, descriptionLength }: Props) => {
+  const fullText = children?.toString() || "";
 
   const [isExpanded, setIsExpanded] = useState(false);
 

@@ -5,9 +5,13 @@ import {
   Circle,
   Image,
   RectangleHorizontal,
+  Settings,
   Text,
   Triangle,
 } from "lucide-react";
+import { CgProfile } from "react-icons/cg";
+import { RxDashboard } from "react-icons/rx";
+import { TbCards } from "react-icons/tb";
 
 export const ROOT_ROUTE = "/";
 export const LOGIN_ROUTE = "/login";
@@ -232,4 +236,10 @@ export const businessList = [
     title: "Paypal",
     image: "/assets/paypal-gray.png",
   },
+];
+
+export const menuItems = [
+  { icon: RxDashboard, title: "Dashboard", href: "/dashboard" },
+  { icon: CgProfile, title: "Profile", href: "/update" },
+  { icon: TbCards, title: "Cards", href: "/cards" },
 ];
