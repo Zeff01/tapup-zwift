@@ -6,7 +6,7 @@ import Loading from "../../../loading";
 import { redirect } from "next/navigation";
 import { ONBOARDING_ROUTE } from "@/constants";
 import NavigationBoarded from "@/components/boarded/navigation";
-import OverlayMenu from "@/components/NavigationInside";
+import TopbarBoarded from "@/components/boarded/topbar";
 
 const Layout = ({ children }: { children: React.ReactNode }) => {
   const { user, isLoading, logOutUser } = useUserContext();
@@ -22,8 +22,8 @@ const Layout = ({ children }: { children: React.ReactNode }) => {
   return (
     <main className="flex-1 flex">
       <NavigationBoarded user={user} signOut={logOutUser} />
-      <OverlayMenu />
-      <div className="w-full lg:w-[calc(100%-25rem)] ease-in-out transition-all ml-auto flex">
+      <div className="w-full lg:w-[calc(100%-25rem)] ease-in-out transition-all ml-auto flex flex-col">
+        <TopbarBoarded />
         {children}
       </div>
     </main>
