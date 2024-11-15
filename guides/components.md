@@ -1,6 +1,6 @@
 # components - File Directory Guide
 
-This document describes the organization of the components in your project.
+This document describes the organization of the components.
 
 ---
 

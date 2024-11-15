@@ -1,6 +1,6 @@
 # hooks - File Directory Guide
 
-This document describes the organization of the hooks in your project.
+This document describes the organization of the hooks.
 
 ---
 
