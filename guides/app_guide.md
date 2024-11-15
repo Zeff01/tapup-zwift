@@ -1,195 +1,172 @@
 # app - File Directory Guide
 
-This document provides an overview of the file structure within the `app` folder of the TAPU-ZWIFT project. It includes descriptions of each folder and its contents, helping you understand the organization of the app and its components.
+This document provides an overview of the file structure within the `app` folder of the TAPU-ZWIFT project. It helps you understand the organization of the app and its components.
 
 ---
 
 ## public
 
-This folder contains static assets and pages that are publicly accessible.
+The `public` folder contains the static files and assets for the app. These files are accessible to users directly.
 
-### layout.tsx
-
-Main layout component for public-facing pages.
-
-### page.tsx
-
-Main entry point for public-facing pages.
+- **layout.tsx**: The main layout component for the public-facing pages.
+- **page.tsx**: The entry point for the public-facing pages.
 
 ### authpages
 
-Contains pages related to user authentication.
+Contains all pages related to user authentication, including login, signup, and password-related actions.
 
-#### password
+- **password**
+  - **layout.tsx**: The layout for password-related pages.
+  - **forgotPassword/page.tsx**: Page for the forgot password process.
+  - **passwordResetComplete/page.tsx**: Page shown after a successful password reset.
+  - **resetPassword/page.tsx**: Page for resetting the password.
+- **login/page.tsx**: The login page for user authentication.
+- **signup/page.tsx**: The signup page for new users.
 
-Pages related to password management.
+### \_components
 
-- **layout.tsx**: Layout for the password-related pages.
-- **forgotPassword**
-  - **page.tsx**: Forgot password page.
-- **passwordResetComplete**
-  - **page.tsx**: Password reset completion page.
-- **resetPassword**
-  - **page.tsx**: Reset password page.
+Contains shared components used throughout the auth-related pages.
 
-#### login
-
-Login page for user authentication.
-
-- **page.tsx**: Login page.
-
-#### signup
-
-User registration page.
-
-- **page.tsx**: Signup page.
-
-#### \_components
-
-Shared components used across authentication pages.
-
-- **auth-background.tsx**: Background component for auth pages.
-- **auth-logout.tsx**: Logout component for authentication.
-- **auth-separator.tsx**: Separator component for authentication forms.
-- **forgot-password-form.tsx**: Form for requesting a password reset.
-- **login-form.tsx**: Login form component.
-- **onboard-indicator.tsx**: Onboarding indicator component.
-- **reset-password-form.tsx**: Form for resetting the password.
-- **signup-form.tsx**: Signup form component.
+- **auth-background.tsx**: Background component for the authentication pages.
+- **auth-logout.tsx**: Logout component used in authentication.
+- **auth-separator.tsx**: A separator component used in auth forms.
+- **forgot-password-form.tsx**: Form component for the forgot password process.
+- **login-form.tsx**: Form component for logging in users.
+- **onboard-indicator.tsx**: Onboarding step indicator.
+- **reset-password-form.tsx**: Form component for resetting passwords.
+- **signup-form.tsx**: Form component for signing up users.
 - **social-buttons.tsx**: Social media authentication buttons.
 
 ### about
 
-About page.
+About the app page.
 
-- **page.tsx**: About page content.
+- **page.tsx**: Displays information about the app.
 
 ### features
 
-Features page describing the app’s key functionalities.
+Shows the features of the app.
 
-- **page.tsx**: Features page content.
+- **page.tsx**: Displays the key features of the app.
 
 ### testimonials
 
-Testimonials page displaying user feedback.
+A page displaying user testimonials.
 
-- **page.tsx**: Testimonials content.
+- **page.tsx**: Displays customer feedback and testimonials.
 
 ### user
 
-User-specific pages.
+User-specific pages, generally showing user profiles.
 
 - **[id]**
-  - **loading.tsx**: Loading state for user profile.
-  - **page.tsx**: User profile page content.
+  - **loading.tsx**: The loading state for user profiles.
+  - **page.tsx**: The user profile page.
 
 ---
 
 ## secured
 
-This folder contains pages and components for authenticated users only.
+This folder contains secured pages and sections for authenticated users only.
 
 ### admin
 
-Admin section for managing the app’s backend.
+Admin section for managing the app's backend.
 
 - **layout.tsx**: Layout for the admin dashboard.
 
 #### users
 
-User management section in the admin dashboard.
+Manages the users section within the admin dashboard.
 
-- **loading.tsx**: Loading state for user management.
-- **page.tsx**: User management page.
+- **loading.tsx**: The loading state for user management.
+- **page.tsx**: Displays the user management page.
 
 #### components
 
-Components specific to the user management section.
+Components used for managing users in the admin section.
 
-- **columns.tsx**: Table column components.
-- **data-table.tsx**: Table displaying user data.
-- **TableComponent.tsx**: Generic table component.
+- **columns.tsx**: Defines the columns for user data tables.
+- **data-table.tsx**: A table component displaying user data.
+- **TableComponent.tsx**: A reusable table component.
 
 ### user
 
-Regular user pages.
+Pages for regular users, displaying user dashboards and other actions.
 
 #### boarded
 
-Section for boarded users.
+The section for users who have completed onboarding.
 
-- **layout.tsx**: Layout for boarded users' section.
+- **layout.tsx**: The layout for the boarded user section.
 
 ##### action
 
-Components for user actions.
+Displays the actions available to boarded users.
 
-- **loading.tsx**: Loading state for user actions.
-- **page.tsx**: Page displaying user actions.
+- **loading.tsx**: The loading state for user actions.
+- **page.tsx**: Displays available actions for boarded users.
 
 ##### card
 
-User cards with dynamic data.
+Displays individual user cards.
 
 - **[userCode]**
-  - **loading.tsx**: Loading state for user card.
-  - **page.tsx**: User card page content.
+  - **loading.tsx**: The loading state for a user card.
+  - **page.tsx**: Displays the individual user card.
 
 ##### dashboard
 
-Dashboard for the user.
+User dashboard section.
 
-- **page.tsx**: User dashboard content.
+- **page.tsx**: Displays the user's dashboard.
 
 #### \_components
 
-Components used within the user dashboard.
+Reusable components for the user dashboard.
 
-- **dashboard.tsx**: Dashboard component.
+- **dashboard.tsx**: The component for displaying the user dashboard.
 
 ##### update
 
-Section for updating user information.
+Pages for updating user information.
 
 - **[id]**
-  - **loading.tsx**: Loading state for update page.
-  - **page.tsx**: User update page content.
-  - **UpdateComponent.tsx**: Component for updating user data.
+  - **loading.tsx**: The loading state for updating user data.
+  - **page.tsx**: The page for updating user information.
+  - **UpdateComponent.tsx**: A component for updating user data.
 
 #### boarding
 
-Boarding process for users.
+Pages related to the onboarding process for new users.
 
-- **layout.tsx**: Layout for the onboarding section.
+- **layout.tsx**: The layout for the onboarding section.
 
 ##### onboarding
 
-Onboarding page for new users.
+The actual onboarding page for new users.
 
-- **loading.tsx**: Loading state for onboarding page.
-- **page.tsx**: Onboarding page content.
+- **loading.tsx**: The loading state for onboarding.
+- **page.tsx**: Displays the onboarding page.
 
 ##### template
 
-Template pages for onboarding.
+Template for onboarding steps.
 
 - **[id]**
-  - **page.tsx**: Template page content.
+  - **page.tsx**: Displays the onboarding template page.
 
 ---
 
 ## edit
 
-This folder contains components related to the editing functionality.
+This section contains pages and components for editing user data or settings.
 
-### page.tsx
-
-Edit page for making changes to user data or settings.
+- **page.tsx**: The main edit page for user data.
 
 ### \_components
 
-Components used in the edit section.
+Components for the editing page.
 
-- **editor-sidebar.tsx**: Sidebar component for editing.
+- **editor-sidebar.tsx**: Sidebar for the editor page.
 - **settings.tsx**: Settings component for configuring user preferences.
