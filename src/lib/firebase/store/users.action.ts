@@ -18,6 +18,7 @@ import { createUserLink } from "@/lib/utils";
 import { getDownloadURL, ref, uploadBytesResumable } from "firebase/storage";
 import revalidateUserPath from "./user.revalidate";
 import { toast } from "react-toastify";
+import { revalidateTag } from "next/cache";
 
 type UserCodeLink = {
   userCode: string;
@@ -109,6 +110,7 @@ export const updateUserById = async (user_id: string, user: Partial<Users>) => {
 
     console.log("Document updated with ID: ", user_id);
     toast.success("User updated successfully");
+    revalidateTag("current-active-user");
     return true;
   } catch (error: any) {
     toast.error("Something went wrong");

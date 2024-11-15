@@ -1,10 +1,13 @@
 "use client";
 import Image from "next/image";
+import dynamic from "next/dynamic";
 import GridLoader from "react-spinners/GridLoader";
+
+// const GridLoader = dynamic(() => import("react-spinners/GridLoader"));
 
 export default function LoadingLogo() {
   return (
-    <div className="bg-background w-screen h-screen flex flex-col items-center justify-center">
+    <div className="bg-background flex-1 flex flex-col items-center justify-center">
       <div className="flex flex-col items-center">
         <GridLoader size={20} color="#6150EB" />
         <Image
