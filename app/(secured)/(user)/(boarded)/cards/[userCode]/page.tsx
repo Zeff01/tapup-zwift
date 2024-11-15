@@ -73,10 +73,11 @@ export default function Card() {
   }, [dlTimeout]);
 
   return (
-    <div className="bg-custom-black w-full h-screen flex flex-col items-center px-2 py-16 gap-y-4 overflow-y-hidden">
+    <div className="bg-custom-black w-full flex-1 flex flex-col items-center px-2 py-16 gap-y-4">
+      {/* w-[350px] */}
       <div
         ref={cardRef}
-        className={`text-black dark:text-black relative w-[400px] aspect-[1.5882] p-2 shadow-md rounded-md`}
+        className={`text-black dark:text-black relative w-[400px] scale-[0.8] lg:scale-100 aspect-[1.5882] p-5 shadow-md rounded-md`}
         style={{ backgroundColor: "white" }}
       >
         {user ? (

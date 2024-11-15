@@ -9,29 +9,16 @@ import {
   FacebookAuthProvider,
   sendPasswordResetEmail,
   confirmPasswordReset,
-  EmailAuthProvider,
-  getAuth,
-  fetchSignInMethodsForEmail,
-  linkWithPopup,
 } from "firebase/auth";
 import { firebaseAuth, firebaseDb } from "@/src/lib/firebase/config/firebase";
 import { createSession, deleteSession } from "./session";
-import {
-  setDoc,
-  doc,
-  serverTimestamp,
-  getDoc,
-  collection,
-  query,
-  where,
-  limit,
-  getDocs,
-} from "firebase/firestore";
+import { setDoc, doc, serverTimestamp, getDoc } from "firebase/firestore";
 import { toast } from "react-toastify";
 import { FirebaseError } from "firebase/app";
 import { z } from "zod";
 import { signupSchema } from "@/schema";
 import { USER_ROLE_ENUMS } from "@/constants";
+import { unstable_cache } from "next/cache";
 export const onAuthStateChanged = (callback: (user: User | null) => void) => {
   return _onAuthStateChanged(firebaseAuth, callback);
 };
@@ -153,21 +140,56 @@ export const signOutHandler = async () => {
   await deleteSession();
 };
 
+// export const currentAuthUserDetails = (id: string) =>
+//   unstable_cache(async () => {
+//     try {
+//       if (!id) {
+//         console.error("Invalid user ID");
+//         return null;
+//       }
+
+//       const userRef = doc(firebaseDb, "user-account", id);
+//       const docSnap = await getDoc(userRef);
+
+//       if (!docSnap.exists()) {
+//         console.log("No such document");
+//         return null;
+//       }
+
+//       return docSnap.data();
+//     } catch (error) {
+//       if (error instanceof FirebaseError) {
+//         toast.error(error.message);
+//         return null;
+//       }
+//       console.error(error);
+//       return null;
+//     }
+//   }, [id]);
+
 export const currentAuthUserDetails = async (id: string) => {
   try {
+    if (!id) {
+      console.error("Invalid user ID");
+      return null;
+    }
+
     const userRef = doc(firebaseDb, "user-account", id);
     const docSnap = await getDoc(userRef);
+
     if (!docSnap.exists()) {
       console.log("No such document");
-      return;
+      return null;
     }
+
     return docSnap.data();
   } catch (error) {
     if (error instanceof FirebaseError) {
-      toast.error(error.code);
-      return;
+      toast.error(error.message);
+      return null;
     }
-    console.log(error);
+    console.error(error);
+    return null;
   }
 };
 
