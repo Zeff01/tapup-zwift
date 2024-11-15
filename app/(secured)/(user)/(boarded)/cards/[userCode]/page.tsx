@@ -77,7 +77,7 @@ export default function Card() {
       {/* w-[350px] */}
       <div
         ref={cardRef}
-        className={`text-black dark:text-black relative w-[400px] scale-[0.8] lg:scale-100 check aspect-[1.5882] p-5 shadow-md rounded-md`}
+        className={`text-black dark:text-black relative w-[400px] scale-[0.8] lg:scale-100 aspect-[1.5882] p-5 shadow-md rounded-md`}
         style={{ backgroundColor: "white" }}
       >
         {user ? (
