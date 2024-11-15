@@ -1,85 +1,117 @@
 # app - File Directory Guide
 
-This document provides an overview of the file structure within the `app` folder of the TAPU-ZWIFT project. It includes descriptions of each subfolder and its contents, helping you understand the organization of this part of the app and its components.
+This document provides an overview of the file structure within the `app` folder of the TAPU-ZWIFT project. It includes descriptions of each subfolder and its contents, helping you understand the organization of the app and its components.
+
+---
+
+## Root Directory
+
+- **favicon.ico**: The website's favicon.
+- **globals.css**: Global styles for the app.
+- **layout.tsx**: Main layout component for rendering common UI elements across pages.
+- **loading.tsx**: Loading component for handling page load states.
 
 ---
 
 ## public
 
-This folder contains static assets and pages that are publicly accessible, including user authentication pages, feature-related pages, and user-specific dynamic content.
+This folder contains static assets and pages that are publicly accessible.
 
-### authpages
+### Files:
 
-Contains all pages related to user authentication.
+- **layout.tsx**: Layout component for public-facing pages.
+- **page.tsx**: Main entry point for public-facing pages.
 
-- **password**: Contains pages related to password management.
+### Subfolders:
 
-  - `forgotPassword`: The page where users can initiate the password recovery process.
-  - `passwordResetComplete`: The page displayed after a successful password reset.
-  - `resetPassword`: The page where users can set a new password.
-
-- **login**: The login page where users can sign in.
-- **signup**: The page where new users can create an account.
-- **\_components**: Shared components used across authentication pages.
-
-### about
-
-The page that provides information about the app or the company.
-
-### features
-
-The page that outlines the key features of the app.
-
-### testimonials
-
-The page that displays testimonials from users.
-
-### user
-
-This folder contains user-specific pages.
-
-- `[id]`: A dynamic folder that contains the profile page for each user.
+- **authpages**: Pages related to user authentication.
+  - **password**: Contains pages related to password management.
+    - **layout.tsx**: Layout for the password-related pages.
+    - **forgotPassword**: Page for users to request a password reset.
+      - **page.tsx**: Forgot password page.
+    - **passwordResetComplete**: Page shown after a successful password reset.
+      - **page.tsx**: Password reset completion page.
+    - **resetPassword**: Page where users reset their password.
+      - **page.tsx**: Reset password page.
+  - **login**: Login page for user authentication.
+    - **page.tsx**: Login page.
+  - **signup**: User registration page.
+    - **page.tsx**: Signup page.
+  - **\_components**: Shared components used across authentication pages.
+    - **auth-background.tsx**: Background component for auth pages.
+    - **auth-logout.tsx**: Logout component for authentication.
+    - **auth-separator.tsx**: Separator component for authentication forms.
+    - **forgot-password-form.tsx**: Form for requesting a password reset.
+    - **login-form.tsx**: Login form component.
+    - **onboard-indicator.tsx**: Onboarding indicator component.
+    - **reset-password-form.tsx**: Form for resetting the password.
+    - **signup-form.tsx**: Signup form component.
+    - **social-buttons.tsx**: Social media authentication buttons.
+- **about**: About page.
+  - **page.tsx**: About page content.
+- **features**: Features page describing the app’s key functionalities.
+  - **page.tsx**: Features page content.
+- **testimonials**: Testimonials page displaying user feedback.
+  - **page.tsx**: Testimonials content.
+- **user**: User-specific pages.
+  - **[id]**: Dynamic user profile pages.
+    - **loading.tsx**: Loading state for user profile.
+    - **page.tsx**: User profile page content.
 
 ---
 
 ## secured
 
-This folder contains pages and components accessible only to authenticated users.
+This folder contains pages and components for authenticated users only.
 
-### admin
+### Subfolders:
 
-This folder holds pages related to the admin dashboard and user management.
-
-- **users**: A section for managing users within the admin dashboard.
-  - `components`: Components specific to user management.
-
-### user
-
-Contains pages for regular authenticated users.
-
-- **boarded**: The section for users who have completed their onboarding.
-
-  - `action`: Components that allow users to take actions.
-  - `card`: User cards with dynamic data.
-
-    - `[userCode]`: User-specific card data.
-
-  - **dashboard**: The user's main dashboard.
-
-    - `_components`: Components specific to the dashboard.
-
-  - **update**: A section for users to update their information.
-    - `[id]`: Pages for updating user data.
-
-- **boarding**: Pages related to the user onboarding process.
-  - `onboarding`: Contains pages that guide users through onboarding.
-  - `template`: Template pages for onboarding.
-    - `[id]`: Dynamic template pages for onboarding.
+- **admin**: Admin section for managing the app’s backend.
+  - **layout.tsx**: Layout for the admin dashboard.
+  - **users**: User management section in the admin dashboard.
+    - **loading.tsx**: Loading state for user management.
+    - **page.tsx**: User management page.
+    - **components**: Components specific to the user management section.
+      - **columns.tsx**: Table column components.
+      - **data-table.tsx**: Table displaying user data.
+      - **TableComponent.tsx**: Generic table component.
+- **user**: Regular user pages.
+  - **boarded**: Section for boarded users.
+    - **layout.tsx**: Layout for boarded users' section.
+    - **action**: Components for user actions.
+      - **loading.tsx**: Loading state for user actions.
+      - **page.tsx**: Page displaying user actions.
+    - **card**: User cards with dynamic data.
+      - **[userCode]**: Dynamic user card data.
+        - **loading.tsx**: Loading state for user card.
+        - **page.tsx**: User card page content.
+    - **dashboard**: Dashboard for the user.
+      - **page.tsx**: User dashboard content.
+      - **\_components**: Components used within the user dashboard.
+        - **dashboard.tsx**: Dashboard component.
+    - **update**: Section for updating user information.
+      - **[id]**: Dynamic page for updating user info.
+        - **loading.tsx**: Loading state for update page.
+        - **page.tsx**: User update page content.
+        - **UpdateComponent.tsx**: Component for updating user data.
+  - **boarding**: Boarding process for users.
+    - **layout.tsx**: Layout for the onboarding section.
+    - **onboarding**: Onboarding page for new users.
+      - **loading.tsx**: Loading state for onboarding page.
+      - **page.tsx**: Onboarding page content.
+    - **template**: Template pages for onboarding.
+      - **[id]**: Dynamic onboarding template pages.
+        - **page.tsx**: Template page content.
 
 ---
 
 ## edit
 
-This folder contains components related to editing user information.
+This folder contains components related to the editing functionality.
 
-- **\_components**: Components for editing functionality.
+### Files:
+
+- **page.tsx**: Edit page for making changes to user data or settings.
+- **\_components**: Components used in the edit section.
+  - **editor-sidebar.tsx**: Sidebar component for editing.
+  - **settings.tsx**: Settings component for configuring user preferences.
