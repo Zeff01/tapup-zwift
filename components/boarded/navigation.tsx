@@ -52,7 +52,6 @@ const NavigationBoarded = ({ user, signOut }: Props) => {
           const href = {
             "/dashboard": "/dashboard",
             "/update": `/update/${user?.uid}`,
-            "/cards": `/cards/${user?.uid}`,
           };
           return (
             <Link

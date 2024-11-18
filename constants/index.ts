@@ -243,3 +243,8 @@ export const menuItems = [
   { icon: CgProfile, title: "Profile", href: "/update" },
   { icon: TbCards, title: "Cards", href: "/cards" },
 ];
+
+export const publicDomain =
+  process.env.NODE_ENV === "development"
+    ? process.env.NEXT_PUBLIC_RESET_PASSWORD_URL_DEV
+    : process.env.NEXT_PUBLIC_RESET_PASSWORD_URL_PROD;

@@ -103,6 +103,15 @@ export default function Cropper({
   const [loading, setLoading] = useState(false);
   const [imageLoaded, setImageLoaded] = useState(false);
 
+  useEffect(() => {
+    const body = document.body;
+    if (showModal) {
+      body.style.overflow = "hidden";
+      return;
+    }
+    body.style.overflow = "auto";
+  }, [showModal]);
+
   function toggleModal() {
     setCrop(undefined);
     setImageLoaded(false);
@@ -283,7 +292,7 @@ export default function Cropper({
       {createPortal(
         <>
           {showModal && (
-            <div className="z-10 fixed top-0 right-0 w-screen h-screen">
+            <div className="z-50 fixed top-0 right-0 w-screen h-screen">
               <div className="z-20 w-full h-full bg-black opacity-80" />
               <div className=" z-30 absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[500px] h-full bg-custom-light flex flex-col items-center gap-y-8 overflow-y-scroll  justify-between">
                 <div className="pt-8 w-full flex flex-col items-center">

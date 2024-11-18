@@ -96,7 +96,13 @@ export const getAllUsers = async (): Promise<Users[]> => {
   }
 };
 
-export const updateUserById = async (user_id: string, user: Partial<Users>) => {
+export const updateUserById = async ({
+  user_id,
+  user,
+}: {
+  user_id: string;
+  user: Partial<Users>;
+}) => {
   try {
     const userCollection = collection(firebaseDb, "user-account");
     console.log({ user_id, user });
@@ -110,7 +116,7 @@ export const updateUserById = async (user_id: string, user: Partial<Users>) => {
 
     console.log("Document updated with ID: ", user_id);
     toast.success("User updated successfully");
-    revalidateTag("current-active-user");
+
     return true;
   } catch (error: any) {
     toast.error("Something went wrong");
@@ -118,6 +124,7 @@ export const updateUserById = async (user_id: string, user: Partial<Users>) => {
     return false;
   }
 };
+
 export const getUserBySubId = async (id: string): Promise<Users | null> => {
   try {
     const userRef = doc(firebaseDb, "user-account", id);
