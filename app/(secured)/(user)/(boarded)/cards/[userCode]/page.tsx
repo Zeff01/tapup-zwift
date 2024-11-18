@@ -77,11 +77,11 @@ export default function Card() {
       {/* w-[350px] */}
       <div
         ref={cardRef}
-        className={`text-black dark:text-black relative w-[400px] scale-[0.8] lg:scale-100 aspect-[1.5882] p-5 shadow-md rounded-md`}
+        className={`text-black dark:text-black relative w-[400px] scale-[0.8] lg:scale-100 aspect-[1.5882]  shadow-md rounded-md`}
         style={{ backgroundColor: "white" }}
       >
         {user ? (
-          <div className="w-full h-full flex flex-row gap-x-2 justify-between">
+          <div className="w-full h-full flex flex-row gap-x-2 justify-between p-5 ">
             <div className="flex-grow flex flex-col justify-between">
               <div id="text-top">
                 <p className="text-[12px]">
@@ -114,7 +114,7 @@ export default function Card() {
               </div>
             </div>
             <div>
-              <QRCodeSVG value={user.user_link as string} size={150} />
+              <QRCodeSVG value={user.user_link as string} size={100} />
             </div>
           </div>
         ) : (
