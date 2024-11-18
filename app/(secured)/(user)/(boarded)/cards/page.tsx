@@ -1,8 +1,6 @@
-"use client";
+import Cards from "./_components/cards";
 
-import Cards from "./components/cards";
-
-export default function CardPage() {
+export default async function CardPage() {
   return (
     <div className="flex-1">
       <Cards />

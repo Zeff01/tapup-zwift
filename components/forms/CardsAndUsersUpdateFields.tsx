@@ -24,7 +24,7 @@ export type ChosenTemplateType = z.infer<
   typeof createPortfolioSchema
 >["chosenTemplate"];
 
-export default function UpdateComponent({
+export default function CardsAndUsersFields({
   userData,
   currentUser = true,
 }: {

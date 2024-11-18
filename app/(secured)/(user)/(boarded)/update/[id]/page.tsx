@@ -1,7 +1,7 @@
 "use client";
 
 import { getUserBySubId } from "@/src/lib/firebase/store/users.action";
-import UpdateComponent from "./UpdateComponent";
+import CardAndUserFields from "@/components/forms/CardsAndUsersUpdateFields";
 import { useEffect, useState } from "react";
 import Loading from "./loading";
 import {
@@ -49,7 +49,7 @@ export default function UpdatePage({ params }: { params: { id: string } }) {
   }
 
   if (user?.role === USER_ROLE_ENUMS.ADMIN && params.id !== user.uid)
-    return <UpdateComponent currentUser={false} userData={fetchUser} />;
+    return <CardAndUserFields currentUser={false} userData={fetchUser} />;
 
-  return <UpdateComponent userData={user!} />;
+  return <CardAndUserFields userData={user!} />;
 }
