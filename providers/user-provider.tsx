@@ -8,8 +8,7 @@ import {
 import { updateUserById } from "@/src/lib/firebase/store/users.action";
 import { Users } from "@/src/lib/firebase/store/users.type";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
-import { createContext, useContext, useEffect, useMemo, useState } from "react";
-import { toast } from "react-toastify";
+import { createContext, useContext, useMemo } from "react";
 
 export interface ExtendedUserInterface extends Users {
   uid: string;
@@ -38,9 +37,6 @@ export const UserProviderContext = createContext<
 export const UserContextProvider = ({ children }: any) => {
   const queryClient = useQueryClient();
 
-  // const [user, setUser] = useState<UserState>(null);
-  // const [isLoading, setIsLoading] = useState(false);
-
   const { userUid } = useUserSession();
   const isAuthenticated = useMemo(() => Boolean(userUid), [userUid]);
 
@@ -65,51 +61,17 @@ export const UserContextProvider = ({ children }: any) => {
 
   const isLoading = isUserLoading || isLoadingUpdateMuitation;
 
-  // console.log(isLoading);
-
-  // useEffect(() => {
-  //   (async () => {
-  //     if (!userUid) return;
-  //     setIsLoading(true);
-  //     const userData = await currentAuthUserDetails(userUid);
-  //     if (!userData) {
-  //       setIsLoading(false);
-  //       return;
-  //     }
-  //     setUser({
-  //       ...(userData as ExtendedUserInterface),
-  //       uid: userUid,
-  //     });
-
-  //     setIsLoading(false);
-  //   })();
-  // }, [userUid]);
-
   const updateUser = async (
     uid: string,
     userData: ExtendedUserInterface,
     currentUser = true
   ) => {
     if (!currentUser) return;
-    console.log("wewwew");
     updateUserMutation({ user_id: uid, user: userData });
-    // setIsLoading(true);
-    // const updateStatus = await updateUserById(uid, userData);
-    // if (!updateStatus) {
-    //   setIsLoading(false);
-    //   return;
-    // }
-    // if (!currentUser) {
-    //   setIsLoading(false);
-    //   return;
-    // }
-    // setUser((prev) => ({ ...prev, ...userData }));
-    // setIsLoading(false);
   };
 
   const logOutUser = async () => {
     await signOutHandler();
-    // setUser(null);
   };
 
   const value = {
