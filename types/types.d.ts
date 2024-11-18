@@ -1,4 +1,5 @@
 import { carouselCards } from "@/constants";
+import { Users } from "@/src/lib/firebase/store/users.type";
 
 export type UserProfile = {
   coverPhotoUrl?: string;
@@ -22,6 +23,10 @@ export type UserProfile = {
   skypeInviteUrl?: string;
   websiteUrl?: string;
 };
+
+export interface Card extends Users {
+  owner: string;
+}
 
 export type Template = {
   id: number;

@@ -74,7 +74,7 @@ const OverlayMenu = () => {
             const href = {
               "/dashboard": "/dashboard",
               "/update": `/update/${user?.uid}`,
-              "/cards": `/cards/${user?.uid}`,
+              // "/cards": `/cards/${user?.uid}`,
             };
             return (
               <Link

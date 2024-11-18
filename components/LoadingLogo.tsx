@@ -7,7 +7,7 @@ import GridLoader from "react-spinners/GridLoader";
 
 export default function LoadingLogo() {
   return (
-    <div className="bg-background flex-1 flex flex-col items-center justify-center">
+    <div className="bg-background flex-1 flex flex-col items-center justify-center h-full">
       <div className="flex flex-col items-center">
         <GridLoader size={20} color="#6150EB" />
         <Image

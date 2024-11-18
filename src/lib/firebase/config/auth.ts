@@ -18,7 +18,6 @@ import { FirebaseError } from "firebase/app";
 import { z } from "zod";
 import { signupSchema } from "@/schema";
 import { USER_ROLE_ENUMS } from "@/constants";
-import { unstable_cache } from "next/cache";
 export const onAuthStateChanged = (callback: (user: User | null) => void) => {
   return _onAuthStateChanged(firebaseAuth, callback);
 };
@@ -167,11 +166,11 @@ export const signOutHandler = async () => {
 //     }
 //   }, [id]);
 
-export const currentAuthUserDetails = async (id: string) => {
+export const currentAuthUserDetails = async ({ id }: { id: string }) => {
   try {
     if (!id) {
       console.error("Invalid user ID");
-      return null;
+      return;
     }
 
     const userRef = doc(firebaseDb, "user-account", id);
@@ -179,17 +178,17 @@ export const currentAuthUserDetails = async (id: string) => {
 
     if (!docSnap.exists()) {
       console.log("No such document");
-      return null;
+      return;
     }
 
     return docSnap.data();
   } catch (error) {
     if (error instanceof FirebaseError) {
       toast.error(error.message);
-      return null;
+      return;
     }
     console.error(error);
-    return null;
+    return;
   }
 };
 
