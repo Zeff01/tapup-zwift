@@ -2,7 +2,7 @@
 import { useState, useEffect } from "react";
 import Image from "next/image";
 import { IoMdClose } from "react-icons/io";
-import { Photo, Users } from "@/src/lib/firebase/store/users.type";
+import { Photo } from "@/src/lib/firebase/store/users.type";
 import { Loader2, LoaderCircle } from "lucide-react";
 import Cropper from "@/components/Cropper";
 import { useForm } from "react-hook-form";
@@ -15,10 +15,13 @@ import SocialLinksForm from "@/components/forms/SocialLinkForm";
 import PersonalInfoForm from "@/components/forms/PersonalInfoForm";
 import CompanyInfoForm from "@/components/forms/CompanyInfoForm";
 import ImageLoaded from "@/components/ImageLoaded";
+import { Card } from "@/types/types";
 import {
   ExtendedUserInterface,
   useUserContext,
 } from "@/providers/user-provider";
+import { useMutation, useQueryClient } from "@tanstack/react-query";
+import { updateCardById } from "@/src/lib/firebase/store/card.action";
 
 export type ChosenTemplateType = z.infer<
   typeof createPortfolioSchema
@@ -26,12 +29,15 @@ export type ChosenTemplateType = z.infer<
 
 export default function CardsAndUsersFields({
   userData,
-  currentUser = true,
+  isCurrentUser,
+  isCard,
 }: {
   userData: ExtendedUserInterface;
-  currentUser?: boolean;
+  isCurrentUser?: boolean;
+  isCard?: boolean;
 }) {
-  const { updateUser, isLoading } = useUserContext();
+  const queryClient = useQueryClient();
+  const { user, updateUser, isLoading: userContextLoading } = useUserContext();
 
   const [photo, setPhoto] = useState<Photo | null>(null);
   const [imageUrl, setImageUrl] = useState<string | null>(
@@ -103,11 +109,26 @@ export default function CardsAndUsersFields({
     methods.setValue("chosenTemplate", selectedTemplateId);
   }, [coverPhotoUrl, imageUrl, serviceImageUrls, selectedTemplateId, methods]);
 
+  const { mutate: updateCardMutation, isPending: isLoadingUpdateMutation } =
+    useMutation({
+      mutationFn: updateCardById,
+      onSuccess: () => {
+        queryClient.invalidateQueries({ queryKey: ["cards", user?.uid] });
+      },
+    });
+
   const formSubmit = async (data: z.infer<typeof createPortfolioSchema>) => {
     if (!userData) return;
-    const id = currentUser ? userData.uid : userData.id;
-    await updateUser(id as string, data as ExtendedUserInterface, currentUser);
+    if (isCard) {
+      updateCardMutation({ user_id: userData.id!, user: data as Card });
+      return;
+    }
+    const id = isCurrentUser ? userData.uid : userData.id || userData.uid;
+    if (!id) return;
+    await updateUser(id as string, data as ExtendedUserInterface);
   };
+
+  const isLoading = userContextLoading || isLoadingUpdateMutation;
 
   return (
     <main className="flex flex-col overflow-auto py-8 px-6 sm:px-0 mx-auto h-full relative w-full">
