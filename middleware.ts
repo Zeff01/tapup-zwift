@@ -10,10 +10,6 @@ import {
   DASHBOARD_ROUTE,
   USER_ROUTE,
   UPDATE_ROUTE,
-  CARD_PATH,
-  ADMIN_ONLY_PATH,
-  UPDATE_PATH,
-  ONBOARDING_PATH,
   ACTION_ROUTE,
   RESET_PASSWORD_ROUTE,
   FORGOT_PASSWORD_ROUTE,
@@ -67,11 +63,5 @@ export default async function middleware(request: NextRequest) {
 }
 
 export const config = {
-  matcher: [
-    "/((?!api|_next/static|_next/image|favicon.ico).*)",
-    ONBOARDING_PATH,
-    CARD_PATH,
-    ADMIN_ONLY_PATH,
-    UPDATE_PATH,
-  ],
+  matcher: ["/((?!api|_next/static|_next/image|favicon.ico).*)"],
 };
