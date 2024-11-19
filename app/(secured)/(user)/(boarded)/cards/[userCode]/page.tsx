@@ -75,7 +75,6 @@ export default function Card() {
 
   return (
     <div className="bg-custom-black w-full flex-1 flex flex-col items-center px-2 py-16 gap-y-4">
-      {/* w-[350px] */}
       <div
         ref={cardRef}
         className={`text-black dark:text-black relative w-[400px] scale-[0.8] lg:scale-100 aspect-[1.5882]  shadow-md rounded-md`}
