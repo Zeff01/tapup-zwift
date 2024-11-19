@@ -4,11 +4,10 @@ import { UserState } from "@/providers/user-provider";
 import { deleteCardById } from "@/src/lib/firebase/store/card.action";
 import { Card } from "@/types/types";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
-import { Edit2, Router, Trash, View } from "lucide-react";
+import { Edit2, Router, Trash, View, Link2, Copy } from "lucide-react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import React from "react";
-import { FiCopy, FiLink } from "react-icons/fi";
 import { toast } from "react-toastify";
 
 type Prop = {
@@ -85,8 +84,8 @@ const DigitalCard = ({ card, confirm, user }: Prop) => {
           className="cursor-pointer hover:text-destructive "
         />
         <Edit2 size={20} className="cursor-pointer" onClick={handleUpdate} />
-        <FiCopy size={20} onClick={handleCopy} />
-        <FiLink size={20} onClick={handleLink} />
+        <Copy size={20} onClick={handleCopy} />
+        <Link2 size={20} onClick={handleLink} />
       </div>
     </div>
   );
