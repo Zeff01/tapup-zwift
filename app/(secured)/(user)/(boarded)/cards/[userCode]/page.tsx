@@ -1,4 +1,5 @@
 "use client";
+
 import { QRCodeSVG } from "qrcode.react";
 import Image from "next/image";
 import { useEffect, useRef, useState } from "react";
@@ -21,7 +22,7 @@ export default function Card() {
     if (!data) {
       toast.error("user not found.");
       setTimeout(() => {
-        router.push("/");
+        router.push("/cards");
       }, 500);
       return;
     }
@@ -33,7 +34,7 @@ export default function Card() {
     if (!card || !user) return;
     const textTop = document.getElementById("text-top") as HTMLDivElement;
     textTop.style.transform = "translateY(-8px)";
-    await html2canvas(card, { scale: 1.1 }).then((canvas) => {
+    await html2canvas(card, { scale: 4 }).then((canvas) => {
       const imgData = canvas.toDataURL("image/png");
 
       // Create a link element
@@ -74,7 +75,6 @@ export default function Card() {
 
   return (
     <div className="bg-custom-black w-full flex-1 flex flex-col items-center px-2 py-16 gap-y-4">
-      {/* w-[350px] */}
       <div
         ref={cardRef}
         className={`text-black dark:text-black relative w-[400px] scale-[0.8] lg:scale-100 aspect-[1.5882]  shadow-md rounded-md`}
@@ -94,15 +94,15 @@ export default function Card() {
               </div>
               <div className="flex flex-col gap-y-[2px]">
                 {user.profilePictureUrl && (
-                  <Image
-                    src={user.profilePictureUrl}
-                    width={70}
-                    height={70}
-                    alt="user photo"
-                    style={{ objectFit: "cover" }}
-                    priority
-                    className="w-[70px] h-[70px] shadow-sm rounded-full"
-                  />
+                  <div className="shadow-sm rounded-full relative h-[70px] w-[70px] overflow-hidden">
+                    <Image
+                      src={user.profilePictureUrl}
+                      fill
+                      alt="user photo"
+                      priority
+                      className="w-full h-full object-fill"
+                    />
+                  </div>
                 )}
                 <div>
                   <p className="font-semibold text-sm text-black">
