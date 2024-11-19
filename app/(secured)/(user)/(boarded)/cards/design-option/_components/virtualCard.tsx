@@ -10,6 +10,8 @@ import grids from "@/public/images/grid.png";
 
 import React from "react";
 import { useRouter } from "next/navigation";
+import Link from "next/link";
+import TapupLogo from "@/components/svgs/TapupLogo";
 
 export default function VirtualCard() {
   const router = useRouter();
@@ -20,16 +22,13 @@ export default function VirtualCard() {
   return (
     <div className="flex relative flex-col h-full  w-full text-primary px-5">
       <div className=" flex flex-shrink flex-col items-center justify-center gap-y-9 py-10">
-        <button className="absolute top-5 left-5 text-3xl text-primary">
+        <Link
+          href={"/cards"}
+          className="absolute top-5 left-5 text-3xl text-primary"
+        >
           <IoArrowBack />
-        </button>
-        <Image
-          src={logo}
-          className="pt-6"
-          alt="TapUp Logo"
-          height={100}
-          width={100}
-        />
+        </Link>
+        <TapupLogo className="mt-6" />
         <h1 className="font-semibold text-2xl md:text-3xl xl:text-4xl w-full text-start md:text-center">
           Create new virtual card
         </h1>
