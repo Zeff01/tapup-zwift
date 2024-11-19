@@ -105,7 +105,6 @@ export const updateUserById = async ({
 }) => {
   try {
     const userCollection = collection(firebaseDb, "user-account");
-    console.log({ user_id, user });
     const userRef = doc(userCollection, user_id);
 
     await setDoc(
@@ -116,12 +115,10 @@ export const updateUserById = async ({
 
     console.log("Document updated with ID: ", user_id);
     toast.success("User updated successfully");
-
-    return true;
   } catch (error: any) {
     toast.error("Something went wrong");
     console.error("Error updating document: ", error);
-    return false;
+    throw error;
   }
 };
 

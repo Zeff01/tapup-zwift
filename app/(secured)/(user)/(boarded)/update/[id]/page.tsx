@@ -49,7 +49,7 @@ export default function UpdatePage({ params }: { params: { id: string } }) {
   }
 
   if (user?.role === USER_ROLE_ENUMS.ADMIN && params.id !== user.uid)
-    return <CardAndUserFields currentUser={false} userData={fetchUser} />;
+    return <CardAndUserFields userData={fetchUser} />;
 
-  return <CardAndUserFields userData={user!} />;
+  return <CardAndUserFields isCurrentUser userData={user!} />;
 }

@@ -35,7 +35,10 @@ const OverlayMenu = () => {
   return (
     <Sheet open={media && openMenu} onOpenChange={handleOpenMenu}>
       <SheetTrigger className="lg:hidden block">
-        <HiMenuAlt3 size={20} className="bg-accent rounded-sm p-1 w-10 h-10" />
+        <HiMenuAlt3
+          size={20}
+          className="bg-accent rounded-sm p-1 w-8 h-8 md:w-10 md:h-10"
+        />
       </SheetTrigger>
 
       <SheetContent
