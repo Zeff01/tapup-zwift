@@ -1,3 +1,5 @@
+"use client";
+
 import { IoArrowBack } from "react-icons/io5";
 import { FaScrewdriverWrench } from "react-icons/fa6";
 
@@ -7,27 +9,35 @@ import Image from "next/image";
 import grids from "@/public/images/grid.png";
 
 import React from "react";
+import { useRouter } from "next/navigation";
+import Link from "next/link";
+import TapupLogo from "@/components/svgs/TapupLogo";
 
 export default function VirtualCard() {
+  const router = useRouter();
+  const handleUseTemplate = () => {
+    console.log("wewew");
+    router.push("/cards/create");
+  };
   return (
     <div className="flex relative flex-col h-full  w-full text-primary px-5">
       <div className=" flex flex-shrink flex-col items-center justify-center gap-y-9 py-10">
-        <button className="absolute top-5 left-5 text-3xl text-primary">
+        <Link
+          href={"/cards"}
+          className="absolute top-5 left-5 text-3xl text-primary"
+        >
           <IoArrowBack />
-        </button>
-        <Image
-          src={logo}
-          className="pt-6"
-          alt="TapUp Logo"
-          height={100}
-          width={100}
-        />
+        </Link>
+        <TapupLogo className="mt-6" />
         <h1 className="font-semibold text-2xl md:text-3xl xl:text-4xl w-full text-start md:text-center">
           Create new virtual card
         </h1>
       </div>
-      <div className="flex flex-col md:flex-row gap-y-4 gap-x-4 w-full flex-grow pb-4 ">
-        <div className=" flex justify-center md:justify-end items-start w-full flex-1">
+      <div className="flex flex-col md:flex-row gap-y-4 gap-x-4 w-full flex-grow pb-4">
+        <div
+          className=" flex justify-center md:justify-end items-start w-full flex-1"
+          onClick={handleUseTemplate}
+        >
           {/* <Input/> */}
           <div className=" flex flex-col gap-y-2 min-h-[400px] rounded-md border cursor-pointer hover:border-green-500 transition-colors duration-300 py-16 px-12">
             <Image

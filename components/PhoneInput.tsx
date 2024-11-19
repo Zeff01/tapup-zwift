@@ -38,6 +38,10 @@ type PhoneInputProps = Omit<
 const PhoneInput: React.ForwardRefExoticComponent<PhoneInputProps> =
   React.forwardRef<React.ElementRef<typeof RPNInput.default>, PhoneInputProps>(
     ({ className, onChange, ...props }, ref) => {
+      const [isMounted, setIsMounted] = React.useState(false);
+      React.useEffect(() => {
+        if (!isMounted) setIsMounted(true);
+      }, [isMounted]);
       return (
         <RPNInput.default
           ref={ref}

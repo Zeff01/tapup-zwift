@@ -7,7 +7,8 @@ import {
 } from "@/src/lib/firebase/config/auth";
 import { updateUserById } from "@/src/lib/firebase/store/users.action";
 import { Users } from "@/src/lib/firebase/store/users.type";
-import { createContext, useContext, useEffect, useMemo, useState } from "react";
+import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
+import { createContext, useContext, useMemo } from "react";
 
 export interface ExtendedUserInterface extends Users {
   uid: string;
@@ -34,56 +35,47 @@ export const UserProviderContext = createContext<
 >(undefined);
 
 export const UserContextProvider = ({ children }: any) => {
-  const [user, setUser] = useState<UserState>(null);
-  const [isLoading, setIsLoading] = useState(false);
+  const queryClient = useQueryClient();
 
   const { userUid } = useUserSession();
   const isAuthenticated = useMemo(() => Boolean(userUid), [userUid]);
 
-  useEffect(() => {
-    (async () => {
-      if (!userUid) return;
-      setIsLoading(true);
-      const userData = await currentAuthUserDetails(userUid);
-      if (!userData) {
-        setIsLoading(false);
-        return;
-      }
-      setUser({
-        ...(userData as ExtendedUserInterface),
-        uid: userUid,
-      });
+  const { data: user, isPending: isUserLoading } = useQuery({
+    queryKey: ["current-active-user", userUid],
+    queryFn: async () => {
+      const data = await currentAuthUserDetails({ id: userUid! });
+      return { uid: userUid, ...data };
+    },
+    enabled: !!userUid,
+  });
 
-      setIsLoading(false);
-    })();
-  }, [userUid]);
+  const { mutate: updateUserMutation, isPending: isLoadingUpdateMuitation } =
+    useMutation({
+      mutationFn: updateUserById,
+      onSuccess: () => {
+        queryClient.invalidateQueries({
+          queryKey: ["current-active-user", user?.uid],
+        });
+      },
+    });
+
+  const isLoading = isUserLoading || isLoadingUpdateMuitation;
 
   const updateUser = async (
     uid: string,
     userData: ExtendedUserInterface,
     currentUser = true
   ) => {
-    setIsLoading(true);
-    const updateStatus = await updateUserById(uid, userData);
-    if (!updateStatus) {
-      setIsLoading(false);
-      return;
-    }
-    if (!currentUser) {
-      setIsLoading(false);
-      return;
-    }
-    setUser((prev) => ({ ...prev, ...userData }));
-    setIsLoading(false);
+    if (!currentUser) return;
+    updateUserMutation({ user_id: uid, user: userData });
   };
 
   const logOutUser = async () => {
     await signOutHandler();
-    setUser(null);
   };
 
   const value = {
-    user,
+    user: user as UserState,
     isAuthenticated,
     isLoading,
     updateUser,
