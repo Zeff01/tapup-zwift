@@ -65,6 +65,7 @@ const DigitalCard = ({ card, confirm, user }: Prop) => {
   const handleCopy = (e: React.MouseEvent<HTMLSpanElement, MouseEvent>) => {
     e.stopPropagation();
     navigator.clipboard.writeText(`${domain}/user/${card.id}`);
+    toast.success("Copied to clipboard");
   };
 
   const iconAndFunctionMap = [
