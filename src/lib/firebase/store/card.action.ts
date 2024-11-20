@@ -1,3 +1,5 @@
+// "use server";
+
 import {
   collection,
   deleteDoc,
@@ -14,7 +16,7 @@ import { firebaseDb } from "../config/firebase";
 import { Users } from "./users.type";
 import { toast } from "react-toastify";
 import { Card } from "@/types/types";
-import { revalidatePath } from "next/cache";
+import { revalidatePath } from "./user.revalidate";
 
 export const createCard = async ({
   user_id,
@@ -115,9 +117,10 @@ export const updateCardById = async ({
       { merge: true }
     );
 
+    revalidatePath(`/cards/${user_id}`, "page");
+    revalidatePath(`/cards/update/${user_id}`);
+
     toast.success("Card updated successfully");
-    // revalidatePath(`/cards/${user_id}`);
-    // revalidatePath(`/cards/update/${user_id}`);
   } catch (error: any) {
     toast.error("Something went wrong");
     console.error("Error updating document: ", error);
