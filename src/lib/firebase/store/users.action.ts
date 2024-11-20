@@ -16,10 +16,8 @@ import { firebaseAuth, firebaseDb, firebaseStorage } from "../config/firebase";
 import { Photo, Users } from "./users.type";
 import { createUserLink } from "@/lib/utils";
 import { getDownloadURL, ref, uploadBytesResumable } from "firebase/storage";
-import revalidateUserPath from "./user.revalidate";
 import { toast } from "react-toastify";
-import { revalidateTag } from "next/cache";
-
+import { revalidatePath } from "./user.revalidate";
 type UserCodeLink = {
   userCode: string;
   user_link: string;
@@ -67,7 +65,7 @@ export const addUser = async (
       user_link,
     };
 
-    revalidateUserPath("/users");
+    revalidatePath("/users");
 
     return userCodeLink;
   } catch (error) {
@@ -105,7 +103,6 @@ export const updateUserById = async ({
 }) => {
   try {
     const userCollection = collection(firebaseDb, "user-account");
-    console.log({ user_id, user });
     const userRef = doc(userCollection, user_id);
 
     await setDoc(
@@ -116,12 +113,10 @@ export const updateUserById = async ({
 
     console.log("Document updated with ID: ", user_id);
     toast.success("User updated successfully");
-
-    return true;
   } catch (error: any) {
     toast.error("Something went wrong");
     console.error("Error updating document: ", error);
-    return false;
+    throw error;
   }
 };
 

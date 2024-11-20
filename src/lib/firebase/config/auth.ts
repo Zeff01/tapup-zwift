@@ -55,7 +55,13 @@ export const signUpHandler = async (data: z.infer<typeof signupSchema>) => {
   }
 };
 
-export const loginHandler = async (email: string, password: string) => {
+export const loginHandler = async ({
+  email,
+  password,
+}: {
+  email: string;
+  password: string;
+}) => {
   try {
     const res = await signInWithEmailAndPassword(firebaseAuth, email, password);
     const userID = res.user.uid;

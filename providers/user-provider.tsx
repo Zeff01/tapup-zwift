@@ -61,12 +61,7 @@ export const UserContextProvider = ({ children }: any) => {
 
   const isLoading = isUserLoading || isLoadingUpdateMuitation;
 
-  const updateUser = async (
-    uid: string,
-    userData: ExtendedUserInterface,
-    currentUser = true
-  ) => {
-    if (!currentUser) return;
+  const updateUser = async (uid: string, userData: ExtendedUserInterface) => {
     updateUserMutation({ user_id: uid, user: userData });
   };
 

@@ -1,69 +1,36 @@
 "use client";
 
 import { QRCodeSVG } from "qrcode.react";
-import Image from "next/image";
 import { useEffect, useRef, useState } from "react";
 import html2canvas from "html2canvas";
-import { getUserBySubId } from "@/src/lib/firebase/store/users.action";
 import { Users } from "@/src/lib/firebase/store/users.type";
-import { useParams, useRouter } from "next/navigation";
 import MoonLoader from "react-spinners/MoonLoader";
-import { toast } from "react-toastify";
+import ImageWithLoading from "@/components/ImageWithLoading";
 
-export default function Card() {
+export default function Canvas2Card({ user }: { user: Users }) {
   const cardRef = useRef<HTMLDivElement>(null);
-  const [user, setUser] = useState<Users | null>(null);
   const [dlTimeout, setDlTimeout] = useState(0);
-  const { userCode } = useParams() as { userCode: string };
-  const router = useRouter();
-
-  const userDataHandler = async () => {
-    const data = await getUserBySubId(userCode);
-    if (!data) {
-      toast.error("user not found.");
-      setTimeout(() => {
-        router.push("/cards");
-      }, 500);
-      return;
-    }
-    setUser(data);
-  };
 
   const handleDownloadImage = async () => {
     const card = cardRef.current;
     if (!card || !user) return;
     const textTop = document.getElementById("text-top") as HTMLDivElement;
     textTop.style.transform = "translateY(-8px)";
-    await html2canvas(card, { scale: 4 }).then((canvas) => {
+    html2canvas(card, { scale: 4 }).then((canvas) => {
       const imgData = canvas.toDataURL("image/png");
 
-      // Create a link element
       const link = document.createElement("a");
-
-      // Set the download attribute with a filename
       const fileName = `${user?.lastName}.png`;
       link.download = fileName;
-
-      // Set the href attribute to the image data URL
       link.href = imgData;
-
-      // Append the link to the body (required for Firefox)
       document.body.appendChild(link);
-
-      // Trigger a click event on the link to start the download
       link.click();
-
-      // Remove the link from the document
       document.body.removeChild(link);
-    });
-    textTop.style.transform = "translateY(0px)";
-    setDlTimeout(2); // cannot click button for 3 seconds
-  };
 
-  useEffect(() => {
-    if (!userCode) return;
-    userDataHandler();
-  }, []);
+      textTop.style.transform = "translateY(0px)";
+      setDlTimeout(2);
+    });
+  };
 
   useEffect(() => {
     if (dlTimeout <= 0) return;
@@ -74,7 +41,7 @@ export default function Card() {
   }, [dlTimeout]);
 
   return (
-    <div className="bg-custom-black w-full flex-1 flex flex-col items-center px-2 py-16 gap-y-4">
+    <div className="bg-background w-full flex-1 flex flex-col items-center px-2 py-16 gap-y-4">
       <div
         ref={cardRef}
         className={`text-black dark:text-black relative w-[400px] scale-[0.8] lg:scale-100 aspect-[1.5882]  shadow-md rounded-md`}
@@ -95,7 +62,7 @@ export default function Card() {
               <div className="flex flex-col gap-y-[2px]">
                 {user.profilePictureUrl && (
                   <div className="shadow-sm rounded-full relative h-[70px] w-[70px] overflow-hidden">
-                    <Image
+                    <ImageWithLoading
                       src={user.profilePictureUrl}
                       fill
                       alt="user photo"

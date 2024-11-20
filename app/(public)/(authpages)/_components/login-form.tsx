@@ -48,9 +48,8 @@ export function LogInForm() {
       password: "",
     },
   });
-
   const onSubmit = async (data: LoginData) => {
-    await loginHandler(data.email, data.password);
+    await loginHandler(data);
     router.push("/onboarding");
   };
 
