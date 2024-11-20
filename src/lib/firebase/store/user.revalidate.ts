@@ -1,7 +1,18 @@
 "use server";
 
-import { revalidatePath } from "next/cache";
+import {
+  revalidatePath as customRevalidatePath,
+  revalidateTag as customRevalidateTag,
+} from "next/cache";
+type RevalidatePathParams = Parameters<typeof customRevalidatePath>;
+type RevalidateTagParams = Parameters<typeof customRevalidateTag>;
 
-export default async function revalidateUserPath(path: string) {
-  revalidatePath(path);
-}
+export const revalidatePath = (...args: RevalidatePathParams) => {
+  const [path, type] = args;
+  customRevalidatePath(path, type);
+};
+
+export const revalidateTag = (...args: RevalidateTagParams) => {
+  const [tag] = args;
+  customRevalidateTag(tag);
+};

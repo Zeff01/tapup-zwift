@@ -3,9 +3,8 @@ import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { usePathname } from "next/navigation";
 import { Button } from "./button";
-import Image from "next/image";
-import { Rotate3DIcon, RotateCcw, RotateCwIcon } from "lucide-react";
-import revalidateUserPath from "@/src/lib/firebase/store/user.revalidate";
+import { RotateCcw } from "lucide-react";
+import { revalidatePath } from "@/src/lib/firebase/store/user.revalidate";
 
 export default function Navbar() {
   const router = useRouter();
@@ -36,7 +35,7 @@ export default function Navbar() {
       {pathname === "/users" && (
         <Button
           onClick={() => {
-            revalidateUserPath("/users");
+            revalidatePath("/users");
           }}
           variant="link"
           size="icon"

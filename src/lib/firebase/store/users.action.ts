@@ -16,10 +16,8 @@ import { firebaseAuth, firebaseDb, firebaseStorage } from "../config/firebase";
 import { Photo, Users } from "./users.type";
 import { createUserLink } from "@/lib/utils";
 import { getDownloadURL, ref, uploadBytesResumable } from "firebase/storage";
-import revalidateUserPath from "./user.revalidate";
 import { toast } from "react-toastify";
-import { revalidateTag } from "next/cache";
-
+import { revalidatePath } from "./user.revalidate";
 type UserCodeLink = {
   userCode: string;
   user_link: string;
@@ -67,7 +65,7 @@ export const addUser = async (
       user_link,
     };
 
-    revalidateUserPath("/users");
+    revalidatePath("/users");
 
     return userCodeLink;
   } catch (error) {
