@@ -14,7 +14,9 @@ const ImageWithLoading = (
   return (
     <>
       {isLoading && (
-        <Loader2 className="animate-spin h-full w-full absolute -translate-x-1/2 left-1/2 -translate-y-1/2 top-1/2" />
+        <span className="flex h-full bg-accent/30 items-center justify-center">
+          <Loader2 className="size-8 animate-spin" />
+        </span>
       )}
       <Image {...props} onLoad={handleImageLoad} />
     </>

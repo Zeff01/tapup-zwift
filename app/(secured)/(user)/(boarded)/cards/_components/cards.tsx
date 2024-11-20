@@ -35,7 +35,7 @@ const Cards = () => {
             + Create
           </Link>
         </div>
-        <div className="mx-auto sm:mx-0 grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-3 gap-4 mt-8">
+        <div className="grid grid-cols-[repeat(auto-fill,minmax(18rem,1fr))] justify-items-center gap-4 mt-8">
           {cards?.map((card) => (
             <DigitalCard
               user={user}

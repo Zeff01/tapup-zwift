@@ -1,25 +1,26 @@
 import React from "react";
-import Canvas2Card from "./canvas";
-import { redirect } from "next/navigation";
+// import Error from "next/error";
+import UserPage from "./TemplateHandler";
 import { getCardById } from "@/src/lib/firebase/store/card.action";
+import { redirect } from "next/navigation";
 
-const Card = async ({ id }: { id: string }) => {
+const UserWebpage = async ({ id }: { id: string }) => {
   let user = null;
 
   try {
     const data = await getCardById(id);
 
     if (!data) {
-      redirect("/cards");
+      redirect("/404");
     }
 
     user = JSON.parse(JSON.stringify(data));
   } catch (error) {
     console.error("Error fetching card data:", error);
-    redirect("/cards");
+    redirect("/404");
   }
 
-  return <Canvas2Card user={user} />;
+  return <UserPage userData={user} />;
 };
 
-export default Card;
+export default UserWebpage;

@@ -13,27 +13,25 @@ import {
   where,
 } from "firebase/firestore";
 import { firebaseDb } from "../config/firebase";
-import { Users } from "./users.type";
 import { toast } from "react-toastify";
 import { Card } from "@/types/types";
 import { revalidatePath } from "./user.revalidate";
 
 export const createCard = async ({
   user_id,
-  user,
+  data,
 }: {
   user_id: string;
-  user: Partial<Users>;
+  data: Partial<Card>;
 }) => {
   try {
     const userCollection = collection(firebaseDb, "cards");
-    console.log({ user_id, user });
     const userRef = doc(userCollection);
 
     await setDoc(
       userRef,
       {
-        ...user,
+        ...data,
         owner: user_id,
         onboarding: true,
         timestamp: serverTimestamp(),
@@ -73,9 +71,11 @@ export const getCardsByOwner = async (owner_id: string) => {
   }
 };
 
-export const getCardById = async (id: string): Promise<Card | undefined> => {
+export const getCardById = async (
+  cardId: string
+): Promise<Card | undefined> => {
   try {
-    const userRef = doc(firebaseDb, "cards", id);
+    const userRef = doc(firebaseDb, "cards", cardId);
     const docSnap = await getDoc(userRef);
     if (!docSnap.exists()) throw new Error("Card doesn't exist");
     const card = { ...docSnap.data(), id: docSnap.id };
@@ -93,6 +93,9 @@ export const deleteCardById = async ({ cardId }: { cardId: string }) => {
     if (!docSnap.exists()) {
       throw new Error("Document does not exist");
     }
+    revalidatePath(`/cards/${cardId}`, "page");
+    revalidatePath(`/user/${cardId}`, "page");
+    revalidatePath(`/cards/update/${cardId}`);
     await deleteDoc(userRef);
   } catch (error) {
     console.error(error);
@@ -101,24 +104,25 @@ export const deleteCardById = async ({ cardId }: { cardId: string }) => {
 };
 
 export const updateCardById = async ({
-  user_id,
-  user,
+  cardId,
+  data,
 }: {
-  user_id: string;
-  user: Partial<Card>;
+  cardId: string;
+  data: Partial<Card>;
 }) => {
   try {
     const userCollection = collection(firebaseDb, "cards");
-    const userRef = doc(userCollection, user_id);
+    const userRef = doc(userCollection, cardId);
 
     await setDoc(
       userRef,
-      { ...user, onboarding: true, timestamp: serverTimestamp() },
+      { ...data, onboarding: true, timestamp: serverTimestamp() },
       { merge: true }
     );
 
-    revalidatePath(`/cards/${user_id}`, "page");
-    revalidatePath(`/cards/update/${user_id}`);
+    revalidatePath(`/cards/${cardId}`, "page");
+    revalidatePath(`/user/${cardId}`, "page");
+    revalidatePath(`/cards/update/${cardId}`);
 
     toast.success("Card updated successfully");
   } catch (error: any) {

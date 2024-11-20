@@ -4,11 +4,10 @@ import { UserState } from "@/providers/user-provider";
 import { deleteCardById } from "@/src/lib/firebase/store/card.action";
 import { Card } from "@/types/types";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
-import { Edit2, Router, Trash, View } from "lucide-react";
+import { Copy, Edit2, Link2, Trash } from "lucide-react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import React from "react";
-import { FiCopy, FiLink } from "react-icons/fi";
 import { toast } from "react-toastify";
 
 type Prop = {
@@ -18,6 +17,10 @@ type Prop = {
 };
 
 const DigitalCard = ({ card, confirm, user }: Prop) => {
+  const domain =
+    process.env.NODE_ENV === "development"
+      ? process.env.NEXT_PUBLIC_RESET_PASSWORD_URL_DEV
+      : process.env.NEXT_PUBLIC_RESET_PASSWORD_URL_PROD;
   const router = useRouter();
   const queryClient = useQueryClient();
 
@@ -31,7 +34,9 @@ const DigitalCard = ({ card, confirm, user }: Prop) => {
       toast.error("Something went wrong");
     },
   });
-  const handleDelete = async (e: React.MouseEvent<SVGElement, MouseEvent>) => {
+  const handleDelete = async (
+    e: React.MouseEvent<HTMLSpanElement, MouseEvent>
+  ) => {
     if (!card.id) return;
     e.stopPropagation();
     const ok = await confirm(
@@ -50,19 +55,35 @@ const DigitalCard = ({ card, confirm, user }: Prop) => {
     deleteCardMutation({ cardId: card.id });
   };
 
-  const handleUpdate = async (e: React.MouseEvent<SVGElement, MouseEvent>) => {
+  const handleUpdate = async (
+    e: React.MouseEvent<HTMLSpanElement, MouseEvent>
+  ) => {
     if (!card.id) return;
     e.stopPropagation();
     router.push(`/cards/update/${card.id}`);
   };
-  const handleCopy = (e: React.MouseEvent<SVGElement, MouseEvent>) => {
+  const handleCopy = (e: React.MouseEvent<HTMLSpanElement, MouseEvent>) => {
     e.stopPropagation();
+    navigator.clipboard.writeText(`${domain}/user/${card.id}`);
+    toast.success("Copied to clipboard");
   };
-  const handleLink = (e: React.MouseEvent<SVGElement, MouseEvent>) => {
-    e.stopPropagation();
-  };
+
+  const iconAndFunctionMap = [
+    {
+      icon: Trash,
+      fn: handleDelete,
+    },
+    {
+      icon: Edit2,
+      fn: handleUpdate,
+    },
+    {
+      icon: Copy,
+      fn: handleCopy,
+    },
+  ];
   return (
-    <div className="w-full max-w-[320px] sm:max-w-none sm:h-full aspect-[340/208] hover:scale-105 transition-transform duration-200 flex justify-between text-white bg-black rounded-[30px]">
+    <div className="w-full aspect-[340/208] hover:scale-105 transition-transform duration-200 flex justify-between text-white bg-neutral-950 rounded-[30px] overflow-hidden">
       <Link
         href={`/cards/${card.id}`}
         prefetch
@@ -78,15 +99,28 @@ const DigitalCard = ({ card, confirm, user }: Prop) => {
           {/* <p className="text-xs mt-4">{`${publicDomain}/profile/${card.id}`}</p> */}
         </div>
       </Link>
-      <div className="flex flex-col px-4 py-6 justify-between items-center">
-        <Trash
-          size={20}
-          onClick={handleDelete}
-          className="cursor-pointer hover:text-destructive "
-        />
-        <Edit2 size={20} className="cursor-pointer" onClick={handleUpdate} />
-        <FiCopy size={20} onClick={handleCopy} />
-        <FiLink size={20} onClick={handleLink} />
+      <div className="flex flex-col justify-center items-center bg-neutral-950 hover:bg-neutral-900 transition">
+        {iconAndFunctionMap.map((item, index) => {
+          const Icon = item.icon;
+          return (
+            <span
+              key={index}
+              className="p-3 hover:opacity-30 cursor-pointer"
+              onClick={item.fn}
+            >
+              <Icon className="size-4" />
+            </span>
+          );
+        })}
+        <Link
+          href={`/user/${card.id}`}
+          className="p-3 hover:opacity-30 cursor-pointer"
+          prefetch
+          target="_blank"
+          rel="noopener noreferrer"
+        >
+          <Link2 className="size-4" />
+        </Link>
       </div>
     </div>
   );

@@ -1,14 +1,10 @@
 "use client";
 
 import { QRCodeSVG } from "qrcode.react";
-import Image from "next/image";
 import { useEffect, useRef, useState } from "react";
 import html2canvas from "html2canvas";
-import { getUserBySubId } from "@/src/lib/firebase/store/users.action";
 import { Users } from "@/src/lib/firebase/store/users.type";
-import { useParams, useRouter } from "next/navigation";
 import MoonLoader from "react-spinners/MoonLoader";
-import { toast } from "react-toastify";
 import ImageWithLoading from "@/components/ImageWithLoading";
 
 export default function Canvas2Card({ user }: { user: Users }) {
