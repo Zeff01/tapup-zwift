@@ -120,7 +120,7 @@ export default function CardsAndUsersFields({
   const formSubmit = async (data: z.infer<typeof createPortfolioSchema>) => {
     if (!userData) return;
     if (isCard) {
-      updateCardMutation({ user_id: userData.id!, user: data as Card });
+      updateCardMutation({ cardId: userData.id!, data });
       return;
     }
     const id = isCurrentUser ? userData.uid : userData.id || userData.uid;
@@ -287,7 +287,7 @@ export default function CardsAndUsersFields({
                                   className="flex items-center justify-center rounded-md h-[77px] w-[77px] overflow-hidden relative bg-[#222224] border border-[#2c2c2c]"
                                 >
                                   <div
-                                    className="absolute flex items-center justify-center top-1 right-1 h-4 rounded-full w-4 bg-gray-900 z-[100] cursor-pointer"
+                                    className="absolute flex items-center justify-center top-1 right-1 h-4 rounded-full w-4 bg-gray-900 z-20 cursor-pointer"
                                     onClick={() =>
                                       setServiceImageUrls((prev) =>
                                         prev.filter((_, index) => index !== key)

@@ -7,11 +7,20 @@ type Props = {
 };
 
 const CardUpdateFom = async ({ cardId }: Props) => {
-  const data = await getCardById(cardId);
+  let user = null;
 
-  if (!data) redirect("/cards");
+  try {
+    const data = await getCardById(cardId);
 
-  const user = JSON.parse(JSON.stringify(data));
+    if (!data) {
+      redirect("/cards");
+    }
+
+    user = JSON.parse(JSON.stringify(data));
+  } catch (error) {
+    console.error("Error fetching card data:", error);
+    redirect("/cards");
+  }
 
   return <CardsAndUsersFields userData={user} isCard />;
 };
