@@ -53,10 +53,16 @@ export function useUserSession(initSession: string | null = null) {
   useEffect(() => {
     const unsubscribe = onAuthStateChanged(async (authUser) => {
       if (!authUser) {
+        const sessionCookie = await getSession();
+
         setUserUid(null);
         setUser(null);
-        await deleteSession();
-        router.push("/login");
+
+        if (sessionCookie) {
+          await deleteSession();
+          router.push("/login");
+        }
+
         return;
       }
       await signOutIfInvalidSession(authUser);
