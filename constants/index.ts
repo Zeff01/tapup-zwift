@@ -248,3 +248,19 @@ export const publicDomain =
   process.env.NODE_ENV === "development"
     ? process.env.NEXT_PUBLIC_RESET_PASSWORD_URL_DEV
     : process.env.NEXT_PUBLIC_RESET_PASSWORD_URL_PROD;
+
+
+export const formHeaderItems = [
+  { id: 1, title:"Tell us about your company"},
+  { id: 2, title:"Update your personal information"},
+  { id: 3, title: "Tell us about your company" },
+]
+
+export const steps = [
+  { name: "Company Info", header: "Tell us about your company" },
+  {
+    name: "Personal Info",
+    header: "Update your personal information",
+  },
+  { name: "Template", header: "Choose your Template" },
+];
