@@ -1,9 +1,8 @@
-import CardsAndUsersCreateFields from "@/components/forms/CardsAndUsersCreateFields";
+import MultiStepForm from "@/components/forms/multi-step-form";
 
-import React from "react";
 
 const CardCreationPage = () => {
-  return <CardsAndUsersCreateFields card />;
+  return <MultiStepForm card/>
 };
 
 export default CardCreationPage;
