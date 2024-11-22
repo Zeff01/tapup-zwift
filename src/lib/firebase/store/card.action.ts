@@ -80,15 +80,24 @@ export const getCardsByOwner = async (owner_id: string) => {
 };
 
 export const getCardById = async (
-  cardId: string
+  cardId: string,
+  options?: {
+    publicSite: boolean;
+  }
 ): Promise<Card | undefined> => {
   try {
     if (!cardId) throw new Error("Parameters Missing");
-    const userId = await authCurrentUser();
     const userRef = doc(firebaseDb, "cards", cardId);
     const docSnap = await getDoc(userRef);
     if (!docSnap.exists()) throw new Error("Card doesn't exist");
     const card = { ...docSnap.data(), id: docSnap.id } as Card;
+
+    if (options?.publicSite) {
+      return card;
+    }
+
+    const userId = await authCurrentUser();
+
     if (userId !== card.owner) throw new Error("Auth user ID doesn't match");
 
     return card;
