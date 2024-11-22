@@ -21,6 +21,7 @@ import { cn } from "@/lib/utils";
 import { usePathname } from "next/navigation";
 import { Button } from "./ui/button";
 import { useMediaQuery } from "usehooks-ts";
+import { ThemeToggle } from "./Theme";
 
 const OverlayMenu = () => {
   const { user, logOutUser: signOut } = useUserContext();
@@ -45,8 +46,12 @@ const OverlayMenu = () => {
         side="left"
         className="bg-background flex flex-col sm:w-[25rem] w-full"
       >
+        <div className="absolute top-2 left-6 ">
+          <ThemeToggle />
+        </div>
         <SheetTitle className="sr-only">Mobile Navigation</SheetTitle>
-        <div className="py-8">
+        <div className="py-8 pt-20">
+          {/* <ThemeToggle /> */}
           <TapupLogo />
         </div>
         <div className="relative bg-accent py-4 px-6 rounded-full outline-white outline-2 flex items-center gap-4">
