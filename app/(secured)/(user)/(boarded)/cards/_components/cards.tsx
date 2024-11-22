@@ -18,6 +18,7 @@ const Cards = () => {
   const { data: cards, status } = useQuery({
     queryKey: ["cards", user?.uid],
     queryFn: () => getCardsByOwner(user?.uid!),
+    staleTime: 1000 * 60 * 5,
   });
 
   if (status === "pending") return <Loading />;
