@@ -6,8 +6,15 @@ import {
   signOutHandler,
 } from "@/src/lib/firebase/config/auth";
 import { User } from "firebase/auth";
-import { createSession, getSession } from "@/src/lib/firebase/config/session";
+import {
+  createSession,
+  deleteSession,
+  getSession,
+  signUserId,
+  verifySignUserId,
+} from "@/src/lib/firebase/config/session";
 import { useRouter } from "next/navigation";
+import { SignedUserIdJwtPayload } from "@/types/types";
 
 export function useUserSession(initSession: string | null = null) {
   const [userUid, setUserUid] = useState<string | null>(initSession);
@@ -20,12 +27,23 @@ export function useUserSession(initSession: string | null = null) {
     setUser(null);
   };
 
-  const signOutIfInvalidSession = async (
-    authUser: User | null,
-    cookieSession: string | undefined
-  ) => {
-    // If cookie is tampered or cookie is added even there's no authenticated users
-    if (!authUser || (cookieSession && cookieSession !== authUser.uid)) {
+  const signOutIfInvalidSession = async (authUser: User) => {
+    const sessionCookie = await getSession();
+    const signUser = await signUserId(authUser.uid);
+
+    const cookie = sessionCookie ?? signUser;
+
+    const cookieSession = (await verifySignUserId(
+      cookie
+    )) as SignedUserIdJwtPayload | null;
+
+    if (!sessionCookie) {
+      await createSession(authUser.uid);
+      router.refresh();
+      return;
+    }
+
+    if (!cookieSession || cookieSession.uid !== authUser.uid) {
       await signOutUser();
       router.refresh();
       return;
@@ -34,17 +52,17 @@ export function useUserSession(initSession: string | null = null) {
 
   useEffect(() => {
     const unsubscribe = onAuthStateChanged(async (authUser) => {
-      const cookieSession = await getSession();
-      await signOutIfInvalidSession(authUser, cookieSession);
-      if (!authUser) return;
+      if (!authUser) {
+        setUserUid(null);
+        setUser(null);
+        await deleteSession();
+        router.push("/login");
+        return;
+      }
+      await signOutIfInvalidSession(authUser);
 
       setUserUid(authUser.uid);
       setUser(authUser);
-
-      // If cookie is deleted even authenticated
-      if (!cookieSession) {
-        await createSession(authUser.uid);
-      }
     });
 
     return () => unsubscribe();
