@@ -8,6 +8,7 @@ import {
 import { updateUserById } from "@/src/lib/firebase/store/users.action";
 import { Users } from "@/src/lib/firebase/store/users.type";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
+import { useRouter } from "next/navigation";
 import { createContext, useContext, useMemo } from "react";
 
 export interface ExtendedUserInterface extends Users {
@@ -35,6 +36,7 @@ export const UserProviderContext = createContext<
 >(undefined);
 
 export const UserContextProvider = ({ children }: any) => {
+  const router = useRouter();
   const queryClient = useQueryClient();
 
   const { userUid } = useUserSession();
@@ -46,6 +48,7 @@ export const UserContextProvider = ({ children }: any) => {
       const data = await currentAuthUserDetails({ id: userUid! });
       return { uid: userUid, ...data };
     },
+    staleTime: 1000 * 60 * 5,
     enabled: !!userUid,
   });
 
@@ -67,6 +70,7 @@ export const UserContextProvider = ({ children }: any) => {
 
   const logOutUser = async () => {
     await signOutHandler();
+    router.push("/login");
   };
 
   const value = {

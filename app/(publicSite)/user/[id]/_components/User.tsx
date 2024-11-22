@@ -2,23 +2,19 @@ import React from "react";
 // import Error from "next/error";
 import UserPage from "./TemplateHandler";
 import { getCardById } from "@/src/lib/firebase/store/card.action";
-import { redirect } from "next/navigation";
+import { notFound } from "next/navigation";
+import { catchErrorTyped } from "@/lib/safe-error-handling";
 
 const UserWebpage = async ({ id }: { id: string }) => {
-  let user = null;
+  const [error, data] = await catchErrorTyped(
+    getCardById(id, { publicSite: true })
+  );
 
-  try {
-    const data = await getCardById(id);
-
-    if (!data) {
-      redirect("/404");
-    }
-
-    user = JSON.parse(JSON.stringify(data));
-  } catch (error) {
-    console.error("Error fetching card data:", error);
-    redirect("/404");
+  if (!data || error) {
+    notFound();
   }
+
+  const user = JSON.parse(JSON.stringify(data));
 
   return <UserPage userData={user} />;
 };

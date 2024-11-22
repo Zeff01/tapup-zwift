@@ -16,7 +16,6 @@ import TapupLogo from "@/components/svgs/TapupLogo";
 export default function VirtualCard() {
   const router = useRouter();
   const handleUseTemplate = () => {
-    console.log("wewew");
     router.push("/cards/create");
   };
   return (

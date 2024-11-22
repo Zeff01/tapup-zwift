@@ -18,6 +18,7 @@ const Cards = () => {
   const { data: cards, status } = useQuery({
     queryKey: ["cards", user?.uid],
     queryFn: () => getCardsByOwner(user?.uid!),
+    staleTime: 1000 * 60 * 5,
   });
 
   if (status === "pending") return <Loading />;
@@ -36,14 +37,27 @@ const Cards = () => {
           </Link>
         </div>
         <div className="grid grid-cols-[repeat(auto-fill,minmax(18rem,1fr))] justify-items-center gap-4 mt-8">
-          {cards?.map((card) => (
-            <DigitalCard
-              user={user}
-              confirm={confirm}
-              key={card.id}
-              card={card}
-            />
-          ))}
+          {cards && cards.length > 0 ? (
+            cards?.map((card) => (
+              <DigitalCard
+                user={user}
+                confirm={confirm}
+                key={card.id}
+                card={card}
+              />
+            ))
+          ) : (
+            <div className="col-span-full flex flex-col items-center justify-center min-h-[60vh]">
+              <div className="flex flex-col items-center">
+                <h2 className="text-2xl md:text-3xl font-bold text-greenTitle mb-4">
+                  No Cards Yet
+                </h2>
+                <p className="text-base md:text-lg text-grayDescription text-center mb-8 max-w-md">
+                  Create your first digital business card to get started!
+                </p>
+              </div>
+            </div>
+          )}
         </div>
       </div>
     </>

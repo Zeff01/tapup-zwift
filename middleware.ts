@@ -58,7 +58,7 @@ export default async function middleware(request: NextRequest) {
   if (authRoutes.some((route) => pathname === route)) {
     return NextResponse.redirect(redirectTo(ONBOARDING_ROUTE));
   }
-
+  console.log("wewew");
   return NextResponse.next();
 }
 

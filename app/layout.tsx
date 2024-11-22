@@ -22,6 +22,7 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   const isDev = process.env.NODE_ENV === "development";
+
   return (
     <html lang="en" suppressHydrationWarning>
       <Head>
