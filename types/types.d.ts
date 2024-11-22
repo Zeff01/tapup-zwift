@@ -36,6 +36,12 @@ export type Template = {
   route: string;
 };
 
+export type SignedUserIdJwtPayload = {
+  uid: string;
+  iat: number;
+  exp: number;
+};
+
 export interface CardItem {
   image: string;
   title: string;

@@ -16,6 +16,7 @@ import { firebaseDb } from "../config/firebase";
 import { toast } from "react-toastify";
 import { Card } from "@/types/types";
 import { revalidatePath } from "./user.revalidate";
+import { authCurrentUser } from "../../utils/auth";
 
 export const createCard = async ({
   user_id,
@@ -25,6 +26,11 @@ export const createCard = async ({
   data: Partial<Card>;
 }) => {
   try {
+    if (!user_id || !data) throw new Error("Parameters Missing");
+
+    const user = await authCurrentUser();
+    if (user !== user_id) throw new Error("Auth user ID doesn't match");
+
     const userCollection = collection(firebaseDb, "cards");
     const userRef = doc(userCollection);
 
@@ -49,7 +55,9 @@ export const createCard = async ({
 
 export const getCardsByOwner = async (owner_id: string) => {
   try {
-    if (!owner_id) return;
+    if (!owner_id) throw new Error("Parameters Missing");
+    const user = await authCurrentUser();
+    if (user !== owner_id) throw new Error("Auth user ID doesn't match");
     const cardsCol = collection(firebaseDb, "cards");
     const queryFn = query(cardsCol, where("owner", "==", owner_id), limit(10));
     const cards = await getDocs(queryFn);
@@ -75,11 +83,15 @@ export const getCardById = async (
   cardId: string
 ): Promise<Card | undefined> => {
   try {
+    if (!cardId) throw new Error("Parameters Missing");
+    const userId = await authCurrentUser();
     const userRef = doc(firebaseDb, "cards", cardId);
     const docSnap = await getDoc(userRef);
     if (!docSnap.exists()) throw new Error("Card doesn't exist");
-    const card = { ...docSnap.data(), id: docSnap.id };
-    return card as Card;
+    const card = { ...docSnap.data(), id: docSnap.id } as Card;
+    if (userId !== card.owner) throw new Error("Auth user ID doesn't match");
+
+    return card;
   } catch (error) {
     console.error("Error getting document: ", error);
     throw error;
@@ -88,10 +100,16 @@ export const getCardById = async (
 
 export const deleteCardById = async ({ cardId }: { cardId: string }) => {
   try {
+    if (cardId) throw new Error("Parameters Missing");
+    const userId = await authCurrentUser();
     const userRef = doc(firebaseDb, "cards", cardId);
     const docSnap = await getDoc(userRef);
     if (!docSnap.exists()) {
       throw new Error("Document does not exist");
+    }
+    const card = { ...docSnap.data() } as Card;
+    if (userId !== card.owner) {
+      throw new Error("Auth user ID doesn't match");
     }
     revalidatePath(`/cards/${cardId}`, "page");
     revalidatePath(`/user/${cardId}`, "page");
@@ -111,9 +129,20 @@ export const updateCardById = async ({
   data: Partial<Card>;
 }) => {
   try {
+    if (!cardId || !data) throw new Error("Parameters Missing");
+    const userId = await authCurrentUser();
+    const cardRef = doc(firebaseDb, "cards", cardId);
+    const docSnap = await getDoc(cardRef);
+    if (!docSnap.exists()) {
+      throw new Error("Document does not exist");
+    }
+    const card = { ...docSnap.data() } as Card;
+    if (userId !== card.owner) {
+      throw new Error("Auth user ID doesn't match");
+    }
+
     const userCollection = collection(firebaseDb, "cards");
     const userRef = doc(userCollection, cardId);
-
     await setDoc(
       userRef,
       { ...data, onboarding: true, timestamp: serverTimestamp() },

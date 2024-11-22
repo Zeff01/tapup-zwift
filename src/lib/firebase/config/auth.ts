@@ -108,7 +108,7 @@ export const signInWithGoogle = async () => {
       email: res.user.email,
       timestamp: serverTimestamp(),
     });
-    await createSession(userID);
+    // await createSession(userID);
 
     toast.success("Login successful!");
   } catch (error) {
@@ -144,33 +144,6 @@ export const signOutHandler = async () => {
   await signOut(firebaseAuth);
   await deleteSession();
 };
-
-// export const currentAuthUserDetails = (id: string) =>
-//   unstable_cache(async () => {
-//     try {
-//       if (!id) {
-//         console.error("Invalid user ID");
-//         return null;
-//       }
-
-//       const userRef = doc(firebaseDb, "user-account", id);
-//       const docSnap = await getDoc(userRef);
-
-//       if (!docSnap.exists()) {
-//         console.log("No such document");
-//         return null;
-//       }
-
-//       return docSnap.data();
-//     } catch (error) {
-//       if (error instanceof FirebaseError) {
-//         toast.error(error.message);
-//         return null;
-//       }
-//       console.error(error);
-//       return null;
-//     }
-//   }, [id]);
 
 export const currentAuthUserDetails = async ({ id }: { id: string }) => {
   try {
