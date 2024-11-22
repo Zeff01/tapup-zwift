@@ -99,7 +99,6 @@ export const signInWithGoogle = async () => {
     if (docSnap.exists()) {
       await createSession(userID);
       toast.success("Login successful!");
-      console.log("wewew");
 
       return;
     }
@@ -108,7 +107,7 @@ export const signInWithGoogle = async () => {
       email: res.user.email,
       timestamp: serverTimestamp(),
     });
-    // await createSession(userID);
+    await createSession(userID);
 
     toast.success("Login successful!");
   } catch (error) {
@@ -123,6 +122,17 @@ export const signInWithFacebook = async () => {
     const provider = new FacebookAuthProvider();
     const res = await signInWithPopup(firebaseAuth, provider);
     const userID = res.user.uid;
+
+    const userAccountRef = doc(firebaseDb, "user-account", userID);
+    const docSnap = await getDoc(userAccountRef);
+
+    if (docSnap.exists()) {
+      await createSession(userID);
+      toast.success("Login successful!");
+
+      return;
+    }
+
     await setDoc(doc(firebaseDb, "user-account", userID), {
       role: USER_ROLE_ENUMS.USER,
       email: res.user.email,
@@ -135,7 +145,7 @@ export const signInWithFacebook = async () => {
   } catch (error) {
     if (error instanceof FirebaseError) {
       // toast.error(error.code);
-      console.log(error.code);
+      console.error(error.code);
     }
   }
 };
