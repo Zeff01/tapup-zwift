@@ -1,3 +1,5 @@
+
+import Link from "next/link";
 import { MdKeyboardDoubleArrowRight } from "react-icons/md";
 
 const ComingSoon = () => {
@@ -11,20 +13,13 @@ const ComingSoon = () => {
           We are still working on it.
         </p>
 
-        <div className="w-full flex justify-center mt-9">
-          <div className="w-[90%] relative  rounded-full h-12 lg:h-16">
-            <input
-              className="bg-green-600 w-full lg:text-3xl rounded-full h-full placeholder:text-white lg:placeholder:text-4xl placeholder:text-xs md:placeholder:text-xl placeholder:italic text-white lg:px-10 lg:py-8 text-sm px-4 py-6"
-              placeholder="Your Email and Get Notified"
-              type="email"
-            />
-            <button
-              type="button"
-              className="absolute right-2 top-2 md:right-3 md:top-2 px-3 py-1 border-none text-black hover:bg-green-400 text-2xl lg:text-4xl bg-white lg:px-4 md:px-4 rounded-full"
-            >
-              <MdKeyboardDoubleArrowRight />
-            </button>
-          </div>
+        <div className="mt-8"> 
+            <Link
+            href="/dashboard"
+            className="inline-block bg-[#22A348] hover:bg-[#1B8A3A] text-white px-6 py-2.5 rounded-md transition-colors duration-200"
+          >
+            Back To Main
+          </Link>
         </div>
       </div>
     </div>
