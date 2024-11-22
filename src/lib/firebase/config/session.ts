@@ -3,8 +3,10 @@ import { cookies } from "next/headers";
 import { SESSION_COOKIE_NAME } from "@/constants";
 import { sign, verify } from "jsonwebtoken";
 
+// const secret = process.env.JWT_SECRET_KEY!;
+
 export const createSession = async (uid: string) => {
-  const token = sign({ uid }, process.env.JWT_SECRET_KEY!, {
+  const token = sign({ uid }, "samplesecret", {
     expiresIn: "1h",
   });
 
@@ -30,14 +32,14 @@ export const getSession = async () => {
 };
 
 export const signUserId = async (uid: string) => {
-  return sign({ uid }, process.env.JWT_SECRET_KEY!, {
+  return sign({ uid }, "samplesecret", {
     expiresIn: "1h",
   });
 };
 
 export const verifySignUserId = async (token: string) => {
   try {
-    const data = await verify(token, process.env.JWT_SECRET_KEY!);
+    const data = await verify(token, "samplesecret");
     return data;
   } catch (error) {
     console.log(error);

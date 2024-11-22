@@ -2,7 +2,7 @@ import React from "react";
 // import Error from "next/error";
 import UserPage from "./TemplateHandler";
 import { getCardById } from "@/src/lib/firebase/store/card.action";
-import { redirect, notFound } from "next/navigation";
+import { notFound } from "next/navigation";
 import { catchErrorTyped } from "@/lib/safe-error-handling";
 
 const UserWebpage = async ({ id }: { id: string }) => {
