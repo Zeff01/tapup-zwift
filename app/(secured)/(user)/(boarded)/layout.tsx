@@ -15,7 +15,7 @@ const Layout = ({ children }: { children: React.ReactNode }) => {
     return <Loading />;
   }
 
-  if (user && (user.onboarding === false || !user.onboarding)) {
+  if (user && !user.onboarding) {
     redirect(ONBOARDING_ROUTE);
   }
 
