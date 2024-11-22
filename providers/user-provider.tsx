@@ -48,6 +48,7 @@ export const UserContextProvider = ({ children }: any) => {
       const data = await currentAuthUserDetails({ id: userUid! });
       return { uid: userUid, ...data };
     },
+    staleTime: 1000 * 60 * 5,
     enabled: !!userUid,
   });
 
