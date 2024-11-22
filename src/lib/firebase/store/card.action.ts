@@ -100,13 +100,16 @@ export const getCardById = async (
 
 export const deleteCardById = async ({ cardId }: { cardId: string }) => {
   try {
-    if (cardId) throw new Error("Parameters Missing");
+    if (!cardId) throw new Error("Parameters Missing");
+
     const userId = await authCurrentUser();
+
     const userRef = doc(firebaseDb, "cards", cardId);
     const docSnap = await getDoc(userRef);
     if (!docSnap.exists()) {
       throw new Error("Document does not exist");
     }
+
     const card = { ...docSnap.data() } as Card;
     if (userId !== card.owner) {
       throw new Error("Auth user ID doesn't match");
