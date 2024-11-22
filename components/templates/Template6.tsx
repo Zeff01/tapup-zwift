@@ -14,9 +14,9 @@ interface ProfilePageProps {
 const Template6: React.FC<ProfilePageProps> = ({ userData }) => {
   const { servicePhotos = [], serviceDescription } = userData;
   return (
-    <div className="overflow-y-auto overflow-x-hidden max-w-[320px] mx-auto bg-white">
+    <div className="overflow-y-auto overflow-x-hidden mx-auto max-w-[480px] bg-white">
       <ProfileInfo {...userData} />
-      <div className="shadow-xl max-w-[320px] mx-auto">
+      <div className="shadow-xl  w-full mx-auto ">
         <ProfileSocials {...userData} />
         <CarouselService
           servicePhotos={servicePhotos}

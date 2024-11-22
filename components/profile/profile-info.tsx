@@ -35,16 +35,16 @@ const ProfileInfo = ({
   };
 
   return (
-    <section className="flex flex-col items-center relative justify-center max-w-[320px] mx-auto shadow-xl">
-      <div className="relative w-full h-[13rem] p-0 m-0">
+    <section className="flex flex-col items-center relative justify-center mx-auto shadow-xl">
+      <div className="relative w-full h-48">
         <Image
           src={coverPhotoUrl || profileBgImage}
           alt="Profile image"
           fill
-          className="object-cover"
+            className="object-cover"
         />
       </div>
-      <div className="flex max-w-[440px] w-full justify-between">
+      <div className="flex w-full justify-between">
         <div className="flex flex-col">
           <div className="w-[7rem] relative h-[7rem] bottom-[4rem] left-[2rem]">
             <Image

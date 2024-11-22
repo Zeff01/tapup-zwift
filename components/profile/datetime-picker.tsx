@@ -51,10 +51,10 @@ export default function DateTimePickerForm() {
   return (
     <Form {...form}>
       <form
-        className="flex flex-col gap-4 justify-center px-4"
+        className="flex flex-col gap-4 justify-center"
         onSubmit={form.handleSubmit(onSubmit)}
       >
-        <h2 className="text-left text-xl">Make an appointment:</h2>
+        <h2 className="text-left text-xl pl-2">Make an appointment:</h2>
         <FormField
           control={form.control}
           name="dateTime"
@@ -69,7 +69,7 @@ export default function DateTimePickerForm() {
                     <Button
                       variant="outline"
                       className={cn(
-                        "w-[280px] justify-start text-left font-normal",
+                        "w-[250px] justify-start bg-transparent text-left font-normal",
                         !field.value && "text-muted-foreground"
                       )}
                     >
@@ -100,8 +100,8 @@ export default function DateTimePickerForm() {
             </FormItem>
           )}
         />
-        <div className="relative w-full pb-5">
-          <Button type="submit" className="w-[120px] absolute right-4">
+        <div className="flex items-center justify-end mr-2 pb-5">
+          <Button type="submit" className="w-[120px] bg-gray-300">
             Set appointment
           </Button>
         </div>
