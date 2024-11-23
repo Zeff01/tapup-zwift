@@ -73,13 +73,13 @@ const CarouselService: React.FC<{
           </CarouselContent>
 
           <CarouselPrevious
-         type="button"
+            type="button"
             onClick={handlePrevious}
             className="left-[-40px] border-black text-primary bg-secondary"
             disabled={currentSlideIndex === 0}
           />
           <CarouselNext
-   type="button"
+            type="button"
             onClick={handleNext}
             className="right-[-40px] border-black text-primary bg-secondary"
             disabled={currentSlideIndex === servicePhotos.length - 1}

@@ -41,7 +41,7 @@ const ProfileInfo = ({
           src={coverPhotoUrl || profileBgImage}
           alt="Profile image"
           fill
-            className="object-cover"
+          className="object-cover"
         />
       </div>
       <div className="flex w-full justify-between">

@@ -108,6 +108,8 @@ export const updateUserById = async ({
     const userCollection = collection(firebaseDb, "user-account");
     const userRef = doc(userCollection, user_id);
 
+    delete user.email;
+
     await setDoc(
       userRef,
       { ...user, onboarding: true, timestamp: serverTimestamp() },

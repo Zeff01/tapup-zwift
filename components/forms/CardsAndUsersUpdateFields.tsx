@@ -347,7 +347,7 @@ export default function CardsAndUsersFields({
               />
 
               {/* Personal Information Inputs */}
-              <PersonalInfoForm control={methods.control} />
+              <PersonalInfoForm control={methods.control} isCard={isCard} />
 
               {/* Social Links Inputs */}
               <SocialLinksForm control={methods.control} />

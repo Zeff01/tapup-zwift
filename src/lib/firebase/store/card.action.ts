@@ -142,6 +142,7 @@ export const updateCardById = async ({
 }) => {
   try {
     if (!cardId || !data) throw new Error("Parameters Missing");
+
     const userId = await authCurrentUser();
     const cardRef = doc(firebaseDb, "cards", cardId);
     const docSnap = await getDoc(cardRef);
@@ -155,6 +156,7 @@ export const updateCardById = async ({
 
     const userCollection = collection(firebaseDb, "cards");
     const userRef = doc(userCollection, cardId);
+
     await setDoc(
       userRef,
       { ...data, onboarding: true, timestamp: serverTimestamp() },

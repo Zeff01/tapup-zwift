@@ -17,7 +17,6 @@ import {
 } from "react-icons/fa";
 import { SiTiktok, SiViber } from "react-icons/si";
 
-
 interface SocialLink {
   label: string;
   icon: React.ReactNode;
@@ -44,7 +43,8 @@ const SocialLinksSelector: React.FC<SocialLinksSelectorProps> = ({
   onAddLink,
 }) => {
   const [search, setSearch] = useState<string>("");
-  const [availableLinks, setAvailableLinks] = useState<SocialLink[]>(socialLinks);
+  const [availableLinks, setAvailableLinks] =
+    useState<SocialLink[]>(socialLinks);
 
   const filteredLinks = availableLinks.filter((link) =>
     link.label.toLowerCase().includes(search.toLowerCase())

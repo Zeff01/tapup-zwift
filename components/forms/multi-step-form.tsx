@@ -132,7 +132,6 @@ export default function CardsAndUsersCreateFields({
       methods.setValue("servicePhotos", serviceImageUrls || []);
     }
     methods.setValue("chosenTemplate", selectedTemplateId);
-    methods.setValue("email", user?.email || "");
   }, [
     coverPhotoUrl,
     imageUrl,
@@ -180,7 +179,7 @@ export default function CardsAndUsersCreateFields({
 
   const isLoading = isLoadingCreateCard || isLoadingOnBoarding;
 
-console.log(formSubmit)
+  console.log(formSubmit);
   // Step state management
   const [currentStep, setCurrentStep] = useState(1);
 
@@ -190,8 +189,7 @@ console.log(formSubmit)
     ["chosenTemplate"], // Step 3 fields
   ];
 
-
-  const handleNextStep = async (event:any) => {
+  const handleNextStep = async (event: any) => {
     event.preventDefault();
 
     const fieldsToValidate = steps[currentStep - 1];
@@ -247,8 +245,6 @@ console.log(formSubmit)
             className="space-y-6"
             onSubmit={methods.handleSubmit(formSubmit)}
           >
-
-
             {/* Step 1 - Cover Photo and Profile Pic */}
             {currentStep === 1 && (
               <div className="">
@@ -295,7 +291,7 @@ console.log(formSubmit)
                   <CompanyInfoForm control={methods.control} />
                   <div className="">
                     <h1 className="text-lg font-semibold mt-2">Photos</h1>
-                      <div className="w-full mt-2">
+                    <div className="w-full mt-2">
                       <Cropper
                         imageUrl={null}
                         setImageUrl={addServiceImageUrl}
@@ -356,8 +352,6 @@ console.log(formSubmit)
               </div>
             )}
 
-
-
             {/* Step 2 - Company Info and Personal Info */}
             {currentStep === 2 && (
               <div className="">
@@ -416,9 +410,6 @@ console.log(formSubmit)
               </div>
             )}
 
-            
-
-            
             {/* Step 3 - Template and Social Links */}
             {currentStep === 3 && (
               <div>

@@ -60,7 +60,7 @@ export function useUserSession(initSession: string | null = null) {
 
         if (sessionCookie) {
           await deleteSession();
-          router.push("/login");
+          // router.push("/login");
         }
 
         return;
