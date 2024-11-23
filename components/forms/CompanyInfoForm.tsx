@@ -12,17 +12,11 @@ const CompanyInfoForm: React.FC<CompanyInfoFormProps> = ({ control }) => {
       <h1 className="text-lg font-semibold mb-6">Company Information</h1>
       <CustomInput
         control={control}
-        name="position"
-        label="Position"
-        placeholder="Enter your position"
-        required={true}
-      />
-      <CustomInput
-        control={control}
         name="company"
         label="Company"
         placeholder="Enter your company name"
         required={true}
+        
       />
       <CustomTextArea
         control={control}

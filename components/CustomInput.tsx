@@ -34,7 +34,7 @@ const CustomInput = ({
             <FormControl>
               <Input
                 placeholder={placeholder}
-                className="mt-1 placeholder-placeholder-input block w-full px-4 py-2 bg-background-input border border-border-input rounded-md"
+                className="mt-1 placeholder-placeholder-input block w-full px-4 py-2 bg-secondary border border-border-input rounded-md"
                 {...field}
               />
             </FormControl>

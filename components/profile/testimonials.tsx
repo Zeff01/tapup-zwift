@@ -19,7 +19,7 @@ const testimonialList = [
 ];
 const Testimonials = () => {
   return (
-    <section className="max-w-[320px] mx-auto py-4 shadow-xl text-black">
+    <section className="mx-auto py-4 shadow-xl text-black">
       <h2 className="text-xl md:text-2xl pl-4">Testimonials</h2>
       <ul className="pt-4">
         {testimonialList.map((item, index) => (
@@ -36,7 +36,7 @@ const Testimonials = () => {
               />
             </div>
 
-            <div className="flex flex-col gap-2 w-[70%]">
+            <div className="flex flex-col gap-2 w-[70%] pr-4">
               <div className="flex">
                 {[1, 1, 1, 1, 1].map((_, index) => (
                   <div className="" key={index}>
@@ -45,7 +45,7 @@ const Testimonials = () => {
                 ))}
               </div>
               <div>
-                <p className="text-xs text-justify pr-2">{item.comment}</p>
+                <p className="text-xs text-justify">{item.comment}</p>
               </div>
             </div>
           </li>

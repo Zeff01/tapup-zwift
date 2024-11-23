@@ -9,7 +9,13 @@ interface PersonalInfoFormProps {
 const PersonalInfoForm: React.FC<PersonalInfoFormProps> = ({ control }) => {
   return (
     <div className="space-y-4">
-      <h1 className="text-lg font-semibold mb-6">Personal Information</h1>
+       <CustomInput
+        control={control}
+        name="position"
+        label="Position"
+        placeholder="Enter your position in your company"
+        required={true}
+      />
       <CustomInput
         control={control}
         name="firstName"
@@ -22,6 +28,13 @@ const PersonalInfoForm: React.FC<PersonalInfoFormProps> = ({ control }) => {
         name="lastName"
         label="Last Name"
         placeholder="Enter your last name"
+        required={true} 
+      />
+      <CustomInput
+        control={control}
+        name="email"
+        label="Email"
+        placeholder="Enter your email"
         required={true}
       />
       <FormField
