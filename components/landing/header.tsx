@@ -11,6 +11,7 @@ import { headerItems } from "@/constants";
 import { useUserContext } from "@/providers/user-provider";
 import AvatarIcon from "../AvatarIcon";
 import TapupLogo from "../svgs/TapupLogo";
+import { ThemeToggle } from "../Theme";
 
 const Header = () => {
   const pathname = usePathname();
@@ -46,7 +47,7 @@ const Header = () => {
             Activate
           </Button>
         </Link>
-
+        <ThemeToggle />
         <Sheet>
           <SheetTrigger asChild>
             <div

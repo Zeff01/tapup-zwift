@@ -11,6 +11,7 @@ import TapupLogo from "../svgs/TapupLogo";
 import { usePathname } from "next/navigation";
 import { cn } from "@/lib/utils";
 import { Button } from "../ui/button";
+import { ThemeToggle } from "../Theme";
 
 type Props = {
   user: UserState;
@@ -21,8 +22,9 @@ const NavigationBoarded = ({ user, signOut }: Props) => {
   const pathname = usePathname().split("/")[1];
   return (
     <nav className="w-[25rem] px-8 flex flex-col border-r fixed z-50 ease-in-out h-screen transition-transform -translate-x-[25rem] lg:translate-x-0">
-      <div className="py-8">
+      <div className="py-8 flex justify-between items-center px-4">
         <TapupLogo />
+        <ThemeToggle />
       </div>
       <div className="relative bg-accent py-4 px-6 rounded-full outline-white outline-2 flex items-center gap-4">
         <Image
