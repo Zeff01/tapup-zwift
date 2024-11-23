@@ -26,8 +26,10 @@ export type ChosenTemplateType = z.infer<
 
 export default function CardsAndUsersCreateFields({
   card,
+  isCard,
 }: {
   card?: boolean;
+  isCard?: boolean;
 }) {
   const { user } = useUserContext();
   const queryClient = useQueryClient();
@@ -380,7 +382,7 @@ export default function CardsAndUsersCreateFields({
                 selectedTemplateId={selectedTemplateId}
                 setSelectedTemplateId={setSelectedTemplateId}
               />{" "}
-              <PersonalInfoForm control={methods.control} />
+              <PersonalInfoForm control={methods.control} isCard={isCard} />
               <SocialLinksForm control={methods.control} />
             </div>
             <button

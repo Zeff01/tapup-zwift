@@ -4,12 +4,16 @@ import { FormControl, FormField, FormLabel, FormMessage } from "../ui/form";
 import { PhoneInput } from "../PhoneInput";
 interface PersonalInfoFormProps {
   control: any;
+  isCard?: boolean;
 }
 
-const PersonalInfoForm: React.FC<PersonalInfoFormProps> = ({ control }) => {
+const PersonalInfoForm: React.FC<PersonalInfoFormProps> = ({
+  control,
+  isCard,
+}) => {
   return (
     <div className="space-y-4">
-       <CustomInput
+      <CustomInput
         control={control}
         name="position"
         label="Position"
@@ -28,7 +32,7 @@ const PersonalInfoForm: React.FC<PersonalInfoFormProps> = ({ control }) => {
         name="lastName"
         label="Last Name"
         placeholder="Enter your last name"
-        required={true} 
+        required={true}
       />
       <CustomInput
         control={control}
@@ -36,6 +40,7 @@ const PersonalInfoForm: React.FC<PersonalInfoFormProps> = ({ control }) => {
         label="Email"
         placeholder="Enter your email"
         required={true}
+        disabled={!isCard}
       />
       <FormField
         control={control}

@@ -12,6 +12,7 @@ interface CustomInput {
   label: string;
   placeholder: string;
   required?: boolean;
+  disabled?: boolean;
 }
 
 const CustomInput = ({
@@ -20,6 +21,7 @@ const CustomInput = ({
   label,
   placeholder,
   required = false,
+  disabled,
 }: CustomInput) => {
   return (
     <FormField
@@ -36,6 +38,7 @@ const CustomInput = ({
                 placeholder={placeholder}
                 className="mt-1 placeholder-placeholder-input block w-full px-4 py-2 bg-secondary border border-border-input rounded-md"
                 {...field}
+                disabled={disabled}
               />
             </FormControl>
             <FormMessage className="text-12 text-red-500 mt-2" />

@@ -1,4 +1,3 @@
-
 import Link from "next/link";
 import { MdKeyboardDoubleArrowRight } from "react-icons/md";
 
@@ -13,8 +12,8 @@ const ComingSoon = () => {
           We are still working on it.
         </p>
 
-        <div className="mt-8"> 
-            <Link
+        <div className="mt-8">
+          <Link
             href="/dashboard"
             className="inline-block bg-[#22A348] hover:bg-[#1B8A3A] text-white px-6 py-2.5 rounded-md transition-colors duration-200"
           >

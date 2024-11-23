@@ -6,7 +6,6 @@ import Template5 from "@/components/templates/Template5";
 import Template6 from "@/components/templates/Template6";
 import { UserProfile } from "@/types/types";
 
-
 const SelectedTemplate = ({
   templateId,
   formData,
@@ -29,6 +28,5 @@ const SelectedTemplate = ({
     <div>Invalid template</div>
   );
 };
-
 
 export default SelectedTemplate;

@@ -16,7 +16,6 @@ const CompanyInfoForm: React.FC<CompanyInfoFormProps> = ({ control }) => {
         label="Company"
         placeholder="Enter your company name"
         required={true}
-        
       />
       <CustomTextArea
         control={control}
