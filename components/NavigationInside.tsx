@@ -80,8 +80,8 @@ const OverlayMenu = () => {
           {menuItems.map((item, index) => {
             const Icon = item.icon;
             const href = {
-              "/dashboard": "/dashboard",
-              "/update": `/update/${user?.uid}`,
+              // "/dashboard": "/dashboard",
+              "/user": `/user/update/${user?.uid}`,
               // "/cards": `/cards/${user?.uid}`,
             };
             return (

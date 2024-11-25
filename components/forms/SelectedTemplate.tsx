@@ -4,14 +4,14 @@ import Template3 from "@/components/templates/Template3";
 import Template4 from "@/components/templates/Template4";
 import Template5 from "@/components/templates/Template5";
 import Template6 from "@/components/templates/Template6";
-import { UserProfile } from "@/types/types";
+import { Card } from "@/types/types";
 
 const SelectedTemplate = ({
   templateId,
   formData,
 }: {
   templateId: keyof typeof renderTemplate; // Restrict templateId to valid keys
-  formData: UserProfile;
+  formData: Card;
 }) => {
   const renderTemplate = {
     template1: <Template1 {...formData} />,

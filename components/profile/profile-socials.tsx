@@ -2,7 +2,7 @@ import { RiFacebookFill } from "react-icons/ri";
 import { FaLinkedinIn } from "react-icons/fa";
 import { FiInstagram } from "react-icons/fi";
 import Link from "next/link";
-import { UserProfile } from "@/types/types";
+import { Card } from "@/types/types";
 
 const style = {
   width: "24px",
@@ -14,7 +14,7 @@ const ProfileSocials = ({
   facebookUrl,
   linkedinUrl,
   instagramUrl,
-}: UserProfile) => {
+}: Partial<Card>) => {
   return (
     <section className="flex gap-3 w-[15rem] pt-5 pl-2">
       <Link href={facebookUrl || "/"}>

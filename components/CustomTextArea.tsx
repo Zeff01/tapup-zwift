@@ -4,7 +4,7 @@ import { Textarea } from "@/components/ui/textarea";
 
 import { Control, FieldPath } from "react-hook-form";
 import { z } from "zod";
-import { createPortfolioSchema } from "@/lib/utils";
+import { createPortfolioSchema } from "@/lib/zod-schema";
 
 interface CustomTextAreaProps {
   control: Control<z.infer<typeof createPortfolioSchema>>;

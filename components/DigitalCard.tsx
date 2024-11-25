@@ -1,7 +1,7 @@
 "use client";
 
 import { UserState } from "@/providers/user-provider";
-import { deleteCardById } from "@/src/lib/firebase/store/card.action";
+import { deleteCardById } from "@/lib/firebase/actions/card.action";
 import { Card } from "@/types/types";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { Copy, Edit2, Link2, Trash } from "lucide-react";
@@ -64,7 +64,7 @@ const DigitalCard = ({ card, confirm, user }: Prop) => {
   };
   const handleCopy = (e: React.MouseEvent<HTMLSpanElement, MouseEvent>) => {
     e.stopPropagation();
-    navigator.clipboard.writeText(`${domain}/user/${card.id}`);
+    navigator.clipboard.writeText(`${domain}/site/${card.id}`);
     toast.success("Copied to clipboard");
   };
 
@@ -113,7 +113,7 @@ const DigitalCard = ({ card, confirm, user }: Prop) => {
           );
         })}
         <Link
-          href={`/user/${card.id}`}
+          href={`/site/${card.id}`}
           className="p-3 hover:opacity-30 cursor-pointer"
           prefetch
           target="_blank"

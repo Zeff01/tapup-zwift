@@ -1,6 +1,6 @@
 "use client";
-import { UserProfile } from "@/types/types";
-import { downloadVCard } from "@/lib/vCardUtils";
+import { Card } from "@/types/types";
+import { downloadVCard } from "@/lib/utils";
 
 import Image from "next/image";
 import profilePic from "@/public/assets/template4samplepic.png";
@@ -23,7 +23,7 @@ const ProfileInfo = ({
   number,
   websiteUrl,
   chosenTemplate,
-}: UserProfile) => {
+}: Partial<Card>) => {
   const userProfile = {
     firstName,
     lastName,

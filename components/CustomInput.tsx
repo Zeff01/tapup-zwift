@@ -4,7 +4,7 @@ import { Input } from "./ui/input";
 
 import { Control, FieldPath } from "react-hook-form";
 import { z } from "zod";
-import { createPortfolioSchema } from "@/lib/utils";
+import { createPortfolioSchema } from "@/lib/zod-schema";
 
 interface CustomInput {
   control: Control<z.infer<typeof createPortfolioSchema>>;

@@ -24,11 +24,11 @@ export const DASHBOARD_ROUTE = "/dashboard";
 export const ADMIN_ONLY_ROUTE = "/users";
 export const CARD_ROUTE = "/cards";
 export const USER_ROUTE = "/users";
-export const UPDATE_ROUTE = "/update";
+export const UPDATE_ROUTE = "/user/update";
 export const ACTION_ROUTE = "/action";
 export const CARD_PATH = "/cards/:path*";
 export const ADMIN_ONLY_PATH = "/users/:path*";
-export const UPDATE_PATH = "/update/:path*";
+export const UPDATE_PATH = "/user/update/:path*";
 export const ONBOARDING_PATH = "/onboarding/:path*";
 export const LOCAL_STORAGE_NAME = "isAuthenticated";
 
@@ -240,7 +240,7 @@ export const businessList = [
 
 export const menuItems = [
   { icon: RxDashboard, title: "Dashboard", href: "/dashboard" },
-  { icon: CgProfile, title: "Profile", href: "/update" },
+  { icon: CgProfile, title: "Profile", href: "/user" },
   { icon: TbCards, title: "Cards", href: "/cards" },
 ];
 
