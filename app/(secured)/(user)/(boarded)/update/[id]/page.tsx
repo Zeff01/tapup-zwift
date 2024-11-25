@@ -12,6 +12,7 @@ import { ADMIN_ONLY_ROUTE, USER_ROLE_ENUMS } from "@/constants";
 import { toast } from "react-toastify";
 import { redirect } from "next/navigation";
 import Error from "next/error";
+import MultiStepFormUpdate from "@/components/forms/multi-step-form-update";
 
 export default function UpdatePage({ params }: { params: { id: string } }) {
   const { user } = useUserContext();
@@ -51,5 +52,5 @@ export default function UpdatePage({ params }: { params: { id: string } }) {
   if (user?.role === USER_ROLE_ENUMS.ADMIN && params.id !== user.uid)
     return <CardAndUserFields userData={fetchUser} />;
 
-  return <CardAndUserFields isCurrentUser userData={user!} />;
+    return <MultiStepFormUpdate isCurrentUser userData={user!}/>
 }
