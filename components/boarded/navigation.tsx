@@ -1,4 +1,4 @@
-import { UserState } from "@/providers/user-provider";
+import { UserState } from "@/types/types";
 import Image from "next/image";
 import React from "react";
 
@@ -52,8 +52,7 @@ const NavigationBoarded = ({ user, signOut }: Props) => {
         {menuItems.map((item, index) => {
           const Icon = item.icon;
           const href = {
-            "/dashboard": "/dashboard",
-            "/update": `/update/${user?.uid}`,
+            "/user": `/user/update/${user?.uid}`,
           };
           return (
             <Link

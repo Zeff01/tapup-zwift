@@ -1,7 +1,9 @@
+"use client";
+
 import React from "react";
 import CustomInput from "@/components/CustomInput";
 import { FormControl, FormField, FormLabel, FormMessage } from "../ui/form";
-import { PhoneInput } from "../PhoneInput";
+import { PhoneInput } from "../ui/phone-input";
 interface PersonalInfoFormProps {
   control: any;
   isCard?: boolean;

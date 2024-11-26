@@ -56,7 +56,7 @@ const TapUpCarousel: React.FC = () => {
           setApi={setApi}
           onMouseEnter={plugin.current.stop}
           onMouseLeave={plugin.current.reset}
-          plugins={[plugin.current]}
+          plugins={[plugin.current as any]}
           opts={{ align: "start", loop: true }}
         >
           <CarouselContent>

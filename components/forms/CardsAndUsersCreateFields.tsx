@@ -1,15 +1,15 @@
 "use client";
 import { useState, useEffect } from "react";
 import Image from "next/image";
-import { updateUserById } from "@/src/lib/firebase/store/users.action";
-import { Photo } from "@/src/lib/firebase/store/users.type";
+import { updateUserById } from "@/lib/firebase/actions/user.action";
+import { Photo } from "@/types/types";
 import { Loader2, LoaderCircle } from "lucide-react";
 import Cropper from "../Cropper";
 import { useForm } from "react-hook-form";
 import { Form } from "@/components/ui/form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { z } from "zod";
-import { createPortfolioSchema } from "@/lib/utils";
+import { createPortfolioSchema } from "@/lib/zod-schema";
 import { TemplateCarousel } from "@/components/TemplateCarousel";
 import SocialLinksForm from "@/components/forms/SocialLinkForm";
 import PersonalInfoForm from "@/components/forms/PersonalInfoForm";
@@ -18,7 +18,7 @@ import ImageLoaded from "@/components/ImageLoaded";
 import { IoMdClose } from "react-icons/io";
 import { useUserContext } from "@/providers/user-provider";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
-import { createCard } from "@/src/lib/firebase/store/card.action";
+import { createCard } from "@/lib/firebase/actions/card.action";
 
 export type ChosenTemplateType = z.infer<
   typeof createPortfolioSchema

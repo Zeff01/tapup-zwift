@@ -1,5 +1,5 @@
-import { downloadVCard } from "@/lib/vCardUtils";
-import { UserProfile } from "@/types/types";
+import { downloadVCard } from "@/lib/utils";
+import { Card } from "@/types/types";
 import Image from "next/image";
 import { CiCirclePlus, CiSaveDown2 } from "react-icons/ci";
 import {
@@ -33,7 +33,7 @@ const Template3 = ({
   whatsappNumber,
   skypeInviteUrl,
   websiteUrl,
-}: UserProfile) => {
+}: Card) => {
   const userProfile = {
     firstName,
     lastName,

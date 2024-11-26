@@ -1,6 +1,5 @@
 import { CarouselCard } from "@/types/types";
 import { Button } from "../ui/button";
-import { HiArrowRightEndOnRectangle } from "react-icons/hi2";
 
 interface CardDetailsProps {
   card: CarouselCard;

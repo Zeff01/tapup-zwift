@@ -1,5 +1,5 @@
 import React from "react";
-import { UserProfile } from "@/types/types";
+import { Card } from "@/types/types";
 import ProfileInfo from "../profile/profile-info";
 import ProfileSocials from "../profile/profile-socials";
 import CarouselService from "../profile/carousel-service";
@@ -8,7 +8,7 @@ import Testimonials from "../profile/testimonials";
 import Footer from "../profile/footer";
 
 interface ProfilePageProps {
-  userData: UserProfile;
+  userData: Card;
 }
 
 const Template6: React.FC<ProfilePageProps> = ({ userData }) => {

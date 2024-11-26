@@ -1,10 +1,7 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import {
-  onAuthStateChanged,
-  signOutHandler,
-} from "@/src/lib/firebase/config/auth";
+import { onAuthStateChanged, signOutHandler } from "@/lib/firebase/auth";
 import { User } from "firebase/auth";
 import {
   createSession,
@@ -12,7 +9,7 @@ import {
   getSession,
   signUserId,
   verifySignUserId,
-} from "@/src/lib/firebase/config/session";
+} from "@/lib/session";
 import { useRouter } from "next/navigation";
 import { SignedUserIdJwtPayload } from "@/types/types";
 

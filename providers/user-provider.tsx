@@ -1,23 +1,12 @@
 "use client";
 
 import { useUserSession } from "@/hooks/useUserSession";
-import {
-  currentAuthUserDetails,
-  signOutHandler,
-} from "@/src/lib/firebase/config/auth";
-import { updateUserById } from "@/src/lib/firebase/store/users.action";
-import { Users } from "@/src/lib/firebase/store/users.type";
+import { currentAuthUserDetails, signOutHandler } from "@/lib/firebase/auth";
+import { updateUserById } from "@/lib/firebase/actions/user.action";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { useRouter } from "next/navigation";
 import { createContext, useContext, useMemo } from "react";
-
-export interface ExtendedUserInterface extends Users {
-  uid: string;
-  role: string;
-  onboarding: boolean;
-}
-
-export type UserState = ExtendedUserInterface | null;
+import { ExtendedUserInterface, UserState } from "@/types/types";
 
 export type UserProviderContextType = {
   user: UserState;
