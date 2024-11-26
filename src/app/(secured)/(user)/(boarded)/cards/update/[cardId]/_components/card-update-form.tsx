@@ -1,28 +1,20 @@
-import CardsAndUsersFields from "@/components/forms/CardsAndUsersUpdateFields";
+import MultiStepFormUpdate from "@/components/forms/multi-step-form-update";
 import { getCardById } from "@/lib/firebase/actions/card.action";
-import { redirect } from "next/navigation";
+import { catchErrorTyped } from "@/lib/utils";
+import { notFound } from "next/navigation";
 
 type Props = {
   cardId: string;
 };
 
 const CardUpdateFom = async ({ cardId }: Props) => {
-  let user = null;
+  const [err, data] = await catchErrorTyped(getCardById(cardId));
 
-  try {
-    const data = await getCardById(cardId);
+  if (err || !data) notFound();
 
-    if (!data) {
-      redirect("/cards");
-    }
+  const card = JSON.parse(JSON.stringify(data));
 
-    user = JSON.parse(JSON.stringify(data));
-  } catch (error) {
-    console.error("Error fetching card data:", error);
-    redirect("/cards");
-  }
-
-  return <CardsAndUsersFields userData={user} isCard />;
+  return <MultiStepFormUpdate userData={card} isCard />;
 };
 
 export default CardUpdateFom;
