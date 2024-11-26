@@ -1,29 +1,24 @@
 "use client";
 import { useState, useEffect } from "react";
 import Image from "next/image";
-import { updateUserById } from "@/src/lib/firebase/store/users.action";
-import { Photo } from "@/src/lib/firebase/store/users.type";
+import { Photo } from "@/types/types";
 import { Loader2, LoaderCircle, X } from "lucide-react";
 import Cropper from "../Cropper";
 import { useForm } from "react-hook-form";
 import { Form } from "@/components/ui/form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { z } from "zod";
-import { createPortfolioSchema } from "@/lib/utils";
+import { createPortfolioSchema } from "@/lib/zod-schema";
 import { TemplateCarousel } from "@/components/TemplateCarousel";
 import PersonalInfoForm from "@/components/forms/PersonalInfoForm";
 import CompanyInfoForm from "@/components/forms/CompanyInfoForm";
 import ImageLoaded from "@/components/ImageLoaded";
 import { IoMdClose } from "react-icons/io";
-import {
-  ExtendedUserInterface,
-  useUserContext,
-} from "@/providers/user-provider";
+import { useUserContext } from "@/providers/user-provider";
+
+import { ExtendedUserInterface } from "@/types/types";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
-import {
-  createCard,
-  updateCardById,
-} from "@/src/lib/firebase/store/card.action";
+import { updateCardById } from "@/lib/firebase/actions/card.action";
 import MultiStepProgress from "./MultiStepProgress";
 import TapupLogo from "../svgs/TapupLogo";
 import { formHeaderItems } from "@/constants";
