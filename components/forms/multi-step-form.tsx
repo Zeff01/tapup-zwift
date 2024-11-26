@@ -388,7 +388,7 @@ export default function CardsAndUsersCreateFields({
                     </p>
                   </div>
                 </div>
-                <PersonalInfoForm control={methods.control} />
+                <PersonalInfoForm control={methods.control} isCard />
                 <SocialLinksSelector onAddLink={handleAddLink} />
                 <div className="">
                   {selectedLinks.map((link) => (
