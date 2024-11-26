@@ -12,7 +12,7 @@ import { createPortal } from "react-dom";
 import { Input } from "@/components/ui/input";
 import { Loader2, Minus, Plus } from "lucide-react";
 import Image from "next/image";
-import { Photo } from "@/types/users.type";
+import { Photo } from "@/types/types";
 import { uploadImage } from "@/lib/firebase/actions/user.action";
 import { LoaderCircle } from "lucide-react";
 
@@ -21,19 +21,15 @@ import ReactCrop, {
   makeAspectCrop,
   Crop,
   PixelCrop,
-  //   convertToPixelCrop,
 } from "react-image-crop";
-import { canvasPreview } from "@/lib/canvasPreview";
+import { canvasPreview } from "@/lib/utils";
 import { useDebounceEffect } from "@/hooks/useDebounceEffect";
 
 import "react-image-crop/dist/ReactCrop.css";
-import { Button } from "@/components/ui/button";
 import { toast } from "react-toastify";
 import { cn } from "@/lib/utils";
 import { ReactNode } from "react";
 import ImageLoaded from "./ImageLoaded";
-import { firebaseDb, firebaseStorage } from "@/lib/firebase/firebase";
-import { m } from "framer-motion";
 
 // This is to demonstate how to make and center a % aspect crop
 // which is a bit trickier so we use some helper functions.

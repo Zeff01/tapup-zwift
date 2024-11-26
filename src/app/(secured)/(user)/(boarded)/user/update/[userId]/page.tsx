@@ -1,11 +1,11 @@
 import { getUserById } from "@/lib/firebase/actions/user.action";
 
 import { notFound } from "next/navigation";
-import { catchErrorTyped } from "@/lib/safe-error-handling";
+import { catchErrorTyped } from "@/lib/utils";
 import { Suspense } from "react";
 import Loading from "./loading";
 import UpdateUserForm from "./_components/update-user-form";
-import { ExtendedUserInterface } from "@/providers/user-provider";
+import { ExtendedUserInterface } from "@/types/types";
 
 const UpdateUser = async ({ id }: { id: string }) => {
   const [err, data] = await catchErrorTyped(getUserById(id));

@@ -2,7 +2,7 @@
 import { useState, useEffect } from "react";
 import Image from "next/image";
 import { IoMdClose } from "react-icons/io";
-import { Photo } from "@/types/users.type";
+import { Photo } from "@/types/types";
 import { Loader2, LoaderCircle } from "lucide-react";
 import Cropper from "@/components/Cropper";
 import { useForm } from "react-hook-form";
@@ -15,11 +15,9 @@ import SocialLinksForm from "@/components/forms/SocialLinkForm";
 import PersonalInfoForm from "@/components/forms/PersonalInfoForm";
 import CompanyInfoForm from "@/components/forms/CompanyInfoForm";
 import ImageLoaded from "@/components/ImageLoaded";
-import { Card } from "@/types/types";
-import {
-  ExtendedUserInterface,
-  useUserContext,
-} from "@/providers/user-provider";
+import { useUserContext } from "@/providers/user-provider";
+
+import { ExtendedUserInterface } from "@/types/types";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { updateCardById } from "@/lib/firebase/actions/card.action";
 

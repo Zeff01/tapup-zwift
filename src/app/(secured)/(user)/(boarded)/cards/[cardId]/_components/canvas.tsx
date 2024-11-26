@@ -3,7 +3,7 @@
 import { QRCodeSVG } from "qrcode.react";
 import { useEffect, useRef, useState } from "react";
 import html2canvas from "html2canvas";
-import { Users } from "@/types/users.type";
+import { Users } from "@/types/types";
 import MoonLoader from "react-spinners/MoonLoader";
 import ImageWithLoading from "@/components/ImageWithLoading";
 

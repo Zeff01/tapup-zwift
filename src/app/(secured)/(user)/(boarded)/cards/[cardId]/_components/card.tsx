@@ -2,7 +2,7 @@ import React from "react";
 import Canvas2Card from "./canvas";
 import { redirect } from "next/navigation";
 import { getCardById } from "@/lib/firebase/actions/card.action";
-import { catchErrorTyped } from "@/lib/safe-error-handling";
+import { catchErrorTyped } from "@/lib/utils";
 
 const Card = async ({ id }: { id: string }) => {
   const [error, data] = await catchErrorTyped(getCardById(id));

@@ -3,7 +3,7 @@ import React from "react";
 import UserPage from "./TemplateHandler";
 import { getCardById } from "@/lib/firebase/actions/card.action";
 import { notFound } from "next/navigation";
-import { catchErrorTyped } from "@/lib/safe-error-handling";
+import { catchErrorTyped } from "@/lib/utils";
 
 const UserWebpage = async ({ id }: { id: string }) => {
   const [error, data] = await catchErrorTyped(

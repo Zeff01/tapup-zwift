@@ -2,7 +2,7 @@
 import { useState, useEffect } from "react";
 import Image from "next/image";
 import { updateUserById } from "@/lib/firebase/actions/user.action";
-import { Photo } from "@/types/users.type";
+import { Photo } from "@/types/types";
 import { Loader2, LoaderCircle, X } from "lucide-react";
 import Cropper from "../Cropper";
 import { useForm } from "react-hook-form";

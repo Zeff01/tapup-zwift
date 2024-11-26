@@ -1,6 +1,6 @@
 "use client";
 
-import { UserState } from "@/providers/user-provider";
+import { UserState } from "@/types/types";
 import { deleteCardById } from "@/lib/firebase/actions/card.action";
 import { Card } from "@/types/types";
 import { useMutation, useQueryClient } from "@tanstack/react-query";

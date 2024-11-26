@@ -11,15 +11,15 @@ const SelectedTemplate = ({
   formData,
 }: {
   templateId: keyof typeof renderTemplate; // Restrict templateId to valid keys
-  formData: Card;
+  formData: Partial<Card>;
 }) => {
   const renderTemplate = {
-    template1: <Template1 {...formData} />,
-    template2: <Template2 {...formData} />,
-    template3: <Template3 {...formData} />,
-    template4: <Template4 {...formData} />,
-    template5: <Template5 {...formData} />,
-    template6: <Template6 userData={formData} />,
+    template1: <Template1 {...(formData as Card)} />,
+    template2: <Template2 {...(formData as Card)} />,
+    template3: <Template3 {...(formData as Card)} />,
+    template4: <Template4 {...(formData as Card)} />,
+    template5: <Template5 {...(formData as Card)} />,
+    template6: <Template6 userData={formData as Card} />,
   };
 
   return templateId in renderTemplate ? (

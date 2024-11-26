@@ -1,6 +1,6 @@
 "use client";
 
-import { Users } from "@/types/users.type";
+import { Users } from "@/types/types";
 import React from "react";
 import { DataTable } from "./data-table";
 import { columns } from "./columns";
