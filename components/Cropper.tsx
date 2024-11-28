@@ -30,6 +30,7 @@ import { toast } from "react-toastify";
 import { cn } from "@/lib/utils";
 import { ReactNode } from "react";
 import ImageLoaded from "./ImageLoaded";
+import TapupLogo from "./svgs/TapupLogo";
 
 // This is to demonstate how to make and center a % aspect crop
 // which is a bit trickier so we use some helper functions.
@@ -287,10 +288,13 @@ export default function Cropper({
           {showModal && (
             <div className="z-50 fixed top-0 right-0 w-screen h-screen">
               <div className="z-20 w-full h-full bg-black opacity-80" />
-              <div className=" z-30 absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[500px] h-full bg-custom-light flex flex-col items-center gap-y-8 overflow-y-scroll  justify-between">
+              <div className=" z-30 absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[500px] h-full bg-secondary flex flex-col items-center gap-y-8 overflow-y-scroll  justify-between">
+                  
+            
                 <div className="pt-8 w-full flex flex-col items-center">
                   {/* <input type="file" accept="image/*" onChange={onSelectFile} /> */}
                   <div className="w-[400px] flex flex-col items-center gap-y-2">
+                   <TapupLogo className="w-[6rem] mb-3"/>
                     <p className="pb-4 font-bold text-2xl">Select the Image</p>
                     <label htmlFor="scale" className="text-xl font-semibold">
                       Zoom
@@ -305,7 +309,7 @@ export default function Cropper({
                         onValueChange={(v) => {
                           setScale(v[0]);
                         }}
-                      />
+                       />
                       <Plus />
                     </div>
                   </div>
@@ -314,7 +318,7 @@ export default function Cropper({
                     <button
                       type="button"
                       onClick={toggleModal}
-                      className="w-20 text-white border disabled:cursor-not-allowed items-center justify-center whitespace-nowrap rounded-md text-sm font-medium ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 border-input bg-transparent hover:bg-accent py-2 hover:text-accent-foreground"
+                      className="w-20 text-white border disabled:cursor-not-allowed items-center justify-center whitespace-nowrap rounded-md text-sm font-medium ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 border-input bg-gray-600 hover:bg-accent py-2 hover:bg-green-600"
                       disabled={loading}
                     >
                       Cancel
@@ -323,7 +327,7 @@ export default function Cropper({
                       <button
                         type="button"
                         onClick={onDownloadCropClick}
-                        className="w-20 z-[500] disabled:opacity-50 disabled:cursor-not-allowed bg-primary text-primary-foreground hover:bg-primary/90 py-2 rounded-md"
+                        className="w-20 z-[500] disabled:opacity-50 disabled:cursor-not-allowed bg-green-500 text-black hover:bg-green-600 py-2 rounded-md "
                         disabled={loading}
                       >
                         {loading ? (
