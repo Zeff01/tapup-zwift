@@ -1,5 +1,5 @@
 "use client";
-import { useState, useEffect, useRef } from "react";
+import { useState, useEffect } from "react";
 import Image from "next/image";
 import { updateUserById } from "@/lib/firebase/actions/user.action";
 import { Photo } from "@/types/types";
@@ -68,8 +68,6 @@ export default function CardsAndUsersCreateFields({
   const addServiceImageUrl = (imageUrl: string) => {
     setServiceImageUrls([...serviceImageUrls, imageUrl]);
   };
-
-  const formRef = useRef<HTMLFormElement>(null);
 
   // 1. Define your form.
   const methods = useForm<z.infer<typeof createPortfolioSchema>>({
