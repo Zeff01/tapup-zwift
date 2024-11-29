@@ -53,6 +53,10 @@ export const signUpHandler = async (data: z.infer<typeof signupSchema>) => {
     );
 
     const userID = res.user.uid;
+    if (!userID) throw new Error("Something went wrong");
+
+    await createSession(userID);
+
     await setDoc(doc(firebaseDb, "user-account", userID), {
       role: USER_ROLE_ENUMS.USER,
       email: res.user.email,
@@ -60,20 +64,20 @@ export const signUpHandler = async (data: z.infer<typeof signupSchema>) => {
       lastname: data.lastName,
       timestamp: serverTimestamp(),
     });
+
     toast.success("User registration successful!");
-    setTimeout(() => {
-      window.location.href = "/login";
-    }, 2000);
   } catch (error) {
     if (error instanceof FirebaseError) {
       switch (error.code) {
         case "auth/email-already-in-use":
           toast.error("Email already exists!");
-          break;
+          throw "Email already exists";
         default:
           toast.error("Something went wrong!");
+          throw error;
       }
     }
+    throw error;
   }
 };
 
@@ -93,12 +97,14 @@ export const loginHandler = async ({
     toast.success("Login successful!");
   } catch (error) {
     if (error instanceof FirebaseError) {
+      console.log(error.code);
       switch (error.code) {
         case "auth/invalid-credential":
           toast.error("Invalid credentials");
-          break;
+          throw "Invalid Credentials";
         default:
           toast.error("Something went wrong!");
+          throw error;
       }
     }
   }

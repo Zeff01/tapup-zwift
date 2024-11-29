@@ -39,8 +39,12 @@ import {
 import Social from "./social-buttons";
 import { SignupData } from "@/types/types";
 import { signUpHandler } from "@/lib/firebase/auth";
+import { useMutation } from "@tanstack/react-query";
+import { useRouter } from "next/navigation";
+import { Loader2 } from "lucide-react";
 
 export function RegisterForm() {
+  const router = useRouter();
   const form = useForm<z.infer<typeof signupSchema>>({
     resolver: zodResolver(signupSchema),
     defaultValues: {
@@ -52,8 +56,21 @@ export function RegisterForm() {
     },
   });
 
+  const {
+    mutate: registerHandlerMutation,
+    isPending,
+    isSuccess,
+  } = useMutation({
+    mutationFn: signUpHandler,
+    onSuccess: () => {
+      router.push("/dashboard");
+    },
+  });
+
+  const isLoading = isPending || isSuccess;
+
   const onSubmit = async (data: SignupData) => {
-    await signUpHandler(data);
+    await registerHandlerMutation(data);
   };
   return (
     <Card className="w-full py-8 px-6 md:p-16 shadow-md rounded-md">
@@ -69,6 +86,7 @@ export function RegisterForm() {
               <div className="flex gap-x-2">
                 <FormField
                   control={form.control}
+                  disabled={isLoading}
                   name="firstName"
                   render={({ field }) => (
                     <FormItem className="flex-1">
@@ -90,6 +108,7 @@ export function RegisterForm() {
                 <FormField
                   control={form.control}
                   name="lastName"
+                  disabled={isLoading}
                   render={({ field }) => (
                     <FormItem className="flex-1">
                       <div className="flex items-center justify-between">
@@ -112,6 +131,7 @@ export function RegisterForm() {
               <FormField
                 control={form.control}
                 name="email"
+                disabled={isLoading}
                 render={({ field }) => (
                   <FormItem>
                     <div className="flex items-center justify-between">
@@ -132,6 +152,7 @@ export function RegisterForm() {
               <FormField
                 control={form.control}
                 name="password"
+                disabled={isLoading}
                 render={({ field }) => (
                   <FormItem>
                     <div className="flex items-center justify-between">
@@ -152,6 +173,7 @@ export function RegisterForm() {
               <FormField
                 control={form.control}
                 name="confirmPassword"
+                disabled={isLoading}
                 render={({ field }) => (
                   <FormItem>
                     <div className="flex items-center justify-between">
@@ -178,8 +200,10 @@ export function RegisterForm() {
               className="w-full rounded-full h-8 bg-[#21C15C] hover:bg-[#1eb746] font-light mt-[20px] transform transition-colors duration-300"
               variant={"default"}
               size={"lg"}
+              disabled={isLoading}
             >
               Sign Up
+              {isLoading && <Loader2 className="ml-2 h-4 w-4 animate-spin" />}
             </Button>
             <p className="flex gap-x-1 items-center justify-center text-xs text-muted-foreground w-full p-2">
               <span>Already Have an Account?</span>

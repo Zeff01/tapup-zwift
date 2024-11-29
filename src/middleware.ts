@@ -56,7 +56,7 @@ export default async function middleware(request: NextRequest) {
   }
 
   if (authRoutes.some((route) => pathname === route)) {
-    return NextResponse.redirect(redirectTo(ONBOARDING_ROUTE));
+    return NextResponse.redirect(redirectTo(DASHBOARD_ROUTE));
   }
   return NextResponse.next();
 }
