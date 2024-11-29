@@ -24,7 +24,7 @@ import { formHeaderItems } from "@/constants";
 import SocialLinksSelector from "./SocialLink";
 import { Input } from "../ui/input";
 import SelectedTemplate from "./SelectedTemplate";
-
+import SelectedPhysicalCard from "./SelectedPhysicalCard";
 import { ArrowLeft } from "lucide-react";
 import { CardSkeleton, CardSkeleton2 } from "@/components/CardSkeleton";
 import { Button } from "@/components/ui/button";
@@ -32,6 +32,10 @@ import { Button } from "@/components/ui/button";
 export type ChosenTemplateType = z.infer<
   typeof createPortfolioSchema
 >["chosenTemplate"];
+
+export type SelectedPhysicalCardType = z.infer<
+  typeof createPortfolioSchema
+>["selectedPhysicalCard"];
 
 interface SelectedLink {
   label: string;
@@ -57,6 +61,9 @@ export default function CardsAndUsersCreateFields({
   const [serviceImageUrls, setServiceImageUrls] = useState<string[]>([]);
 
   const [selectedLinks, setSelectedLinks] = useState<SelectedLink[]>([]);
+
+  const [selectedPhysicalCard, setSelectedPhysicalCard] =
+    useState<SelectedPhysicalCardType>("card1");
 
   const [selectedTemplateId, setSelectedTemplateId] =
     useState<ChosenTemplateType>("template1");
@@ -93,6 +100,7 @@ export default function CardsAndUsersCreateFields({
       skypeInviteUrl: "",
       websiteUrl: "",
       chosenTemplate: "template1",
+      selectedPhysicalCard: "card1",
     },
   });
 
@@ -189,6 +197,7 @@ export default function CardsAndUsersCreateFields({
     ["company", "companyBackground", "serviceDescription"], // Step 1 fields
     ["firstName", "lastName", "email", "number"], // Step 2 fields
     ["chosenTemplate"], // Step 3 fields
+    ["selectedPhysicalCard"], // Step 4 fields
   ];
 
   const handleNextStep = async (event: any) => {
@@ -498,13 +507,25 @@ export default function CardsAndUsersCreateFields({
 
               {/* Cards Grid */}
               <div className="grid sm:grid-cols-2 gap-3 sm:gap-4 md:gap-6 lg:gap-8">
-                {Array.from({ length: 8 }, (_, index) =>
-                  index % 2 === 0 ? (
-                    <CardSkeleton key={index} />
-                  ) : (
-                    <CardSkeleton2 key={index} />
-                  )
-                )}
+                {(
+                  Object.keys(
+                    createPortfolioSchema.shape.selectedPhysicalCard.enum
+                  ) as SelectedPhysicalCardType[]
+                ).map((cardId) => (
+                  <div
+                    key={cardId}
+                    onClick={() => {
+                      setSelectedPhysicalCard(cardId);
+                      methods.setValue("selectedPhysicalCard", cardId);
+                    }}
+                  >
+                    <SelectedPhysicalCard
+                      cardId={cardId}
+                      formData={methods.getValues()}
+                      isSelected={selectedPhysicalCard === cardId}
+                    />
+                  </div>
+                ))}
               </div>
             </div>
           </div>
