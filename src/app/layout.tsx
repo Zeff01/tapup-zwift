@@ -4,7 +4,6 @@ import type { Metadata } from "next";
 import { Lato } from "next/font/google";
 import { ToastContainer } from "react-toastify";
 import Head from "next/head";
-import { UserContextProvider } from "@/providers/user-provider";
 import { ThemeProvider } from "@/providers/theme-provider";
 import { QueryProvider } from "@/providers/query-provider";
 
@@ -38,21 +37,19 @@ export default function RootLayout({
           disableTransitionOnChange
         >
           <QueryProvider>
-            <UserContextProvider>
-              <main className="min-h-screen flex flex-col bg-background">
-                {children}
-              </main>
-              {isDev && (
-                <div className="z-50 fixed bottom-4 right-4 bg-foreground size-6 rounded-full flex items-center justify-center font-bold text-background text-xs">
-                  <span className="block sm:hidden">xs</span>
-                  <span className="hidden sm:block md:hidden">sm</span>
-                  <span className="hidden md:block lg:hidden">md</span>
-                  <span className="hidden lg:block xl:hidden">lg</span>
-                  <span className="hidden xl:block">xl</span>
-                </div>
-              )}
-              <ToastContainer />
-            </UserContextProvider>
+            <main className="min-h-screen flex flex-col bg-background">
+              {children}
+            </main>
+            {isDev && (
+              <div className="z-50 fixed bottom-4 right-4 bg-foreground size-6 rounded-full flex items-center justify-center font-bold text-background text-xs">
+                <span className="block sm:hidden">xs</span>
+                <span className="hidden sm:block md:hidden">sm</span>
+                <span className="hidden md:block lg:hidden">md</span>
+                <span className="hidden lg:block xl:hidden">lg</span>
+                <span className="hidden xl:block">xl</span>
+              </div>
+            )}
+            <ToastContainer />
           </QueryProvider>
         </ThemeProvider>
       </body>

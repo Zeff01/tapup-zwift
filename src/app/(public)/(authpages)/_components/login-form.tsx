@@ -38,6 +38,8 @@ import Social from "./social-buttons";
 import { loginHandler } from "@/lib/firebase/auth";
 import { LoginData } from "@/types/types";
 import { useRouter } from "next/navigation";
+import { useMutation } from "@tanstack/react-query";
+import { Loader2 } from "lucide-react";
 
 export function LogInForm() {
   const router = useRouter();
@@ -48,10 +50,21 @@ export function LogInForm() {
       password: "",
     },
   });
+  const {
+    mutate: loginHandlerMutation,
+    isPending,
+    isSuccess,
+  } = useMutation({
+    mutationFn: loginHandler,
+    onSuccess: () => {
+      router.push("/dashboard");
+    },
+  });
   const onSubmit = async (data: LoginData) => {
-    await loginHandler(data);
-    router.push("/onboarding");
+    await loginHandlerMutation(data);
   };
+
+  const isLoading = isPending || isSuccess;
 
   return (
     <Card className="w-full shadow-md md:p-10 h-full flex flex-col justify-center rounded-md py-8">
@@ -67,6 +80,7 @@ export function LogInForm() {
               <FormField
                 control={form.control}
                 name="email"
+                disabled={isLoading}
                 render={({ field }) => (
                   <FormItem>
                     <div className="flex items-center justify-between">
@@ -87,6 +101,7 @@ export function LogInForm() {
               <FormField
                 control={form.control}
                 name="password"
+                disabled={isLoading}
                 render={({ field }) => (
                   <FormItem>
                     <div className="flex items-center justify-between">
@@ -119,8 +134,10 @@ export function LogInForm() {
               className="w-full rounded-full h-8 bg-[#21C15C] hover:bg-[#1eb746] font-light mt-[20px] transform transition-colors duration-300"
               variant={"default"}
               size={"lg"}
+              disabled={isLoading}
             >
               Sign In
+              {isLoading && <Loader2 className="ml-2 h-4 w-4 animate-spin" />}
             </Button>
             <p className="flex gap-x-1 items-center justify-center text-xs text-muted-foreground w-full mt-2">
               <span>Don&#39;t Have an Account?</span>

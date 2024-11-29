@@ -21,18 +21,18 @@ type Props = {
 };
 
 const AvatarIcon = ({ img, className }: Props) => {
-  const { logOutUser, isAuthenticated, user } = useUserContext();
+  // const { logOutUser, isAuthenticated, user } = useUserContext();
   return (
     <DropdownMenu>
       <DropdownMenuTrigger>
         <Avatar className={cn(className)}>
-          <AvatarImage src={isAuthenticated ? img : ""} />
+          {/* <AvatarImage src={isAuthenticated ? img : ""} /> */}
           <AvatarFallback className="bg-secondary">
             <UserIcon className="text-primary" />
           </AvatarFallback>
         </Avatar>
       </DropdownMenuTrigger>
-      {isAuthenticated ? (
+      {/* {isAuthenticated ? (
         <DropdownMenuContent>
           <DropdownMenuLabel>My Account</DropdownMenuLabel>
           <DropdownMenuSeparator />
@@ -66,7 +66,7 @@ const AvatarIcon = ({ img, className }: Props) => {
             <DropdownMenuItem>Sign Up</DropdownMenuItem>
           </Link>
         </DropdownMenuContent>
-      )}
+      )} */}
     </DropdownMenu>
   );
 };

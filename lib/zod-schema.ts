@@ -152,8 +152,8 @@ export const loginSchema = z.object({
 
 export const signupSchema = z
   .object({
-    firstName: z.string(),
-    lastName: z.string(),
+    firstName: z.string().min(3, "*"),
+    lastName: z.string().min(3, "*"),
     email: z.string().email({ message: "Invalid email address" }),
     password: z
       .string()
