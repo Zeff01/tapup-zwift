@@ -4,13 +4,11 @@ import {
   Sheet,
   SheetTrigger,
   SheetContent,
-  SheetClose,
   SheetTitle,
 } from "@/components/ui/sheet";
 import Link from "next/link";
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import Image from "next/image";
-import tapUpLogo from "@/public/assets/tap-up-logo-white.png";
 import { HiMenuAlt3 } from "react-icons/hi";
 import profilePic from "@/public/assets/template4samplepic.png";
 import { BiLogOut } from "react-icons/bi";

@@ -36,9 +36,11 @@ const Cards = () => {
             + Create
           </Link>
         </div>
-        <div className="grid grid-cols-[repeat(auto-fill,minmax(18rem,1fr))] justify-items-center gap-4 mt-8">
+        {/* grid-cols-[repeat(auto-fill,minmax(18rem,1fr))] */}
+        {/* grid-cols-[200px,fit-content(40rem),1fr] */}
+        <div className="grid justify-center grid-cols-[repeat(auto-fill,minmax(18rem,24rem))] justify-items-center xl:justify-start xl:grid-cols-[repeat(auto-fill,minmax(18rem,1fr))] gap-4 mt-8">
           {cards && cards.length > 0 ? (
-            cards?.map((card) => (
+            cards.map((card) => (
               <DigitalCard
                 user={user}
                 confirm={confirm}

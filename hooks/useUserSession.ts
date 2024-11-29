@@ -36,13 +36,13 @@ export function useUserSession(initSession: string | null = null) {
 
     if (!sessionCookie) {
       await createSession(authUser.uid);
-      router.refresh();
+      router.push("/dashboard");
       return;
     }
 
     if (!cookieSession || cookieSession.uid !== authUser.uid) {
       await signOutUser();
-      router.refresh();
+      router.push("/login");
       return;
     }
   };
@@ -57,7 +57,7 @@ export function useUserSession(initSession: string | null = null) {
 
         if (sessionCookie) {
           await deleteSession();
-          // router.push("/login");
+          router.push("/login");
         }
 
         return;
@@ -68,7 +68,9 @@ export function useUserSession(initSession: string | null = null) {
       setUser(authUser);
     });
 
-    return () => unsubscribe();
+    return () => {
+      return unsubscribe();
+    };
   }, []);
 
   return { userUid, user };
