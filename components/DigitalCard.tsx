@@ -83,7 +83,7 @@ const DigitalCard = ({ card, confirm, user }: Prop) => {
     },
   ];
   return (
-    <div className="w-full aspect-[340/208] hover:scale-105 transition-transform duration-200 flex justify-between text-white bg-neutral-950 rounded-[30px] overflow-hidden">
+    <div className="w-full aspect-[340/208] hover:scale-105 transition-transform duration-200 flex justify-between text-secondary bg-foreground rounded-[30px] overflow-hidden">
       <Link
         href={`/cards/${card.id}`}
         prefetch
@@ -99,7 +99,7 @@ const DigitalCard = ({ card, confirm, user }: Prop) => {
           {/* <p className="text-xs mt-4">{`${publicDomain}/profile/${card.id}`}</p> */}
         </div>
       </Link>
-      <div className="flex flex-col justify-center items-center bg-neutral-950 hover:bg-neutral-900 transition">
+      <div className="flex flex-col justify-center items-center bg-foreground hover:bg-primaryBackground hover:text-primary  transition">
         {iconAndFunctionMap.map((item, index) => {
           const Icon = item.icon;
           return (
