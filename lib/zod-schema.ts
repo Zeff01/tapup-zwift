@@ -51,6 +51,8 @@ export const createPortfolioSchema = z.object({
     "template4",
     "template5",
     "template6",
+    "template9",
+    "template10",
   ]),
   firstName: z.string().min(3, "First name must be at least 3 characters"),
   lastName: z.string().min(3, "Last name must be at least 3 characters"),
