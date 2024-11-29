@@ -25,6 +25,10 @@ import SocialLinksSelector from "./SocialLink";
 import { Input } from "../ui/input";
 import SelectedTemplate from "./SelectedTemplate";
 
+import { ArrowLeft } from "lucide-react";
+import { CardSkeleton, CardSkeleton2 } from "@/components/CardSkeleton";
+import { Button } from "@/components/ui/button";
+
 export type ChosenTemplateType = z.infer<
   typeof createPortfolioSchema
 >["chosenTemplate"];
@@ -169,7 +173,6 @@ export default function CardsAndUsersCreateFields({
 
   const formSubmit = async (data: z.infer<typeof createPortfolioSchema>) => {
     if (!user) return;
-
     if (!card) {
       onBoardUserMutation({ user_id: user.uid, user: data });
       return;
@@ -179,7 +182,6 @@ export default function CardsAndUsersCreateFields({
 
   const isLoading = isLoadingCreateCard || isLoadingOnBoarding;
 
-  console.log(formSubmit);
   // Step state management
   const [currentStep, setCurrentStep] = useState(1);
 
@@ -191,7 +193,10 @@ export default function CardsAndUsersCreateFields({
 
   const handleNextStep = async (event: any) => {
     event.preventDefault();
-
+    if (currentStep === 3) {
+      setCurrentStep(4);
+      return;
+    }
     const fieldsToValidate = steps[currentStep - 1];
 
     // Trigger validation only for the current step
@@ -228,247 +233,303 @@ export default function CardsAndUsersCreateFields({
     );
   };
 
+  const handleSubmit = () => {
+    methods.handleSubmit(formSubmit)();
+  };
+
   return (
-    <main className="flex flex-col overflow-auto py-8 px-6 sm:px-0 bg-background h-full">
-      <TapupLogo className="mx-auto mb-5" />
-      <div className="w-full mx-auto max-w-sm">
-        {formHeaderItems.map((item) => (
-          <div key={item.id} className="mb-4">
-            <h2 className="text-2xl">
-              {currentStep === item.id ? item.title : ""}
-            </h2>
-          </div>
-        ))}
-        <MultiStepProgress currentStep={currentStep} />
-        <Form {...methods}>
-          <form
-            className="space-y-6"
-            onSubmit={methods.handleSubmit(formSubmit)}
-          >
-            {/* Step 1 - Cover Photo and Profile Pic */}
-            {currentStep === 1 && (
-              <div className="">
-                <p className="text-lg font-semibold mb-6">Cover Photo</p>
-                <div className="flex aspect-[16/9] w-full flex-col items-center relative mb-20">
-                  <div className="rounded-lg animate-pulse absolute w-full h-full" />
-                  <div className="flex flex-col items-center relative w-full">
-                    <div className="w-full">
-                      <Cropper
-                        imageUrl={coverPhotoUrl}
-                        setImageUrl={setCoverPhotoUrl}
-                        photo={coverPhoto}
-                        aspect={16 / 9}
-                        setPhoto={setCoverPhoto}
-                        className="w-full aspect-[16/9] rounded-2xl overflow-hidden border-none "
-                        imageClassName="rounded-2xl"
-                        fallback={
-                          <div className="w-full aspect-[16/9] flex flex-col items-center gap-y-2 rounded-2xl border-dashed border-2 border-gray-500">
-                            <Image
-                              src={"/assets/image-plus.svg"}
-                              width={50}
-                              height={50}
-                              alt="plus"
-                              className="size-10 lg:size-auto mt-8 border p-2 rounded-md cursor-pointer"
-                            />
-                            <p className="text-[#767676] text-xl">
-                              Drop your image here or{" "}
-                              <span className="text-green-500">browse</span>
-                            </p>
-                            <p className="text-[#767676] text-xs">
-                              We support PNG, JPEG, and GIF files under 25MB
-                            </p>
-                          </div>
-                        }
-                      />
-                    </div>
-                  </div>
-                </div>
-                <span className="text-sm text-red-500">
-                  {methods.formState.errors.profilePictureUrl?.message ?? ""}
-                </span>
-
-                <div className="space-y-6">
-                  <CompanyInfoForm control={methods.control} />
+    <main>
+      {currentStep < 4 ? (
+        <div className="flex flex-col overflow-auto py-8 px-6 sm:px-0 bg-background h-full">
+          <TapupLogo className="mx-auto mb-5" />
+          <div className="w-full mx-auto max-w-sm">
+            {formHeaderItems.map((item) => (
+              <div key={item.id} className="mb-4">
+                <h2 className="text-2xl">
+                  {currentStep === item.id ? item.title : ""}
+                </h2>
+              </div>
+            ))}
+            <MultiStepProgress currentStep={currentStep} />
+            <Form {...methods}>
+              <form
+                className="space-y-6"
+                onSubmit={methods.handleSubmit(formSubmit)}
+              >
+                {/* Step 1 - Cover Photo and Profile Pic */}
+                {currentStep === 1 && (
                   <div className="">
-                    <h1 className="text-lg font-semibold mt-2">Photos</h1>
-                    <div className="w-full mt-2">
-                      <Cropper
-                        imageUrl={null}
-                        setImageUrl={addServiceImageUrl}
-                        photo={null}
-                        aspect={1}
-                        setPhoto={addServicePhoto}
-                        className="w-full aspect-[16/9] rounded-2xl overflow-hidden border-dashed border-2"
-                        imageClassName="rounded-2xl"
-                        fallback={
-                          <div className="w-full aspect-[16/9] flex flex-col items-center gap-y-2">
-                            <Image
-                              src={"/assets/image-plus.svg"}
-                              width={50}
-                              height={50}
-                              alt="plus"
-                              className="size-10 lg:size-auto mt-8 border p-2 rounded-md cursor-pointer"
-                            />
-                            <p className="text-[#767676] text-xl">
-                              Drop your image here or{" "}
-                              <span className="text-green-500">browse</span>
-                            </p>
-                            <p className="text-[#767676] text-xs">
-                              We support PNG, JPEG, and GIF files under 25MB
-                            </p>
-                          </div>
-                        }
-                      />
-
-                      <div className="flex gap-2 mt-4 flex-wrap">
-                        {serviceImageUrls.map((url, key) => {
-                          return (
-                            <div
-                              key={`index-${key}`}
-                              className="flex items-center justify-center rounded-md h-[77px] w-[77px] z-auto overflow-hidden relative bg-[#222224] border border-[#2c2c2c]"
-                            >
-                              <div
-                                className="absolute flex items-center justify-center top-1 right-1 h-4 rounded-full w-4 bg-gray-900 z-[100] cursor-pointer"
-                                onClick={() =>
-                                  setServiceImageUrls((prev) =>
-                                    prev.filter((_, index) => index !== key)
-                                  )
-                                }
-                              >
-                                <IoMdClose className="size-2 text-white" />
+                    <p className="text-lg font-semibold mb-6">Cover Photo</p>
+                    <div className="flex aspect-[16/9] w-full flex-col items-center relative mb-20">
+                      <div className="rounded-lg animate-pulse absolute w-full h-full" />
+                      <div className="flex flex-col items-center relative w-full">
+                        <div className="w-full">
+                          <Cropper
+                            imageUrl={coverPhotoUrl}
+                            setImageUrl={setCoverPhotoUrl}
+                            photo={coverPhoto}
+                            aspect={16 / 9}
+                            setPhoto={setCoverPhoto}
+                            className="w-full aspect-[16/9] rounded-2xl overflow-hidden border-none "
+                            imageClassName="rounded-2xl"
+                            fallback={
+                              <div className="w-full aspect-[16/9] flex flex-col items-center gap-y-2 rounded-2xl border-dashed border-2 border-gray-500">
+                                <Image
+                                  src={"/assets/image-plus.svg"}
+                                  width={50}
+                                  height={50}
+                                  alt="plus"
+                                  className="size-10 lg:size-auto mt-8 border p-2 rounded-md cursor-pointer"
+                                />
+                                <p className="text-[#767676] text-xl">
+                                  Drop your image here or{" "}
+                                  <span className="text-green-500">browse</span>
+                                </p>
+                                <p className="text-[#767676] text-xs">
+                                  We support PNG, JPEG, and GIF files under 25MB
+                                </p>
                               </div>
-                              <Loader2 className="animate-spin" />
-                              <ImageLoaded
-                                className="rounded-md absolute top-0 left-0"
-                                url={url}
-                              />
-                            </div>
-                          );
-                        })}
+                            }
+                          />
+                        </div>
                       </div>
                     </div>
-                  </div>
-                </div>
-              </div>
-            )}
+                    <span className="text-sm text-red-500">
+                      {methods.formState.errors.profilePictureUrl?.message ??
+                        ""}
+                    </span>
 
-            {/* Step 2 - Company Info and Personal Info */}
-            {currentStep === 2 && (
-              <div className="">
-                <h2>Profile Photo</h2>
-                <div className="w-full flex justify-center items-center flex-col my-4">
-                  <Cropper
-                    imageUrl={imageUrl}
-                    setImageUrl={setImageUrl}
-                    photo={photo}
-                    aspect={1}
-                    setPhoto={setPhoto}
-                    circularCrop
-                    className="w-[120px] h-[120px] lg:w-[150px] lg:h-[150px] rounded-full "
-                    fallback={
-                      <div className="relative w-full h-full rounded-full flex items-center justify-center border-2  border-dashed">
-                        <Image
-                          src={"/assets/image-plus.svg"}
-                          width={50}
-                          height={50}
-                          className="size-8 lg:size-auto p-2 border rounded-md border-gray-500"
-                          alt="gallery"
-                        />
+                    <div className="space-y-6">
+                      <CompanyInfoForm control={methods.control} />
+                      <div className="">
+                        <h1 className="text-lg font-semibold mt-2">Photos</h1>
+                        <div className="w-full mt-2">
+                          <Cropper
+                            imageUrl={null}
+                            setImageUrl={addServiceImageUrl}
+                            photo={null}
+                            aspect={1}
+                            setPhoto={addServicePhoto}
+                            className="w-full aspect-[16/9] rounded-2xl overflow-hidden border-dashed border-2"
+                            imageClassName="rounded-2xl"
+                            fallback={
+                              <div className="w-full aspect-[16/9] flex flex-col items-center gap-y-2">
+                                <Image
+                                  src={"/assets/image-plus.svg"}
+                                  width={50}
+                                  height={50}
+                                  alt="plus"
+                                  className="size-10 lg:size-auto mt-8 border p-2 rounded-md cursor-pointer"
+                                />
+                                <p className="text-[#767676] text-xl">
+                                  Drop your image here or{" "}
+                                  <span className="text-green-500">browse</span>
+                                </p>
+                                <p className="text-[#767676] text-xs">
+                                  We support PNG, JPEG, and GIF files under 25MB
+                                </p>
+                              </div>
+                            }
+                          />
+
+                          <div className="flex gap-2 mt-4 flex-wrap">
+                            {serviceImageUrls.map((url, key) => {
+                              return (
+                                <div
+                                  key={`index-${key}`}
+                                  className="flex items-center justify-center rounded-md h-[77px] w-[77px] z-auto overflow-hidden relative bg-[#222224] border border-[#2c2c2c]"
+                                >
+                                  <div
+                                    className="absolute flex items-center justify-center top-1 right-1 h-4 rounded-full w-4 bg-gray-900 z-[100] cursor-pointer"
+                                    onClick={() =>
+                                      setServiceImageUrls((prev) =>
+                                        prev.filter((_, index) => index !== key)
+                                      )
+                                    }
+                                  >
+                                    <IoMdClose className="size-2 text-white" />
+                                  </div>
+                                  <Loader2 className="animate-spin" />
+                                  <ImageLoaded
+                                    className="rounded-md absolute top-0 left-0"
+                                    url={url}
+                                  />
+                                </div>
+                              );
+                            })}
+                          </div>
+                        </div>
                       </div>
-                    }
-                  />
-
-                  <div className="flex flex-col items-center justify-center mt-2">
-                    <p className="text-[#767676] text-base">
-                      Drop your image here or{" "}
-                      <span className="text-green-500">browse</span>
-                    </p>
-                    <p className="text-[#767676] text-xs">
-                      We support PNG, JPEG, and GIF files under 25MB
-                    </p>
-                  </div>
-                </div>
-                <PersonalInfoForm control={methods.control} isCard />
-                <SocialLinksSelector onAddLink={handleAddLink} />
-                <div className="">
-                  {selectedLinks.map((link) => (
-                    <div key={link.key} className="flex flex-col gap-3 py-2">
-                      <span className="font-medium text-primary">
-                        {link.label}
-                      </span>
-                      <Input
-                        placeholder={`Enter ${link.label} URL`}
-                        value={link.value}
-                        onChange={(e) =>
-                          handleInputChange(link.key, e.target.value)
-                        }
-                        className="flex-1 text-primary bg-secondary"
-                      />
                     </div>
-                  ))}
-                </div>
-              </div>
-            )}
-
-            {/* Step 3 - Template and Social Links */}
-            {currentStep === 3 && (
-              <div>
-                <h2>Template Preview</h2>
-                {selectedTemplateId ? (
-                  <div className="w-full overflow-y-scroll border max-h-[340px] rounded-lg mb-4 ">
-                    <SelectedTemplate
-                      templateId={selectedTemplateId}
-                      formData={methods.watch()}
-                    />
-                  </div>
-                ) : (
-                  <div className="w-full flex items-center justify-center border rounded-lg mb-4 bg-gray-100">
-                    <p className="text-gray-500">No template selected</p>
                   </div>
                 )}
-                <TemplateCarousel
-                  selectedTemplateId={selectedTemplateId}
-                  setSelectedTemplateId={setSelectedTemplateId}
-                />
-              </div>
-            )}
 
-            {/* Navigation Buttons */}
-            <div className="flex justify-end gap-5">
-              {currentStep > 1 && (
-                <button
-                  type="button"
-                  onClick={goToPreviousStep}
-                  className="px-8 py-2 bg-gray-400 text-white rounded-full hover:bg-slate-700"
-                >
-                  Back
-                </button>
-              )}
-              {currentStep < 3 ? (
-                <button
-                  type="button"
-                  onClick={handleNextStep}
-                  className="px-8 py-2 bg-green-600 text-white rounded-full hover:bg-green-500"
-                >
-                  Next
-                </button>
-              ) : (
-                <button
-                  type="submit"
-                  className="px-8 py-2 bg-green-600 text-white rounded-full hover:bg-green-500"
-                  disabled={isLoading}
-                >
-                  {isLoading ? (
-                    <LoaderCircle className="animate-spin" />
-                  ) : (
-                    "Submit"
+                {/* Step 2 - Company Info and Personal Info */}
+                {currentStep === 2 && (
+                  <div className="">
+                    <h2>Profile Photo</h2>
+                    <div className="w-full flex justify-center items-center flex-col my-4">
+                      <Cropper
+                        imageUrl={imageUrl}
+                        setImageUrl={setImageUrl}
+                        photo={photo}
+                        aspect={1}
+                        setPhoto={setPhoto}
+                        circularCrop
+                        className="w-[120px] h-[120px] lg:w-[150px] lg:h-[150px] rounded-full "
+                        fallback={
+                          <div className="relative w-full h-full rounded-full flex items-center justify-center border-2  border-dashed">
+                            <Image
+                              src={"/assets/image-plus.svg"}
+                              width={50}
+                              height={50}
+                              className="size-8 lg:size-auto p-2 border rounded-md border-gray-500"
+                              alt="gallery"
+                            />
+                          </div>
+                        }
+                      />
+
+                      <div className="flex flex-col items-center justify-center mt-2">
+                        <p className="text-[#767676] text-base">
+                          Drop your image here or{" "}
+                          <span className="text-green-500">browse</span>
+                        </p>
+                        <p className="text-[#767676] text-xs">
+                          We support PNG, JPEG, and GIF files under 25MB
+                        </p>
+                      </div>
+                    </div>
+                    <PersonalInfoForm control={methods.control} isCard />
+                    <SocialLinksSelector onAddLink={handleAddLink} />
+                    <div className="">
+                      {selectedLinks.map((link) => (
+                        <div
+                          key={link.key}
+                          className="flex flex-col gap-3 py-2"
+                        >
+                          <span className="font-medium text-primary">
+                            {link.label}
+                          </span>
+                          <Input
+                            placeholder={`Enter ${link.label} URL`}
+                            value={link.value}
+                            onChange={(e) =>
+                              handleInputChange(link.key, e.target.value)
+                            }
+                            className="flex-1 text-primary bg-secondary"
+                          />
+                        </div>
+                      ))}
+                    </div>
+                  </div>
+                )}
+
+                {/* Step 3 - Template and Social Links */}
+                {currentStep === 3 && (
+                  <div>
+                    <h2>Template Preview</h2>
+                    {selectedTemplateId ? (
+                      <div className="w-full overflow-y-scroll border max-h-[340px] rounded-lg mb-4 ">
+                        <SelectedTemplate
+                          templateId={selectedTemplateId}
+                          formData={methods.watch()}
+                        />
+                      </div>
+                    ) : (
+                      <div className="w-full flex items-center justify-center border rounded-lg mb-4 bg-gray-100">
+                        <p className="text-gray-500">No template selected</p>
+                      </div>
+                    )}
+                    <TemplateCarousel
+                      selectedTemplateId={selectedTemplateId}
+                      setSelectedTemplateId={setSelectedTemplateId}
+                    />
+                  </div>
+                )}
+
+                {/* Navigation Buttons */}
+                <div className="flex justify-end gap-5">
+                  {currentStep > 1 && (
+                    <button
+                      type="button"
+                      onClick={goToPreviousStep}
+                      className="px-8 py-2 bg-gray-400 text-white rounded-full hover:bg-slate-700"
+                    >
+                      Back
+                    </button>
                   )}
-                </button>
-              )}
+                  {currentStep < 4 && (
+                    <button
+                      type="button"
+                      onClick={handleNextStep}
+                      className="px-8 py-2 bg-green-600 text-white rounded-full hover:bg-green-500"
+                    >
+                      Next
+                    </button>
+                  )}
+                </div>
+              </form>
+            </Form>
+          </div>
+        </div>
+      ) : (
+        <div className="flex flex-col h-screen ">
+          {/* Top Section with Back Button */}
+          <div className="p-4">
+            <Button
+              variant="outline"
+              className="text-foreground dark:text-secondary-foreground dark:border-white"
+              onClick={goToPreviousStep}
+            >
+              <ArrowLeft />
+              Back
+            </Button>
+          </div>
+
+          {/* Scrollable Middle Section */}
+
+          <div className="flex-1 overflow-y-auto">
+            <div className="max-w-3xl mx-auto p-6">
+              {/* Title */}
+              <h1 className="text-2xl font-medium text-center mb-8">
+                Pick your physical card
+              </h1>
+
+              {/* Cards Grid */}
+              <div className="grid sm:grid-cols-2 gap-3 sm:gap-4 md:gap-6 lg:gap-8">
+                {Array.from({ length: 8 }, (_, index) =>
+                  index % 2 === 0 ? (
+                    <CardSkeleton key={index} />
+                  ) : (
+                    <CardSkeleton2 key={index} />
+                  )
+                )}
+              </div>
             </div>
-          </form>
-        </Form>
-      </div>
+          </div>
+
+          {/* Bottom Section with Submit Button */}
+
+          <div className="p-4 md:pr-16">
+            <div className="mx-auto flex justify-end">
+              <Button
+                variant="green"
+                size="lg"
+                type="submit"
+                disabled={isLoading}
+                onClick={handleSubmit}
+              >
+                {isLoading ? (
+                  <LoaderCircle className="animate-spin" />
+                ) : (
+                  "Submit"
+                )}
+              </Button>
+            </div>
+          </div>
+        </div>
+      )}
     </main>
   );
 }
