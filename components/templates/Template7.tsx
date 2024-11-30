@@ -56,7 +56,7 @@ const Template7 = ({
                         />
                         ) : (
                         <Image
-                            src={"/images/template-7-cover-photo.jpeg"}
+                            src={"/assets/template-7-cover-photo.jpeg"}
                             alt="Cover Image"
                             width={400}
                             height={200}
@@ -64,7 +64,7 @@ const Template7 = ({
                         />
                         )}
                     </div>
-                    <div className="absolute -bottom-16 rounded left-1/4 transform -translate-x-24 p-2 bg-white border border-blue-600">
+                    <div className="absolute -bottom-16 rounded left-1/4 transform -translate-x-24 p-2 bg-white border border-blue-600 h-[120px] w-[120px]">
                         {profilePictureUrl ? (
                         <div className="w-28 h-28 overflow-hidden">
                             <Image
@@ -76,8 +76,14 @@ const Template7 = ({
                             />
                         </div>
                         ) : (
-                        <div className="bg-purple-500 rounded w-28 h-28 flex items-center justify-center">
-                            <span className="text-white font-bold text-xl">HW</span>
+                            <div className="object-cover">
+                                <Image
+                                src={"/assets/template-7-profile-picture.jpeg"}
+                                alt="Profile Image"
+                                width={80}
+                                height={80}
+                                className="rounded"
+                                />
                         </div>
                         )}
                     </div>
@@ -135,10 +141,40 @@ const Template7 = ({
                     </div>
                 </div>
                 {/*Photos */}
-                <div className="grid grid-cols-2 gap-2">
-                    
-                </div>
-                
+                    <div className="grid grid-cols-2 gap-4 p-4">
+                        <div className="relative h-[200px]">
+                            <Image
+                                src={"/assets/template-7-image1.jpeg"}
+                                alt="Image"
+                                className="rounded-lg shadow-lg object-cover"
+                                fill
+                            ></Image>
+                        </div>
+                        <div className="relative h-[140px]">
+                            <Image
+                                src={"/assets/template-7-image2.jpeg"}
+                                alt="Image"
+                                className="rounded-lg shadow-lg object-cover"
+                                fill
+                            ></Image>
+                        </div>
+                        <div className="relative h-[140px]">
+                            <Image
+                                src={"/assets/template-7-image2.jpeg"}
+                                alt="Image"
+                                className="rounded-lg shadow-lg object-cover"
+                                fill
+                            ></Image>
+                        </div>
+                        <div className="relative h-[200px]">
+                            <Image
+                                src={"/assets/template-7-image1.jpeg"}
+                                alt="Image"
+                                className="rounded-lg shadow-lg object-cover"
+                                fill
+                            ></Image>
+                        </div>
+                    </div>
             </div>
 
         </div>
