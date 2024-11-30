@@ -175,6 +175,26 @@ const Template7 = ({
                             ></Image>
                         </div>
                     </div>
+                    {/*Footer */}
+                    <div className="flex flex-col items-center my-3 gap-y-3">
+                        <div className="text-base text-[#143583] font-bold">
+                            {company ?? 'ABC Company'}
+                        </div>
+                        <div className="flex justify-center gap-2.5">
+                            <Button className="rounded-full h-[28px] w-[28px]">
+                                <FaFacebookMessenger className="" />
+                            </Button>
+                            <Button className="rounded-full h-[28px] w-[28px]">
+                                <FaFacebook className="" />
+                            </Button>
+                            <Button className="rounded-full h-[28px] w-[28px]">
+                                <FaInstagram className="" />
+                            </Button>
+                        </div>
+                        <div className="flex justify-center">
+                            <p className="text-[8px] text-gray-500 font-light">Copyright 2024 ABC Company. All Right Reserved</p>
+                        </div>
+                    </div>
             </div>
 
         </div>
