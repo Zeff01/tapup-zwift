@@ -56,15 +56,15 @@ const Template7 = ({
                         />
                         ) : (
                         <Image
-                            src={"/assets/template1coverphoto.png"}
+                            src={"/images/template-7-cover-photo.jpeg"}
                             alt="Cover Image"
                             width={400}
                             height={200}
-                            className=""
+                            className="w-full h-52 object-cover overflow-hidden"
                         />
                         )}
                     </div>
-                    <div className="absolute -bottom-20 rounded left-1/4 transform -translate-x-24 p-2 bg-white border border-blue-600">
+                    <div className="absolute -bottom-16 rounded left-1/4 transform -translate-x-24 p-2 bg-white border border-blue-600">
                         {profilePictureUrl ? (
                         <div className="w-28 h-28 overflow-hidden">
                             <Image
@@ -76,7 +76,7 @@ const Template7 = ({
                             />
                         </div>
                         ) : (
-                        <div className="bg-purple-500 w-28 h-28 flex items-center justify-center">
+                        <div className="bg-purple-500 rounded w-28 h-28 flex items-center justify-center">
                             <span className="text-white font-bold text-xl">HW</span>
                         </div>
                         )}
@@ -84,7 +84,7 @@ const Template7 = ({
                      
                 </div>
                 {/* PERSONAL INFORMATION */}
-                <div className="mt-28 space-y-1 pl-5">
+                <div className="mt-20 space-y-1 pl-5">
                     {firstName ? (
                         <h1 className="text-xl font-bold mt-4 text-blue-600 ">
                         {firstName + " " + lastName}
@@ -120,14 +120,25 @@ const Template7 = ({
                     <div className="text-xl text-blue-600 font-bold mb-5">
                         {company ?? 'ABC Company'}
                     </div>
-                    <div className="flex flex-col gap-y-2">
+                    <div className="flex flex-col gap-y-2 mb-3">
                         <div className="text-gray-500 text-xs font-semibold">Company Overview</div>
                         <div className="text-gray-500 text-[10px] font-normal leading-4">
                         Lorem ipsum dolor sit amet consectetur. Commodo non imperdiet tempus orci non id nibh 
                         faucibus. Laoreet at hendrerit at viverra dignissim consequat posuere mi cras.
                         </div>
                     </div>
+                    <div className="flex flex-col gap-y-2 mb-3">
+                        <div className="text-gray-500 text-xs font-semibold">Our Services</div>
+                        <div className="text-gray-500 text-[10px] font-normal leading-4">
+                        {serviceDescription ?? 'Lorem ipsum dolor sit amet consectetur. Commodo non imperdiet tempus orci non id nibh faucibus. Laoreet at hendrerit at viverra '}
+                        </div>
+                    </div>
                 </div>
+                {/*Photos */}
+                <div className="grid grid-cols-2 gap-2">
+                    
+                </div>
+                
             </div>
 
         </div>
