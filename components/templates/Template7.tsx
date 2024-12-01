@@ -64,7 +64,7 @@ const Template7 = ({
                         />
                         )}
                     </div>
-                    <div className="absolute -bottom-16 rounded left-1/4 transform -translate-x-24 p-2 bg-white border border-blue-600 h-[120px] w-[120px]">
+                    <div className="absolute -bottom-16 rounded-[20px] left-1/4 transform -translate-x-24 bg-[#F2F2F2] border-8 border-[#F2F2F2] h-[120px] w-[120px]">
                         {profilePictureUrl ? (
                         <div className="w-28 h-28 overflow-hidden">
                             <Image
@@ -76,35 +76,35 @@ const Template7 = ({
                             />
                         </div>
                         ) : (
-                            <div className="object-cover">
+                            <div className="rounded-[20px]">
                                 <Image
                                 src={"/assets/template-7-profile-picture.jpeg"}
                                 alt="Profile Image"
-                                width={80}
-                                height={80}
-                                className="rounded"
+                                fill
+                                className="rounded-[20px]"
                                 />
-                        </div>
+                            </div>
                         )}
                     </div>
                      
                 </div>
-                {/* PERSONAL INFORMATION */}
-                <div className="mt-20 space-y-1 pl-5">
+                <div className="flex flex-col px-5">
+                    {/* PERSONAL INFORMATION */}
+                <div className="mt-20 space-y-1">
                     {firstName ? (
                         <h1 className="text-xl font-bold mt-4 text-blue-600 ">
                         {firstName + " " + lastName}
                         </h1>
                     ) : (
-                        <h1 className="text-xl font-bold mt-2 text-blue-600 ">Hussain Watkins</h1>
+                        <h1 className="text-xl font-bold mt-2 text-blue-600 ">Janna Marie Smith</h1>
                     )}
-                    <p className="font-semibold text-gray-500">
-                        {position ?? "Chief Technology Officer"}
+                    <p className="font-semibold text-[#959595]">
+                        {position ?? "ABC Company | UI/UX Designer"}
                     </p>
-                    <p className=" text-gray-500 text-xs">
-                        {email ?? "H.Watkins@gmail.com"}
+                    <p className=" text-[#959595] text-xs">
+                        {email ?? "jannamariesmith@gmail.com"}
                     </p>
-                    <p className=" text-gray-500 text-xs"> {number ?? +639123456789}</p>
+                    <p className=" text-[#959595] text-xs"> {number ?? '+639123456789'}</p>
                 </div>
                 {/* SOCIALS */}
                 <div className="flex pl-5 mt-3 gap-2">
@@ -141,38 +141,50 @@ const Template7 = ({
                     </div>
                 </div>
                 {/*Photos */}
-                    <div className="grid grid-cols-2 gap-4 p-4">
-                        <div className="relative h-[200px]">
-                            <Image
-                                src={"/assets/template-7-image1.jpeg"}
-                                alt="Image"
-                                className="rounded-lg shadow-lg object-cover"
-                                fill
-                            ></Image>
+                    <div className="grid grid-cols-2 gap-2">
+                        <div className="flex flex-col gap-y-2">
+                            <div className="relative h-[200px] p-2 rounded-lg bg-[#F2F2F2]">
+                                <div className="relative h-[11.5rem]">
+                                    <Image
+                                        src={"/assets/template-7-image1.jpeg"}
+                                        alt="Image"
+                                        className="rounded-lg"
+                                        fill
+                                    ></Image>
+                                </div>
+                            </div>
+                            <div className="relative h-[140px] p-2 rounded-lg bg-[#F2F2F2]">
+                                <div className="relative h-[7.8rem]">
+                                    <Image
+                                        src={"/assets/template-7-image2.jpeg"}
+                                        alt="Image"
+                                        className="rounded-lg"
+                                        fill
+                                    ></Image>
+                                </div>
+                            </div>
                         </div>
-                        <div className="relative h-[140px]">
-                            <Image
-                                src={"/assets/template-7-image2.jpeg"}
-                                alt="Image"
-                                className="rounded-lg shadow-lg object-cover"
-                                fill
-                            ></Image>
-                        </div>
-                        <div className="relative h-[140px]">
-                            <Image
-                                src={"/assets/template-7-image2.jpeg"}
-                                alt="Image"
-                                className="rounded-lg shadow-lg object-cover"
-                                fill
-                            ></Image>
-                        </div>
-                        <div className="relative h-[200px]">
-                            <Image
-                                src={"/assets/template-7-image1.jpeg"}
-                                alt="Image"
-                                className="rounded-lg shadow-lg object-cover"
-                                fill
-                            ></Image>
+                        <div className="flex flex-col gap-y-2">
+                            <div className="relative h-[140px] p-2 rounded-lg bg-[#F2F2F2]">
+                                <div className="relative h-[7.8rem]">
+                                    <Image
+                                        src={"/assets/template-7-image2.jpeg"}
+                                        alt="Image"
+                                        className="rounded-lg"
+                                        fill
+                                    ></Image>
+                                </div>
+                            </div>
+                            <div className="relative h-[200px] p-2 rounded-lg bg-[#F2F2F2]">
+                                <div className="relative h-[11.5rem]">
+                                    <Image
+                                        src={"/assets/template-7-image1.jpeg"}
+                                        alt="Image"
+                                        className="rounded-lg shadow-lg object-cover"
+                                        fill
+                                    ></Image>
+                                </div>
+                            </div>
                         </div>
                     </div>
                     {/*Footer */}
@@ -195,6 +207,8 @@ const Template7 = ({
                             <p className="text-[8px] text-gray-500 font-light">Copyright 2024 ABC Company. All Right Reserved</p>
                         </div>
                     </div>
+                </div>
+                
             </div>
 
         </div>
