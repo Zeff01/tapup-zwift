@@ -8,7 +8,8 @@ import {
   FaGlobe,
   FaEnvelope,  
   FaPhone,
-  FaFacebookMessenger
+  FaFacebookMessenger,
+  FaBookmark,
 } from "react-icons/fa6";
 import { downloadVCard } from "@/lib/utils";
 import {Button} from "@/components/ui/button";
@@ -47,7 +48,7 @@ const Tempate8 =  ({
                     {/*Cover Color Gradient */}
                     <div className="w-full h-[244px] bg-gradient-radial from-white to-blue-700"></div>
                     {/* Profile picture and bookmark icon */}
-                    <div className="absolute rounded-full bg-[#D9D9D9] transform left-[11rem] -bottom-16 w-[120px] h-[120px] border-[#D9D9D9] border-[8px]">
+                    <div className="absolute rounded-full bg-[#F2F2F2] transform left-[11rem] -bottom-16 w-[120px] h-[120px] border-[#F2F2F2] border-[8px]">
                         <Image
                             src={'/assets/template-8-profile-picture.jpeg'}
                             fill
@@ -55,9 +56,16 @@ const Tempate8 =  ({
                             className="rounded-full"
                         />
                     </div>
+                    <Button className="absolute rounded-full left-[20rem] -bottom-5 w-[24px] h-[24px] bg-[#F2F2F2] border-[#F2F2F2] border-[8px]">
+                        <FaBookmark />
+                    </Button>
                 </div>
-                
+                 {/* Profile details */}
+                <div className="flex justify-center mt-20">
+                    <h1 className="text-xl font-extrabold text-[#143583] leading-[25.1px]">Janna Marie Smith</h1>
+                </div>
              </div>
+            
         </div>
     )
 
