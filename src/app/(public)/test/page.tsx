@@ -1,4 +1,5 @@
-import Template7 from "@/components/templates/Template7"
+// import Template7 from "@/components/templates/Template7"
+import Template8 from "@/components/templates/Template8"
 
 export default function Test() {
 
@@ -6,7 +7,7 @@ export default function Test() {
 
     return (
         <div>
-            <Template7 />
+            <Template8 />
         </div>
     )
 }
