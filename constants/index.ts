@@ -242,6 +242,7 @@ export const menuItems = [
   { icon: RxDashboard, title: "Dashboard", href: "/dashboard" },
   { icon: CgProfile, title: "Profile", href: "/user" },
   { icon: TbCards, title: "Cards", href: "/cards" },
+  { icon: TbCards, title: "Retrieve Card", href: "/retrieve" },
 ];
 
 export const publicDomain =
