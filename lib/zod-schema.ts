@@ -13,6 +13,7 @@ const refinePhoneNumber = (phoneNumber: string) => {
 export const createPortfolioSchema = z.object({
   coverPhotoUrl: z
     .string()
+    .min(3, "Cover Photo is required")
     .refine(
       (value) =>
         value === "" ||

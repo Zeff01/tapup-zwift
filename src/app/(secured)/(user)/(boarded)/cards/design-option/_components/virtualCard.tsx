@@ -8,18 +8,35 @@ import templates from "@/public/images/templates.png";
 import Image from "next/image";
 import grids from "@/public/images/grid.png";
 
-import React from "react";
+import React, { useState } from "react";
 import { useRouter } from "next/navigation";
 import Link from "next/link";
 import TapupLogo from "@/components/svgs/TapupLogo";
+import ComingSoon from "@/components/ComingSoon";
 
 export default function VirtualCard() {
+  const [openComingSoon, setOpenComingSoon] = useState(false);
   const router = useRouter();
   const handleUseTemplate = () => {
     router.push("/cards/create");
   };
+  const handleOpenComingSoon = () => {
+    setOpenComingSoon(true);
+  }
   return (
     <div className="flex relative flex-col h-full  w-full text-primary px-5">
+      {openComingSoon ? <div>
+         <Link
+          href={"/cards"}
+          className="absolute top-5 left-5 text-3xl text-primary"
+        >
+          <IoArrowBack />
+        </Link>
+        <ComingSoon /> 
+        </div>
+        : (
+      <div>
+          
       <div className=" flex flex-shrink flex-col items-center justify-center gap-y-9 py-10">
         <Link
           href={"/cards"}
@@ -45,7 +62,7 @@ export default function VirtualCard() {
               alt="templates img"
               height={400}
               width={400}
-            />
+              />
             <h1 className=" text-center font-medium  text-xl">
               Use a template
             </h1>
@@ -57,7 +74,7 @@ export default function VirtualCard() {
 
         <div className=" flex justify-center md:justify-start items-start w-full flex-1">
           {/* <Input/> */}
-          <div className=" flex flex-col gap-y-2 min-h-[400px] rounded-md border cursor-pointer hover:border-green-500 transition-colors duration-300 py-16 px-12">
+          <div className=" flex flex-col gap-y-2 min-h-[400px] rounded-md border cursor-pointer hover:border-green-500 transition-colors duration-300 py-16 px-12" onClick={handleOpenComingSoon}>
             <div className="relative">
               <button className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 p-3 bg-white  border  md:dark:shadow-[0_0_30px_30px_rgba(0,0,0,.8)] dark:shadow-[0_0_30px_30px_rgba(0,0,0,.8)] shadow-[0_0_30px_30px_rgba(255,255,255,1)] dark:bg-black text-primary rounded-md">
                 <FaScrewdriverWrench className="text-xl text-slate-400" />
@@ -70,6 +87,7 @@ export default function VirtualCard() {
                 width={390}
               />
             </div>
+          
 
             <h1 className=" text-center font-medium  text-xl">
               Build your own
@@ -81,6 +99,8 @@ export default function VirtualCard() {
           </div>
         </div>
       </div>
+                </div>
+      )}
     </div>
   );
 }

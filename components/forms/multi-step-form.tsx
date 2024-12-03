@@ -194,36 +194,38 @@ export default function CardsAndUsersCreateFields({
   const [currentStep, setCurrentStep] = useState(1);
 
   const steps: Array<(keyof z.infer<typeof createPortfolioSchema>)[]> = [
-    ["company", "companyBackground", "serviceDescription"], // Step 1 fields
-    ["firstName", "lastName", "email", "number"], // Step 2 fields
+    ["coverPhotoUrl", "company", "companyBackground", "serviceDescription"], // Step 1 fields
+    ["profilePictureUrl","firstName", "lastName", "email", "number"], // Step 2 fields
     ["chosenTemplate"], // Step 3 fields
     ["selectedPhysicalCard"], // Step 4 fields
   ];
 
-  const handleNextStep = async (event: any) => {
-    event.preventDefault();
-    if (currentStep === 3) {
-      setCurrentStep(4);
-      return;
-    }
-    const fieldsToValidate = steps[currentStep - 1];
-
+const handleNextStep = async (event: any) => {
+  event.preventDefault();
+  
+  if (currentStep === 3) {
+    setCurrentStep(4);
+    return;
+  }
+  const fieldsToValidate = [...steps[currentStep - 1]];
+  
     // Trigger validation only for the current step
-    const isValid = await methods.trigger(fieldsToValidate);
+  const isValid = await methods.trigger(fieldsToValidate);
 
-    if (isValid) {
+  if (isValid) {
       // Clear errors for other steps to avoid showing irrelevant errors
-      const nonCurrentFields = steps
-        .flat()
-        .filter((field) => !fieldsToValidate.includes(field));
-      methods.clearErrors(nonCurrentFields);
+    const nonCurrentFields = steps
+      .flat()
+      .filter((field) => !fieldsToValidate.includes(field));
+    methods.clearErrors(nonCurrentFields);
 
-      // Proceed to the next step
-      setCurrentStep((prev) => Math.min(prev + 1, steps.length));
-    } else {
+    // Proceed to the next step
+    setCurrentStep((prev) => Math.min(prev + 1, steps.length));
+  } else {
       console.log("Validation errors", methods.formState.errors);
-    }
-  };
+  }
+};
+
 
   const goToPreviousStep = () => {
     setCurrentStep((prev) => Math.max(prev - 1, 1));
@@ -242,9 +244,10 @@ export default function CardsAndUsersCreateFields({
     );
   };
 
-  const handleSubmit = () => {
-    methods.handleSubmit(formSubmit)();
-  };
+
+const handleSubmit = async () => {
+  methods.handleSubmit(formSubmit)();
+};
 
   return (
     <main>
@@ -265,7 +268,7 @@ export default function CardsAndUsersCreateFields({
                 className="space-y-6"
                 onSubmit={methods.handleSubmit(formSubmit)}
               >
-                {/* Step 1 - Cover Photo and Profile Pic */}
+                {/* Step 1 - Cover Photo & company info*/}
                 {currentStep === 1 && (
                   <div className="">
                     <p className="text-lg font-semibold mb-6">Cover Photo</p>
@@ -303,8 +306,8 @@ export default function CardsAndUsersCreateFields({
                         </div>
                       </div>
                     </div>
-                    <span className="text-sm text-red-500">
-                      {methods.formState.errors.profilePictureUrl?.message ??
+                    <span className="text-sm text-red-500 relative bottom-12">
+                      {methods.formState.errors.coverPhotoUrl?.message ??
                         ""}
                     </span>
 
@@ -373,7 +376,7 @@ export default function CardsAndUsersCreateFields({
                   </div>
                 )}
 
-                {/* Step 2 - Company Info and Personal Info */}
+                {/* Step 2 - Profile Photo & Personal Info */}
                 {currentStep === 2 && (
                   <div className="">
                     <h2>Profile Photo</h2>
@@ -409,6 +412,11 @@ export default function CardsAndUsersCreateFields({
                         </p>
                       </div>
                     </div>
+                  <span className="text-sm text-red-500">
+                      {methods.formState.errors.profilePictureUrl?.message ??
+                        ""}
+                    </span>
+
                     <PersonalInfoForm control={methods.control} isCard />
                     <SocialLinksSelector onAddLink={handleAddLink} />
                     <div className="">
@@ -434,7 +442,7 @@ export default function CardsAndUsersCreateFields({
                   </div>
                 )}
 
-                {/* Step 3 - Template and Social Links */}
+                {/* Step 3 - Template*/}
                 {currentStep === 3 && (
                   <div>
                     <h2>Template Preview</h2>
@@ -479,7 +487,7 @@ export default function CardsAndUsersCreateFields({
                   )}
                 </div>
               </form>
-            </Form>
+              </Form>
           </div>
         </div>
       ) : (
@@ -537,10 +545,10 @@ export default function CardsAndUsersCreateFields({
               <Button
                 variant="green"
                 size="lg"
-                type="submit"
+                type="button"
                 disabled={isLoading}
                 onClick={handleSubmit}
-              >
+                >
                 {isLoading ? (
                   <LoaderCircle className="animate-spin" />
                 ) : (
@@ -550,7 +558,7 @@ export default function CardsAndUsersCreateFields({
             </div>
           </div>
         </div>
-      )}
-    </main>
+        )}
+        </main>
   );
 }
