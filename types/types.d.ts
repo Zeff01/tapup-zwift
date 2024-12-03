@@ -33,6 +33,23 @@ export type Users = {
   userCode?: string;
   user_link?: string;
 };
+
+export type Notification = {
+  title: string;
+  message: string;
+  type: "success" | "error" | "warning" | "info";
+  timestamp: any;
+  read: boolean;
+  userId?: string;
+  broadcast: boolean;
+  excemptedUserIds?: string[];
+};
+
+export type Notifications = {
+  id: string;
+  data: Notification;
+}[];
+
 export interface ExtendedUserInterface extends Users {
   uid: string;
   role: string;

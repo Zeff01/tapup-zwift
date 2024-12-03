@@ -1,4 +1,6 @@
-import { UserState } from "@/types/types";
+"use client";
+
+import { Notifications, UserState } from "@/types/types";
 import Image from "next/image";
 import React from "react";
 
@@ -12,21 +14,22 @@ import { usePathname } from "next/navigation";
 import { cn } from "@/lib/utils";
 import { Button } from "../ui/button";
 import { ThemeToggle } from "../Theme";
+import NotificationsSidebar from "./notifications";
 
 type Props = {
   user: UserState;
+  notifications: Notifications;
   signOut: () => void;
 };
 
-const NavigationBoarded = ({ user, signOut }: Props) => {
+const NavigationBoarded = ({ user, signOut, notifications }: Props) => {
   const pathname = usePathname().split("/")[1];
   return (
     <nav className="w-[25rem] px-8 flex flex-col border-r fixed z-50 ease-in-out h-screen transition-transform -translate-x-[25rem] lg:translate-x-0">
       <div className="py-8 flex justify-between items-center px-4">
         <TapupLogo />
-        <ThemeToggle />
       </div>
-      <div className="relative bg-accent py-4 px-6 rounded-full outline-white outline-2 flex items-center gap-4">
+      <div className="relative border p-1 rounded-full outline-white outline-2 flex items-center gap-2">
         <Image
           src={user?.profilePictureUrl || profilePic}
           alt="user image"
@@ -34,19 +37,22 @@ const NavigationBoarded = ({ user, signOut }: Props) => {
           height={50}
           className="object-cover rounded-full"
         />
-        <div>
-          <h3 className="font-bold">
+        <div className="flex flex-col">
+          <h3 className="font-bold text-sm">
             {user?.firstName
               ? `${user?.firstName} ${user?.lastName}`
               : "Anonymous"}
           </h3>
-          <p
-            title={user?.email}
-            className="text-xs truncate hover:overflow-visible w-44"
-          >
-            {user?.email || "anonymous@mail.com"}
-          </p>
+          <input
+            readOnly
+            value={user?.email || "anonymous@mail.com"}
+            className="text-xs text-foreground/30 border-0 truncate w-32 bg-transparent outline-none"
+          />
         </div>
+        <span className="ml-auto flex mr-2">
+          <ThemeToggle variant="boarded" />
+          <NotificationsSidebar user={user} notifications={notifications} />
+        </span>
       </div>
       <div className="flex-1 pb-12 flex flex-col mt-12 gap-2">
         {menuItems.map((item, index) => {

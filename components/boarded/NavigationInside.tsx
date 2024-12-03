@@ -14,15 +14,22 @@ import profilePic from "@/public/assets/template4samplepic.png";
 import { BiLogOut } from "react-icons/bi";
 import { menuItems } from "@/constants";
 import { useUserContext } from "@/providers/user-provider";
-import TapupLogo from "./svgs/TapupLogo";
+import TapupLogo from "../svgs/TapupLogo";
 import { cn } from "@/lib/utils";
 import { usePathname } from "next/navigation";
-import { Button } from "./ui/button";
+import { Button } from "../ui/button";
 import { useMediaQuery } from "usehooks-ts";
-import { ThemeToggle } from "./Theme";
+import { ThemeToggle } from "../Theme";
+import NotificationsSidebar from "./notifications";
+import { Notifications, UserState } from "@/types/types";
 
-const OverlayMenu = () => {
-  const { user, logOutUser: signOut } = useUserContext();
+type Props = {
+  notifications: Notifications;
+  user: UserState;
+  signOut: () => void;
+};
+
+const OverlayMenu = ({ notifications, user, signOut }: Props) => {
   const media = useMediaQuery("(max-width: 1024px)");
   const [openMenu, setOpenMenu] = useState(false);
   const pathname = usePathname().split("/")[1];
@@ -52,7 +59,7 @@ const OverlayMenu = () => {
           {/* <ThemeToggle /> */}
           <TapupLogo />
         </div>
-        <div className="relative bg-accent py-4 px-6 rounded-full outline-white outline-2 flex items-center gap-4">
+        <div className="relative border p-1 rounded-full outline-white outline-2 flex items-center gap-2">
           <Image
             src={user?.profilePictureUrl || profilePic}
             alt="user image"
@@ -60,19 +67,22 @@ const OverlayMenu = () => {
             height={50}
             className="object-cover rounded-full"
           />
-          <div>
-            <h3 className="font-bold">
+          <div className="flex flex-col">
+            <h3 className="font-bold text-sm">
               {user?.firstName
                 ? `${user?.firstName} ${user?.lastName}`
                 : "Anonymous"}
             </h3>
-            <p
-              title={user?.email}
-              className="text-xs truncate hover:overflow-visible w-44"
-            >
-              {user?.email || "anonymous@mail.com"}
-            </p>
+            <input
+              readOnly
+              value={user?.email || "anonymous@mail.com"}
+              className="text-xs text-foreground/30 border-0 truncate w-32 bg-transparent outline-none"
+            />
           </div>
+          <span className="ml-auto flex mr-2">
+            <ThemeToggle variant="boarded" />
+            <NotificationsSidebar notifications={notifications} />
+          </span>
         </div>
         <div className="flex-1 pb-12 flex flex-col mt-12 gap-2">
           {menuItems.map((item, index) => {
