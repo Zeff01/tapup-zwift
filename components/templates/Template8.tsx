@@ -46,9 +46,20 @@ const Tempate8 =  ({
              <div className="w-full mx-auto  max-w-[480px]">
                 <div className="flex flex-col relative">
                     {/*Cover Color Gradient */}
-                    <div className="w-full h-[244px] bg-gradient-radial from-white to-blue-700"></div>
+                    <div className="w-full h-[244px] bg-[radial-gradient(circle_at_top_left,_#ffffff_1%,_#1d4ed8_90%)]">
+                    <svg
+                        className="absolute bottom-0 left-0 w-full"
+                        xmlns="http://www.w3.org/2000/svg"
+                        viewBox="0 0 1440 320"
+                    >
+                        <path
+                        fill="#ffffff"
+                         d="M0,200 C480,96 960,96 1440,200 L1440,320 L0,320 Z"
+                        ></path>
+                    </svg>
+                    </div>
                     {/* Profile picture and bookmark icon */}
-                    <div className="absolute rounded-full bg-[#F2F2F2] transform left-[11rem] -bottom-16 w-[120px] h-[120px] border-[#F2F2F2] border-[8px]">
+                    <div className="absolute rounded-full bg-[#F2F2F2] transform left-[10rem] -bottom-1 w-[120px] h-[120px] border-[#F2F2F2] border-[8px]">
                         <Image
                             src={'/assets/template-8-profile-picture.jpeg'}
                             fill
@@ -56,12 +67,12 @@ const Tempate8 =  ({
                             className="rounded-full"
                         />
                     </div>
-                    <Button className="absolute rounded-full left-[20rem] -bottom-5 w-[24px] h-[24px] bg-[#F2F2F2] border-[#F2F2F2] border-[8px]">
-                        <FaBookmark />
+                    <Button className="absolute rounded-[20px] transform left-[19rem] top-[10rem] w-[40px] h-[40px] bg-[#F2F2F2] border-[#F2F2F2]">
+                        <FaBookmark className="w-[24px] h-[24px]" />
                     </Button>
                 </div>
                  {/* Profile details */}
-                <div className="flex flex-col items-center mt-20 gap-2 mb-5">
+                <div className="flex flex-col items-center mt-[1.5rem] gap-2 mb-5">
                     <h1 className="text-xl font-extrabold text-[#143583] leading-[25.1px]">Janna Marie Smith</h1>
                     <p className="text-xs font-semibold leading-[15.06px] text-[#959595]">ABC Company | UI/UX Designer</p>
                     <p className="font-normal text-[#959595] text-[10px] leading-[12.55px]">jannamariesmith@gmail.com</p>

@@ -1,6 +1,5 @@
 import { Card } from "@/types/types";
 import Image from "next/image";
-import { CiMail, CiPhone, CiSaveDown2 } from "react-icons/ci";
 import {
   FaFacebook,
   FaInstagram,
@@ -10,7 +9,6 @@ import {
   FaPhone,
   FaFacebookMessenger
 } from "react-icons/fa6";
-import { downloadVCard } from "@/lib/utils";
 import {Button} from "@/components/ui/button";
 
 const Template7 = ({
@@ -60,19 +58,18 @@ const Template7 = ({
                             alt="Cover Image"
                             width={400}
                             height={200}
+                            priority={false}
                             className="w-full h-52 object-cover overflow-hidden"
                         />
                         )}
                     </div>
                     <div className="absolute -bottom-16 rounded-[20px] left-1/4 transform -translate-x-24 bg-[#F2F2F2] border-8 border-[#F2F2F2] h-[120px] w-[120px]">
                         {profilePictureUrl ? (
-                        <div className="w-28 h-28 overflow-hidden">
+                        <div className="rounded-[20px]">
                             <Image
                             src={profilePictureUrl}
                             alt="Profile Image"
-                            width={80}
-                            height={80}
-                            className="rounded-full w-24 h-24"
+                            className="rounded-[20px] "
                             />
                         </div>
                         ) : (
@@ -118,7 +115,7 @@ const Template7 = ({
                 </div>
                 {/* CTA BUTTONS */}
                 <div className="grid grid-cols-3 gap-4 mt-5">
-                    <Button className="col-span-2 bg-blue-600 text-white">Email Me</Button>
+                    <Button className="col-span-2 bg-[#1976D2] hover:bg-[#1976D2] text-white">Email Me</Button>
                     <Button className="bg-gray-500 text-white">Save</Button>
                 </div>
                 {/*COMPANY DETAILS */}
