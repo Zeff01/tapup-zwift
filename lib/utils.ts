@@ -137,6 +137,7 @@ export function catchErrorTyped<T, E extends new (message?: string) => Error>(
 }
 
 export function timeAgo(timestamp: Date): string {
+  if (!timestamp) return "";
   const currentTime = new Date();
   const timeDiff = currentTime.getTime() - timestamp.getTime();
   const seconds = Math.floor(timeDiff / 1000);

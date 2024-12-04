@@ -51,12 +51,8 @@ const OverlayMenu = ({ notifications, user, signOut }: Props) => {
         side="left"
         className="bg-background flex flex-col sm:w-[25rem] w-full"
       >
-        <div className="absolute top-2 left-6 ">
-          <ThemeToggle />
-        </div>
         <SheetTitle className="sr-only">Mobile Navigation</SheetTitle>
         <div className="py-8 pt-20">
-          {/* <ThemeToggle /> */}
           <TapupLogo />
         </div>
         <div className="relative border p-1 rounded-full outline-white outline-2 flex items-center gap-2">
@@ -81,7 +77,7 @@ const OverlayMenu = ({ notifications, user, signOut }: Props) => {
           </div>
           <span className="ml-auto flex mr-2">
             <ThemeToggle variant="boarded" />
-            <NotificationsSidebar notifications={notifications} />
+            <NotificationsSidebar user={user} notifications={notifications} />
           </span>
         </div>
         <div className="flex-1 pb-12 flex flex-col mt-12 gap-2">
@@ -110,7 +106,7 @@ const OverlayMenu = ({ notifications, user, signOut }: Props) => {
             );
           })}
           <Button
-            className="mt-auto flex justify-start gap-0 py-6 bg-secondary/20 border text-foreground text-base"
+            className="mt-auto flex justify-start gap-0 py-6 bg-secondary/20 border text-foreground text-base active:bg-destructive hover:bg-destructive"
             variant="destructive"
             onClick={signOut}
           >

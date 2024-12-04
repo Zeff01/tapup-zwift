@@ -30,15 +30,13 @@ const NotificationsSidebar = ({ user, notifications }: Props) => {
   const { mutate: createNotificationMutation } = useMutation({
     mutationFn: createNotification,
     onSuccess: () => {
-      console.log("success");
+      console.log("created notifications");
     },
     onError: (err) => {
       console.log(err);
     },
   });
   const handleCreateNotification = () => {
-    // This will create a notification and send to a specific user
-
     createNotificationMutation({
       userId: "xEfwE1dUY2bQcVspHnFYa5b715K2", // current User
       data: {
@@ -46,8 +44,9 @@ const NotificationsSidebar = ({ user, notifications }: Props) => {
         message: "test",
         read: false,
         type: "info",
-        broadcast: false,
-        userId: "ANvgs5O0MUXohWuzvh4viHArAQ82", // specify user
+        broadcast: true,
+        // excemptedUserIds: ["ANvgs5O0MUXohWuzvh4viHArAQ82"],
+        // userIds: ["ANvgs5O0MUXohWuzvh4viHArAQ82"], // specify
       },
     });
   };

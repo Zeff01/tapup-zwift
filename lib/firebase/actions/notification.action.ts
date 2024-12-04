@@ -1,10 +1,12 @@
 import {
+  arrayUnion,
   collection,
   deleteDoc,
   doc,
   getDoc,
   serverTimestamp,
   setDoc,
+  updateDoc,
 } from "firebase/firestore";
 import { firebaseDb } from "../firebase";
 import { Notification } from "@/types/types";
@@ -16,7 +18,7 @@ export const createNotification = async ({
   data,
 }: {
   userId: string;
-  data: Omit<Notification, "timestamp">;
+  data: Partial<Notification> & Omit<Notification, "timestamp">;
 }) => {
   try {
     if (!userId || !data) throw new Error("Parameters Missing");
@@ -26,6 +28,8 @@ export const createNotification = async ({
 
     const notificationsRef = collection(firebaseDb, "notifications");
     const userRef = doc(notificationsRef);
+
+    // console.log(serverTimestamp());
 
     await setDoc(
       userRef,
@@ -53,7 +57,7 @@ export const deleteOrExcemptNotification = async ({
   type?: "delete" | "excempt";
 }) => {
   try {
-    console.log(userId, notificationId);
+    // console.log(userId, notificationId);
     if (!userId || !notificationId) throw new Error("Parameters Missing");
 
     const user = await authCurrentUser();
@@ -67,12 +71,23 @@ export const deleteOrExcemptNotification = async ({
 
     const notification = { ...docSnap.data() } as Notification;
 
+    if (notification.broadcast) {
+      notification.excemptedUserIds = notification.excemptedUserIds
+        ? [...notification.excemptedUserIds, userId]
+        : [userId];
+      delete notification.timestamp;
+      await updateDoc(userRef, {
+        ...notification,
+        timestamp: serverTimestamp(),
+      });
+    }
+
     // TODO: Handle Broadcast
     // if (notification.broadcast) {
 
     // }
 
-    await deleteDoc(userRef);
+    // await deleteDoc(userRef);
   } catch (err) {
     console.log("Error Handling Notification: ", err);
     throw err;

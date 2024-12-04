@@ -57,6 +57,8 @@ const NavigationItems = ({
 
   const Icon = iconTable["info"];
 
+  // console.log(notif.data);
+
   const { mutate: handleExceptDeleteNotifMutation, isPending: isLoading } =
     useMutation({
       mutationFn: deleteOrExcemptNotification,
@@ -91,7 +93,7 @@ const NavigationItems = ({
               {notif.data.type}
             </h1>
             <span className="text-muted-foreground text-xs ">
-              {timeAgo(notif.data.timestamp.toDate())}
+              {timeAgo(notif?.data?.timestamp?.toDate())}
             </span>
           </span>
           <Button

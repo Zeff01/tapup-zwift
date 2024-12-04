@@ -40,7 +40,7 @@ export type Notification = {
   type: "success" | "error" | "warning" | "info";
   timestamp: any;
   read: boolean;
-  userId?: string;
+  userIds?: string[];
   broadcast: boolean;
   excemptedUserIds?: string[];
 };
