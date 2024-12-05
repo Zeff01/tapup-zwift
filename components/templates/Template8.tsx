@@ -1,6 +1,6 @@
 import { Card } from "@/types/types";
 import Image from "next/image";
-import { CiMail, CiPhone, CiSaveDown2 } from "react-icons/ci";
+import { Bookmark } from 'lucide-react';
 import {
   FaFacebook,
   FaInstagram,
@@ -11,7 +11,6 @@ import {
   FaFacebookMessenger,
   FaBookmark,
 } from "react-icons/fa6";
-import { downloadVCard } from "@/lib/utils";
 import {Button} from "@/components/ui/button";
 
 const Tempate8 =  ({
@@ -67,8 +66,8 @@ const Tempate8 =  ({
                             className="rounded-full"
                         />
                     </div>
-                    <Button className="absolute rounded-[20px] transform left-[19rem] top-[10rem] w-[40px] h-[40px] bg-[#F2F2F2] border-[#F2F2F2]">
-                        <FaBookmark className="w-[24px] h-[24px]" />
+                    <Button className="absolute rounded-[20px] transform left-[19rem] top-[10rem] w-[40px] h-[40px] bg-[#F2F2F2] hover:bg-[#F2F2F2]">
+                        <Bookmark className="w-[24px] h-[24px]" />
                     </Button>
                 </div>
                  {/* Profile details */}
