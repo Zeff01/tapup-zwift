@@ -26,10 +26,16 @@ export const createNotification = async ({
     const user = await authCurrentUser();
     if (user !== userId) throw new Error("Auth user ID doesn't match");
 
+    if (data.broadcast && data.userIds) {
+      throw new Error("Broadcast notifications cannot have userIds");
+    }
+
+    if (data.userIds?.length === 0 || !data.userIds) {
+      throw new Error("Notification must have at least one userId");
+    }
+
     const notificationsRef = collection(firebaseDb, "notifications");
     const userRef = doc(notificationsRef);
-
-    // console.log(serverTimestamp());
 
     await setDoc(
       userRef,
@@ -57,7 +63,6 @@ export const deleteOrExcemptNotification = async ({
   type?: "delete" | "excempt";
 }) => {
   try {
-    // console.log(userId, notificationId);
     if (!userId || !notificationId) throw new Error("Parameters Missing");
 
     const user = await authCurrentUser();
@@ -75,19 +80,24 @@ export const deleteOrExcemptNotification = async ({
       notification.excemptedUserIds = notification.excemptedUserIds
         ? [...notification.excemptedUserIds, userId]
         : [userId];
-      delete notification.timestamp;
       await updateDoc(userRef, {
         ...notification,
-        timestamp: serverTimestamp(),
       });
+      return;
     }
 
-    // TODO: Handle Broadcast
-    // if (notification.broadcast) {
-
-    // }
-
-    // await deleteDoc(userRef);
+    if (notification.userIds?.length === 1) {
+      await deleteDoc(userRef);
+      return;
+    } else {
+      notification.userIds = notification.userIds?.filter(
+        (id) => id !== userId
+      );
+      await updateDoc(userRef, {
+        ...notification,
+      });
+      return;
+    }
   } catch (err) {
     console.log("Error Handling Notification: ", err);
     throw err;

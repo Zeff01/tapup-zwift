@@ -1,6 +1,12 @@
 import { firebaseDb } from "@/lib/firebase/firebase";
 import { Notification, Notifications } from "@/types/types";
-import { collection, onSnapshot, orderBy, query } from "firebase/firestore";
+import {
+  collection,
+  onSnapshot,
+  orderBy,
+  query,
+  where,
+} from "firebase/firestore";
 import { useEffect, useRef, useState } from "react";
 
 type Props = {
@@ -12,6 +18,7 @@ const useNotification = ({ userUid }: Props) => {
   const unsubscribeRef = useRef<(() => void) | null>(null);
 
   useEffect(() => {
+    if (!userUid) return;
     if (unsubscribeRef.current) {
       unsubscribeRef.current();
     }
@@ -25,21 +32,25 @@ const useNotification = ({ userUid }: Props) => {
           const notificationsData = doc.doc.data() as Notification;
           if (
             !notificationsData ||
-            !userUid ||
             (!notificationsData.broadcast &&
               (!notificationsData.userIds ||
                 !notificationsData?.userIds?.includes(userUid))) ||
             (notificationsData.excemptedUserIds?.includes(userUid) &&
               notificationsData.broadcast)
-          )
-            return;
-
-          if (snapshot.metadata.hasPendingWrites) {
-            console.log(snapshot.metadata);
+          ) {
+            setNotif((prev) => prev.filter((n) => n.id !== doc.doc.id));
             return;
           }
+
+          if (snapshot.metadata.hasPendingWrites) {
+            return;
+          }
+          if (doc.type === "removed") {
+            setNotif((prev) => prev.filter((n) => n.id !== doc.doc.id));
+            return;
+          }
+
           if (doc.type === "modified") {
-            console.log(doc.doc.data());
             setNotif((prev) => {
               const index = prev.findIndex((n) => n.id === doc.doc.id);
               if (index !== -1) {
@@ -59,9 +70,6 @@ const useNotification = ({ userUid }: Props) => {
               { id: doc.doc.id, data: notificationsData },
               ...prev,
             ]);
-          }
-          if (doc.type === "removed") {
-            setNotif((prev) => prev.filter((n) => n.id !== doc.doc.id));
           }
         });
       }

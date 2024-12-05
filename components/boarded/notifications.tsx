@@ -44,9 +44,12 @@ const NotificationsSidebar = ({ user, notifications }: Props) => {
         message: "test",
         read: false,
         type: "info",
-        broadcast: true,
-        // excemptedUserIds: ["ANvgs5O0MUXohWuzvh4viHArAQ82"],
-        // userIds: ["ANvgs5O0MUXohWuzvh4viHArAQ82"], // specify
+        broadcast: false,
+        excemptedUserIds: ["ANvgs5O0MUXohWuzvh4viHArAQ82"],
+        userIds: [
+          "ANvgs5O0MUXohWuzvh4viHArAQ82",
+          "xEfwE1dUY2bQcVspHnFYa5b715K2",
+        ], // specify
       },
     });
   };
