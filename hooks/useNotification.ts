@@ -26,7 +26,7 @@ const useNotification = ({ userUid }: Props) => {
 
     const unsubscribe = onSnapshot(
       query(notificationsRef, orderBy("timestamp", "asc")),
-      { includeMetadataChanges: true },
+      { includeMetadataChanges: false },
       (snapshot) => {
         snapshot.docChanges().forEach((doc) => {
           const notificationsData = doc.doc.data() as Notification;
@@ -41,10 +41,10 @@ const useNotification = ({ userUid }: Props) => {
             setNotif((prev) => prev.filter((n) => n.id !== doc.doc.id));
             return;
           }
+          // if (snapshot.metadata.hasPendingWrites) {
+          //   return;
+          // }
 
-          if (snapshot.metadata.hasPendingWrites) {
-            return;
-          }
           if (doc.type === "removed") {
             setNotif((prev) => prev.filter((n) => n.id !== doc.doc.id));
             return;
@@ -56,18 +56,48 @@ const useNotification = ({ userUid }: Props) => {
               if (index !== -1) {
                 return prev.map((n, i) => {
                   if (i === index) {
-                    return { ...n, data: doc.doc.data() as Notification };
+                    return {
+                      ...n,
+                      data: {
+                        message: notificationsData.message,
+                        title: notificationsData.title,
+                        timestamp: notificationsData.timestamp,
+                        type: notificationsData.type,
+                        read: notificationsData.userIdsRead?.includes(userUid),
+                      },
+                    };
                   }
                   return n;
                 });
               } else {
-                return [{ id: doc.doc.id, data: notificationsData }, ...prev];
+                return [
+                  {
+                    id: doc.doc.id,
+                    data: {
+                      message: notificationsData.message,
+                      title: notificationsData.title,
+                      timestamp: notificationsData.timestamp,
+                      type: notificationsData.type,
+                      read: notificationsData.userIdsRead?.includes(userUid),
+                    },
+                  },
+                  ...prev,
+                ];
               }
             });
           }
           if (doc.type === "added") {
             setNotif((prev) => [
-              { id: doc.doc.id, data: notificationsData },
+              {
+                id: doc.doc.id,
+                data: {
+                  message: notificationsData.message,
+                  title: notificationsData.title,
+                  timestamp: notificationsData.timestamp,
+                  type: notificationsData.type,
+                  read: notificationsData.userIdsRead?.includes(userUid),
+                },
+              },
               ...prev,
             ]);
           }

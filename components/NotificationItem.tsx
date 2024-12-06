@@ -13,9 +13,11 @@ import {
   X,
 } from "lucide-react";
 import { Button } from "./ui/button";
-import { useUserContext } from "@/providers/user-provider";
 import { useMutation } from "@tanstack/react-query";
-import { deleteOrExcemptNotification } from "@/lib/firebase/actions/notification.action";
+import {
+  deleteOrExcemptNotification,
+  readNotification,
+} from "@/lib/firebase/actions/notification.action";
 import { toast } from "react-toastify";
 
 const navigationVariants = cva("w-2 rounded-l-md", {
@@ -70,9 +72,27 @@ const NavigationItems = ({
       },
     });
 
+  const { mutate: handleReadNotifMutation } = useMutation({
+    mutationFn: readNotification,
+    onSuccess: () => {
+      toast.success("Notification deleted");
+    },
+    onError: () => {
+      toast.error("Something went wrong");
+    },
+  });
+
   const handleExceptDeleteNotif = (notifId: string) => {
     if (!user || !notifId) return;
     handleExceptDeleteNotifMutation({
+      userId: user.uid!,
+      notificationId: notifId,
+    });
+  };
+
+  const handleNotifRead = (notifId: string) => {
+    if (!user || !notifId) return;
+    handleReadNotifMutation({
       userId: user.uid!,
       notificationId: notifId,
     });
@@ -110,7 +130,11 @@ const NavigationItems = ({
         </span>
         <div className="border-t gap-2 border-muted-foreground p-2 mt-2 flex justify-end">
           {!notif.data.read && (
-            <Button className="px-2 py-1 h-auto" variant={"ghost"}>
+            <Button
+              className="px-2 py-1 h-auto"
+              variant={"ghost"}
+              onClick={() => handleNotifRead(notif.id)}
+            >
               Mark as Read
             </Button>
           )}

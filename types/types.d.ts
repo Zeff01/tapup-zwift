@@ -39,10 +39,11 @@ export type Notification = {
   message: string;
   type: "success" | "error" | "warning" | "info";
   timestamp: any;
-  read: boolean;
+  read?: boolean;
   userIds?: string[];
-  broadcast: boolean;
+  broadcast?: boolean;
   excemptedUserIds?: string[];
+  userIdsRead?: string[];
 };
 
 export type Notifications = {

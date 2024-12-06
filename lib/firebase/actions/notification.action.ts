@@ -30,7 +30,7 @@ export const createNotification = async ({
       throw new Error("Broadcast notifications cannot have userIds");
     }
 
-    if (data.userIds?.length === 0 || !data.userIds) {
+    if (!data.broadcast && (data.userIds?.length === 0 || !data.userIds)) {
       throw new Error("Notification must have at least one userId");
     }
 
@@ -81,7 +81,7 @@ export const deleteOrExcemptNotification = async ({
         ? [...notification.excemptedUserIds, userId]
         : [userId];
       await updateDoc(userRef, {
-        ...notification,
+        excemptedUserIds: notification.excemptedUserIds,
       });
       return;
     }
@@ -94,12 +94,46 @@ export const deleteOrExcemptNotification = async ({
         (id) => id !== userId
       );
       await updateDoc(userRef, {
-        ...notification,
+        userIds: notification.userIds,
       });
       return;
     }
   } catch (err) {
     console.log("Error Handling Notification: ", err);
+    throw err;
+  }
+};
+
+export const readNotification = async ({
+  userId,
+  notificationId,
+}: {
+  userId: string;
+  notificationId: string;
+}) => {
+  try {
+    if (!userId || !notificationId) throw new Error("Parameters Missing");
+
+    const user = await authCurrentUser();
+    if (user !== userId) throw new Error("Auth user ID doesn't match");
+
+    const userRef = doc(firebaseDb, "notifications", notificationId);
+    const docSnap = await getDoc(userRef);
+    if (!docSnap.exists()) {
+      throw new Error("Document does not exist");
+    }
+
+    const notification = { ...docSnap.data() } as Notification;
+
+    notification.userIdsRead = notification.userIdsRead
+      ? [...notification.userIdsRead, userId]
+      : [userId];
+
+    await updateDoc(userRef, {
+      userIdsRead: notification.userIdsRead,
+    });
+  } catch (err) {
+    console.log("Error Reading Notification: ", err);
     throw err;
   }
 };

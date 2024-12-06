@@ -38,18 +38,14 @@ const NotificationsSidebar = ({ user, notifications }: Props) => {
   });
   const handleCreateNotification = () => {
     createNotificationMutation({
-      userId: "xEfwE1dUY2bQcVspHnFYa5b715K2", // current User
+      userId: "ANvgs5O0MUXohWuzvh4viHArAQ82", // current User
       data: {
         title: "test",
         message: "test",
-        read: false,
-        type: "info",
+        type: "error",
         broadcast: false,
-        excemptedUserIds: ["ANvgs5O0MUXohWuzvh4viHArAQ82"],
-        userIds: [
-          "ANvgs5O0MUXohWuzvh4viHArAQ82",
-          "xEfwE1dUY2bQcVspHnFYa5b715K2",
-        ], // specify
+        userIds: ["ANvgs5O0MUXohWuzvh4viHArAQ82"],
+        // userIdsRead: ["xEfwE1dUY2bQcVspHnFYa5b715K2"],
       },
     });
   };
