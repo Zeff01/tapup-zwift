@@ -195,37 +195,36 @@ export default function CardsAndUsersCreateFields({
 
   const steps: Array<(keyof z.infer<typeof createPortfolioSchema>)[]> = [
     ["coverPhotoUrl", "company", "companyBackground", "serviceDescription"], // Step 1 fields
-    ["profilePictureUrl","firstName", "lastName", "email", "number"], // Step 2 fields
+    ["profilePictureUrl", "firstName", "lastName", "email", "number"], // Step 2 fields
     ["chosenTemplate"], // Step 3 fields
     ["selectedPhysicalCard"], // Step 4 fields
   ];
 
-const handleNextStep = async (event: any) => {
-  event.preventDefault();
-  
-  if (currentStep === 3) {
-    setCurrentStep(4);
-    return;
-  }
-  const fieldsToValidate = [...steps[currentStep - 1]];
-  
+  const handleNextStep = async (event: any) => {
+    event.preventDefault();
+
+    if (currentStep === 3) {
+      setCurrentStep(4);
+      return;
+    }
+    const fieldsToValidate = [...steps[currentStep - 1]];
+
     // Trigger validation only for the current step
-  const isValid = await methods.trigger(fieldsToValidate);
+    const isValid = await methods.trigger(fieldsToValidate);
 
-  if (isValid) {
+    if (isValid) {
       // Clear errors for other steps to avoid showing irrelevant errors
-    const nonCurrentFields = steps
-      .flat()
-      .filter((field) => !fieldsToValidate.includes(field));
-    methods.clearErrors(nonCurrentFields);
+      const nonCurrentFields = steps
+        .flat()
+        .filter((field) => !fieldsToValidate.includes(field));
+      methods.clearErrors(nonCurrentFields);
 
-    // Proceed to the next step
-    setCurrentStep((prev) => Math.min(prev + 1, steps.length));
-  } else {
+      // Proceed to the next step
+      setCurrentStep((prev) => Math.min(prev + 1, steps.length));
+    } else {
       console.log("Validation errors", methods.formState.errors);
-  }
-};
-
+    }
+  };
 
   const goToPreviousStep = () => {
     setCurrentStep((prev) => Math.max(prev - 1, 1));
@@ -244,13 +243,12 @@ const handleNextStep = async (event: any) => {
     );
   };
 
-
-const handleSubmit = async () => {
-  methods.handleSubmit(formSubmit)();
-};
+  const handleSubmit = async () => {
+    methods.handleSubmit(formSubmit)();
+  };
 
   return (
-    <main>
+    <main className="h-full">
       {currentStep < 4 ? (
         <div className="flex flex-col overflow-auto py-8 px-6 sm:px-0 bg-background h-full">
           <TapupLogo className="mx-auto mb-5" />
@@ -307,8 +305,7 @@ const handleSubmit = async () => {
                       </div>
                     </div>
                     <span className="text-sm text-red-500 relative bottom-12">
-                      {methods.formState.errors.coverPhotoUrl?.message ??
-                        ""}
+                      {methods.formState.errors.coverPhotoUrl?.message ?? ""}
                     </span>
 
                     <div className="space-y-6">
@@ -412,7 +409,7 @@ const handleSubmit = async () => {
                         </p>
                       </div>
                     </div>
-                  <span className="text-sm text-red-500">
+                    <span className="text-sm text-red-500">
                       {methods.formState.errors.profilePictureUrl?.message ??
                         ""}
                     </span>
@@ -487,13 +484,13 @@ const handleSubmit = async () => {
                   )}
                 </div>
               </form>
-              </Form>
+            </Form>
           </div>
         </div>
       ) : (
-        <div className="flex flex-col h-screen ">
+        <div className="flex flex-col h-full border-purple-500 border relative ">
           {/* Top Section with Back Button */}
-          <div className="p-4">
+          <div className="p-4 border">
             <Button
               variant="outline"
               className="text-foreground dark:text-secondary-foreground dark:border-white"
@@ -504,18 +501,29 @@ const handleSubmit = async () => {
             </Button>
           </div>
 
-          {/* Scrollable Middle Section */}
+          {/* Middle Section */}
 
-          <div className="flex-1 overflow-y-auto">
-            <div className="max-w-3xl mx-auto p-6">
-              {/* Title */}
-              <h1 className="text-2xl font-medium text-center mb-8">
-                Pick your physical card
-              </h1>
+          <div className="flex-grow flex flex-col">
+            {/* Title */}
+            <h1 className="text-2xl font-medium text-center mb-8 mx-auto">
+              Pick your physical card
+            </h1>
 
-              {/* Cards Grid */}
-              <div className="grid sm:grid-cols-2 gap-3 sm:gap-4 md:gap-6 lg:gap-8">
-                {(
+            {/* Cards Grid */}
+
+            <div className="flex-grow flex flex-col">
+              <div className="flex-grow border  flex items-center justify-center">
+                h1
+              </div>
+              <div className="flex gap-5 justify-center items-center">
+                <div className="bg-teal-800 size-16"></div>
+                <div className="bg-teal-800 size-16"></div>
+                <div className="bg-teal-800 size-16"></div>
+                <div className="bg-teal-800 size-16"></div>
+              </div>
+            </div>
+
+            {/*  {(
                   Object.keys(
                     createPortfolioSchema.shape.selectedPhysicalCard.enum
                   ) as SelectedPhysicalCardType[]
@@ -533,14 +541,12 @@ const handleSubmit = async () => {
                       isSelected={selectedPhysicalCard === cardId}
                     />
                   </div>
-                ))}
-              </div>
-            </div>
+                ))} */}
           </div>
 
           {/* Bottom Section with Submit Button */}
 
-          <div className="p-4 md:pr-16">
+          <div className="p-4 md:pr-16 border">
             <div className="mx-auto flex justify-end">
               <Button
                 variant="green"
@@ -548,7 +554,7 @@ const handleSubmit = async () => {
                 type="button"
                 disabled={isLoading}
                 onClick={handleSubmit}
-                >
+              >
                 {isLoading ? (
                   <LoaderCircle className="animate-spin" />
                 ) : (
@@ -558,7 +564,7 @@ const handleSubmit = async () => {
             </div>
           </div>
         </div>
-        )}
-        </main>
+      )}
+    </main>
   );
 }
