@@ -2,6 +2,7 @@
 
 import { useState } from "react";
 import Link from "next/link";
+// import { Link } from "react-scroll";
 import { Button } from "../ui/button";
 import { RxHamburgerMenu } from "react-icons/rx";
 import { Sheet, SheetTrigger, SheetContent } from "../ui/sheet";
@@ -22,7 +23,7 @@ const Header = () => {
   return (
     <header className="flex sticky top-0 z-50 bg-background justify-between items-center md:px-10 shadow-xl p-4">
       <Link href="/" rel="preload">
-        <TapupLogo className="w-20 lg:w-auto" />
+        <TapupLogo className="w-18 lg:w-28" />
       </Link>
 
       <div className="flex items-center gap-4 lg:gap-8">
