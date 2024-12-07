@@ -1,5 +1,4 @@
-
-import Header from "@/components/landing/Header";
+import Header from "../../../components/landing/Header";
 import React from "react";
 
 type Props = {
