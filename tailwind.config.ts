@@ -24,6 +24,7 @@ const config = {
       },
       colors: {
         grayDescription: "hsl(var(--text-description))",
+        checkColor: "hsl(var(--check-color))",
         greenTitle: "#6fdc00",
         placeholder: {
           input: "#383839",
