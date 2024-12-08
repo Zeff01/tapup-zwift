@@ -16,7 +16,7 @@ const socials = [
 ];
 const Footer = () => {
   return (
-    <footer className="pb-8 pt-16">
+    <footer className="pb-8 pt-16" id="contact">
       <Newsletter />
       <div className="flex mt-8 flex-col sm:flex-row w-full gap-4 justify-around pt-6 items-center">
         <div className="mx-auto aspect-[3.63] h-9">

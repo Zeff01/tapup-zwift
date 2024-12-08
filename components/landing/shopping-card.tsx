@@ -17,7 +17,7 @@ const ShoppingCard = () => {
   };
 
   return (
-    <section className="py-16">
+    <section className="py-8 lg:py-16">
       <h2 className="text-3xl sm:text-4xl md:text-5xl lg:text-[3.5vw] leading-tight md:leading-none text-center font-black">
         Shopping Card
       </h2>
