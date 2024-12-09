@@ -44,6 +44,18 @@ export type Notification = {
   broadcast?: boolean;
   excemptedUserIds?: string[];
   userIdsRead?: string[];
+  actions?: "card/transfer";
+  transactionId?: string;
+};
+
+export type Transaction = {
+  type?: "card/transfer";
+  transactionId: string;
+  sender: string;
+  verificationCode: string;
+  receiver: string;
+  timestamp: any;
+  status: "pending" | "completed" | "failed";
 };
 
 export type Notifications = {

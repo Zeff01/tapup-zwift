@@ -1,8 +1,10 @@
 import { firebaseDb } from "@/lib/firebase/firebase";
 import { Notification, Notifications } from "@/types/types";
 import {
+  and,
   collection,
   onSnapshot,
+  or,
   orderBy,
   query,
   where,
@@ -24,12 +26,50 @@ const useNotification = ({ userUid }: Props) => {
     }
     const notificationsRef = collection(firebaseDb, "notifications");
 
+    // or(
+    //   and(
+    //     where("broadcast", "==", false),
+    //     and(
+    //       or(
+    //         where("userIds", "!=", null),
+    //         where("userIds", "!=", undefined)
+    //       ),
+    //       where("userIds", "array-contains", userUid)
+    //     )
+    //   ),
+    //   and(
+    //     where("broadcast", "==", true),
+    //     where("excemptedUserIds", "not-in", [userUid])
+    //   )
+    // ),
+
+    // or(
+
+    //   where("broadcast", "==", true),
+    //   and(
+    //     where("broadcast", "==", false),
+    //     where("userIds", "array-contains", userUid)
+    //   )
+    // )
+
     const unsubscribe = onSnapshot(
-      query(notificationsRef, orderBy("timestamp", "asc")),
+      query(
+        notificationsRef,
+        or(
+          where("broadcast", "==", true),
+          and(
+            where("broadcast", "==", false),
+            where("userIds", "array-contains", userUid)
+          )
+        ),
+        orderBy("timestamp", "asc")
+      ),
+
       { includeMetadataChanges: false },
       (snapshot) => {
         snapshot.docChanges().forEach((doc) => {
           const notificationsData = doc.doc.data() as Notification;
+          console.log(notificationsData);
           if (
             !notificationsData ||
             (!notificationsData.broadcast &&

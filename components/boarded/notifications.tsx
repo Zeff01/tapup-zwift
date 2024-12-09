@@ -43,8 +43,8 @@ const NotificationsSidebar = ({ user, notifications }: Props) => {
         title: "test",
         message: "test",
         type: "error",
-        broadcast: false,
-        userIds: ["ANvgs5O0MUXohWuzvh4viHArAQ82"],
+        broadcast: true,
+        // userIds: ["ANvgs5O0MUXohWuzvh4viHArAQ82"],
         // userIdsRead: ["xEfwE1dUY2bQcVspHnFYa5b715K2"],
       },
     });
