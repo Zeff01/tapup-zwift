@@ -58,7 +58,7 @@ const Tempate8 =  ({
                     </svg>
                     </div>
                     {/* Profile picture and bookmark icon */}
-                    <div className="absolute rounded-full bg-[#F2F2F2] transform left-[10rem] -bottom-1 w-[120px] h-[120px] border-[#F2F2F2] border-[8px]">
+                    <div className="absolute rounded-full bg-offWhiteTemplate transform left-40 -bottom-1 w-custom-29 h-custom-29 border-offWhiteTemplate border-2xs">
                         <Image
                             src={'/assets/template-8-profile-picture.jpeg'}
                             fill
@@ -66,15 +66,15 @@ const Tempate8 =  ({
                             className="rounded-full"
                         />
                     </div>
-                    <Button className="absolute rounded-[20px] transform left-[19rem] top-[10rem] w-[40px] h-[40px] bg-[#F2F2F2] hover:bg-[#F2F2F2]">
-                        <Bookmark className="w-[24px] h-[24px]" />
+                    <Button className="absolute rounded-xl transform left-[19rem] top-40 w-10 h-10 bg-offWhiteTemplate hover:bg-offWhiteTemplate">
+                        <Bookmark className="w-6 h-6" />
                     </Button>
                 </div>
                  {/* Profile details */}
-                <div className="flex flex-col items-center mt-[1.5rem] gap-2 mb-5">
-                    <h1 className="text-xl font-extrabold text-[#143583] leading-[25.1px]">Janna Marie Smith</h1>
-                    <p className="text-xs font-semibold leading-[15.06px] text-[#959595]">ABC Company | UI/UX Designer</p>
-                    <p className="font-normal text-[#959595] text-[10px] leading-[12.55px]">jannamariesmith@gmail.com</p>
+                <div className="flex flex-col items-center mt-6 gap-2 mb-5">
+                    <h1 className="text-xl font-extrabold text-footerBlueTemplate leading-[25.1px]">Janna Marie Smith</h1>
+                    <p className="text-xs font-semibold leading-4 text-grayTemplate">ABC Company | UI/UX Designer</p>
+                    <p className="font-normal text-grayTemplate text-xs leading-3">jannamariesmith@gmail.com</p>
                 </div>
                 <div className="flex justify-center gap-2 mb-5">
                     <Button className="rounded-full"><FaFacebook /></Button>
@@ -87,70 +87,70 @@ const Tempate8 =  ({
                 </div>
                 {/* CTA BUTTON */}
                 <div className="mb-5">
-                    <Button className="rounded-[20px] bg-[#143583] text-white w-full hover:bg-[#143583]">Email me!</Button>
+                    <Button className="rounded-xl bg-footerBlueTemplate text-white w-full hover:bg-footerBlueTemplate">Email me!</Button>
                 </div>
                 {/*COMPANY DETAILS */}
-                <div className="flex flex-col justify-start gap-[12px]">
-                    <h1 className="text-base font-extrabold leading-[30.12px] text-[#143583]">ABC Company</h1>
-                    <h5 className="text-xs font-extrabold leading-[15.06px] text-[#959595]">Company Overview</h5>
-                    <p className="text-[10px] leading-4 font-light text-[#959595]">Lorem ipsum dolor sit amet consectetur. Commodo non imperdiet tempus orci non id nibh faucibus. 
+                <div className="flex flex-col justify-start gap-3">
+                    <h1 className="text-base font-extrabold leading-8 text-footerBlueTemplate">ABC Company</h1>
+                    <h5 className="text-xs font-extrabold leading-4 text-grayTemplate">Company Overview</h5>
+                    <p className="text-2xs leading-4 font-light text-grayTemplate">Lorem ipsum dolor sit amet consectetur. Commodo non imperdiet tempus orci non id nibh faucibus. 
                         Laoreet at hendrerit at viverra dignissim consequat posuere mi cras.</p>
-                    <h5 className="text-xs font-extrabold leading-[15.06px] text-[#959595]">Our Services</h5>
-                    <p className="text-[10px] leading-4 font-light text-[#959595]">Lorem ipsum dolor sit amet consectetur. Commodo non imperdiet tempus orci non id nibh faucibus. 
+                    <h5 className="text-xs font-extrabold leading-4 text-grayTemplate">Our Services</h5>
+                    <p className="text-2xs leading-4 font-light text-grayTemplate">Lorem ipsum dolor sit amet consectetur. Commodo non imperdiet tempus orci non id nibh faucibus. 
                         Laoreet at hendrerit at viverra</p>
                     {/*Photos */}
                     <div className="grid grid-cols-2 gap-2">
                         <div className="flex flex-col gap-y-2">
-                            <div className="relative h-[140px] p-2 rounded-2xl bg-[#F2F2F2]">
-                                <div className="relative h-[7.8rem]">
+                            <div className="relative h-36 p-2 rounded-2xl bg-offWhiteTemplate">
+                                <div className="relative h-32">
                                     <Image
                                         src={'/assets/template-7-image1.jpeg'}
                                         fill
                                         alt="photo"
-                                        className="rounded-[8px]"
+                                        className="rounded-2xs"
                                     />
                                 </div>
                             </div>
-                            <div className="relative h-[140px] p-2 rounded-2xl bg-[#F2F2F2]">
-                                <div className="relative h-[7.8rem]">
+                            <div className="relative h-36 p-2 rounded-2xl bg-offWhiteTemplate">
+                                <div className="relative h-32">
                                     <Image
                                         src={'/assets/template-7-image2.jpeg'}
                                         fill
                                         alt="photo"
-                                        className="rounded-[8px]"
+                                        className="rounded-2xs"
                                     />
                                 </div>
                             </div>
                         </div>
                         <div className="relative h-full p-2 rounded-2xl bg-[#F2F2F2]">
-                            <div className="relative h-[270]">
+                            <div className="relative h-custom-278">
                                 <Image
                                     src={'/assets/template-8-image1.jpeg'}
                                     fill
                                     alt="photo"
-                                    className="rounded-[8px]"
+                                    className="rounded-2xs"
                                 />
                             </div>
                         </div>
                     </div>
                     {/*Footer */}
                     <div className="flex flex-col items-center my-3 gap-y-3">
-                        <div className="text-base text-[#143583] font-bold">
+                        <div className="text-base text-footerBlueTemplate font-bold">
                             {company ?? 'ABC Company'}
                         </div>
                         <div className="flex justify-center gap-2.5">
-                            <Button className="rounded-full h-[28px] w-[28px]">
+                            <Button className="rounded-full h-2xs w-2xs">
                                 <FaFacebookMessenger className="" />
                             </Button>
-                            <Button className="rounded-full h-[28px] w-[28px]">
+                            <Button className="rounded-full h-2xs w-2xs">
                                 <FaFacebook className="" />
                             </Button>
-                            <Button className="rounded-full h-[28px] w-[28px]">
+                            <Button className="rounded-full h-2xs w-2xs">
                                 <FaInstagram className="" />
                             </Button>
                         </div>
                         <div className="flex justify-center">
-                            <p className="text-[8px] text-gray-500 font-light">Copyright 2024 ABC Company. All Right Reserved</p>
+                            <p className="text-2xs text-gray-500 font-light">Copyright 2024 ABC Company. All Right Reserved</p>
                         </div>
                     </div>
                 </div>

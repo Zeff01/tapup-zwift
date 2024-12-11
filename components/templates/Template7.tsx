@@ -50,7 +50,7 @@ const Template7 = ({
                             alt="Cover Image"
                             width={400}
                             height={200}
-                            className="w-full h-48 object-cover rounded-[2rem] overflow-hidden"
+                            className="w-full h-52 object-cover overflow-hidden"
                         />
                         ) : (
                         <Image
@@ -63,13 +63,13 @@ const Template7 = ({
                         />
                         )}
                     </div>
-                    <div className="absolute -bottom-16 rounded-[20px] left-1/4 transform -translate-x-24 bg-[#F2F2F2] border-8 border-[#F2F2F2] h-[120px] w-[120px]">
+                    <div className="absolute -bottom-16 rounded-xl left-1/4 transform -translate-x-24 bg-offWhiteTemplate border-8 border-offWhiteTemplate h-custom-29 w-custom-29">
                         {profilePictureUrl ? (
-                        <div className="rounded-[20px]">
+                        <div className="rounded-xl">
                             <Image
                             src={profilePictureUrl}
                             alt="Profile Image"
-                            className="rounded-[20px] "
+                            className="rounded-xl"
                             />
                         </div>
                         ) : (
@@ -78,7 +78,7 @@ const Template7 = ({
                                 src={"/assets/template-7-profile-picture.jpeg"}
                                 alt="Profile Image"
                                 fill
-                                className="rounded-[20px]"
+                                className="rounded-xl"
                                 />
                             </div>
                         )}
@@ -95,13 +95,13 @@ const Template7 = ({
                     ) : (
                         <h1 className="text-xl font-bold mt-2 text-blue-600 ">Janna Marie Smith</h1>
                     )}
-                    <p className="font-semibold text-[#959595]">
+                    <p className="font-semibold text-grayTemplate">
                         {position ?? "ABC Company | UI/UX Designer"}
                     </p>
-                    <p className=" text-[#959595] text-xs">
+                    <p className=" text-grayTemplate text-xs">
                         {email ?? "jannamariesmith@gmail.com"}
                     </p>
-                    <p className=" text-[#959595] text-xs"> {number ?? '+639123456789'}</p>
+                    <p className=" text-grayTemplate text-xs"> {number ?? '+639123456789'}</p>
                 </div>
                 {/* SOCIALS */}
                 <div className="flex pl-5 mt-3 gap-2">
@@ -115,7 +115,7 @@ const Template7 = ({
                 </div>
                 {/* CTA BUTTONS */}
                 <div className="grid grid-cols-3 gap-4 mt-5">
-                    <Button className="col-span-2 bg-[#1976D2] hover:bg-[#1976D2] text-white">Email Me</Button>
+                    <Button className="col-span-2 bg-blueTemplate hover:bg-blueTemplate text-white">Email Me</Button>
                     <Button className="bg-gray-500 text-white">Save</Button>
                 </div>
                 {/*COMPANY DETAILS */}
@@ -125,14 +125,14 @@ const Template7 = ({
                     </div>
                     <div className="flex flex-col gap-y-2 mb-3">
                         <div className="text-gray-500 text-xs font-semibold">Company Overview</div>
-                        <div className="text-gray-500 text-[10px] font-normal leading-4">
+                        <div className="text-gray-500 text-2xs font-normal leading-4">
                         Lorem ipsum dolor sit amet consectetur. Commodo non imperdiet tempus orci non id nibh 
                         faucibus. Laoreet at hendrerit at viverra dignissim consequat posuere mi cras.
                         </div>
                     </div>
                     <div className="flex flex-col gap-y-2 mb-3">
                         <div className="text-gray-500 text-xs font-semibold">Our Services</div>
-                        <div className="text-gray-500 text-[10px] font-normal leading-4">
+                        <div className="text-gray-500 text-2xs font-normal leading-4">
                         {serviceDescription ?? 'Lorem ipsum dolor sit amet consectetur. Commodo non imperdiet tempus orci non id nibh faucibus. Laoreet at hendrerit at viverra '}
                         </div>
                     </div>
@@ -140,8 +140,8 @@ const Template7 = ({
                 {/*Photos */}
                     <div className="grid grid-cols-2 gap-2">
                         <div className="flex flex-col gap-y-2">
-                            <div className="relative h-[200px] p-2 rounded-lg bg-[#F2F2F2]">
-                                <div className="relative h-[11.5rem]">
+                            <div className="relative h-52 p-2 rounded-lg bg-offWhiteTemplate">
+                                <div className="relative h-48">
                                     <Image
                                         src={"/assets/template-7-image1.jpeg"}
                                         alt="Image"
@@ -150,8 +150,8 @@ const Template7 = ({
                                     ></Image>
                                 </div>
                             </div>
-                            <div className="relative h-[140px] p-2 rounded-lg bg-[#F2F2F2]">
-                                <div className="relative h-[7.8rem]">
+                            <div className="relative h-36 p-2 rounded-lg bg-offWhiteTemplate">
+                                <div className="relative h-32">
                                     <Image
                                         src={"/assets/template-7-image2.jpeg"}
                                         alt="Image"
@@ -162,8 +162,8 @@ const Template7 = ({
                             </div>
                         </div>
                         <div className="flex flex-col gap-y-2">
-                            <div className="relative h-[140px] p-2 rounded-lg bg-[#F2F2F2]">
-                                <div className="relative h-[7.8rem]">
+                            <div className="relative h-36 p-2 rounded-lg bg-offWhiteTemplate">
+                                <div className="relative h-32">
                                     <Image
                                         src={"/assets/template-7-image2.jpeg"}
                                         alt="Image"
@@ -172,8 +172,8 @@ const Template7 = ({
                                     ></Image>
                                 </div>
                             </div>
-                            <div className="relative h-[200px] p-2 rounded-lg bg-[#F2F2F2]">
-                                <div className="relative h-[11.5rem]">
+                            <div className="relative h-52 p-2 rounded-lg bg-offWhiteTemplate">
+                                <div className="relative h-48">
                                     <Image
                                         src={"/assets/template-7-image1.jpeg"}
                                         alt="Image"
@@ -186,22 +186,22 @@ const Template7 = ({
                     </div>
                     {/*Footer */}
                     <div className="flex flex-col items-center my-3 gap-y-3">
-                        <div className="text-base text-[#143583] font-bold">
+                        <div className="text-base text-footerBlueTemplate font-bold">
                             {company ?? 'ABC Company'}
                         </div>
                         <div className="flex justify-center gap-2.5">
-                            <Button className="rounded-full h-[28px] w-[28px]">
+                            <Button className="rounded-full h-2xs w-2xs">
                                 <FaFacebookMessenger className="" />
                             </Button>
-                            <Button className="rounded-full h-[28px] w-[28px]">
+                            <Button className="rounded-full h-2xs w-2xs">
                                 <FaFacebook className="" />
                             </Button>
-                            <Button className="rounded-full h-[28px] w-[28px]">
+                            <Button className="rounded-full h-2xs w-2xs">
                                 <FaInstagram className="" />
                             </Button>
                         </div>
                         <div className="flex justify-center">
-                            <p className="text-[8px] text-gray-500 font-light">Copyright 2024 ABC Company. All Right Reserved</p>
+                            <p className="text-3xs text-gray-500 font-light">Copyright 2024 ABC Company. All Right Reserved</p>
                         </div>
                     </div>
                 </div>
