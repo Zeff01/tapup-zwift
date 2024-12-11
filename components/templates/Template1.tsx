@@ -1,4 +1,4 @@
-import { Card } from "@/types/types";
+import { UserProfile } from "@/types/types";
 import Image from "next/image";
 import { CiMail, CiPhone, CiSaveDown2 } from "react-icons/ci";
 import {
@@ -11,7 +11,7 @@ import {
   FaSkype,
   FaGlobe,
 } from "react-icons/fa6";
-import { downloadVCard } from "@/lib/utils";
+import { downloadVCard } from "@/lib/vCardUtils";
 
 const Template1 = ({
   profilePictureUrl,
@@ -33,7 +33,7 @@ const Template1 = ({
   whatsappNumber,
   skypeInviteUrl,
   websiteUrl,
-}: Card) => {
+}: UserProfile) => {
   const userProfile = {
     firstName,
     lastName,
