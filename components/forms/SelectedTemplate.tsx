@@ -4,8 +4,11 @@ import Template3 from "@/components/templates/Template3";
 import Template4 from "@/components/templates/Template4";
 import Template5 from "@/components/templates/Template5";
 import Template6 from "@/components/templates/Template6";
+import Template7 from "@/components/templates/Template7";
+import Template8 from "@/components/templates/Template8";
 import Template9 from "@/components/templates/Template9";
 import Template10 from "@/components/templates/Template10";
+
 import { Card } from "@/types/types";
 
 const SelectedTemplate = ({
@@ -22,6 +25,8 @@ const SelectedTemplate = ({
     template4: <Template4 {...(formData as Card)} />,
     template5: <Template5 {...(formData as Card)} />,
     template6: <Template6 userData={formData as Card} />,
+    template7: <Template7 {...(formData as Card)} />,
+    template8: <Template8 {...(formData as Card)} />,
     template9: <Template9 {...(formData as Card)} />,
     template10: <Template10 {...(formData as Card)} />,
   };

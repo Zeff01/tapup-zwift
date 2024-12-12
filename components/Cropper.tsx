@@ -289,12 +289,10 @@ export default function Cropper({
             <div className="z-50 fixed top-0 right-0 w-screen h-screen">
               <div className="z-20 w-full h-full bg-black opacity-80" />
               <div className=" z-30 absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[500px] h-full bg-secondary flex flex-col items-center gap-y-8 overflow-y-scroll  justify-between">
-                  
-            
                 <div className="pt-8 w-full flex flex-col items-center">
                   {/* <input type="file" accept="image/*" onChange={onSelectFile} /> */}
                   <div className="w-[400px] flex flex-col items-center gap-y-2">
-                   <TapupLogo className="w-[6rem] mb-3"/>
+                    <TapupLogo className="w-[6rem] mb-3" />
                     <p className="pb-4 font-bold text-2xl">Select the Image</p>
                     <label htmlFor="scale" className="text-xl font-semibold">
                       Zoom
@@ -309,7 +307,7 @@ export default function Cropper({
                         onValueChange={(v) => {
                           setScale(v[0]);
                         }}
-                       />
+                      />
                       <Plus />
                     </div>
                   </div>
