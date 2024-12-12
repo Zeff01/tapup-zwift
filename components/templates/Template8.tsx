@@ -1,44 +1,54 @@
 import { Card } from "@/types/types";
 import Image from "next/image";
-import { Bookmark } from 'lucide-react';
+import { CiMail, CiPhone, CiSaveDown2 } from "react-icons/ci";
+import {Button} from "@/components/ui/button";
+import {Bookmark} from "lucide-react"
 import {
+  FaXTwitter,
   FaFacebook,
+  FaYoutube,
   FaInstagram,
   FaLinkedin,
+  FaWhatsapp,
+  FaSkype,
   FaGlobe,
-  FaEnvelope,  
-  FaPhone,
   FaFacebookMessenger,
-  FaBookmark,
+    FaEnvelope,
+    FaPhone,
 } from "react-icons/fa6";
-import {Button} from "@/components/ui/button";
+import { downloadVCard } from "@/lib/utils";
 
-const Tempate8 =  ({
-    profilePictureUrl,
-    coverPhotoUrl,
-    position,
-    company,
-    serviceDescription,
+const Template8 = ({
+  profilePictureUrl,
+  coverPhotoUrl,
+  position,
+  company,
+  companyBackground,
+  serviceDescription,
+  servicePhotos,
+  firstName,
+  lastName,
+  email,
+  number,
+  facebookUrl,
+  youtubeUrl,
+  instagramUrl,
+  twitterUrl,
+  linkedinUrl,
+  whatsappNumber,
+  skypeInviteUrl,
+  websiteUrl,
+}: Card) => {
+  const userProfile = {
     firstName,
     lastName,
     email,
     number,
-    facebookUrl,
-    youtubeUrl,
-    instagramUrl,
-    twitterUrl,
-    linkedinUrl,
-    websiteUrl
-}: Card) => {
-    const userProfile = {
-        firstName,
-        lastName,
-        email,
-        number,
-        company,
-        position,
-        websiteUrl
-    }
+    company,
+    position,
+    websiteUrl,
+  };
+
 
     return (
         <div className="bg-white text-black p-4 flex flex-col justify-between min-h-screen">
@@ -161,4 +171,4 @@ const Tempate8 =  ({
 
 }
 
-export default Tempate8
+export default Template8
