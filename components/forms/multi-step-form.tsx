@@ -187,36 +187,35 @@ export default function CardsAndUsersCreateFields({
 
   const steps: Array<(keyof z.infer<typeof createPortfolioSchema>)[]> = [
     ["coverPhotoUrl", "company", "companyBackground", "serviceDescription"], // Step 1 fields
-    ["profilePictureUrl","firstName", "lastName", "email", "number"], // Step 2 fields
+    ["profilePictureUrl", "firstName", "lastName", "email", "number"], // Step 2 fields
     ["chosenTemplate"], // Step 3 fields
   ];
 
-const handleNextStep = async (event: any) => {
-  event.preventDefault();
-  
-  if (currentStep === 3) {
-    setCurrentStep(4);
-    return;
-  }
-  const fieldsToValidate = [...steps[currentStep - 1]];
-  
+  const handleNextStep = async (event: any) => {
+    event.preventDefault();
+
+    if (currentStep === 3) {
+      setCurrentStep(4);
+      return;
+    }
+    const fieldsToValidate = [...steps[currentStep - 1]];
+
     // Trigger validation only for the current step
-  const isValid = await methods.trigger(fieldsToValidate);
+    const isValid = await methods.trigger(fieldsToValidate);
 
-  if (isValid) {
+    if (isValid) {
       // Clear errors for other steps to avoid showing irrelevant errors
-    const nonCurrentFields = steps
-      .flat()
-      .filter((field) => !fieldsToValidate.includes(field));
-    methods.clearErrors(nonCurrentFields);
+      const nonCurrentFields = steps
+        .flat()
+        .filter((field) => !fieldsToValidate.includes(field));
+      methods.clearErrors(nonCurrentFields);
 
-    // Proceed to the next step
-    setCurrentStep((prev) => Math.min(prev + 1, steps.length));
-  } else {
+      // Proceed to the next step
+      setCurrentStep((prev) => Math.min(prev + 1, steps.length));
+    } else {
       console.log("Validation errors", methods.formState.errors);
-  }
-};
-
+    }
+  };
 
   const goToPreviousStep = () => {
     setCurrentStep((prev) => Math.max(prev - 1, 1));
@@ -235,10 +234,9 @@ const handleNextStep = async (event: any) => {
     );
   };
 
-
-const handleSubmit = async () => {
-  methods.handleSubmit(formSubmit)();
-};
+  const handleSubmit = async () => {
+    methods.handleSubmit(formSubmit)();
+  };
 
   return (
     <main>
@@ -298,8 +296,7 @@ const handleSubmit = async () => {
                       </div>
                     </div>
                     <span className="text-sm text-red-500 relative bottom-12">
-                      {methods.formState.errors.coverPhotoUrl?.message ??
-                        ""}
+                      {methods.formState.errors.coverPhotoUrl?.message ?? ""}
                     </span>
 
                     <div className="space-y-6">
@@ -403,7 +400,7 @@ const handleSubmit = async () => {
                         </p>
                       </div>
                     </div>
-                  <span className="text-sm text-red-500">
+                    <span className="text-sm text-red-500">
                       {methods.formState.errors.profilePictureUrl?.message ??
                         ""}
                     </span>
@@ -478,7 +475,7 @@ const handleSubmit = async () => {
                   )}
                 </div>
               </form>
-              </Form>
+            </Form>
           </div>
         </div>
       ) : (
@@ -527,7 +524,7 @@ const handleSubmit = async () => {
                 type="button"
                 disabled={isLoading}
                 onClick={handleSubmit}
-                >
+              >
                 {isLoading ? (
                   <LoaderCircle className="animate-spin" />
                 ) : (
@@ -537,7 +534,7 @@ const handleSubmit = async () => {
             </div>
           </div>
         </div>
-        )}
-        </main>
+      )}
+    </main>
   );
 }

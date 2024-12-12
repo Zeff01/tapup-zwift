@@ -52,6 +52,8 @@ export const createPortfolioSchema = z.object({
     "template4",
     "template5",
     "template6",
+    "template7",
+    "template8",
     "template9",
     "template10",
   ]),
