@@ -520,7 +520,7 @@ export default function CardsAndUsersCreateFields({
             {/* Cards Grid */}
 
             <div className="flex-grow flex flex-col">
-              <div className="flex-grow border border-green-500 flex items-center justify-center">
+              <div className="flex-grow border border-green-500 flex items-center justify-center mx-6 md:mx-0">
                 {selectedPhysicalCard ? (
                   <SelectedPhysicalCard
                     cardId={selectedPhysicalCard}
@@ -537,26 +537,6 @@ export default function CardsAndUsersCreateFields({
                 />
               </div>
             </div>
-
-            {/*  {(
-                  Object.keys(
-                    createPortfolioSchema.shape.selectedPhysicalCard.enum
-                  ) as SelectedPhysicalCardType[]
-                ).map((cardId) => (
-                  <div
-                    key={cardId}
-                    onClick={() => {
-                      setSelectedPhysicalCard(cardId);
-                      methods.setValue("selectedPhysicalCard", cardId);
-                    }}
-                  >
-                    <SelectedPhysicalCard
-                      cardId={cardId}
-                      formData={methods.getValues()}
-                      isSelected={selectedPhysicalCard === cardId}
-                    />
-                  </div>
-                ))} */}
           </div>
 
           {/* Bottom Section with Submit Button */}
