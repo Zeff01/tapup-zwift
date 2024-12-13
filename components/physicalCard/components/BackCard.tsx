@@ -13,7 +13,18 @@ const BackCard = ({
   data: Partial<Card>;
   backgroundImage?: string | StaticImageData;
 }) => {
-  console.log("BackCard", data);
+  console.log("back card", data);
+  // Destructure the properties from the data object
+  const {
+    firstName,
+    lastName,
+    email,
+    number,
+    company,
+    position,
+    websiteUrl,
+    profilePictureUrl,
+  } = data;
 
   return (
     <div className="w-full h-full rounded-lg overflow-hidden relative">
@@ -83,16 +94,16 @@ const BackCard = ({
                   height={12}
                   className=" aspect-[12/12] object-contain object-center"
                 />
-                {data.number || "Phone Number"}
+                {number || "Phone Number"}
               </p>
             </div>
           </div>
           {/* Profile */}
           <div className=" flex flex-col justify-center h-full">
-            {data.profilePictureUrl ? (
+            {profilePictureUrl ? (
               <div className="relative w-24 h-24 rounded-full overflow-hidden ">
                 <Image
-                  src={data.profilePictureUrl}
+                  src={profilePictureUrl}
                   alt="Profile"
                   width={127}
                   height={124}
