@@ -11,6 +11,7 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { z } from "zod";
 import { createPortfolioSchema } from "@/lib/zod-schema";
 import { TemplateCarousel } from "@/components/TemplateCarousel";
+import { PhysicalCardCarousel } from "@/components/PhysicalCardCarousel";
 import SocialLinksForm from "@/components/forms/SocialLinkForm";
 import PersonalInfoForm from "@/components/forms/PersonalInfoForm";
 import CompanyInfoForm from "@/components/forms/CompanyInfoForm";
@@ -23,6 +24,9 @@ import { createCard } from "@/lib/firebase/actions/card.action";
 export type ChosenTemplateType = z.infer<
   typeof createPortfolioSchema
 >["chosenTemplate"];
+export type ChosenPhysicalCardType = z.infer<
+  typeof createPortfolioSchema
+>["chosenPhysicalCard"];
 
 export default function CardsAndUsersCreateFields({
   card,
@@ -45,6 +49,8 @@ export default function CardsAndUsersCreateFields({
 
   const [selectedTemplateId, setSelectedTemplateId] =
     useState<ChosenTemplateType>("template1");
+  const [selectedPhysicalCardId, setSelectedPhysicalCardId] =
+    useState<ChosenPhysicalCardType>("card1");
 
   const addServicePhoto = (photo: Photo) => {
     setServicePhotos([...servicePhotos, photo]);
@@ -66,6 +72,7 @@ export default function CardsAndUsersCreateFields({
       serviceDescription: "",
       servicePhotos: [],
       chosenTemplate: "template1",
+      chosenPhysicalCard: "card1",
       firstName: "",
       lastName: "",
       email: "",
@@ -121,12 +128,15 @@ export default function CardsAndUsersCreateFields({
       methods.setValue("servicePhotos", serviceImageUrls || []);
     }
     methods.setValue("chosenTemplate", selectedTemplateId);
+    methods.setValue("chosenPhysicalCard", selectedPhysicalCardId);
+
     methods.setValue("email", user?.email || "");
   }, [
     coverPhotoUrl,
     imageUrl,
     serviceImageUrls,
     selectedTemplateId,
+    selectedPhysicalCardId,
     methods,
     user,
   ]);
@@ -140,6 +150,7 @@ export default function CardsAndUsersCreateFields({
   const { mutate: createCardMutation, isPending: isLoadingCreateCard } =
     useMutation({
       mutationFn: createCard,
+
       onSuccess: () => {
         queryClient.invalidateQueries({ queryKey: ["cards", user?.uid] });
         successHandler();
