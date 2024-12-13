@@ -1,11 +1,27 @@
+import Image from "next/image";
+import { StaticImageData } from "next/image";
+
 // Front Card Component (NFC/Tap Card)
-const FrontCard = () => (
-  <div
-    className="absolute w-full h-full rounded-lg [backface-visibility:hidden] 
-    bg-gradient-to-br from-foreground/90 
-    via-green-900 to-foreground/90 border-2 border-purple-500"
-  >
-    <div className="p-6 flex flex-col justify-between h-full">
+const FrontCard = ({
+  backgroundImage,
+}: {
+  backgroundImage?: string | StaticImageData;
+}) => (
+  <div className="w-full h-full rounded-lg overflow-hidden">
+    {/* Background Image */}
+    {backgroundImage && (
+      <div className="absolute inset-0">
+        <Image
+          src={backgroundImage}
+          alt="Card Background"
+          fill
+          className="object-cover"
+        />
+      </div>
+    )}
+
+    {/* Content */}
+    <div className="relative z-10 p-6 flex flex-col justify-between h-full">
       <div className="text-right text-white">NFC</div>
       <div className="text-center">
         <div className="text-white text-2xl">Tap Up</div>
