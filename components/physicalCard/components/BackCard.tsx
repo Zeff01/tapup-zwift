@@ -2,18 +2,23 @@ import { Card } from "@/types/types";
 import Image from "next/image";
 import { StaticImageData } from "next/image";
 import tapUpLogoWhite from "@/public/assets/tap-up-logo-white.png";
+import tapUpLogoBlack from "@/public/assets/tap-up-logo-black.png";
 import extension from "@/public/assets/extension-logo.png";
 import searchSite from "@/public/assets/search-site-logo.png";
 import phone from "@/public/assets/phone-logo.png";
+
 // Back Card Component (Personal Details)
 const BackCard = ({
   data,
   backgroundImage,
+  color,
 }: {
   data: Partial<Card>;
   backgroundImage?: string | StaticImageData;
+  color: "white" | "black";
 }) => {
   console.log("back card", data);
+
   // Destructure the properties from the data object
   const {
     firstName,
@@ -25,6 +30,11 @@ const BackCard = ({
     websiteUrl,
     profilePictureUrl,
   } = data;
+
+  // Determine text color based on the color parameter
+  const textColor = color === "white" ? "text-white" : "text-black";
+  const textGrayColor = color === "white" ? "text-gray-300" : "text-gray-700"; // Adjust gray color for better contrast
+  const tapUpLogo = color === "white" ? tapUpLogoWhite : tapUpLogoBlack;
 
   return (
     <div className="w-full h-full rounded-lg overflow-hidden relative">
@@ -45,74 +55,74 @@ const BackCard = ({
         {/* Tap up title */}
         <div className="flex justify-end">
           <Image
-            src={tapUpLogoWhite}
+            src={tapUpLogo} // You may want to conditionally set this based on color
             alt="Tap up"
             width={105}
             height={40}
-            className=" aspect-[105/40] object-contain object-center"
+            className="aspect-[105/40] object-contain object-center"
           />
         </div>
         {/* Personal Details */}
-        <div className="flex justify-between items-start ">
+        <div className="flex justify-between items-start">
           {/* Name and Position */}
           <div>
-            <div className="">
-              <h2 className="text-2xl text-white font-bold">
-                {data.firstName || "First "} {data.lastName || "Last "}
+            <div>
+              <h2 className={`text-2xl font-bold ${textColor}`}>
+                {firstName || "First "} {lastName || "Last "}
               </h2>
-              <p className="text-sm text-gray-300 font-medium">
-                {data.position || "Position"}
+              <p className={`text-sm ${textGrayColor} font-medium`}>
+                {position || "Position"}
               </p>
             </div>
-            {/* other Details */}
+            {/* Other Details */}
             <div className="mt-6 flex flex-col gap-3">
-              <p className="text-gray-300 text-xs font-medium flex gap-2">
+              <p className={`flex gap-2 ${textGrayColor} text-xs font-medium`}>
                 <Image
                   src={extension}
                   alt="username"
                   width={12}
                   height={12}
-                  className=" aspect-[12/12] object-contain object-center"
+                  className="aspect-[12/12] object-contain object-center"
                 />
-                {data.company || "username"}
+                {company || "username"}
               </p>
-              <p className="text-gray-300 text-xs font-medium flex gap-2">
+              <p className={`flex gap-2 ${textGrayColor} text-xs font-medium`}>
                 <Image
                   src={searchSite}
                   alt="website"
                   width={12}
                   height={12}
-                  className=" aspect-[12/12] object-contain object-center"
+                  className="aspect-[12/12] object-contain object-center"
                 />
-                {data.websiteUrl || "Website"}
+                {websiteUrl || "Website"}
               </p>
-              <p className="text-gray-300 text-xs font-medium flex gap-2">
+              <p className={`flex gap-2 ${textGrayColor} text-xs font-medium`}>
                 <Image
                   src={phone}
                   alt="phone"
                   width={12}
                   height={12}
-                  className=" aspect-[12/12] object-contain object-center"
+                  className="aspect-[12/12] object-contain object-center"
                 />
                 {number || "Phone Number"}
               </p>
             </div>
           </div>
           {/* Profile */}
-          <div className=" flex flex-col justify-center h-full">
+          <div className="flex flex-col justify-center h-full">
             {profilePictureUrl ? (
-              <div className="relative w-24 h-24 rounded-full overflow-hidden ">
+              <div className="relative w-24 h-24 rounded-full overflow-hidden">
                 <Image
                   src={profilePictureUrl}
                   alt="Profile"
                   width={127}
                   height={124}
-                  className=" aspect-[127/124] rounded-full object-contain object-center"
+                  className="aspect-[127/124] rounded-full object-contain object-center"
                 />
               </div>
             ) : (
-              <div className="relative aspect-[127/124] w-[127px] h-[124px] rounded-full overflow-hidden  bg-gray-200 flex items-center justify-center">
-                <span className="text-gray-500 font-medium">No Image</span>
+              <div className="relative aspect-[127/124] w-[127px] h-[124px] rounded-full overflow-hidden bg-gray-200 flex items-center justify-center">
+                <span className={`${textGrayColor} font-medium`}>No Image</span>
               </div>
             )}
           </div>
