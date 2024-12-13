@@ -1,56 +1,84 @@
-import { Card } from "@/types/types";
-import Image from "next/image";
+"use client";
 
-const PhysicalCard2 = (data: Partial<Card>) => {
+import { Card } from "@/types/types";
+import { CardContainer } from "@/components/ui/3Dcard";
+import { Button } from "../ui/button";
+import { RefreshCcw } from "lucide-react";
+import FrontCard from "./components/FrontCard";
+import BackCard from "./components/BackCard";
+import card2Bg from "@/public/assets/card2-bg.png";
+import { useState } from "react";
+
+const PhysicalCard2 = ({
+  profilePictureUrl,
+  position,
+  company,
+  firstName,
+  lastName,
+  email,
+  number,
+  websiteUrl,
+}: Card) => {
+  const userProfile = {
+    firstName,
+    lastName,
+    email,
+    number,
+    company,
+    position,
+    websiteUrl,
+    profilePictureUrl,
+  };
+
+  const [isFlipped, setIsFlipped] = useState(false);
+
+  const handleFlip = () => setIsFlipped((prev) => !prev);
+
   return (
-    <div className="relative aspect-[1.586/1] [perspective:1000px] group">
-      <div className="relative w-full h-full transition-transform duration-500 [transform-style:preserve-3d] group-hover:[transform:rotateY(180deg)]">
+    <CardContainer containerClassName="w-full max-w-[434px] aspect-[16/10] mx-auto">
+      <div
+        className={`
+          relative w-full h-full 
+          transition-transform duration-500 
+          [transform-style:preserve-3d] 
+          ${isFlipped ? "[transform:rotateY(180deg)]" : ""}
+        `}
+      >
         {/* Front of card */}
-        <div className="absolute inset-0 rounded-lg [backface-visibility:hidden] bg-gradient-to-br from-purple-800 via-purple-600 to-purple-900">
-          <div className="p-6">
-            <div className="flex justify-between">
-              <div>
-                <h2 className="text-2xl text-white">
-                  {data.firstName} {data.lastName}
-                </h2>
-                <p className="text-gray-300">{data.position}</p>
-                <div className="mt-4">
-                  <p className="text-gray-300">{data.company}</p>
-                  <p className="text-gray-300">{data.websiteUrl}</p>
-                  <p className="text-gray-300">{data.number}</p>
-                </div>
-              </div>
-              {data.profilePictureUrl && (
-                <div className="relative w-24 h-24 rounded-lg overflow-hidden">
-                  <Image
-                    src={data.profilePictureUrl}
-                    alt="profile"
-                    fill
-                    className="object-cover"
-                  />
-                </div>
-              )}
-            </div>
-          </div>
+        <div
+          className={`
+            absolute w-full h-full 
+            [backface-visibility:hidden]
+            ${!isFlipped ? "z-10" : "z-0"}
+          `}
+        >
+          <FrontCard backgroundImage={card2Bg} color="black" />
         </div>
 
         {/* Back of card */}
-        <div className="absolute inset-0 rounded-lg [backface-visibility:hidden] [transform:rotateY(180deg)] bg-gradient-to-br from-purple-800 via-purple-600 to-purple-900">
-          <div className="p-6 flex flex-col justify-between h-full">
-            <div className="text-right text-white">NFC</div>
-            <div className="text-center">
-              <div className="text-white text-2xl">Tap Up</div>
-            </div>
-            <div className="flex justify-between items-end">
-              <div className="text-white text-sm">Powered By</div>
-              <div className="w-16 h-16 bg-white rounded-lg">
-                {/* QR Code placeholder */}
-              </div>
-            </div>
-          </div>
+        <div
+          className={`
+            absolute w-full h-full 
+            [backface-visibility:hidden]
+            ${isFlipped ? "z-10" : "z-0"}
+            [transform:rotateY(180deg)] border-2 border-purple-500
+          `}
+        >
+          <BackCard
+            data={userProfile}
+            backgroundImage={card2Bg}
+            color="black"
+          />
         </div>
       </div>
-    </div>
+
+      {/* Flip Button */}
+      <div className="absolute top-2 left-2">
+        <Button variant="outline" size="icon" onClick={handleFlip}>
+          <RefreshCcw className="h-4 w-4" />
+        </Button>
+      </div>
+    </CardContainer>
   );
 };
 
