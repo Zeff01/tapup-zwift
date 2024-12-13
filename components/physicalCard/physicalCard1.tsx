@@ -1,10 +1,66 @@
-import { Card } from "@/types/types";
-import card1Bg from "@/public/assets/card1-bg.png";
-import Image from "next/image";
-import { RefreshCcw } from "lucide-react";
-import { Button } from "../ui/button";
-import { useState } from "react";
+// import { Card } from "@/types/types";
+// import { useState } from "react";
+// import { Button } from "../ui/button";
+// import { RefreshCcw } from "lucide-react";
+// import FrontCard from "./components/FrontCard";
+// import BackCard from "./components/BackCard";
 
+// const PhysicalCard1 = (data: Partial<Card>) => {
+//   const [isFlipped, setIsFlipped] = useState(false);
+
+//   const handleFlip = () => {
+//     setIsFlipped((prev) => !prev);
+//   };
+
+//   return (
+//     <div className="w-full max-w-[434px] aspect-[16/10] relative flex justify-center items-center mx-auto">
+//       <div
+//         className={`
+//           relative w-full h-full
+//           transition-transform duration-500
+//           [transform-style:preserve-3d]
+//           ${isFlipped ? "[transform:rotateY(180deg)]" : ""}
+//         `}
+//       >
+//         {/* Front of card (NFC/Tap Card) */}
+//         <div
+//           className={`
+//             absolute w-full h-full
+//             ${isFlipped ? "z-10" : "z-0"}
+//           `}
+//         >
+//           <FrontCard />
+//         </div>
+//         {/* Back of card (Personal Details) */}
+//         <div
+//           className={`
+//             absolute w-full h-full
+//             ${!isFlipped ? "z-10" : "z-0"}
+//           `}
+//         >
+//           <BackCard data={data} />
+//         </div>
+//       </div>
+
+//       {/* Flip Button */}
+//       <div className="absolute top-2 right-2">
+//         <Button variant="outline" size="icon" onClick={handleFlip}>
+//           <RefreshCcw className="h-4 w-4" />
+//         </Button>
+//       </div>
+//     </div>
+//   );
+// };
+
+// export default PhysicalCard1;
+
+import { Card } from "@/types/types";
+import { useState } from "react";
+import { Button } from "../ui/button";
+import { RefreshCcw } from "lucide-react";
+import FrontCard from "./components/FrontCard";
+import BackCard from "./components/BackCard";
+// Main Card Component
 const PhysicalCard1 = (data: Partial<Card>) => {
   const [isFlipped, setIsFlipped] = useState(false);
 
@@ -13,52 +69,47 @@ const PhysicalCard1 = (data: Partial<Card>) => {
   };
 
   return (
-    <div className="w-full relative border border-blue-500 flex justify-center h-full items-center">
-      <div className="absolute top-1 right-0 md:top-1/4 md:right-5 border border-blue-500">
-        <Button onClick={handleFlip}>
-          <RefreshCcw />
+    <div className="w-full max-w-[434px] aspect-[16/10] relative flex justify-center items-center mx-auto">
+      <div
+        className={`
+          relative w-full h-full 
+          transition-transform duration-500 
+          [transform-style:preserve-3d] 
+          ${isFlipped ? "[transform:rotateY(180deg)]" : ""}
+        `}
+      >
+        {/* Front of card (NFC/Tap Card) */}
+        <div
+          className={`
+            absolute w-full h-full 
+            [backface-visibility:hidden]
+            ${!isFlipped ? "z-10" : "z-0"}
+          `}
+        >
+          <FrontCard />
+        </div>
+
+        {/* Back of card (Personal Details) */}
+        <div
+          className={`
+            absolute w-full h-full 
+            [backface-visibility:hidden]
+            ${isFlipped ? "z-10" : "z-0"}
+            absolute w-full h-full rounded-lg [backface-visibility:hidden] 
+    [transform:rotateY(180deg)] bg-gradient-to-br from-foreground/90 
+    via-green-900 to-foreground/90 border-2 border-purple-500
+            
+          `}
+        >
+          <BackCard data={data} />
+        </div>
+      </div>
+
+      {/* Flip Button */}
+      <div className="absolute top-2 right-2">
+        <Button variant="outline" size="icon" onClick={handleFlip}>
+          <RefreshCcw className="h-4 w-4" />
         </Button>
-      </div>
-      {/* Front */}
-      <div
-        className={`relative aspect-[16/10] w-full max-w-[434px] h-auto md:h-[271px] mx-5 border border-blue-500 transition-transform duration-500 ${isFlipped ? "transform rotate-y-180" : ""}`}
-      >
-        <Image
-          src={card1Bg}
-          alt="Card Background"
-          fill
-          className="object-cover"
-          priority
-        />
-
-        <div
-          className={`absolute inset-0 flex items-center justify-center z-10 ${isFlipped ? "hidden" : ""}`}
-        >
-          <div className="text-white text-center text-2xl md:text-4xl lg:text-5xl font-bold drop-shadow-[0_1.2px_1.2px_rgba(0,0,0,0.8)] px-4">
-            {data.firstName || "Your Title Here"}
-          </div>
-        </div>
-      </div>
-      {/* Back */}
-      <div
-        className={`relative aspect-[16/10] w-full max-w-[434px] h-auto md:h-[271px] mx-5 border border-blue-500 transition-transform duration-500 ${isFlipped ? "transform rotate-y-180" : ""}`}
-      >
-        <Image
-          src={card1Bg}
-          alt="Card Background"
-          fill
-          className="object-cover"
-          priority
-        />
-
-        {/* Back */}
-        <div
-          className={`absolute inset-0 flex items-center justify-center z-10 ${isFlipped ? "" : "hidden"}`}
-        >
-          <div className="text-white text-center text-2xl md:text-4xl lg:text-5xl font-bold drop-shadow-[0_1.2px_1.2px_rgba(0,0,0,0.8)] px-4">
-            {data.lastName || "Your Title Here"}
-          </div>
-        </div>
       </div>
     </div>
   );
