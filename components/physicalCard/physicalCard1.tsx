@@ -52,7 +52,7 @@ const PhysicalCard1 = ({ data }: { data: Partial<Card> }) => {
       </div>
 
       {/* Flip Button */}
-      <div className="absolute top-2 right-2">
+      <div className="absolute top-2 left-2">
         <Button variant="outline" size="icon" onClick={handleFlip}>
           <RefreshCcw className="h-4 w-4" />
         </Button>
