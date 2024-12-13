@@ -52,7 +52,7 @@ const PhysicalCard1 = ({
             ${!isFlipped ? "z-10" : "z-0"}
           `}
         >
-          <FrontCard backgroundImage={card1Bg} />
+          <FrontCard backgroundImage={card1Bg} color="white" />
         </div>
 
         {/* Back of card */}
@@ -64,7 +64,11 @@ const PhysicalCard1 = ({
             [transform:rotateY(180deg)] border-2 border-purple-500
           `}
         >
-          <BackCard data={userProfile} backgroundImage={card1Bg} />
+          <BackCard
+            data={userProfile}
+            backgroundImage={card1Bg}
+            color="white"
+          />
         </div>
       </div>
 
