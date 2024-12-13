@@ -28,14 +28,16 @@ import SelectedPhysicalCard from "./SelectedPhysicalCard";
 import { ArrowLeft } from "lucide-react";
 import { CardSkeleton, CardSkeleton2 } from "@/components/CardSkeleton";
 import { Button } from "@/components/ui/button";
+import { PhysicalCardCarousel } from "../PhysicalCardCarousel";
+import { RefreshCcw } from "lucide-react";
 
 export type ChosenTemplateType = z.infer<
   typeof createPortfolioSchema
 >["chosenTemplate"];
 
-export type SelectedPhysicalCardType = z.infer<
+export type ChosenPhysicalCardType = z.infer<
   typeof createPortfolioSchema
->["selectedPhysicalCard"];
+>["chosenPhysicalCard"];
 
 interface SelectedLink {
   label: string;
@@ -62,11 +64,10 @@ export default function CardsAndUsersCreateFields({
 
   const [selectedLinks, setSelectedLinks] = useState<SelectedLink[]>([]);
 
-  const [selectedPhysicalCard, setSelectedPhysicalCard] =
-    useState<SelectedPhysicalCardType>("card1");
-
   const [selectedTemplateId, setSelectedTemplateId] =
     useState<ChosenTemplateType>("template1");
+  const [selectedPhysicalCard, setSelectedPhysicalCard] =
+    useState<ChosenPhysicalCardType>("card1");
 
   const addServicePhoto = (photo: Photo) => {
     setServicePhotos([...servicePhotos, photo]);
@@ -100,7 +101,7 @@ export default function CardsAndUsersCreateFields({
       skypeInviteUrl: "",
       websiteUrl: "",
       chosenTemplate: "template1",
-      selectedPhysicalCard: "card1",
+      chosenPhysicalCard: "card1",
     },
   });
 
@@ -144,11 +145,13 @@ export default function CardsAndUsersCreateFields({
       methods.setValue("servicePhotos", serviceImageUrls || []);
     }
     methods.setValue("chosenTemplate", selectedTemplateId);
+    methods.setValue("chosenPhysicalCard", selectedPhysicalCard);
   }, [
     coverPhotoUrl,
     imageUrl,
     serviceImageUrls,
     selectedTemplateId,
+    selectedPhysicalCard,
     methods,
     user,
   ]);
@@ -180,12 +183,13 @@ export default function CardsAndUsersCreateFields({
     });
 
   const formSubmit = async (data: z.infer<typeof createPortfolioSchema>) => {
-    if (!user) return;
-    if (!card) {
-      onBoardUserMutation({ user_id: user.uid, user: data });
-      return;
-    }
-    createCardMutation({ user_id: user.uid, data });
+    // if (!user) return;
+    // if (!card) {
+    //   onBoardUserMutation({ user_id: user.uid, user: data });
+    //   return;
+    // }
+    // createCardMutation({ user_id: user.uid, data });
+    console.log("data", data);
   };
 
   const isLoading = isLoadingCreateCard || isLoadingOnBoarding;
@@ -197,7 +201,7 @@ export default function CardsAndUsersCreateFields({
     ["coverPhotoUrl", "company", "companyBackground", "serviceDescription"], // Step 1 fields
     ["profilePictureUrl", "firstName", "lastName", "email", "number"], // Step 2 fields
     ["chosenTemplate"], // Step 3 fields
-    ["selectedPhysicalCard"], // Step 4 fields
+    ["chosenPhysicalCard"], // Step 4 fields
   ];
 
   const handleNextStep = async (event: any) => {
@@ -246,6 +250,7 @@ export default function CardsAndUsersCreateFields({
   const handleSubmit = async () => {
     methods.handleSubmit(formSubmit)();
   };
+  console.log("data", methods.watch());
 
   return (
     <main className="h-full">
@@ -488,7 +493,7 @@ export default function CardsAndUsersCreateFields({
           </div>
         </div>
       ) : (
-        <div className="flex flex-col h-full border-purple-500 border relative ">
+        <div className="flex flex-col h-full border-purple-500 border">
           {/* Top Section with Back Button */}
           <div className="p-4 border">
             <Button
@@ -512,14 +517,21 @@ export default function CardsAndUsersCreateFields({
             {/* Cards Grid */}
 
             <div className="flex-grow flex flex-col">
-              <div className="flex-grow border  flex items-center justify-center">
-                h1
+              <div className="flex-grow border border-green-500 flex items-center justify-center">
+                {selectedPhysicalCard ? (
+                  <SelectedPhysicalCard
+                    cardId={selectedPhysicalCard}
+                    formData={methods.watch()}
+                  />
+                ) : (
+                  <h1 className="text-black">Select a card</h1>
+                )}
               </div>
-              <div className="flex gap-5 justify-center items-center">
-                <div className="bg-teal-800 size-16"></div>
-                <div className="bg-teal-800 size-16"></div>
-                <div className="bg-teal-800 size-16"></div>
-                <div className="bg-teal-800 size-16"></div>
+              <div className="h-20 md:h-24 border-red-500 border">
+                <PhysicalCardCarousel
+                  selectedCardId={selectedPhysicalCard}
+                  setSelectedCardId={setSelectedPhysicalCard}
+                />
               </div>
             </div>
 
