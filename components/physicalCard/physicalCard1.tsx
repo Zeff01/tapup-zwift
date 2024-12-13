@@ -1,21 +1,41 @@
+"use client";
+
 import { Card } from "@/types/types";
-import { useState } from "react";
+import { CardContainer } from "@/components/ui/3Dcard";
 import { Button } from "../ui/button";
 import { RefreshCcw } from "lucide-react";
 import FrontCard from "./components/FrontCard";
 import BackCard from "./components/BackCard";
 import card1Bg from "@/public/assets/card1-bg.png";
-// Main Card Component
-const PhysicalCard1 = ({ data }: { data: Partial<Card> }) => {
-  console.log("data", data);
-  const [isFlipped, setIsFlipped] = useState(false);
+import { useState } from "react";
 
-  const handleFlip = () => {
-    setIsFlipped((prev) => !prev);
+const PhysicalCard1 = ({
+  profilePictureUrl,
+  position,
+  company,
+  firstName,
+  lastName,
+  email,
+  number,
+  websiteUrl,
+}: Card) => {
+  const userProfile = {
+    firstName,
+    lastName,
+    email,
+    number,
+    company,
+    position,
+    websiteUrl,
+    profilePictureUrl,
   };
 
+  const [isFlipped, setIsFlipped] = useState(false);
+
+  const handleFlip = () => setIsFlipped((prev) => !prev);
+
   return (
-    <div className="w-full max-w-[434px] aspect-[16/10] relative flex justify-center items-center mx-auto">
+    <CardContainer containerClassName="w-full max-w-[434px] aspect-[16/10] mx-auto">
       <div
         className={`
           relative w-full h-full 
@@ -24,7 +44,7 @@ const PhysicalCard1 = ({ data }: { data: Partial<Card> }) => {
           ${isFlipped ? "[transform:rotateY(180deg)]" : ""}
         `}
       >
-        {/* Front of card (NFC/Tap Card) */}
+        {/* Front of card */}
         <div
           className={`
             absolute w-full h-full 
@@ -35,19 +55,16 @@ const PhysicalCard1 = ({ data }: { data: Partial<Card> }) => {
           <FrontCard backgroundImage={card1Bg} />
         </div>
 
-        {/* Back of card (Personal Details) */}
+        {/* Back of card */}
         <div
           className={`
             absolute w-full h-full 
             [backface-visibility:hidden]
             ${isFlipped ? "z-10" : "z-0"}
-            absolute w-full h-full rounded-lg [backface-visibility:hidden] 
-    [transform:rotateY(180deg)] bg-gradient-to-br from-foreground/90 
-    via-green-900 to-foreground/90 border-2 border-purple-500
-            
+            [transform:rotateY(180deg)] border-2 border-purple-500
           `}
         >
-          <BackCard data={{ ...data }} backgroundImage={card1Bg} />
+          <BackCard data={userProfile} backgroundImage={card1Bg} />
         </div>
       </div>
 
@@ -57,7 +74,7 @@ const PhysicalCard1 = ({ data }: { data: Partial<Card> }) => {
           <RefreshCcw className="h-4 w-4" />
         </Button>
       </div>
-    </div>
+    </CardContainer>
   );
 };
 
