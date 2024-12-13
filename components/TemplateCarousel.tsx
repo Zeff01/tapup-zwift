@@ -56,6 +56,30 @@ const templates: Template[] = [
     imageUrl: "/assets/template6.png",
     route: "/create/template/6",
   },
+  {
+    id: "template9",
+    name: "Simple White",
+    imageUrl: "/assets/template9.png",
+    route: "/create/template/6",
+  },
+  {
+    id: "template10",
+    name: "Simple White",
+    imageUrl: "/assets/template10.png",
+    route: "/create/template/6",
+  },
+  {
+    id: "template7",
+    name: "Simple White",
+    imageUrl: "/assets/template6.png",
+    route: "/create/template/7",
+  },
+  {
+    id: "template8",
+    name: "Simple White",
+    imageUrl: "/assets/template6.png",
+    route: "/create/template/8",
+  },
 ];
 
 interface TemplateCarouselProps {

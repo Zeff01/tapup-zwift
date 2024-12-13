@@ -200,6 +200,7 @@ export default function CardsAndUsersCreateFields({
   const steps: Array<(keyof z.infer<typeof createPortfolioSchema>)[]> = [
     ["coverPhotoUrl", "company", "companyBackground", "serviceDescription"], // Step 1 fields
     ["profilePictureUrl", "firstName", "lastName", "email", "number"], // Step 2 fields
+    ["profilePictureUrl", "firstName", "lastName", "email", "number"], // Step 2 fields
     ["chosenTemplate"], // Step 3 fields
     ["chosenPhysicalCard"], // Step 4 fields
   ];
@@ -311,6 +312,7 @@ export default function CardsAndUsersCreateFields({
                     </div>
                     <span className="text-sm text-red-500 relative bottom-12">
                       {methods.formState.errors.coverPhotoUrl?.message ?? ""}
+                      {methods.formState.errors.coverPhotoUrl?.message ?? ""}
                     </span>
 
                     <div className="space-y-6">
@@ -414,6 +416,7 @@ export default function CardsAndUsersCreateFields({
                         </p>
                       </div>
                     </div>
+
                     <span className="text-sm text-red-500">
                       {methods.formState.errors.profilePictureUrl?.message ??
                         ""}
