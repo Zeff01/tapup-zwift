@@ -1,7 +1,10 @@
 import { CardItem } from "@/types/types";
 import {
+  ArrowUp,
   Circle,
+  CreditCard,
   Image,
+  LayoutDashboard,
   RectangleHorizontal,
   Text,
   Triangle,
@@ -267,3 +270,25 @@ export const steps = [
   },
   { name: "Template", header: "Choose your Template" },
 ];
+
+
+export const accountItem = [
+  { icon: LayoutDashboard, title: 'Dashboard' },
+  { icon: ArrowUp, title: 'Taps' },
+  { icon: CreditCard, title: 'Billing' },
+]
+
+export const paymentCards = [
+  {
+    image: '/assets/payment/Visa.png',
+    title:"Visa",
+  },
+   {
+    image: '/assets/payment/Paypal.png',
+    title:"Paypal",
+  },
+    {
+    image: '/assets/payment/Mastercard.png',
+    title:"Mastercard",
+  }
+]
