@@ -77,7 +77,7 @@ const templates: Template[] = [
   {
     id: "template12",
     name: "Simple White",
-    imageUrl: "/assets/template10.png",
+    imageUrl: "/assets/template12.png",
     route: "/create/template/12",
   },
   {
