@@ -189,7 +189,7 @@ export default function CardsAndUsersCreateFields({
     //   return;
     // }
     // createCardMutation({ user_id: user.uid, data });
-    console.log("data", data);
+    console.log("submit Data", data);
   };
 
   const isLoading = isLoadingCreateCard || isLoadingOnBoarding;
@@ -496,7 +496,7 @@ export default function CardsAndUsersCreateFields({
           </div>
         </div>
       ) : (
-        <div className="flex flex-col h-full border-purple-500 border">
+        <div className="flex flex-col h-full">
           {/* Top Section with Back Button */}
           <div className="p-4 border">
             <Button
@@ -520,7 +520,7 @@ export default function CardsAndUsersCreateFields({
             {/* Cards Grid */}
 
             <div className="flex-grow flex flex-col">
-              <div className="flex-grow border border-green-500 flex items-center justify-center mx-6 md:mx-0">
+              <div className="flex-grow flex items-center justify-center mx-6 md:mx-0">
                 {selectedPhysicalCard ? (
                   <SelectedPhysicalCard
                     cardId={selectedPhysicalCard}
@@ -530,7 +530,7 @@ export default function CardsAndUsersCreateFields({
                   <h1 className="text-black">Select a card</h1>
                 )}
               </div>
-              <div className="h-20 md:h-24 border-red-500 border">
+              <div className="h-20 md:h-24 ">
                 <PhysicalCardCarousel
                   selectedCardId={selectedPhysicalCard}
                   setSelectedCardId={setSelectedPhysicalCard}

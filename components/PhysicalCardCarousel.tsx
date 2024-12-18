@@ -56,7 +56,7 @@ export function PhysicalCardCarousel({
   setSelectedCardId,
 }: PhysicalCardCarouselProps) {
   return (
-    <div className="border border-emerald-500">
+    <div className="">
       <Carousel
         opts={{ align: "start" }}
         className="w-full max-w-screen-lg mx-auto overflow-hidden"

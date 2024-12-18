@@ -61,7 +61,7 @@ const PhysicalCard4 = ({
             absolute w-full h-full 
             [backface-visibility:hidden]
             ${isFlipped ? "z-10" : "z-0"}
-            [transform:rotateY(180deg)] border-2 border-purple-500
+            [transform:rotateY(180deg)] 
           `}
         >
           <BackCard

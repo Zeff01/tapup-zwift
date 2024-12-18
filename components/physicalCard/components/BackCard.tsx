@@ -51,7 +51,7 @@ const BackCard = ({
       )}
 
       {/* Content */}
-      <div className="relative z-10 p-6 flex flex-col h-full justify-between">
+      <div className="relative z-10 p-4 sm:p-6 flex flex-col h-full justify-between">
         {/* Tap up title */}
         <div className="flex justify-end">
           <Image
@@ -63,11 +63,11 @@ const BackCard = ({
           />
         </div>
         {/* Personal Details */}
-        <div className="flex justify-between items-start">
+        <div className="flex justify-between items-start ">
           {/* Name and Position */}
           <div>
             <div>
-              <h2 className={`text-2xl font-bold ${textColor}`}>
+              <h2 className={`text-md sm:text-2xl font-bold ${textColor}`}>
                 {firstName || "First "} {lastName || "Last "}
               </h2>
               <p className={`text-sm ${textGrayColor} font-medium`}>
@@ -75,7 +75,7 @@ const BackCard = ({
               </p>
             </div>
             {/* Other Details */}
-            <div className="mt-6 flex flex-col gap-3">
+            <div className="mt-6 flex flex-col gap-1 sm:gap-3">
               <p className={`flex gap-2 ${textGrayColor} text-xs font-medium`}>
                 <Image
                   src={extension}
@@ -117,7 +117,7 @@ const BackCard = ({
                   alt="Profile"
                   width={127}
                   height={124}
-                  className="aspect-[127/124] rounded-full object-contain object-center"
+                  className="aspect-[27/24] sm:aspect-[127/124] rounded-full object-contain object-center"
                 />
               </div>
             ) : (
