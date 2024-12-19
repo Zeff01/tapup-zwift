@@ -108,7 +108,7 @@ const Template1 = ({
           </div>
           <div className="absolute -bottom-12 left-1/2 transform -translate-x-1/2">
             {profilePictureUrl ? (
-              <div className="w-28 h-28 rounded-full mx-auto overflow-hidden">
+              <div className="border-[8px] border-black rounded-full mx-auto overflow-hidden">
                 <Image
                   src={profilePictureUrl}
                   alt="Profile Image"
