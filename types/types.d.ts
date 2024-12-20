@@ -7,6 +7,9 @@ import {
 } from "@/lib/zod-schema";
 import { z } from "zod";
 
+
+
+
 export type Users = {
   id?: string;
   coverPhotoUrl?: string;
@@ -76,3 +79,24 @@ export type LoginData = z.infer<typeof loginSchema>;
 export type SignupData = z.infer<typeof signupSchema>;
 export type ForgotPasswordData = z.infer<typeof forgotPasswordSchema>;
 export type ResetPasswordData = z.infer<typeof resetPasswordSchema>;
+
+
+export type TapItemprops = {
+  date: string; // ISO date string
+  todayCount?: number | undefined;
+  weekCount?: number;
+  monthCount?: number;
+  total: number;
+  company: string;
+  position: string;
+  companyImage: string;
+  name?: string;
+}
+
+export type BillingHistoryItem = {
+  id: number;
+  name: string;
+  price: string;
+  quantity: number;
+  image: string;
+};

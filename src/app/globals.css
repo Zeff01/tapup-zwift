@@ -68,6 +68,9 @@
     --sidebar-border: 220 13% 91%;
 
     --sidebar-ring: 217.2 91.2% 59.8%;
+
+    /* --check-color: 131, 40%, 80%, 1; */
+
   }
 
   .dark {
@@ -123,6 +126,7 @@
   }
   html {
     font-family: "Inter", sans-serif;
+    scroll-behavior: smooth;
   }
   body {
     color: rgb(var(--foreground-rgb));
@@ -186,4 +190,5 @@
   .no-scrollbar::-webkit-scrollbar {
     display: none;
   }
+
 }
