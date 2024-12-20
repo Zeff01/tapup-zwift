@@ -162,18 +162,18 @@ const Dashboard = () => {
                 Profile
               </h3>
               <div className="flex items-center justify-center mt-10">
-                <div className="max-w-screen-md w-full p-10  border border-muted flex flex-col items-center justify-center rounded-md">
+                <div className="max-w-screen-md w-full p-10 md:py-12 border border-muted flex flex-col items-center justify-center rounded-md">
                   <Image
                     src={user?.profilePictureUrl!}
-                    className="rounded-full h-[6rem] md:h-[8rem] md:w-[8rem] w-[6rem]"
+                    className="rounded-full h-[6rem] md:h-[10rem] md:w-[10rem] w-[6rem]"
                     alt="profileImg"
                     width={120}
                     height={120}
                   />
-                  <h2 className="text-lg font-semibold mt-4">
+                  <h2 className="text-lg md:text-2xl font-semibold mt-4">
                     {`${user?.firstName} ${user?.lastName} `}
                   </h2>
-                  <p className="text-sm text-muted-foreground">{user?.email}</p>
+                  <p className="text-sm md:text-lg text-muted-foreground">{user?.email}</p>
                 </div>
               </div>
             </div>
@@ -192,8 +192,8 @@ const Dashboard = () => {
                     height={80}
                   />
                   <div>
-                    <h2 className="text-lg font-semibold">Standard</h2>
-                    <p className="text-sm text-muted-foreground">
+                    <h2 className="text-lg md:text-2xl font-semibold">Standard</h2>
+                    <p className="text-sm md:text-lg text-muted-foreground">
                       Lorem ipsum dolor sit amet, consectetur adipiscing elit,
                       sed do eiusmod tempor incididunt
                     </p>
