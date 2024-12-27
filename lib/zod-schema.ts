@@ -56,6 +56,8 @@ export const createPortfolioSchema = z.object({
     "template8",
     "template9",
     "template10",
+    "template11",
+    "template12",
   ]),
   chosenPhysicalCard: z.enum(["card1", "card2", "card3", "card4"]),
   firstName: z.string().min(3, "First name must be at least 3 characters"),
@@ -207,10 +209,15 @@ export const resetPasswordSchema = z
     path: ["confirmPassword"],
   });
 
-
 export const paymentSchema = z.object({
-  cardNumber: z.string().nonempty("Card number is required").regex(/^\d{4} \d{4} \d{4} \d{4}$/, "Invalid card number format"),
-  expiryDate: z.string().nonempty("Expiry date is required").regex(/^\d{2}\/\d{2}$/, "Invalid expiry date format"),
+  cardNumber: z
+    .string()
+    .nonempty("Card number is required")
+    .regex(/^\d{4} \d{4} \d{4} \d{4}$/, "Invalid card number format"),
+  expiryDate: z
+    .string()
+    .nonempty("Expiry date is required")
+    .regex(/^\d{2}\/\d{2}$/, "Invalid expiry date format"),
   cvv: z.string().nonempty("CVV is required").length(3, "CVV must be 3 digits"),
   firstName: z.string().nonempty("First name is required"),
   lastName: z.string().nonempty("Last name is required"),
@@ -218,5 +225,7 @@ export const paymentSchema = z.object({
   city: z.string().nonempty("City is required"),
   country: z.string().nonempty("Country is required"),
   zipCode: z.string().nonempty("Zip code is required"),
-  agree: z.boolean().refine((val) => val === true, "You must agree with the payment policy"),
+  agree: z
+    .boolean()
+    .refine((val) => val === true, "You must agree with the payment policy"),
 });

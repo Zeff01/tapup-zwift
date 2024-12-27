@@ -40,20 +40,20 @@ const TapItem: React.FC<TapItemprops> = (props) => {
 
   return (
     <div className="flex justify-between items-center p-2">
-      <div className="flex gap-2">
+      <div className="flex gap-3">
         <Image
           src={companyImage}
           alt={company}
           width={50}
           height={50}
-          className="rounded-sm border border-border"
+          className="rounded-sm border border-border md:h-[4rem] md:w-[4rem]"
         />
         <div>
-          <h3 className="font-bold">{company}</h3>
-          <p className="text-muted-foreground text-sm">{position}</p>
+          <h3 className="font-bold md:text-lg">{company}</h3>
+          <p className="text-muted-foreground text-sm md:text-base">{position}</p>
         </div>
       </div>
-      <div className="text-green-500 text-sm ">
+      <div className="text-green-500 text-sm md:text-base text-right">
         <span>{getTapContextText(props)}</span>
         <p className="text-muted-foreground text-right">{total} total</p>
       </div>
