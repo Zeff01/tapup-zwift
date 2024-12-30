@@ -107,6 +107,7 @@ export default function CardsAndUsersCreateFields({
 
   useEffect(() => {
     const savedData = localStorage.getItem("portfolioFormData");
+
     if (savedData) {
       const parsedData = JSON.parse(savedData);
       if (!imageUrl) {
@@ -183,13 +184,12 @@ export default function CardsAndUsersCreateFields({
     });
 
   const formSubmit = async (data: z.infer<typeof createPortfolioSchema>) => {
-    // if (!user) return;
-    // if (!card) {
-    //   onBoardUserMutation({ user_id: user.uid, user: data });
-    //   return;
-    // }
-    // createCardMutation({ user_id: user.uid, data });
-    console.log("submit Data", data);
+    if (!user) return;
+    if (!card) {
+      onBoardUserMutation({ user_id: user.uid, user: data });
+      return;
+    }
+    createCardMutation({ user_id: user.uid, data });
   };
 
   const isLoading = isLoadingCreateCard || isLoadingOnBoarding;
@@ -248,30 +248,26 @@ export default function CardsAndUsersCreateFields({
     );
   };
 
-  const handleSubmit = async () => {
-    methods.handleSubmit(formSubmit)();
-  };
-  console.log("data", methods.watch());
-
   return (
     <main className="h-full">
-      {currentStep < 4 ? (
-        <div className="flex flex-col overflow-auto py-8 px-6 sm:px-0 bg-background h-full">
-          <TapupLogo className="mx-auto mb-5" />
-          <div className="w-full mx-auto max-w-sm">
-            {formHeaderItems.map((item) => (
-              <div key={item.id} className="mb-4">
-                <h2 className="text-2xl">
-                  {currentStep === item.id ? item.title : ""}
-                </h2>
-              </div>
-            ))}
-            <MultiStepProgress currentStep={currentStep} />
-            <Form {...methods}>
-              <form
-                className="space-y-6"
-                onSubmit={methods.handleSubmit(formSubmit)}
-              >
+      <Form {...methods}>
+        <form
+          className="space-y-6 h-full"
+          onSubmit={methods.handleSubmit(formSubmit)}
+        >
+          {currentStep < 4 ? (
+            <div className="flex flex-col overflow-auto py-8 px-6 sm:px-0 bg-background h-full">
+              <TapupLogo className="mx-auto mb-5" />
+              <div className="w-full mx-auto max-w-sm">
+                {formHeaderItems.map((item) => (
+                  <div key={item.id} className="mb-4">
+                    <h2 className="text-2xl">
+                      {currentStep === item.id ? item.title : ""}
+                    </h2>
+                  </div>
+                ))}
+                <MultiStepProgress currentStep={currentStep} />
+
                 {/* Step 1 - Cover Photo & company info*/}
                 {currentStep === 1 && (
                   <div className="">
@@ -491,75 +487,73 @@ export default function CardsAndUsersCreateFields({
                     </button>
                   )}
                 </div>
-              </form>
-            </Form>
-          </div>
-        </div>
-      ) : (
-        <div className="flex flex-col h-full">
-          {/* Top Section with Back Button */}
-          <div className="p-4 border">
-            <Button
-              variant="outline"
-              className="text-foreground dark:text-secondary-foreground dark:border-white"
-              onClick={goToPreviousStep}
-            >
-              <ArrowLeft />
-              Back
-            </Button>
-          </div>
-
-          {/* Middle Section */}
-
-          <div className="flex-grow flex flex-col">
-            {/* Title */}
-            <h1 className="text-2xl font-medium text-center mb-8 mx-auto">
-              Pick your physical card
-            </h1>
-
-            {/* Cards Grid */}
-
-            <div className="flex-grow flex flex-col">
-              <div className="flex-grow flex items-center justify-center mx-6 md:mx-0">
-                {selectedPhysicalCard ? (
-                  <SelectedPhysicalCard
-                    cardId={selectedPhysicalCard}
-                    formData={methods.watch()}
-                  />
-                ) : (
-                  <h1 className="text-black">Select a card</h1>
-                )}
-              </div>
-              <div className="h-20 md:h-24 ">
-                <PhysicalCardCarousel
-                  selectedCardId={selectedPhysicalCard}
-                  setSelectedCardId={setSelectedPhysicalCard}
-                />
               </div>
             </div>
-          </div>
+          ) : (
+            <div className="flex flex-col h-full">
+              {/* Top Section with Back Button */}
+              <div className="p-4 border">
+                <Button
+                  variant="outline"
+                  className="text-foreground dark:text-secondary-foreground dark:border-white"
+                  onClick={goToPreviousStep}
+                >
+                  <ArrowLeft />
+                  Back
+                </Button>
+              </div>
 
-          {/* Bottom Section with Submit Button */}
+              {/* Middle Section */}
 
-          <div className="p-4 md:pr-16 border">
-            <div className="mx-auto flex justify-end">
-              <Button
-                variant="green"
-                size="lg"
-                type="button"
-                disabled={isLoading}
-                onClick={handleSubmit}
-              >
-                {isLoading ? (
-                  <LoaderCircle className="animate-spin" />
-                ) : (
-                  "Submit"
-                )}
-              </Button>
+              <div className="flex-grow flex flex-col">
+                {/* Title */}
+                <h1 className="text-2xl font-medium text-center my-8 mx-auto">
+                  Pick your physical card
+                </h1>
+
+                {/* Cards Grid */}
+
+                <div className="flex-grow flex flex-col">
+                  <div className="flex-grow flex items-center justify-center mx-6 md:mx-0">
+                    {selectedPhysicalCard ? (
+                      <SelectedPhysicalCard
+                        cardId={selectedPhysicalCard}
+                        formData={methods.watch()}
+                      />
+                    ) : (
+                      <h1 className="text-black">Select a card</h1>
+                    )}
+                  </div>
+                  <div className="h-20 md:h-24 ">
+                    <PhysicalCardCarousel
+                      selectedCardId={selectedPhysicalCard}
+                      setSelectedCardId={setSelectedPhysicalCard}
+                    />
+                  </div>
+                </div>
+              </div>
+
+              {/* Bottom Section with Submit Button */}
+
+              <div className="p-4 md:pr-16">
+                <div className="mx-auto flex justify-end">
+                  <button
+                    type="submit"
+                    className="px-8 py-2 bg-green-600 text-white rounded-full hover:bg-green-500"
+                    disabled={isLoading}
+                  >
+                    {isLoading ? (
+                      <LoaderCircle className="animate-spin" />
+                    ) : (
+                      "Submit"
+                    )}
+                  </button>
+                </div>
+              </div>
             </div>
-          </div>
-        </div>
-      )}
+          )}
+        </form>
+      </Form>
     </main>
   );
 }
