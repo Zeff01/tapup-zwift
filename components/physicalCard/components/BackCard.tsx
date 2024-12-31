@@ -7,7 +7,6 @@ import extension from "@/public/assets/extension-logo.png";
 import searchSite from "@/public/assets/search-site-logo.png";
 import phone from "@/public/assets/phone-logo.png";
 
-// Back Card Component (Personal Details)
 const BackCard = ({
   data,
   backgroundImage,
@@ -17,9 +16,6 @@ const BackCard = ({
   backgroundImage?: string | StaticImageData;
   color: "white" | "black";
 }) => {
-  console.log("back card", data);
-
-  // Destructure the properties from the data object
   const {
     firstName,
     lastName,
@@ -33,7 +29,7 @@ const BackCard = ({
 
   // Determine text color based on the color parameter
   const textColor = color === "white" ? "text-white" : "text-black";
-  const textGrayColor = color === "white" ? "text-gray-300" : "text-gray-700"; // Adjust gray color for better contrast
+  const textGrayColor = color === "white" ? "text-gray-300" : "text-gray-700";
   const tapUpLogo = color === "white" ? tapUpLogoWhite : tapUpLogoBlack;
 
   return (
