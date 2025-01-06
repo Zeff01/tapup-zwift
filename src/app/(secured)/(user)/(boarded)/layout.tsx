@@ -9,7 +9,9 @@ import NavigationBoarded from "@/components/boarded/navigation";
 import TopbarBoarded from "@/components/boarded/topbar";
 
 const Layout = ({ children }: { children: React.ReactNode }) => {
-  const { user, isLoading, logOutUser } = useUserContext();
+  const { user, notifications, isLoading, logOutUser } = useUserContext();
+
+  const notif = notifications ?? [];
 
   if (!user || (!user && isLoading)) {
     return <Loading />;
@@ -21,9 +23,13 @@ const Layout = ({ children }: { children: React.ReactNode }) => {
 
   return (
     <main className="flex-1 flex">
-      <NavigationBoarded user={user} signOut={logOutUser} />
+      <NavigationBoarded
+        notifications={notif}
+        user={user}
+        signOut={logOutUser}
+      />
       <div className="w-full lg:w-[calc(100%-25rem)] ease-in-out transition-all ml-auto flex flex-col">
-        <TopbarBoarded />
+        <TopbarBoarded notifications={notif} user={user} signOut={logOutUser} />
         {children}
       </div>
     </main>

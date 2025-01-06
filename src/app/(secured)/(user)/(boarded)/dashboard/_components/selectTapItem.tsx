@@ -183,11 +183,11 @@ const RecentTapsSelect = ({ recentTaps }: RecentTapsSelectProps) => {
                     width={20}
                     height={20}
                     className="rounded-full w-6 h-6"
-                        />
-                        <div>
-                  <h5 className="font-semibold">{item.name}</h5>
-                  <p className="text-sm text-gray-500">{item.company}</p>
-                            </div>
+                  />
+                  <div>
+                    <h5 className="font-semibold">{item.name}</h5>
+                    <p className="text-sm text-gray-500">{item.company}</p>
+                  </div>
                 </div>
                 <span className="text-xs text-gray-400">{item.time}</span>
               </div>

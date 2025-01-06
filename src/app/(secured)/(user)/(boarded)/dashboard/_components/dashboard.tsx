@@ -173,7 +173,9 @@ const Dashboard = () => {
                   <h2 className="text-lg md:text-2xl font-semibold mt-4">
                     {`${user?.firstName} ${user?.lastName} `}
                   </h2>
-                  <p className="text-sm md:text-lg text-muted-foreground">{user?.email}</p>
+                  <p className="text-sm md:text-lg text-muted-foreground">
+                    {user?.email}
+                  </p>
                 </div>
               </div>
             </div>
@@ -192,7 +194,9 @@ const Dashboard = () => {
                     height={80}
                   />
                   <div>
-                    <h2 className="text-lg md:text-2xl font-semibold">Standard</h2>
+                    <h2 className="text-lg md:text-2xl font-semibold">
+                      Standard
+                    </h2>
                     <p className="text-sm md:text-lg text-muted-foreground">
                       Lorem ipsum dolor sit amet, consectetur adipiscing elit,
                       sed do eiusmod tempor incididunt
@@ -233,8 +237,7 @@ const Dashboard = () => {
               ""
             )}
             <div className="max-w-screen-md w-full mx-auto overflow-y-auto h-[300px]">
-              <RecentTaps recentTaps={recentTaps}
-              />
+              <RecentTaps recentTaps={recentTaps} />
             </div>
 
             <div className="w-full mt-4">
@@ -244,10 +247,8 @@ const Dashboard = () => {
 
               <div className="max-h-[350px] max-w-screen-md mx-auto overflow-y-auto border border-border rounded-md">
                 {/* Each card */}
-                <RecentTapsSelect recentTaps={recentTaps}
-                 />
+                <RecentTapsSelect recentTaps={recentTaps} />
                 {/* Example list */}
-
               </div>
             </div>
           </div>

@@ -5,11 +5,20 @@ import { currentAuthUserDetails, signOutHandler } from "@/lib/firebase/auth";
 import { updateUserById } from "@/lib/firebase/actions/user.action";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { useRouter } from "next/navigation";
-import { createContext, useContext, useMemo } from "react";
-import { ExtendedUserInterface, UserState } from "@/types/types";
+import { createContext, useContext, useEffect, useMemo, useState } from "react";
+import {
+  ExtendedUserInterface,
+  Notifications,
+  UserState,
+  Notification,
+} from "@/types/types";
+import { collection, onSnapshot } from "firebase/firestore";
+import { firebaseDb } from "@/lib/firebase/firebase";
+import useNotification from "@/hooks/useNotification";
 
 export type UserProviderContextType = {
   user: UserState;
+  notifications: Notifications | undefined;
   isAuthenticated: boolean;
   isLoading: boolean;
   updateUser: (
@@ -30,6 +39,8 @@ export const UserContextProvider = ({ children }: any) => {
 
   const { userUid } = useUserSession();
   const isAuthenticated = useMemo(() => Boolean(userUid), [userUid]);
+
+  const notif = useNotification({ userUid });
 
   const { data: user, isPending: isUserLoading } = useQuery({
     queryKey: ["current-active-user", userUid],
@@ -64,6 +75,7 @@ export const UserContextProvider = ({ children }: any) => {
 
   const value = {
     user: user as UserState,
+    notifications: notif,
     isAuthenticated,
     isLoading,
     updateUser,

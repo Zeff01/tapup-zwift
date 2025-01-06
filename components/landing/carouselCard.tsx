@@ -51,7 +51,9 @@ const TapUpCarousel: React.FC = () => {
 
   return (
     <section className="py-16" id="cardSelection">
-      <h2 className="text-center lg:text-6xl md:text-4xl text-3xl font-bold mb-10 ">Pick a card to start</h2>
+      <h2 className="text-center lg:text-6xl md:text-4xl text-3xl font-bold mb-10 ">
+        Pick a card to start
+      </h2>
       <div className="w-full">
         <Carousel
           setApi={setApi}

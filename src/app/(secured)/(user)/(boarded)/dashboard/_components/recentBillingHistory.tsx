@@ -6,15 +6,11 @@ import Image from "next/image";
 import { useRouter } from "next/navigation";
 import React, { useState } from "react";
 
-
-
 type RecentBillingProps = {
-    recentBilling: BillingHistoryItem[];
-    }
-
+  recentBilling: BillingHistoryItem[];
+};
 
 const RecentBillingHistory = ({ recentBilling }: RecentBillingProps) => {
-   
   const router = useRouter();
 
   const [visibleCount, setVisibleCount] = useState(3); // Number of visible items
@@ -76,13 +72,13 @@ const RecentBillingHistory = ({ recentBilling }: RecentBillingProps) => {
 
       {visibleCount < recentBilling.length && (
         <div className="w-full flex items-center justify-center">
-                  <Button
-                    className="max-w-screen-md w-full mx-auto bg-buttonColor mt-2 hover:bg-green-600 text-primary text-sm"
-                    onClick={showMore}
-                  >
-                    Show More
-                  </Button>
-                </div>
+          <Button
+            className="max-w-screen-md w-full mx-auto bg-buttonColor mt-2 hover:bg-green-600 text-primary text-sm"
+            onClick={showMore}
+          >
+            Show More
+          </Button>
+        </div>
       )}
     </div>
   );

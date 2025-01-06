@@ -18,8 +18,8 @@ const CardDetails: React.FC<CardDetailsProps> = ({ card }) => {
       </pre>
 
       <Button className="uppercase max-w-[15rem] px-8 py-6 w-full bg-green-600 mt-[27px] font-bold flex text-background items-center mx-auto hover:bg-green-700">
-        
-      Sign up & Activate<LogIn/>
+        Sign up & Activate
+        <LogIn />
       </Button>
     </section>
   );
