@@ -19,6 +19,27 @@ export const createUserLink = (userCode: string) => {
   }
 };
 
+export const createCardLink = (cardId: string) => {
+  try {
+    if (!cardId) return "";
+    const baseLink =
+      process.env.NODE_ENV === "production"
+        ? process.env.NEXT_PUBLIC_RESET_PASSWORD_URL_PROD
+        : process.env.NEXT_PUBLIC_RESET_PASSWORD_URL_DEV;
+    const card_link = `${baseLink}/site/${cardId}`;
+    return card_link;
+  } catch (error) {
+    console.error("Error creating link: ", error);
+    throw new Error("Error creating link");
+  }
+};
+
+export const isValidQRCode = (url: string) => {
+  const devUrl = process.env.NEXT_PUBLIC_RESET_PASSWORD_URL_DEV + "/site/";
+  const prodUrl = process.env.NEXT_PUBLIC_RESET_PASSWORD_URL_PROD + "/site/";
+  return url.startsWith(devUrl) || url.startsWith(prodUrl);
+};
+
 export const downloadVCard = (userProfile: Partial<Card>) => {
   const { firstName, lastName, email, number, company, position, websiteUrl } =
     userProfile;
