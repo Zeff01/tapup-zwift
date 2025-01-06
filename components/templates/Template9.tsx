@@ -47,7 +47,7 @@ const Template1 = ({
   console.log(websiteUrl);
 
   return (
-    <div className="min-h-screen bg-white flex flex-col ">
+    <div className="min-h-screen bg-white dark:bg-black flex flex-col ">
       <div className=" h-96 relative   ">
         <div className="absolute flex gap-x-2 m-4 top-0 right-0">
           <span className=" bg-white text-2xl p-2 text-neutral-800 rounded-full">
@@ -82,9 +82,9 @@ const Template1 = ({
             />
           )}
         </div>
-        <div className="absolute  z-20 top-[108px] left-1/2 transform -translate-x-1/2 ">
+        <div className="absolute  z-20 top-[118px] left-1/2 transform -translate-x-1/2 ">
           {profilePictureUrl ? (
-            <div className="w-28 h-28 rounded-full mx-auto overflow-hidden">
+            <div className=" rounded-full mx-auto overflow-hidden">
               <Image
                 src={profilePictureUrl}
                 alt="Profile Image"
@@ -189,7 +189,7 @@ const Template1 = ({
           </div>
         </div>
       </div>
-      <div className=" flex flex-col gap-y-6 pt-6 bg-white mx-5 flex-grow border-t border-t-neutral-300 text-neutral-900">
+      <div className=" flex flex-col gap-y-6 pt-6 bg-white px-5 flex-grow border-t border-t-neutral-300 text-neutral-900">
         <h2 className="font-semibold text-3xl mx-auto w-full  tracking-wider  text-center">
           {company ?? "COMPANY"}
         </h2>

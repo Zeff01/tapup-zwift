@@ -1,11 +1,11 @@
 import { CardItem } from "@/types/types";
 import {
-  ArrowBigRight,
-  CheckCircleIcon,
+  ArrowUp,
   Circle,
+  CreditCard,
   Image,
+  LayoutDashboard,
   RectangleHorizontal,
-  Settings,
   Text,
   Triangle,
 } from "lucide-react";
@@ -70,10 +70,11 @@ export const USER_ROLE_ENUMS = Object.freeze({
 });
 
 export const headerItems = [
-  { href: "/", label: "Main" },
-  { href: "/about", label: "About" },
-  { href: "/testimonials", label: "Testimonials" },
-  { href: "/features", label: "Features" },
+  { href: "/#about", label: "About" },
+  { href: "/#features", label: "Features" },
+  { href: "/#quickguide", label: "Quick Guide" },
+  { href: "/#products", label: "Products" },
+  { href: "/#contact", label: "Contact" },
 ];
 
 export const companyListItem = [
@@ -101,19 +102,24 @@ export const companyListItem = [
 
 export const tapupLearnMoreList = [
   {
-    icon: CheckCircleIcon,
-    title:
-      "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim.",
+    title: "Personal Website Creation",
+    description:
+      "Easily create your own professional website using pre-designed, customizable templates tailored to your needs.",
   },
   {
-    icon: CheckCircleIcon,
-    title:
-      "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim.",
+    title: "Powerful Web Builder",
+    description:
+      "Take full control of your websites design with an intuitive web builder that allows you to customize every detail.",
   },
   {
-    icon: CheckCircleIcon,
-    title:
-      "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim.",
+    title: "Printable Business Cards",
+    description:
+      "Generate high-quality, print-ready business cards to complement your digital presence and leave a lasting impression.",
+  },
+  {
+    title: "Cross-Device Networking",
+    description:
+      "Enhance your professional connections with cards optimized for compatibility across a wide range of devices.",
   },
 ];
 
@@ -197,29 +203,34 @@ export const stepItem = [
 
 export const carouselCards = {
   card1: {
-    title: "Standard Black Card",
-    image: "/assets/tapUp-card1.png",
+    title: "Standard Blue Card",
+    image: "/assets/cards/card1.png",
     description: `Lorem ipsum dolor sit, amet consectetur adipisicing elit. Consequatur minima quia porro vel obcaecati dicta asperiores? Numquam velit soluta fugit iure suscipit, odit, veniam reiciendis eveniet nesciunt, consequuntur cum dicta.`,
   },
   card2: {
     title: "Standard Yellow Card",
-    image: "/assets/tapUp-card2.png",
+    image: "/assets/cards/card5.png",
     description: `Lorem ipsum dolor sit, amet consectetur adipisicing elit. Consequatur minima quia porro vel obcaecati dicta asperiores? Numquam velit soluta fugit iure suscipit, odit, veniam reiciendis eveniet nesciunt, consequuntur cum dicta.`,
   },
   card3: {
-    title: "Standard Blue Card",
-    image: "/assets/tapUp-card3.png",
+    title: "Standard Green Card",
+    image: "/assets/cards/card3.png",
     description: `Lorem ipsum dolor sit, amet consectetur adipisicing elit. Consequatur minima quia porro vel obcaecati dicta asperiores? Numquam velit soluta fugit iure suscipit, odit, veniam reiciendis eveniet nesciunt, consequuntur cum dicta.`,
   },
   card4: {
-    title: "Standard Dark Blue Card",
-    image: "/assets/tapUp-card4.png",
+    title: "Standard Special Card",
+    image: "/assets/cards/card4.png",
     description: `Lorem ipsum dolor sit, amet consectetur adipisicing elit. Consequatur minima quia porro vel obcaecati dicta asperiores? Numquam velit soluta fugit iure suscipit, odit, veniam reiciendis eveniet nesciunt, consequuntur cum dicta.`,
   },
   card5: {
     title: "Standard Special Card",
-    image: "/assets/tapUp-card5.png",
+    image: "/assets/cards/card2.png",
     description: `Lorem ipsum dolor sit, amet consectetur adipisicing elit. Consequatur minima quia porro vel obcaecati dicta asperiores? Numquam velit soluta fugit iure suscipit, odit, veniam reiciendis eveniet nesciunt, consequuntur cum dicta.`,
+  },
+  card6: {
+    title: "Custom Card",
+    image: "/assets/cards/gridImg.png",
+    description: `Using our card builder, you can personalize your cards by adding text, images, and various design elements, allowing you to create something truly unique and special.`,
   },
 };
 
@@ -262,4 +273,25 @@ export const steps = [
     header: "Update your personal information",
   },
   { name: "Template", header: "Choose your Template" },
+];
+
+export const accountItem = [
+  { icon: LayoutDashboard, title: "Dashboard" },
+  { icon: ArrowUp, title: "Taps" },
+  { icon: CreditCard, title: "Billing" },
+];
+
+export const paymentCards = [
+  {
+    image: "/assets/payment/Visa.png",
+    title: "Visa",
+  },
+  {
+    image: "/assets/payment/Paypal.png",
+    title: "Paypal",
+  },
+  {
+    image: "/assets/payment/Mastercard.png",
+    title: "Mastercard",
+  },
 ];

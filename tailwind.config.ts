@@ -22,9 +22,23 @@ const config = {
         inter: ["Inter", "sans-serif"],
         racing: ["Racing Sans One"],
       },
+      fontSize: {
+        "2xs": "10px",
+        "3xs": "8px",
+      },
+      borderWidth: {
+        "2xs": "8px",
+      },
       colors: {
-        grayDescription: "hsla(var(--text-description))",
+        grayDescription: "hsl(var(--text-description))",
+        checkColor: "#B6E0BE",
         greenTitle: "#6fdc00",
+        greenBorder: "#60BB72",
+        buttonColor: "#108C28",
+        grayTemplate: "#959595",
+        blueTemplate: "#1976D2",
+        offWhiteTemplate: "#F2F2F2",
+        footerBlueTemplate: "#143583",
         placeholder: {
           input: "#383839",
         },
@@ -91,9 +105,11 @@ const config = {
           "conic-gradient(from 180deg at 50% 50%, var(--tw-gradient-stops))",
       },
       borderRadius: {
+        xl: "20px",
         lg: "var(--radius)",
         md: "calc(var(--radius) - 2px)",
         sm: "calc(var(--radius) - 4px)",
+        "2xs": "8px",
       },
       keyframes: {
         "accordion-down": {
@@ -122,6 +138,15 @@ const config = {
       },
       lineClamp: {
         2: "2",
+      },
+      height: {
+        "2xs": "28px",
+        "custom-29": "120px",
+        "custom-278": "278px",
+      },
+      width: {
+        "2xs": "28px",
+        "custom-29": "120px",
       },
     },
   },

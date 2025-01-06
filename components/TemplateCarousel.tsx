@@ -58,15 +58,39 @@ const templates: Template[] = [
   },
   {
     id: "template9",
-    name: "Simple White",
+    name: "Business",
     imageUrl: "/assets/template9.png",
-    route: "/create/template/6",
+    route: "/create/template/9",
   },
   {
     id: "template10",
-    name: "Simple White",
+    name: "Purple Aura",
     imageUrl: "/assets/template10.png",
-    route: "/create/template/6",
+    route: "/create/template/10",
+  },
+  {
+    id: "template11",
+    name: "Sky",
+    imageUrl: "/assets/template11.png",
+    route: "/create/template/11",
+  },
+  {
+    id: "template12",
+    name: "Simple White",
+    imageUrl: "/assets/template12.png",
+    route: "/create/template/12",
+  },
+  {
+    id: "template7",
+    name: "Simple White",
+    imageUrl: "/assets/template6.png",
+    route: "/create/template/7",
+  },
+  {
+    id: "template8",
+    name: "Simple White",
+    imageUrl: "/assets/template6.png",
+    route: "/create/template/8",
   },
 ];
 

@@ -1,22 +1,20 @@
-import AboutTapup from "./about-tapup";
+import AboutTapup from "./About";
 import TapUpCarousel from "./carouselCard";
-import FeaturedBusiness from "./feature-business";
-import CompanyList from "./feature-company";
 import Footer from "./footer";
-import Hero from "./hero";
-import HowItWorks from "./how-it-works";
-import ShoppingCard from "./shopping-card";
+import Hero from "./HeroSection";
+import HowItWorks from "./HowItWorks";
+import Products from "./Product";
+import UserWebsite from "./UserWebsite";
 
 const LandingPage = () => {
   return (
     <>
       <Hero />
-      <CompanyList />
       <AboutTapup />
-      <ShoppingCard />
       <HowItWorks />
+      <Products />
+      <UserWebsite />
       <TapUpCarousel />
-      <FeaturedBusiness />
       <Footer />
     </>
   );
