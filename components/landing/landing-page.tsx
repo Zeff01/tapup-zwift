@@ -13,7 +13,7 @@ const LandingPage = () => {
       <AboutTapup />
       <HowItWorks />
       <Products />
-      <UserWebsite/>
+      <UserWebsite />
       <TapUpCarousel />
       <Footer />
     </>

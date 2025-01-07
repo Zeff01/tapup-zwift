@@ -8,11 +8,17 @@ import Link from "next/link";
 
 import { Button } from "@/components/ui/button";
 import { Checkbox } from "@/components/ui/checkbox";
-import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from "@/components/ui/form";
+import {
+  Form,
+  FormControl,
+  FormField,
+  FormItem,
+  FormLabel,
+  FormMessage,
+} from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
 import { paymentCards } from "@/constants";
 import { paymentSchema } from "@/lib/zod-schema";
-
 
 // Infer the schema type
 type PaymentMethodData = z.infer<typeof paymentSchema>;
@@ -45,13 +51,21 @@ const PaymentMethod: React.FC = () => {
       </Link>
 
       <Form {...form}>
-        <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-6 max-w-screen-md w-full mx-auto">
+        <form
+          onSubmit={form.handleSubmit(onSubmit)}
+          className="space-y-6 max-w-screen-md w-full mx-auto"
+        >
           <h2 className="text-xl font-semibold">Payment Details</h2>
 
           <div className="flex items-center gap-2 justify-center bg-green-300 rounded-md p-1">
             {paymentCards.map((item) => (
               <div key={item.title} className="relative w-[4rem] mt-1 h-[4rem]">
-                <Image src={item.image} alt="credit card" fill className="object-cover" />
+                <Image
+                  src={item.image}
+                  alt="credit card"
+                  fill
+                  className="object-cover"
+                />
               </div>
             ))}
           </div>
@@ -198,10 +212,10 @@ const PaymentMethod: React.FC = () => {
               <FormItem>
                 <div className="flex items-center gap-2">
                   <FormControl>
-                     <Checkbox 
-            checked={field.value} 
-            onCheckedChange={field.onChange} 
-          />
+                    <Checkbox
+                      checked={field.value}
+                      onCheckedChange={field.onChange}
+                    />
                   </FormControl>
                   <FormLabel>I agree with the payment policy</FormLabel>
                 </div>
@@ -211,7 +225,10 @@ const PaymentMethod: React.FC = () => {
           />
 
           {/* Submit Button */}
-          <Button type="submit" className="w-full bg-buttonColor text-white hover:bg-green-600">
+          <Button
+            type="submit"
+            className="w-full bg-buttonColor text-white hover:bg-green-600"
+          >
             Submit Payment
           </Button>
         </form>

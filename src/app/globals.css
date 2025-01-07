@@ -70,7 +70,6 @@
     --sidebar-ring: 217.2 91.2% 59.8%;
 
     /* --check-color: 131, 40%, 80%, 1; */
-
   }
 
   .dark {
@@ -91,7 +90,7 @@
     --primary: 210 40% 98%;
     --primary-foreground: 222.2 47.4% 11.2%;
 
-    --secondary: 217.2 32.6% 17.5%;
+    --secondary: 217.2, 32.6%, 17.5%, 0.3;
     --secondary-foreground: 210 40% 98%;
 
     --muted: 217.2 32.6% 17.5%;
@@ -190,5 +189,4 @@
   .no-scrollbar::-webkit-scrollbar {
     display: none;
   }
-
 }

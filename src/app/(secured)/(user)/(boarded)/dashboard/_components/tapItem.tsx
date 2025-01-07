@@ -1,7 +1,6 @@
 import { TapItemprops } from "@/types/types";
 import Image from "next/image";
 
-
 const getTapContextText = (tap: TapItemprops): string => {
   const now = new Date();
   const tapDate = new Date(tap.date);
@@ -24,15 +23,17 @@ const getTapContextText = (tap: TapItemprops): string => {
   // Return the appropriate context message
   if (isToday && tap.todayCount! > 0) {
     return `+${tap.todayCount || 0} today`;
-  } else if (isThisWeek && (!tap.todayCount || tap.todayCount === 0) && tap.weekCount! > 0) {
+  } else if (
+    isThisWeek &&
+    (!tap.todayCount || tap.todayCount === 0) &&
+    tap.weekCount! > 0
+  ) {
     return `+${tap.weekCount || 0} this week`;
   } else if (isThisMonth && tap.monthCount! > 0) {
     return `+${tap.monthCount || 0} this month`;
   } else {
     return `Last tapped on ${tapDate.toLocaleDateString()}`;
   }
-
-
 };
 const TapItem: React.FC<TapItemprops> = (props) => {
   console.log(getTapContextText(props));
@@ -50,7 +51,9 @@ const TapItem: React.FC<TapItemprops> = (props) => {
         />
         <div>
           <h3 className="font-bold md:text-lg">{company}</h3>
-          <p className="text-muted-foreground text-sm md:text-base">{position}</p>
+          <p className="text-muted-foreground text-sm md:text-base">
+            {position}
+          </p>
         </div>
       </div>
       <div className="text-green-500 text-sm md:text-base text-right">
