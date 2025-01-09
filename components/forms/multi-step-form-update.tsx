@@ -215,7 +215,10 @@ const MultiStepFormUpdate = ({
   return (
     <main className="h-full">
       <Form {...methods}>
-        <form className="space-y-6" onSubmit={methods.handleSubmit(formSubmit)}>
+        <form
+          className="space-y-6 h-full"
+          onSubmit={methods.handleSubmit(formSubmit)}
+        >
           {currentStep < 4 ? (
             <div className="flex flex-col overflow-auto py-8 px-6 sm:px-0 bg-background h-full">
               <TapupLogo className="mx-auto mb-5" />
