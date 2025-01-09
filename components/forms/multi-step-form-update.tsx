@@ -75,6 +75,7 @@ const MultiStepFormUpdate = ({
     ["company", "companyBackground", "serviceDescription"], // Step 1 fields
     ["firstName", "lastName", "email", "number"], // Step 2 fields
     ["chosenTemplate"], // Step 3 fields
+    ["chosenPhysicalCard"], // Step 4 fields
   ];
 
   const [selectedTemplateId, setSelectedTemplateId] =
@@ -106,6 +107,8 @@ const MultiStepFormUpdate = ({
       servicePhotos: userData.servicePhotos || [],
       chosenTemplate:
         (userData.chosenTemplate as ChosenTemplateType) || "template1",
+      chosenPhysicalCard:
+        (userData.chosenPhysicalCard as ChosenPhysicalCardType) || "card1",
       firstName: userData.firstName || "",
       lastName: userData.lastName || "",
       email: userData.email || "",
@@ -135,7 +138,15 @@ const MultiStepFormUpdate = ({
       methods.setValue("servicePhotos", serviceImageUrls || []);
     }
     methods.setValue("chosenTemplate", selectedTemplateId);
-  }, [coverPhotoUrl, imageUrl, serviceImageUrls, selectedTemplateId, methods]);
+    methods.setValue("chosenPhysicalCard", selectedPhysicalCardId);
+  }, [
+    coverPhotoUrl,
+    imageUrl,
+    serviceImageUrls,
+    selectedTemplateId,
+    selectedPhysicalCardId,
+    methods,
+  ]);
 
   const { mutate: updateCardMutation, isPending: isLoadingUpdateMutation } =
     useMutation({
