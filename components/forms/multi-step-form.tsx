@@ -199,7 +199,6 @@ export default function CardsAndUsersCreateFields({
   const steps: Array<(keyof z.infer<typeof createPortfolioSchema>)[]> = [
     ["coverPhotoUrl", "company", "companyBackground", "serviceDescription"], // Step 1 fields
     ["profilePictureUrl", "firstName", "lastName", "email", "number"], // Step 2 fields
-    ["profilePictureUrl", "firstName", "lastName", "email", "number"], // Step 2 fields
     ["chosenTemplate"], // Step 3 fields
     ["chosenPhysicalCard"], // Step 4 fields
   ];
