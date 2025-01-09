@@ -20,6 +20,7 @@ import { IoMdClose } from "react-icons/io";
 import { useUserContext } from "@/providers/user-provider";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { createCard } from "@/lib/firebase/actions/card.action";
+import SelectedPhysicalCard from "./SelectedPhysicalCard";
 
 export type ChosenTemplateType = z.infer<
   typeof createPortfolioSchema
@@ -49,6 +50,7 @@ export default function CardsAndUsersCreateFields({
 
   const [selectedTemplateId, setSelectedTemplateId] =
     useState<ChosenTemplateType>("template1");
+
   const [selectedPhysicalCardId, setSelectedPhysicalCardId] =
     useState<ChosenPhysicalCardType>("card1");
 
@@ -395,6 +397,35 @@ export default function CardsAndUsersCreateFields({
               />{" "}
               <PersonalInfoForm control={methods.control} isCard={isCard} />
               <SocialLinksForm control={methods.control} />
+            </div>
+
+            {/* Physical Cards Section */}
+            <div className="flex-grow flex flex-col">
+              {/* Title */}
+              <h1 className="text-2xl font-medium text-center my-8 mx-auto">
+                Pick your physical card
+              </h1>
+
+              {/* Cards Grid */}
+
+              <div className="flex-grow flex flex-col space-y-6">
+                <div className="flex-grow flex items-center justify-center mx-6 md:mx-0">
+                  {selectedPhysicalCardId ? (
+                    <SelectedPhysicalCard
+                      cardId={selectedPhysicalCardId}
+                      formData={methods.watch()}
+                    />
+                  ) : (
+                    <h1 className="text-black">Select a card</h1>
+                  )}
+                </div>
+                <div className="h-20 md:h-24 ">
+                  <PhysicalCardCarousel
+                    selectedCardId={selectedPhysicalCardId}
+                    setSelectedCardId={setSelectedPhysicalCardId}
+                  />
+                </div>
+              </div>
             </div>
             <button
               type="submit"
