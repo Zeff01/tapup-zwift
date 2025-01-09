@@ -17,6 +17,7 @@ export type Users = {
   serviceDescription?: string;
   servicePhotos?: string[];
   chosenTemplate?: string;
+  chosenPhysicalCard?: string;
   firstName?: string;
   lastName?: string;
   email: string;
