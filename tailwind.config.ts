@@ -21,6 +21,7 @@ const config = {
       fontFamily: {
         inter: ["Inter", "sans-serif"],
         racing: ["Racing Sans One"],
+        righteous: ["Righteous"],
       },
       fontSize: {
         "2xs": "10px",
