@@ -26,7 +26,6 @@ import { Input } from "../ui/input";
 import SelectedTemplate from "./SelectedTemplate";
 import SelectedPhysicalCard from "./SelectedPhysicalCard";
 import { ArrowLeft } from "lucide-react";
-import { CardSkeleton, CardSkeleton2 } from "@/components/CardSkeleton";
 import { Button } from "@/components/ui/button";
 import { PhysicalCardCarousel } from "../PhysicalCardCarousel";
 import { RefreshCcw } from "lucide-react";
