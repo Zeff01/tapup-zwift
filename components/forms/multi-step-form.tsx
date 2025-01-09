@@ -253,6 +253,7 @@ export default function CardsAndUsersCreateFields({
           className="space-y-6 h-full"
           onSubmit={methods.handleSubmit(formSubmit)}
         >
+          {/* First 3 Step has the same layout for the heading and title */}
           {currentStep < 4 ? (
             <div className="flex flex-col overflow-auto py-8 px-6 sm:px-0 bg-background h-full">
               <TapupLogo className="mx-auto mb-5" />
