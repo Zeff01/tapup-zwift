@@ -25,10 +25,15 @@ import { formHeaderItems } from "@/constants";
 import SocialLinksSelector from "./SocialLink";
 import { Input } from "../ui/input";
 import SelectedTemplate from "./SelectedTemplate";
+import SelectPhysicalCard from "./SelectedPhysicalCard";
 
 export type ChosenTemplateType = z.infer<
   typeof createPortfolioSchema
 >["chosenTemplate"];
+
+export type ChosenPhysicalCardType = z.infer<
+  typeof createPortfolioSchema
+>["chosenPhysicalCard"];
 
 interface SelectedLink {
   label: string;
@@ -74,6 +79,11 @@ const MultiStepFormUpdate = ({
 
   const [selectedTemplateId, setSelectedTemplateId] =
     useState<ChosenTemplateType>(userData.chosenTemplate as ChosenTemplateType);
+
+  const [selectedPhysicalCardId, setSelectedPhysicalCardId] =
+    useState<ChosenPhysicalCardType>(
+      userData.chosenPhysicalCard as ChosenPhysicalCardType
+    );
 
   const addServicePhoto = (photo: Photo) => {
     setServicePhotos([...servicePhotos, photo]);
