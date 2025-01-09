@@ -4,11 +4,15 @@ import { Card } from "@/types/types";
 import { CardContainer } from "@/components/ui/3Dcard";
 import { Button } from "../ui/button";
 import { RefreshCcw } from "lucide-react";
-import FrontCard from "./components/FrontCard";
-import BackCard from "./components/BackCard";
+import FrontCard1 from "./components/FrontCard1";
+import BackCard from "./BackCard";
 import { useState } from "react";
 
+import { PhysicalCardProps } from "@/types/types";
+
 const PhysicalCard = ({
+  frontBackgroundImage,
+  backBackgroundImage,
   profilePictureUrl,
   position,
   company,
@@ -17,9 +21,8 @@ const PhysicalCard = ({
   email,
   number,
   websiteUrl,
-  frontBackgroundImage,
-  backBackgroundImage,
-}: Card) => {
+  chosenPhysicalCard,
+}: PhysicalCardProps) => {
   const userProfile = {
     firstName,
     lastName,
@@ -29,11 +32,73 @@ const PhysicalCard = ({
     position,
     websiteUrl,
     profilePictureUrl,
+    chosenPhysicalCard,
   };
 
   const [isFlipped, setIsFlipped] = useState(false);
 
   const handleFlip = () => setIsFlipped((prev) => !prev);
+
+  const renderFrontCard = () => {
+    switch (chosenPhysicalCard) {
+      case "card1":
+        return (
+          <FrontCard1
+            data={userProfile}
+            backgroundImage={frontBackgroundImage}
+            tapColor="text-white"
+            upColor="text-greenTitle"
+            nameColor="text-white"
+            positionColor="text-white"
+            iconColor="text-greenTitle"
+            detailsColor="text-white"
+          />
+        );
+
+      case "card2":
+        return (
+          <FrontCard1
+            data={userProfile}
+            backgroundImage={frontBackgroundImage}
+            tapColor="text-black"
+            upColor="text-greenTitle"
+            nameColor="text-black"
+            positionColor="text-black"
+            iconColor="text-greenTitle"
+            detailsColor="text-black"
+          />
+        );
+      case "card3":
+        return (
+          <FrontCard1
+            data={userProfile}
+            backgroundImage={frontBackgroundImage}
+            tapColor="text-black"
+            upColor="text-white"
+            nameColor="text-black"
+            positionColor="text-black"
+            iconColor="text-greenTitle"
+            detailsColor="text-black"
+          />
+        );
+      case "card4":
+        return (
+          <FrontCard1
+            data={userProfile}
+            backgroundImage={frontBackgroundImage}
+            tapColor="text-white"
+            upColor="text-greenTitle"
+            nameColor="text-white"
+            positionColor="text-white"
+            iconColor="text-greenTitle"
+            detailsColor="text-white"
+          />
+        );
+
+      default:
+        return null;
+    }
+  };
 
   return (
     <CardContainer containerClassName="w-full max-w-[434px] aspect-[16/10] mx-auto">
@@ -45,7 +110,7 @@ const PhysicalCard = ({
           ${isFlipped ? "[transform:rotateY(180deg)]" : ""}
         `}
       >
-        {/* Front of card */}
+        {/* Back of card */}
         <div
           className={`
             absolute w-full h-full 
@@ -56,7 +121,7 @@ const PhysicalCard = ({
           <BackCard backgroundImage={backBackgroundImage} color="white" />
         </div>
 
-        {/* Back of card */}
+        {/* Front of card */}
         <div
           className={`
             absolute w-full h-full 
@@ -65,11 +130,7 @@ const PhysicalCard = ({
             [transform:rotateY(180deg)] 
           `}
         >
-          <FrontCard
-            data={userProfile}
-            backgroundImage={frontBackgroundImage}
-            color="white"
-          />
+          {renderFrontCard()}
         </div>
       </div>
 

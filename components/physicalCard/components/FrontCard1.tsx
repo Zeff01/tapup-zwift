@@ -10,11 +10,20 @@ import phone from "@/public/assets/phone-logo.png";
 const BackCard = ({
   data,
   backgroundImage,
-  color,
+  tapColor,
+  upColor,
+  nameColor,
+  positionColor,
+  detailsColor,
 }: {
   data: Partial<Card>;
   backgroundImage?: string | StaticImageData;
-  color: "white" | "black";
+  tapColor?: string;
+  upColor?: string;
+  nameColor?: string;
+  positionColor?: string;
+  iconColor?: string;
+  detailsColor?: string;
 }) => {
   const {
     firstName,
@@ -26,11 +35,6 @@ const BackCard = ({
     websiteUrl,
     profilePictureUrl,
   } = data;
-
-  // Determine text color based on the color parameter
-  const textColor = color === "white" ? "text-white" : "text-black";
-  const textGrayColor = color === "white" ? "text-gray-300" : "text-gray-700";
-  const tapUpLogo = color === "white" ? tapUpLogoWhite : tapUpLogoBlack;
 
   return (
     <div className="w-full h-full rounded-lg overflow-hidden relative">
@@ -48,31 +52,28 @@ const BackCard = ({
 
       {/* Content */}
       <div className="relative z-10 p-4 sm:p-6 flex flex-col h-full justify-between">
-        {/* Tap up title */}
-        <div className="flex justify-end">
-          <Image
-            src={tapUpLogo} // You may want to conditionally set this based on color
-            alt="Tap up"
-            width={105}
-            height={40}
-            className="aspect-[105/40] object-contain object-center"
-          />
+        {/* TAP UP title */}
+        <div className="flex justify-end aspect-21/8">
+          <h1 className="text-4xl leading-10 font-righteous ">
+            <span className={tapColor}>Tap</span>{" "}
+            <span className={upColor}>Up</span>
+          </h1>
         </div>
         {/* Personal Details */}
         <div className="flex justify-between items-start ">
           {/* Name and Position */}
           <div>
             <div>
-              <h2 className={`text-md sm:text-2xl font-bold ${textColor}`}>
+              <h2 className={`text-md sm:text-2xl font-bold ${nameColor}`}>
                 {firstName || "First "} {lastName || "Last "}
               </h2>
-              <p className={`text-sm ${textGrayColor} font-medium`}>
+              <p className={`text-sm ${positionColor} font-medium`}>
                 {position || "Position"}
               </p>
             </div>
             {/* Other Details */}
             <div className="mt-6 flex flex-col gap-1 sm:gap-3">
-              <p className={`flex gap-2 ${textGrayColor} text-xs font-medium`}>
+              <p className={`flex gap-2 ${detailsColor} text-xs font-medium`}>
                 <Image
                   src={extension}
                   alt="username"
@@ -82,7 +83,7 @@ const BackCard = ({
                 />
                 {company || "username"}
               </p>
-              <p className={`flex gap-2 ${textGrayColor} text-xs font-medium`}>
+              <p className={`flex gap-2 ${detailsColor} text-xs font-medium`}>
                 <Image
                   src={searchSite}
                   alt="website"
@@ -92,7 +93,7 @@ const BackCard = ({
                 />
                 {websiteUrl || "Website"}
               </p>
-              <p className={`flex gap-2 ${textGrayColor} text-xs font-medium`}>
+              <p className={`flex gap-2 ${detailsColor} text-xs font-medium`}>
                 <Image
                   src={phone}
                   alt="phone"
@@ -118,7 +119,7 @@ const BackCard = ({
               </div>
             ) : (
               <div className="relative aspect-[127/124] w-[127px] h-[124px] rounded-full overflow-hidden bg-gray-200 flex items-center justify-center">
-                <span className={`${textGrayColor} font-medium`}>No Image</span>
+                <span className={`${position} font-medium`}>No Image</span>
               </div>
             )}
           </div>
