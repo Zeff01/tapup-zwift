@@ -6,10 +6,9 @@ import { Button } from "../ui/button";
 import { RefreshCcw } from "lucide-react";
 import FrontCard from "./components/FrontCard";
 import BackCard from "./components/BackCard";
-import card2Bg from "@/public/assets/card2-bg.png";
 import { useState } from "react";
 
-const PhysicalCard2 = ({
+const PhysicalCard = ({
   profilePictureUrl,
   position,
   company,
@@ -18,6 +17,8 @@ const PhysicalCard2 = ({
   email,
   number,
   websiteUrl,
+  frontBackgroundImage,
+  backBackgroundImage,
 }: Card) => {
   const userProfile = {
     firstName,
@@ -52,7 +53,7 @@ const PhysicalCard2 = ({
             ${!isFlipped ? "z-10" : "z-0"}
           `}
         >
-          <FrontCard backgroundImage={card2Bg} color="black" />
+          <BackCard backgroundImage={backBackgroundImage} color="white" />
         </div>
 
         {/* Back of card */}
@@ -64,10 +65,10 @@ const PhysicalCard2 = ({
             [transform:rotateY(180deg)] 
           `}
         >
-          <BackCard
+          <FrontCard
             data={userProfile}
-            backgroundImage={card2Bg}
-            color="black"
+            backgroundImage={frontBackgroundImage}
+            color="white"
           />
         </div>
       </div>
@@ -82,4 +83,4 @@ const PhysicalCard2 = ({
   );
 };
 
-export default PhysicalCard2;
+export default PhysicalCard;

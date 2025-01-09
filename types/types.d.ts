@@ -92,6 +92,8 @@ export interface Photo {
 
 export interface Card extends Users {
   owner: string;
+  frontBackgroundImage?: StaticImageData;
+  backBackgroundImage?: StaticImageData;
 }
 
 export interface CardItem {
