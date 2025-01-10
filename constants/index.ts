@@ -11,7 +11,7 @@ import {
 } from "lucide-react";
 import { CgProfile } from "react-icons/cg";
 import { RxDashboard } from "react-icons/rx";
-import { TbCards } from "react-icons/tb";
+import { TbCards, TbSettingsFilled } from "react-icons/tb";
 
 export const ROOT_ROUTE = "/";
 export const LOGIN_ROUTE = "/login";
@@ -102,20 +102,24 @@ export const companyListItem = [
 
 export const tapupLearnMoreList = [
   {
-    title:"Personal Website Creation",
-    description: "Easily create your own professional website using pre-designed, customizable templates tailored to your needs.",
+    title: "Personal Website Creation",
+    description:
+      "Easily create your own professional website using pre-designed, customizable templates tailored to your needs.",
   },
- {
-    title:"Powerful Web Builder",
-    description: 'Take full control of your websites design with an intuitive web builder that allows you to customize every detail.',
+  {
+    title: "Powerful Web Builder",
+    description:
+      "Take full control of your websites design with an intuitive web builder that allows you to customize every detail.",
   },
- {
-    title:"Printable Business Cards",
-    description: 'Generate high-quality, print-ready business cards to complement your digital presence and leave a lasting impression.',
+  {
+    title: "Printable Business Cards",
+    description:
+      "Generate high-quality, print-ready business cards to complement your digital presence and leave a lasting impression.",
   },
- {
-    title:"Cross-Device Networking",
-    description: 'Enhance your professional connections with cards optimized for compatibility across a wide range of devices.'
+  {
+    title: "Cross-Device Networking",
+    description:
+      "Enhance your professional connections with cards optimized for compatibility across a wide range of devices.",
   },
 ];
 
@@ -223,7 +227,7 @@ export const carouselCards = {
     image: "/assets/cards/card2.png",
     description: `Lorem ipsum dolor sit, amet consectetur adipisicing elit. Consequatur minima quia porro vel obcaecati dicta asperiores? Numquam velit soluta fugit iure suscipit, odit, veniam reiciendis eveniet nesciunt, consequuntur cum dicta.`,
   },
-    card6: {
+  card6: {
     title: "Custom Card",
     image: "/assets/cards/gridImg.png",
     description: `Using our card builder, you can personalize your cards by adding text, images, and various design elements, allowing you to create something truly unique and special.`,
@@ -246,9 +250,10 @@ export const businessList = [
 ];
 
 export const menuItems = [
-  { icon: RxDashboard, title: "Dashboard", href: "/dashboard" },
   { icon: CgProfile, title: "Profile", href: "/user" },
+  { icon: RxDashboard, title: "Dashboard", href: "/dashboard" },
   { icon: TbCards, title: "Cards", href: "/cards" },
+  { icon: TbSettingsFilled, title: "Settings", href: "/settings" },
 ];
 
 export const publicDomain =
@@ -271,24 +276,23 @@ export const steps = [
   { name: "Template", header: "Choose your Template" },
 ];
 
-
 export const accountItem = [
-  { icon: LayoutDashboard, title: 'Dashboard' },
-  { icon: ArrowUp, title: 'Taps' },
-  { icon: CreditCard, title: 'Billing' },
-]
+  { icon: LayoutDashboard, title: "Dashboard" },
+  { icon: ArrowUp, title: "Taps" },
+  { icon: CreditCard, title: "Billing" },
+];
 
 export const paymentCards = [
   {
-    image: '/assets/payment/Visa.png',
-    title:"Visa",
+    image: "/assets/payment/Visa.png",
+    title: "Visa",
   },
-   {
-    image: '/assets/payment/Paypal.png',
-    title:"Paypal",
+  {
+    image: "/assets/payment/Paypal.png",
+    title: "Paypal",
   },
-    {
-    image: '/assets/payment/Mastercard.png',
-    title:"Mastercard",
-  }
-]
+  {
+    image: "/assets/payment/Mastercard.png",
+    title: "Mastercard",
+  },
+];
