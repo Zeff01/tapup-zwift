@@ -22,12 +22,13 @@ import { toast } from "react-toastify";
 import { FirebaseError } from "firebase/app";
 import { z } from "zod";
 import { signupSchema } from "../zod-schema";
-import { USER_ROLE_ENUMS } from "@/constants";
+import { UPDATE_ROUTE, USER_ROLE_ENUMS } from "@/constants";
 export const onAuthStateChanged = (callback: (user: User | null) => void) => {
   return _onAuthStateChanged(firebaseAuth, callback);
 };
 
 import { SignedUserIdJwtPayload } from "@/types/types";
+import { AppRouterInstance } from "next/dist/shared/lib/app-router-context.shared-runtime";
 
 export const authCurrentUser = async () => {
   try {
@@ -84,9 +85,11 @@ export const signUpHandler = async (data: z.infer<typeof signupSchema>) => {
 export const loginHandler = async ({
   email,
   password,
+  router,
 }: {
   email: string;
   password: string;
+  router?: AppRouterInstance;
 }) => {
   try {
     const res = await signInWithEmailAndPassword(firebaseAuth, email, password);
@@ -95,6 +98,7 @@ export const loginHandler = async ({
       await createSession(userID);
     }
     toast.success("Login successful!");
+    if (router) router.push(`${UPDATE_ROUTE}/${userID}`);
   } catch (error) {
     if (error instanceof FirebaseError) {
       console.log(error.code);
@@ -128,7 +132,7 @@ export const signInWithGoogle = async () => {
       await createSession(userID);
       toast.success("Login successful!");
 
-      return;
+      return userID;
     }
     await setDoc(doc(firebaseDb, "user-account", userID), {
       role: USER_ROLE_ENUMS.USER,
@@ -138,6 +142,7 @@ export const signInWithGoogle = async () => {
     await createSession(userID);
 
     toast.success("Login successful!");
+    return userID;
   } catch (error) {
     if (error instanceof FirebaseError) {
       console.log(error.code);
@@ -158,7 +163,7 @@ export const signInWithFacebook = async () => {
       await createSession(userID);
       toast.success("Login successful!");
 
-      return;
+      return userID;
     }
 
     await setDoc(doc(firebaseDb, "user-account", userID), {
@@ -170,6 +175,7 @@ export const signInWithFacebook = async () => {
       await createSession(userID);
     }
     toast.success("Login successful!");
+    return userID;
   } catch (error) {
     if (error instanceof FirebaseError) {
       // toast.error(error.code);
