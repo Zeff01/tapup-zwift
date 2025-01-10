@@ -33,7 +33,7 @@ const Cards = () => {
             href={"/cards/design-option"}
             className="text-primary-foreground bg-green-500 rounded-lg md:text-lg px-6 py-2"
           >
-            + Create
+            + Buy a card
           </Link>
         </div>
         {/* grid-cols-[repeat(auto-fill,minmax(18rem,1fr))] */}
