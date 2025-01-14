@@ -10,12 +10,12 @@ export default function LoadingLogo() {
     <div className="bg-background flex flex-col items-center justify-center h-[100dvh]">
       <div className="flex flex-col items-center gap-12 ">
         <Image
-          src="/assets/tap-up-logo-white.png"
+          src="/assets/tap-up-header-logo.png"
           alt="Company Logo"
           width={150}
           height={150}
           priority
-          className="mx-auto mt-4 dark:block"
+          className="mx-auto mt-4 dark:hidden"
         />
         <div className='flex space-x-2 justify-center items-center gap-3 dark:invert'>
           <div className='h-5 w-5 bg-black rounded-full animate-bounce [animation-delay:-0.3s]'></div>
