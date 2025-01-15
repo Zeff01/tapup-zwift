@@ -1,13 +1,16 @@
 "use client";
 
 import { UserState } from "@/types/types";
-import { deleteCardById } from "@/lib/firebase/actions/card.action";
+import {
+  deleteCardById,
+  duplicateCard,
+} from "@/lib/firebase/actions/card.action";
 import { Card } from "@/types/types";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
-import { Copy, Edit2, Link2, Trash } from "lucide-react";
+import { Copy, Edit2, Link2, Trash, EyeIcon } from "lucide-react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
-import React from "react";
+import React, { useEffect } from "react";
 import { toast } from "react-toastify";
 
 type Prop = {
@@ -23,6 +26,17 @@ const DigitalCard = ({ card, confirm, user }: Prop) => {
       : process.env.NEXT_PUBLIC_RESET_PASSWORD_URL_PROD;
   const router = useRouter();
   const queryClient = useQueryClient();
+
+  const { mutate: duplicateCardMutation } = useMutation({
+    mutationFn: duplicateCard,
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ["cards", user?.uid] });
+      // toast.success("Card duplicated successfully");
+    },
+    onError: () => {
+      toast.error("Something went wrong");
+    },
+  });
 
   const { mutate: deleteCardMutation } = useMutation({
     mutationFn: deleteCardById,
@@ -65,7 +79,27 @@ const DigitalCard = ({ card, confirm, user }: Prop) => {
   const handleCopy = (e: React.MouseEvent<HTMLSpanElement, MouseEvent>) => {
     e.stopPropagation();
     navigator.clipboard.writeText(`${domain}/site/${card.id}`);
-    toast.success("Copied to clipboard");
+    toast.success("Link Copied to clipboard");
+  };
+  const handleDuplicate = async (
+    e: React.MouseEvent<HTMLSpanElement, MouseEvent>
+  ) => {
+    if (!card.id) return;
+    e.stopPropagation();
+    const ok = await confirm(
+      undefined,
+      <>
+        Confirm{" "}
+        <span className="font-bold text-destructive">
+          {card.firstName + " " + card.lastName}{" "}
+        </span>{" "}
+        card duplication.
+      </>
+    );
+
+    if (!ok) return;
+
+    duplicateCardMutation({ card_id: card.id!, owner_id: card.owner! });
   };
 
   const iconAndFunctionMap = [
@@ -79,7 +113,7 @@ const DigitalCard = ({ card, confirm, user }: Prop) => {
     },
     {
       icon: Copy,
-      fn: handleCopy,
+      fn: handleDuplicate,
     },
   ];
   return (
@@ -105,21 +139,27 @@ const DigitalCard = ({ card, confirm, user }: Prop) => {
           return (
             <span
               key={index}
-              className="p-3 hover:opacity-30 cursor-pointer"
+              className="px-3 py-3 2xl:py-2 hover:opacity-30 cursor-pointer"
               onClick={item.fn}
             >
               <Icon className="size-4" />
             </span>
           );
         })}
+        <span
+          className="px-3 py-3 2xl:py-2 hover:opacity-30 cursor-pointer"
+          onClick={handleCopy}
+        >
+          <Link2 className="size-4" />
+        </span>
         <Link
           href={`/site/${card.id}`}
-          className="p-3 hover:opacity-30 cursor-pointer"
+          className="px-3 py-3 2xl:py-2 hover:opacity-30 cursor-pointer"
           prefetch
           target="_blank"
           rel="noopener noreferrer"
         >
-          <Link2 className="size-4" />
+          <EyeIcon className="size-4" />
         </Link>
       </div>
     </div>

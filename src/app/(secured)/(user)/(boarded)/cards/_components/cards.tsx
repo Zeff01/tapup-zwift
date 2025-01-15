@@ -31,12 +31,13 @@ const Cards = () => {
       <div className="px-4 flex flex-col min-h-full md:px-16 py-8">
         <div className="flex items-center justify-between">
           <h1 className="text-2xl md:text-4xl font-semibold">MY CARDS</h1>
+
           <div className="flex">
             <Link
               href={"/cards/design-option"}
-              className="text-primary-foreground mr-4 bg-green-500 rounded-lg md:text-lg px-6 py-2"
+              className="text-primary-foreground bg-green-500 rounded-lg md:text-lg px-6 py-2"
             >
-              + Create
+              + Buy a card
             </Link>
             <QrCodeModal
               icon={<QrCode className="size-6 shrink-0" size={8} />}
