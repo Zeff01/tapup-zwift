@@ -24,14 +24,19 @@ import { formHeaderItems } from "@/constants";
 import SocialLinksSelector from "./SocialLink";
 import { Input } from "../ui/input";
 import SelectedTemplate from "./SelectedTemplate";
-
+import SelectedPhysicalCard from "./SelectedPhysicalCard";
 import { ArrowLeft } from "lucide-react";
-import { CardSkeleton, CardSkeleton2 } from "@/components/CardSkeleton";
 import { Button } from "@/components/ui/button";
+import { PhysicalCardCarousel } from "../PhysicalCardCarousel";
+import { RefreshCcw } from "lucide-react";
 
 export type ChosenTemplateType = z.infer<
   typeof createPortfolioSchema
 >["chosenTemplate"];
+
+export type ChosenPhysicalCardType = z.infer<
+  typeof createPortfolioSchema
+>["chosenPhysicalCard"];
 
 interface SelectedLink {
   label: string;
@@ -60,6 +65,8 @@ export default function CardsAndUsersCreateFields({
 
   const [selectedTemplateId, setSelectedTemplateId] =
     useState<ChosenTemplateType>("template1");
+  const [selectedPhysicalCard, setSelectedPhysicalCard] =
+    useState<ChosenPhysicalCardType>("card1");
 
   const addServicePhoto = (photo: Photo) => {
     setServicePhotos([...servicePhotos, photo]);
@@ -93,11 +100,13 @@ export default function CardsAndUsersCreateFields({
       skypeInviteUrl: "",
       websiteUrl: "",
       chosenTemplate: "template1",
+      chosenPhysicalCard: "card1",
     },
   });
 
   useEffect(() => {
     const savedData = localStorage.getItem("portfolioFormData");
+
     if (savedData) {
       const parsedData = JSON.parse(savedData);
       if (!imageUrl) {
@@ -136,11 +145,13 @@ export default function CardsAndUsersCreateFields({
       methods.setValue("servicePhotos", serviceImageUrls || []);
     }
     methods.setValue("chosenTemplate", selectedTemplateId);
+    methods.setValue("chosenPhysicalCard", selectedPhysicalCard);
   }, [
     coverPhotoUrl,
     imageUrl,
     serviceImageUrls,
     selectedTemplateId,
+    selectedPhysicalCard,
     methods,
     user,
   ]);
@@ -189,6 +200,7 @@ export default function CardsAndUsersCreateFields({
     ["coverPhotoUrl", "company", "companyBackground", "serviceDescription"], // Step 1 fields
     ["profilePictureUrl", "firstName", "lastName", "email", "number"], // Step 2 fields
     ["chosenTemplate"], // Step 3 fields
+    ["chosenPhysicalCard"], // Step 4 fields
   ];
 
   const handleNextStep = async (event: any) => {
@@ -234,29 +246,27 @@ export default function CardsAndUsersCreateFields({
     );
   };
 
-  const handleSubmit = async () => {
-    methods.handleSubmit(formSubmit)();
-  };
-
   return (
-    <main>
-      {currentStep < 4 ? (
-        <div className="flex flex-col overflow-auto py-8 px-6 sm:px-0 bg-background h-full">
-          <TapupLogo className="mx-auto mb-5" />
-          <div className="w-full mx-auto max-w-sm">
-            {formHeaderItems.map((item) => (
-              <div key={item.id} className="mb-4">
-                <h2 className="text-2xl">
-                  {currentStep === item.id ? item.title : ""}
-                </h2>
-              </div>
-            ))}
-            <MultiStepProgress currentStep={currentStep} />
-            <Form {...methods}>
-              <form
-                className="space-y-6"
-                onSubmit={methods.handleSubmit(formSubmit)}
-              >
+    <main className="h-full">
+      <Form {...methods}>
+        <form
+          className="space-y-6 h-full"
+          onSubmit={methods.handleSubmit(formSubmit)}
+        >
+          {/* First 3 Step has the same layout for the heading and title */}
+          {currentStep < 4 ? (
+            <div className="flex flex-col overflow-auto py-8 px-6 sm:px-0 bg-background h-full">
+              <TapupLogo className="mx-auto mb-5" />
+              <div className="w-full mx-auto max-w-sm">
+                {formHeaderItems.map((item) => (
+                  <div key={item.id} className="mb-4">
+                    <h2 className="text-2xl">
+                      {currentStep === item.id ? item.title : ""}
+                    </h2>
+                  </div>
+                ))}
+                <MultiStepProgress currentStep={currentStep} />
+
                 {/* Step 1 - Cover Photo & company info*/}
                 {currentStep === 1 && (
                   <div className="">
@@ -296,6 +306,7 @@ export default function CardsAndUsersCreateFields({
                       </div>
                     </div>
                     <span className="text-sm text-red-500 relative bottom-12">
+                      {methods.formState.errors.coverPhotoUrl?.message ?? ""}
                       {methods.formState.errors.coverPhotoUrl?.message ?? ""}
                     </span>
 
@@ -400,6 +411,7 @@ export default function CardsAndUsersCreateFields({
                         </p>
                       </div>
                     </div>
+
                     <span className="text-sm text-red-500">
                       {methods.formState.errors.profilePictureUrl?.message ??
                         ""}
@@ -474,67 +486,73 @@ export default function CardsAndUsersCreateFields({
                     </button>
                   )}
                 </div>
-              </form>
-            </Form>
-          </div>
-        </div>
-      ) : (
-        <div className="flex flex-col h-screen ">
-          {/* Top Section with Back Button */}
-          <div className="p-4">
-            <Button
-              variant="outline"
-              className="text-foreground dark:text-secondary-foreground dark:border-white"
-              onClick={goToPreviousStep}
-            >
-              <ArrowLeft />
-              Back
-            </Button>
-          </div>
-
-          {/* Scrollable Middle Section */}
-
-          <div className="flex-1 overflow-y-auto">
-            <div className="max-w-3xl mx-auto p-6">
-              {/* Title */}
-              <h1 className="text-2xl font-medium text-center mb-8">
-                Pick your physical card
-              </h1>
-
-              {/* Cards Grid */}
-              <div className="grid sm:grid-cols-2 gap-3 sm:gap-4 md:gap-6 lg:gap-8">
-                {Array.from({ length: 8 }, (_, index) =>
-                  index % 2 === 0 ? (
-                    <CardSkeleton key={index} />
-                  ) : (
-                    <CardSkeleton2 key={index} />
-                  )
-                )}
               </div>
             </div>
-          </div>
+          ) : (
+            <div className="flex flex-col h-full">
+              {/* Top Section with Back Button */}
+              <div className="p-4 border">
+                <Button
+                  variant="outline"
+                  className="text-foreground dark:text-secondary-foreground dark:border-white"
+                  onClick={goToPreviousStep}
+                >
+                  <ArrowLeft />
+                  Back
+                </Button>
+              </div>
 
-          {/* Bottom Section with Submit Button */}
+              {/* Middle Section */}
 
-          <div className="p-4 md:pr-16">
-            <div className="mx-auto flex justify-end">
-              <Button
-                variant="green"
-                size="lg"
-                type="button"
-                disabled={isLoading}
-                onClick={handleSubmit}
-              >
-                {isLoading ? (
-                  <LoaderCircle className="animate-spin" />
-                ) : (
-                  "Submit"
-                )}
-              </Button>
+              <div className="flex-grow flex flex-col">
+                {/* Title */}
+                <h1 className="text-2xl font-medium text-center my-8 mx-auto">
+                  Pick your physical card
+                </h1>
+
+                {/* Cards Grid */}
+
+                <div className="flex-grow flex flex-col">
+                  <div className="flex-grow flex items-center justify-center mx-6 md:mx-0">
+                    {selectedPhysicalCard ? (
+                      <SelectedPhysicalCard
+                        cardId={selectedPhysicalCard}
+                        formData={methods.watch()}
+                      />
+                    ) : (
+                      <h1 className="text-black">Select a card</h1>
+                    )}
+                  </div>
+                  <div className="h-20 md:h-24 ">
+                    <PhysicalCardCarousel
+                      selectedCardId={selectedPhysicalCard}
+                      setSelectedCardId={setSelectedPhysicalCard}
+                    />
+                  </div>
+                </div>
+              </div>
+
+              {/* Bottom Section with Submit Button */}
+
+              <div className="p-4 md:pr-16">
+                <div className="mx-auto flex justify-end">
+                  <button
+                    type="submit"
+                    className="px-8 py-2 bg-green-600 text-white rounded-full hover:bg-green-500"
+                    disabled={isLoading}
+                  >
+                    {isLoading ? (
+                      <LoaderCircle className="animate-spin" />
+                    ) : (
+                      "Submit"
+                    )}
+                  </button>
+                </div>
+              </div>
             </div>
-          </div>
-        </div>
-      )}
+          )}
+        </form>
+      </Form>
     </main>
   );
 }

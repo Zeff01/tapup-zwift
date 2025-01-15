@@ -17,6 +17,7 @@ export type Users = {
   serviceDescription?: string;
   servicePhotos?: string[];
   chosenTemplate?: string;
+  chosenPhysicalCard?: string;
   firstName?: string;
   lastName?: string;
   email: string;
@@ -91,6 +92,11 @@ export interface Photo {
 
 export interface Card extends Users {
   owner: string;
+}
+
+export interface PhysicalCardProps extends Card {
+  frontBackgroundImage?: StaticImageData;
+  backBackgroundImage?: StaticImageData;
 }
 
 export interface CardItem {

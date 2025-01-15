@@ -59,6 +59,7 @@ export const createPortfolioSchema = z.object({
     "template11",
     "template12",
   ]),
+  chosenPhysicalCard: z.enum(["card1", "card2", "card3", "card4"]),
   firstName: z.string().min(3, "First name must be at least 3 characters"),
   lastName: z.string().min(3, "Last name must be at least 3 characters"),
   email: z.string(),
