@@ -21,14 +21,14 @@ const Products = () => {
           </div>
           <div className="flex flex-col md:flex-row gap-3">
             <Image
-              src="/assets/cards/card2.png"
+              src="/assets/cards/card7.png"
               alt="card"
               width={250}
               height={200}
               className=""
             />
             <Image
-              src="/assets/cards/card3.png"
+              src="/assets/cards/card6.png"
               alt="card"
               width={250}
               height={150}
