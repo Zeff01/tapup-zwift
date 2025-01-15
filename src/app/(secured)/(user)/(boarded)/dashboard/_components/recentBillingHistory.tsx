@@ -1,4 +1,5 @@
 "use client";
+import ComingSoon from "@/components/ComingSoon";
 import { Button } from "@/components/ui/button";
 import { BillingHistoryItem } from "@/types/types";
 import { PlusIcon } from "lucide-react";
@@ -11,8 +12,7 @@ type RecentBillingProps = {
 };
 
 const RecentBillingHistory = ({ recentBilling }: RecentBillingProps) => {
-  const router = useRouter();
-
+  const route = useRouter();
   const [visibleCount, setVisibleCount] = useState(3); // Number of visible items
 
   const showMore = () => {
@@ -20,28 +20,23 @@ const RecentBillingHistory = ({ recentBilling }: RecentBillingProps) => {
   };
 
   return (
-    <div className="w-full mt-10">
+    <div className="w-full">
       {recentBilling.length === 0 ? (
-        <div className="mt-10 max-w-screen-md w-full mx-auto">
-          <div className="flex items-center justify-center mt-10">
-            <div className="max-w-screen-md w-full p-10  border border-muted flex flex-col items-center justify-center rounded-md">
-              <div className="w-[150px] h-[100px] border-2 rounded-sm bg-green-100 border-dashed border-greenBorder flex items-center justify-center">
-                <p className="font-semibold text-green-700">¯\_(ツ)_/¯</p>
+        <div className="max-w-screen-md w-full mx-auto">
+       
+           <div className="flex items-center justify-center mt-10">
+            <div className="w-full p-2 py-4 md:p-10 border border-muted flex flex-col items-center justify-center rounded-md">
+              <div className="relative w-[120px] md:w-[250px] aspect-video">
+                <Image src="/assets/shopImg.svg" alt="coming soon" fill className="object-cover" />
               </div>
               <h2 className="text-lg font-semibold mt-4">
-                No payment method set
+                Coming Soon
               </h2>
               <p className="text-sm text-muted-foreground text-center">
-                It looks like you have not set a payment method yet
+                This feature is currently under development
               </p>
             </div>
           </div>
-          <Button
-            className="w-full bg-buttonColor mt-2 hover:bg-green-600 text-primary text-sm"
-            onClick={() => router.push("/dashboard/payment")}
-          >
-            <PlusIcon /> Add a payment method
-          </Button>
         </div>
       ) : (
         <div className="w-full">
