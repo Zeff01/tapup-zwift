@@ -6,8 +6,15 @@ import html2canvas from "html2canvas";
 import { Users } from "@/types/types";
 import MoonLoader from "react-spinners/MoonLoader";
 import ImageWithLoading from "@/components/ImageWithLoading";
+import { createCardLink } from "@/lib/utils";
 
-export default function Canvas2Card({ user }: { user: Users }) {
+export default function Canvas2Card({
+  user,
+  isQrScanner,
+}: {
+  user: Users;
+  isQrScanner?: boolean;
+}) {
   const cardRef = useRef<HTMLDivElement>(null);
   const [dlTimeout, setDlTimeout] = useState(0);
 
@@ -81,7 +88,7 @@ export default function Canvas2Card({ user }: { user: Users }) {
               </div>
             </div>
             <div>
-              <QRCodeSVG value={user.user_link as string} size={100} />
+              <QRCodeSVG value={createCardLink(user.id as string)} size={100} />
             </div>
           </div>
         ) : (
@@ -97,13 +104,15 @@ export default function Canvas2Card({ user }: { user: Users }) {
           </div>
         )}
       </div>
-      <button
-        onClick={handleDownloadImage}
-        className="bg-custom-purple text-white px-6 py-2 font-semibold rounded-md active:scale-95 transition-all duration-150 disabled:opacity-50 disabled:cursor-not-allowed"
-        disabled={Boolean(!user || dlTimeout > 0)}
-      >
-        Convert to PNG
-      </button>
+      {!isQrScanner && (
+        <button
+          onClick={handleDownloadImage}
+          className="bg-custom-purple text-white px-6 py-2 font-semibold rounded-md active:scale-95 transition-all duration-150 disabled:opacity-50 disabled:cursor-not-allowed"
+          disabled={Boolean(!user || dlTimeout > 0)}
+        >
+          Convert to PNG
+        </button>
+      )}
     </div>
   );
 }

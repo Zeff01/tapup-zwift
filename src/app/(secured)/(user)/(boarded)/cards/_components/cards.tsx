@@ -8,6 +8,8 @@ import { useQuery } from "@tanstack/react-query";
 import { getCardsByOwner } from "@/lib/firebase/actions/card.action";
 import Loading from "@/src/app/loading";
 import { useConfirm } from "@/hooks/useConfirm";
+import { QrCode } from "lucide-react";
+import QrCodeModal from "@/components/qrcode/qrcode-modal";
 
 const Cards = () => {
   const [ConfirmDialog, confirm] = useConfirm(
@@ -29,12 +31,18 @@ const Cards = () => {
       <div className="px-4 flex flex-col min-h-full md:px-16 py-8">
         <div className="flex items-center justify-between">
           <h1 className="text-2xl md:text-4xl font-semibold">MY CARDS</h1>
-          <Link
-            href={"/cards/design-option"}
-            className="text-primary-foreground bg-green-500 rounded-lg md:text-lg px-6 py-2"
-          >
-            + Buy a card
-          </Link>
+
+          <div className="flex">
+            <Link
+              href={"/cards/design-option"}
+              className="text-primary-foreground bg-green-500 rounded-lg md:text-lg px-6 py-2"
+            >
+              + Buy a card
+            </Link>
+            <QrCodeModal
+              icon={<QrCode className="size-6 shrink-0" size={8} />}
+            />
+          </div>
         </div>
         {/* grid-cols-[repeat(auto-fill,minmax(18rem,1fr))] */}
         {/* grid-cols-[200px,fit-content(40rem),1fr] */}

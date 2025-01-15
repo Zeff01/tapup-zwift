@@ -5,7 +5,10 @@ import grids from "../../public/images/grid.png";
 
 const Products = () => {
   return (
-    <section className="py-8 lg:py-16  container items-center flex xl:flex-row flex-col" id="products">
+    <section
+      className="py-8 lg:py-16  container items-center flex xl:flex-row flex-col"
+      id="products"
+    >
       <div className="">
         <div className="flex items-start flex-col md:flex-row">
           <div className="md:w-[200px] mr-5 pb-4">
@@ -79,7 +82,9 @@ const Products = () => {
               />
             </div>
           </div>
-          <h2 className="md:text-4xl lg:text-5xl font-bold text-2xl">Using our</h2>
+          <h2 className="md:text-4xl lg:text-5xl font-bold text-2xl">
+            Using our
+          </h2>
           <h2 className="md:text-4xl lg:text-5xl text-green-500 font-bold text-2xl">
             card builder
           </h2>

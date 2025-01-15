@@ -7,9 +7,6 @@ import {
 } from "@/lib/zod-schema";
 import { z } from "zod";
 
-
-
-
 export type Users = {
   id?: string;
   coverPhotoUrl?: string;
@@ -20,6 +17,7 @@ export type Users = {
   serviceDescription?: string;
   servicePhotos?: string[];
   chosenTemplate?: string;
+  chosenPhysicalCard?: string;
   firstName?: string;
   lastName?: string;
   email: string;
@@ -36,6 +34,36 @@ export type Users = {
   userCode?: string;
   user_link?: string;
 };
+
+export type Notification = {
+  title: string;
+  message: string;
+  type: "success" | "error" | "warning" | "info";
+  timestamp: any;
+  read?: boolean;
+  userIds?: string[];
+  broadcast?: boolean;
+  excemptedUserIds?: string[];
+  userIdsRead?: string[];
+  actions?: "card/transfer";
+  transactionId?: string;
+};
+
+export type Transaction = {
+  type?: "card/transfer";
+  transactionId: string;
+  sender: string;
+  verificationCode: string;
+  receiver: string;
+  timestamp: any;
+  status: "pending" | "completed" | "failed";
+};
+
+export type Notifications = {
+  id: string;
+  data: Notification;
+}[];
+
 export interface ExtendedUserInterface extends Users {
   uid: string;
   role: string;
@@ -66,6 +94,11 @@ export interface Card extends Users {
   owner: string;
 }
 
+export interface PhysicalCardProps extends Card {
+  frontBackgroundImage?: StaticImageData;
+  backBackgroundImage?: StaticImageData;
+}
+
 export interface CardItem {
   image: string;
   title: string;
@@ -80,7 +113,6 @@ export type SignupData = z.infer<typeof signupSchema>;
 export type ForgotPasswordData = z.infer<typeof forgotPasswordSchema>;
 export type ResetPasswordData = z.infer<typeof resetPasswordSchema>;
 
-
 export type TapItemprops = {
   date: string; // ISO date string
   todayCount?: number | undefined;
@@ -91,7 +123,7 @@ export type TapItemprops = {
   position: string;
   companyImage: string;
   name?: string;
-}
+};
 
 export type BillingHistoryItem = {
   id: number;
