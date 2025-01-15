@@ -232,6 +232,16 @@ export const carouselCards = {
     image: "/assets/cards/gridImg.png",
     description: `Using our card builder, you can personalize your cards by adding text, images, and various design elements, allowing you to create something truly unique and special.`,
   },
+  card7: {
+    title: "Standard Blue Card",
+    image: "/assets/cards/card6.png",
+    description: `Using our card builder, you can personalize your cards by adding text, images, and various design elements, allowing you to create something truly unique and special.`,
+  },
+    card8: {
+   title: "Standard Blue Card",
+    image: "/assets/cards/card7.png",
+    description: `Using our card builder, you can personalize your cards by adding text, images, and various design elements, allowing you to create something truly unique and special.`,
+  },
 };
 
 export const businessList = [
