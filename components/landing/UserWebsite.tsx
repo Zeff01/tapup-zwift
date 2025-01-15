@@ -37,8 +37,8 @@ const UserWebsite = () => {
               or build your own
             </p>
             <div className="relative">
-              <button className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 p-3 bg-white  border  md:dark:shadow-[0_0_30px_30px_rgba(0,0,0,.8)] dark:shadow-[0_0_30px_30px_rgba(0,0,0,.8)] shadow-[0_0_30px_30px_rgba(255,255,255,1)] dark:bg-black text-primary rounded-md">
-                <FaScrewdriverWrench className="text-xl text-slate-400" />
+              <button className="absolute top-1/2 left-1/2 cursor-auto transform -translate-x-1/2 -translate-y-1/2 p-3 bg-white  border  md:dark:shadow-[0_0_30px_30px_rgba(0,0,0,.8)] dark:shadow-[0_0_30px_30px_rgba(0,0,0,.8)] shadow-[0_0_30px_30px_rgba(255,255,255,1)] dark:bg-black text-primary rounded-md">
+                <FaScrewdriverWrench className="text-xl text-slate-400 " />
               </button>
               <Image
                 className="md:h-[22rem] h-[16rem] w-[120px] md:w-[200px]"
