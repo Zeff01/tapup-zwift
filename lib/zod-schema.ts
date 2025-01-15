@@ -159,8 +159,8 @@ export const loginSchema = z.object({
 
 export const signupSchema = z
   .object({
-    firstName: z.string().min(3, "*"),
-    lastName: z.string().min(3, "*"),
+    firstName: z.string().min(3, { message: "Must be at least 3 characters " }),
+    lastName: z.string().min(3, { message: "Must be at least 3 characters" }),
     email: z.string().email({ message: "Invalid email address" }),
     password: z
       .string()

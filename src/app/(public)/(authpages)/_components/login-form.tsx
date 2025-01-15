@@ -32,7 +32,6 @@ import {
   FormField,
   FormItem,
   FormLabel,
-  FormMessage,
 } from "@/components/ui/form";
 import Social from "./social-buttons";
 import { loginHandler } from "@/lib/firebase/auth";
@@ -85,7 +84,6 @@ export function LogInForm() {
                   <FormItem>
                     <div className="flex items-center justify-between">
                       <FormLabel className="text-xs">Email Address</FormLabel>
-                      <FormMessage className="text-xs" />
                     </div>
                     <FormControl>
                       <Input
@@ -106,7 +104,6 @@ export function LogInForm() {
                   <FormItem>
                     <div className="flex items-center justify-between">
                       <FormLabel className="text-xs">Password</FormLabel>
-                      <FormMessage className="text-xs" />
                     </div>
                     <FormControl>
                       <Input

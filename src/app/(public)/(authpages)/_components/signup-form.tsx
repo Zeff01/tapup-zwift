@@ -34,7 +34,6 @@ import {
   FormField,
   FormItem,
   FormLabel,
-  FormMessage,
 } from "@/components/ui/form";
 import Social from "./social-buttons";
 import { SignupData } from "@/types/types";
@@ -83,7 +82,7 @@ export function RegisterForm() {
         <Form {...form}>
           <form onSubmit={form.handleSubmit(onSubmit)}>
             <div className="space-y-4 ">
-              <div className="flex gap-x-2">
+              <div className="flex flex-col gap-y-2 lg:gap-x-2 lg:flex-row ">
                 <FormField
                   control={form.control}
                   disabled={isLoading}
@@ -92,7 +91,6 @@ export function RegisterForm() {
                     <FormItem className="flex-1">
                       <div className="flex items-center justify-between">
                         <FormLabel className="text-xs">First Name</FormLabel>
-                        <FormMessage className="text-xs" />
                       </div>
                       <FormControl>
                         <Input
@@ -113,7 +111,6 @@ export function RegisterForm() {
                     <FormItem className="flex-1">
                       <div className="flex items-center justify-between">
                         <FormLabel className="text-xs">Last Name</FormLabel>
-                        <FormMessage className="text-xs" />
                       </div>
                       <FormControl>
                         <Input
@@ -136,7 +133,6 @@ export function RegisterForm() {
                   <FormItem>
                     <div className="flex items-center justify-between">
                       <FormLabel className=" text-xs">Email Address</FormLabel>
-                      <FormMessage className="text-xs" />
                     </div>
                     <FormControl>
                       <Input
@@ -157,7 +153,6 @@ export function RegisterForm() {
                   <FormItem>
                     <div className="flex items-center justify-between">
                       <FormLabel className=" text-xs">Password</FormLabel>
-                      <FormMessage className="text-xs" />
                     </div>
                     <FormControl>
                       <Input
@@ -180,7 +175,6 @@ export function RegisterForm() {
                       <FormLabel className=" text-xs">
                         Confirm Password
                       </FormLabel>
-                      <FormMessage className="text-xs" />
                     </div>
                     <FormControl>
                       <Input
