@@ -11,7 +11,7 @@ import {
 } from "lucide-react";
 import { CgProfile } from "react-icons/cg";
 import { RxDashboard } from "react-icons/rx";
-import { TbCards } from "react-icons/tb";
+import { TbCards, TbSettingsFilled } from "react-icons/tb";
 
 export const ROOT_ROUTE = "/";
 export const LOGIN_ROUTE = "/login";
@@ -250,9 +250,10 @@ export const businessList = [
 ];
 
 export const menuItems = [
-  { icon: RxDashboard, title: "Dashboard", href: "/dashboard" },
   { icon: CgProfile, title: "Profile", href: "/user" },
+  { icon: RxDashboard, title: "Dashboard", href: "/dashboard" },
   { icon: TbCards, title: "Cards", href: "/cards" },
+  { icon: TbSettingsFilled, title: "Settings", href: "/settings" },
 ];
 
 export const publicDomain =

@@ -55,12 +55,9 @@ export function LogInForm() {
     isSuccess,
   } = useMutation({
     mutationFn: loginHandler,
-    onSuccess: () => {
-      router.push("/dashboard");
-    },
   });
   const onSubmit = async (data: LoginData) => {
-    await loginHandlerMutation(data);
+    await loginHandlerMutation({ ...data, router });
   };
 
   const isLoading = isPending || isSuccess;

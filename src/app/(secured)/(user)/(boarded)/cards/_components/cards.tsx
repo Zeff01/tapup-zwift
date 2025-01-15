@@ -31,6 +31,7 @@ const Cards = () => {
       <div className="px-4 flex flex-col min-h-full md:px-16 py-8">
         <div className="flex items-center justify-between">
           <h1 className="text-2xl md:text-4xl font-semibold">MY CARDS</h1>
+
           <div className="flex">
             <Link
               href={"/cards/physicalCards"}

@@ -53,6 +53,36 @@ export const createCard = async ({
   }
 };
 
+interface DuplicateCardProp {
+  card_id: string;
+  owner_id: string;
+}
+
+export const duplicateCard = async ({
+  card_id,
+  owner_id,
+}: DuplicateCardProp) => {
+  if (!card_id) throw new Error("Parameters Missing");
+  const user = await authCurrentUser();
+  if (user !== owner_id) throw new Error("Auth user ID doesn't match");
+  const docRef = doc(firebaseDb, "cards", card_id);
+  try {
+    const docSnap = await getDoc(docRef);
+    if (docSnap.exists()) {
+      // Document data
+      const data = docSnap.data() as Card;
+      // console.log(data);
+      createCard({ user_id: data.owner, data });
+    } else {
+      // Document does not exist
+      console.log("No such document!");
+    }
+  } catch (error) {
+    console.log(error);
+    throw error;
+  }
+};
+
 export const getCardsByOwner = async (owner_id: string) => {
   try {
     if (!owner_id) throw new Error("Parameters Missing");
