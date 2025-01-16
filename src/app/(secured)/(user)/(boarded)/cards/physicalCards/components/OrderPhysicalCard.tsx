@@ -1,5 +1,8 @@
 "use client";
+
 import SelectedPhysicalCard from "@/components/forms/SelectedPhysicalCard";
+import { OrderCardsCarousel } from "@/components/ui/OrderCardsCarousel";
+import { cardItems } from "@/constants";
 import { PhysicalCardCarousel } from "@/components/PhysicalCardCarousel";
 import { createPortfolioSchema } from "@/lib/zod-schema";
 import React, { useState } from "react";
@@ -12,6 +15,8 @@ import { ShoppingCart, Trash } from "lucide-react";
 import Link from "next/link";
 import Cart from "./Cart";
 import ComingSoon from "@/components/ComingSoon";
+import Image from "next/image";
+
 export type ChosenPhysicalCardType = z.infer<
   typeof createPortfolioSchema
 >["chosenPhysicalCard"];
@@ -32,46 +37,22 @@ const OrderPhysicalCard = () => {
     if (quantity > 1) setQuantity(quantity - 1);
   };
 
-  // Define form
-  const methods = useForm<z.infer<typeof createPortfolioSchema>>({
-    resolver: zodResolver(createPortfolioSchema),
-    defaultValues: {
-      company: "",
-      companyBackground: "",
-      serviceDescription: "",
-      coverPhotoUrl: "",
-      servicePhotos: [],
-      profilePictureUrl: "",
-      position: "",
-      firstName: "",
-      lastName: "",
-      email: "",
-      number: "",
-      facebookUrl: "",
-      youtubeUrl: "",
-      instagramUrl: "",
-      twitterUrl: "",
-      linkedinUrl: "",
-      whatsappNumber: "",
-      skypeInviteUrl: "",
-      websiteUrl: "",
-      chosenTemplate: "template1",
-      chosenPhysicalCard: "card1",
-    },
-  });
-
   const [isComingSoon, setIsComingSoon] = useState(false);
 
   const handleClick = () => {
     setIsComingSoon((prev) => !prev);
   };
 
+  const selectedCard = cardItems.find(
+    (card) => card.id === selectedPhysicalCard
+  );
+
   return (
     <>
       {isComingSoon ? (
         <ComingSoon />
       ) : (
-        <div className="relative max-h-screen flex flex-col max-w-[370px] ">
+        <div className="relative max-h-screen flex flex-col max-w-sm">
           {/* Dim Background Overlay */}
           {isExpanded && (
             <div className="absolute inset-0 bg-black opacity-50 z-10"></div>
@@ -91,18 +72,28 @@ const OrderPhysicalCard = () => {
             <div className="flex-grow flex flex-col">
               <div className="flex-grow flex items-center justify-center mx-6 md:mx-0">
                 {selectedPhysicalCard ? (
-                  <SelectedPhysicalCard
-                    cardId={selectedPhysicalCard}
-                    formData={methods.watch()}
-                  />
+                  <div className="flex items-center aspect-[16/10]">
+                    {selectedCard && (
+                      <Image
+                        src={selectedCard.image}
+                        alt={selectedCard.title}
+                        width={300}
+                        height={200}
+                      />
+                    )}
+                  </div>
                 ) : (
                   <h1 className="text-black">Select a card</h1>
                 )}
               </div>
               <div className="h-20 md:h-24">
-                <PhysicalCardCarousel
+                <OrderCardsCarousel
                   selectedCardId={selectedPhysicalCard}
-                  setSelectedCardId={setSelectedPhysicalCard}
+                  setSelectedCardId={(id: string) =>
+                    // Update the state `selectedPhysicalCard` with the selected card's ID
+                    // Typecast the ID to ensure it matches the `ChosenPhysicalCardType` type
+                    setSelectedPhysicalCard(id as ChosenPhysicalCardType)
+                  }
                 />
               </div>
             </div>
