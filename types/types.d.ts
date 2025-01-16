@@ -1,10 +1,12 @@
 import { carouselCards } from "@/constants";
+
 import {
   forgotPasswordSchema,
   loginSchema,
   resetPasswordSchema,
   signupSchema,
 } from "@/lib/zod-schema";
+
 import { z } from "zod";
 
 export type Users = {
@@ -55,13 +57,9 @@ interface DeliveryOption {
   courier: Courier;
   estimatedDeliveryDate: Date;
 }
-
-interface CartItem {
-  productId: string;
-  productName: string;
+export interface CartItem {
+  product: PhysicalCardProduct;
   quantity: number;
-  price: number;
-  total: number;
 }
 
 interface Order {
@@ -108,6 +106,7 @@ export interface ExtendedUserInterface extends Users {
   role: string;
   onboarding: boolean;
 }
+
 export type UserState = ExtendedUserInterface | null;
 
 export type Template = {
@@ -139,17 +138,23 @@ export interface PhysicalCardProps extends Card {
 }
 
 export interface CardItem {
+  id: string;
   image: string;
   title: string;
   description: string;
   price: number;
 }
+
 export type CarouselCardKey = keyof typeof carouselCards;
+
 export type CarouselCard = (typeof carouselCards)[CarouselCardKey];
 
 export type LoginData = z.infer<typeof loginSchema>;
+
 export type SignupData = z.infer<typeof signupSchema>;
+
 export type ForgotPasswordData = z.infer<typeof forgotPasswordSchema>;
+
 export type ResetPasswordData = z.infer<typeof resetPasswordSchema>;
 
 export type TapItemprops = {
