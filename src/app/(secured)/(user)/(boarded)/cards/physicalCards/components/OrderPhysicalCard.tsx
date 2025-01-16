@@ -72,7 +72,7 @@ const OrderPhysicalCard = () => {
       {isComingSoon ? (
         <ComingSoon />
       ) : (
-        <div className="relative max-h-screen flex flex-col max-w-[370px] ">
+        <div className="relative max-h-screen flex flex-col max-w-sm">
           {/* Dim Background Overlay */}
           {isExpanded && (
             <div className="absolute inset-0 bg-black opacity-50 z-10"></div>
@@ -94,7 +94,7 @@ const OrderPhysicalCard = () => {
                 {selectedPhysicalCard ? (
                   <div className="flex items-center aspect-[16/10]">
                     <Image
-                      src={`/assets/${selectedPhysicalCard}-front.png`} // Assuming the image naming convention
+                      src={`/assets/${selectedPhysicalCard}-front.png`}
                       alt={selectedPhysicalCard}
                       width={300}
                       height={200}
