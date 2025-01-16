@@ -35,6 +35,45 @@ export type Users = {
   user_link?: string;
 };
 
+interface Address {
+  street: string;
+  city: string;
+  state: string;
+  postalCode: string;
+  country: string;
+}
+
+interface ShippingInfo {
+  recipientName: string;
+  contactNumber: string;
+  address: Address;
+}
+
+type Courier = "LBC" | "J&T Express";
+
+interface DeliveryOption {
+  courier: Courier;
+  estimatedDeliveryDate: Date;
+}
+
+interface CartItem {
+  productId: string;
+  productName: string;
+  quantity: number;
+  price: number;
+  total: number;
+}
+
+interface Order {
+  orderId: string;
+  items: CartItem[];
+  shippingInfo: ShippingInfo;
+  deliveryOption: DeliveryOption;
+  orderDate: Date;
+  totalAmount: number;
+  status: "Pending" | "Shipped" | "Delivered" | "Cancelled";
+}
+
 export type Notification = {
   title: string;
   message: string;

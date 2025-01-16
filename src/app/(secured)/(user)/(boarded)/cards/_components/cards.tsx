@@ -34,10 +34,10 @@ const Cards = () => {
 
           <div className="flex">
             <Link
-              href={"/cards/design-option"}
-              className="text-primary-foreground bg-green-500 rounded-lg md:text-lg px-6 py-2"
+              href={"/cards/physicalCards"}
+              className="text-primary-foreground mr-4 bg-green-500 rounded-lg md:text-lg px-6 py-2"
             >
-              + Buy a card
+              Buy a Card
             </Link>
             <QrCodeModal
               icon={<QrCode className="size-6 shrink-0" size={8} />}
