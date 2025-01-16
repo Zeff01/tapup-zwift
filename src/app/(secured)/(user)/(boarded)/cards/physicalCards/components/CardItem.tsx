@@ -17,9 +17,9 @@ const CardItem: React.FC<CardItemProps> = ({ imageSrc, title, price }) => {
   };
 
   return (
-    <div className="flex items-center p-4 border rounded-lg">
+    <div className="flex items-center p-4 rounded-lg">
       {/* Product Image */}
-      <div className="w-8 h-16 relative">
+      <div className="w-16 h-10 relative">
         <Image
           src={imageSrc}
           alt={title}
@@ -36,16 +36,18 @@ const CardItem: React.FC<CardItemProps> = ({ imageSrc, title, price }) => {
       </div>
 
       {/* Quantity Controls */}
-      <div className="flex items-center">
+      <div className="flex items-center gap-1">
         <button
-          className="w-8 h-8 border rounded-full flex items-center justify-center"
+          className="w-8 h-8 border rounded-lg flex items-center justify-center"
           onClick={decrementQuantity}
         >
           –
         </button>
-        <span className="mx-3">{quantity}</span>
+        <span className=" w-8 h-8 border rounded-lg flex items-center justify-center">
+          {quantity}
+        </span>
         <button
-          className="w-8 h-8 border rounded-full flex items-center justify-center"
+          className="w-8 h-8 border rounded-lg flex items-center justify-center"
           onClick={incrementQuantity}
         >
           +
