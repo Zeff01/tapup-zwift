@@ -12,6 +12,7 @@ import { ShoppingCart, Trash } from "lucide-react";
 import Link from "next/link";
 import Cart from "./Cart";
 import ComingSoon from "@/components/ComingSoon";
+import Image from "next/image";
 export type ChosenPhysicalCardType = z.infer<
   typeof createPortfolioSchema
 >["chosenPhysicalCard"];
@@ -91,10 +92,14 @@ const OrderPhysicalCard = () => {
             <div className="flex-grow flex flex-col">
               <div className="flex-grow flex items-center justify-center mx-6 md:mx-0">
                 {selectedPhysicalCard ? (
-                  <SelectedPhysicalCard
-                    cardId={selectedPhysicalCard}
-                    formData={methods.watch()}
-                  />
+                  <div className="flex items-center aspect-[16/10]">
+                    <Image
+                      src={`/assets/${selectedPhysicalCard}-front.png`} // Assuming the image naming convention
+                      alt={selectedPhysicalCard}
+                      width={300}
+                      height={200}
+                    />
+                  </div>
                 ) : (
                   <h1 className="text-black">Select a card</h1>
                 )}
