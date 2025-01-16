@@ -125,46 +125,44 @@ export const tapupLearnMoreList = [
 
 export const cardItems: CardItem[] = [
   {
-    image: "/assets/tapUp-card1.png",
+    id: "card1",
+    image: "/assets/cards/card1.png",
     title: "Standard Black Card",
     description:
       "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt elweofsaj ",
     price: 3000,
   },
   {
-    image: "/assets/tapUp-card2.png",
+    id: "card2",
+    image: "/assets/cards/card2.png",
     title: "Standard Yellow Card",
     description:
       "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt elweofsaj sed do eiusmod tempor incididunt elweofsaj sed do eiusmod tempor incididunt elweofsaj ",
     price: 3000,
   },
   {
-    image: "/assets/tapUp-card3.png",
+    id: "card3",
+    image: "/assets/cards/card3.png",
     title: "Standard Light Blue Card",
     description:
       "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt elweofsaj ",
     price: 4000,
   },
   {
-    image: "/assets/tapUp-card4.png",
+    id: "card4",
+    image: "/assets/cards/card4.png",
     title: "Standard Blue Card",
     description:
       "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt elweofsaj ",
     price: 2500,
   },
   {
-    image: "/assets/tapUp-card5.png",
+    id: "card5",
+    image: "/assets/cards/card5.png",
     title: "Standard White Card",
     description:
       "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt elweofsaj ",
     price: 3600,
-  },
-  {
-    image: "/assets/tapUp-card2.png",
-    title: "Standard Yellow Card",
-    description:
-      "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt elweofsaj ",
-    price: 3000,
   },
 ];
 
@@ -237,8 +235,8 @@ export const carouselCards = {
     image: "/assets/cards/card6.png",
     description: `Using our card builder, you can personalize your cards by adding text, images, and various design elements, allowing you to create something truly unique and special.`,
   },
-    card8: {
-   title: "Standard Blue Card",
+  card8: {
+    title: "Standard Blue Card",
     image: "/assets/cards/card7.png",
     description: `Using our card builder, you can personalize your cards by adding text, images, and various design elements, allowing you to create something truly unique and special.`,
   },
