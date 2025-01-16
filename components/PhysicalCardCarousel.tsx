@@ -97,3 +97,31 @@ export function PhysicalCardCarousel({
     </div>
   );
 }
+
+{
+  /* <div className="flex gap-10 justify-center items-center border border-blue-500 h-24">
+  {physicalCards.map((card) => (
+    <div
+      key={card.id}
+      className={`block transform hover:scale-105 transition-transform duration-300 ${
+        selectedCardId === card.id ? "border-2 rounded-lg border-green-500" : ""
+      }`}
+      onClick={() => setSelectedCardId(card.id)}
+    >
+      <Card className="bg-black rounded-lg overflow-hidden border-red-500 size-24">
+        <CardContent className="flex flex-col items-center justify-center p-1 size-24  ">
+          <Image
+            src={card.imageUrl}
+            alt={card.name}
+            width={40}
+            height={10}
+            className="rounded-md size-24  object-cover border border-rose-500"
+            layout="responsive"
+            onClick={() => setSelectedCardId(card.id)}
+          />
+        </CardContent>
+      </Card>
+    </div>
+  ))}
+</div>; */
+}
