@@ -34,7 +34,7 @@ const Cards = () => {
 
           <div className="flex">
             <Link
-              href={"/cards/physicalCards"}
+              href={"/cards/cardShop"}
               className="text-primary-foreground mr-4 bg-green-500 rounded-lg md:text-lg px-6 py-2"
             >
               Buy a Card
