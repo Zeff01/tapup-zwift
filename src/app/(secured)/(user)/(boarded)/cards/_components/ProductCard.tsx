@@ -1,19 +1,34 @@
-// components/CardItem.js
 import { useState } from "react";
 import Image from "next/image";
+import { CartItem, CardItem } from "@/types/types";
+import { useCart } from "@/providers/cart-provider";
 
-interface CardItemProps {
-  imageSrc: string;
-  title: string;
-  price: number;
+interface ProductCardProps {
+  item: CartItem;
 }
 
-const CardItem: React.FC<CardItemProps> = ({ imageSrc, title, price }) => {
-  const [quantity, setQuantity] = useState(1);
+const ProductCard: React.FC<ProductCardProps> = ({ item }) => {
+  const { dispatch } = useCart();
+  const [quantity, setQuantity] = useState(item.quantity);
 
-  const incrementQuantity = () => setQuantity(quantity + 1);
+  const incrementQuantity = () => {
+    const newQuantity = quantity + 1;
+    setQuantity(newQuantity);
+    dispatch({
+      type: "UPDATE_CART_ITEM_QUANTITY",
+      payload: { id: item.product.id, quantity: newQuantity },
+    });
+  };
+
   const decrementQuantity = () => {
-    if (quantity > 1) setQuantity(quantity - 1);
+    if (quantity > 1) {
+      const newQuantity = quantity - 1;
+      setQuantity(newQuantity);
+      dispatch({
+        type: "UPDATE_CART_ITEM_QUANTITY",
+        payload: { id: item.product.id, quantity: newQuantity },
+      });
+    }
   };
 
   return (
@@ -21,8 +36,8 @@ const CardItem: React.FC<CardItemProps> = ({ imageSrc, title, price }) => {
       {/* Product Image */}
       <div className="w-16 h-10 relative">
         <Image
-          src={imageSrc}
-          alt={title}
+          src={item.product.image}
+          alt={item.product.title}
           layout="fill"
           objectFit="cover"
           className="rounded-lg"
@@ -31,8 +46,8 @@ const CardItem: React.FC<CardItemProps> = ({ imageSrc, title, price }) => {
 
       {/* Product Details */}
       <div className="ml-4 flex-1">
-        <h3 className="text-lg font-semibold">{title}</h3>
-        <p className="text-gray-600">₱{price}</p>
+        <h3 className="text-lg font-semibold">{item.product.title}</h3>
+        <p>₱{item.product.price}</p>
       </div>
 
       {/* Quantity Controls */}
@@ -57,4 +72,4 @@ const CardItem: React.FC<CardItemProps> = ({ imageSrc, title, price }) => {
   );
 };
 
-export default CardItem;
+export default ProductCard;

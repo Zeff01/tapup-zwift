@@ -58,7 +58,7 @@ interface DeliveryOption {
   estimatedDeliveryDate: Date;
 }
 export interface CartItem {
-  product: PhysicalCardProduct;
+  product: CardItem;
   quantity: number;
 }
 
