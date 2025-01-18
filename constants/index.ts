@@ -126,7 +126,7 @@ export const tapupLearnMoreList = [
 export const cardItems: CardItem[] = [
   {
     id: "card1",
-    image: "/assets/cards/card1.png",
+    image: "/assets/cards/back/card1.png",
     title: "Standard Black Card",
     description:
       "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt elweofsaj ",
@@ -134,7 +134,7 @@ export const cardItems: CardItem[] = [
   },
   {
     id: "card2",
-    image: "/assets/cards/card2.png",
+    image: "/assets/cards/back/card2.png",
     title: "Standard Yellow Card",
     description:
       "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt elweofsaj sed do eiusmod tempor incididunt elweofsaj sed do eiusmod tempor incididunt elweofsaj ",
@@ -142,7 +142,7 @@ export const cardItems: CardItem[] = [
   },
   {
     id: "card3",
-    image: "/assets/cards/card3.png",
+    image: "/assets/cards/back/card3.png",
     title: "Standard Light Blue Card",
     description:
       "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt elweofsaj ",
@@ -150,7 +150,7 @@ export const cardItems: CardItem[] = [
   },
   {
     id: "card4",
-    image: "/assets/cards/card4.png",
+    image: "/assets/cards/back/card4.png",
     title: "Standard Blue Card",
     description:
       "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt elweofsaj ",
@@ -158,7 +158,7 @@ export const cardItems: CardItem[] = [
   },
   {
     id: "card5",
-    image: "/assets/cards/card5.png",
+    image: "/assets/cards/back/card5.png",
     title: "Standard White Card",
     description:
       "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt elweofsaj ",
