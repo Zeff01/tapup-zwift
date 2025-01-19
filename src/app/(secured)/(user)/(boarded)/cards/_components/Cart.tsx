@@ -3,7 +3,11 @@ import { useCart } from "@/providers/cart-provider";
 import { CartItem } from "@/types/types";
 import ProductCard from "./ProductCard";
 
-const Cart: React.FC = () => {
+interface CartProps {
+  showTrash: boolean;
+}
+
+const Cart: React.FC<CartProps> = ({ showTrash }) => {
   const { state } = useCart();
 
   return (
@@ -12,7 +16,11 @@ const Cart: React.FC = () => {
         <p>No items in the cart.</p>
       ) : (
         state.items.map((item: CartItem) => (
-          <ProductCard key={item.product.id} item={item} />
+          <ProductCard
+            key={item.product.id}
+            item={item}
+            showTrash={showTrash}
+          />
         ))
       )}
     </div>
