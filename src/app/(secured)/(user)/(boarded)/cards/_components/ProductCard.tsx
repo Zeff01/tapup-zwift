@@ -1,13 +1,16 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import Image from "next/image";
 import { CartItem, CardItem } from "@/types/types";
 import { useCart } from "@/providers/cart-provider";
+import { Trash } from "lucide-react";
+import { Button } from "@/components/ui/button";
 
 interface ProductCardProps {
   item: CartItem;
+  showTrash: boolean;
 }
 
-const ProductCard: React.FC<ProductCardProps> = ({ item }) => {
+const ProductCard: React.FC<ProductCardProps> = ({ item, showTrash }) => {
   const { dispatch } = useCart();
   const [quantity, setQuantity] = useState(item.quantity);
 
@@ -31,6 +34,10 @@ const ProductCard: React.FC<ProductCardProps> = ({ item }) => {
     }
   };
 
+  const handleRemoveFromCart = () => {
+    dispatch({ type: "REMOVE_FROM_CART", payload: { id: item.product.id } });
+  };
+
   return (
     <div className="flex items-center p-4 rounded-lg">
       {/* Product Image */}
@@ -51,23 +58,33 @@ const ProductCard: React.FC<ProductCardProps> = ({ item }) => {
       </div>
 
       {/* Quantity Controls */}
-      <div className="flex items-center gap-1">
-        <button
-          className="w-8 h-8 border rounded-lg flex items-center justify-center"
-          onClick={decrementQuantity}
+      {showTrash ? (
+        <Button
+          className="p-2 absolute right-4 text-destructive"
+          variant="outline"
+          onClick={handleRemoveFromCart}
         >
-          –
-        </button>
-        <span className=" w-8 h-8 border rounded-lg flex items-center justify-center">
-          {quantity}
-        </span>
-        <button
-          className="w-8 h-8 border rounded-lg flex items-center justify-center"
-          onClick={incrementQuantity}
-        >
-          +
-        </button>
-      </div>
+          <Trash />
+        </Button>
+      ) : (
+        <div className="flex items-center gap-1">
+          <button
+            className="w-8 h-8 border rounded-lg flex items-center justify-center"
+            onClick={decrementQuantity}
+          >
+            –
+          </button>
+          <span className=" w-8 h-8 border rounded-lg flex items-center justify-center">
+            {quantity}
+          </span>
+          <button
+            className="w-8 h-8 border rounded-lg flex items-center justify-center"
+            onClick={incrementQuantity}
+          >
+            +
+          </button>
+        </div>
+      )}
     </div>
   );
 };
