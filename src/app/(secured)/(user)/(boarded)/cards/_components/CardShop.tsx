@@ -4,10 +4,15 @@ import { OrderCardsCarousel } from "@/components/OrderCardsCarousel";
 import { cardItems } from "@/constants";
 import { createPortfolioSchema } from "@/lib/zod-schema";
 import React, { useState } from "react";
-import { IoArrowUp, IoArrowDown } from "react-icons/io5";
 import { z } from "zod";
 import { Button } from "@/components/ui/button";
-import { ShoppingCart, Trash } from "lucide-react";
+import {
+  ShoppingCart,
+  Trash,
+  ChevronDown,
+  ChevronUp,
+  Check,
+} from "lucide-react";
 import Cart from "./Cart";
 import ComingSoon from "@/components/ComingSoon";
 import Image from "next/image";
@@ -31,6 +36,10 @@ const OrderPhysicalCard = () => {
   );
 
   const [isExpanded, setIsExpanded] = useState(false);
+  const [isTrash, setIsTrash] = useState(false);
+  const handleButtonTrash = () => {
+    setIsTrash(!isTrash);
+  };
 
   const [selectedPhysicalCard, setSelectedPhysicalCard] =
     useState<ChosenPhysicalCardType>("card1");
@@ -160,16 +169,19 @@ const OrderPhysicalCard = () => {
           </div>
 
           {/* Arrow Toggle Button */}
-          <div className=" z-20 bg-white dark:bg-transparent flex justify-center border-t rounded-t-xl pt-4">
-            <button
-              onClick={toggleExpand}
-              className="p-2  bg-gray-100 dark:bg-transparent rounded-full "
-            >
-              {!isExpanded ? <IoArrowUp /> : <IoArrowDown />}
+          <div className="relative z-20 bg-white dark:bg-transparent flex justify-center items-center border-t rounded-t-xl pt-4">
+            <button onClick={toggleExpand} className="p-2 dark:bg-transparent ">
+              {!isExpanded ? <ChevronUp /> : <ChevronDown />}
             </button>
-            {/* <button className="p-2 bg-gray-100 rounded-full hover:bg-gray-200">
-          <Trash />
-        </button> */}
+            {isExpanded && (
+              <Button
+                className="p-2 absolute right-4"
+                variant="outline"
+                onClick={handleButtonTrash}
+              >
+                {!isTrash ? <Trash /> : <Check />}{" "}
+              </Button>
+            )}
           </div>
 
           {/* Collapsible Section */}
@@ -177,7 +189,7 @@ const OrderPhysicalCard = () => {
             <div className=" p-4 z-20 bg-white dark:bg-transparent ">
               <h2 className="text-lg font-bold mb-2">Your Cart</h2>
               <div className="space-y-4 w-full h-96 overflow-y-auto ">
-                <Cart />
+                <Cart showTrash={isTrash} />
               </div>
             </div>
           )}
