@@ -37,12 +37,12 @@ export type Users = {
   user_link?: string;
 };
 
-type Courier = "LBC" | "J&T Express";
-
-interface DeliveryOption {
-  courier: Courier;
-  estimatedDeliveryDate: Date;
+export interface DeliveryOption {
+  name: string;
+  image: string;
   shippingFee: number;
+  minDays: number;
+  maxDays: number;
 }
 export interface CartItem {
   product: CardItem;
