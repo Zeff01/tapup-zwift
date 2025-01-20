@@ -37,32 +37,19 @@ export type Users = {
   user_link?: string;
 };
 
-interface Address {
-  street: string;
-  city: string;
-  state: string;
-  postalCode: string;
-  country: string;
-}
-
-interface ShippingInfo {
-  recipientName: string;
-  contactNumber: string;
-  address: Address;
-}
-
 type Courier = "LBC" | "J&T Express";
 
 interface DeliveryOption {
   courier: Courier;
   estimatedDeliveryDate: Date;
+  shippingFee: number;
 }
 export interface CartItem {
   product: CardItem;
   quantity: number;
 }
 
-interface Order {
+export interface Order {
   orderId: string;
   items: CartItem[];
   shippingInfo: ShippingInfo;
@@ -70,6 +57,18 @@ interface Order {
   orderDate: Date;
   totalAmount: number;
   status: "Pending" | "Shipped" | "Delivered" | "Cancelled";
+}
+export interface Address {
+  city: string;
+  street: string;
+  unit: string;
+  postalCode: string;
+}
+
+export interface ShippingInfo {
+  recipientName: string;
+  contactNumber: string;
+  address: Address;
 }
 
 export type Notification = {
