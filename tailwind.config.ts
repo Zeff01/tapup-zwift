@@ -40,6 +40,7 @@ const config = {
         blueTemplate: "#1976D2",
         offWhiteTemplate: "#F2F2F2",
         footerBlueTemplate: "#143583",
+        inputOnChangeBg: "#E7F5EA",
         placeholder: {
           input: "#383839",
         },
