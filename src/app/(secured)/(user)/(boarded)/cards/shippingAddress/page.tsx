@@ -1,9 +1,13 @@
 import ShippingAddress from "../_components/ShippingAddress";
 
+import { ShippingInfoProvider } from "@/providers/shipping-info-provider";
+
 const Page = () => {
   return (
     <main className="w-full flex justify-center h-full">
-      <ShippingAddress />
+      <ShippingInfoProvider>
+        <ShippingAddress />
+      </ShippingInfoProvider>
     </main>
   );
 };
