@@ -1,7 +1,7 @@
 "use client";
 
-import * as React from "react";
-import { useForm, SubmitHandler } from "react-hook-form";
+import React, { useState } from "react";
+import { useForm, SubmitHandler, Controller } from "react-hook-form";
 import {
   Form,
   FormItem,
@@ -11,42 +11,55 @@ import {
   FormMessage,
   FormField,
 } from "@/components/ui/form";
-import { useState } from "react";
 import { PhoneInput } from "../ui/phone-input";
 import { Button } from "../ui/button";
 import { ShippingInfo } from "@/types/types";
+import { useShippingInfo } from "@/providers/shipping-info-provider";
+import { toast } from "react-toastify";
 
 const ShippingInfoForm: React.FC = () => {
-  const methods = useForm<ShippingInfo>();
-  const { handleSubmit } = methods;
+  const { state, setState } = useShippingInfo();
 
-  const onSubmit: SubmitHandler<ShippingInfo> = (data) => {
-    console.log(data);
+  const methods = useForm({
+    defaultValues: state.shippingInfo || {
+      recipientName: "",
+      contactNumber: "",
+      address: {
+        city: "",
+        street: "",
+        unit: "",
+        postalCode: "",
+      },
+    },
+  });
+
+  const { handleSubmit, control } = methods;
+
+  const onSubmit: SubmitHandler<any> = (data) => {
+    toast.success("Address saved successfully");
+    setState({ ...state, shippingInfo: data });
   };
 
   return (
     <Form {...methods}>
-      <form onSubmit={handleSubmit(onSubmit)} className="space-y-4 mx-4 mb-4">
+      <form onSubmit={handleSubmit(onSubmit)} className="space-y-6 mx-4 mb-4">
         {/* Contact */}
-        <div className="">
+        <div>
           <h3 className="text-muted-foreground font-semibold md:text-lg text-sm py-3">
             Contact
           </h3>
-          <div
-            className=" max-w-screen-md w-full border border-muted flex flex-col
-           p-3 rounded-md gap-2"
-          >
+          <div className="max-w-screen-md w-full border border-muted p-4 rounded-md gap-4">
             <FormField
               name="recipientName"
               render={({ field }) => (
-                <FormItem className="flex flex-col">
-                  <FormLabel>Recipient&apos; Name</FormLabel>
+                <FormItem>
+                  <FormLabel>Recipient&apos;s Name</FormLabel>
                   <FormControl>
                     <input
                       {...field}
                       type="text"
-                      className="border border-muted rounded-md p-2"
-                      placeholder="Recipient Name"
+                      className="border border-muted rounded-md p-2 w-full focus:bg-inputOnChangeBg focus:outline-none"
+                      placeholder="Enter recipient's name"
                     />
                   </FormControl>
                   <FormMessage />
@@ -54,47 +67,46 @@ const ShippingInfoForm: React.FC = () => {
               )}
             />
             <FormField
-              name="number"
-              render={({ field }) => (
-                <div className="flex flex-col gap-2">
-                  <FormLabel className="text-14 w-full max-w-[280px] font-medium ">
-                    {"Phone Number"}:
-                    {true && <span className="text-red-500 ml-1">*</span>}
-                  </FormLabel>
-                  <div className="flex w-full flex-col">
-                    <FormControl>
-                      <PhoneInput
-                        defaultCountry="PH"
-                        placeholder="Enter your phone number"
-                        {...field}
-                      />
-                    </FormControl>
-                    <FormMessage className="text-12 text-red-500 mt-2" />
-                  </div>
-                </div>
+              name="contactNumber"
+              render={() => (
+                <FormItem>
+                  <FormLabel>Contact Number</FormLabel>
+                  <FormControl>
+                    <Controller
+                      name="contactNumber"
+                      control={control}
+                      render={({ field }) => (
+                        <PhoneInput
+                          {...field}
+                          defaultCountry="PH"
+                          placeholder="Enter your phone number"
+                        />
+                      )}
+                    />
+                  </FormControl>
+                  <FormMessage />
+                </FormItem>
               )}
             />
           </div>
         </div>
+
         {/* Address */}
-        <div className="">
+        <div>
           <h3 className="text-muted-foreground font-semibold md:text-lg text-sm py-3">
             Address
           </h3>
-          <div
-            className=" max-w-screen-md w-full border border-muted flex flex-col
-           p-3 rounded-md gap-2"
-          >
+          <div className="max-w-screen-md w-full border border-muted p-4 rounded-md gap-4">
             <FormField
-              name="region"
+              name="address.city"
               render={({ field }) => (
-                <FormItem className="flex flex-col">
+                <FormItem>
                   <FormLabel>Region / City / District</FormLabel>
                   <FormControl>
                     <input
                       {...field}
                       type="text"
-                      className="border border-muted rounded-md p-2 "
+                      className="border border-muted rounded-md p-2 w-full focus:bg-inputOnChangeBg focus:outline-none"
                       placeholder="Enter your region / city / district"
                     />
                   </FormControl>
@@ -103,16 +115,16 @@ const ShippingInfoForm: React.FC = () => {
               )}
             />
             <FormField
-              name="street"
+              name="address.street"
               render={({ field }) => (
-                <FormItem className="flex flex-col">
-                  <FormLabel>Street/ Building Name</FormLabel>
+                <FormItem>
+                  <FormLabel>Street / Building Name</FormLabel>
                   <FormControl>
                     <input
                       {...field}
                       type="text"
-                      className="border border-muted rounded-md p-2 "
-                      placeholder="Sesame Street"
+                      className="border border-muted rounded-md p-2 w-full focus:bg-inputOnChangeBg focus:outline-none"
+                      placeholder="Enter your street or building name"
                     />
                   </FormControl>
                   <FormMessage />
@@ -120,16 +132,16 @@ const ShippingInfoForm: React.FC = () => {
               )}
             />
             <FormField
-              name="unit"
+              name="address.unit"
               render={({ field }) => (
-                <FormItem className="flex flex-col">
+                <FormItem>
                   <FormLabel>Unit Floor</FormLabel>
                   <FormControl>
                     <input
                       {...field}
                       type="text"
-                      className="border border-muted rounded-md p-2 "
-                      placeholder="123"
+                      className="border border-muted rounded-md p-2 w-full focus:bg-inputOnChangeBg focus:outline-none"
+                      placeholder="Enter your unit or floor number"
                     />
                   </FormControl>
                   <FormMessage />
@@ -137,16 +149,16 @@ const ShippingInfoForm: React.FC = () => {
               )}
             />
             <FormField
-              name="postalCode"
+              name="address.postalCode"
               render={({ field }) => (
-                <FormItem className="flex flex-col">
-                  <FormLabel>Postal COde</FormLabel>
+                <FormItem>
+                  <FormLabel>Postal Code</FormLabel>
                   <FormControl>
                     <input
                       {...field}
                       type="text"
-                      className="border border-muted rounded-md p-2 "
-                      placeholder="Enter Postal Code"
+                      className="border border-muted rounded-md p-2 w-full focus:bg-inputOnChangeBg focus:outline-none"
+                      placeholder="Enter your postal code"
                     />
                   </FormControl>
                   <FormMessage />
@@ -155,8 +167,8 @@ const ShippingInfoForm: React.FC = () => {
             />
           </div>
         </div>
+
         <Button type="submit" variant="default" className="w-full my-3">
-          {" "}
           Submit
         </Button>
       </form>

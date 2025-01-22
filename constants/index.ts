@@ -202,7 +202,6 @@ export const stepItem = [
 
 export const courierList = [
   {
-    id: "courier1",
     name: "JRS Express",
     image: "/assets/courier/j&t.png",
     shippingFee: 50,
@@ -210,7 +209,6 @@ export const courierList = [
     maxDays: 5,
   },
   {
-    id: "courier2",
     name: "LBC",
     image: "/assets/courier/lbc.png",
     shippingFee: 50,
