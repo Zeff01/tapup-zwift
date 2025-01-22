@@ -36,7 +36,7 @@ const getTapContextText = (tap: TapItemprops): string => {
   }
 };
 const TapItem: React.FC<TapItemprops> = (props) => {
-  console.log(getTapContextText(props));
+
   const { company, position, companyImage, total } = props;
 
   return (
@@ -47,18 +47,18 @@ const TapItem: React.FC<TapItemprops> = (props) => {
           alt={company}
           width={50}
           height={50}
-          className="rounded-sm border border-border md:h-[4rem] md:w-[4rem]"
+          className="rounded-sm border border-border md:h-[4rem] md:w-[4rem] lg:h-[3rem] lg:w-[3rem] "
         />
         <div>
-          <h3 className="font-bold md:text-lg">{company}</h3>
-          <p className="text-muted-foreground text-sm md:text-base">
+          <h3 className="font-bold md:text-lg lg:text-sm xl:text-lg">{company}</h3>
+          <p className="text-muted-foreground text-sm md:text-base lg:text-xs xl:text-sm">
             {position}
           </p>
         </div>
       </div>
       <div className="text-green-500 text-sm md:text-base text-right">
-        <span>{getTapContextText(props)}</span>
-        <p className="text-muted-foreground text-right">{total} total</p>
+        <span className="lg:text-sm text-base xl:text-base">{getTapContextText(props)}</span>
+        <p className="text-muted-foreground text-right lg:text-xs xl:text-base">{total} total</p>
       </div>
     </div>
   );

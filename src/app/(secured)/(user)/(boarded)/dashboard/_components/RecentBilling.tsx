@@ -24,7 +24,7 @@ const RecentBillingHistory = ({ recentBilling }: RecentBillingProps) => {
       {recentBilling.length === 0 ? (
         <div className="max-w-screen-md w-full mx-auto">
        
-           <div className="flex items-center justify-center mt-10">
+           <div className="flex items-center justify-center mt-5">
             <div className="w-full p-2 py-4 md:p-10 border border-muted flex flex-col items-center justify-center rounded-md">
               <div className="relative w-[120px] md:w-[250px] aspect-video">
                 <Image src="/assets/shopImg.svg" alt="coming soon" fill className="object-cover" />
