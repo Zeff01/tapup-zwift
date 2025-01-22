@@ -21,18 +21,18 @@ type Props = {
 };
 
 const AvatarIcon = ({ img, className }: Props) => {
-  const { logOutUser, isAuthenticated, user } = useUserContext();
+  // const { logOutUser, isAuthenticated, user } = useUserContext();
   return (
     <DropdownMenu>
       <DropdownMenuTrigger>
         <Avatar className={cn(className)}>
-          <AvatarImage src={isAuthenticated ? img : ""} />
+          {/* <AvatarImage src={isAuthenticated ? img : ""} /> */}
           <AvatarFallback className="bg-secondary">
             <UserIcon className="text-primary" />
           </AvatarFallback>
         </Avatar>
       </DropdownMenuTrigger>
-      {isAuthenticated ? (
+      {/* {isAuthenticated ? (
         <DropdownMenuContent>
           <DropdownMenuLabel>My Account</DropdownMenuLabel>
           <DropdownMenuSeparator />
@@ -40,13 +40,13 @@ const AvatarIcon = ({ img, className }: Props) => {
             <DropdownMenuItem>Dashboard</DropdownMenuItem>
           </Link>
           <DropdownMenuSeparator />
-          <Link href={`/user/${user?.uid}`}>
+          <Link href={`/site/${user?.uid}`}>
             <DropdownMenuItem>Profile</DropdownMenuItem>
           </Link>
           <Link href={`/card/${user?.uid}`}>
             <DropdownMenuItem>Card</DropdownMenuItem>
           </Link>
-          <Link href={`/update/${user?.uid}`}>
+          <Link href={`/user/update/${user?.uid}`}>
             <DropdownMenuItem>User Settings</DropdownMenuItem>
           </Link>
           <DropdownMenuSeparator />
@@ -66,7 +66,7 @@ const AvatarIcon = ({ img, className }: Props) => {
             <DropdownMenuItem>Sign Up</DropdownMenuItem>
           </Link>
         </DropdownMenuContent>
-      )}
+      )} */}
     </DropdownMenu>
   );
 };

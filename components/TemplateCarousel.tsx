@@ -56,6 +56,42 @@ const templates: Template[] = [
     imageUrl: "/assets/template6.png",
     route: "/create/template/6",
   },
+  {
+    id: "template9",
+    name: "Business",
+    imageUrl: "/assets/template9.png",
+    route: "/create/template/9",
+  },
+  {
+    id: "template10",
+    name: "Purple Aura",
+    imageUrl: "/assets/template10.png",
+    route: "/create/template/10",
+  },
+  {
+    id: "template11",
+    name: "Sky",
+    imageUrl: "/assets/template11.png",
+    route: "/create/template/11",
+  },
+  {
+    id: "template12",
+    name: "Simple White",
+    imageUrl: "/assets/template12.png",
+    route: "/create/template/12",
+  },
+  {
+    id: "template7",
+    name: "Simple White",
+    imageUrl: "/assets/template6.png",
+    route: "/create/template/7",
+  },
+  {
+    id: "template8",
+    name: "Simple White",
+    imageUrl: "/assets/template6.png",
+    route: "/create/template/8",
+  },
 ];
 
 interface TemplateCarouselProps {
@@ -99,22 +135,6 @@ export function TemplateCarousel({
                     <h3 className="text-sm font-semibold mt-2">
                       {template.name}
                     </h3>
-                    <div className="flex items-center gap-4 mt-2">
-                      <div
-                        className="bg-green-600 text-white py-1 px-2 text-xs rounded hover:bg-green-700"
-                        onClick={() => setSelectedTemplateId(template.id)}
-                      >
-                        Select
-                      </div>
-                      <Link
-                        href={`/create/template/${template.id}`}
-                        passHref
-                        className="flex items-center hover:text-white/70 duration-300"
-                        target="_blank"
-                      >
-                        <EyeIcon className="w-4 h-4" />
-                      </Link>
-                    </div>
                   </CardContent>
                 </Card>
               </div>

@@ -1,6 +1,6 @@
 "use client";
-import { UserProfile } from "@/types/types";
-import { downloadVCard } from "@/lib/vCardUtils";
+import { Card } from "@/types/types";
+import { downloadVCard } from "@/lib/utils";
 
 import Image from "next/image";
 import profilePic from "@/public/assets/template4samplepic.png";
@@ -23,7 +23,7 @@ const ProfileInfo = ({
   number,
   websiteUrl,
   chosenTemplate,
-}: UserProfile) => {
+}: Partial<Card>) => {
   const userProfile = {
     firstName,
     lastName,
@@ -35,8 +35,8 @@ const ProfileInfo = ({
   };
 
   return (
-    <section className="flex flex-col items-center relative justify-center max-w-[320px] mx-auto shadow-xl">
-      <div className="relative w-full h-[13rem] p-0 m-0">
+    <section className="flex flex-col items-center relative justify-center mx-auto shadow-xl">
+      <div className="relative w-full h-48">
         <Image
           src={coverPhotoUrl || profileBgImage}
           alt="Profile image"
@@ -44,7 +44,7 @@ const ProfileInfo = ({
           className="object-cover"
         />
       </div>
-      <div className="flex max-w-[440px] w-full justify-between">
+      <div className="flex w-full justify-between">
         <div className="flex flex-col">
           <div className="w-[7rem] relative h-[7rem] bottom-[4rem] left-[2rem]">
             <Image

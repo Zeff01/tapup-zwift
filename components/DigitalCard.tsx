@@ -1,13 +1,16 @@
 "use client";
 
-import { UserState } from "@/providers/user-provider";
-import { deleteCardById } from "@/src/lib/firebase/store/card.action";
+import { UserState } from "@/types/types";
+import {
+  deleteCardById,
+  duplicateCard,
+} from "@/lib/firebase/actions/card.action";
 import { Card } from "@/types/types";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
-import { Edit2, Router, Trash, View, Link2, Copy } from "lucide-react";
+import { Copy, Edit2, Link2, Trash, EyeIcon } from "lucide-react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
-import React from "react";
+import React, { useEffect } from "react";
 import { toast } from "react-toastify";
 
 type Prop = {
@@ -17,8 +20,23 @@ type Prop = {
 };
 
 const DigitalCard = ({ card, confirm, user }: Prop) => {
+  const domain =
+    process.env.NODE_ENV === "development"
+      ? process.env.NEXT_PUBLIC_RESET_PASSWORD_URL_DEV
+      : process.env.NEXT_PUBLIC_RESET_PASSWORD_URL_PROD;
   const router = useRouter();
   const queryClient = useQueryClient();
+
+  const { mutate: duplicateCardMutation } = useMutation({
+    mutationFn: duplicateCard,
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ["cards", user?.uid] });
+      // toast.success("Card duplicated successfully");
+    },
+    onError: () => {
+      toast.error("Something went wrong");
+    },
+  });
 
   const { mutate: deleteCardMutation } = useMutation({
     mutationFn: deleteCardById,
@@ -30,7 +48,9 @@ const DigitalCard = ({ card, confirm, user }: Prop) => {
       toast.error("Something went wrong");
     },
   });
-  const handleDelete = async (e: React.MouseEvent<SVGElement, MouseEvent>) => {
+  const handleDelete = async (
+    e: React.MouseEvent<HTMLSpanElement, MouseEvent>
+  ) => {
     if (!card.id) return;
     e.stopPropagation();
     const ok = await confirm(
@@ -49,19 +69,55 @@ const DigitalCard = ({ card, confirm, user }: Prop) => {
     deleteCardMutation({ cardId: card.id });
   };
 
-  const handleUpdate = async (e: React.MouseEvent<SVGElement, MouseEvent>) => {
+  const handleUpdate = async (
+    e: React.MouseEvent<HTMLSpanElement, MouseEvent>
+  ) => {
     if (!card.id) return;
     e.stopPropagation();
     router.push(`/cards/update/${card.id}`);
   };
-  const handleCopy = (e: React.MouseEvent<SVGElement, MouseEvent>) => {
+  const handleCopy = (e: React.MouseEvent<HTMLSpanElement, MouseEvent>) => {
     e.stopPropagation();
+    navigator.clipboard.writeText(`${domain}/site/${card.id}`);
+    toast.success("Link Copied to clipboard");
   };
-  const handleLink = (e: React.MouseEvent<SVGElement, MouseEvent>) => {
+  const handleDuplicate = async (
+    e: React.MouseEvent<HTMLSpanElement, MouseEvent>
+  ) => {
+    if (!card.id) return;
     e.stopPropagation();
+    const ok = await confirm(
+      undefined,
+      <>
+        Confirm{" "}
+        <span className="font-bold text-destructive">
+          {card.firstName + " " + card.lastName}{" "}
+        </span>{" "}
+        card duplication.
+      </>
+    );
+
+    if (!ok) return;
+
+    duplicateCardMutation({ card_id: card.id!, owner_id: card.owner! });
   };
+
+  const iconAndFunctionMap = [
+    {
+      icon: Trash,
+      fn: handleDelete,
+    },
+    {
+      icon: Edit2,
+      fn: handleUpdate,
+    },
+    {
+      icon: Copy,
+      fn: handleDuplicate,
+    },
+  ];
   return (
-    <div className="w-full max-w-[320px] sm:max-w-none sm:h-full aspect-[340/208] hover:scale-105 transition-transform duration-200 flex justify-between text-white bg-black rounded-[30px]">
+    <div className="w-full aspect-[340/208] hover:scale-105 transition-transform duration-200 flex justify-between text-secondary bg-foreground rounded-[30px] overflow-hidden">
       <Link
         href={`/cards/${card.id}`}
         prefetch
@@ -77,15 +133,34 @@ const DigitalCard = ({ card, confirm, user }: Prop) => {
           {/* <p className="text-xs mt-4">{`${publicDomain}/profile/${card.id}`}</p> */}
         </div>
       </Link>
-      <div className="flex flex-col px-4 py-6 justify-between items-center">
-        <Trash
-          size={20}
-          onClick={handleDelete}
-          className="cursor-pointer hover:text-destructive "
-        />
-        <Edit2 size={20} className="cursor-pointer" onClick={handleUpdate} />
-        <Copy size={20} onClick={handleCopy} />
-        <Link2 size={20} onClick={handleLink} />
+      <div className="flex flex-col justify-center items-center bg-foreground hover:bg-primaryBackground hover:text-primary  transition">
+        {iconAndFunctionMap.map((item, index) => {
+          const Icon = item.icon;
+          return (
+            <span
+              key={index}
+              className="px-3 py-3 2xl:py-2 hover:opacity-30 cursor-pointer"
+              onClick={item.fn}
+            >
+              <Icon className="size-4" />
+            </span>
+          );
+        })}
+        <span
+          className="px-3 py-3 2xl:py-2 hover:opacity-30 cursor-pointer"
+          onClick={handleCopy}
+        >
+          <Link2 className="size-4" />
+        </span>
+        <Link
+          href={`/site/${card.id}`}
+          className="px-3 py-3 2xl:py-2 hover:opacity-30 cursor-pointer"
+          prefetch
+          target="_blank"
+          rel="noopener noreferrer"
+        >
+          <EyeIcon className="size-4" />
+        </Link>
       </div>
     </div>
   );

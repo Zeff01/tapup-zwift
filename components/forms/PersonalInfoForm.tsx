@@ -1,15 +1,27 @@
+"use client";
+
 import React from "react";
 import CustomInput from "@/components/CustomInput";
 import { FormControl, FormField, FormLabel, FormMessage } from "../ui/form";
-import { PhoneInput } from "../PhoneInput";
+import { PhoneInput } from "../ui/phone-input";
 interface PersonalInfoFormProps {
   control: any;
+  isCard?: boolean;
 }
 
-const PersonalInfoForm: React.FC<PersonalInfoFormProps> = ({ control }) => {
+const PersonalInfoForm: React.FC<PersonalInfoFormProps> = ({
+  control,
+  isCard,
+}) => {
   return (
     <div className="space-y-4">
-      <h1 className="text-lg font-semibold mb-6">Personal Information</h1>
+      <CustomInput
+        control={control}
+        name="position"
+        label="Position"
+        placeholder="Enter your position in your company"
+        required={true}
+      />
       <CustomInput
         control={control}
         name="firstName"
@@ -23,6 +35,14 @@ const PersonalInfoForm: React.FC<PersonalInfoFormProps> = ({ control }) => {
         label="Last Name"
         placeholder="Enter your last name"
         required={true}
+      />
+      <CustomInput
+        control={control}
+        name="email"
+        label="Email"
+        placeholder="Enter your email"
+        required={true}
+        disabled={!isCard}
       />
       <FormField
         control={control}

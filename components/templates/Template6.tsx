@@ -1,5 +1,5 @@
 import React from "react";
-import { UserProfile } from "@/types/types";
+import { Card } from "@/types/types";
 import ProfileInfo from "../profile/profile-info";
 import ProfileSocials from "../profile/profile-socials";
 import CarouselService from "../profile/carousel-service";
@@ -8,15 +8,15 @@ import Testimonials from "../profile/testimonials";
 import Footer from "../profile/footer";
 
 interface ProfilePageProps {
-  userData: UserProfile;
+  userData: Card;
 }
 
 const Template6: React.FC<ProfilePageProps> = ({ userData }) => {
   const { servicePhotos = [], serviceDescription } = userData;
   return (
-    <div className="overflow-y-auto overflow-x-hidden max-w-[320px] mx-auto bg-white">
+    <div className="overflow-y-auto overflow-x-hidden mx-auto max-w-[480px] bg-white">
       <ProfileInfo {...userData} />
-      <div className="shadow-xl max-w-[320px] mx-auto">
+      <div className="shadow-xl  w-full mx-auto ">
         <ProfileSocials {...userData} />
         <CarouselService
           servicePhotos={servicePhotos}

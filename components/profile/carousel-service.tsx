@@ -49,7 +49,7 @@ const CarouselService: React.FC<{
           <CarouselContent>
             {servicePhotos.length > 0 ? (
               <CarouselItem className="flex justify-center ">
-                <div className="cursor-pointer relative h-[12rem] overflow-hidden aspect-video pl-0">
+                <div className="cursor-pointer relative w-[11rem] aspect-square md:w-[15rem]">
                   <Image
                     src={servicePhotos[currentSlideIndex]}
                     alt={`Service ${currentSlideIndex + 1}`}
@@ -60,7 +60,7 @@ const CarouselService: React.FC<{
               </CarouselItem>
             ) : (
               <CarouselItem className="flex justify-center">
-                <div className="cursor-pointer relative w-[13rem] aspect-square pl-0">
+                <div className="cursor-pointer relative w-[11rem] aspect-square md:w-[15rem]">
                   <Image
                     src="/assets/profile-service-image.png"
                     alt="Default Service"
@@ -73,13 +73,15 @@ const CarouselService: React.FC<{
           </CarouselContent>
 
           <CarouselPrevious
+            type="button"
             onClick={handlePrevious}
-            className="left-2 md:left-1 border-black"
+            className="left-[-40px] border-black text-primary bg-secondary"
             disabled={currentSlideIndex === 0}
           />
           <CarouselNext
+            type="button"
             onClick={handleNext}
-            className="right-2 md:right-1 border-black"
+            className="right-[-40px] border-black text-primary bg-secondary"
             disabled={currentSlideIndex === servicePhotos.length - 1}
           />
         </Carousel>

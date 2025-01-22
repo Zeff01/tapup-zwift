@@ -2,30 +2,33 @@
 import { useState, useEffect } from "react";
 import Image from "next/image";
 import { IoMdClose } from "react-icons/io";
-import { Photo } from "@/src/lib/firebase/store/users.type";
+import { Photo } from "@/types/types";
 import { Loader2, LoaderCircle } from "lucide-react";
 import Cropper from "@/components/Cropper";
 import { useForm } from "react-hook-form";
 import { Form } from "@/components/ui/form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { z } from "zod";
-import { createPortfolioSchema } from "@/lib/utils";
+import { createPortfolioSchema } from "@/lib/zod-schema";
 import { TemplateCarousel } from "@/components/TemplateCarousel";
 import SocialLinksForm from "@/components/forms/SocialLinkForm";
 import PersonalInfoForm from "@/components/forms/PersonalInfoForm";
 import CompanyInfoForm from "@/components/forms/CompanyInfoForm";
 import ImageLoaded from "@/components/ImageLoaded";
-import { Card } from "@/types/types";
-import {
-  ExtendedUserInterface,
-  useUserContext,
-} from "@/providers/user-provider";
+import { useUserContext } from "@/providers/user-provider";
+
+import { ExtendedUserInterface } from "@/types/types";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
-import { updateCardById } from "@/src/lib/firebase/store/card.action";
+import { updateCardById } from "@/lib/firebase/actions/card.action";
+import SelectedPhysicalCard from "./SelectedPhysicalCard";
+import { PhysicalCardCarousel } from "../PhysicalCardCarousel";
 
 export type ChosenTemplateType = z.infer<
   typeof createPortfolioSchema
 >["chosenTemplate"];
+export type ChosenPhysicalCardType = z.infer<
+  typeof createPortfolioSchema
+>["chosenPhysicalCard"];
 
 export default function CardsAndUsersFields({
   userData,
@@ -56,6 +59,11 @@ export default function CardsAndUsersFields({
 
   const [selectedTemplateId, setSelectedTemplateId] =
     useState<ChosenTemplateType>(userData.chosenTemplate as ChosenTemplateType);
+
+  const [selectedPhysicalCardId, setSelectedPhysicalCardId] =
+    useState<ChosenPhysicalCardType>(
+      userData.chosenPhysicalCard as ChosenPhysicalCardType
+    );
 
   const addServicePhoto = (photo: Photo) => {
     setServicePhotos([...servicePhotos, photo]);
@@ -120,7 +128,7 @@ export default function CardsAndUsersFields({
   const formSubmit = async (data: z.infer<typeof createPortfolioSchema>) => {
     if (!userData) return;
     if (isCard) {
-      updateCardMutation({ user_id: userData.id!, user: data as Card });
+      updateCardMutation({ cardId: userData.id!, data });
       return;
     }
     const id = isCurrentUser ? userData.uid : userData.id || userData.uid;
@@ -287,7 +295,7 @@ export default function CardsAndUsersFields({
                                   className="flex items-center justify-center rounded-md h-[77px] w-[77px] overflow-hidden relative bg-[#222224] border border-[#2c2c2c]"
                                 >
                                   <div
-                                    className="absolute flex items-center justify-center top-1 right-1 h-4 rounded-full w-4 bg-gray-900 z-[100] cursor-pointer"
+                                    className="absolute flex items-center justify-center top-1 right-1 h-4 rounded-full w-4 bg-gray-900 z-20 cursor-pointer"
                                     onClick={() =>
                                       setServiceImageUrls((prev) =>
                                         prev.filter((_, index) => index !== key)
@@ -347,11 +355,41 @@ export default function CardsAndUsersFields({
               />
 
               {/* Personal Information Inputs */}
-              <PersonalInfoForm control={methods.control} />
+              <PersonalInfoForm control={methods.control} isCard={isCard} />
 
               {/* Social Links Inputs */}
               <SocialLinksForm control={methods.control} />
             </div>
+
+            {/* Physical Cards Section */}
+            <div className="flex-grow flex flex-col">
+              {/* Title */}
+              <h1 className="text-2xl font-medium text-center my-8 mx-auto">
+                Pick your physical card
+              </h1>
+
+              {/* Cards Grid */}
+
+              <div className="flex-grow flex flex-col space-y-6">
+                <div className="flex-grow flex items-center justify-center mx-6 md:mx-0">
+                  {selectedPhysicalCardId ? (
+                    <SelectedPhysicalCard
+                      cardId={selectedPhysicalCardId}
+                      formData={methods.watch()}
+                    />
+                  ) : (
+                    <h1 className="text-black">Select a card</h1>
+                  )}
+                </div>
+                <div className="h-20 md:h-24 ">
+                  <PhysicalCardCarousel
+                    selectedCardId={selectedPhysicalCardId}
+                    setSelectedCardId={setSelectedPhysicalCardId}
+                  />
+                </div>
+              </div>
+            </div>
+
             <button
               type="submit"
               className="w-full px-4 py-4 bg-[#6150EB] hover:bg-[#6250ebc0] rounded-md font-bold disabled:opacity-50 disabled:cursor-not-allowed"

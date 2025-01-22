@@ -1,17 +1,18 @@
 import { CardItem } from "@/types/types";
 import {
-  ArrowBigRight,
-  CheckCircleIcon,
+  ArrowUp,
   Circle,
+  CreditCard,
   Image,
+  LayoutDashboard,
   RectangleHorizontal,
-  Settings,
   Text,
   Triangle,
 } from "lucide-react";
 import { CgProfile } from "react-icons/cg";
 import { RxDashboard } from "react-icons/rx";
-import { TbCards } from "react-icons/tb";
+import { TbCards, TbSettingsFilled } from "react-icons/tb";
+import { FiShoppingBag } from "react-icons/fi";
 
 export const ROOT_ROUTE = "/";
 export const LOGIN_ROUTE = "/login";
@@ -24,11 +25,11 @@ export const DASHBOARD_ROUTE = "/dashboard";
 export const ADMIN_ONLY_ROUTE = "/users";
 export const CARD_ROUTE = "/cards";
 export const USER_ROUTE = "/users";
-export const UPDATE_ROUTE = "/update";
+export const UPDATE_ROUTE = "/user/update";
 export const ACTION_ROUTE = "/action";
 export const CARD_PATH = "/cards/:path*";
 export const ADMIN_ONLY_PATH = "/users/:path*";
-export const UPDATE_PATH = "/update/:path*";
+export const UPDATE_PATH = "/user/update/:path*";
 export const ONBOARDING_PATH = "/onboarding/:path*";
 export const LOCAL_STORAGE_NAME = "isAuthenticated";
 
@@ -70,10 +71,11 @@ export const USER_ROLE_ENUMS = Object.freeze({
 });
 
 export const headerItems = [
-  { href: "/", label: "Main" },
-  { href: "/about", label: "About" },
-  { href: "/testimonials", label: "Testimonials" },
-  { href: "/features", label: "Features" },
+  { href: "/#about", label: "About" },
+  { href: "/#features", label: "Features" },
+  { href: "/#quickguide", label: "Quick Guide" },
+  { href: "/#products", label: "Products" },
+  { href: "/#contact", label: "Contact" },
 ];
 
 export const companyListItem = [
@@ -101,64 +103,67 @@ export const companyListItem = [
 
 export const tapupLearnMoreList = [
   {
-    icon: CheckCircleIcon,
-    title:
-      "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim.",
+    title: "Personal Website Creation",
+    description:
+      "Easily create your own professional website using pre-designed, customizable templates tailored to your needs.",
   },
   {
-    icon: CheckCircleIcon,
-    title:
-      "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim.",
+    title: "Powerful Web Builder",
+    description:
+      "Take full control of your websites design with an intuitive web builder that allows you to customize every detail.",
   },
   {
-    icon: CheckCircleIcon,
-    title:
-      "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim.",
+    title: "Printable Business Cards",
+    description:
+      "Generate high-quality, print-ready business cards to complement your digital presence and leave a lasting impression.",
+  },
+  {
+    title: "Cross-Device Networking",
+    description:
+      "Enhance your professional connections with cards optimized for compatibility across a wide range of devices.",
   },
 ];
 
 export const cardItems: CardItem[] = [
   {
-    image: "/assets/tapUp-card1.png",
+    id: "card1",
+    image: "/assets/cards/back/card1.png",
     title: "Standard Black Card",
     description:
       "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt elweofsaj ",
     price: 3000,
   },
   {
-    image: "/assets/tapUp-card2.png",
+    id: "card2",
+    image: "/assets/cards/back/card2.png",
     title: "Standard Yellow Card",
     description:
       "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt elweofsaj sed do eiusmod tempor incididunt elweofsaj sed do eiusmod tempor incididunt elweofsaj ",
     price: 3000,
   },
   {
-    image: "/assets/tapUp-card3.png",
+    id: "card3",
+    image: "/assets/cards/back/card3.png",
     title: "Standard Light Blue Card",
     description:
       "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt elweofsaj ",
     price: 4000,
   },
   {
-    image: "/assets/tapUp-card4.png",
+    id: "card4",
+    image: "/assets/cards/back/card4.png",
     title: "Standard Blue Card",
     description:
       "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt elweofsaj ",
     price: 2500,
   },
   {
-    image: "/assets/tapUp-card5.png",
+    id: "card5",
+    image: "/assets/cards/back/card5.png",
     title: "Standard White Card",
     description:
       "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt elweofsaj ",
     price: 3600,
-  },
-  {
-    image: "/assets/tapUp-card2.png",
-    title: "Standard Yellow Card",
-    description:
-      "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt elweofsaj ",
-    price: 3000,
   },
 ];
 
@@ -195,31 +200,62 @@ export const stepItem = [
   },
 ];
 
+export const courierList = [
+  {
+    name: "JRS Express",
+    image: "/assets/courier/j&t.png",
+    shippingFee: 50,
+    minDays: 3,
+    maxDays: 5,
+  },
+  {
+    name: "LBC",
+    image: "/assets/courier/lbc.png",
+    shippingFee: 50,
+    minDays: 3,
+    maxDays: 5,
+  },
+];
 export const carouselCards = {
   card1: {
-    title: "Standard Black Card",
-    image: "/assets/tapUp-card1.png",
+    title: "Standard Blue Card",
+    image: "/assets/cards/card1.png",
     description: `Lorem ipsum dolor sit, amet consectetur adipisicing elit. Consequatur minima quia porro vel obcaecati dicta asperiores? Numquam velit soluta fugit iure suscipit, odit, veniam reiciendis eveniet nesciunt, consequuntur cum dicta.`,
   },
   card2: {
     title: "Standard Yellow Card",
-    image: "/assets/tapUp-card2.png",
+    image: "/assets/cards/card5.png",
     description: `Lorem ipsum dolor sit, amet consectetur adipisicing elit. Consequatur minima quia porro vel obcaecati dicta asperiores? Numquam velit soluta fugit iure suscipit, odit, veniam reiciendis eveniet nesciunt, consequuntur cum dicta.`,
   },
   card3: {
-    title: "Standard Blue Card",
-    image: "/assets/tapUp-card3.png",
+    title: "Standard Green Card",
+    image: "/assets/cards/card3.png",
     description: `Lorem ipsum dolor sit, amet consectetur adipisicing elit. Consequatur minima quia porro vel obcaecati dicta asperiores? Numquam velit soluta fugit iure suscipit, odit, veniam reiciendis eveniet nesciunt, consequuntur cum dicta.`,
   },
   card4: {
-    title: "Standard Dark Blue Card",
-    image: "/assets/tapUp-card4.png",
+    title: "Standard Special Card",
+    image: "/assets/cards/card4.png",
     description: `Lorem ipsum dolor sit, amet consectetur adipisicing elit. Consequatur minima quia porro vel obcaecati dicta asperiores? Numquam velit soluta fugit iure suscipit, odit, veniam reiciendis eveniet nesciunt, consequuntur cum dicta.`,
   },
   card5: {
     title: "Standard Special Card",
-    image: "/assets/tapUp-card5.png",
+    image: "/assets/cards/card2.png",
     description: `Lorem ipsum dolor sit, amet consectetur adipisicing elit. Consequatur minima quia porro vel obcaecati dicta asperiores? Numquam velit soluta fugit iure suscipit, odit, veniam reiciendis eveniet nesciunt, consequuntur cum dicta.`,
+  },
+  card6: {
+    title: "Custom Card",
+    image: "/assets/cards/gridImg.png",
+    description: `Using our card builder, you can personalize your cards by adding text, images, and various design elements, allowing you to create something truly unique and special.`,
+  },
+  card7: {
+    title: "Standard Blue Card",
+    image: "/assets/cards/card6.png",
+    description: `Using our card builder, you can personalize your cards by adding text, images, and various design elements, allowing you to create something truly unique and special.`,
+  },
+  card8: {
+    title: "Standard Blue Card",
+    image: "/assets/cards/card7.png",
+    description: `Using our card builder, you can personalize your cards by adding text, images, and various design elements, allowing you to create something truly unique and special.`,
   },
 };
 
@@ -239,12 +275,50 @@ export const businessList = [
 ];
 
 export const menuItems = [
-  { icon: RxDashboard, title: "Dashboard", href: "/dashboard" },
-  { icon: CgProfile, title: "Profile", href: "/update" },
+  { icon: CgProfile, title: "Profile", href: "/dashboard" },
+  // { icon: RxDashboard, title: "Dashboard", href: "/dashboard" },
   { icon: TbCards, title: "Cards", href: "/cards" },
+  { icon: FiShoppingBag, title: "Orders", href: "/orders"},
+  { icon: TbSettingsFilled, title: "Settings", href: "/settings" },
 ];
 
 export const publicDomain =
   process.env.NODE_ENV === "development"
     ? process.env.NEXT_PUBLIC_RESET_PASSWORD_URL_DEV
     : process.env.NEXT_PUBLIC_RESET_PASSWORD_URL_PROD;
+
+export const formHeaderItems = [
+  { id: 1, title: "Tell us about your company" },
+  { id: 2, title: "Update your personal information" },
+  { id: 3, title: "Tell us about your company" },
+];
+
+export const steps = [
+  { name: "Company Info", header: "Tell us about your company" },
+  {
+    name: "Personal Info",
+    header: "Update your personal information",
+  },
+  { name: "Template", header: "Choose your Template" },
+];
+
+export const accountItem = [
+  { icon: LayoutDashboard, title: "Dashboard" },
+  { icon: ArrowUp, title: "Taps" },
+  { icon: CreditCard, title: "Billing" },
+];
+
+export const paymentCards = [
+  {
+    image: "/assets/payment/Visa.png",
+    title: "Visa",
+  },
+  {
+    image: "/assets/payment/Paypal.png",
+    title: "Paypal",
+  },
+  {
+    image: "/assets/payment/Mastercard.png",
+    title: "Mastercard",
+  },
+];

@@ -1,3 +1,5 @@
+"use client";
+
 import * as React from "react";
 import * as LabelPrimitive from "@radix-ui/react-label";
 import { Slot } from "@radix-ui/react-slot";
@@ -91,12 +93,18 @@ const FormLabel = React.forwardRef<
   const { error, formItemId } = useFormField();
 
   return (
-    <Label
-      ref={ref}
-      className={cn(error && "text-destructive", className)}
-      htmlFor={formItemId}
-      {...props}
-    />
+    <>
+      {error ? (
+        <FormMessage className="text-xs" />
+      ) : (
+        <Label
+          ref={ref}
+          className={cn(error && "text-destructive", className)}
+          htmlFor={formItemId}
+          {...props}
+        />
+      )}
+    </>
   );
 });
 FormLabel.displayName = "FormLabel";
