@@ -234,14 +234,29 @@ export const forgotPasswordHandler = async (email: string) => {
       window.location.href = "/login";
     }, 3000);
   } catch (error) {
+    console.error("Error sending password reset email:", error);
     if (error instanceof FirebaseError) {
       switch (error.code) {
         case "auth/user-not-found":
           toast.error("User not found!");
           break;
+        case "auth/invalid-email":
+          toast.error("Invalid email address!");
+          break;
+        case "auth/missing-email":
+          toast.error("Email address is required!");
+          break;
+        case "auth/too-many-requests":
+          toast.error("Too many requests. Try again later.");
+          break;
+        case "auth/internal-error":
+          toast.error("Internal error. Please try again later.");
+          break;
         default:
           toast.error("Something went wrong!");
       }
+    } else {
+      toast.error("Something went wrong!");
     }
   }
 };
