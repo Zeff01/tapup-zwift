@@ -12,6 +12,7 @@ import Link from "next/link";
 import { useRouter } from "next/navigation";
 import React, { useEffect } from "react";
 import { toast } from "react-toastify";
+import { CiLink } from "react-icons/ci";
 
 type Prop = {
   card: Partial<Card>;
@@ -104,18 +105,16 @@ const DigitalCard = ({ card, confirm, user }: Prop) => {
 
   const iconAndFunctionMap = [
     {
+      icon: Edit2,
+      fn: handleUpdate,
+    },  
+    {
       icon: Trash,
       fn: handleDelete,
     },
-    {
-      icon: Edit2,
-      fn: handleUpdate,
-    },
-    {
-      icon: Copy,
-      fn: handleDuplicate,
-    },
   ];
+
+
   return (
     <div className="w-full aspect-[340/208] hover:scale-105 transition-transform duration-200 flex justify-between text-secondary bg-foreground rounded-[30px] overflow-hidden">
       <Link
@@ -134,7 +133,24 @@ const DigitalCard = ({ card, confirm, user }: Prop) => {
         </div>
       </Link>
       <div className="flex flex-col justify-center items-center bg-foreground hover:bg-primaryBackground hover:text-primary  transition">
-        {iconAndFunctionMap.map((item, index) => {
+        <Link
+          href={`/site/${card.id}`}
+          className="px-3 py-3 2xl:py-2 hover:opacity-30 cursor-pointer"
+          prefetch
+          target="_blank"
+          rel="noopener noreferrer"
+        >
+          <EyeIcon className="size-4" />
+        </Link>
+        <span
+          className="px-3 py-3 2xl:py-2 hover:opacity-30 cursor-pointer"
+          onClick={handleCopy}
+        >
+          <CiLink size={18} strokeWidth={0.5} />
+        </span>
+      
+
+          {iconAndFunctionMap.map((item, index) => {
           const Icon = item.icon;
           return (
             <span
@@ -146,21 +162,6 @@ const DigitalCard = ({ card, confirm, user }: Prop) => {
             </span>
           );
         })}
-        <span
-          className="px-3 py-3 2xl:py-2 hover:opacity-30 cursor-pointer"
-          onClick={handleCopy}
-        >
-          <Link2 className="size-4" />
-        </span>
-        <Link
-          href={`/site/${card.id}`}
-          className="px-3 py-3 2xl:py-2 hover:opacity-30 cursor-pointer"
-          prefetch
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <EyeIcon className="size-4" />
-        </Link>
       </div>
     </div>
   );
