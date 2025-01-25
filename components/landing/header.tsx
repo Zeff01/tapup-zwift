@@ -45,8 +45,8 @@ const Header = () => {
 
         {/* Desktop Activate Button */}
         <Link href="/login">
-          <Button className="hidden lg:block bg-green-600 hover:bg-green-700">
-            Activate
+          <Button className="hidden lg:block  text-lg  bg-green-600 hover:bg-green-700">
+            Sign in
           </Button>
         </Link>
 
