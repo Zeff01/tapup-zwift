@@ -21,14 +21,14 @@ const Products = () => {
           </div>
           <div className="flex flex-col md:flex-row gap-3">
             <Image
-              src="/assets/cards/card7.png"
+              src="/assets/cards/back/card7.png"
               alt="card"
               width={250}
               height={200}
               className=""
             />
             <Image
-              src="/assets/cards/card6.png"
+              src="/assets/cards/back/card6.png"
               alt="card"
               width={250}
               height={150}
@@ -38,14 +38,14 @@ const Products = () => {
         </div>
         <div className="flex items-center justify-center mt-4 flex-col gap-3 md:flex-row">
           <Image
-            src="/assets/cards/card1.png"
+            src="/assets/cards/back/card1.png"
             alt="card"
             width={250}
             height={200}
             className=""
           />
           <Image
-            src="/assets/cards/card4.png"
+            src="/assets/cards/back/card4.png"
             alt="card"
             width={250}
             height={250}
@@ -54,7 +54,7 @@ const Products = () => {
         </div>
         <div className="flex items-center justify-center w-full mt-4">
           <Image
-            src="/assets/cards/card5.png"
+            src="/assets/cards/back/card5.png"
             alt="card"
             width={250}
             height={200}
