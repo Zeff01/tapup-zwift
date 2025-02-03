@@ -219,27 +219,27 @@ export const courierList = [
 export const carouselCards = {
   card1: {
     title: "Standard Blue Card",
-    image: "/assets/cards/card1.png",
+    image: "/assets/cards/back/card1.png",
     description: `Lorem ipsum dolor sit, amet consectetur adipisicing elit. Consequatur minima quia porro vel obcaecati dicta asperiores? Numquam velit soluta fugit iure suscipit, odit, veniam reiciendis eveniet nesciunt, consequuntur cum dicta.`,
   },
   card2: {
     title: "Standard Yellow Card",
-    image: "/assets/cards/card5.png",
+    image: "/assets/cards/back/card2.png",
     description: `Lorem ipsum dolor sit, amet consectetur adipisicing elit. Consequatur minima quia porro vel obcaecati dicta asperiores? Numquam velit soluta fugit iure suscipit, odit, veniam reiciendis eveniet nesciunt, consequuntur cum dicta.`,
   },
   card3: {
     title: "Standard Green Card",
-    image: "/assets/cards/card3.png",
+    image: "/assets/cards/back/card3.png",
     description: `Lorem ipsum dolor sit, amet consectetur adipisicing elit. Consequatur minima quia porro vel obcaecati dicta asperiores? Numquam velit soluta fugit iure suscipit, odit, veniam reiciendis eveniet nesciunt, consequuntur cum dicta.`,
   },
   card4: {
     title: "Standard Special Card",
-    image: "/assets/cards/card4.png",
+    image: "/assets/cards/back/card4.png",
     description: `Lorem ipsum dolor sit, amet consectetur adipisicing elit. Consequatur minima quia porro vel obcaecati dicta asperiores? Numquam velit soluta fugit iure suscipit, odit, veniam reiciendis eveniet nesciunt, consequuntur cum dicta.`,
   },
   card5: {
     title: "Standard Special Card",
-    image: "/assets/cards/card2.png",
+    image: "/assets/cards/back/card5.png",
     description: `Lorem ipsum dolor sit, amet consectetur adipisicing elit. Consequatur minima quia porro vel obcaecati dicta asperiores? Numquam velit soluta fugit iure suscipit, odit, veniam reiciendis eveniet nesciunt, consequuntur cum dicta.`,
   },
   card6: {
@@ -249,12 +249,32 @@ export const carouselCards = {
   },
   card7: {
     title: "Standard Blue Card",
-    image: "/assets/cards/card6.png",
+    image: "/assets/cards/back/card6.png",
     description: `Using our card builder, you can personalize your cards by adding text, images, and various design elements, allowing you to create something truly unique and special.`,
   },
   card8: {
     title: "Standard Blue Card",
-    image: "/assets/cards/card7.png",
+    image: "/assets/cards/back/card7.png",
+    description: `Using our card builder, you can personalize your cards by adding text, images, and various design elements, allowing you to create something truly unique and special.`,
+  },
+    card9: {
+    title: "Standard Card",
+    image: "/assets/cards/back/card8.png",
+    description: `Using our card builder, you can personalize your cards by adding text, images, and various design elements, allowing you to create something truly unique and special.`,
+  },
+      card10: {
+    title: "Standard Blue Card",
+    image: "/assets/cards/back/card9.png",
+    description: `Using our card builder, you can personalize your cards by adding text, images, and various design elements, allowing you to create something truly unique and special.`,
+  },
+          card11: {
+    title: "Standard Blue Card",
+    image: "/assets/cards/back/card10.png",
+    description: `Using our card builder, you can personalize your cards by adding text, images, and various design elements, allowing you to create something truly unique and special.`,
+  },
+              card12: {
+    title: "Standard Blue Card",
+    image: "/assets/cards/back/card11.png",
     description: `Using our card builder, you can personalize your cards by adding text, images, and various design elements, allowing you to create something truly unique and special.`,
   },
 };
