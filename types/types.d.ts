@@ -178,15 +178,3 @@ export type BillingHistoryItem = {
   quantity: number;
   image: string;
 };
-
-
-
-// type OrderStatus = "Pending" | "To Ship" | "Delivered" | "Return/Refund" | "Cancelled";
-
-// interface Order {
-//   id: number;
-//   status: OrderStatus;
-//   items: OrderItem[];
-//   shipping: number;
-//   requiresInfo: boolean;
-// }
