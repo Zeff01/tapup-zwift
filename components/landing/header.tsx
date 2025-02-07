@@ -46,7 +46,7 @@ const Header = () => {
         {/* Desktop Activate Button */}
         <Link href="/login">
           <Button className="hidden lg:block  text-lg  bg-green-600 hover:bg-green-700">
-            Sign in
+            Sign In
           </Button>
         </Link>
 
@@ -110,7 +110,7 @@ const Header = () => {
 
             <Link href="/login" className="mt-4" onClick={handleMobileMenu}>
               <Button className="w-full bg-green-600 hover:bg-green-700">
-                Activate
+                Sign In
               </Button>
             </Link>
           </nav>
