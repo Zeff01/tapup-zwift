@@ -38,11 +38,11 @@ export type Users = {
 };
 
 export interface DeliveryOption {
-  name: string;
-  image: string;
+  name?: string;
+  image?: string;
   shippingFee: number;
-  minDays: number;
-  maxDays: number;
+  minDays?: number;
+  maxDays?: number;
 }
 export interface CartItem {
   product: CardItem;
@@ -56,8 +56,11 @@ export interface Order {
   deliveryOption: DeliveryOption;
   orderDate: Date;
   totalAmount: number;
-  status: "Pending" | "Shipped" | "Delivered" | "Cancelled";
+  requiresInfo?: boolean;
+  status: "Pending" | "To Ship" | "To Receive" | "Delivered" | "To Return/Refund"| "Cancelled";
+  returnStatus?: "Return Requested" | "To Return" | "Refunded" | "Delivered" | "Return Rejected" | "Cancelled";
 }
+
 export interface Address {
   city: string;
   street: string;
@@ -175,3 +178,15 @@ export type BillingHistoryItem = {
   quantity: number;
   image: string;
 };
+
+
+
+// type OrderStatus = "Pending" | "To Ship" | "Delivered" | "Return/Refund" | "Cancelled";
+
+// interface Order {
+//   id: number;
+//   status: OrderStatus;
+//   items: OrderItem[];
+//   shipping: number;
+//   requiresInfo: boolean;
+// }
