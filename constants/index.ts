@@ -2,12 +2,18 @@ import { CardItem } from "@/types/types";
 import {
   ArrowUp,
   Circle,
+  Clock4,
   CreditCard,
   Image,
   LayoutDashboard,
+  Package,
+  PackageCheck,
   RectangleHorizontal,
   Text,
   Triangle,
+  Truck,
+  Undo2,
+  X,
 } from "lucide-react";
 import { CgProfile } from "react-icons/cg";
 import { RxDashboard } from "react-icons/rx";
@@ -342,3 +348,37 @@ export const paymentCards = [
     title: "Mastercard",
   },
 ];
+
+
+export const orderItems = [
+  {
+    icon: Clock4 ,
+    title: "Pending",
+    route: 'pending'
+  },
+   {
+    icon: Package ,
+     title: "To Ship",
+    route: 'to-ship'
+  },
+    {
+    icon: Truck ,
+      title: "To Receive",
+    route: 'to-receive'
+  },
+    {
+    icon: PackageCheck ,
+       title: "Delivered",
+    route: 'delivered'
+  }, 
+     {
+    icon: Undo2 ,
+       title: "To Return/Refund",
+    route: 'to-return-refund'
+  },  
+      {
+    icon: X ,
+        title: "Cancelled",
+    route: 'cancelled'
+  },
+]
