@@ -24,7 +24,9 @@ const Footer = () => {
             <TapupLogo className="w-full h-full" />
           </Link>
         </div>
-        <div className="flex gap-5 mx-auto">
+
+        {/* remove list and socials temporarily */}
+        {/* <div className="flex gap-5 mx-auto">
           {list.map((item, index) => (
             <Link href="/" key={index} className="font-semibold">
               {item}
@@ -44,7 +46,7 @@ const Footer = () => {
               </Link>
             </li>
           ))}
-        </ul>
+        </ul> */}
       </div>
     </footer>
   );
