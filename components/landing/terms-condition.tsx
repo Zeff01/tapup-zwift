@@ -3,7 +3,7 @@ const policy = {
   description: `
 Welcome to TapUp ("we," "our," "us"). These Terms and Conditions govern your use of our website, https://www.tapup.tech/ (the "Site"), and our services. By accessing or using the Site, you agree to be bound by these Terms. If you do not agree with these Terms, please do not use the Site.
 
-To use our Site, you must be at least [Insert Minimum Age] years old. By accessing or using the Site, you represent and warrant that you meet this eligibility requirement. The Site is intended for lawful use only, and you agree to comply with all applicable laws and regulations. You must not engage in any activity that violates the rights of others, harms the Site or its users, or disrupts the functionality of the Site.
+To use our Site, you must be at least 18 years old. By accessing or using the Site, you represent and warrant that you meet this eligibility requirement. The Site is intended for lawful use only, and you agree to comply with all applicable laws and regulations. You must not engage in any activity that violates the rights of others, harms the Site or its users, or disrupts the functionality of the Site.
 
 All content on the Site, including text, graphics, logos, and software, is the property of TapUp or its licensors and is protected by intellectual property laws. You may not use, reproduce, distribute, or modify any content without our prior written consent. Unauthorized use of the Site or its content may result in legal action.
 
