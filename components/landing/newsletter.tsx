@@ -17,6 +17,7 @@ const listItem = [
   {
     title: "Company",
     list: ["Privacy", "Terms and Conditions"],
+    url: ["/privacy-policy", "/terms-conditions"],
     // list: ["Customer Service", "Terms of Use", "Privacy", "About"],
   },
 ];
@@ -50,10 +51,10 @@ const Newsletter = () => {
           <div key={index} className="text-center md:text-left pt-4 sm:pt-0">
             <h4 className="font-bold text-lg">{item.title}</h4>
             <ul>
-              {item.list.map((item, index) => (
+              {item.list.map((listItem, index) => (
                 <li key={index} className="pt-3 w-[8rem] mx-auto  md:text-left">
-                  <Link href="/" className="my-3 text-base">
-                    {item}
+                  <Link href={item.url[index]} className="my-3 text-base">
+                    {listItem}
                   </Link>
                 </li>
               ))}
