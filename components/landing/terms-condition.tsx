@@ -27,7 +27,7 @@ We may update these Terms from time to time to reflect changes in our practices 
 
 const TermsAndConditions = () => {
   return (
-    <section className="max-w-4xl mx-auto p-6 shadow-md rounded-lg">
+    <section className="max-w-4xl mx-auto p-6">
       <h2 className="text-3xl font-bold  mt-6 text-center">{policy.title}</h2>
       <p className="text-placeholder-input dark:text-offWhiteTemplate text-justify whitespace-pre-wrap leading-relaxed">
         {policy.description}
