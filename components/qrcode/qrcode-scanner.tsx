@@ -16,6 +16,7 @@ import { Button } from "../ui/button";
 import { CameraOff, CircleAlert, CircleCheck } from "lucide-react";
 import Modal from "../Modal";
 import { DialogClose } from "../ui/dialog";
+import Image from "next/image";
 
 
 const QrCodeScanner: React.FC = () => {
@@ -260,11 +261,15 @@ const QrCodeScanner: React.FC = () => {
             <CameraOff size={100} color="white" />
           </div>
         ) : uploadedImage ? ( // Show uploaded image if available
-          <img
-            src={uploadedImage}
-            alt="Uploaded QR Code"
-            className="object-cover w-full h-full"
-          />
+            <div className="relative w-full h-full">
+
+            <Image
+              fill
+              src={uploadedImage}
+              alt="Uploaded QR Code"
+              className="object-cover"
+              />
+              </div>
         ) : isScanning ? (
           <video
             ref={videoRef}
