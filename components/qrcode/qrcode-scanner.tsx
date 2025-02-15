@@ -1,3 +1,5 @@
+'use client'
+
 import React, { useRef, useEffect, useState } from "react";
 import QrScanner from "qr-scanner";
 import {
@@ -256,13 +258,14 @@ const QrCodeScanner: React.FC = () => {
           position: "relative",
         }}
       >
+
+      
         {devices.length === 0 ? (
           <div className="w-full h-full bg-black flex items-center justify-center">
             <CameraOff size={100} color="white" />
           </div>
-        ) : uploadedImage ? ( // Show uploaded image if available
+        ) : uploadedImage ? ( 
             <div className="relative w-full h-full">
-
             <Image
               fill
               src={uploadedImage}
@@ -294,6 +297,7 @@ const QrCodeScanner: React.FC = () => {
         ) : (
           <p className="text-center text-greenColor">QR Code is valid</p>
         ))}
+      
 
       {/* Show message if an image is uploaded */}
       {uploadedImage &&
@@ -336,6 +340,8 @@ const QrCodeScanner: React.FC = () => {
         </button>
       )}
 
+      
+      {/* MODAL */}
       <Modal isOpen={isModalOpen} onClose={() => setIsModalOpen(false)}>
         <div className="flex flex-col items-center">
           {/* Icon */}
