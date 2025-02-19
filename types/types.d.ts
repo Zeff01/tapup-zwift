@@ -1,6 +1,3 @@
-types/types.d.ts
-
-
 import { carouselCards } from "@/constants";
 
 import {
