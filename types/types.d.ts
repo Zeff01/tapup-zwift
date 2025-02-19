@@ -132,6 +132,7 @@ export interface Photo {
 
 export interface Card extends Users {
   owner: string;
+  status?: "disabled",
 }
 
 export interface PhysicalCardProps extends Card {

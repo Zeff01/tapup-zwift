@@ -3,15 +3,16 @@ import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogClose } from "@
 interface ModalProps { 
     isOpen: boolean;
     onClose: () => void;
-    children: React.ReactNode;
+  children: React.ReactNode;
+  title?: string;
 }
 
-const Modal = ({ isOpen, onClose, children }: ModalProps) => {
+const Modal = ({ isOpen, onClose, children,title}: ModalProps) => {
   return (
     <Dialog open={isOpen} onOpenChange={onClose}>
       <DialogContent className="max-w-[300px] rounded-sm md:max-w-lg w-full md:p-6 p-2">
         <DialogHeader>
-          <DialogTitle>Confirmation</DialogTitle>
+          <DialogTitle>{title}</DialogTitle>
           <DialogClose asChild>
           </DialogClose>
         </DialogHeader>

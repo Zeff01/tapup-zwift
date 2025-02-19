@@ -1,3 +1,4 @@
+
 "use client";
 
 import { Order } from "@/types/types";
@@ -218,6 +219,7 @@ const OrderCard: React.FC<OrderCardProps> = ({ order }) => {
           <Modal
             isOpen={showCancelModal}
             onClose={() => setShowCancelModal(false)}
+            title="Confirmation"
           >
             <div className="p-4 text-center">
               <h2 className="text-sm md:text-lg font-semibold">
