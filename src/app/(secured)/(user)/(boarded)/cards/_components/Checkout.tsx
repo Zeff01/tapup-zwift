@@ -159,6 +159,7 @@ const Checkout = () => {
           <p className="space-x-2">
             Total: <span className="text-greenTitle">₱{calculateTotal()}</span>
           </p>
+          {/* change to /cards/orderStatus/success , if xendit is successfull */}
           <Link href="/cards/checkout">
             <Button variant="green" onClick={proceedPayment}>
               Proceed To Payment
