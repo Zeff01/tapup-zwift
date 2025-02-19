@@ -18,7 +18,7 @@ const QrCodeModal = ({ icon }: { icon: ReactNode }) => {
       </DialogTrigger>
       <DialogContent>
         <DialogHeader>
-          <DialogTitle>Card Retrieval QR Code Scanner</DialogTitle>
+          <DialogTitle className="text-center text-base md:text-xl">Card Retrieval QR Code Scanner</DialogTitle>
         </DialogHeader>
         <QrCodeScanner />
       </DialogContent>
