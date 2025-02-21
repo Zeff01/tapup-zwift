@@ -1,15 +1,31 @@
 "use client";
 
-import React, { useEffect } from "react";
+import React from "react";
 import NavBar from "./Navbar";
 import { useShippingInfo } from "@/providers/shipping-info-provider";
 import Link from "next/link";
 import { ChevronRight } from "lucide-react";
 import Image from "next/image";
-import { ShippingInfo, DeliveryOption, Order } from "@/types/types";
+import {
+  ShippingInfo,
+  DeliveryOption,
+  Order,
+  CreateInvoiceType,
+  CustomerType,
+} from "@/types/types";
 import { useCart } from "@/providers/cart-provider";
 import { Button } from "@/components/ui/button";
 import { toast } from "react-toastify";
+import { createInvoice } from "@/lib/xendit";
+import { getLoggedInUser } from "@/lib/session";
+import {
+  addCardForUser,
+  addInvoice,
+  createCustomerAndRecurringPlan,
+  getUserById,
+  handleCreateInvoice,
+} from "@/lib/firebase/actions/user.action";
+import { Users } from "@/types/types";
 const Checkout = () => {
   const { state: shippingState } = useShippingInfo();
   const { state: cartState } = useCart();
@@ -17,28 +33,94 @@ const Checkout = () => {
 
   const calculateSubtotal = () => {
     return cartState.items.reduce(
-      (total, item) => total + item.product.price * item.quantity,
+      (total, item) =>
+        total +
+        item.product.price * item.quantity +
+        (item.subscriptionPlan?.price || 0),
       0
     );
   };
+
   const calculateTotal = () => {
     const subtotal = calculateSubtotal();
-    const shippingFee = deliveryOption ? deliveryOption.shippingFee : 0;
+    const shippingFee = deliveryOption?.shippingFee || 0;
     return subtotal + shippingFee;
   };
 
-  const proceedPayment = () => {
-    const order: Order = {
-      items: cartState.items,
-      shippingInfo: shippingInfo as ShippingInfo,
-      deliveryOption: deliveryOption as DeliveryOption,
-      orderDate: new Date(),
-      totalAmount: calculateTotal(),
-      status: "Pending",
-      orderId: "",
-    };
-    toast.error("Payment Gateway not yet implemented");
+  const proceedPayment = async () => {
+    try {
+      console.log("Starting payment process...");
+
+      const userLoggedIn = await getLoggedInUser();
+      console.log("Logged-in user:", userLoggedIn);
+
+      if (typeof userLoggedIn === "string") {
+        toast.error("Invalid user session.");
+        return;
+      }
+
+      const user = (await getUserById(userLoggedIn?.uid)) as Users;
+      console.log("Fetched user:", user);
+
+      if (!user) {
+        toast.error("User data not found.");
+        return;
+      }
+
+      const referenceId = `customer-${user.id}-${new Date().toISOString()}`;
+      console.log("Generated reference ID:", referenceId);
+
+      const customerData: CustomerType = {
+        reference_id: referenceId,
+        type: "INDIVIDUAL",
+        email: user.email,
+        individual_detail: {
+          given_names: user.firstName ?? "",
+          surname: user.lastName ?? "",
+        },
+      };
+
+      const cartItem = cartState.items[0];
+      console.log("Current cart item:", cartItem);
+
+      if (!cartItem.subscriptionPlan) {
+        throw new Error(
+          "Subscription plan is required to create a recurring plan."
+        );
+      }
+
+      console.log(
+        "Physical card ID before adding card:",
+        cartItem.physicalCardId
+      );
+
+      const cardId = await addCardForUser(
+        userLoggedIn?.uid,
+        cartItem.physicalCardId
+      );
+
+      console.log("Newly added card ID:", cardId);
+
+      // Create customer and recurring plan in Xendit
+      const { customer, recurringPlan } = await createCustomerAndRecurringPlan(
+        customerData,
+        cartItem.subscriptionPlan,
+        cardId,
+        calculateTotal()
+      );
+
+      console.log(
+        "Customer and Recurring Plan Created:",
+        customer,
+        recurringPlan
+      );
+      toast.success("Subscription successfully created.");
+    } catch (error) {
+      console.error("Error upgrading subscription:", error);
+      toast.error("Failed to process subscription.");
+    }
   };
+
   return (
     <div className="relative max-h-screen flex flex-col max-w-sm w-full overflow-auto">
       {/* Navigation Bar */}

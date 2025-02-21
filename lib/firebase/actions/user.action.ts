@@ -11,13 +11,17 @@ import {
   setDoc,
   query,
   limit,
+  Timestamp,
 } from "firebase/firestore";
 import { firebaseAuth, firebaseDb, firebaseStorage } from "../firebase";
-import { Photo, Users } from "@/types/types";
+import { Card, CreateInvoiceType, CustomerType, Photo, RecurringPlanType, SubscriptionPlan, Users } from "@/types/types";
 import { createUserLink } from "@/lib/utils";
 import { getDownloadURL, ref, uploadBytesResumable } from "firebase/storage";
 import { toast } from "react-toastify";
 import { revalidatePath } from "../../revalidate";
+import { isAfter, addDays } from "date-fns";
+import { createInvoice } from "@/lib/xendit";
+import { xenditClient } from "@/lib/axios";
 type UserCodeLink = {
   userCode: string;
   user_link: string;
@@ -204,5 +208,193 @@ export const getUserDataByUserCode = async (
   } catch (error) {
     console.error(error);
     return null;
+  }
+};
+
+export const handleCreateInvoice = async (
+  invoicePayload: CreateInvoiceType,
+  userId?: string
+) => {
+  try {
+    const invoiceResponse = await createInvoice(invoicePayload);
+
+    if (userId) {
+      const invoiceData = {
+        ...invoicePayload,
+        status: "PENDING",
+      };
+      await addInvoice(userId, invoiceData);
+    }
+
+    window.location.href = invoiceResponse.invoice_url;
+    toast.success("Invoice created successfully! Proceed to payment.");
+  } catch (error) {
+    console.error("Error creating invoice:", error);
+    toast.error("Failed to create invoice. Please try again.");
+  }
+};
+
+
+export const addInvoice = async (
+  userId: string,
+  invoice: CreateInvoiceType & { status: string }
+) => {
+  try {
+    const invoiceCollection = collection(firebaseDb, "invoices");
+    const invoiceRef = doc(invoiceCollection, invoice.external_id);
+
+    await setDoc(invoiceRef, {
+      ...invoice,
+      userId,
+      created_at: serverTimestamp(),
+    });
+
+    console.log("Invoice added with ID: ", invoice.external_id);
+    return invoice.external_id;
+  } catch (error) {
+    console.error("Error adding invoice: ", error);
+    return null;
+  }
+};
+
+export const addCardForUser = async (userId: string, chosenPhysicalCard: string): Promise<string> => {
+  try {
+    console.log("Adding card for user:", userId);
+    console.log("Chosen Physical Card ID:", chosenPhysicalCard);
+
+    const user = await getUserById(userId);
+    if (!user) {
+      console.error("User not found for ID:", userId);
+      throw new Error("User not found");
+    }
+
+    console.log("User data retrieved:", user);
+
+    const transferCode = crypto.randomUUID().split('-').slice(0, 2).join('-');
+    console.log("Generated Transfer Code:", transferCode);
+
+    const cardCollection = collection(firebaseDb, "cards");
+    const card: Card = {
+      ...user,
+      owner: userId,
+      transferCode: transferCode,
+      chosenPhysicalCard: chosenPhysicalCard,
+    };
+
+    console.log("Card object before saving:", card);
+
+    const docRef = await addDoc(cardCollection, card);
+    console.log("Card added successfully. User ID:", userId, "Card ID:", docRef.id);
+
+    return docRef.id;
+  } catch (error) {
+    console.error("Error adding card:", error);
+    throw error;
+  }
+};
+
+export const addSubscription = async ({
+  cardId,
+  subscriptionDays,
+}: {
+  cardId: string;
+  subscriptionDays: number;
+}): Promise<string | null> => {
+  try {
+    const subscriptionCollection = collection(firebaseDb, "subscriptions");
+
+    const dateAvailedTimestamp = Timestamp.now();
+
+    const subscriptionDoc = await addDoc(subscriptionCollection, {
+      cardId,
+      dateAvailed: dateAvailedTimestamp,
+      subscriptionDays,
+    });
+
+    console.log("Subscription added with ID:", subscriptionDoc.id);
+    return subscriptionDoc.id;
+  } catch (error) {
+    console.error("Error adding subscription:", error);
+    return null;
+  }
+};
+
+export const getSubscriptionPlans = async (): Promise<SubscriptionPlan[]> => {
+  try {
+    const subscriptionCollection = collection(firebaseDb, "subscription-plans");
+    const snapshot = await getDocs(subscriptionCollection);
+
+    const plans: SubscriptionPlan[] = snapshot.docs.map((doc) => ({
+      id: doc.id,
+      ...(doc.data() as Omit<SubscriptionPlan, "id">),
+    }));
+
+    return plans;
+  } catch (error) {
+    console.error("Error fetching subscription plans:", error);
+    return [];
+  }
+};
+
+export const createCustomerAndRecurringPlan = async (
+  customerData: CustomerType,
+  subscriptionPlan: SubscriptionPlan,
+  cardId: string,
+  totalPrice?: number
+) => {
+  try {
+    // Create customer in Xendit
+    const { data: customer } = await xenditClient.post("/customers", customerData);
+
+    const now = new Date();
+    const formattedDateTime = now.toISOString().replace(/[-:T.Z]/g, "").slice(0, 14);
+
+    const referenceId = `recurring-${customer.id}-${subscriptionPlan.id}-${cardId}-${formattedDateTime}`;
+
+    let interval: "DAY" | "WEEK" | "MONTH" = "DAY"; // Explicitly set the type
+    let intervalCount = subscriptionPlan.durationDays;
+
+    if (subscriptionPlan.durationDays > 365) {
+      console.log("Subscription duration exceeds 365 days, converting to months");
+
+      interval = "MONTH";
+      intervalCount = Math.floor(subscriptionPlan.durationDays / 30);
+    } else if (subscriptionPlan.durationDays >= 7 && subscriptionPlan.durationDays % 7 === 0) {
+      console.log("Subscription duration is a multiple of 7, converting to weeks");
+
+      interval = "WEEK";
+      intervalCount = subscriptionPlan.durationDays / 7;
+    }
+
+    // Define recurring plan details
+    const recurringPlanData: RecurringPlanType = {
+      reference_id: referenceId,
+      customer_id: customer.id,
+      recurring_action: "PAYMENT",
+      currency: "PHP",
+      amount: totalPrice ?? subscriptionPlan.price,
+      schedule: {
+        reference_id: `schedule-${customer.id}-${subscriptionPlan.id}-${cardId}`,
+        interval: interval,
+        interval_count: intervalCount,
+      },
+      description: `Subscription for ${subscriptionPlan.name}`,
+      success_return_url: process.env.NEXT_PUBLIC_SUCCESS_REDIRECT_URL,
+      failure_return_url: process.env.NEXT_PUBLIC_FAILURE_REDIRECT_URL,
+      metadata: { cardId },
+    };
+
+    console.log("Generated reference_id:", recurringPlanData.reference_id);
+    console.log("Final interval and count:", interval, intervalCount);
+
+    // Create recurring plan in Xendit
+    const { data: recurringPlan } = await xenditClient.post("/recurring/plans", recurringPlanData);
+    console.log("Xendit Recurring Plan Response:", recurringPlan);
+    window.location.href = recurringPlan.actions?.[0]?.url;
+
+    return { customer, recurringPlan };
+  } catch (error) {
+    console.error("Error creating customer or recurring plan:", error);
+    throw error;
   }
 };

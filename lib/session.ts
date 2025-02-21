@@ -44,3 +44,13 @@ export const verifySignUserId = async (token: string) => {
     return null;
   }
 };
+
+export const getLoggedInUser = async () => {
+  const token = await getSession();
+  if (!token) return null;
+
+  const userData = await verifySignUserId(token);
+  if (!userData) return null;
+
+  return userData;
+};

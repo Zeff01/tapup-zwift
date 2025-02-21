@@ -38,15 +38,17 @@ export type Users = {
 };
 
 export interface DeliveryOption {
-  name?: string;
-  image?: string;
+  name: string;
+  image: string;
   shippingFee: number;
-  minDays?: number;
-  maxDays?: number;
+  minDays: number;
+  maxDays: number;
 }
 export interface CartItem {
+  physicalCardId: string;
   product: CardItem;
   quantity: number;
+  subscriptionPlan: SubscriptionPlan | null;
 }
 
 export interface Order {
@@ -56,11 +58,8 @@ export interface Order {
   deliveryOption: DeliveryOption;
   orderDate: Date;
   totalAmount: number;
-  requiresInfo?: boolean;
-  status: "Pending" | "To Ship" | "To Receive" | "Delivered" | "To Return/Refund"| "Cancelled";
-  returnStatus?: "Return Requested" | "To Return" | "Refunded" | "Delivered" | "Return Rejected" | "Cancelled";
+  status: "Pending" | "Shipped" | "Delivered" | "Cancelled";
 }
-
 export interface Address {
   city: string;
   street: string;
@@ -132,6 +131,10 @@ export interface Photo {
 
 export interface Card extends Users {
   owner: string;
+  transferCode: string;
+  expiryDate?: number;
+  disabled?: boolean;
+  chosenPhysicalCard?: string;
 }
 
 export interface PhysicalCardProps extends Card {
@@ -177,4 +180,141 @@ export type BillingHistoryItem = {
   price: string;
   quantity: number;
   image: string;
+};
+
+type CustomerType = {
+  reference_id: string; // Required: Unique merchant-provided identifier
+  mobile_number?: string; // Optional: Mobile number in E.164 format
+  email?: string; // Optional: Email address of the customer
+  type: "INDIVIDUAL" | "BUSINESS"; // Required: Type of customer
+  individual_detail: {
+    given_names: string; // Required: First name(s) of the individual
+    surname?: string; // Optional: Last name
+    middle_name?: string; // Optional: Middle name
+  };
+};
+
+
+export type CreateInvoiceType = {
+  external_id: string; // Required: Unique identifier for the invoice
+  amount: number; // Required: Invoice amount (inclusive of fees/items)
+  description?: string; // Optional: Description of the invoice
+  invoice_duration?: number; // Optional: Duration before expiration (in seconds)
+  customer?: {
+    given_names?: string;
+    surname?: string;
+    email?: string;
+    mobile_number?: string;
+    addresses?: {
+      city?: string;
+      country: string;
+      postal_code?: string;
+      state?: string;
+      street_line1?: string;
+      street_line2?: string;
+    }[];
+  };
+  customer_notification_preference?: {
+    invoice_created?: ("whatsapp" | "email" | "viber")[];
+    invoice_reminder?: ("whatsapp" | "email" | "viber")[];
+    invoice_paid?: ("whatsapp" | "email" | "viber")[];
+  };
+  success_redirect_url?: string; // Optional: URL after successful payment
+  failure_redirect_url?: string; // Optional: URL after failed/expired invoice
+  payment_methods?: string[]; // Optional: Available payment methods
+  currency?: "IDR" | "PHP" | "THB" | "VND" | "MYR"; // Optional: Invoice currency
+  callback_virtual_account_id?: string; // Optional: ID for fixed virtual account
+  mid_label?: string; // Optional: Merchant MID label
+  reminder_time_unit?: "days" | "hours"; // Optional: Unit for reminder_time
+  reminder_time?: number; // Optional: Reminder before expiration
+  locale?: "en" | "id"; // Optional: Language for invoice UI
+  items?: {
+    name: string;
+    quantity: number;
+    price: number;
+    category?: string;
+    url?: string;
+  }[]; // Optional: List of items (required for PayLater)
+  fees?: {
+    type: string;
+    value: number;
+  }[]; // Optional: Extra fees (admin, shipping, tax, etc.)
+  should_authenticate_credit_card?: boolean; // Optional: Force 3DS authentication for cards
+  channel_properties?: {
+    cards?: {
+      allowed_bins?: string[];
+      installment_configuration?: {
+        allow_installment: boolean;
+        allow_full_payment: boolean;
+        allowed_terms?: {
+          issuer: string;
+          terms: number[];
+        }[];
+      };
+    };
+  };
+  metadata?: Record<string, any>; // Optional: Custom metadata (up to 50 keys)
+};
+
+type Subscription = {
+  id: string; // Document ID
+  cardId: string;
+  dateAvailed: number; // Timestamp (when subscription is active)
+  subscriptionDays: number; // Duration in days
+};
+
+type SubscriptionPlan = {
+  id: string;
+  name: string;
+  price: number;
+  durationDays: number;
+  features: string[];
+};
+
+export type RecurringPlanType = {
+  reference_id: string;
+  customer_id: string;
+  recurring_action: "PAYMENT";
+  currency: "IDR" | "PHP";
+  amount: number;
+  schedule: {
+    reference_id: string;
+    interval: "DAY" | "WEEK" | "MONTH";
+    interval_count: number;
+    total_recurrence?: number;
+    anchor_date?: string; // ISO 8601 Timestamp
+    retry_interval?: "DAY";
+    retry_interval_count?: number;
+    total_retry?: number; // Min 1, Max 10
+    failed_attempt_notifications?: number[];
+  };
+  notification_config?: {
+    locale?: "en" | "id";
+    recurring_created?: ("WHATSAPP" | "EMAIL")[];
+    recurring_succeeded?: ("WHATSAPP" | "EMAIL")[];
+    recurring_failed?: ("WHATSAPP" | "EMAIL")[];
+  };
+  failed_cycle_action?: "RESUME" | "STOP";
+  immediate_action_type?: "FULL_AMOUNT";
+  metadata?: Record<string, unknown> | null;
+  description?: string;
+  success_return_url?: string;
+  failure_return_url?: string;
+  items?: {
+    type:
+    | "DIGITAL_PRODUCT"
+    | "PHYSICAL_PRODUCT"
+    | "DIGITAL_SERVICE"
+    | "PHYSICAL_SERVICE"
+    | "FEE"
+    | "DISCOUNT";
+    name: string;
+    net_unit_amount: number;
+    quantity: number;
+    url?: string;
+    category?: string;
+    subcategory?: string;
+    description?: string;
+    metadata?: Record<string, unknown>;
+  }[];
 };

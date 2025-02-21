@@ -14,35 +14,24 @@ const socials = [
   { title: "linkedin", image: "/assets/Icon-linkedin.png" },
   { title: "Discord", image: "/assets/icon-discord.png" },
 ];
-
-const listItem = {
-  list: ["Privacy", "Terms and Conditions"],
-  url: ["/privacy-policy", "/terms-conditions"],
-};
 const Footer = () => {
   return (
     <footer className="pb-8 pt-16" id="contact">
-      {/* <Newsletter /> */}
+      <Newsletter />
       <div className="flex mt-8 flex-col sm:flex-row w-full gap-4 justify-around pt-6 items-center">
         <div className="mx-auto aspect-[3.63] h-9">
           <Link href="/">
             <TapupLogo className="w-full h-full" />
           </Link>
         </div>
-
-        {/* remove list and socials temporarily */}
         <div className="flex gap-5 mx-auto">
-          {listItem.list.map((item, index) => (
-            <Link
-              href={listItem.url[index]}
-              key={index}
-              className="font-semibold"
-            >
+          {list.map((item, index) => (
+            <Link href="/" key={index} className="font-semibold">
               {item}
             </Link>
           ))}
         </div>
-        {/* <ul className="flex gap-4 mx-auto">
+        <ul className="flex gap-4 mx-auto">
           {socials.map((item, index) => (
             <li key={index} className="relative w-6 h-6">
               <Link href="/">
@@ -55,7 +44,7 @@ const Footer = () => {
               </Link>
             </li>
           ))}
-        </ul> */}
+        </ul>
       </div>
     </footer>
   );

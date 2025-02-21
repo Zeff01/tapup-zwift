@@ -1,16 +1,10 @@
-"use client";
-import { useEffect } from "react";
-import { useRouter, usePathname } from "next/navigation";
+import ComingSoon from '@/components/ComingSoon'
 
-export default function OrdersHomePage() {
-  const router = useRouter();
-  const pathname = usePathname();
 
-  useEffect(() => {
-    if (pathname === "/orders") {
-      router.push("/orders/pending");
-    }
-  }, [pathname, router]);
-
-  return null;
+const page = () => {
+  return (
+    <ComingSoon/>
+  )
 }
+
+export default page

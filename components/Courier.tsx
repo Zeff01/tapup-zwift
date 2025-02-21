@@ -21,7 +21,7 @@ const Courier: React.FC<CourierProps> = ({
       onClick={onSelect}
     >
       {/* Image */}
-      <Image src={image!} alt={name!} width={44} height={22} />
+      <Image src={image} alt={name} width={44} height={22} />
 
       {/* details */}
       <div className="flex flex-col">

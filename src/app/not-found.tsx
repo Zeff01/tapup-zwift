@@ -7,7 +7,7 @@ export default function NotFound() {
       <div className="container">
         <div className="pl-0 md:pl-8 lg:pl-16">
           {/* Title */}
-          <h1 className="text-[40px] md:text-[60px] lg:text-[96px] text-greenBorder font-medium italic leading-[1.5] mb-4">
+          <h1 className="text-[40px] md:text-[60px] lg:text-[96px] text-[#1FAE3A] font-medium italic leading-[1.5] mb-4">
             Oops,
           </h1>
 
@@ -19,7 +19,7 @@ export default function NotFound() {
           {/* Button */}
           <Link
             href="/dashboard"
-            className="inline-block mt-8 bg-greenBorder hover:bg-greenColor text-white px-6 py-2.5 rounded-md transition-colors duration-200"
+            className="inline-block mt-8 bg-[#22A348] hover:bg-[#1B8A3A] text-white px-6 py-2.5 rounded-md transition-colors duration-200"
           >
             Back To Main
           </Link>
