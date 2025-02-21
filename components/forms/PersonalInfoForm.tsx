@@ -20,7 +20,7 @@ const PersonalInfoForm: React.FC<PersonalInfoFormProps> = ({
         name="position"
         label="Position"
         placeholder="Enter your position in your company"
-        required={true}
+        required={false}
       />
       <CustomInput
         control={control}
