@@ -152,6 +152,144 @@ export const createPortfolioSchema = z.object({
     .optional(),
 });
 
+export const editCardSchema = z.object({
+  coverPhotoUrl: z
+    .string()
+    .refine(
+      (value) =>
+        value === "" ||
+        /^\b(?:https?:\/\/)?(?:www\.)?[^ "]+\.[a-zA-Z]{2,}\b/.test(value),
+      {
+        message: "Invalid Coverphoto URL",
+      }
+    ).optional(),
+  profilePictureUrl: z
+    .string()
+    .min(3, "Profile Picture is required")
+    .refine(
+      (value) =>
+        value === "" ||
+        /^\b(?:https?:\/\/)?(?:www\.)?[^ "]+\.[a-zA-Z]{2,}\b/.test(value),
+      {
+        message: "Invalid Coverphoto URL",
+      }
+    ), // Profile picture URL is required
+  position: z.string().optional(),
+  company: z.string().optional(),
+  companyBackground: z
+    .string()
+    .optional(),
+  serviceDescription: z
+    .string()
+    .optional(),
+  servicePhotos: z.array(z.string().url()).optional(),
+  chosenTemplate: z.enum([
+    "template1",
+    "template2",
+    "template3",
+    "template4",
+    "template5",
+    "template6",
+    "template7",
+    "template8",
+    "template9",
+    "template10",
+    "template11",
+    "template12",
+  ]),
+  chosenPhysicalCard: z.enum(["card1", "card2", "card3", "card4"]),
+  firstName: z.string().min(3, "First name must be at least 3 characters"),
+  lastName: z.string().min(3, "Last name must be at least 3 characters"),
+  email: z.string(),
+  number: z
+    .string()
+    .refine(isValidPhoneNumber, { message: "Invalid phone number" }),
+  facebookUrl: z
+    .string()
+    .refine(
+      (value) =>
+        value === "" ||
+        /^\b(?:https?:\/\/)?(?:www\.)?[^ "]+\.[a-zA-Z]{2,}\b/.test(value),
+      {
+        message: "Invalid URL",
+        // specify the field path for error
+      }
+    )
+    .optional(),
+  youtubeUrl: z
+    .string()
+    .refine(
+      (value) =>
+        value === "" ||
+        /^\b(?:https?:\/\/)?(?:www\.)?[^ "]+\.[a-zA-Z]{2,}\b/.test(value),
+      {
+        message: "Invalid URL",
+      }
+    )
+    .optional(),
+  instagramUrl: z
+    .string()
+    .refine(
+      (value) =>
+        value === "" ||
+        /^\b(?:https?:\/\/)?(?:www\.)?[^ "]+\.[a-zA-Z]{2,}\b/.test(value),
+      {
+        message: "Invalid URL",
+      }
+    )
+    .optional(),
+  twitterUrl: z
+    .string()
+    .refine(
+      (value) =>
+        value === "" ||
+        /^\b(?:https?:\/\/)?(?:www\.)?[^ "]+\.[a-zA-Z]{2,}\b/.test(value),
+      {
+        message: "Invalid URL",
+      }
+    )
+    .optional(),
+  linkedinUrl: z
+    .string()
+    .refine(
+      (value) =>
+        value === "" ||
+        /^\b(?:https?:\/\/)?(?:www\.)?[^ "]+\.[a-zA-Z]{2,}\b/.test(value),
+      {
+        message: "Invalid URL",
+      }
+    )
+    .optional(),
+  whatsappNumber: z
+    .string()
+    .refine(refinePhoneNumber, { message: "Invalid phone number" })
+    .optional(),
+  skypeInviteUrl: z
+    .string()
+    .refine(
+      (value) =>
+        value === "" ||
+        /^(?:https?:\/\/)?(?:join\.skype\.com\/invite\/[a-zA-Z0-9_-]+)$/.test(
+          value
+        ),
+      {
+        message: "Invalid URL",
+      }
+    )
+    .optional(),
+  websiteUrl: z
+    .string()
+    .refine(
+      (value) =>
+        value === "" ||
+        /^\b(?:https?:\/\/)?(?:www\.)?[^ "]+\.[a-zA-Z]{2,}\b/.test(value),
+      {
+        message: "Invalid URL",
+      }
+    )
+    .optional(),
+});
+
 export const loginSchema = z.object({
   email: z.string().email({ message: "Invalid email address" }),
   password: z.string(),
