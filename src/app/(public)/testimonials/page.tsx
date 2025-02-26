@@ -39,8 +39,8 @@ const TestimonialPage = () => {
         {testimonials.map((testimonial, index) => (
           <div key={index} className="bg-gray-100 dark:bg-gray-800 p-6 rounded-md shadow-md flex flex-col items-center text-center">
             <Image src={testimonial.image} alt={testimonial.name} width={80} height={80} className="rounded-full mb-4" />
-            <p className="italic text-lg text-muted-foreground">"{testimonial.quote}"</p>
-            <h3 className="mt-4 font-semibold">- {testimonial.name}, {testimonial.title}</h3>
+            <p className="italic text-lg text-muted-foreground">{testimonial.quote}</p>
+            <h3 className="mt-4 font-semibold">{testimonial.name}, {testimonial.title}</h3>
           </div>
         ))}
       </div>
