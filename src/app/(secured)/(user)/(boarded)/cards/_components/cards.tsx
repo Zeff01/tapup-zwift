@@ -8,10 +8,12 @@ import { useQuery } from "@tanstack/react-query";
 import { getCardsByOwner } from "@/lib/firebase/actions/card.action";
 import Loading from "@/src/app/loading";
 import { useConfirm } from "@/hooks/useConfirm";
-import { QrCode } from "lucide-react";
-import QrCodeModal from "@/components/qrcode/qrcode-modal";
+import { ShoppingBag } from "lucide-react";
+import { useRouter } from "next/navigation";
 
 const Cards = () => {
+  const router = useRouter();
+
   const [ConfirmDialog, confirm] = useConfirm(
     "Are you sure",
     "You are about to delete this card"
@@ -39,9 +41,14 @@ const Cards = () => {
             >
               Buy a Card
             </Link>
-            <QrCodeModal
-              icon={<QrCode className="size-6 shrink-0" size={8} />}
-            />
+            <div className="flex items-center justify-center">
+
+            <ShoppingBag
+              onClick={() => router.push("/orders")}
+              size={36}
+              className="cursor-pointer"
+              />
+              </div>
           </div>
         </div>
         {/* grid-cols-[repeat(auto-fill,minmax(18rem,1fr))] */}
