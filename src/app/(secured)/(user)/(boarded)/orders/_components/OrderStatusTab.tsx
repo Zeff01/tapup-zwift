@@ -48,7 +48,7 @@ const OrderStatusTabs: React.FC<OrderStatusTabsProps> = ({
               key={route}
               onClick={() => handleStatusChange(formattedStatus)}
               className={`flex gap-2 items-center justify-center py-2 px-4 rounded-md cursor-pointer transition ${
-                isActive ? "bg-muted-foreground font-bold" : "hover:bg-gray-200"
+                isActive ? "bg-white text-black font-bold" : "hover:bg-gray-200 text-muted-foreground"
               }`}
             >
               <Icon size={20} />

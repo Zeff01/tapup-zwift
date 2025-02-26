@@ -11,6 +11,7 @@ import RenderStatusSection from "./RenderStatusSection";
 import { useState } from "react";
 
 import Modal from "@/components/Modal";
+import { ChevronDown } from "lucide-react";
 
 interface OrderCardProps {
   order: Order;
@@ -19,6 +20,9 @@ const OrderCard: React.FC<OrderCardProps> = ({ order }) => {
   const pathname = usePathname();
   const router = useRouter();
   const [showCancelModal, setShowCancelModal] = useState(false);
+  const [showAll, setShowAll] = useState(false);
+
+  const displayedItems = showAll ? order.items : order.items.slice(0, 2);
 
   const handleCancelClick = (e: any) => {
     if (buttonText === "Cancel Order") {
@@ -100,53 +104,75 @@ const OrderCard: React.FC<OrderCardProps> = ({ order }) => {
               information needed for the cards.
             </p>
             <Link href="/cards">
-              <button className="bg-greenColor hover:bg-green-400 w-full py-2 mt-2 rounded">
+              <button className="bg-orderButton text-white hover:bg-greenColor w-full py-2 mt-2 rounded">
                 Fill Out Card Info
               </button>
             </Link>
           </div>
         )}
         {<RenderStatusSection order={order} />}
-        {order.items.map((item) => (
+        {displayedItems.map((item) => (
           <div
             key={item.product.id}
             className="flex justify-between items-center"
           >
-            <div className="flex gap-4">
-              <Image
-                src={item.product.image}
-                alt={item.product.title}
-                width={70}
-                height={40}
-              />
+            <div className="flex gap-4 items-center">
+              <div className="relative w-14 h-9 md:w-20 md:h-12 items-center">
+                <Image
+                  src={item.product.image}
+                  alt={item.product.title}
+                  fill
+                  className="object-cover rounded-sm"
+                />
+              </div>
               <div>
                 <h2 className="text-sm font-medium font-inter md:text-lg">
                   {item.product.title}
                 </h2>
                 <p className="text-xs text-muted-foreground md:text-base">
-                  ₱{item.product.price}
+                  {item.product.description}
                 </p>
               </div>
             </div>
-            <p className="text-sm font-semibold lg:text-lg">
-              x<span className="ml-2">{item.quantity}</span>
-            </p>
+            <div className="flex gap-2 items-center justify-center">
+              <p className="text-sm font-semibold md:text-lg">
+                <span className="ml-2">{item.quantity}</span>
+              </p>
+              <p className="text-xs md:text-sm">x</p>
+              <p className="text-sm md:text-lg text-muted-foreground">
+                ₱ {item.product.price}
+              </p>
+            </div>
           </div>
         ))}
-        <div className="mt-2">
-          <h2 className="text-sm font-medium font-inter md:text-xl text-primary">
-            Shipping
-          </h2>
-          <p className="text-xs text-muted-foreground md:text-lg">
-            ₱{order.deliveryOption?.shippingFee}
-          </p>
-          <p className="text-lg md:text-xl text-right text-muted-foreground">
-            Total:{" "}
-            <span className="text-green-600 font-bold">
-              ₱{order.totalAmount! + order.deliveryOption?.shippingFee!}
-            </span>
-          </p>
-        </div>
+
+        {order.items.length > 2 && !showAll && (
+          <div>
+          <Button
+            className="bg-transparent text-muted-foreground font-medium mx-auto text-center text-sm md:text-lg  w-full border-none"
+            onClick={() => setShowAll(true)}
+            >
+            View More <ChevronDown />
+          </Button>
+            </div>
+        )}
+        {(order.items.length <= 2 || showAll) &&
+          <div className={`mt-2`}>
+            <h2 className="text-sm font-medium font-inter md:text-xl text-primary">
+              Shipping
+            </h2>
+            <p className="text-xs text-muted-foreground md:text-lg">
+              ₱{order.deliveryOption?.shippingFee}
+            </p>
+          </div>
+        }
+            <p className="text-lg md:text-xl text-right text-muted-foreground">
+              Total:{" "}
+              <span className="text-green-600 font-bold">
+                ₱{order.totalAmount! + order.deliveryOption?.shippingFee!}
+              </span>
+            </p>
+        
         <div className="flex justify-center gap-2 mt-4">
           {order?.status && (
             <Link
@@ -169,7 +195,7 @@ const OrderCard: React.FC<OrderCardProps> = ({ order }) => {
                     className={`${
                       pathname.includes("/orders/to-receive") ||
                       pathname.includes("/orders/to-return-refund")
-                        ? "hover:bg-orderButton dark:hover:text-primary bg-greenColor"
+                        ? "hover:bg-greenColor text-white dark:hover:text-primary bg-orderButton"
                         : "hover:bg-red-300 bg-[#EF4444]"
                     } max-w-screen-lg w-full py-2 px-4 text-white rounded-lg`}
                   >
@@ -181,7 +207,7 @@ const OrderCard: React.FC<OrderCardProps> = ({ order }) => {
                       className={`${
                         pathname.includes("/orders/to-receive") ||
                         pathname.includes("/orders/to-return-refund")
-                          ? "hover:bg-orderButton dark:hover:text-primary bg-greenColor"
+                          ? "hover:bg-greenColor text-white dark:hover:text-primary bg-orderButton"
                           : "hover:bg-red-300 bg-[#EF4444]"
                       } max-w-screen-lg w-full`}
                     >
@@ -219,7 +245,6 @@ const OrderCard: React.FC<OrderCardProps> = ({ order }) => {
           <Modal
             isOpen={showCancelModal}
             onClose={() => setShowCancelModal(false)}
-            title="Confirmation"
           >
             <div className="p-4 text-center">
               <h2 className="text-sm md:text-lg font-semibold">
