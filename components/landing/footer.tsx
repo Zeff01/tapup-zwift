@@ -21,7 +21,9 @@ const listItem = {
 const Footer = () => {
   return (
     <footer className="pb-8 pt-16" id="contact">
+      {/* hide newsletter */}
       {/* <Newsletter /> */}
+      
       <div className="flex mt-8 flex-col sm:flex-row w-full gap-4 justify-around pt-6 items-center">
         <div className="mx-auto aspect-[3.63] h-9">
           <Link href="/">
@@ -29,17 +31,16 @@ const Footer = () => {
           </Link>
         </div>
 
-        {/* remove list and socials temporarily */}
+     
         <div className="gap-8 mx-auto flex">
-         
           <div>
           <h2 className="font-semibold text-lg">Information</h2>
           <div className="flex flex-col gap-1">
            <Link href="/testimonials" className="hover:text-hoverColor">Testimonials</Link>
           </div>
           </div>
-
-            <div className="">
+            
+          <div>
           <h2 className="font-semibold text-lg">Company</h2>
           <div className="flex flex-col gap-1">
            {listItem.list.map((item, index) => (
@@ -54,7 +55,9 @@ const Footer = () => {
           </div>
         </div>
         </div>
-        
+
+
+        {/* hide socials */}
         {/* <ul className="flex gap-4 mx-auto">
           {socials.map((item, index) => (
             <li key={index} className="relative w-6 h-6">
