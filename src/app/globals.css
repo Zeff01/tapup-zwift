@@ -155,15 +155,15 @@
   ::-webkit-scrollbar-thumb {
     background-color: #888;
     border-radius: 3px;
-    @apply bg-custom-purple;
+    @apply bg-greenColor;
   }
 
   ::-webkit-scrollbar-thumb:hover {
-    @apply bg-custom-purple;
+    @apply bg-green-500;
   }
 
   ::-webkit-scrollbar-thumb:active {
-    @apply bg-custom-purple;
+    @apply bg-green-500;
   }
 }
 
