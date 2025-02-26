@@ -9,7 +9,7 @@ interface NavBarProps {
 
 const NavBar: React.FC<NavBarProps> = ({ title, href }) => {
   return (
-    <div className="flex items-center p-3 space-x-4">
+    <div className="flex items-center p-3 space-x-4 border-b-2">
       <Link href={href} className="border p-2 rounded-md">
         <IoArrowBack className="text-lg" />
       </Link>
