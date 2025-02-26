@@ -21,6 +21,7 @@ import { useUserContext } from "@/providers/user-provider";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { createCard } from "@/lib/firebase/actions/card.action";
 import SelectedPhysicalCard from "./SelectedPhysicalCard";
+import TapupLogo from "../svgs/TapupLogo";
 
 export type ChosenTemplateType = z.infer<
   typeof createPortfolioSchema
@@ -185,14 +186,7 @@ export default function CardsAndUsersCreateFields({
   return (
     <main className="flex flex-col overflow-auto py-8 px-6 sm:px-0 bg-background h-full">
       <div className="w-full mx-auto max-w-sm">
-        <Image
-          src="/assets/zwift-logo.png"
-          alt="Company Logo"
-          width={140}
-          height={41}
-          priority
-          className="mx-auto mb-8"
-        />
+        <TapupLogo className="mx-auto mb-4" />
         <Form {...methods}>
           <form
             className="space-y-6"
