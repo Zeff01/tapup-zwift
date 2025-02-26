@@ -315,7 +315,7 @@ export const menuItems = [
   { icon: CgProfile, title: "Profile", href: "/dashboard" },
   // { icon: RxDashboard, title: "Dashboard", href: "/dashboard" },
   { icon: TbCards, title: "Cards", href: "/cards" },
-  { icon: FiShoppingBag, title: "Orders", href: "/orders" },
+  // { icon: FiShoppingBag, title: "Orders", href: "/orders" },
   { icon: TbSettingsFilled, title: "Settings", href: "/settings" },
 ];
 
