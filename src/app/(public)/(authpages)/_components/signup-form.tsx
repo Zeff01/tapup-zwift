@@ -2,7 +2,7 @@
 
 import Link from "next/link";
 import { Separator } from "@/src/app/(public)/(authpages)/_components/auth-separator";
-
+import { Eye, EyeOff } from "lucide-react";
 //shadcn components
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
@@ -41,9 +41,12 @@ import { signUpHandler } from "@/lib/firebase/auth";
 import { useMutation } from "@tanstack/react-query";
 import { useRouter } from "next/navigation";
 import { Loader2 } from "lucide-react";
+import { useState } from "react";
 
 export function RegisterForm() {
   const router = useRouter();
+  const [showPassword, setShowPassword] = useState(false);
+  const [showConfirmPassword, setShowConfirmPassword] = useState(false);
   const form = useForm<z.infer<typeof signupSchema>>({
     resolver: zodResolver(signupSchema),
     defaultValues: {
@@ -152,15 +155,28 @@ export function RegisterForm() {
                 render={({ field }) => (
                   <FormItem>
                     <div className="flex items-center justify-between">
-                      <FormLabel className=" text-xs">Password</FormLabel>
+                      <FormLabel className="text-xs">Password</FormLabel>
                     </div>
                     <FormControl>
-                      <Input
-                        {...field}
-                        type="password"
-                        placeholder="Password"
-                        className="text-xs h-8"
-                      />
+                      <div className="relative">
+                        <Input
+                          {...field}
+                          type={showPassword ? "text" : "password"}
+                          placeholder="Password"
+                          className="text-xs h-8 pr-10"
+                        />
+                        <button
+                          type="button"
+                          onClick={() => setShowPassword(!showPassword)}
+                          className="absolute inset-y-0 right-0 flex items-center pr-3"
+                        >
+                          {showPassword ? (
+                            <EyeOff className="h-4 w-4 " />
+                          ) : (
+                            <Eye className="h-4 w-4" />
+                          )}
+                        </button>
+                      </div>
                     </FormControl>
                   </FormItem>
                 )}
@@ -172,17 +188,32 @@ export function RegisterForm() {
                 render={({ field }) => (
                   <FormItem>
                     <div className="flex items-center justify-between">
-                      <FormLabel className=" text-xs">
+                      <FormLabel className="text-xs">
                         Confirm Password
                       </FormLabel>
                     </div>
                     <FormControl>
-                      <Input
-                        {...field}
-                        type="password"
-                        placeholder="Confirm Password"
-                        className="text-xs h-8"
-                      />
+                      <div className="relative">
+                        <Input
+                          {...field}
+                          type={showConfirmPassword ? "text" : "password"}
+                          placeholder="Confirm Password"
+                          className="text-xs h-8 pr-10"
+                        />
+                        <button
+                          type="button"
+                          onClick={() =>
+                            setShowConfirmPassword(!showConfirmPassword)
+                          }
+                          className="absolute inset-y-0 right-0 flex items-center pr-3"
+                        >
+                          {showConfirmPassword ? (
+                            <EyeOff className="h-4 w-4 " />
+                          ) : (
+                            <Eye className="h-4 w-4 " />
+                          )}
+                        </button>
+                      </div>
                     </FormControl>
                   </FormItem>
                 )}
