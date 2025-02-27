@@ -33,7 +33,7 @@ export default function Social({ label }: { label: string }) {
         <FcGoogle className="text-lg" />
         <span className="text-xs"> {label} with Google</span>
       </Button>
-      <Button
+      {/* <Button
         onClick={handleFacebookSignIn}
         className="w-full flex gap-x-1 border-gray-500 dark:border h-8 rounded-full text-muted-foreground"
         size={"lg"}
@@ -41,7 +41,7 @@ export default function Social({ label }: { label: string }) {
       >
         <FaFacebook className="text-lg text-blue-600" />
         <span className="text-xs"> {label} with Facebook</span>
-      </Button>
+      </Button> */}
     </>
   );
 }

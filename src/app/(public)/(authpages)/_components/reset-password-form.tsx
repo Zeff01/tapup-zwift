@@ -31,10 +31,14 @@ import { ResetPasswordData } from "@/types/types";
 import { useSearchParams, useRouter } from "next/navigation";
 import passwordDots from "@/public/assets/password-dots.png";
 import Image from "next/image";
+import { Eye, EyeOff } from "lucide-react";
+import { useState } from "react";
 
 export function ResetPasswordForm() {
   const searchParams = useSearchParams();
   const router = useRouter();
+  const [showPassword, setShowPassword] = useState(false);
+  const [showConfirmPassword, setShowConfirmPassword] = useState(false);
   const oobCode = searchParams.get("oobCode");
   const form = useForm<z.infer<typeof resetPasswordSchema>>({
     resolver: zodResolver(resetPasswordSchema),
@@ -87,12 +91,25 @@ export function ResetPasswordForm() {
                       <FormMessage className="text-xs" />
                     </div>
                     <FormControl>
-                      <Input
-                        {...field}
-                        type="password"
-                        placeholder="Password"
-                        className="text-xs h-8"
-                      />
+                      <div className="relative">
+                        <Input
+                          {...field}
+                          type={showPassword ? "text" : "password"}
+                          placeholder="Password"
+                          className="text-xs h-8 pr-10"
+                        />
+                        <button
+                          type="button"
+                          onClick={() => setShowPassword(!showPassword)}
+                          className="absolute inset-y-0 right-0 flex items-center pr-3"
+                        >
+                          {showPassword ? (
+                            <EyeOff className="h-4 w-4 " />
+                          ) : (
+                            <Eye className="h-4 w-4 " />
+                          )}
+                        </button>
+                      </div>
                     </FormControl>
                   </FormItem>
                 )}
@@ -109,12 +126,27 @@ export function ResetPasswordForm() {
                       <FormMessage className="text-xs" />
                     </div>
                     <FormControl>
-                      <Input
-                        {...field}
-                        type="password"
-                        placeholder="Confirm Password"
-                        className="text-xs h-8"
-                      />
+                      <div className="relative">
+                        <Input
+                          {...field}
+                          type={showConfirmPassword ? "text" : "password"}
+                          placeholder="Confirm Password"
+                          className="text-xs h-8 pr-10"
+                        />
+                        <button
+                          type="button"
+                          onClick={() =>
+                            setShowConfirmPassword(!showConfirmPassword)
+                          }
+                          className="absolute inset-y-0 right-0 flex items-center pr-3"
+                        >
+                          {showConfirmPassword ? (
+                            <EyeOff className="h-4 w-4 text-gray-500" />
+                          ) : (
+                            <Eye className="h-4 w-4 text-gray-500" />
+                          )}
+                        </button>
+                      </div>
                     </FormControl>
                   </FormItem>
                 )}
