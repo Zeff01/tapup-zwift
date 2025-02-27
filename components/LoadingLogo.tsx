@@ -32,17 +32,17 @@ export default function LoadingLogo() {
   return (
     <div className="bg-background flex flex-col items-center justify-center h-[100dvh]">
       <div className="flex flex-col items-center">
-        {/* <LoadingOption1
-          isDarkMode={isDarkMode}
-          tapUpWhiteLogo={images.tapUpWhiteLogo}
-          tapUpBlackLogo={images.tapUpBlackLogo}
-        /> */}
-
-        <LoadingOption2
+        <LoadingOption1
           isDarkMode={isDarkMode}
           tapUpWhiteLogo={images.tapUpWhiteLogo}
           tapUpBlackLogo={images.tapUpBlackLogo}
         />
+        {/* 
+        <LoadingOption2
+          isDarkMode={isDarkMode}
+          tapUpWhiteLogo={images.tapUpWhiteLogo}
+          tapUpBlackLogo={images.tapUpBlackLogo}
+        /> */}
       </div>
     </div>
   );
