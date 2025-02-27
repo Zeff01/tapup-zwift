@@ -23,7 +23,7 @@ const testimonials = [
     name: "Michael K.",
     title: "Business Owner",
     quote: "I appreciate the eco-friendly approach of Tap Up. It's helping me reduce waste while maintaining a professional image.",
-      image: "/assets/testimonialImg.png"
+      image: "/assets/testimonialImg5.jpg "
   }
 ];
 
@@ -38,7 +38,10 @@ const TestimonialPage = () => {
       <div className="grid gap-6 mt-6 md:grid-cols-2">
         {testimonials.map((testimonial, index) => (
           <div key={index} className="bg-gray-100 dark:bg-gray-800 p-6 rounded-md shadow-md flex flex-col items-center text-center">
-            <Image src={testimonial.image} alt={testimonial.name} width={80} height={80} className="rounded-full mb-4" />
+            <div className="relative w-[5rem] aspect-square">
+
+            <Image src={testimonial.image} alt={testimonial.name} fill className="object-cover rounded-full mb-4" />
+            </div>
             <p className="italic text-lg text-muted-foreground">{testimonial.quote}</p>
             <h3 className="mt-4 font-semibold">{testimonial.name}, {testimonial.title}</h3>
           </div>
