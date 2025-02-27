@@ -15,21 +15,13 @@ type Props = {
 const TopbarBoarded = ({ notifications, user, signOut }: Props) => {
   const pathname = usePathname();
 
-  const handleSwitch = () => {
-    if (pathname.includes('/orders')){
-       return <h1 className="text-xl font-semibold">Orders</h1>;
-    }
-   switch (pathname) {
-          case "/dashboard":
-            return <h1 className="text-xl font-semibold">My Account</h1>;
-          default:
-            return <TapupLogo/>
-        }
-}
-
   return (
     <div className="flex lg:hidden py-4 px-4 sticky top-0 z-50 bg-background items-center ">
-      {handleSwitch()}
+      {pathname === "/dashboard" ? (
+        <h1 className="text-xl">My Account</h1>
+      ) : (
+        <TapupLogo />
+      )}
       <span className="absolute -translate-y-1/2 top-1/2 right-4">
         <OverlayMenu
           notifications={notifications}

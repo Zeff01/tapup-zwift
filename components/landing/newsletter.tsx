@@ -4,21 +4,18 @@ import { Button } from "../ui/button";
 import { FaArrowRight } from "react-icons/fa6";
 import Link from "next/link";
 
-// remove product list and information  temporarily
 const listItem = [
-  // {
-  //   title: "Product",
-  //   list: ["Black Card", "Yellow Card", "Blue Card"],
-  // },
-  // {
-  //   title: "Information",
-  //   list: ["News", "Testimonials", "Feedback"],
-  // },
+  {
+    title: "Product",
+    list: ["Black Card", "Yellow Card", "Blue Card"],
+  },
+  {
+    title: "Information",
+    list: ["News", "Testimonials", "Feedback"],
+  },
   {
     title: "Company",
-    list: ["Privacy", "Terms and Conditions"],
-    url: ["/privacy-policy", "/terms-conditions"],
-    // list: ["Customer Service", "Terms of Use", "Privacy", "About"],
+    list: ["Customer Service", "Terms of Use", "Privacy", "About"],
   },
 ];
 
@@ -32,7 +29,6 @@ const Newsletter = () => {
             type="email"
             placeholder="Email Address"
             className="pl-4 pr-16 h-[3rem] text-xl w-full placeholder:text-xs lg:placeholder:xl"
-            disabled
           />
           <Button
             type="submit"
@@ -42,8 +38,9 @@ const Newsletter = () => {
           </Button>
         </div>
         <p className="font-inter text-sm text-grayDescription">
-          Stay updated with the latest news, updates, and exclusive offers.
-          Subscribe to our newsletter today!
+          Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do
+          eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad
+          minim veniam, temtempor incididunt ut labore.
         </p>
       </div>
       <div className="flex gap-8 flex-col sm:flex-row">
@@ -51,10 +48,10 @@ const Newsletter = () => {
           <div key={index} className="text-center md:text-left pt-4 sm:pt-0">
             <h4 className="font-bold text-lg">{item.title}</h4>
             <ul>
-              {item.list.map((listItem, index) => (
+              {item.list.map((item, index) => (
                 <li key={index} className="pt-3 w-[8rem] mx-auto  md:text-left">
-                  <Link href={item.url[index]} className="my-3 text-base">
-                    {listItem}
+                  <Link href="/" className="my-3 text-base">
+                    {item}
                   </Link>
                 </li>
               ))}

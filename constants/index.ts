@@ -2,18 +2,12 @@ import { CardItem } from "@/types/types";
 import {
   ArrowUp,
   Circle,
-  Clock4,
   CreditCard,
   Image,
   LayoutDashboard,
-  Package,
-  PackageCheck,
   RectangleHorizontal,
   Text,
   Triangle,
-  Truck,
-  Undo2,
-  X,
 } from "lucide-react";
 import { CgProfile } from "react-icons/cg";
 import { RxDashboard } from "react-icons/rx";
@@ -224,34 +218,29 @@ export const courierList = [
 ];
 export const carouselCards = {
   card1: {
-    title: "Midnight Flow",
+    title: "Standard Blue Card",
     image: "/assets/cards/back/card1.png",
-    description:
-      "A sleek and modern design with deep purple and black gradients, perfect for professionals who want to leave a bold impression. The fluid background adds a touch of elegance, making it ideal for tech and innovation-driven individuals.",
+    description: `Lorem ipsum dolor sit, amet consectetur adipisicing elit. Consequatur minima quia porro vel obcaecati dicta asperiores? Numquam velit soluta fugit iure suscipit, odit, veniam reiciendis eveniet nesciunt, consequuntur cum dicta.`,
   },
   card2: {
-    title: "Golden Vision",
+    title: "Standard Yellow Card",
     image: "/assets/cards/back/card2.png",
-    description:
-      "A bright and confident design with a yellow backdrop that radiates energy and optimism. This card is perfect for go-getters who want to stand out with a vibrant yet professional look.",
+    description: `Lorem ipsum dolor sit, amet consectetur adipisicing elit. Consequatur minima quia porro vel obcaecati dicta asperiores? Numquam velit soluta fugit iure suscipit, odit, veniam reiciendis eveniet nesciunt, consequuntur cum dicta.`,
   },
   card3: {
-    title: "Green Edge",
+    title: "Standard Green Card",
     image: "/assets/cards/back/card3.png",
-    description:
-      "A refreshing design that blends green and white for a clean and energetic feel. The curved accent brings movement, symbolizing growth and innovation—great for those in sustainability, wellness, or entrepreneurship.",
+    description: `Lorem ipsum dolor sit, amet consectetur adipisicing elit. Consequatur minima quia porro vel obcaecati dicta asperiores? Numquam velit soluta fugit iure suscipit, odit, veniam reiciendis eveniet nesciunt, consequuntur cum dicta.`,
   },
   card4: {
-    title: "Blue Horizon",
+    title: "Standard Special Card",
     image: "/assets/cards/back/card4.png",
-    description:
-      "A soft yet professional blue gradient gives this card a calm and collected feel. Ideal for corporate professionals and creatives who want a subtle but impactful presence.",
+    description: `Lorem ipsum dolor sit, amet consectetur adipisicing elit. Consequatur minima quia porro vel obcaecati dicta asperiores? Numquam velit soluta fugit iure suscipit, odit, veniam reiciendis eveniet nesciunt, consequuntur cum dicta.`,
   },
   card5: {
-    title: "Serene Blend",
+    title: "Standard Special Card",
     image: "/assets/cards/back/card5.png",
-    description:
-      "A soothing mix of soft blue and pink gradients, creating a professional yet inviting look. This design is perfect for individuals who want a refined and balanced aesthetic that conveys trust and warmth. ",
+    description: `Lorem ipsum dolor sit, amet consectetur adipisicing elit. Consequatur minima quia porro vel obcaecati dicta asperiores? Numquam velit soluta fugit iure suscipit, odit, veniam reiciendis eveniet nesciunt, consequuntur cum dicta.`,
   },
   card6: {
     title: "Custom Card",
@@ -259,40 +248,34 @@ export const carouselCards = {
     description: `Using our card builder, you can personalize your cards by adding text, images, and various design elements, allowing you to create something truly unique and special.`,
   },
   card7: {
-    title: "Arctic Clarity",
+    title: "Standard Blue Card",
     image: "/assets/cards/back/card6.png",
-    description:
-      "A crisp and professional layout featuring icy blue tones and a minimalist structure. Best for those who prefer a polished and straightforward approach to networking.",
+    description: `Using our card builder, you can personalize your cards by adding text, images, and various design elements, allowing you to create something truly unique and special.`,
   },
   card8: {
-    title: "Sunrise Spark",
+    title: "Standard Blue Card",
     image: "/assets/cards/back/card7.png",
-    description:
-      "A lively mix of warm orange and cool blue, evoking a balance of creativity and trust. This design is great for those who want a friendly yet professional aesthetic that welcomes conversation.",
+    description: `Using our card builder, you can personalize your cards by adding text, images, and various design elements, allowing you to create something truly unique and special.`,
   },
-  card9: {
-    title: "Verdant Flow",
+    card9: {
+    title: "Standard Card",
     image: "/assets/cards/back/card8.png",
-    description:
-      "A dynamic green and white layout with a sleek curve, symbolizing growth and innovation. This card is a great fit for professionals in tech, sustainability, or business, offering a fresh and energetic look while maintaining a professional feel.",
+    description: `Using our card builder, you can personalize your cards by adding text, images, and various design elements, allowing you to create something truly unique and special.`,
   },
-  card10: {
-    title: "Rose Radiance",
+      card10: {
+    title: "Standard Blue Card",
     image: "/assets/cards/back/card9.png",
-    description:
-      "A soft yet confident mix of pink and red hues, adding a touch of charm and elegance. Ideal for creative professionals, designers, or anyone who wants a stylish, memorable introduction.",
+    description: `Using our card builder, you can personalize your cards by adding text, images, and various design elements, allowing you to create something truly unique and special.`,
   },
-  card11: {
-    title: "Global Vision",
+          card11: {
+    title: "Standard Blue Card",
     image: "/assets/cards/back/card10.png",
-    description:
-      "A global-themed design with a purple gradient, representing ambition and international reach. This card suits professionals aiming to expand their network across borders.",
+    description: `Using our card builder, you can personalize your cards by adding text, images, and various design elements, allowing you to create something truly unique and special.`,
   },
-  card12: {
-    title: "Cosmic Grid",
+              card12: {
+    title: "Standard Blue Card",
     image: "/assets/cards/back/card11.png",
-    description:
-      "A deep-space-inspired design with digital lines, symbolizing connection and innovation. Great for tech enthusiasts, developers, and engineers who want a sophisticated and modern card.",
+    description: `Using our card builder, you can personalize your cards by adding text, images, and various design elements, allowing you to create something truly unique and special.`,
   },
 };
 
@@ -315,7 +298,7 @@ export const menuItems = [
   { icon: CgProfile, title: "Profile", href: "/dashboard" },
   // { icon: RxDashboard, title: "Dashboard", href: "/dashboard" },
   { icon: TbCards, title: "Cards", href: "/cards" },
-  { icon: FiShoppingBag, title: "Orders", href: "/orders" },
+  { icon: FiShoppingBag, title: "Orders", href: "/orders"},
   { icon: TbSettingsFilled, title: "Settings", href: "/settings" },
 ];
 
@@ -357,38 +340,5 @@ export const paymentCards = [
   {
     image: "/assets/payment/Mastercard.png",
     title: "Mastercard",
-  },
-];
-
-export const orderItems = [
-  {
-    icon: Clock4,
-    title: "Pending",
-    route: "pending",
-  },
-  {
-    icon: Package,
-    title: "To Ship",
-    route: "to-ship",
-  },
-  {
-    icon: Truck,
-    title: "To Receive",
-    route: "to-receive",
-  },
-  {
-    icon: PackageCheck,
-    title: "Delivered",
-    route: "delivered",
-  },
-  {
-    icon: Undo2,
-    title: "To Return/Refund",
-    route: "to-return-refund",
-  },
-  {
-    icon: X,
-    title: "Cancelled",
-    route: "cancelled",
   },
 ];

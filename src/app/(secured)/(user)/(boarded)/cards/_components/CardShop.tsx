@@ -3,7 +3,7 @@
 import { OrderCardsCarousel } from "@/components/OrderCardsCarousel";
 import { cardItems } from "@/constants";
 import { createPortfolioSchema } from "@/lib/zod-schema";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { z } from "zod";
 import { Button } from "@/components/ui/button";
 import {
@@ -18,8 +18,9 @@ import ComingSoon from "@/components/ComingSoon";
 import Image from "next/image";
 import NavBar from "./Navbar";
 import { useCart } from "@/providers/cart-provider";
-import { CartItem } from "@/types/types";
+import { CartItem, SubscriptionPlan } from "@/types/types";
 import Link from "next/link";
+import { getSubscriptionPlans } from "@/lib/firebase/actions/user.action";
 export type ChosenPhysicalCardType = z.infer<
   typeof createPortfolioSchema
 >["chosenPhysicalCard"];
@@ -27,12 +28,43 @@ export type ChosenPhysicalCardType = z.infer<
 const OrderPhysicalCard = () => {
   const { state, dispatch } = useCart();
 
+  const [subscriptionPlans, setSubscriptionPlans] = useState<
+    SubscriptionPlan[]
+  >([]);
+  const [selectedPlan, setSelectedPlan] = useState<SubscriptionPlan | null>(
+    null
+  );
+
+  useEffect(() => {
+    const fetchPlans = async () => {
+      const plans = await getSubscriptionPlans();
+      setSubscriptionPlans(plans);
+
+      if (plans.length > 0) {
+        setSelectedPlan(plans[0]); // Set first plan as default
+      }
+    };
+
+    fetchPlans();
+  }, []);
+
+  const handlePlanChange = (event: React.ChangeEvent<HTMLSelectElement>) => {
+    const plan = subscriptionPlans.find((p) => p.id === event.target.value);
+    if (plan) {
+      setSelectedPlan(plan);
+    }
+  };
+
   const totalItems = state.items.reduce(
     (total, item) => total + item.quantity,
     0
   );
+
   const subtotal = state.items.reduce(
-    (total, item) => total + item.product.price * item.quantity,
+    (total, item) =>
+      total +
+      item.product.price * item.quantity +
+      (item.subscriptionPlan?.price || 0),
     0
   );
 
@@ -63,6 +95,10 @@ const OrderPhysicalCard = () => {
   );
 
   const addItemToCart = () => {
+    console.log("Attempting to add item to cart...");
+    console.log("Selected Card:", selectedCard);
+    console.log("Selected Subscription Plan:", selectedPlan);
+
     if (selectedCard) {
       const existingCartItem = state.items.find(
         (item) => item.product.id === selectedCard.id
@@ -70,17 +106,26 @@ const OrderPhysicalCard = () => {
 
       if (existingCartItem) {
         const newQuantity = existingCartItem.quantity + quantity;
+        console.log("Updating existing cart item. New quantity:", newQuantity);
+
         dispatch({
           type: "UPDATE_CART_ITEM_QUANTITY",
           payload: { id: selectedCard.id, quantity: newQuantity },
         });
       } else {
         const cartItem: CartItem = {
+          physicalCardId: selectedCard.id,
           product: selectedCard,
           quantity: quantity,
+          subscriptionPlan: selectedPlan,
         };
+
+        console.log("Adding new item to cart:", cartItem);
+
         dispatch({ type: "ADD_TO_CART", payload: cartItem });
       }
+    } else {
+      console.warn("No card selected!");
     }
   };
 
@@ -155,6 +200,27 @@ const OrderPhysicalCard = () => {
             <ShoppingCart />
             <span>Add to Cart</span>
           </Button>
+        </div>
+
+        {/* Subscription Plan */}
+        <div className="relative max-h-screen flex flex-col max-w-sm">
+          {/* Subscription Plan Dropdown */}
+          <div className="mt-4">
+            <label className="block text-sm font-medium text-gray-700 dark:text-gray-300">
+              Choose a Subscription Plan
+            </label>
+            <select
+              value={selectedPlan?.id || ""}
+              onChange={handlePlanChange}
+              className="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-primary focus:border-primary dark:bg-gray-800 dark:border-gray-700 dark:text-white"
+            >
+              {subscriptionPlans.map((plan) => (
+                <option key={plan.id} value={plan.id}>
+                  {plan.name} - ₱{plan.price} ({plan.durationDays} days)
+                </option>
+              ))}
+            </select>
+          </div>
         </div>
       </div>
 
