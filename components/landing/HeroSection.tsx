@@ -4,6 +4,7 @@ import tapupImg from "@/public/assets/Cards.png";
 import { LogIn } from "lucide-react";
 import Link from "next/link";
 
+
 const Hero = () => {
   return (
     <section
@@ -18,8 +19,8 @@ const Hero = () => {
         <p className="text-lg w-full max-w-xl leading-snug md:leading-8 sm:text-xl mt-4 text-muted-foreground text-justify">
           Tap Up allows you to create, share, and manage digital business cards effortlessly. With customizable designs, instant updates, and seamless integration across devices, you can leave a lasting impression.
         </p>
-        <Link href="/signup">
-        <Button className="uppercase max-w-[15rem] py-6 w-full bg-green-600 mt-[27px] font-bold flex text-background items-center mx-auto sm:mx-0 hover:bg-green-700">
+        <Link href="/signup" >
+          <Button className="uppercase max-w-[15rem] py-6 w-full text-white bg-buttonColor mt-[27px] font-bold flex items-center mx-auto sm:mx-0 hover:bg-hoverColor">
           Get a card <LogIn size={32} />
           </Button>
           </Link>

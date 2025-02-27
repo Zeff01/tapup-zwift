@@ -34,9 +34,9 @@ const Header = () => {
               href={item.href}
               className={`${
                 item.href === pathname
-                  ? "text-green-600 border-b-2 border-greenTitle"
+                  ? "text-greenText border-b-2 border-greenTitle"
                   : ""
-              } hover:text-green-500`}
+              } hover:text-hoverColor`}
             >
               {item.label}
             </Link>
@@ -45,8 +45,8 @@ const Header = () => {
 
         {/* Desktop Activate Button */}
         <Link href="/login">
-          <Button className="hidden lg:block  text-lg  bg-green-600 hover:bg-green-700">
-            Sign in
+          <Button className="hidden lg:block  text-lg text-white  bg-buttonColor hover:bg-hoverColor">
+            Sign In
           </Button>
         </Link>
 
@@ -96,10 +96,10 @@ const Header = () => {
                 className={`
                   ${
                     item.href === pathname
-                      ? "text-green-600 border-b-2 border-greenTitle"
+                      ? "text-greenText border-b-2 border-greenTitle"
                       : ""
                   } 
-                  hover:text-green-500 
+                  hover:text-hoverColor 
                   py-2
                 `}
                 onClick={handleMobileMenu}
@@ -109,8 +109,8 @@ const Header = () => {
             ))}
 
             <Link href="/login" className="mt-4" onClick={handleMobileMenu}>
-              <Button className="w-full bg-green-600 hover:bg-green-700">
-                Activate
+              <Button className="w-full bg-green-600 text-white hover:bg-green-700">
+                Sign In
               </Button>
             </Link>
           </nav>

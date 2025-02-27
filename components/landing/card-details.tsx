@@ -19,7 +19,7 @@ const CardDetails: React.FC<CardDetailsProps> = ({ card }) => {
       </pre>
 
       <Link href="/signup">
-      <Button className="uppercase max-w-[15rem] px-8 py-6 w-full bg-green-600 mt-[27px] font-bold flex text-background items-center mx-auto hover:bg-green-700">
+      <Button className="uppercase max-w-[15rem] px-8 py-6 w-full text-white bg-buttonColor mt-[27px] font-bold flex items-center mx-auto hover:bg-hoverColor">
         Sign up & Activate
         <LogIn />
         </Button>

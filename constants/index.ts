@@ -242,38 +242,40 @@ export const carouselCards = {
     image: "/assets/cards/back/card5.png",
     description: `Lorem ipsum dolor sit, amet consectetur adipisicing elit. Consequatur minima quia porro vel obcaecati dicta asperiores? Numquam velit soluta fugit iure suscipit, odit, veniam reiciendis eveniet nesciunt, consequuntur cum dicta.`,
   },
+  // hide web builder image
+  // card6: {
+  //   title: "Custom Card",
+  //   image: "/assets/cards/gridImg.png",
+  //   description: `Using our card builder, you can personalize your cards by adding text, images, and various design elements, allowing you to create something truly unique and special.`,
+  // },
+
   card6: {
-    title: "Custom Card",
-    image: "/assets/cards/gridImg.png",
-    description: `Using our card builder, you can personalize your cards by adding text, images, and various design elements, allowing you to create something truly unique and special.`,
-  },
-  card7: {
-    title: "Standard Blue Card",
+    title: "Arctic Clarity",
     image: "/assets/cards/back/card6.png",
     description: `Using our card builder, you can personalize your cards by adding text, images, and various design elements, allowing you to create something truly unique and special.`,
   },
-  card8: {
-    title: "Standard Blue Card",
+  card7: {
+    title: "Sunrise Spark",
     image: "/assets/cards/back/card7.png",
     description: `Using our card builder, you can personalize your cards by adding text, images, and various design elements, allowing you to create something truly unique and special.`,
   },
-    card9: {
-    title: "Standard Card",
+  card8: {
+    title: "Verdant Flow",
     image: "/assets/cards/back/card8.png",
     description: `Using our card builder, you can personalize your cards by adding text, images, and various design elements, allowing you to create something truly unique and special.`,
   },
-      card10: {
-    title: "Standard Blue Card",
+  card9: {
+    title: "Rose Radiance",
     image: "/assets/cards/back/card9.png",
     description: `Using our card builder, you can personalize your cards by adding text, images, and various design elements, allowing you to create something truly unique and special.`,
   },
-          card11: {
-    title: "Standard Blue Card",
+  card10: {
+    title: "Global Vision",
     image: "/assets/cards/back/card10.png",
     description: `Using our card builder, you can personalize your cards by adding text, images, and various design elements, allowing you to create something truly unique and special.`,
   },
-              card12: {
-    title: "Standard Blue Card",
+  card11: {
+    title: "Cosmic Grid",
     image: "/assets/cards/back/card11.png",
     description: `Using our card builder, you can personalize your cards by adding text, images, and various design elements, allowing you to create something truly unique and special.`,
   },

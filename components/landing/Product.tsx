@@ -6,7 +6,7 @@ import grids from "../../public/images/grid.png";
 const Products = () => {
   return (
     <section
-      className="py-8 lg:py-16  container items-center flex xl:flex-row flex-col"
+      className="py-8 lg:py-16 container items-center justify-center flex xl:flex-row flex-col"
       id="products"
     >
       <div className="">
@@ -63,7 +63,8 @@ const Products = () => {
         </div>
       </div>
 
-      <div className=" flex justify-center md:justify-start items-start flex-1">
+      {/* hide web builder */}
+      {/* <div className=" flex justify-center md:justify-start items-start flex-1">
         <div className=" flex flex-col md:justify-end justify-center gap-y-2 min-h-[400px]">
           <div className="flex items-end md:h-[300px]">
             <p className=" md:text-2xl w-[150px] text-base text-muted-foreground md:mr-2">
@@ -89,7 +90,7 @@ const Products = () => {
             card builder
           </h2>
         </div>
-      </div>
+      </div> */}
     </section>
   );
 };
