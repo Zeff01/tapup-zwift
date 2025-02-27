@@ -392,7 +392,7 @@ export default function CardsAndUsersFields({
 
             <button
               type="submit"
-              className="w-full px-4 py-4 bg-[#6150EB] hover:bg-[#6250ebc0] rounded-md font-bold disabled:opacity-50 disabled:cursor-not-allowed"
+              className="w-full px-4 py-4 bg-[#6150EB] hover:bg-[#6250ebc0] rounded-md font-bold disabled:opacity-50 disabled:cursor-not-allowed text-white"
               disabled={isLoading}
             >
               {isLoading ? (

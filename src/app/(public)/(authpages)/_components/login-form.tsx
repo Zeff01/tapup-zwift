@@ -39,9 +39,13 @@ import { LoginData } from "@/types/types";
 import { useRouter } from "next/navigation";
 import { useMutation } from "@tanstack/react-query";
 import { Loader2 } from "lucide-react";
+import { Eye, EyeOff } from "lucide-react";
+import { useState } from "react";
 
 export function LogInForm() {
   const router = useRouter();
+  const [showPassword, setShowPassword] = useState(false);
+
   const form = useForm<z.infer<typeof loginSchema>>({
     resolver: zodResolver(loginSchema),
     defaultValues: {
@@ -103,12 +107,25 @@ export function LogInForm() {
                       <FormLabel className="text-xs">Password</FormLabel>
                     </div>
                     <FormControl>
-                      <Input
-                        {...field}
-                        type="password"
-                        placeholder="Password"
-                        className="text-xs h-8"
-                      />
+                      <div className="relative">
+                        <Input
+                          {...field}
+                          type={showPassword ? "text" : "password"}
+                          placeholder="Password"
+                          className="text-xs h-8 pr-10"
+                        />
+                        <button
+                          type="button"
+                          onClick={() => setShowPassword(!showPassword)}
+                          className="absolute inset-y-0 right-0 flex items-center pr-3"
+                        >
+                          {showPassword ? (
+                            <EyeOff className="h-4 w-4 " />
+                          ) : (
+                            <Eye className="h-4 w-4 " />
+                          )}
+                        </button>
+                      </div>
                     </FormControl>
                   </FormItem>
                 )}
