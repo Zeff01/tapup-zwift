@@ -61,7 +61,7 @@ const PersonalInfoForm: React.FC<PersonalInfoFormProps> = ({
                   {...field}
                 />
               </FormControl>
-              <FormMessage className="text-12 text-red-500 mt-2" />
+              {/* <FormMessage className="text-12 text-red-500 mt-2" /> */}
             </div>
           </div>
         )}
