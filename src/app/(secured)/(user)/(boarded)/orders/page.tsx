@@ -1,10 +1,16 @@
-import ComingSoon from '@/components/ComingSoon'
+"use client";
+import { useEffect } from "react";
+import { useRouter, usePathname } from "next/navigation";
 
+export default function OrdersHomePage() {
+  const router = useRouter();
+  const pathname = usePathname();
 
-const page = () => {
-  return (
-    <ComingSoon/>
-  )
+  useEffect(() => {
+    if (pathname === "/orders") {
+      router.push("/orders/pending");
+    }
+  }, [pathname, router]);
+
+  return null;
 }
-
-export default page
