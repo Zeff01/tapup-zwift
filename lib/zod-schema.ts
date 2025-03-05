@@ -153,6 +153,7 @@ export const createPortfolioSchema = z.object({
 });
 
 export const editCardSchema = z.object({
+
   coverPhotoUrl: z
     .string()
     .refine(

@@ -17,6 +17,7 @@ import * as Dialog from "@radix-ui/react-dialog";
 import { firebaseAuth } from "@/lib/firebase/firebase";
 import { toast } from "react-toastify";
 import { useQueryClient } from "@tanstack/react-query";
+import { TooltipProvider } from "@radix-ui/react-tooltip";
 
 const Cards = () => {
   const [ConfirmDialog, confirm] = useConfirm(
@@ -92,29 +93,31 @@ const Cards = () => {
           </div>
         </div>
 
-        <div className="grid justify-center grid-cols-[repeat(auto-fill,minmax(18rem,24rem))] justify-items-center xl:justify-start xl:grid-cols-[repeat(auto-fill,minmax(18rem,1fr))] gap-4 mt-8">
-          {cards && cards.length > 0 ? (
-            cards.map((card) => (
-              <DigitalCard
-                user={user}
-                confirm={confirm}
-                key={card.id}
-                card={card}
-              />
-            ))
-          ) : (
-            <div className="col-span-full flex flex-col items-center justify-center min-h-[60vh]">
-              <div className="flex flex-col items-center">
-                <h2 className="text-2xl md:text-3xl font-bold text-greenTitle mb-4">
-                  No Cards Yet
-                </h2>
-                <p className="text-base md:text-lg text-grayDescription text-center mb-8 max-w-md">
-                  Create your first digital business card to get started!
-                </p>
+        <TooltipProvider>
+          <div className="grid justify-center grid-cols-[repeat(auto-fill,minmax(18rem,24rem))] justify-items-center xl:justify-start xl:grid-cols-[repeat(auto-fill,minmax(18rem,1fr))] gap-4 mt-8">
+            {cards && cards.length > 0 ? (
+              cards.map((card) => (
+                <DigitalCard
+                  user={user}
+                  confirm={confirm}
+                  key={card.id}
+                  card={card}
+                />
+              ))
+            ) : (
+              <div className="col-span-full flex flex-col items-center justify-center min-h-[60vh]">
+                <div className="flex flex-col items-center">
+                  <h2 className="text-2xl md:text-3xl font-bold text-greenTitle mb-4">
+                    No Cards Yet
+                  </h2>
+                  <p className="text-base md:text-lg text-grayDescription text-center mb-8 max-w-md">
+                    Create your first digital business card to get started!
+                  </p>
+                </div>
               </div>
-            </div>
-          )}
-        </div>
+            )}
+          </div>
+        </TooltipProvider>
 
         <Dialog.Root open={isDialogOpen} onOpenChange={setIsDialogOpen}>
           <Dialog.Portal>

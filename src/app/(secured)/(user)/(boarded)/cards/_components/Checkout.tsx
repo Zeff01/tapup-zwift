@@ -30,6 +30,7 @@ const Checkout = () => {
   const { state: shippingState } = useShippingInfo();
   const { state: cartState } = useCart();
   const { shippingInfo, deliveryOption } = shippingState;
+  const { dispatch } = useCart();
 
   const calculateSubtotal = () => {
     return cartState.items.reduce(
@@ -115,10 +116,16 @@ const Checkout = () => {
         recurringPlan
       );
       toast.success("Subscription successfully created.");
+      handleClearCart();
     } catch (error) {
       console.error("Error upgrading subscription:", error);
       toast.error("Failed to process subscription.");
     }
+  };
+
+  const handleClearCart = () => {
+    dispatch({ type: "CLEAR_CART" });
+    localStorage.removeItem("cartState");
   };
 
   return (
