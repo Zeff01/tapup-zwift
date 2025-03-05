@@ -58,7 +58,9 @@ export interface Order {
   deliveryOption: DeliveryOption;
   orderDate: Date;
   totalAmount: number;
-  status: "Pending" | "Shipped" | "Delivered" | "Cancelled";
+  requiresInfo?: boolean;
+  status: "Pending" | "To Ship" | "To Receive" | "Delivered" | "To Return/Refund"| "Cancelled";
+  returnStatus?: "Return Requested" | "To Return" | "Refunded" | "Delivered" | "Return Rejected" | "Cancelled";
 }
 export interface Address {
   city: string;
