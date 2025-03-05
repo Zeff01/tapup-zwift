@@ -11,14 +11,16 @@ import {
 } from "@/lib/firebase/actions/card.action";
 import Loading from "@/src/app/loading";
 import { useConfirm } from "@/hooks/useConfirm";
-import { QrCode } from "lucide-react";
+import { QrCode, ShoppingBag } from "lucide-react";
 import QrCodeModal from "@/components/qrcode/qrcode-modal";
 import * as Dialog from "@radix-ui/react-dialog";
 import { firebaseAuth } from "@/lib/firebase/firebase";
 import { toast } from "react-toastify";
 import { useQueryClient } from "@tanstack/react-query";
+import { useRouter } from "next/navigation";
 
 const Cards = () => {
+  const router = useRouter();
   const [ConfirmDialog, confirm] = useConfirm(
     "Are you sure",
     "You are about to delete this card"
@@ -85,10 +87,14 @@ const Cards = () => {
             >
               Buy a Card
             </Link>
+<div className="flex items-center justify-center">
 
-            <QrCodeModal
-              icon={<QrCode className="size-6 shrink-0" size={8} />}
-            />
+            <ShoppingBag
+              onClick={() => router.push("/orders")}
+              size={36}
+              className="cursor-pointer"
+              />
+              </div>
           </div>
         </div>
 
