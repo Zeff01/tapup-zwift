@@ -19,6 +19,8 @@ import { toast } from "react-toastify";
 import { Card, Subscription } from "@/types/types";
 import { revalidatePath } from "../../revalidate";
 import { authCurrentUser } from "../auth";
+import { differenceInDays } from "date-fns";
+
 
 export const createCard = async ({
   user_id,
@@ -100,17 +102,28 @@ export const getCardsByOwner = async (owner_id: string) => {
       return [];
     }
 
-    const result: Partial<Card>[] = await Promise.all(
-      cards.docs.map(async (doc) => {
-        const cardData = doc.data();
-        const expiryTimestamp = await getLatestSubscriptionExpiryDate(doc.id);
-        return {
-          ...cardData,
-          id: doc.id,
-          expiryDate: expiryTimestamp ?? undefined, // Keep as number
-        };
-      })
-    );
+    const result: Partial<Card>[] = [];
+
+    for (const doc of cards.docs) {
+      const cardData = doc.data();
+      const expiryTimestamp = await getLatestSubscriptionExpiryDate(doc.id);
+
+      if (expiryTimestamp) {
+        const expiryDate = new Date(expiryTimestamp);
+        const today = new Date();
+
+        // Exclude cards that have been expired for more than 30 days
+        if (differenceInDays(today, expiryDate) > 30) {
+          continue;
+        }
+      }
+
+      result.push({
+        ...cardData,
+        id: doc.id,
+        expiryDate: expiryTimestamp ?? undefined, // Keep as number
+      });
+    }
 
     return result;
   } catch (error) {

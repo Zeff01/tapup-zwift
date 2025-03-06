@@ -2,7 +2,7 @@
 import { useState, useEffect } from "react";
 import Image from "next/image";
 import { Photo } from "@/types/types";
-import { Loader2, LoaderCircle, X } from "lucide-react";
+import { Loader2, LoaderCircle } from "lucide-react";
 import Cropper from "../Cropper";
 import { useForm } from "react-hook-form";
 import { Form } from "@/components/ui/form";
@@ -15,8 +15,7 @@ import CompanyInfoForm from "@/components/forms/CompanyInfoForm";
 import ImageLoaded from "@/components/ImageLoaded";
 import { IoMdClose } from "react-icons/io";
 import { useUserContext } from "@/providers/user-provider";
-
-import { ExtendedUserInterface } from "@/types/types";
+import { Card, ExtendedUserInterface } from "@/types/types";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { updateCardById } from "@/lib/firebase/actions/card.action";
 import MultiStepProgress from "./MultiStepProgress";
@@ -25,19 +24,30 @@ import { formHeaderItems } from "@/constants";
 import SocialLinksSelector from "./SocialLink";
 import { Input } from "../ui/input";
 import SelectedTemplate from "./SelectedTemplate";
-import SelectPhysicalCard from "./SelectedPhysicalCard";
-import SelectedPhysicalCard from "./SelectedPhysicalCard";
-import { Button } from "@/components/ui/button";
-import { ArrowLeft } from "lucide-react";
-import { PhysicalCardCarousel } from "../PhysicalCardCarousel";
+import { useRouter } from "next/navigation";
 
-export type ChosenTemplateType = z.infer<
-  typeof createPortfolioSchema
->["chosenTemplate"];
+export type ChosenTemplateType =
+  | "template1"
+  | "template2"
+  | "template3"
+  | "template4"
+  | "template5"
+  | "template6"
+  | "template7"
+  | "template8"
+  | "template9"
+  | "template10"
+  | "template11"
+  | "template12";
 
-export type ChosenPhysicalCardType = z.infer<
-  typeof createPortfolioSchema
->["chosenPhysicalCard"];
+export type ChosenPhysicalCardType = "card1" | "card2" | "card3" | "card4";
+
+type CardSpecificFields = {
+  owner: string;
+  transferCode: string;
+  expiryDate?: number;
+  disabled?: boolean;
+};
 
 interface SelectedLink {
   label: string;
@@ -45,17 +55,22 @@ interface SelectedLink {
   value: string;
 }
 
+interface MultiStepFormUpdateProps {
+  userData: Card | ExtendedUserInterface;
+  isCurrentUser?: boolean;
+  isCard?: boolean;
+  isOnboarding?: boolean;
+}
+
 const MultiStepFormUpdate = ({
   userData,
   isCurrentUser,
   isCard,
-}: {
-  userData: ExtendedUserInterface;
-  isCurrentUser?: boolean;
-  isCard?: boolean;
-}) => {
+  isOnboarding,
+}: MultiStepFormUpdateProps) => {
   const queryClient = useQueryClient();
-  const { user, updateUser, isLoading: userContextLoading } = useUserContext();
+  const { user, updateUser } = useUserContext();
+  const router = useRouter();
 
   const [photo, setPhoto] = useState<Photo | null>(null);
   const [imageUrl, setImageUrl] = useState<string | null>(
@@ -82,11 +97,13 @@ const MultiStepFormUpdate = ({
   ];
 
   const [selectedTemplateId, setSelectedTemplateId] =
-    useState<ChosenTemplateType>(userData.chosenTemplate as ChosenTemplateType);
+    useState<ChosenTemplateType>(
+      (userData.chosenTemplate as ChosenTemplateType) ?? "template1"
+    );
 
   const [selectedPhysicalCardId, setSelectedPhysicalCardId] =
     useState<ChosenPhysicalCardType>(
-      userData.chosenPhysicalCard as ChosenPhysicalCardType
+      (userData.chosenPhysicalCard as ChosenPhysicalCardType) ?? "card1"
     );
 
   const addServicePhoto = (photo: Photo) => {
@@ -102,11 +119,15 @@ const MultiStepFormUpdate = ({
     defaultValues: {
       coverPhotoUrl: userData.coverPhotoUrl || "",
       profilePictureUrl: userData.profilePictureUrl || "",
+      position: userData.position || "",
+      company: userData.company || "",
+      companyBackground: userData.companyBackground || "",
+      serviceDescription: userData.serviceDescription || "",
       servicePhotos: userData.servicePhotos || [],
       chosenTemplate:
-        (userData.chosenTemplate as ChosenTemplateType) || "template1",
+        (userData.chosenTemplate as ChosenTemplateType) ?? "template1",
       chosenPhysicalCard:
-        (userData.chosenPhysicalCard as ChosenPhysicalCardType) || "card1",
+        (userData.chosenPhysicalCard as ChosenPhysicalCardType) ?? "card1",
       firstName: userData.firstName || "",
       lastName: userData.lastName || "",
       email: userData.email || "",
@@ -122,30 +143,6 @@ const MultiStepFormUpdate = ({
     },
   });
 
-  useEffect(() => {
-    if (imageUrl) {
-      methods.setValue("profilePictureUrl", imageUrl || "");
-      if (methods.formState.errors.profilePictureUrl) {
-        methods.clearErrors("profilePictureUrl");
-      }
-    }
-    if (coverPhotoUrl) {
-      methods.setValue("coverPhotoUrl", coverPhotoUrl || "");
-    }
-    if (serviceImageUrls.length > 0) {
-      methods.setValue("servicePhotos", serviceImageUrls || []);
-    }
-    methods.setValue("chosenTemplate", selectedTemplateId);
-    methods.setValue("chosenPhysicalCard", selectedPhysicalCardId);
-  }, [
-    coverPhotoUrl,
-    imageUrl,
-    serviceImageUrls,
-    selectedTemplateId,
-    selectedPhysicalCardId,
-    methods,
-  ]);
-
   const { mutate: updateCardMutation, isPending: isLoadingUpdateMutation } =
     useMutation({
       mutationFn: updateCardById,
@@ -155,19 +152,31 @@ const MultiStepFormUpdate = ({
     });
 
   const formSubmit = async (data: z.infer<typeof editCardSchema>) => {
-    if (!userData) return;
+    if (isOnboarding) {
+      localStorage.removeItem("onboardingData");
+      localStorage.setItem("onboardingData", JSON.stringify(data));
+      router.push("/onboarding/next-step");
+      return;
+    }
+
     if (isCard) {
       updateCardMutation({ cardId: userData.id!, data });
       return;
     }
-    const id = isCurrentUser ? userData.uid : userData.id || userData.uid;
+
+    const id = isCurrentUser
+      ? (userData as ExtendedUserInterface).uid
+      : userData.id;
+
     if (!id) return;
-    await updateUser(id as string, data as ExtendedUserInterface);
+    await updateUser(id, data as ExtendedUserInterface);
   };
 
-  const isLoading = userContextLoading || isLoadingUpdateMutation;
+  const isLoading = isOnboarding
+    ? isLoadingUpdateMutation
+    : isLoadingUpdateMutation;
 
-  const handleNextStep = async (event: any) => {
+  const handleNextStep = async (event: React.FormEvent) => {
     event.preventDefault();
     const fieldsToValidate = steps[currentStep - 1];
     const isValid = await methods.trigger(fieldsToValidate);
@@ -175,6 +184,7 @@ const MultiStepFormUpdate = ({
     if (isValid) {
       if (currentStep === steps.length) {
         await methods.handleSubmit(formSubmit)();
+        if (!isOnboarding) router.push("/dashboard");
       } else {
         setCurrentStep((prev) => prev + 1);
       }
@@ -406,7 +416,9 @@ const MultiStepFormUpdate = ({
                     )}
                     <TemplateCarousel
                       selectedTemplateId={selectedTemplateId}
-                      setSelectedTemplateId={setSelectedTemplateId}
+                      setSelectedTemplateId={(id: ChosenTemplateType) =>
+                        setSelectedTemplateId(id)
+                      }
                     />
                   </div>
                 </div>
