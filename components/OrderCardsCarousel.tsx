@@ -21,11 +21,12 @@ export function OrderCardsCarousel({
   setSelectedCardId,
 }: OrderCardsCarouselProps) {
   return (
-    <div className="">
+    <div className="px-12">
       <Carousel
         opts={{ align: "start" }}
-        className="w-full max-w-screen-lg mx-auto overflow-hidden"
+        className="w-full max-w-screen-lg mx-auto "
       >
+        <CarouselPrevious />
         <CarouselContent className="flex justify-start items-center px-4 md:justify-center">
           {cardItems.map((card: CardItem) => (
             <CarouselItem key={card.id} className="flex-none p-2">
@@ -37,7 +38,7 @@ export function OrderCardsCarousel({
                 }`}
                 onClick={() => setSelectedCardId(card.id)}
               >
-                <Card className="bg-black rounded-lg overflow-hidden border-none aspect-[16/10] w-24 md:w-28">
+                <Card className="bg-black rounded-lg border-none aspect-[16/10] w-24 md:w-28">
                   <CardContent className="flex flex-col items-center justify-center p-1 text-white">
                     <Image
                       src={card.image}
@@ -54,7 +55,7 @@ export function OrderCardsCarousel({
             </CarouselItem>
           ))}
         </CarouselContent>
-        <CarouselPrevious />
+
         <CarouselNext />
       </Carousel>
     </div>
