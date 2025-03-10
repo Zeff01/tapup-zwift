@@ -212,6 +212,7 @@ export default function CardsAndUsersCreateFields({
                       fallback={
                         <div className="w-full aspect-[16/9] flex flex-col items-center gap-y-2 bg-[#222224]">
                           <Image
+                            unoptimized={true}
                             src={"/assets/plus.svg"}
                             width={50}
                             height={50}
@@ -237,6 +238,7 @@ export default function CardsAndUsersCreateFields({
                         fallback={
                           <div className="relative w-full h-full rounded-full flex items-center justify-center bg-[#222224]">
                             <Image
+                              unoptimized={true}
                               src={"/assets/gallery.svg"}
                               width={50}
                               height={50}
@@ -245,6 +247,7 @@ export default function CardsAndUsersCreateFields({
                             />
                             <div className="absolute bottom-0 right-0 bg-[#222224] rounded-full">
                               <Image
+                                unoptimized={true}
                                 src={"/assets/plus-dark.svg"}
                                 width={50}
                                 height={50}
@@ -306,6 +309,7 @@ export default function CardsAndUsersCreateFields({
                               fallback={
                                 <div className="relative w-full h-full flex items-center justify-center bg-[#222224] rounded-md">
                                   <Image
+                                    unoptimized={true}
                                     src={"/assets/gallery.svg"}
                                     width={50}
                                     height={50}
@@ -313,6 +317,7 @@ export default function CardsAndUsersCreateFields({
                                   />
                                   <div className="absolute bottom-0 right-0 translate-x-1/2 translate-y-1/4 bg-[#222224] rounded-full">
                                     <Image
+                                      unoptimized={true}
                                       src={"/assets/plus-dark.svg"}
                                       width={50}
                                       height={50}
@@ -361,6 +366,7 @@ export default function CardsAndUsersCreateFields({
                                 fallback={
                                   <div className="relative w-full h-full flex items-center justify-center bg-[#222224] rounded-md">
                                     <Image
+                                      unoptimized={true}
                                       src={"/assets/gallery.svg"}
                                       width={20}
                                       height={20}
@@ -368,6 +374,7 @@ export default function CardsAndUsersCreateFields({
                                     />
                                     <div className="absolute bottom-0 right-0 translate-x-1/2 translate-y-1/4 bg-[#222224] rounded-full">
                                       <Image
+                                        unoptimized={true}
                                         src={"/assets/plus-dark.svg"}
                                         width={30}
                                         height={30}
