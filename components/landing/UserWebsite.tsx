@@ -10,7 +10,7 @@ const UserWebsite = () => {
       className="flex py-8 md:py-24 mx-auto flex-col xl:flex-row"
       id="userswebsite"
     >
-      <div className="flex">
+      <div className="flex flex-col md:flex-row ">
         <div className="md:w-[220px] pb-4 pl-10 w-full lg:pl-2">
           <p className="md:text-2xl text-sm text-muted-foreground">
             Create your personal website
