@@ -14,7 +14,7 @@ const CardDetails: React.FC<CardDetailsProps> = ({ card }) => {
         {card?.title}
       </h2>
 
-      <pre className="text-lg w-full max-w-lg leading-snug md:leading-8 sm:text-xl text-muted-foreground text-justify mt-6 whitespace-pre-line font-sans mx-auto h-56 p-4 rounded-md border shadow-lg">
+      <pre className="text-lg w-full max-w-lg leading-snug md:leading-8 sm:text-xl text-muted-foreground text-justify mt-6 whitespace-pre-line font-sans mx-auto h-56 p-4 rounded-md ">
         {card?.description}
       </pre>
 
