@@ -39,7 +39,7 @@ const ProductCard: React.FC<ProductCardProps> = ({ item, showTrash }) => {
   };
 
   return (
-    <div className="flex items-center p-4 rounded-lg">
+    <div className="flex items-center p-4 rounded-lg relative">
       {/* Product Image */}
       <div className="w-16 h-10 relative">
         <Image
