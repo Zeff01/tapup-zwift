@@ -195,7 +195,7 @@ const OrderPhysicalCard = () => {
           {/* Add to Cart Button */}
           <Button
             onClick={addItemToCart}
-            className="flex gap-2 hover:bg-primary "
+            className="flex gap-2 hover:bg-black dark:hover:bg-grayTemplate"
           >
             <ShoppingCart />
             <span>Add to Cart</span>
@@ -241,14 +241,16 @@ const OrderPhysicalCard = () => {
       </div>
 
       {/* Collapsible Section */}
-      {isExpanded && (
-        <div className=" p-4 z-20 bg-white dark:bg-transparent ">
-          <h2 className="text-lg font-bold mb-2">Your Cart</h2>
-          <div className="space-y-4 w-full h-96 overflow-y-auto ">
-            <Cart showTrash={isTrash} />
-          </div>
+      <div
+        className={`z-20 bg-white dark:bg-transparent overflow-hidden transition-all duration-500 ease-in-out ${
+          isExpanded ? "max-h-96 p-4" : "max-h-0 p-0"
+        }`}
+      >
+        <h2 className="text-lg font-bold mb-2">Your Cart</h2>
+        <div className="space-y-4 w-full h-96 overflow-y-auto pb-16 ">
+          <Cart showTrash={isTrash} />
         </div>
-      )}
+      </div>
 
       {/* Fixed Bottom Section */}
       <div className=" p-4  z-20 bg-white dark:bg-transparent ">
