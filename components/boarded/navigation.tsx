@@ -31,6 +31,7 @@ const NavigationBoarded = ({ user, signOut, notifications }: Props) => {
       </div>
       <div className="relative border p-1 rounded-full outline-white outline-2 flex items-center gap-2">
         <Image
+          unoptimized={true}
           src={user?.profilePictureUrl || profilePic}
           alt="user image"
           width={50}
