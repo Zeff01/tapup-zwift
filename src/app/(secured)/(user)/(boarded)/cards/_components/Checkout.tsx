@@ -174,6 +174,7 @@ const Checkout = () => {
                 <div className=" flex items-center gap-3">
                   {/* Image */}
                   <Image
+                    unoptimized={true}
                     src={deliveryOption?.image || ""}
                     alt={deliveryOption?.name || "img"}
                     width={44}
