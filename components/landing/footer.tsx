@@ -26,20 +26,13 @@ const Footer = () => {
 
       <div className="flex mt-8 flex-col sm:flex-row w-full gap-4 justify-around pt-6 items-center">
         <div className="mx-auto text-center">
-          <div className="aspect-[3.63] h-9 mx-auto">
-            <Link href="/">
-              <TapupLogo className="w-full h-full" />
+          <div className="flex flex-col items-start">
+            <Link href="/" className="mb-2">
+              <TapupLogo className="h-9 " />
             </Link>
+            <h2 className="text-left"> codebility.dev@gmail.com</h2>
+            <h2 className="text-left">+63921090799</h2>
           </div>
-          <Link
-            href="mailto:codebility.dev@gmail.com"
-            className="block hover:text-hoverColor mt-2"
-          >
-            codebility.dev@gmail.com
-          </Link>
-          <Link href="tel:+63921090799" className="block hover:text-hoverColor">
-            +63921090799
-          </Link>
         </div>
 
         <div className="gap-8 mx-auto flex">

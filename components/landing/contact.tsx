@@ -5,12 +5,12 @@ import Image from "next/image";
 import Link from "next/link";
 
 const contactInfo = [
-  {
-    title: "Location",
-    icon: MapPin,
-    text: "123 Tap Up Street, Manila, Philippines",
-    url: "https://www.google.com/maps/place/GF,+mm-121,+Mall+of+Asia,+1300+Pacific+Dr,+Pasay,+Metro+Manila/@14.535199,120.9808556,17z/data=!4m6!3m5!1s0x3397cbfc631a33dd:0x5a802dacaf391a08!8m2!3d14.535199!4d120.982729!16s%2Fg%2F11y5z853v5?hl=en&entry=ttu&g_ep=EgoyMDI1MDIyMy4xIKXMDSoASAFQAw%3D%3D",
-  },
+  // {
+  //   title: "Location",
+  //   icon: MapPin,
+  //   text: "123 Tap Up Street, Manila, Philippines",
+  //   url: "https://www.google.com/maps/place/GF,+mm-121,+Mall+of+Asia,+1300+Pacific+Dr,+Pasay,+Metro+Manila/@14.535199,120.9808556,17z/data=!4m6!3m5!1s0x3397cbfc631a33dd:0x5a802dacaf391a08!8m2!3d14.535199!4d120.982729!16s%2Fg%2F11y5z853v5?hl=en&entry=ttu&g_ep=EgoyMDI1MDIyMy4xIKXMDSoASAFQAw%3D%3D",
+  // },
   {
     title: "Email",
     icon: MailIcon,
