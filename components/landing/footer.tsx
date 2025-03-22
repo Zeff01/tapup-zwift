@@ -31,18 +31,29 @@ const Footer = () => {
               <TapupLogo className="w-full h-full" />
             </Link>
           </div>
+          {/* 
           <Link
             href="mailto:codebility.dev@gmail.com"
             className="block hover:text-hoverColor mt-2"
           >
             codebility.dev@gmail.com
           </Link>
-          <Link href="tel:+63921090799" className="block hover:text-hoverColor">
-            +63921090799
-          </Link>
+          <h2>+63921090799</h2>
+          <h2 className=""> 123 Tap Up Street, Manila, Philippines</h2> */}
         </div>
 
         <div className="gap-8 mx-auto flex">
+          <div>
+            <h2 className="font-semibold text-lg">Contact</h2>
+            <div className="flex flex-col gap-1">
+              <h2> codebility.dev@gmail.com</h2>
+              <h2>+63921090799</h2>
+              <h2 className="">
+                {" "}
+                123 Tap Up Street, <br></br>Manila, Philippines
+              </h2>
+            </div>
+          </div>
           <div>
             <h2 className="font-semibold text-lg">Information</h2>
             <div className="flex flex-col gap-1">
