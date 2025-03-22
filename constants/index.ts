@@ -225,26 +225,31 @@ export const courierList = [
 export const carouselCards = {
   card1: {
     title: "Midnight Flow",
+    price: 500,
     image: "/assets/cards/back/card1.png",
     description: `A sleek and modern design with deep purple and black gradients, perfect for professionals who want to leave a bold impression. The fluid background adds a touch of elegance, making it ideal for tech and innovation-driven individuals.`,
   },
   card2: {
     title: "Golden Vision",
+    price: 500,
     image: "/assets/cards/back/card2.png",
     description: `A bright and confident design with a yellow backdrop that radiates energy and optimism. This card is perfect for go-getters who want to stand out with a vibrant yet professional look.`,
   },
   card3: {
     title: "Green Edge",
+    price: 500,
     image: "/assets/cards/back/card3.png",
     description: `A refreshing design that blends green and white for a clean and energetic feel. The curved accent brings movement, symbolizing growth and innovation—great for those in sustainability, wellness, or entrepreneurship.`,
   },
   card4: {
     title: "Blue Horizon",
+    price: 500,
     image: "/assets/cards/back/card4.png",
     description: `A soft yet professional blue gradient gives this card a calm and collected feel. Ideal for corporate professionals and creatives who want a subtle but impactful presence.`,
   },
   card5: {
     title: "Serene Blend",
+    price: 500,
     image: "/assets/cards/back/card5.png",
     description: `A soothing mix of soft blue and pink gradients, creating a professional yet inviting look. This design is perfect for individuals who want a refined and balanced aesthetic that conveys trust and warmth.`,
   },
@@ -257,32 +262,38 @@ export const carouselCards = {
 
   card6: {
     title: "Arctic Clarity",
+    price: 500,
     image: "/assets/cards/back/card6.png",
     description: `A crisp and professional layout featuring icy blue tones and a minimalist structure. Best for those who prefer a polished and straightforward approach to networking.`,
   },
   card7: {
     title: "Sunrise Spark",
+    price: 500,
     image: "/assets/cards/back/card7.png",
     description: `A lively mix of warm orange and cool blue, evoking a balance of creativity and trust. This design is great for those who want a friendly yet professional aesthetic that welcomes conversation.
 `,
   },
   card8: {
     title: "Verdant Flow",
+    price: 500,
     image: "/assets/cards/back/card8.png",
     description: `A dynamic green and white layout with a sleek curve, symbolizing growth and innovation. This card is a great fit for professionals in tech, sustainability, or business, offering a fresh and energetic look while maintaining a professional feel.`,
   },
   card9: {
     title: "Rose Radiance",
+    price: 500,
     image: "/assets/cards/back/card9.png",
     description: `A soft yet confident mix of pink and red hues, adding a touch of charm and elegance. Ideal for creative professionals, designers, or anyone who wants a stylish, memorable introduction.`,
   },
   card10: {
     title: "Global Vision",
+    price: 500,
     image: "/assets/cards/back/card10.png",
     description: `A global-themed design with a purple gradient, representing ambition and international reach. This card suits professionals aiming to expand their network across borders.`,
   },
   card11: {
     title: "Cosmic Grid",
+    price: 500,
     image: "/assets/cards/back/card11.png",
     description: `A deep-space-inspired design with digital lines, symbolizing connection and innovation. Great for tech enthusiasts, developers, and engineers who want a sophisticated and modern card.`,
   },
