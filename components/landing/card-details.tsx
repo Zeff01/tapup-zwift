@@ -13,7 +13,7 @@ const CardDetails: React.FC<CardDetailsProps> = ({ card }) => {
       <h2 className="text-3xl sm:text-4xl md:text-5xl lg:text-[3.5vw] leading-tight md:leading-none text-center font-black">
         {card?.title}
       </h2>
-      <h2 className="text-2xl sm:text-3xl md:text-4xl lg:text-[3vw] leading-tight md:leading-none text-center font-bold text-greenText my-3">
+      <h2 className="text-xl sm:text-2xl md:text-3xl lg:text-[2vw] leading-tight md:leading-none text-center font-bold text-greenText my-3">
         ₱ {card?.price}
       </h2>
       <pre className="text-lg w-full max-w-lg leading-snug md:leading-8 sm:text-xl text-muted-foreground text-justify mt-6 whitespace-pre-line font-sans mx-auto h-56 p-4 rounded-md ">
