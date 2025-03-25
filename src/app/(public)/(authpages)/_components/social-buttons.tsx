@@ -1,7 +1,7 @@
 "use client";
 
 import { Button } from "@/components/ui/button";
-import { UPDATE_ROUTE } from "@/constants";
+import { CARD_ROUTE, UPDATE_ROUTE } from "@/constants";
 import { signInWithGoogle, signInWithFacebook } from "@/lib/firebase/auth";
 import { useRouter } from "next/navigation";
 import { FaFacebook } from "react-icons/fa6";
@@ -12,14 +12,16 @@ export default function Social({ label }: { label: string }) {
   const handleGoogleSignIn = async () => {
     const response = await signInWithGoogle();
     if (response) {
-      router.push(`${UPDATE_ROUTE}/${response}`);
+      // router.push(`${UPDATE_ROUTE}/${response}`);
+      router.push(`${CARD_ROUTE}`);
     }
   };
 
   const handleFacebookSignIn = async () => {
     const response = await signInWithFacebook();
     if (response) {
-      router.push(`${UPDATE_ROUTE}/${response}`);
+      router.push(`${CARD_ROUTE}`)
+      // router.push(`${UPDATE_ROUTE}/${response}`);
     }
   };
   return (
@@ -33,7 +35,7 @@ export default function Social({ label }: { label: string }) {
         <FcGoogle className="text-lg" />
         <span className="text-xs"> {label} with Google</span>
       </Button>
-      <Button
+      {/* <Button
         onClick={handleFacebookSignIn}
         className="w-full flex gap-x-1 border-gray-500 dark:border h-8 rounded-full text-muted-foreground"
         size={"lg"}
@@ -41,7 +43,7 @@ export default function Social({ label }: { label: string }) {
       >
         <FaFacebook className="text-lg text-blue-600" />
         <span className="text-xs"> {label} with Facebook</span>
-      </Button>
+      </Button> */}
     </>
   );
 }

@@ -29,6 +29,7 @@ const Testimonials = () => {
           >
             <div className="relative w-[30%]  h-[4rem]">
               <Image
+                unoptimized={true}
                 src={item.image}
                 alt={`image ${index}`}
                 fill

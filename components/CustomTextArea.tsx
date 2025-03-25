@@ -39,7 +39,7 @@ const CustomTextArea = ({
                 {...field}
               />
             </FormControl>
-            <FormMessage className="text-12 text-red-500 mt-2" />
+            {/* <FormMessage className="text-12 text-red-500 mt-2" /> */}
           </div>
         </div>
       )}

@@ -22,7 +22,7 @@ import { toast } from "react-toastify";
 import { FirebaseError } from "firebase/app";
 import { z } from "zod";
 import { signupSchema } from "../zod-schema";
-import { DASHBOARD_ROUTE, UPDATE_ROUTE, USER_ROLE_ENUMS } from "@/constants";
+import { CARD_ROUTE, DASHBOARD_ROUTE, UPDATE_ROUTE, USER_ROLE_ENUMS } from "@/constants";
 export const onAuthStateChanged = (callback: (user: User | null) => void) => {
   return _onAuthStateChanged(firebaseAuth, callback);
 };
@@ -138,7 +138,7 @@ export const loginHandler = async ({
       await createSession(userID);
     }
     toast.success("Login successful!");
-    if (router) router.push(`${DASHBOARD_ROUTE}`);
+    if (router) router.push(`${CARD_ROUTE}`);
   } catch (error) {
     if (error instanceof FirebaseError) {
       console.log(error.code);

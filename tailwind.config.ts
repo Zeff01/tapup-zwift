@@ -33,8 +33,13 @@ const config = {
       colors: {
         grayDescription: "hsl(var(--text-description))",
         checkColor: "#B6E0BE",
+        blueColor: "#2563EB",
         greenTitle: "#6fdc00",
+        greenText: "#108C28",
         greenBorder: "#60BB72",
+        orderButton: "#042009",
+        greenColor: "#108C28",
+        hoverColor: "#129a2c",
         buttonColor: "#108C28",
         grayTemplate: "#959595",
         blueTemplate: "#1976D2",

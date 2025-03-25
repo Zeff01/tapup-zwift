@@ -21,6 +21,7 @@ import { useUserContext } from "@/providers/user-provider";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { createCard } from "@/lib/firebase/actions/card.action";
 import SelectedPhysicalCard from "./SelectedPhysicalCard";
+import TapupLogo from "../svgs/TapupLogo";
 
 export type ChosenTemplateType = z.infer<
   typeof createPortfolioSchema
@@ -185,14 +186,7 @@ export default function CardsAndUsersCreateFields({
   return (
     <main className="flex flex-col overflow-auto py-8 px-6 sm:px-0 bg-background h-full">
       <div className="w-full mx-auto max-w-sm">
-        <Image
-          src="/assets/zwift-logo.png"
-          alt="Company Logo"
-          width={140}
-          height={41}
-          priority
-          className="mx-auto mb-8"
-        />
+        <TapupLogo className="mx-auto mb-4" />
         <Form {...methods}>
           <form
             className="space-y-6"
@@ -218,6 +212,7 @@ export default function CardsAndUsersCreateFields({
                       fallback={
                         <div className="w-full aspect-[16/9] flex flex-col items-center gap-y-2 bg-[#222224]">
                           <Image
+                            unoptimized={true}
                             src={"/assets/plus.svg"}
                             width={50}
                             height={50}
@@ -243,6 +238,7 @@ export default function CardsAndUsersCreateFields({
                         fallback={
                           <div className="relative w-full h-full rounded-full flex items-center justify-center bg-[#222224]">
                             <Image
+                              unoptimized={true}
                               src={"/assets/gallery.svg"}
                               width={50}
                               height={50}
@@ -251,6 +247,7 @@ export default function CardsAndUsersCreateFields({
                             />
                             <div className="absolute bottom-0 right-0 bg-[#222224] rounded-full">
                               <Image
+                                unoptimized={true}
                                 src={"/assets/plus-dark.svg"}
                                 width={50}
                                 height={50}
@@ -312,6 +309,7 @@ export default function CardsAndUsersCreateFields({
                               fallback={
                                 <div className="relative w-full h-full flex items-center justify-center bg-[#222224] rounded-md">
                                   <Image
+                                    unoptimized={true}
                                     src={"/assets/gallery.svg"}
                                     width={50}
                                     height={50}
@@ -319,6 +317,7 @@ export default function CardsAndUsersCreateFields({
                                   />
                                   <div className="absolute bottom-0 right-0 translate-x-1/2 translate-y-1/4 bg-[#222224] rounded-full">
                                     <Image
+                                      unoptimized={true}
                                       src={"/assets/plus-dark.svg"}
                                       width={50}
                                       height={50}
@@ -367,6 +366,7 @@ export default function CardsAndUsersCreateFields({
                                 fallback={
                                   <div className="relative w-full h-full flex items-center justify-center bg-[#222224] rounded-md">
                                     <Image
+                                      unoptimized={true}
                                       src={"/assets/gallery.svg"}
                                       width={20}
                                       height={20}
@@ -374,6 +374,7 @@ export default function CardsAndUsersCreateFields({
                                     />
                                     <div className="absolute bottom-0 right-0 translate-x-1/2 translate-y-1/4 bg-[#222224] rounded-full">
                                       <Image
+                                        unoptimized={true}
                                         src={"/assets/plus-dark.svg"}
                                         width={30}
                                         height={30}
@@ -429,7 +430,7 @@ export default function CardsAndUsersCreateFields({
             {/* </div> */}
             <button
               type="submit"
-              className="w-full px-4 py-4 bg-[#6150EB] hover:bg-[#6250ebc0] rounded-md font-bold disabled:opacity-50 disabled:cursor-not-allowed"
+              className="w-full px-4 py-4 bg-[#6150EB] hover:bg-[#6250ebc0] rounded-md font-bold disabled:opacity-50 disabled:cursor-not-allowed text-offWhiteTemplate"
               disabled={isLoading}
             >
               {isLoading ? (

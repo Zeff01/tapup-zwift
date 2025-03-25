@@ -61,7 +61,7 @@ export const createPortfolioSchema = z.object({
   ]),
   chosenPhysicalCard: z.enum(["card1", "card2", "card3", "card4"]),
   firstName: z.string().min(3, "First name must be at least 3 characters"),
-  lastName: z.string().min(3, "Last name must be at least 3 characters"),
+  lastName: z.string().min(2, "Last name must be at least 2 characters"),
   email: z.string(),
   number: z
     .string()
@@ -200,7 +200,7 @@ export const editCardSchema = z.object({
   ]),
   chosenPhysicalCard: z.enum(["card1", "card2", "card3", "card4"]),
   firstName: z.string().min(3, "First name must be at least 3 characters"),
-  lastName: z.string().min(3, "Last name must be at least 3 characters"),
+  lastName: z.string().min(2, "Last name must be at least 2 characters"),
   email: z.string(),
   number: z
     .string()
@@ -299,7 +299,7 @@ export const loginSchema = z.object({
 export const signupSchema = z
   .object({
     firstName: z.string().min(3, { message: "Must be at least 3 characters " }),
-    lastName: z.string().min(3, { message: "Must be at least 3 characters" }),
+    lastName: z.string().min(2, { message: "Must be at least 2 characters" }),
     email: z.string().email({ message: "Invalid email address" }),
     password: z
       .string()

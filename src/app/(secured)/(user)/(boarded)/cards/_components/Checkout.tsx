@@ -174,6 +174,7 @@ const Checkout = () => {
                 <div className=" flex items-center gap-3">
                   {/* Image */}
                   <Image
+                    unoptimized={true}
                     src={deliveryOption?.image || ""}
                     alt={deliveryOption?.name || "img"}
                     width={44}
@@ -216,6 +217,7 @@ const Checkout = () => {
                 >
                   <div className="flex gap-3 items-center">
                     <Image
+                      unoptimized={true}
                       src={item.product.image}
                       alt={item.product.title}
                       width={50}
@@ -248,6 +250,7 @@ const Checkout = () => {
           <p className="space-x-2">
             Total: <span className="text-greenTitle">₱{calculateTotal()}</span>
           </p>
+          {/* change to /cards/orderStatus/success , if xendit is successfull */}
           <Link href="/cards/checkout">
             <Button variant="green" onClick={proceedPayment}>
               Proceed To Payment

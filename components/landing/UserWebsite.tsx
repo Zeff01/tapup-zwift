@@ -10,14 +10,14 @@ const UserWebsite = () => {
       className="flex py-8 md:py-24 mx-auto flex-col xl:flex-row"
       id="userswebsite"
     >
-      <div className="flex">
+      <div className="flex flex-col md:flex-row ">
         <div className="md:w-[220px] pb-4 pl-10 w-full lg:pl-2">
           <p className="md:text-2xl text-sm text-muted-foreground">
-            Create your card
+            Create your personal website
           </p>
-          <h2 className="md:text-4xl lg:text-5xl text-2xl font-bold">
+          {/* <h2 className="md:text-4xl lg:text-5xl text-2xl font-bold">
             With our <span className="text-green-500">templates</span>
-          </h2>
+          </h2> */}
         </div>
         <div className="relative xl:right-20 md:right-16">
           <Image
@@ -29,8 +29,8 @@ const UserWebsite = () => {
           />
         </div>
       </div>
-
-      <div className=" flex items-center justify-center pt-16 flex-1">
+{/* hide web builder temporarily */}
+      {/* <div className=" flex items-center justify-center pt-16 flex-1">
         <div className=" flex flex-col justify-center gap-y-2 min-h-[400px]">
           <div className="flex items-end ">
             <p className=" md:text-2xl w-[150px] text-base text-muted-foreground md:mr-2">
@@ -56,7 +56,7 @@ const UserWebsite = () => {
             card builder
           </h2>
         </div>
-      </div>
+      </div> */}
     </section>
   );
 };
