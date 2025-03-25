@@ -416,17 +416,195 @@ const DigitalCard = ({ card, confirm, user }: Prop) => {
         </div>
       </div>
 
-      {/* Dialogs remain the same as before */}
       <Dialog.Root open={expiredDialogOpen} onOpenChange={setExpiredDialogOpen}>
-        {/* Dialog content unchanged */}
-      </Dialog.Root>
+        <Dialog.Portal>
+          <Dialog.Overlay className="fixed inset-0 bg-black/50 backdrop-blur-sm z-50" />
+          <Dialog.Content className="fixed inset-0 flex items-center justify-center p-4 z-50">
+            <div className="bg-white dark:bg-gray-900 dark:text-white p-6 rounded-lg shadow-lg max-w-sm w-full">
+              <Dialog.Title className="text-lg font-bold text-red-600">
+                {isCardDisabled ? "Card Disabled" : "Card Expired"}
+              </Dialog.Title>
+              <p className="mt-2 text-gray-600 dark:text-gray-300">
+                {isCardDisabled
+                  ? "This card has been disabled and can no longer be accessed."
+                  : "This card has expired and can no longer be accessed."}
+              </p>
 
+              {!isCardDisabled && (
+                <>
+                  <h3 className="text-md font-semibold mt-4">
+                    Upgrade to a plan:
+                  </h3>
+                  {isLoading ? (
+                    <p>Loading plans...</p>
+                  ) : (
+                    <ul className="mt-2 space-y-3">
+                      {plans?.map((plan) => (
+                        <li
+                          key={plan.id}
+                          className="border p-4 rounded-lg cursor-pointer hover:bg-gray-100 dark:hover:bg-gray-800 transition"
+                          onClick={() => handleUpgrade(plan)}
+                        >
+                          <p className="font-semibold text-lg">{plan.name}</p>
+                          <p className="text-sm text-gray-700 dark:text-gray-300">
+                            Php {plan.price} / {plan.durationDays} days
+                          </p>
+                          <ul className="text-xs list-disc ml-5 mt-2 text-gray-600 dark:text-gray-400">
+                            {plan.features.map((feature, idx) => (
+                              <li key={idx}>{feature}</li>
+                            ))}
+                          </ul>
+                        </li>
+                      ))}
+                    </ul>
+                  )}
+                </>
+              )}
+
+              <div className="flex justify-end gap-2 mt-4">
+                <Dialog.Close asChild>
+                  <button className="px-4 py-2 bg-gray-300 dark:bg-gray-700 rounded">
+                    Close
+                  </button>
+                </Dialog.Close>
+              </div>
+            </div>
+          </Dialog.Content>
+        </Dialog.Portal>
+      </Dialog.Root>
       <Dialog.Root open={open} onOpenChange={setOpen}>
-        {/* Custom URL dialog content */}
+        <Dialog.Portal>
+          <Dialog.Overlay className="fixed inset-0 bg-black/50 backdrop-blur-sm z-50" />
+          <Dialog.Content className="fixed inset-0 flex items-center justify-center p-4 z-50">
+            <div className="bg-white dark:bg-gray-900 dark:text-white p-6 rounded-lg shadow-lg max-w-sm w-full">
+              <Dialog.Title className="text-lg font-bold">
+                Enter Custom URL
+              </Dialog.Title>
+              <input
+                type="text"
+                className="w-full p-2 border rounded mt-3 bg-gray-100 dark:bg-gray-800 dark:border-gray-700 dark:text-white"
+                value={customUrl}
+                onChange={(e) => setCustomUrl(e.target.value)}
+              />
+              <div className="flex justify-end gap-2 mt-4">
+                <Dialog.Close asChild>
+                  <button className="px-4 py-2 bg-gray-300 dark:bg-gray-700 rounded">
+                    Cancel
+                  </button>
+                </Dialog.Close>
+                <button
+                  className="px-4 py-2 bg-green-500 text-white rounded"
+                  onClick={handleAddCustomUrl}
+                >
+                  Save
+                </button>
+              </div>
+            </div>
+          </Dialog.Content>
+        </Dialog.Portal>
       </Dialog.Root>
-
       <Dialog.Root open={transferOpen} onOpenChange={setTransferOpen}>
-        {/* Transfer ownership dialog content */}
+        <Dialog.Portal>
+          <Dialog.Overlay className="fixed inset-0 bg-black/50 backdrop-blur-sm z-50" />
+          <Dialog.Content className="fixed inset-0 flex items-center justify-center p-4 z-50">
+            <div className="bg-white dark:bg-gray-900 dark:text-white p-6 rounded-lg shadow-lg max-w-sm w-full">
+              <Dialog.Title className="text-lg font-bold">
+                Transfer Card Ownership
+              </Dialog.Title>
+
+              <input
+                type="email"
+                className="w-full p-2 border rounded mt-3 bg-gray-100 dark:bg-gray-800 dark:border-gray-700 dark:text-white"
+                value={newOwnerEmail}
+                onChange={(e) => setNewOwnerEmail(e.target.value)}
+                placeholder="Enter new owner's email"
+              />
+
+              <p className="text-sm text-gray-500 dark:text-gray-400 mt-4 italic">
+                or transfer ownership using transfer code
+              </p>
+
+              <div className="flex items-center justify-between bg-gray-100 dark:bg-gray-800 p-2 mt-1 rounded border dark:border-gray-700">
+                <span className="text-sm truncate">{card.transferCode}</span>
+                <button
+                  className="ml-2 px-2 py-1 text-sm bg-blue-500 text-white rounded"
+                  onClick={() => {
+                    if (card.transferCode) {
+                      navigator.clipboard.writeText(card.transferCode);
+                      toast.success("Transfer code copied!");
+                    } else {
+                      toast.error("No transfer code available");
+                    }
+                  }}
+                >
+                  Copy
+                </button>
+              </div>
+
+              <div className="flex justify-end gap-2 mt-4">
+                <Dialog.Close asChild>
+                  <button className="px-4 py-2 bg-gray-300 dark:bg-gray-700 rounded">
+                    Cancel
+                  </button>
+                </Dialog.Close>
+                <button
+                  className="px-4 py-2 bg-green-500 text-white rounded"
+                  onClick={handleTransferOwnership}
+                >
+                  Transfer
+                </button>
+              </div>
+            </div>
+          </Dialog.Content>
+        </Dialog.Portal>
+      </Dialog.Root>
+      <Dialog.Root open={expiredDialogOpen} onOpenChange={setExpiredDialogOpen}>
+        <Dialog.Portal>
+          <Dialog.Overlay className="fixed inset-0 bg-black/50 backdrop-blur-sm z-50" />
+          <Dialog.Content className="fixed inset-0 flex items-center justify-center p-4 z-50">
+            <div className="bg-white dark:bg-gray-900 dark:text-white p-6 rounded-lg shadow-lg max-w-sm w-full">
+              <Dialog.Title className="text-lg font-bold text-red-600">
+                Card Expired
+              </Dialog.Title>
+              <p className="mt-2 text-gray-600 dark:text-gray-300">
+                This card has expired and can no longer be accessed.
+              </p>
+
+              <h3 className="text-md font-semibold mt-4">Upgrade to a plan:</h3>
+              {isLoading ? (
+                <p>Loading plans...</p>
+              ) : (
+                <ul className="mt-2 space-y-3">
+                  {plans?.map((plan) => (
+                    <li
+                      key={plan.id}
+                      className="border p-4 rounded-lg cursor-pointer hover:bg-gray-100 dark:hover:bg-gray-800 transition"
+                      onClick={() => handleUpgrade(plan)}
+                    >
+                      <p className="font-semibold text-lg">{plan.name}</p>
+                      <p className="text-sm text-gray-700 dark:text-gray-300">
+                        Php {plan.price} / {plan.durationDays} days
+                      </p>
+                      <ul className="text-xs list-disc ml-5 mt-2 text-gray-600 dark:text-gray-400">
+                        {plan.features.map((feature, idx) => (
+                          <li key={idx}>{feature}</li>
+                        ))}
+                      </ul>
+                    </li>
+                  ))}
+                </ul>
+              )}
+
+              <div className="flex justify-end gap-2 mt-4">
+                <Dialog.Close asChild>
+                  <button className="px-4 py-2 bg-gray-300 dark:bg-gray-700 rounded">
+                    Close
+                  </button>
+                </Dialog.Close>
+              </div>
+            </div>
+          </Dialog.Content>
+        </Dialog.Portal>
       </Dialog.Root>
     </>
   );

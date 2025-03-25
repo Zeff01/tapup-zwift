@@ -41,7 +41,8 @@ import { signUpHandler } from "@/lib/firebase/auth";
 import { useMutation } from "@tanstack/react-query";
 import { useRouter } from "next/navigation";
 import { Loader2 } from "lucide-react";
-import { useState } from "react";
+import { useEffect } from "react";
+
 
 export function RegisterForm() {
   const router = useRouter();
@@ -58,6 +59,24 @@ export function RegisterForm() {
     },
   });
 
+  useEffect(() => {
+    if (typeof window === "undefined") return;
+
+    const savedData = localStorage.getItem("onboardingData");
+    if (savedData) {
+      try {
+        const onboardingData = JSON.parse(savedData);
+        form.reset({
+          firstName: onboardingData.firstName || "",
+          lastName: onboardingData.lastName || "",
+          email: onboardingData.email || "",
+        });
+      } catch (error) {
+        console.error("Error parsing onboardingData:", error);
+      }
+    }
+  }, []);
+
   const {
     mutate: registerHandlerMutation,
     isPending,
@@ -72,7 +91,11 @@ export function RegisterForm() {
   const isLoading = isPending || isSuccess;
 
   const onSubmit = async (data: SignupData) => {
-    await registerHandlerMutation(data);
+    try {
+      await registerHandlerMutation(data);
+    } catch (error) {
+      console.error("Signup error:", error);
+    }
   };
   return (
     <Card className="w-full py-8 px-6 md:p-16 shadow-md rounded-md">
