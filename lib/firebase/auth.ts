@@ -27,8 +27,9 @@ export const onAuthStateChanged = (callback: (user: User | null) => void) => {
   return _onAuthStateChanged(firebaseAuth, callback);
 };
 
-import { SignedUserIdJwtPayload } from "@/types/types";
+import { SignedUserIdJwtPayload, Users } from "@/types/types";
 import { AppRouterInstance } from "next/dist/shared/lib/app-router-context.shared-runtime";
+import { addCardForUser, updateUserById } from "./actions/user.action";
 
 export const authCurrentUser = async () => {
   try {
@@ -46,18 +47,22 @@ export const authCurrentUser = async () => {
 };
 
 export const signUpHandler = async (data: z.infer<typeof signupSchema>) => {
+  console.log("Starting sign-up process with data:", data);
   try {
     const res = await createUserWithEmailAndPassword(
       firebaseAuth,
       data.email,
       data.password
     );
+    console.log("User created successfully:", res.user);
 
     const userID = res.user.uid;
     if (!userID) throw new Error("Something went wrong");
 
+    console.log("Creating session for user ID:", userID);
     await createSession(userID);
 
+    console.log("Storing user data in Firestore");
     await setDoc(doc(firebaseDb, "user-account", userID), {
       role: USER_ROLE_ENUMS.USER,
       email: res.user.email,
@@ -66,15 +71,50 @@ export const signUpHandler = async (data: z.infer<typeof signupSchema>) => {
       timestamp: serverTimestamp(),
     });
 
+    const onboardingDataStr = localStorage.getItem("onboardingData");
+    if (onboardingDataStr) {
+      console.log("Found onboarding data in localStorage:", onboardingDataStr);
+      try {
+        const onboardingData = JSON.parse(onboardingDataStr) as Partial<Users>;
+        console.log("Parsed onboarding data:", onboardingData);
+
+        const { email, ...cleanOnboardingData } = onboardingData;
+
+        console.log("Updating user with onboarding data");
+        await updateUserById({
+          user_id: userID,
+          user: cleanOnboardingData,
+        });
+
+        if (cleanOnboardingData.chosenPhysicalCard) {
+          console.log("Adding physical card:", cleanOnboardingData.chosenPhysicalCard);
+          await addCardForUser(userID, cleanOnboardingData.chosenPhysicalCard);
+        } else {
+          console.warn("No physical card selected in onboarding data");
+          toast.error("Missing card selection in onboarding data");
+        }
+      } catch (error) {
+        console.error("Error processing onboarding data:", error);
+        toast.error("Failed to process onboarding information");
+        throw error;
+      }
+    } else {
+      console.log("No onboarding data found in localStorage");
+    }
+
     toast.success("User registration successful!");
+    console.log("User registration completed successfully");
   } catch (error) {
+    console.error("Error during sign-up process:", error);
     if (error instanceof FirebaseError) {
       switch (error.code) {
         case "auth/email-already-in-use":
           toast.error("Email already exists!");
+          console.error("Firebase error: Email already exists");
           throw "Email already exists";
         default:
           toast.error("Something went wrong!");
+          console.error("Firebase error:", error);
           throw error;
       }
     }

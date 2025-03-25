@@ -25,6 +25,8 @@ import SocialLinksSelector from "./SocialLink";
 import { Input } from "../ui/input";
 import SelectedTemplate from "./SelectedTemplate";
 import { useRouter } from "next/navigation";
+import { toast } from "react-toastify";
+import { Button } from "../ui/button";
 
 export type ChosenTemplateType =
   | "template1"
@@ -90,11 +92,13 @@ const MultiStepFormUpdate = ({
   const [selectedLinks, setSelectedLinks] = useState<SelectedLink[]>([]);
   const [currentStep, setCurrentStep] = useState(1);
 
-  const steps: Array<(keyof z.infer<typeof editCardSchema>)[]> = [
-    [],
-    ["firstName", "lastName", "email", "number"],
-    ["chosenTemplate"],
-  ];
+  const steps: Array<(keyof z.infer<typeof editCardSchema>)[]> = isOnboarding
+    ? [
+        ["coverPhotoUrl", "company", "position"],
+        ["firstName", "lastName", "email", "number", "profilePictureUrl"],
+        ["chosenTemplate"],
+      ]
+    : [[], ["firstName", "lastName", "email", "number"], ["chosenTemplate"]];
 
   const [selectedTemplateId, setSelectedTemplateId] =
     useState<ChosenTemplateType>(
@@ -143,6 +147,22 @@ const MultiStepFormUpdate = ({
     },
   });
 
+  useEffect(() => {
+    methods.setValue("coverPhotoUrl", coverPhotoUrl || "");
+  }, [coverPhotoUrl, methods.setValue]);
+
+  useEffect(() => {
+    methods.setValue("profilePictureUrl", imageUrl || "");
+  }, [imageUrl, methods.setValue]);
+
+  useEffect(() => {
+    methods.setValue("servicePhotos", serviceImageUrls);
+  }, [serviceImageUrls, methods.setValue]);
+
+  useEffect(() => {
+    methods.setValue("chosenTemplate", selectedTemplateId);
+  }, [selectedTemplateId, methods.setValue]);
+
   const { mutate: updateCardMutation, isPending: isLoadingUpdateMutation } =
     useMutation({
       mutationFn: updateCardById,
@@ -152,24 +172,59 @@ const MultiStepFormUpdate = ({
     });
 
   const formSubmit = async (data: z.infer<typeof editCardSchema>) => {
-    if (isOnboarding) {
-      localStorage.removeItem("onboardingData");
-      localStorage.setItem("onboardingData", JSON.stringify(data));
-      router.push("/onboarding/next-step");
-      return;
+    console.log("formSubmit function called");
+    console.log("isOnboarding:", isOnboarding);
+
+    try {
+      console.log("formSubmit");
+      if (isOnboarding) {
+        console.log("Inside onboarding block");
+
+        if (!coverPhotoUrl || !imageUrl) {
+          toast.error("Please upload both cover photo and profile picture");
+          return;
+        }
+
+        const onboardingData = {
+          ...data,
+          coverPhotoUrl,
+          profilePictureUrl: imageUrl,
+          servicePhotos: serviceImageUrls,
+        };
+
+        console.log("Saving to localStorage:", onboardingData);
+        localStorage.setItem("onboardingData", JSON.stringify(onboardingData));
+        toast.success("Onboarding data saved successfully!");
+        router.push("/login");
+        return;
+      }
+      console.log("Proceeding with regular update...");
+
+      if (isCard) {
+        await updateCardMutation({ cardId: userData.id!, data });
+        router.push("/dashboard");
+        return;
+      }
+
+      const id = isCurrentUser
+        ? (userData as ExtendedUserInterface).uid
+        : userData.id;
+
+      if (!id) return;
+      await updateUser(id, data as ExtendedUserInterface);
+      toast.success("Profile updated successfully!");
+    } catch (error) {
+      console.error("Submission error:", error);
+      let errorMessage = "Failed to save data. Please try again.";
+
+      if (error instanceof Error) {
+        errorMessage = error.message;
+      } else if (typeof error === "string") {
+        errorMessage = error;
+      }
+
+      toast.error(errorMessage);
     }
-
-    if (isCard) {
-      updateCardMutation({ cardId: userData.id!, data });
-      return;
-    }
-
-    const id = isCurrentUser
-      ? (userData as ExtendedUserInterface).uid
-      : userData.id;
-
-    if (!id) return;
-    await updateUser(id, data as ExtendedUserInterface);
   };
 
   const isLoading = isOnboarding
@@ -178,16 +233,57 @@ const MultiStepFormUpdate = ({
 
   const handleNextStep = async (event: React.FormEvent) => {
     event.preventDefault();
-    const fieldsToValidate = steps[currentStep - 1];
-    const isValid = await methods.trigger(fieldsToValidate);
+    console.log("handleNextStep");
+    try {
+      // Validate current step fields
+      const fieldsToValidate = steps[currentStep - 1];
+      const isValid = await methods.trigger(fieldsToValidate);
 
-    if (isValid) {
+      // On final step, validate entire form
+      const isFinalStep = currentStep === steps.length;
+      if (isFinalStep) {
+        const fullIsValid = await methods.trigger();
+        if (!fullIsValid) return;
+      }
+      const hasImageErrors =
+        (currentStep === 1 && isOnboarding && !coverPhotoUrl) ||
+        (currentStep === 2 && isOnboarding && !imageUrl);
+
+      if (!isValid || hasImageErrors) {
+        // Handle image validation errors first
+        if (hasImageErrors) {
+          if (!coverPhotoUrl) toast.error("Cover photo is required");
+          if (!imageUrl && currentStep === 2)
+            toast.error("Profile picture is required");
+          return;
+        }
+
+        // Handle Zod validation errors
+        const errorKeys = Object.keys(methods.formState.errors);
+        if (errorKeys.length > 0) {
+          const firstError =
+            methods.formState.errors[
+              errorKeys[0] as keyof typeof methods.formState.errors
+            ];
+          toast.error(
+            firstError?.message ||
+              "Please fill in all required fields correctly"
+          );
+        }
+        return;
+      }
+
       if (currentStep === steps.length) {
+        console.log("Submitting form...");
+
         await methods.handleSubmit(formSubmit)();
-        if (!isOnboarding) router.push("/dashboard");
       } else {
+        console.log("Next step");
         setCurrentStep((prev) => prev + 1);
       }
+    } catch (error) {
+      console.error("Error in handleNextStep:", error);
+      toast.error("An unexpected error occurred. Please try again.");
     }
   };
 
@@ -200,14 +296,17 @@ const MultiStepFormUpdate = ({
       ...prev,
       { label: link.label, key: link.key, value: "" },
     ]);
+    // Initialize form value for new link
+    methods.setValue(link.key as keyof z.infer<typeof editCardSchema>, "");
   };
 
   const handleInputChange = (key: string, value: string) => {
     setSelectedLinks((prev) =>
       prev.map((link) => (link.key === key ? { ...link, value } : link))
     );
+    // Update corresponding form field
+    methods.setValue(key as keyof z.infer<typeof editCardSchema>, value);
   };
-
   return (
     <main className="h-full">
       <Form {...methods}>
@@ -435,20 +534,20 @@ const MultiStepFormUpdate = ({
                     Back
                   </button>
                 )}
-                <button
+                <Button
                   type="button"
                   onClick={handleNextStep}
                   className="px-8 py-2 bg-green-600 text-white rounded-full hover:bg-green-500"
                   disabled={isLoading}
                 >
                   {isLoading ? (
-                    <LoaderCircle className="animate-spin" />
+                    <LoaderCircle className="animate-spin size-5" />
                   ) : currentStep === steps.length ? (
                     "Submit"
                   ) : (
                     "Next"
-                  )}
-                </button>
+                  )}{" "}
+                </Button>
               </div>
             </div>
           </div>
