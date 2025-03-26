@@ -21,7 +21,6 @@ import { revalidatePath } from "../../revalidate";
 import { authCurrentUser } from "../auth";
 import { differenceInDays } from "date-fns";
 
-
 export const createCard = async ({
   user_id,
   data,
@@ -151,7 +150,10 @@ export const getCardById = async (
       console.log("Searching for card by custom URL...");
 
       const cardsCollection = collection(firebaseDb, "cards");
-      const customUrlQuery = query(cardsCollection, where("customUrl", "==", input));
+      const customUrlQuery = query(
+        cardsCollection,
+        where("customUrl", "==", input)
+      );
       const querySnapshot = await getDocs(customUrlQuery);
 
       if (querySnapshot.empty) {
@@ -301,7 +303,9 @@ export const addCustomUrl = async (customUrl: string, cardId: string) => {
       const daysRemaining = 30 - daysElapsed;
 
       if (daysRemaining > 0) {
-        throw new Error(`Custom URL can only be changed after ${daysRemaining} days`);
+        throw new Error(
+          `Custom URL can only be changed after ${daysRemaining} days`
+        );
       }
     }
 
@@ -393,7 +397,10 @@ export const transferCardOwnership = async ({
     }
 
     const userAccountRef = collection(firebaseDb, "user-account");
-    const userQuery = query(userAccountRef, where("email", "==", newOwnerEmail));
+    const userQuery = query(
+      userAccountRef,
+      where("email", "==", newOwnerEmail)
+    );
     const userSnap = await getDocs(userQuery);
 
     if (userSnap.empty) {
@@ -405,7 +412,7 @@ export const transferCardOwnership = async ({
     await updateDoc(cardRef, {
       ...resetCardFields(),
       owner: newOwnerId,
-      transferCode: crypto.randomUUID().split('-').slice(0, 2).join('-'),
+      transferCode: crypto.randomUUID().split("-").slice(0, 2).join("-"),
       expiryDate: cardData.expiryDate || null,
       chosenPhysicalCard: cardData.chosenPhysicalCard,
     });
@@ -427,7 +434,11 @@ export const transferCardOwnershipUsingCode = async (
   try {
     const cardCollection = collection(firebaseDb, "cards");
 
-    const q = query(cardCollection, where("transferCode", "==", transferCode), limit(1));
+    const q = query(
+      cardCollection,
+      where("transferCode", "==", transferCode),
+      limit(1)
+    );
     const snapshot = await getDocs(q);
 
     if (snapshot.empty) {
@@ -448,7 +459,7 @@ export const transferCardOwnershipUsingCode = async (
 
     await updateDoc(cardRef, {
       owner: newOwnerId,
-      transferCode: crypto.randomUUID().split('-').slice(0, 2).join('-'),
+      transferCode: crypto.randomUUID().split("-").slice(0, 2).join("-"),
       ...resetCardFields(),
     });
 

@@ -4,12 +4,10 @@ import { useRouter } from "next/navigation";
 import { useState, useEffect, useMemo } from "react";
 
 import OrderCard from "../_components/OrderCard";
-import {  statusToUrl, urlToStatus } from "@/constants/orderStatus";
+import { statusToUrl, urlToStatus } from "@/constants/orderStatus";
 
 import OrderStatusTabs, { OrderStatus } from "../_components/OrderStatus";
 import { exampleOrders } from "@/constants/exampleOrders";
-
-
 
 interface OrdersPageProps {
   params: { status: string };
@@ -22,17 +20,21 @@ const OrdersPage: React.FC<OrdersPageProps> = ({ params }) => {
   // Format and update status on param change
   useEffect(() => {
     if (params.status) {
-      const formattedStatus = urlToStatus[params.status.toLowerCase()] || "Pending";
+      const formattedStatus =
+        urlToStatus[params.status.toLowerCase()] || "Pending";
       setStatus(formattedStatus);
     }
   }, [params.status]);
 
   // Memoized order counts
   const orderCounts = useMemo(() => {
-    return exampleOrders.reduce((counts, order) => {
-      counts[order.status] = (counts[order.status] || 0) + 1;
-      return counts;
-    }, {} as Record<OrderStatus, number>);
+    return exampleOrders.reduce(
+      (counts, order) => {
+        counts[order.status] = (counts[order.status] || 0) + 1;
+        return counts;
+      },
+      {} as Record<OrderStatus, number>
+    );
   }, []);
 
   // Filtered orders based on current status
@@ -45,8 +47,6 @@ const OrdersPage: React.FC<OrdersPageProps> = ({ params }) => {
     setStatus(newStatus);
     router.push(`/orders/${statusToUrl[newStatus]}`, { scroll: false });
   };
-
-
 
   return (
     <div className="h-full max-w-screen-xl">

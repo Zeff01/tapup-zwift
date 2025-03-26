@@ -1,4 +1,3 @@
-
 "use client";
 
 import { Order } from "@/types/types";
@@ -9,7 +8,6 @@ import { Button } from "@/components/ui/button";
 import Link from "next/link";
 import RenderStatusSection from "./RenderStatusSection";
 import { useState } from "react";
-
 
 import { ChevronDown } from "lucide-react";
 import Modal from "@/components/Modal";
@@ -149,15 +147,15 @@ const OrderCard: React.FC<OrderCardProps> = ({ order }) => {
 
         {order.items.length > 2 && !showAll && (
           <div>
-          <Button
-            className="bg-transparent text-muted-foreground font-medium mx-auto text-center text-sm md:text-lg  w-full border-none"
-            onClick={() => setShowAll(true)}
+            <Button
+              className="bg-transparent text-muted-foreground font-medium mx-auto text-center text-sm md:text-lg  w-full border-none"
+              onClick={() => setShowAll(true)}
             >
-            View More <ChevronDown />
-          </Button>
-            </div>
+              View More <ChevronDown />
+            </Button>
+          </div>
         )}
-        {(order.items.length <= 2 || showAll) &&
+        {(order.items.length <= 2 || showAll) && (
           <div className={`mt-2`}>
             <h2 className="text-sm font-medium font-inter md:text-xl text-primary">
               Shipping
@@ -166,14 +164,14 @@ const OrderCard: React.FC<OrderCardProps> = ({ order }) => {
               ₱{order.deliveryOption?.shippingFee}
             </p>
           </div>
-        }
-            <p className="text-lg md:text-xl text-right text-muted-foreground">
-              Total:{" "}
-              <span className="text-green-600 font-bold">
-                ₱{order.totalAmount! + order.deliveryOption?.shippingFee!}
-              </span>
-            </p>
-        
+        )}
+        <p className="text-lg md:text-xl text-right text-muted-foreground">
+          Total:{" "}
+          <span className="text-green-600 font-bold">
+            ₱{order.totalAmount! + order.deliveryOption?.shippingFee!}
+          </span>
+        </p>
+
         <div className="flex justify-center gap-2 mt-4">
           {order?.status && (
             <Link

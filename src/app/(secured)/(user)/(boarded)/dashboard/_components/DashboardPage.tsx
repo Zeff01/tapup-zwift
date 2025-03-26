@@ -82,20 +82,20 @@ const recentTaps: TapItemprops[] = [
 ];
 
 const billingHistory: BillingHistoryItem[] = [
-    // {
-    //   id: 1,
-    //   quantity: 1,
-    //   name: "Black Card",
-    //   price: "₱1000",
-    //   image: "/assets/cards/back/card1.png",
-    // },
-    // {
-    //   id: 2,
-    //   quantity: 1,
-    //   name: "Custom Card",
-    //   price: "₱1000",
-    //   image: "/assets/cards/back/card1.png",
-    // },
+  // {
+  //   id: 1,
+  //   quantity: 1,
+  //   name: "Black Card",
+  //   price: "₱1000",
+  //   image: "/assets/cards/back/card1.png",
+  // },
+  // {
+  //   id: 2,
+  //   quantity: 1,
+  //   name: "Custom Card",
+  //   price: "₱1000",
+  //   image: "/assets/cards/back/card1.png",
+  // },
 ];
 
 const Dashboard = () => {
@@ -283,7 +283,9 @@ const Dashboard = () => {
             {/* Connections Section */}
             {recentTaps.length > 0 ? (
               <div className="opacity-50 max-w-[250px] w-full">
-                <h2 className="text-muted-foreground font-semibold md:text-lg text-sm">Connections</h2>
+                <h2 className="text-muted-foreground font-semibold md:text-lg text-sm">
+                  Connections
+                </h2>
                 <div className="max-w-screen-md w-full flex-col justify-center p-4 border border-muted flex items-center gap-4 rounded-md">
                   <h2 className="text-checkColor text-3xl font-extrabold">
                     {recentTaps.length}
@@ -306,16 +308,15 @@ const Dashboard = () => {
             Taps
           </h2>
           <div>
-            {recentTaps.length > 0 &&
+            {recentTaps.length > 0 && (
               <p className="text-muted-foreground text-sm mb-2">
                 Select a card to view who tapped it
               </p>
-            }
-              <div className="flex gap-2 max-w-screen-md w-full">
-                <DesktopTapsSelect recentTaps={recentTaps} />
-              </div>
+            )}
+            <div className="flex gap-2 max-w-screen-md w-full">
+              <DesktopTapsSelect recentTaps={recentTaps} />
             </div>
-         
+          </div>
 
           {/* Billing History Section */}
           <div className="max-w-[450px]">
@@ -337,7 +338,6 @@ const Dashboard = () => {
               <Connections />
             </div>
           )}
-
         </div>
       </div>
     </div>

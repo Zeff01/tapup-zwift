@@ -20,7 +20,7 @@ export default function Social({ label }: { label: string }) {
   const handleFacebookSignIn = async () => {
     const response = await signInWithFacebook();
     if (response) {
-      router.push(`${CARD_ROUTE}`)
+      router.push(`${CARD_ROUTE}`);
       // router.push(`${UPDATE_ROUTE}/${response}`);
     }
   };

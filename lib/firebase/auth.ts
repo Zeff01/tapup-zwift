@@ -22,7 +22,12 @@ import { toast } from "react-toastify";
 import { FirebaseError } from "firebase/app";
 import { z } from "zod";
 import { signupSchema } from "../zod-schema";
-import { CARD_ROUTE, DASHBOARD_ROUTE, UPDATE_ROUTE, USER_ROLE_ENUMS } from "@/constants";
+import {
+  CARD_ROUTE,
+  DASHBOARD_ROUTE,
+  UPDATE_ROUTE,
+  USER_ROLE_ENUMS,
+} from "@/constants";
 export const onAuthStateChanged = (callback: (user: User | null) => void) => {
   return _onAuthStateChanged(firebaseAuth, callback);
 };
@@ -87,7 +92,10 @@ export const signUpHandler = async (data: z.infer<typeof signupSchema>) => {
         });
 
         if (cleanOnboardingData.chosenPhysicalCard) {
-          console.log("Adding physical card:", cleanOnboardingData.chosenPhysicalCard);
+          console.log(
+            "Adding physical card:",
+            cleanOnboardingData.chosenPhysicalCard
+          );
           await addCardForUser(userID, cleanOnboardingData.chosenPhysicalCard);
         } else {
           console.warn("No physical card selected in onboarding data");

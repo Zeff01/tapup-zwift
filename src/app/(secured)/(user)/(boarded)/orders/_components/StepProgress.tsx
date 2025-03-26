@@ -3,7 +3,7 @@ import { LucideIcon } from "lucide-react";
 
 interface Step {
   label: string;
-  icon: LucideIcon; 
+  icon: LucideIcon;
 }
 
 interface StepProgressProps {

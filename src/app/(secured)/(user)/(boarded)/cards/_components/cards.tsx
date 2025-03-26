@@ -88,14 +88,13 @@ const Cards = () => {
             >
               Buy a Card
             </Link>
-<div className="flex items-center justify-center">
-
-            <ShoppingBag
-              onClick={() => router.push("/orders")}
-              size={36}
-              className="cursor-pointer"
+            <div className="flex items-center justify-center">
+              <ShoppingBag
+                onClick={() => router.push("/orders")}
+                size={36}
+                className="cursor-pointer"
               />
-              </div>
+            </div>
           </div>
         </div>
 

@@ -199,7 +199,7 @@ const RecentTapsSelect = ({ recentTaps }: RecentTapsSelectProps) => {
           )}
         </div>
       </div>
-    </div>    
+    </div>
   );
 };
 
