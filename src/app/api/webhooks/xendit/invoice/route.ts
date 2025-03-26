@@ -67,22 +67,29 @@ export async function POST(req: NextRequest) {
       }
 
       if (external_id.startsWith("order-card")) {
-        console.log(`Invoice ${external_id} paid, adding card for user ${userId}.`);
-        const cardId = await addCardForUser(userId, invoiceData.chosenPhysicalCard);
+        console.log(
+          `Invoice ${external_id} paid, adding card for user ${userId}.`
+        );
+        const cardId = await addCardForUser(
+          userId,
+          invoiceData.chosenPhysicalCard
+        );
         // await addSubscription({
         //   cardId,
         //   subscriptionDays: 30,
         // });
         console.log(`Card added for user ${userId} with card ID: ${cardId}`);
-      }
-      else if (external_id.startsWith("subscription")) {
+      } else if (external_id.startsWith("subscription")) {
         console.log(`Processing subscription invoice: ${external_id}`);
 
         const parts = external_id.split("-");
 
         if (parts.length < 4) {
           console.error(`Invalid external_id format: ${external_id}`);
-          return NextResponse.json({ error: "Invalid external_id format" }, { status: 400 });
+          return NextResponse.json(
+            { error: "Invalid external_id format" },
+            { status: 400 }
+          );
         }
         const cardId = parts[1];
         const planId = parts[2];
@@ -90,8 +97,13 @@ export async function POST(req: NextRequest) {
         console.log(`Extracted Card ID: ${cardId}, Plan ID: ${planId}`);
 
         if (!cardId || !planId) {
-          console.error(`Missing cardId or planId in external_id: ${external_id}`);
-          return NextResponse.json({ error: "Invalid external_id format" }, { status: 400 });
+          console.error(
+            `Missing cardId or planId in external_id: ${external_id}`
+          );
+          return NextResponse.json(
+            { error: "Invalid external_id format" },
+            { status: 400 }
+          );
         }
 
         // Fetch subscription plan details from Firestore
@@ -100,7 +112,10 @@ export async function POST(req: NextRequest) {
 
         if (!planSnapshot.exists()) {
           console.error(`Subscription plan ${planId} not found`);
-          return NextResponse.json({ error: "Subscription plan not found" }, { status: 404 });
+          return NextResponse.json(
+            { error: "Subscription plan not found" },
+            { status: 404 }
+          );
         }
 
         const planData = planSnapshot.data();
@@ -109,9 +124,10 @@ export async function POST(req: NextRequest) {
         // Add the subscription for the given card
         await addSubscription({ cardId, subscriptionDays });
 
-        console.log(`Subscription activated for card ${cardId} with plan ${planId} for ${subscriptionDays} days.`);
+        console.log(
+          `Subscription activated for card ${cardId} with plan ${planId} for ${subscriptionDays} days.`
+        );
       }
-
     } else {
       console.log(`Invoice ${external_id} not paid, no action taken.`);
     }

@@ -36,7 +36,8 @@ const Page = () => {
   }, [pathname, orderId]);
 
   if (loading) return <p>Loading...</p>;
-  if (!order) return <p className="text-center text-xl mt-4">No order found.</p>;
+  if (!order)
+    return <p className="text-center text-xl mt-4">No order found.</p>;
 
   return (
     <div className="h-full w-full">

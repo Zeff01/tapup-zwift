@@ -14,7 +14,15 @@ import {
   Timestamp,
 } from "firebase/firestore";
 import { firebaseAuth, firebaseDb, firebaseStorage } from "../firebase";
-import { Card, CreateInvoiceType, CustomerType, Photo, RecurringPlanType, SubscriptionPlan, Users } from "@/types/types";
+import {
+  Card,
+  CreateInvoiceType,
+  CustomerType,
+  Photo,
+  RecurringPlanType,
+  SubscriptionPlan,
+  Users,
+} from "@/types/types";
 import { createUserLink } from "@/lib/utils";
 import { getDownloadURL, ref, uploadBytesResumable } from "firebase/storage";
 import { toast } from "react-toastify";
@@ -234,7 +242,6 @@ export const handleCreateInvoice = async (
   }
 };
 
-
 export const addInvoice = async (
   userId: string,
   invoice: CreateInvoiceType & { status: string }
@@ -257,7 +264,10 @@ export const addInvoice = async (
   }
 };
 
-export const addCardForUser = async (userId: string, chosenPhysicalCard: string): Promise<string> => {
+export const addCardForUser = async (
+  userId: string,
+  chosenPhysicalCard: string
+): Promise<string> => {
   try {
     console.log("Adding card for user:", userId);
     console.log("Chosen Physical Card ID:", chosenPhysicalCard);
@@ -270,7 +280,7 @@ export const addCardForUser = async (userId: string, chosenPhysicalCard: string)
 
     console.log("User data retrieved:", user);
 
-    const transferCode = crypto.randomUUID().split('-').slice(0, 2).join('-');
+    const transferCode = crypto.randomUUID().split("-").slice(0, 2).join("-");
     console.log("Generated Transfer Code:", transferCode);
 
     const cardCollection = collection(firebaseDb, "cards");
@@ -284,7 +294,12 @@ export const addCardForUser = async (userId: string, chosenPhysicalCard: string)
     console.log("Card object before saving:", card);
 
     const docRef = await addDoc(cardCollection, card);
-    console.log("Card added successfully. User ID:", userId, "Card ID:", docRef.id);
+    console.log(
+      "Card added successfully. User ID:",
+      userId,
+      "Card ID:",
+      docRef.id
+    );
 
     return docRef.id;
   } catch (error) {
@@ -344,10 +359,16 @@ export const createCustomerAndRecurringPlan = async (
 ) => {
   try {
     // Create customer in Xendit
-    const { data: customer } = await xenditClient.post("/customers", customerData);
+    const { data: customer } = await xenditClient.post(
+      "/customers",
+      customerData
+    );
 
     const now = new Date();
-    const formattedDateTime = now.toISOString().replace(/[-:T.Z]/g, "").slice(0, 14);
+    const formattedDateTime = now
+      .toISOString()
+      .replace(/[-:T.Z]/g, "")
+      .slice(0, 14);
 
     const referenceId = `recurring-${customer.id}-${subscriptionPlan.id}-${cardId}-${formattedDateTime}`;
 
@@ -355,12 +376,19 @@ export const createCustomerAndRecurringPlan = async (
     let intervalCount = subscriptionPlan.durationDays;
 
     if (subscriptionPlan.durationDays > 365) {
-      console.log("Subscription duration exceeds 365 days, converting to months");
+      console.log(
+        "Subscription duration exceeds 365 days, converting to months"
+      );
 
       interval = "MONTH";
       intervalCount = Math.floor(subscriptionPlan.durationDays / 30);
-    } else if (subscriptionPlan.durationDays >= 7 && subscriptionPlan.durationDays % 7 === 0) {
-      console.log("Subscription duration is a multiple of 7, converting to weeks");
+    } else if (
+      subscriptionPlan.durationDays >= 7 &&
+      subscriptionPlan.durationDays % 7 === 0
+    ) {
+      console.log(
+        "Subscription duration is a multiple of 7, converting to weeks"
+      );
 
       interval = "WEEK";
       intervalCount = subscriptionPlan.durationDays / 7;
@@ -388,7 +416,10 @@ export const createCustomerAndRecurringPlan = async (
     console.log("Final interval and count:", interval, intervalCount);
 
     // Create recurring plan in Xendit
-    const { data: recurringPlan } = await xenditClient.post("/recurring/plans", recurringPlanData);
+    const { data: recurringPlan } = await xenditClient.post(
+      "/recurring/plans",
+      recurringPlanData
+    );
     console.log("Xendit Recurring Plan Response:", recurringPlan);
     window.location.href = recurringPlan.actions?.[0]?.url;
 

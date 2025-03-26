@@ -1,6 +1,10 @@
 import { AxiosError } from "axios";
 import { xenditClient } from "./axios";
-import { CustomerType, CreateInvoiceType, RecurringPlanType } from "@/types/types";
+import {
+  CustomerType,
+  CreateInvoiceType,
+  RecurringPlanType,
+} from "@/types/types";
 
 const isAxiosError = (error: unknown): error is AxiosError => {
   return (error as AxiosError)?.isAxiosError === true;
@@ -8,13 +12,19 @@ const isAxiosError = (error: unknown): error is AxiosError => {
 
 export const createCustomer = async (customerData: CustomerType) => {
   try {
-    console.log("Sending customer data to Xendit:", JSON.stringify(customerData, null, 2));
+    console.log(
+      "Sending customer data to Xendit:",
+      JSON.stringify(customerData, null, 2)
+    );
 
     const { data } = await xenditClient.post("/customers", customerData);
     return data;
   } catch (error) {
     if (isAxiosError(error)) {
-      console.error("Xendit API Error:", JSON.stringify(error.response?.data, null, 2) || error.message);
+      console.error(
+        "Xendit API Error:",
+        JSON.stringify(error.response?.data, null, 2) || error.message
+      );
     } else if (error instanceof Error) {
       console.error("Unexpected Error:", error.message);
     } else {
@@ -40,9 +50,14 @@ export const createInvoice = async (invoiceData: CreateInvoiceType) => {
   }
 };
 
-export const createRecurringPlan = async (recurringPlanData: RecurringPlanType) => {
+export const createRecurringPlan = async (
+  recurringPlanData: RecurringPlanType
+) => {
   try {
-    const { data } = await xenditClient.post("/recurring/plans", recurringPlanData);
+    const { data } = await xenditClient.post(
+      "/recurring/plans",
+      recurringPlanData
+    );
     return data;
   } catch (error) {
     if (isAxiosError(error)) {

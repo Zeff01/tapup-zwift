@@ -41,8 +41,7 @@ import { signUpHandler } from "@/lib/firebase/auth";
 import { useMutation } from "@tanstack/react-query";
 import { useRouter } from "next/navigation";
 import { Loader2 } from "lucide-react";
-import { useEffect } from "react";
-
+import { useEffect, useState } from "react";
 
 export function RegisterForm() {
   const router = useRouter();

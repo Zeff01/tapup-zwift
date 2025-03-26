@@ -59,8 +59,20 @@ export interface Order {
   orderDate: Date;
   totalAmount: number;
   requiresInfo?: boolean;
-  status: "Pending" | "To Ship" | "To Receive" | "Delivered" | "To Return/Refund"| "Cancelled";
-  returnStatus?: "Return Requested" | "To Return" | "Refunded" | "Delivered" | "Return Rejected" | "Cancelled";
+  status:
+    | "Pending"
+    | "To Ship"
+    | "To Receive"
+    | "Delivered"
+    | "To Return/Refund"
+    | "Cancelled";
+  returnStatus?:
+    | "Return Requested"
+    | "To Return"
+    | "Refunded"
+    | "Delivered"
+    | "Return Rejected"
+    | "Cancelled";
 }
 export interface Address {
   city: string;
@@ -196,7 +208,6 @@ type CustomerType = {
   };
 };
 
-
 export type CreateInvoiceType = {
   external_id: string; // Required: Unique identifier for the invoice
   amount: number; // Required: Invoice amount (inclusive of fees/items)
@@ -304,12 +315,12 @@ export type RecurringPlanType = {
   failure_return_url?: string;
   items?: {
     type:
-    | "DIGITAL_PRODUCT"
-    | "PHYSICAL_PRODUCT"
-    | "DIGITAL_SERVICE"
-    | "PHYSICAL_SERVICE"
-    | "FEE"
-    | "DISCOUNT";
+      | "DIGITAL_PRODUCT"
+      | "PHYSICAL_PRODUCT"
+      | "DIGITAL_SERVICE"
+      | "PHYSICAL_SERVICE"
+      | "FEE"
+      | "DISCOUNT";
     name: string;
     net_unit_amount: number;
     quantity: number;

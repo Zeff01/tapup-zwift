@@ -153,7 +153,6 @@ export const createPortfolioSchema = z.object({
 });
 
 export const editCardSchema = z.object({
-
   coverPhotoUrl: z
     .string()
     .refine(
@@ -163,7 +162,8 @@ export const editCardSchema = z.object({
       {
         message: "Invalid Coverphoto URL",
       }
-    ).optional(),
+    )
+    .optional(),
   profilePictureUrl: z
     .string()
     .min(3, "Profile Picture is required")
@@ -177,12 +177,8 @@ export const editCardSchema = z.object({
     ), // Profile picture URL is required
   position: z.string().optional(),
   company: z.string().optional(),
-  companyBackground: z
-    .string()
-    .optional(),
-  serviceDescription: z
-    .string()
-    .optional(),
+  companyBackground: z.string().optional(),
+  serviceDescription: z.string().optional(),
   servicePhotos: z.array(z.string().url()).optional(),
   chosenTemplate: z.enum([
     "template1",
@@ -320,8 +316,6 @@ export const signupSchema = z
     message: "Passwords do not match",
     path: ["confirmPassword"],
   });
-
-
 
 export const forgotPasswordSchema = z.object({
   email: z.string().email({ message: "Invalid email address" }),

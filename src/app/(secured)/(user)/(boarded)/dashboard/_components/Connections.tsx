@@ -8,23 +8,23 @@ interface connectionType {
 }
 const activeConnections: connectionType[] = [
   {
-     image: "/assets/profileImage.png",
-      name: "Gordon Gekko",
-      companyName: "Gekko & Co"
+    image: "/assets/profileImage.png",
+    name: "Gordon Gekko",
+    companyName: "Gekko & Co",
   },
   {
-     image: "/assets/profileImage.png",
-      name: "Tony Stark",
-      companyName: "Stark Industries"
+    image: "/assets/profileImage.png",
+    name: "Tony Stark",
+    companyName: "Stark Industries",
   },
   {
-     image: "/assets/profileImage.png",
-      name: "Miles Dyson",
-      companyName: "Cyberdyne System"
-  }
+    image: "/assets/profileImage.png",
+    name: "Miles Dyson",
+    companyName: "Cyberdyne System",
+  },
 ];
 
-const mutedConnections:connectionType[] = [
+const mutedConnections: connectionType[] = [
   {
     image: "/assets/profileImage.png",
     name: "Gordon Gekko",
@@ -35,10 +35,9 @@ const mutedConnections:connectionType[] = [
     name: "Tony Stark",
     companyName: "Stark Industries",
   },
-
 ];
 
-const blockConnections:connectionType[] = [
+const blockConnections: connectionType[] = [
   {
     image: "/assets/profileImage.png",
     name: "Gordon Gekko",
@@ -49,7 +48,6 @@ const blockConnections:connectionType[] = [
     name: "Tony Stark",
     companyName: "Stark Industries",
   },
-
 ];
 
 const Connections = () => {
@@ -90,7 +88,7 @@ const Connections = () => {
       ) : (
         ""
       )}
-     {Array.isArray(mutedConnections) && mutedConnections.length > 0 ? (
+      {Array.isArray(mutedConnections) && mutedConnections.length > 0 ? (
         <li className="max-w-[300px] w-full flex flex-col border rounded-sm">
           <div>
             <h2 className="lg:text-lg p-4 border-b text-base font-semibold text-center">
@@ -124,8 +122,8 @@ const Connections = () => {
         </li>
       ) : (
         ""
-          )}
-          {Array.isArray(blockConnections) && blockConnections.length > 0 ? (
+      )}
+      {Array.isArray(blockConnections) && blockConnections.length > 0 ? (
         <li className="max-w-[300px] w-full flex flex-col border rounded-sm">
           <div>
             <h2 className="lg:text-lg p-4 border-b text-base font-semibold text-center">

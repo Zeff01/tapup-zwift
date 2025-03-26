@@ -1,4 +1,3 @@
-
 import { Order, SubscriptionPlan } from "@/types/types";
 
 const exampleSubscriptionPlan: SubscriptionPlan = {
@@ -10,7 +9,7 @@ const exampleSubscriptionPlan: SubscriptionPlan = {
 };
 
 export const exampleOrders: Order[] = [
-{
+  {
     orderId: "ORD123126",
     items: [
       {
@@ -22,10 +21,10 @@ export const exampleOrders: Order[] = [
           price: 250,
         },
         quantity: 2,
-                physicalCardId: "PHC123",
+        physicalCardId: "PHC123",
         subscriptionPlan: exampleSubscriptionPlan,
       },
-       {
+      {
         product: {
           id: "C126",
           image: "/assets/cards/back/card2.png",
@@ -33,8 +32,8 @@ export const exampleOrders: Order[] = [
           description: "Essential",
           price: 250,
         },
-         quantity: 2,
-                physicalCardId: "PHC124",
+        quantity: 2,
+        physicalCardId: "PHC124",
         subscriptionPlan: exampleSubscriptionPlan,
       },
       {
@@ -46,7 +45,7 @@ export const exampleOrders: Order[] = [
           price: 50,
         },
         quantity: 1,
-                physicalCardId: "PHC125",
+        physicalCardId: "PHC125",
         subscriptionPlan: exampleSubscriptionPlan,
       },
     ],
@@ -61,8 +60,8 @@ export const exampleOrders: Order[] = [
       },
     },
     deliveryOption: {
-        name: "J&T Express",
-            image:"/assets/courier/lbc.png",
+      name: "J&T Express",
+      image: "/assets/courier/lbc.png",
       shippingFee: 50,
       minDays: 3,
       maxDays: 7,
@@ -72,9 +71,6 @@ export const exampleOrders: Order[] = [
     status: "Pending",
   },
 
-  
-    
-  
   {
     orderId: "ORD123216",
     items: [
@@ -87,7 +83,7 @@ export const exampleOrders: Order[] = [
           price: 1000,
         },
         quantity: 2,
-                physicalCardId: "PHC12311",
+        physicalCardId: "PHC12311",
         subscriptionPlan: exampleSubscriptionPlan,
       },
       {
@@ -99,10 +95,10 @@ export const exampleOrders: Order[] = [
           price: 350,
         },
         quantity: 1,
-                physicalCardId: "PHC1232",
+        physicalCardId: "PHC1232",
         subscriptionPlan: exampleSubscriptionPlan,
       },
-       {
+      {
         product: {
           id: "C124",
           image: "/assets/cards/back/card4.png",
@@ -110,8 +106,8 @@ export const exampleOrders: Order[] = [
           description: "Essential",
           price: 350,
         },
-         quantity: 1,
-                physicalCardId: "PHC123232",
+        quantity: 1,
+        physicalCardId: "PHC123232",
         subscriptionPlan: exampleSubscriptionPlan,
       },
     ],
@@ -126,8 +122,8 @@ export const exampleOrders: Order[] = [
       },
     },
     deliveryOption: {
-        name: "J&T Express",
-            image:"/assets/courier/lbc.png",
+      name: "J&T Express",
+      image: "/assets/courier/lbc.png",
       shippingFee: 50,
       minDays: 3,
       maxDays: 7,
@@ -135,9 +131,9 @@ export const exampleOrders: Order[] = [
     orderDate: new Date("2025-01-28"),
     totalAmount: 2700,
     status: "To Receive",
-    },
-  
-   {
+  },
+
+  {
     orderId: "ORD1234321",
     items: [
       {
@@ -149,7 +145,7 @@ export const exampleOrders: Order[] = [
           price: 250,
         },
         quantity: 2,
-                physicalCardId: "PHC1231232132",
+        physicalCardId: "PHC1231232132",
         subscriptionPlan: exampleSubscriptionPlan,
       },
       {
@@ -161,7 +157,7 @@ export const exampleOrders: Order[] = [
           price: 50,
         },
         quantity: 1,
-                physicalCardId: "PHC1231212",
+        physicalCardId: "PHC1231212",
         subscriptionPlan: exampleSubscriptionPlan,
       },
     ],
@@ -176,8 +172,8 @@ export const exampleOrders: Order[] = [
       },
     },
     deliveryOption: {
-        name: "J&T Express",
-            image:"/assets/courier/lbc.png",
+      name: "J&T Express",
+      image: "/assets/courier/lbc.png",
       shippingFee: 50,
       minDays: 3,
       maxDays: 7,
@@ -186,9 +182,9 @@ export const exampleOrders: Order[] = [
     totalAmount: 550,
     status: "To Return/Refund",
     returnStatus: "Return Requested",
-    },
-  
-   {
+  },
+
+  {
     orderId: "ORD123456",
     items: [
       {
@@ -200,7 +196,7 @@ export const exampleOrders: Order[] = [
           price: 250,
         },
         quantity: 2,
-                physicalCardId: "PHC1231111",
+        physicalCardId: "PHC1231111",
         subscriptionPlan: exampleSubscriptionPlan,
       },
       {
@@ -212,7 +208,7 @@ export const exampleOrders: Order[] = [
           price: 50,
         },
         quantity: 1,
-                physicalCardId: "PHC12332131",
+        physicalCardId: "PHC12332131",
         subscriptionPlan: exampleSubscriptionPlan,
       },
     ],
@@ -227,8 +223,8 @@ export const exampleOrders: Order[] = [
       },
     },
     deliveryOption: {
-        name: "J&T Express",
-            image:"/assets/courier/lbc.png",
+      name: "J&T Express",
+      image: "/assets/courier/lbc.png",
       shippingFee: 50,
       minDays: 3,
       maxDays: 7,
@@ -237,9 +233,9 @@ export const exampleOrders: Order[] = [
     totalAmount: 550,
     status: "To Return/Refund",
     returnStatus: "Refunded",
-    },
-  
-   {
+  },
+
+  {
     orderId: "ORD123326",
     items: [
       {
@@ -251,9 +247,8 @@ export const exampleOrders: Order[] = [
           price: 250,
         },
         quantity: 2,
-            physicalCardId: "PHC12332132",
+        physicalCardId: "PHC12332132",
         subscriptionPlan: exampleSubscriptionPlan,
-        
       },
       {
         product: {
@@ -264,7 +259,7 @@ export const exampleOrders: Order[] = [
           price: 50,
         },
         quantity: 1,
-                physicalCardId: "PHC132123",
+        physicalCardId: "PHC132123",
         subscriptionPlan: exampleSubscriptionPlan,
       },
     ],
@@ -279,8 +274,8 @@ export const exampleOrders: Order[] = [
       },
     },
     deliveryOption: {
-        name: "J&T Express",
-            image:"/assets/courier/lbc.png",
+      name: "J&T Express",
+      image: "/assets/courier/lbc.png",
       shippingFee: 50,
       minDays: 3,
       maxDays: 7,
@@ -289,8 +284,8 @@ export const exampleOrders: Order[] = [
     totalAmount: 550,
     status: "To Return/Refund",
     returnStatus: "To Return",
-    },
-  
+  },
+
   {
     orderId: "ORD1226",
     items: [
@@ -303,7 +298,7 @@ export const exampleOrders: Order[] = [
           price: 250,
         },
         quantity: 2,
-                physicalCardId: "PHC1323223",
+        physicalCardId: "PHC1323223",
         subscriptionPlan: exampleSubscriptionPlan,
       },
       {
@@ -315,7 +310,7 @@ export const exampleOrders: Order[] = [
           price: 50,
         },
         quantity: 1,
-                physicalCardId: "PHC1232323",
+        physicalCardId: "PHC1232323",
         subscriptionPlan: exampleSubscriptionPlan,
       },
     ],
@@ -330,18 +325,18 @@ export const exampleOrders: Order[] = [
       },
     },
     deliveryOption: {
-        name: "J&T Express",
-            image:"/assets/courier/lbc.png",
+      name: "J&T Express",
+      image: "/assets/courier/lbc.png",
       shippingFee: 50,
       minDays: 3,
       maxDays: 7,
     },
     orderDate: new Date("2025-01-28"),
     totalAmount: 550,
-      status: "Delivered",
-    returnStatus:"Delivered"
-    },
-  
+    status: "Delivered",
+    returnStatus: "Delivered",
+  },
+
   {
     orderId: "ORD12312",
     items: [
@@ -354,7 +349,7 @@ export const exampleOrders: Order[] = [
           price: 250,
         },
         quantity: 2,
-                physicalCardId: "PHC111123",
+        physicalCardId: "PHC111123",
         subscriptionPlan: exampleSubscriptionPlan,
       },
       {
@@ -366,7 +361,7 @@ export const exampleOrders: Order[] = [
           price: 50,
         },
         quantity: 1,
-                physicalCardId: "PHC1232323",
+        physicalCardId: "PHC1232323",
         subscriptionPlan: exampleSubscriptionPlan,
       },
     ],
@@ -381,18 +376,18 @@ export const exampleOrders: Order[] = [
       },
     },
     deliveryOption: {
-        name: "J&T Express",
-            image:"/assets/courier/lbc.png",
+      name: "J&T Express",
+      image: "/assets/courier/lbc.png",
       shippingFee: 50,
       minDays: 3,
       maxDays: 7,
     },
     orderDate: new Date("2025-01-28"),
     totalAmount: 550,
-      status: "Delivered",
+    status: "Delivered",
     returnStatus: "Return Rejected",
-    },
-  
+  },
+
   {
     orderId: "ORD123456",
     items: [
@@ -405,7 +400,7 @@ export const exampleOrders: Order[] = [
           price: 250,
         },
         quantity: 2,
-                physicalCardId: "PHC13223",
+        physicalCardId: "PHC13223",
         subscriptionPlan: exampleSubscriptionPlan,
       },
       {
@@ -417,7 +412,7 @@ export const exampleOrders: Order[] = [
           price: 50,
         },
         quantity: 1,
-                physicalCardId: "PHC123",
+        physicalCardId: "PHC123",
         subscriptionPlan: exampleSubscriptionPlan,
       },
     ],
@@ -432,8 +427,8 @@ export const exampleOrders: Order[] = [
       },
     },
     deliveryOption: {
-        name: "J&T Express",
-            image:"/assets/courier/lbc.png",
+      name: "J&T Express",
+      image: "/assets/courier/lbc.png",
       shippingFee: 50,
       minDays: 3,
       maxDays: 7,
@@ -455,7 +450,7 @@ export const exampleOrders: Order[] = [
           price: 250,
         },
         quantity: 2,
-                physicalCardId: "PHC11232123",
+        physicalCardId: "PHC11232123",
         subscriptionPlan: exampleSubscriptionPlan,
       },
       {
@@ -467,7 +462,7 @@ export const exampleOrders: Order[] = [
           price: 50,
         },
         quantity: 1,
-                physicalCardId: "PHC1213223",
+        physicalCardId: "PHC1213223",
         subscriptionPlan: exampleSubscriptionPlan,
       },
     ],
@@ -482,19 +477,19 @@ export const exampleOrders: Order[] = [
       },
     },
     deliveryOption: {
-        name: "J&T Express",
-            image:"/assets/courier/lbc.png",
+      name: "J&T Express",
+      image: "/assets/courier/lbc.png",
       shippingFee: 50,
       minDays: 3,
       maxDays: 7,
     },
     orderDate: new Date("2025-01-28"),
     totalAmount: 550,
-      status: "Cancelled",
-    returnStatus: "Refunded"
-    },
+    status: "Cancelled",
+    returnStatus: "Refunded",
+  },
 
-   {
+  {
     orderId: "ORD123326",
     items: [
       {
@@ -506,7 +501,7 @@ export const exampleOrders: Order[] = [
           price: 250,
         },
         quantity: 2,
-                physicalCardId: "PHC1323223",
+        physicalCardId: "PHC1323223",
         subscriptionPlan: exampleSubscriptionPlan,
       },
       {
@@ -518,7 +513,7 @@ export const exampleOrders: Order[] = [
           price: 50,
         },
         quantity: 1,
-                physicalCardId: "PHC12322323",
+        physicalCardId: "PHC12322323",
         subscriptionPlan: exampleSubscriptionPlan,
       },
     ],
@@ -533,20 +528,19 @@ export const exampleOrders: Order[] = [
       },
     },
     deliveryOption: {
-        name: "J&T Express",
-            image:"/assets/courier/lbc.png",
+      name: "J&T Express",
+      image: "/assets/courier/lbc.png",
       shippingFee: 50,
       minDays: 3,
       maxDays: 7,
     },
     orderDate: new Date("2025-01-28"),
     totalAmount: 550,
-      status: "Cancelled",
-    returnStatus: "Cancelled"
-    },
-  
+    status: "Cancelled",
+    returnStatus: "Cancelled",
+  },
 
-{
+  {
     orderId: "ORD123326",
     items: [
       {
@@ -558,7 +552,7 @@ export const exampleOrders: Order[] = [
           price: 250,
         },
         quantity: 2,
-                physicalCardId: "PHC3232123",
+        physicalCardId: "PHC3232123",
         subscriptionPlan: exampleSubscriptionPlan,
       },
       {
@@ -570,7 +564,7 @@ export const exampleOrders: Order[] = [
           price: 50,
         },
         quantity: 1,
-                physicalCardId: "PHC1223123",
+        physicalCardId: "PHC1223123",
         subscriptionPlan: exampleSubscriptionPlan,
       },
     ],
@@ -585,8 +579,8 @@ export const exampleOrders: Order[] = [
       },
     },
     deliveryOption: {
-        name: "J&T Express",
-        image:"/assets/courier/lbc.png",
+      name: "J&T Express",
+      image: "/assets/courier/lbc.png",
       shippingFee: 50,
       minDays: 3,
       maxDays: 7,

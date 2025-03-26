@@ -23,15 +23,17 @@ const RecentBillingHistory = ({ recentBilling }: RecentBillingProps) => {
     <div className="w-full">
       {recentBilling.length === 0 ? (
         <div className="max-w-screen-md w-full mx-auto">
-       
-           <div className="flex items-center justify-center mt-5">
+          <div className="flex items-center justify-center mt-5">
             <div className="w-full p-2 py-4 md:p-10 border border-muted flex flex-col items-center justify-center rounded-md">
               <div className="relative w-[120px] md:w-[250px] aspect-video">
-                <Image src="/assets/shopImg.svg" alt="coming soon" fill className="object-cover" />
+                <Image
+                  src="/assets/shopImg.svg"
+                  alt="coming soon"
+                  fill
+                  className="object-cover"
+                />
               </div>
-              <h2 className="text-lg font-semibold mt-4">
-                Coming Soon
-              </h2>
+              <h2 className="text-lg font-semibold mt-4">Coming Soon</h2>
               <p className="text-sm text-muted-foreground text-center">
                 This feature is currently under development
               </p>

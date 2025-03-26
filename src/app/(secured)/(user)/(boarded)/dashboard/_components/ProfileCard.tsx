@@ -7,17 +7,17 @@ interface profileCardProps {
     firstName?: string;
     lastName?: string;
     email?: string;
-    } | null;
-    className?:string,
+  } | null;
+  className?: string;
 }
 
-const ProfileCard = ({ user,className }: profileCardProps) => {
-    if (!user) {
-        return <p>No user data available</p>;
-    }
+const ProfileCard = ({ user, className }: profileCardProps) => {
+  if (!user) {
+    return <p>No user data available</p>;
+  }
 
-    return (
-        <div className={clsx("w-full", className)}>
+  return (
+    <div className={clsx("w-full", className)}>
       <h3 className="text-muted-foreground font-semibold md:text-lg text-sm">
         Profile
       </h3>
