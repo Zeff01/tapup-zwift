@@ -8,7 +8,6 @@ TAPUP is an innovative app that serves as a digital portfolio for business card 
 
 ---
 
-
 ## Getting Started
 
 ### Prerequisites
@@ -17,10 +16,12 @@ Before you begin, ensure you have the following installed on your machine:
 
 - Node.js
 
-You should also be familiar with:  
-- TypeScript  
+You should also be familiar with:
+
+- TypeScript
 
 ### Setup Steps
+
 Follow these steps to get the project up and running on your local machine:
 
 1. Clone the project from the Github 'tapup-fe' main branch (dev). Copy the clone link.
@@ -57,6 +58,7 @@ npm install
    Obtain the `.env.local` files for production from the system administrator. These files contain sensitive configuration details such as API keys and database credentials.
 
    Example `.env.local` file:
+
    ```env
    NEXT_PUBLIC_API_KEY="******************"
    NEXT_PUBLIC_AUTH_DOMAIN="tapup-*****.firebaseapp.com"
@@ -83,18 +85,12 @@ npm run dev
 ---
 
 ## Further Reading
+
 For more detailed information, please refer to the following sections in our wiki:
 
-| Topic                | Description                                                                 | Link                                                                          |
-|----------------------|-----------------------------------------------------------------------------|-------------------------------------------------------------------------------|
-| Contributing         | Commit and pull request guidelines                                          | https://github.com/Zeff01/tapup-zwift/wiki/Contributing-and-Commit-Guidelines |
-| Folder Structure     | Overview of the project's directories and their purposes.                   | https://github.com/Zeff01/tapup-zwift/wiki/Folder-Structure                   |
-| Tech Stack           | Core technologies and tools used in the project.                            | https://github.com/Zeff01/tapup-zwift/wiki/Tech-Stack                         |
-| VSCode Extensions    | Recommended extensions to for development.                                  | https://github.com/Zeff01/tapup-zwift/wiki/VSC-Code-Extensions                |
-
-
-
-
-
-
-
+| Topic             | Description                                               | Link                                                                          |
+| ----------------- | --------------------------------------------------------- | ----------------------------------------------------------------------------- |
+| Contributing      | Commit and pull request guidelines                        | https://github.com/Zeff01/tapup-zwift/wiki/Contributing-and-Commit-Guidelines |
+| Folder Structure  | Overview of the project's directories and their purposes. | https://github.com/Zeff01/tapup-zwift/wiki/Folder-Structure                   |
+| Tech Stack        | Core technologies and tools used in the project.          | https://github.com/Zeff01/tapup-zwift/wiki/Tech-Stack                         |
+| VSCode Extensions | Recommended extensions to for development.                | https://github.com/Zeff01/tapup-zwift/wiki/VSC-Code-Extensions                |

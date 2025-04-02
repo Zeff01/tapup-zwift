@@ -10,6 +10,8 @@ import { headerItems } from "@/constants";
 
 import TapupLogo from "../svgs/TapupLogo";
 import { ThemeToggle } from "../Theme";
+import { ShoppingCart } from "lucide-react";
+import { cn } from "@/lib/utils";
 
 const Header = () => {
   const pathname = usePathname();
@@ -50,6 +52,14 @@ const Header = () => {
           </Button>
         </Link>
 
+        <div
+          className={cn("relative", {
+            "before:content-[''] before:absolute before:size-3 before:bg-red-500 before:-right-1 before:-top-1 before:rounded-full":
+              true,
+          })}
+        >
+          <ShoppingCart />
+        </div>
         <ThemeToggle />
 
         {/* Mobile Menu Trigger */}

@@ -7,7 +7,7 @@ import {
 } from "@/components/ui/carousel";
 import Image from "next/image";
 import CardDetails from "./card-details";
-import React from "react";
+import React, { useEffect } from "react";
 import { carouselCards } from "@/constants";
 import { cn } from "@/lib/utils";
 import Autoplay from "embla-carousel-autoplay";
@@ -16,9 +16,18 @@ import { useMediaQuery } from "usehooks-ts";
 import { type CarouselApi } from "@/components/ui/carousel";
 import { CarouselCardKey } from "@/types/types";
 
-const TapUpCarousel: React.FC = () => {
+interface Params {
+  viewCard?: boolean;
+  onChange?: (title: string) => void;
+  startPos?: number;
+}
+
+const TapUpCarousel = ({ viewCard, onChange, startPos }: Params) => {
   const [api, setApi] = React.useState<CarouselApi>();
-  const [current, setCurrent] = React.useState(2);
+  const [current, setCurrent] = React.useState(() => {
+    if (!startPos) return 2;
+    return startPos;
+  });
 
   const media = useMediaQuery("(max-width: 1024px)");
 
@@ -49,11 +58,18 @@ const TapUpCarousel: React.FC = () => {
     });
   }, [api, media]);
 
+  useEffect(() => {
+    if (!onChange) return;
+    onChange(carouselCards[`card${current}` as CarouselCardKey].title);
+  }, [current]);
+
   return (
     <section className="py-16" id="cardSelection">
-      <h2 className="text-center lg:text-6xl md:text-4xl text-3xl font-bold mb-10 ">
-        Pick a card to start
-      </h2>
+      {!viewCard && (
+        <h2 className="text-center lg:text-6xl md:text-4xl text-3xl font-bold mb-10 ">
+          Pick a card to start
+        </h2>
+      )}
       <div className="w-full">
         <Carousel
           setApi={setApi}
@@ -86,10 +102,12 @@ const TapUpCarousel: React.FC = () => {
           </CarouselContent>
         </Carousel>
       </div>
-      <CardDetails
-        key={current}
-        card={carouselCards[`card${current}` as CarouselCardKey]}
-      />
+      {!viewCard && (
+        <CardDetails
+          key={current}
+          card={carouselCards[`card${current}` as CarouselCardKey]}
+        />
+      )}
     </section>
   );
 };

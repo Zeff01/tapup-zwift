@@ -1,7 +1,7 @@
 import { CarouselCard } from "@/types/types";
 import { Button } from "../ui/button";
-import { LogIn } from "lucide-react";
 import Link from "next/link";
+import { BiPurchaseTag } from "react-icons/bi";
 
 interface CardDetailsProps {
   card: CarouselCard;
@@ -20,10 +20,10 @@ const CardDetails: React.FC<CardDetailsProps> = ({ card }) => {
         {card?.description}
       </pre>
 
-      <Link href="/signup">
+      <Link href={`/card?title=${card?.title}`}>
         <Button className="uppercase max-w-[15rem] px-8 py-6 w-full text-white bg-buttonColor mt-[27px] font-bold flex items-center mx-auto hover:bg-hoverColor">
-          Sign up & Activate
-          <LogIn />
+          Purchase Card
+          <BiPurchaseTag />
         </Button>
       </Link>
     </section>
