@@ -7,7 +7,7 @@ import {
 } from "@/components/ui/carousel";
 import Image from "next/image";
 import CardDetails from "./card-details";
-import React, { useEffect } from "react";
+import React, { useEffect, useRef } from "react";
 import { carouselCards } from "@/constants";
 import { cn } from "@/lib/utils";
 import Autoplay from "embla-carousel-autoplay";
@@ -15,19 +15,22 @@ import { useMediaQuery } from "usehooks-ts";
 
 import { type CarouselApi } from "@/components/ui/carousel";
 import { CarouselCardKey } from "@/types/types";
+import { useSearchParams } from "next/navigation";
 
 interface Params {
   viewCard?: boolean;
   onChange?: (title: string) => void;
-  startPos?: number;
 }
 
-const TapUpCarousel = ({ viewCard, onChange, startPos }: Params) => {
+const TapUpCarousel = ({ viewCard, onChange }: Params) => {
+  const searchParams = useSearchParams();
+  const title = searchParams.get("title");
   const [api, setApi] = React.useState<CarouselApi>();
-  const [current, setCurrent] = React.useState(() => {
-    if (!startPos) return 2;
-    return startPos;
-  });
+  const [current, setCurrent] = React.useState(0);
+
+  const start = useRef(
+    Object.values(carouselCards).findIndex((card) => card.title === title) || 0
+  );
 
   const media = useMediaQuery("(max-width: 1024px)");
 
@@ -35,33 +38,71 @@ const TapUpCarousel = ({ viewCard, onChange, startPos }: Params) => {
     Autoplay({ delay: 5000, stopOnInteraction: true })
   );
 
+  const plugins = React.useMemo(() => {
+    return !viewCard ? [plugin.current] : [];
+  }, [viewCard]);
+
   React.useEffect(() => {
     if (!api) {
       return;
     }
     if (media) {
-      setCurrent(api.selectedScrollSnap() + 1);
-    } else {
       setCurrent(api.selectedScrollSnap() + 2);
+      if (onChange) {
+        onChange(
+          carouselCards[
+            `card${api.selectedScrollSnap() + 2}` as CarouselCardKey
+          ]?.title
+        );
+      }
+    } else {
+      setCurrent(() => {
+        if (api.selectedScrollSnap() === api.scrollSnapList().length - 1) {
+          if (onChange) {
+            onChange(carouselCards[`card${1}` as CarouselCardKey]?.title);
+          }
+          return 1;
+        }
+        if (onChange) {
+          onChange(
+            carouselCards[
+              `card${api.selectedScrollSnap() + 2}` as CarouselCardKey
+            ]?.title
+          );
+        }
+        return api.selectedScrollSnap() + 2;
+      });
     }
     api.on("select", () => {
       if (media) {
         setCurrent(api.selectedScrollSnap() + 1);
+        if (onChange) {
+          onChange(
+            carouselCards[
+              `card${api.selectedScrollSnap() + 1}` as CarouselCardKey
+            ]?.title
+          );
+        }
         return;
       }
       setCurrent(() => {
         if (api.selectedScrollSnap() === api.scrollSnapList().length - 1) {
+          if (onChange) {
+            onChange(carouselCards[`card${1}` as CarouselCardKey]?.title);
+          }
           return 1;
+        }
+        if (onChange) {
+          onChange(
+            carouselCards[
+              `card${api.selectedScrollSnap() + 2}` as CarouselCardKey
+            ]?.title
+          );
         }
         return api.selectedScrollSnap() + 2;
       });
     });
   }, [api, media]);
-
-  useEffect(() => {
-    if (!onChange) return;
-    onChange(carouselCards[`card${current}` as CarouselCardKey].title);
-  }, [current]);
 
   return (
     <section className="py-16" id="cardSelection">
@@ -73,21 +114,35 @@ const TapUpCarousel = ({ viewCard, onChange, startPos }: Params) => {
       <div className="w-full">
         <Carousel
           setApi={setApi}
-          onMouseEnter={plugin.current.stop}
-          onMouseLeave={plugin.current.reset}
-          plugins={[plugin.current as any]}
-          opts={{ align: "start", loop: true }}
+          onMouseEnter={!viewCard ? plugin.current.stop : undefined}
+          onMouseLeave={!viewCard ? plugin.current.reset : undefined}
+          plugins={plugins as any}
+          opts={{
+            align: "start",
+            loop: true,
+            startIndex: viewCard
+              ? start.current - 1 < 0
+                ? 10
+                : start.current - 1
+              : 0,
+          }}
         >
           <CarouselContent>
             {Object.values(carouselCards).map((item, index) => (
               <CarouselItem
                 key={index}
-                className={`md:basis-1/2 lg:basis-1/3 flex items-center justify-center rounded-md`}
+                className={cn(
+                  "md:basis-1/2 lg:basis-1/3 flex items-center justify-center rounded-md"
+                  // {
+                  //   "lg:basis-[25%]": viewCard,
+                  // }
+                )}
               >
                 <div
                   className={cn(
                     "cursor-pointer relative xl:w-[24rem] xl:h-[20rem] h-[16rem] w-[15rem] aspect-video transition-all duration-500 ease-in-out",
                     index + 1 === current && "scale-125"
+                    // viewCard && "xl:w-[18rem] xl:h-[14rem]"
                   )}
                 >
                   <Image
