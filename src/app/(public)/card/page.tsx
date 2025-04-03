@@ -16,15 +16,12 @@ const CardPurchasePreviewPage = () => {
   const [title, setTitle] = useState(queryParamsTitle);
 
   const handleSetTitle = (title: string) => {
+    setTitle(title);
     router.push(`/card?title=${title}`);
   };
 
   const card =
     Object.values(carouselCards).find((card) => card.title === title) || null;
-
-  const startPos =
-    Object.values(carouselCards).findIndex((card) => card.title === title) ||
-    null;
 
   return (
     <React.Fragment>
@@ -53,11 +50,7 @@ const CardPurchasePreviewPage = () => {
           </div>
         </article>
       </section>
-      <TapUpCarousel
-        viewCard
-        onChange={handleSetTitle}
-        startPos={startPos as number}
-      />
+      <TapUpCarousel viewCard onChange={handleSetTitle} />
     </React.Fragment>
   );
 };
