@@ -176,3 +176,10 @@ export function timeAgo(timestamp: Date): string {
   if (seconds > 0) return `${seconds} second${seconds > 1 ? "s" : ""} ago`;
   return "just now";
 }
+
+export function formatCurrency(amount: number): string {
+  return new Intl.NumberFormat("en-US", {
+    style: "currency",
+    currency: "PHP",
+  }).format(amount);
+}

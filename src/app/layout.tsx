@@ -6,6 +6,7 @@ import { ToastContainer } from "react-toastify";
 import Head from "next/head";
 import { ThemeProvider } from "@/providers/theme-provider";
 import { QueryProvider } from "@/providers/query-provider";
+import { CartProvider } from "@/providers/cart-provider-v2";
 
 const lato = Lato({ weight: "400", subsets: ["latin"] });
 
@@ -37,19 +38,21 @@ export default function RootLayout({
           disableTransitionOnChange
         >
           <QueryProvider>
-            <main className="min-h-screen flex flex-col bg-background">
-              {children}
-            </main>
-            {isDev && (
-              <div className="z-50 fixed bottom-4 right-4 bg-foreground size-6 rounded-full flex items-center justify-center font-bold text-background text-xs">
-                <span className="block sm:hidden">xs</span>
-                <span className="hidden sm:block md:hidden">sm</span>
-                <span className="hidden md:block lg:hidden">md</span>
-                <span className="hidden lg:block xl:hidden">lg</span>
-                <span className="hidden xl:block">xl</span>
-              </div>
-            )}
-            <ToastContainer />
+            <CartProvider>
+              <main className="min-h-screen flex flex-col bg-background">
+                {children}
+              </main>
+              {isDev && (
+                <div className="z-50 fixed bottom-4 right-4 bg-foreground size-6 rounded-full flex items-center justify-center font-bold text-background text-xs">
+                  <span className="block sm:hidden">xs</span>
+                  <span className="hidden sm:block md:hidden">sm</span>
+                  <span className="hidden md:block lg:hidden">md</span>
+                  <span className="hidden lg:block xl:hidden">lg</span>
+                  <span className="hidden xl:block">xl</span>
+                </div>
+              )}
+              <ToastContainer />
+            </CartProvider>
           </QueryProvider>
         </ThemeProvider>
       </body>

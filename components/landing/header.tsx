@@ -1,5 +1,6 @@
 "use client";
 
+import dynamic from "next/dynamic";
 import { useState } from "react";
 import Link from "next/link";
 import { Button } from "../ui/button";
@@ -11,7 +12,11 @@ import { headerItems } from "@/constants";
 import TapupLogo from "../svgs/TapupLogo";
 import { ThemeToggle } from "../Theme";
 import { ShoppingCart } from "lucide-react";
-import { cn } from "@/lib/utils";
+
+const Cart = dynamic(() => import("../cart/Cart"), {
+  ssr: false,
+  loading: () => <ShoppingCart className="!size-6 shrink-0" />,
+});
 
 const Header = () => {
   const pathname = usePathname();
@@ -52,14 +57,7 @@ const Header = () => {
           </Button>
         </Link>
 
-        <div
-          className={cn("relative", {
-            "before:content-[''] before:absolute before:size-3 before:bg-red-500 before:-right-1 before:-top-1 before:rounded-full":
-              true,
-          })}
-        >
-          <ShoppingCart />
-        </div>
+        <Cart />
         <ThemeToggle />
 
         {/* Mobile Menu Trigger */}
