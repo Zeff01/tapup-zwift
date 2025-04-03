@@ -141,7 +141,8 @@ const TapUpCarousel = ({ viewCard, onChange }: Params) => {
                 <div
                   className={cn(
                     "cursor-pointer relative xl:w-[24rem] xl:h-[20rem] h-[16rem] w-[15rem] aspect-video transition-all duration-500 ease-in-out",
-                    index + 1 === current && "scale-125"
+                    !media && index + 1 === current && "scale-125",
+                    media && index === current && "scale-125"
                     // viewCard && "xl:w-[18rem] xl:h-[14rem]"
                   )}
                 >
