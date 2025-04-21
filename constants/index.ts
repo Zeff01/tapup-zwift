@@ -43,6 +43,9 @@ export const UPDATE_PATH = "/user/update/:path*";
 export const ONBOARDING_PATH = "/onboarding/:path*";
 export const LOCAL_STORAGE_NAME = "isAuthenticated";
 
+export const DEFAULT_COVER_PHOTO = "/public/assets/cover_placeholder.png";
+export const DEFAULT_PROFILE_PHOTO = "/public/assets/profile_placeholder.png";
+
 export const cardEditorUtils = {
   text: {
     icon: Text,
