@@ -15,6 +15,7 @@ import { CartSummary } from "./cart-summary";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { Separator } from "@/components/ui/separator";
 import { cn } from "@/lib/utils";
+import Link from "next/link";
 
 export default function Cart() {
   const { items, totalItems, isOpen, openCart, closeCart } = useCart();
@@ -57,7 +58,14 @@ export default function Cart() {
                 <CartSummary />
               </div>
               <SheetFooter className="mt-4 px-1">
-                <Button className="w-full">Checkout</Button>
+                <Link href="/delivery-form" className="w-full">
+                  <Button
+                    onClick={closeCart}
+                    className="w-full hover:bg-greenColor hover:text-white"
+                  >
+                    Checkout
+                  </Button>
+                </Link>
               </SheetFooter>
             </>
           ) : (

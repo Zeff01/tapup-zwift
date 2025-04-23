@@ -373,3 +373,23 @@ export const paymentSchema = z.object({
     .boolean()
     .refine((val) => val === true, "You must agree with the payment policy"),
 });
+
+export const deliveryFormSchema = z.object({
+  email: z.string().email({ message: "Please enter a valid email address" }),
+  firstName: z
+    .string()
+    .min(2, { message: "First name must be at least 2 characters" }),
+  lastName: z
+    .string()
+    .min(2, { message: "Last name must be at least 2 characters" }),
+  streetAddress: z.string().min(5, { message: "Street address is required" }),
+  city: z.string().min(2, { message: "City is required" }),
+  country: z.string().min(1, { message: "Please select a country" }),
+  stateProvince: z
+    .string()
+    .min(1, { message: "Please select a state/province" }),
+  postalCode: z.string().min(1, { message: "Postal/ZIP code is required" }),
+  phoneNumber: z
+    .string()
+    .min(10, { message: "Please enter a valid phone number" }),
+});

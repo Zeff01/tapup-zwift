@@ -5,9 +5,8 @@ import { formatCurrency } from "@/lib/utils";
 
 export function CartSummary() {
   const { subtotal } = useCart();
-  const shipping = 0; // Free shipping for this example
-  const tax = subtotal * 0.1; // 10% tax rate for this example
-  const total = subtotal + shipping + tax;
+  const shipping = 0;
+  const total = subtotal + shipping;
 
   return (
     <div className="space-y-2">
@@ -18,10 +17,6 @@ export function CartSummary() {
       <div className="flex justify-between">
         <span>Shipping</span>
         <span>{shipping === 0 ? "Free" : formatCurrency(shipping)}</span>
-      </div>
-      <div className="flex justify-between">
-        <span>Tax (10%)</span>
-        <span>{formatCurrency(tax)}</span>
       </div>
       <div className="flex justify-between font-medium">
         <span>Total</span>

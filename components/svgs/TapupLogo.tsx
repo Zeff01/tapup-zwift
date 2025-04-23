@@ -43,8 +43,8 @@ const TapupLogo = ({ className }: Props) => (
         y2="13.0113"
         gradientUnits="userSpaceOnUse"
       >
-        <stop stop-color="#1B1824" />
-        <stop offset="1" stop-color="#162629" />
+        <stop stopColor="#1B1824" />
+        <stop offset="1" stopColor="#162629" />
       </linearGradient>
       <linearGradient
         id="paint1_linear_300_2460"
@@ -54,8 +54,8 @@ const TapupLogo = ({ className }: Props) => (
         y2="13.0113"
         gradientUnits="userSpaceOnUse"
       >
-        <stop stop-color="#1B1824" />
-        <stop offset="1" stop-color="#162629" />
+        <stop stopColor="#1B1824" />
+        <stop offset="1" stopColor="#162629" />
       </linearGradient>
       <linearGradient
         id="paint2_linear_300_2460"
@@ -65,8 +65,8 @@ const TapupLogo = ({ className }: Props) => (
         y2="17.5"
         gradientUnits="userSpaceOnUse"
       >
-        <stop stop-color="#181824" />
-        <stop offset="1" stop-color="#162629" />
+        <stop stopColor="#181824" />
+        <stop offset="1" stopColor="#162629" />
       </linearGradient>
     </defs>
   </svg>

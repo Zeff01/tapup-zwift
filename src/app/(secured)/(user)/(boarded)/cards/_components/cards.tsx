@@ -123,7 +123,6 @@ const Cards = () => {
             )}
           </div>
         </TooltipProvider>
-
         <Dialog.Root open={isDialogOpen} onOpenChange={setIsDialogOpen}>
           <Dialog.Portal>
             <Dialog.Overlay className="fixed inset-0 bg-black/50 backdrop-blur-sm z-50" />

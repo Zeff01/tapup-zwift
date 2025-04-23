@@ -7,7 +7,7 @@ import {
 } from "@/components/ui/carousel";
 import Image from "next/image";
 import CardDetails from "./card-details";
-import React, { useEffect, useRef } from "react";
+import React, { useRef } from "react";
 import { carouselCards } from "@/constants";
 import { cn } from "@/lib/utils";
 import Autoplay from "embla-carousel-autoplay";

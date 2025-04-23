@@ -416,7 +416,7 @@ const DigitalCard = ({ card, confirm, user }: Prop) => {
         </div>
       </div>
 
-      <Dialog.Root open={expiredDialogOpen} onOpenChange={setExpiredDialogOpen}>
+      {/* <Dialog.Root open={expiredDialogOpen} onOpenChange={setExpiredDialogOpen}>
         <Dialog.Portal>
           <Dialog.Overlay className="fixed inset-0 bg-black/50 backdrop-blur-sm z-50" />
           <Dialog.Content className="fixed inset-0 flex items-center justify-center p-4 z-50">
@@ -471,7 +471,7 @@ const DigitalCard = ({ card, confirm, user }: Prop) => {
             </div>
           </Dialog.Content>
         </Dialog.Portal>
-      </Dialog.Root>
+      </Dialog.Root> */}
       <Dialog.Root open={open} onOpenChange={setOpen}>
         <Dialog.Portal>
           <Dialog.Overlay className="fixed inset-0 bg-black/50 backdrop-blur-sm z-50" />

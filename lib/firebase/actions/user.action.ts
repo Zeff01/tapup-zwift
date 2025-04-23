@@ -18,9 +18,12 @@ import {
   Card,
   CreateInvoiceType,
   CustomerType,
+  GenericCard,
+  GenericCardType,
   Photo,
   RecurringPlanType,
   SubscriptionPlan,
+  TransactionType,
   Users,
 } from "@/types/types";
 import { createUserLink } from "@/lib/utils";
@@ -308,11 +311,32 @@ export const addCardForUser = async (
   }
 };
 
+export const addCard = async (genericCard: GenericCardType) => {
+  try {
+    const transferCode = crypto.randomUUID().split("-").slice(0, 2).join("-");
+    console.log("Generated Transfer Code:", transferCode);
+
+    const cardCollection = collection(firebaseDb, "cards");
+    const card: GenericCard = {
+      transferCode: transferCode,
+      chosenPhysicalCard: genericCard,
+      createdAt: serverTimestamp(),
+    };
+
+    const docRef = await addDoc(cardCollection, card);
+
+    return docRef.id;
+  } catch (error) {
+    console.error("Error adding card:", error);
+    throw error;
+  }
+};
+
 export const addSubscription = async ({
-  cardId,
+  cardIds,
   subscriptionDays,
 }: {
-  cardId: string;
+  cardIds: string[];
   subscriptionDays: number;
 }): Promise<string | null> => {
   try {
@@ -321,7 +345,7 @@ export const addSubscription = async ({
     const dateAvailedTimestamp = Timestamp.now();
 
     const subscriptionDoc = await addDoc(subscriptionCollection, {
-      cardId,
+      cardIds: cardIds,
       dateAvailed: dateAvailedTimestamp,
       subscriptionDays,
     });
@@ -364,6 +388,8 @@ export const createCustomerAndRecurringPlan = async (
       customerData
     );
 
+    console.log("Customer:", customer);
+
     const now = new Date();
     const formattedDateTime = now
       .toISOString()
@@ -372,7 +398,7 @@ export const createCustomerAndRecurringPlan = async (
 
     const referenceId = `recurring-${customer.id}-${subscriptionPlan.id}-${cardId}-${formattedDateTime}`;
 
-    let interval: "DAY" | "WEEK" | "MONTH" = "DAY"; // Explicitly set the type
+    let interval: "DAY" | "WEEK" | "MONTH" = "DAY";
     let intervalCount = subscriptionPlan.durationDays;
 
     if (subscriptionPlan.durationDays > 365) {
@@ -412,8 +438,7 @@ export const createCustomerAndRecurringPlan = async (
       metadata: { cardId },
     };
 
-    console.log("Generated reference_id:", recurringPlanData.reference_id);
-    console.log("Final interval and count:", interval, intervalCount);
+    console.log("Recurring Plan Data:", recurringPlanData);
 
     // Create recurring plan in Xendit
     const { data: recurringPlan } = await xenditClient.post(
@@ -429,3 +454,117 @@ export const createCustomerAndRecurringPlan = async (
     throw error;
   }
 };
+
+export const createCustomerAndRecurringPlanBundle = async (
+  customerData: CustomerType,
+  subscriptionPlan: SubscriptionPlan,
+  cardIds: string[],
+  totalPrice?: number
+) => {
+  try {
+    const { data: customer } = await xenditClient.post(
+      "/customers",
+      customerData
+    );
+
+    console.log("Customer:", customer);
+
+    const now = new Date();
+    const formattedDateTime = now
+      .toISOString()
+      .replace(/[-:T.Z]/g, "")
+      .slice(0, 14);
+
+    const bundleId = crypto.randomUUID().split("-").slice(0, 2).join("-");
+    const referenceId = `recurring-${customer.id}-${subscriptionPlan.id}-bundle${bundleId}-${formattedDateTime}`;
+
+    let interval: "DAY" | "WEEK" | "MONTH" = "DAY";
+    let intervalCount = subscriptionPlan.durationDays;
+
+    if (subscriptionPlan.durationDays > 365) {
+      console.log(
+        "Subscription duration exceeds 365 days, converting to months"
+      );
+
+      interval = "MONTH";
+      intervalCount = Math.floor(subscriptionPlan.durationDays / 30);
+    } else if (
+      subscriptionPlan.durationDays >= 7 &&
+      subscriptionPlan.durationDays % 7 === 0
+    ) {
+      console.log(
+        "Subscription duration is a multiple of 7, converting to weeks"
+      );
+
+      interval = "WEEK";
+      intervalCount = subscriptionPlan.durationDays / 7;
+    }
+
+    // Define recurring plan details
+    const recurringPlanData: RecurringPlanType = {
+      reference_id: referenceId,
+      customer_id: customer.id,
+      recurring_action: "PAYMENT",
+      currency: "PHP",
+      amount: totalPrice ?? subscriptionPlan.price,
+      schedule: {
+        reference_id: `schedule-${customer.id}-${subscriptionPlan.id}-bundle${bundleId}`,
+        interval: interval,
+        interval_count: intervalCount,
+      },
+      description: `Subscription for ${cardIds.length} Cards. ${subscriptionPlan.name}`,
+      success_return_url: process.env.NEXT_PUBLIC_SUCCESS_REDIRECT_URL,
+      failure_return_url: process.env.NEXT_PUBLIC_FAILURE_REDIRECT_URL,
+      metadata: {
+        cardIds: cardIds,
+        per_card_price: subscriptionPlan.price,
+      },
+    };
+
+    console.log("Recurring Plan Data:", recurringPlanData);
+
+    // Create recurring plan in Xendit
+    const { data: recurringPlan } = await xenditClient.post(
+      "/recurring/plans",
+      recurringPlanData
+    );
+    console.log("Xendit Recurring Plan Response:", recurringPlan);
+    window.location.href = recurringPlan.actions?.[0]?.url;
+
+    return { customer, recurringPlan };
+  } catch (error) {
+    console.error("Error creating customer or recurring plan:", error);
+    throw error;
+  }
+};
+
+export const createTransaction = async (transactionData: TransactionType) => {
+  try {
+    const transactionCollection = collection(firebaseDb, "transactions");
+
+    const dataToSave: TransactionType = {
+      ...transactionData,
+      createdAt: serverTimestamp(),
+    };
+
+    const docRef = await addDoc(transactionCollection, dataToSave);
+
+    console.log("Transaction added with ID:", docRef.id);
+
+    return docRef.id;
+  } catch (error) {
+    console.error("Error creating transaction:", error);
+    throw error;
+  }
+};
+
+export async function getStatesData(countryCode: string): Promise<unknown> {
+  const geonameUsername = process.env.NEXT_PUBLIC_GEONAME_USERNAME || "";
+  const response = await fetch(
+    `http://api.geonames.org/searchJSON?featureCode=ADM2&maxRows=1000&country=${countryCode}&username=${geonameUsername}`
+  );
+  if (!response.ok) {
+    throw new Error("Failed to fetch states data");
+  }
+  return response.json();
+}
