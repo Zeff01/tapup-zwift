@@ -10,9 +10,13 @@ import {
   USER_ROLE_ENUMS,
 } from "@/constants";
 import Loading from "@/src/app/loading";
+import AdminNavigation from "@/components/boarded/AdminNavigation";
+import TopbarBoarded from "@/components/boarded/topbar";
 
 const Layout = ({ children }: { children: React.ReactNode }) => {
-  const { user, isLoading } = useUserContext();
+  const { user, notifications, isLoading, logOutUser } = useUserContext();
+
+  const notif = notifications ?? [];
 
   if (!user || (!user && isLoading)) {
     return <Loading />;
@@ -26,7 +30,15 @@ const Layout = ({ children }: { children: React.ReactNode }) => {
     redirect(DASHBOARD_ROUTE);
   }
 
-  return <>{children}</>;
+  return (
+    <main className="flex-1 flex">
+      <AdminNavigation notifications={notif} user={user} signOut={logOutUser} />
+      <div className="w-full lg:w-[calc(100%-25rem)] ease-in-out transition-all ml-auto flex flex-col">
+        <TopbarBoarded notifications={notif} user={user} signOut={logOutUser} />
+        {children}
+      </div>
+    </main>
+  );
 };
 
 export default Layout;

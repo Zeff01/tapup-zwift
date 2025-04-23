@@ -14,6 +14,10 @@ import {
   Truck,
   Undo2,
   X,
+  Users,
+  Mail,
+  BarChart,
+  LayoutList,
 } from "lucide-react";
 import { CgProfile } from "react-icons/cg";
 import { RxDashboard } from "react-icons/rx";
@@ -38,6 +42,9 @@ export const ADMIN_ONLY_PATH = "/users/:path*";
 export const UPDATE_PATH = "/user/update/:path*";
 export const ONBOARDING_PATH = "/onboarding/:path*";
 export const LOCAL_STORAGE_NAME = "isAuthenticated";
+
+export const DEFAULT_COVER_PHOTO = "/public/assets/cover_placeholder.png";
+export const DEFAULT_PROFILE_PHOTO = "/public/assets/profile_placeholder.png";
 
 export const cardEditorUtils = {
   text: {
@@ -331,6 +338,14 @@ export const menuItems = [
   { icon: TbCards, title: "Cards", href: "/cards" },
   // { icon: FiShoppingBag, title: "Orders", href: "/orders"},
   // { icon: TbSettingsFilled, title: "Settings", href: "/settings" },
+];
+
+export const adminMenuItems = [
+  { icon: Users, title: "Users", href: "/users-lists" },
+  { icon: FiShoppingBag, title: "Orders", href: "/users-orders" },
+  { icon: Mail, title: "Mail", href: "/mail" },
+  { icon: BarChart, title: "Insights", href: "/insights" },
+  { icon: LayoutList, title: "Logs", href: "/log" },
 ];
 
 export const publicDomain =

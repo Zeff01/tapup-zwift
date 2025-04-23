@@ -174,33 +174,43 @@ export const editCardSchema = z.object({
       {
         message: "Invalid Coverphoto URL",
       }
-    ), // Profile picture URL is required
+    )
+    .optional(), // Profile picture URL is required
   position: z.string().optional(),
   company: z.string().optional(),
   companyBackground: z.string().optional(),
   serviceDescription: z.string().optional(),
   servicePhotos: z.array(z.string().url()).optional(),
-  chosenTemplate: z.enum([
-    "template1",
-    "template2",
-    "template3",
-    "template4",
-    "template5",
-    "template6",
-    "template7",
-    "template8",
-    "template9",
-    "template10",
-    "template11",
-    "template12",
-  ]),
-  chosenPhysicalCard: z.enum(["card1", "card2", "card3", "card4"]),
-  firstName: z.string().min(3, "First name must be at least 3 characters"),
-  lastName: z.string().min(2, "Last name must be at least 2 characters"),
-  email: z.string(),
+  chosenTemplate: z
+    .enum([
+      "template1",
+      "template2",
+      "template3",
+      "template4",
+      "template5",
+      "template6",
+      "template7",
+      "template8",
+      "template9",
+      "template10",
+      "template11",
+      "template12",
+    ])
+    .optional(),
+  chosenPhysicalCard: z.enum(["card1", "card2", "card3", "card4"]).optional(),
+  firstName: z
+    .string()
+    .min(3, "First name must be at least 3 characters")
+    .optional(),
+  lastName: z
+    .string()
+    .min(2, "Last name must be at least 2 characters")
+    .optional(),
+  email: z.string().optional(),
   number: z
     .string()
-    .refine(isValidPhoneNumber, { message: "Invalid phone number" }),
+    .refine(isValidPhoneNumber, { message: "Invalid phone number" })
+    .optional(),
   facebookUrl: z
     .string()
     .refine(
