@@ -48,7 +48,6 @@ import {
   createCustomerAndRecurringPlan,
   createCustomerAndRecurringPlanBundle,
   createTransaction,
-  getStatesData,
 } from "@/lib/firebase/actions/user.action";
 
 type Geonames = {
@@ -66,6 +65,17 @@ type StateProvince = {
     geonameId: string;
   }[];
 };
+
+async function getStatesData(countryCode: string): Promise<unknown> {
+  const geonameUsername = process.env.NEXT_PUBLIC_GEONAME_USERNAME || "";
+  const response = await fetch(
+    `http://api.geonames.org/searchJSON?featureCode=ADM2&maxRows=1000&country=${countryCode}&username=${geonameUsername}`
+  );
+  if (!response.ok) {
+    throw new Error("Failed to fetch states data");
+  }
+  return response.json();
+}
 
 export default function DeliveryForm({
   fetchedCountries,
@@ -103,11 +113,11 @@ export default function DeliveryForm({
   });
 
   async function onSubmit(values: z.infer<typeof deliveryFormSchema>) {
-    if (!subscriptionPlan) {
+    if (!subscriptionPlan || !cardItems || cardItems.length === 0) {
       toast({
         title: "Error",
         description:
-          "Subscription plan is required to create a recurring plan.",
+          "Please select a subscription plan and add at least one card to your cart.",
       });
       return;
     }
@@ -313,34 +323,69 @@ export default function DeliveryForm({
               render={({ field }) => (
                 <FormItem>
                   <FormLabel>State/Province</FormLabel>
-                  <Select
-                    disabled={!selectedCountryCode}
-                    onValueChange={field.onChange}
-                    value={field.value}
-                  >
-                    <FormControl>
-                      <SelectTrigger>
-                        <SelectValue placeholder="Select state/province" />
-                      </SelectTrigger>
-                    </FormControl>
-                    <SelectContent>
-                      {isLoadingStates && (
-                        <Loader2 className="animate-spin self-center shrink-0 size-6 mx-auto" />
-                      )}
-                      {fetchedStates &&
-                        fetchedStates?.geonames?.map((state: any) => (
-                          <SelectItem
-                            key={state.geonameId}
-                            value={state.toponymName}
-                          >
-                            {state.toponymName}
-                          </SelectItem>
-                        ))}
-                      {fetchedStates &&
-                        fetchedStates?.geonames.length === 0 &&
-                        "No states found"}
-                    </SelectContent>
-                  </Select>
+                  <Popover>
+                    <PopoverTrigger asChild>
+                      <FormControl>
+                        <Button
+                          variant="outline"
+                          role="combobox"
+                          className={cn(
+                            "w-full justify-between h-10",
+                            !field.value && "text-muted-foreground"
+                          )}
+                        >
+                          {field.value || "Select or type state/province"}
+                          <ChevronsUpDown className="ml-2 h-4 w-4 shrink-0 opacity-50" />
+                        </Button>
+                      </FormControl>
+                    </PopoverTrigger>
+                    <PopoverContent className="w-full p-0">
+                      <Command>
+                        <CommandInput
+                          placeholder="Search or enter state/province..."
+                          onValueChange={(value) => {
+                            if (value) field.onChange(value);
+                          }}
+                        />
+                        <CommandList>
+                          <CommandEmpty>
+                            <div className="py-3 px-4 text-sm">
+                              No match found. Use the text you typed as your
+                              state/province.
+                            </div>
+                          </CommandEmpty>
+                          {isLoadingStates && (
+                            <Loader2 className="animate-spin self-center shrink-0 size-6 mx-auto" />
+                          )}
+                          <CommandGroup>
+                            {fetchedStates &&
+                              fetchedStates?.geonames?.map((state: any) => (
+                                <CommandItem
+                                  value={state.toponymName}
+                                  key={state.geonameId}
+                                  onSelect={() => {
+                                    field.onChange(state.toponymName);
+                                  }}
+                                >
+                                  <Check
+                                    className={cn(
+                                      "mr-2 h-4 w-4",
+                                      state.toponymName === field.value
+                                        ? "opacity-100"
+                                        : "opacity-0"
+                                    )}
+                                  />
+                                  {state.toponymName}
+                                </CommandItem>
+                              ))}
+                          </CommandGroup>
+                        </CommandList>
+                      </Command>
+                    </PopoverContent>
+                  </Popover>
+                  <FormDescription>
+                    Select from the list or type your own state/province
+                  </FormDescription>
                 </FormItem>
               )}
             />

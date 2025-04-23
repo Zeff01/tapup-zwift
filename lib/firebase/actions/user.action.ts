@@ -557,14 +557,3 @@ export const createTransaction = async (transactionData: TransactionType) => {
     throw error;
   }
 };
-
-export async function getStatesData(countryCode: string): Promise<unknown> {
-  const geonameUsername = process.env.NEXT_PUBLIC_GEONAME_USERNAME || "";
-  const response = await fetch(
-    `http://api.geonames.org/searchJSON?featureCode=ADM2&maxRows=1000&country=${countryCode}&username=${geonameUsername}`
-  );
-  if (!response.ok) {
-    throw new Error("Failed to fetch states data");
-  }
-  return response.json();
-}
