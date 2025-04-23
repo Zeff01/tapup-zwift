@@ -69,7 +69,7 @@ type StateProvince = {
 async function getStatesData(countryCode: string): Promise<unknown> {
   const geonameUsername = process.env.NEXT_PUBLIC_GEONAME_USERNAME || "";
   const response = await fetch(
-    `http://api.geonames.org/searchJSON?featureCode=ADM2&maxRows=1000&country=${countryCode}&username=${geonameUsername}`
+    `https://secure.geonames.org/searchJSON?featureCode=ADM2&maxRows=1000&country=${countryCode}&username=${geonameUsername}`
   );
   if (!response.ok) {
     throw new Error("Failed to fetch states data");
@@ -84,11 +84,12 @@ export default function DeliveryForm({
   fetchedCountries: Countries;
   subscriptionPlan: SubscriptionPlan;
 }) {
-  const { items: cardItems } = useCart();
+  const { items: cardItems, clearCart } = useCart();
   const [open, setOpen] = useState(false);
   const [selectedCountryCode, setSelectedCountryCode] = useState<string | null>(
     null
   );
+  const [isLoadingTransaction, setIsLoadingTransaction] = useState(false);
 
   const { data: fetchedStates, isLoading: isLoadingStates } = useQuery({
     enabled: !!selectedCountryCode,
@@ -121,6 +122,8 @@ export default function DeliveryForm({
       });
       return;
     }
+
+    setIsLoadingTransaction(true);
 
     const referenceId = `customer-${values.email}-${new Date().toISOString()}`;
 
@@ -181,7 +184,8 @@ export default function DeliveryForm({
 
     const transactionId = await createTransaction(transactionData);
 
-    console.log(transactionId);
+    clearCart();
+    setIsLoadingTransaction(false);
   }
 
   return (
@@ -189,6 +193,7 @@ export default function DeliveryForm({
       <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-8">
         <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
           <FormField
+            disabled={isLoadingTransaction}
             control={form.control}
             name="firstName"
             render={({ field }) => (
@@ -202,6 +207,7 @@ export default function DeliveryForm({
             )}
           />
           <FormField
+            disabled={isLoadingTransaction}
             control={form.control}
             name="lastName"
             render={({ field }) => (
@@ -216,6 +222,7 @@ export default function DeliveryForm({
         </div>
 
         <FormField
+          disabled={isLoadingTransaction}
           control={form.control}
           name="email"
           render={({ field }) => (
@@ -237,6 +244,7 @@ export default function DeliveryForm({
         />
 
         <FormField
+          disabled={isLoadingTransaction}
           control={form.control}
           name="phoneNumber"
           render={({ field }) => (
@@ -258,6 +266,7 @@ export default function DeliveryForm({
           <h3 className="font-medium text-lg">Delivery Address</h3>
           <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
             <FormField
+              disabled={isLoadingTransaction}
               control={form.control}
               name="country"
               render={({ field }) => (
@@ -318,6 +327,7 @@ export default function DeliveryForm({
             />
 
             <FormField
+              disabled={isLoadingTransaction}
               control={form.control}
               name="stateProvince"
               render={({ field }) => (
@@ -348,12 +358,15 @@ export default function DeliveryForm({
                           }}
                         />
                         <CommandList>
-                          <CommandEmpty>
-                            <div className="py-3 px-4 text-sm">
-                              No match found. Use the text you typed as your
-                              state/province.
-                            </div>
-                          </CommandEmpty>
+                          {!isLoadingStates && (
+                            <CommandEmpty>
+                              <div className="py-3 px-4 text-sm">
+                                No match found. Use the text you typed as your
+                                state/province.
+                              </div>
+                            </CommandEmpty>
+                          )}
+
                           {isLoadingStates && (
                             <Loader2 className="animate-spin self-center shrink-0 size-6 mx-auto" />
                           )}
@@ -392,6 +405,7 @@ export default function DeliveryForm({
           </div>
 
           <FormField
+            disabled={isLoadingTransaction}
             control={form.control}
             name="streetAddress"
             render={({ field }) => (
@@ -405,6 +419,7 @@ export default function DeliveryForm({
           />
 
           <FormField
+            disabled={isLoadingTransaction}
             control={form.control}
             name="city"
             render={({ field }) => (
@@ -418,6 +433,7 @@ export default function DeliveryForm({
           />
 
           <FormField
+            disabled={isLoadingTransaction}
             control={form.control}
             name="postalCode"
             render={({ field }) => (
@@ -431,8 +447,15 @@ export default function DeliveryForm({
           />
         </div>
 
-        <Button type="submit" className="w-full">
+        <Button
+          disabled={isLoadingTransaction}
+          type="submit"
+          className="w-full"
+        >
           Submit Delivery Information
+          {isLoadingTransaction && (
+            <Loader2 className="ml-2 h-4 w-4 animate-spin" />
+          )}
         </Button>
       </form>
     </Form>
