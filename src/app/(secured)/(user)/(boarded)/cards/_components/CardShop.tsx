@@ -14,7 +14,6 @@ import {
   Check,
 } from "lucide-react";
 import Cart from "./Cart";
-import ComingSoon from "@/components/ComingSoon";
 import Image from "next/image";
 import NavBar from "./Navbar";
 import { useCart } from "@/providers/cart-provider";

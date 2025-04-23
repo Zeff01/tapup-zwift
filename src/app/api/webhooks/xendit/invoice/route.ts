@@ -122,7 +122,7 @@ export async function POST(req: NextRequest) {
         const subscriptionDays = planData?.durationDays ?? 30;
 
         // Add the subscription for the given card
-        await addSubscription({ cardId, subscriptionDays });
+        await addSubscription({ cardId: [cardId], subscriptionDays });
 
         console.log(
           `Subscription activated for card ${cardId} with plan ${planId} for ${subscriptionDays} days.`

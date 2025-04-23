@@ -151,6 +151,17 @@ export interface Card extends Users {
   chosenPhysicalCard?: string;
 }
 
+export type GenericCardType = {
+  id: string;
+  name: string;
+};
+
+export type GenericCard = {
+  transferCode: string;
+  chosenPhysicalCard: GenericCardType;
+  createdAt: Timestamp;
+};
+
 export interface PhysicalCardProps extends Card {
   frontBackgroundImage?: StaticImageData;
   backBackgroundImage?: StaticImageData;
@@ -330,4 +341,23 @@ export type RecurringPlanType = {
     description?: string;
     metadata?: Record<string, unknown>;
   }[];
+};
+
+export type TransactionType = {
+  id?: string;
+  receiver: {
+    customerId: string;
+    customerName: string;
+    customerEmail: string;
+    customerPhone: string;
+    customerAddress: string;
+  };
+  cards: {
+    id: string;
+    name: string;
+    quantity: number;
+  }[];
+  amount: number;
+  status: "pending" | "completed" | "failed";
+  createdAt?: Timestamp;
 };
