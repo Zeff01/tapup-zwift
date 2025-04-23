@@ -40,7 +40,6 @@ import {
 import { cn } from "@/lib/utils";
 import { toast } from "@/hooks/use-toast";
 import { useQuery } from "@tanstack/react-query";
-import { getStatesData } from "../page";
 import { deliveryFormSchema } from "@/lib/zod-schema";
 import { useCart } from "@/providers/cart-provider-v2";
 import { CustomerType, SubscriptionPlan, TransactionType } from "@/types/types";
@@ -49,6 +48,7 @@ import {
   createCustomerAndRecurringPlan,
   createCustomerAndRecurringPlanBundle,
   createTransaction,
+  getStatesData,
 } from "@/lib/firebase/actions/user.action";
 
 type Geonames = {
@@ -75,7 +75,6 @@ export default function DeliveryForm({
   subscriptionPlan: SubscriptionPlan;
 }) {
   const { items: cardItems } = useCart();
-  // console.log(subscriptionPlan);
   const [open, setOpen] = useState(false);
   const [selectedCountryCode, setSelectedCountryCode] = useState<string | null>(
     null
@@ -87,48 +86,6 @@ export default function DeliveryForm({
     queryFn: () =>
       getStatesData(selectedCountryCode!) as Promise<StateProvince>,
   });
-
-  // const referenceId = `customer-${user.id}-${new Date().toISOString()}`;
-  //     console.log("Generated reference ID:", referenceId);
-
-  //     const customerData: CustomerType = {
-  //       reference_id: referenceId,
-  //       type: "INDIVIDUAL",
-  //       email: user.email,
-  //       individual_detail: {
-  //         given_names: user.firstName ?? "",
-  //         surname: user.lastName ?? "",
-  //       },
-  //     };
-
-  //     const cartItem = cartState.items[0];
-  //     console.log("Current cart item:", cartItem);
-
-  //     if (!cartItem.subscriptionPlan) {
-  //       throw new Error(
-  //         "Subscription plan is required to create a recurring plan."
-  //       );
-  //     }
-
-  //     console.log(
-  //       "Physical card ID before adding card:",
-  //       cartItem.physicalCardId
-  //     );
-
-  // const cardId = await addCardForUser(
-  //   userLoggedIn?.uid,
-  //   cartItem.physicalCardId
-  // );
-
-  //     console.log("Newly added card ID:", cardId);
-
-  //     // Create customer and recurring plan in Xendit
-  //     const { customer, recurringPlan } = await createCustomerAndRecurringPlan(
-  //       customerData,
-  //       cartItem.subscriptionPlan,
-  //       cardId,
-  //       calculateTotal()
-  //     );
 
   const form = useForm<z.infer<typeof deliveryFormSchema>>({
     resolver: zodResolver(deliveryFormSchema),

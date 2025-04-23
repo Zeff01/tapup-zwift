@@ -20,17 +20,6 @@ async function getCountriesData(): Promise<unknown> {
   return response.json();
 }
 
-export async function getStatesData(countryCode: string): Promise<unknown> {
-  const geonameUsername = process.env.NEXT_PUBLIC_GEONAME_USERNAME || "";
-  const response = await fetch(
-    `http://api.geonames.org/searchJSON?featureCode=ADM2&maxRows=1000&country=${countryCode}&username=${geonameUsername}`
-  );
-  if (!response.ok) {
-    throw new Error("Failed to fetch states data");
-  }
-  return response.json();
-}
-
 async function CountryFormContent() {
   const [countries, subscriptionPlan] = await Promise.all([
     getCountriesData(),
