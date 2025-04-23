@@ -266,7 +266,6 @@ export default function DeliveryForm({
           <h3 className="font-medium text-lg">Delivery Address</h3>
           <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
             <FormField
-              disabled={isLoadingTransaction}
               control={form.control}
               name="country"
               render={({ field }) => (
@@ -276,6 +275,7 @@ export default function DeliveryForm({
                     <PopoverTrigger asChild>
                       <FormControl>
                         <Button
+                          disabled={isLoadingTransaction}
                           variant="outline"
                           role="combobox"
                           aria-expanded={open}
@@ -327,7 +327,6 @@ export default function DeliveryForm({
             />
 
             <FormField
-              disabled={isLoadingTransaction}
               control={form.control}
               name="stateProvince"
               render={({ field }) => (
@@ -337,6 +336,7 @@ export default function DeliveryForm({
                     <PopoverTrigger asChild>
                       <FormControl>
                         <Button
+                          disabled={isLoadingTransaction}
                           variant="outline"
                           role="combobox"
                           className={cn(
@@ -450,7 +450,7 @@ export default function DeliveryForm({
         <Button
           disabled={isLoadingTransaction}
           type="submit"
-          className="w-full"
+          className="w-full bg-greenColor text-white hover:bg-greenColor/80"
         >
           Submit Delivery Information
           {isLoadingTransaction && (
