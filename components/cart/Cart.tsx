@@ -61,7 +61,7 @@ export default function Cart() {
                 <Link href="/delivery-form" className="w-full">
                   <Button
                     onClick={closeCart}
-                    className="w-full hover:bg-greenColor hover:text-white"
+                    className="w-full bg-greenColor text-white hover:bg-greenColor/80"
                   >
                     Checkout
                   </Button>
