@@ -32,7 +32,11 @@ export const onAuthStateChanged = (callback: (user: User | null) => void) => {
   return _onAuthStateChanged(firebaseAuth, callback);
 };
 
-import { SignedUserIdJwtPayload, Users } from "@/types/types";
+import {
+  ExtendedUserInterface,
+  SignedUserIdJwtPayload,
+  Users,
+} from "@/types/types";
 import { AppRouterInstance } from "next/dist/shared/lib/app-router-context.shared-runtime";
 import { addCardForUser, updateUserById } from "./actions/user.action";
 
@@ -45,6 +49,29 @@ export const authCurrentUser = async () => {
 
     if (!userObj) throw new Error("Invalid User Token");
     return userObj.uid;
+  } catch (error) {
+    console.error(error);
+    throw error;
+  }
+};
+
+export const authCurrentUserv2 = async () => {
+  try {
+    const cookie = await getSession();
+    if (!cookie) throw new Error("User not found");
+
+    const userObj = (await verifySignUserId(cookie)) as SignedUserIdJwtPayload;
+
+    if (!userObj) throw new Error("Invalid User Token");
+
+    const userdetails = (await currentAuthUserDetails({
+      id: userObj.uid,
+    })) as ExtendedUserInterface;
+
+    return {
+      ...userObj,
+      ...userdetails,
+    };
   } catch (error) {
     console.error(error);
     throw error;
