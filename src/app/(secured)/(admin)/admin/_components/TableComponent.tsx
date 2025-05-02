@@ -5,14 +5,8 @@ import React from "react";
 import { DataTable } from "./data-table";
 import { columns } from "./columns";
 
-const TableComponent = ({
-  users,
-  isLoading,
-}: {
-  users: Users[];
-  isLoading: boolean;
-}) => {
-  return <DataTable columns={columns} data={users} isLoading={isLoading} />;
+const TableComponent = ({ users }: { users: Users[] }) => {
+  return <DataTable columns={columns} data={users} />;
 };
 
 export default TableComponent;

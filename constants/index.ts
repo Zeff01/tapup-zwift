@@ -341,7 +341,7 @@ export const menuItems = [
 ];
 
 export const adminMenuItems = [
-  { icon: Users, title: "Users", href: "/users-lists" },
+  { icon: Users, title: "Dashboard", href: "/admin" },
   { icon: FiShoppingBag, title: "Orders", href: "/users-orders" },
   { icon: Mail, title: "Mail", href: "/mail" },
   { icon: BarChart, title: "Insights", href: "/insights" },
