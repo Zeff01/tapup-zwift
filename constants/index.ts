@@ -342,10 +342,10 @@ export const menuItems = [
 
 export const adminMenuItems = [
   { icon: Users, title: "Dashboard", href: "/admin" },
-  { icon: FiShoppingBag, title: "Orders", href: "/users-orders" },
-  { icon: Mail, title: "Mail", href: "/mail" },
-  { icon: BarChart, title: "Insights", href: "/insights" },
-  { icon: LayoutList, title: "Logs", href: "/log" },
+  { icon: FiShoppingBag, title: "Orders", href: "/admin/users-orders" },
+  { icon: Mail, title: "Mail", href: "/admin/mail" },
+  { icon: BarChart, title: "Insights", href: "/admin/insights" },
+  { icon: LayoutList, title: "Logs", href: "/admin/log" },
 ];
 
 export const publicDomain =

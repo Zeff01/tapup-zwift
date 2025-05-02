@@ -69,7 +69,7 @@ const useNotification = ({ userUid }: Props) => {
       (snapshot) => {
         snapshot.docChanges().forEach((doc) => {
           const notificationsData = doc.doc.data() as Notification;
-          console.log(notificationsData);
+          // console.log(notificationsData);
           if (
             !notificationsData ||
             (!notificationsData.broadcast &&

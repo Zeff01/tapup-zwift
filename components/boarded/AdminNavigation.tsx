@@ -23,7 +23,8 @@ type Props = {
 };
 
 const AdminNavigation = ({ user, signOut, notifications }: Props) => {
-  const pathname = usePathname().split("/")[1];
+  const pathname = usePathname();
+
   return (
     <nav className="w-[25rem] px-8 flex flex-col border-r fixed z-50 ease-in-out h-screen transition-transform -translate-x-[25rem] lg:translate-x-0">
       <div className="py-8 flex justify-between items-center px-4">
@@ -58,16 +59,13 @@ const AdminNavigation = ({ user, signOut, notifications }: Props) => {
       <div className="flex-1 pb-12 flex flex-col mt-12 gap-2">
         {adminMenuItems.map((item, index) => {
           const Icon = item.icon;
-          const href = {
-            "/user": `/user/update/${user?.uid}`,
-          };
           return (
             <Link
               key={index}
-              href={href[item.href as keyof typeof href] || item.href}
+              href={item.href}
               className={cn(
                 "flex items-center transition-colors duration-200 pl-4 bg-secondary/20 border p-3 rounded-sm",
-                item.href.includes(pathname)
+                item.href === pathname
                   ? "bg-green-500 text-background font-black"
                   : "hover:bg-accent"
               )}
