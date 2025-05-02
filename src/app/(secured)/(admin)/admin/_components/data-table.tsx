@@ -37,13 +37,11 @@ import { Skeleton } from "@/components/ui/skeleton";
 interface DataTableProps<TData, TValue> {
   columns: ColumnDef<TData, TValue>[];
   data: TData[];
-  isLoading: boolean;
 }
 
 export function DataTable<TData, TValue>({
   columns,
   data,
-  isLoading,
 }: DataTableProps<TData, TValue>) {
   const [sorting, setSorting] = useState<SortingState>([]);
   const [columnFilters, setColumnFilters] = useState<ColumnFiltersState>([]);
@@ -125,7 +123,7 @@ export function DataTable<TData, TValue>({
               ))}
             </TableHeader>
             <TableBody className="">
-              {isLoading &&
+              {/* {isLoading &&
                 Array.from({ length: 5 }).map((_, i) => (
                   <TableRow key={`loading-${i}`}>
                     <TableCell className="py-[26px]">
@@ -150,8 +148,8 @@ export function DataTable<TData, TValue>({
                       <Skeleton className="size-5 rounded-full" />
                     </TableCell>
                   </TableRow>
-                ))}
-              {!isLoading && table.getRowModel().rows?.length === 0 && (
+                ))} */}
+              {table.getRowModel().rows?.length === 0 && (
                 <TableRow>
                   <TableCell
                     colSpan={columns.length}
@@ -161,8 +159,7 @@ export function DataTable<TData, TValue>({
                   </TableCell>
                 </TableRow>
               )}
-              {!isLoading &&
-                table.getRowModel().rows?.length > 0 &&
+              {table.getRowModel().rows?.length > 0 &&
                 table.getRowModel().rows.map((row) => (
                   <TableRow
                     key={row.id}
