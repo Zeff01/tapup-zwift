@@ -6,12 +6,13 @@ import { useCart } from "@/hooks/use-cart-v2";
 import { cn, formatCurrency } from "@/lib/utils";
 import { Plus } from "lucide-react";
 import Image from "next/image";
-import { useSearchParams } from "next/navigation";
+import { useRouter, useSearchParams } from "next/navigation";
 import React, { useState } from "react";
 import { BiSolidPurchaseTag } from "react-icons/bi";
 
 const CardPurchasePreviewPage = () => {
   const searchParams = useSearchParams();
+  const router = useRouter();
   const queryParamsTitle = searchParams.get("title");
   const { addItem } = useCart();
 
@@ -74,6 +75,15 @@ const CardPurchasePreviewPage = () => {
                 <Button
                   variant={"green"}
                   className="min-w-fit text-xs lg:text-base lg:w-36 text-white"
+                  onClick={() => {
+                    addItem({
+                      id: card?.id || "",
+                      name: card?.title || "",
+                      price: card?.price || 0,
+                      image: card?.image || "",
+                    });
+                    router.push("/delivery-form");
+                  }}
                 >
                   Buy Now
                   <BiSolidPurchaseTag />
