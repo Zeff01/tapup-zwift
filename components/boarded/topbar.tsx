@@ -3,17 +3,14 @@
 import React from "react";
 import TapupLogo from "../svgs/TapupLogo";
 import OverlayMenu from "./NavigationInside";
-import { Notifications, UserState } from "@/types/types";
 import { usePathname } from "next/navigation";
+import { useUserContext } from "@/providers/user-provider";
 
-type Props = {
-  notifications: Notifications;
-  user: UserState;
-  signOut: () => void;
-};
-
-const TopbarBoarded = ({ notifications, user, signOut }: Props) => {
+const TopbarBoarded = () => {
   const pathname = usePathname();
+  const { user, notifications: notif, logOutUser: signOut } = useUserContext();
+
+  const notifications = notif ?? [];
 
   return (
     <div className="flex lg:hidden py-4 px-4 sticky top-0 z-50 bg-background items-center ">

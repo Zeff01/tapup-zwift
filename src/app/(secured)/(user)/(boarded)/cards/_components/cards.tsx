@@ -11,8 +11,9 @@ import {
 } from "@/lib/firebase/actions/card.action";
 import Loading from "@/src/app/loading";
 import { useConfirm } from "@/hooks/useConfirm";
-import { QrCode, ShoppingBag } from "lucide-react";
-import QrCodeModal from "@/components/qrcode/qrcode-modal";
+// import { QrCode, ShoppingBag } from "lucide-react";
+import { ShoppingBag } from "lucide-react";
+// import QrCodeModal from "@/components/qrcode/qrcode-modal";
 import * as Dialog from "@radix-ui/react-dialog";
 import { firebaseAuth } from "@/lib/firebase/firebase";
 import { toast } from "react-toastify";
@@ -33,6 +34,7 @@ const Cards = () => {
   const [transferCode, setTransferCode] = useState("");
 
   const { data: cards, status } = useQuery({
+    enabled: !!user?.uid,
     queryKey: ["cards", user?.uid],
     queryFn: () => getCardsByOwner(user?.uid!),
     staleTime: 1000 * 60 * 5,

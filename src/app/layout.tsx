@@ -7,6 +7,7 @@ import Head from "next/head";
 import { ThemeProvider } from "@/providers/theme-provider";
 import { QueryProvider } from "@/providers/query-provider";
 import { CartProvider } from "@/providers/cart-provider-v2";
+import { UserContextProvider } from "@/providers/user-provider";
 
 const lato = Lato({ weight: "400", subsets: ["latin"] });
 
@@ -38,21 +39,23 @@ export default function RootLayout({
           disableTransitionOnChange
         >
           <QueryProvider>
-            <CartProvider>
-              <main className="min-h-screen flex flex-col bg-background">
-                {children}
-              </main>
-              {isDev && (
-                <div className="z-50 fixed bottom-4 right-4 bg-foreground size-6 rounded-full flex items-center justify-center font-bold text-background text-xs">
-                  <span className="block sm:hidden">xs</span>
-                  <span className="hidden sm:block md:hidden">sm</span>
-                  <span className="hidden md:block lg:hidden">md</span>
-                  <span className="hidden lg:block xl:hidden">lg</span>
-                  <span className="hidden xl:block">xl</span>
-                </div>
-              )}
-              <ToastContainer />
-            </CartProvider>
+            <UserContextProvider>
+              <CartProvider>
+                <main className="min-h-screen flex flex-col bg-background">
+                  {children}
+                </main>
+                {isDev && (
+                  <div className="z-50 fixed bottom-4 right-4 bg-foreground size-6 rounded-full flex items-center justify-center font-bold text-background text-xs">
+                    <span className="block sm:hidden">xs</span>
+                    <span className="hidden sm:block md:hidden">sm</span>
+                    <span className="hidden md:block lg:hidden">md</span>
+                    <span className="hidden lg:block xl:hidden">lg</span>
+                    <span className="hidden xl:block">xl</span>
+                  </div>
+                )}
+                <ToastContainer />
+              </CartProvider>
+            </UserContextProvider>
           </QueryProvider>
         </ThemeProvider>
       </body>
