@@ -1,6 +1,6 @@
 "use client";
 
-import { Users } from "@/types/types";
+import { ExtendedUserInterface } from "@/types/types";
 import { ColumnDef } from "@tanstack/react-table";
 import {
   ArrowUpDown,
@@ -14,7 +14,7 @@ import { toast } from "react-toastify";
 import Link from "next/link";
 import { createUserLink } from "@/lib/utils";
 
-export const columns: ColumnDef<Users>[] = [
+export const columns: ColumnDef<ExtendedUserInterface>[] = [
   {
     accessorKey: "email",
     header: ({ column }) => {
@@ -28,33 +28,43 @@ export const columns: ColumnDef<Users>[] = [
         </div>
       );
     },
-  },
-  {
-    accessorKey: "company",
-    header: () => <div className="min-w-[10rem]">Company</div>,
-  },
-  {
-    accessorKey: "position",
-    header: () => <div className="min-w-[10rem]">position</div>,
-  },
-  {
-    accessorKey: "firstName",
-    header: () => <div className="min-w-[10rem]">FirstName</div>,
-  },
-  {
-    accessorKey: "lastName",
-    header: () => <div className="">LastName</div>,
+    cell: ({ row }) => {
+      return (
+        <Link className="underline" href={`/admin/${row.original.id}`}>
+          {row.original.email}
+        </Link>
+      );
+    },
   },
 
+  {
+    accessorKey: "Name",
+    header: () => <div className="min-w-[10rem]">Name</div>,
+    cell: ({ row }) => {
+      return (
+        <div>
+          {(row?.original?.firstName || "N/A") +
+            " " +
+            (row?.original?.lastName || "")}
+        </div>
+      );
+    },
+  },
+  {
+    accessorKey: "Role",
+    header: () => <div className="min-w-[10rem]">Role</div>,
+    cell: ({ row }) => {
+      return <div>{row.original?.role}</div>;
+    },
+  },
   {
     id: "actions",
+    header: () => <div className="">Actions</div>,
     cell: ({ row }) => {
       const link = row.original;
-      // console.log("link:", link);
-      // if (link.userCode === "LanXgtZFYp7je3p9imBE") console.log(link);
 
       return (
-        <div className="flex gap-2 justify-center flex-nowrap ">
+        <div className="flex gap-1 w-fit">
           <Link href={`/user/update/${link.id}`}>
             <Button
               onClick={() => {}}

@@ -4,7 +4,7 @@ import { useState } from "react";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
 import * as z from "zod";
-import { Check, ChevronsUpDown, Loader2 } from "lucide-react";
+import { AlertCircleIcon, Check, ChevronsUpDown, Loader2 } from "lucide-react";
 
 import { Button } from "@/components/ui/button";
 import {
@@ -14,16 +14,10 @@ import {
   FormField,
   FormItem,
   FormLabel,
-  FormMessage,
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
-import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from "@/components/ui/select";
+
+import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
 import {
   Command,
   CommandEmpty,
@@ -45,7 +39,6 @@ import { useCart } from "@/providers/cart-provider-v2";
 import { CustomerType, SubscriptionPlan, TransactionType } from "@/types/types";
 import {
   addCard,
-  createCustomerAndRecurringPlan,
   createCustomerAndRecurringPlanBundle,
   createTransaction,
 } from "@/lib/firebase/actions/user.action";
@@ -182,7 +175,8 @@ export default function DeliveryForm({
       status: "pending",
     };
 
-    const transactionId = await createTransaction(transactionData);
+    // const transactionId = await createTransaction(transactionData);
+    await createTransaction(transactionData);
 
     clearCart();
     setIsLoadingTransaction(false);
@@ -191,9 +185,19 @@ export default function DeliveryForm({
   return (
     <Form {...form}>
       <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-8">
+        {cardItems.length === 0 && (
+          <Alert variant={"destructive"}>
+            <AlertCircleIcon className="h-4 w-4" />
+            <AlertTitle>Heads up!</AlertTitle>
+            <AlertDescription>
+              Your cart is empty. It should have atleast 1 item.
+            </AlertDescription>
+          </Alert>
+        )}
+
         <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
           <FormField
-            disabled={isLoadingTransaction}
+            disabled={isLoadingTransaction || cardItems.length === 0}
             control={form.control}
             name="firstName"
             render={({ field }) => (
@@ -207,7 +211,7 @@ export default function DeliveryForm({
             )}
           />
           <FormField
-            disabled={isLoadingTransaction}
+            disabled={isLoadingTransaction || cardItems.length === 0}
             control={form.control}
             name="lastName"
             render={({ field }) => (
@@ -220,9 +224,8 @@ export default function DeliveryForm({
             )}
           />
         </div>
-
         <FormField
-          disabled={isLoadingTransaction}
+          disabled={isLoadingTransaction || cardItems.length === 0}
           control={form.control}
           name="email"
           render={({ field }) => (
@@ -242,9 +245,8 @@ export default function DeliveryForm({
             </FormItem>
           )}
         />
-
         <FormField
-          disabled={isLoadingTransaction}
+          disabled={isLoadingTransaction || cardItems.length === 0}
           control={form.control}
           name="phoneNumber"
           render={({ field }) => (
@@ -261,7 +263,6 @@ export default function DeliveryForm({
             </FormItem>
           )}
         />
-
         <div className="border p-6 rounded-lg space-y-6">
           <h3 className="font-medium text-lg">Delivery Address</h3>
           <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
@@ -275,7 +276,9 @@ export default function DeliveryForm({
                     <PopoverTrigger asChild>
                       <FormControl>
                         <Button
-                          disabled={isLoadingTransaction}
+                          disabled={
+                            isLoadingTransaction || cardItems.length === 0
+                          }
                           variant="outline"
                           role="combobox"
                           aria-expanded={open}
@@ -336,7 +339,9 @@ export default function DeliveryForm({
                     <PopoverTrigger asChild>
                       <FormControl>
                         <Button
-                          disabled={isLoadingTransaction}
+                          disabled={
+                            isLoadingTransaction || cardItems.length === 0
+                          }
                           variant="outline"
                           role="combobox"
                           className={cn(
@@ -405,7 +410,7 @@ export default function DeliveryForm({
           </div>
 
           <FormField
-            disabled={isLoadingTransaction}
+            disabled={isLoadingTransaction || cardItems.length === 0}
             control={form.control}
             name="streetAddress"
             render={({ field }) => (
@@ -419,7 +424,7 @@ export default function DeliveryForm({
           />
 
           <FormField
-            disabled={isLoadingTransaction}
+            disabled={isLoadingTransaction || cardItems.length === 0}
             control={form.control}
             name="city"
             render={({ field }) => (
@@ -433,7 +438,7 @@ export default function DeliveryForm({
           />
 
           <FormField
-            disabled={isLoadingTransaction}
+            disabled={isLoadingTransaction || cardItems.length === 0}
             control={form.control}
             name="postalCode"
             render={({ field }) => (
@@ -446,9 +451,8 @@ export default function DeliveryForm({
             )}
           />
         </div>
-
         <Button
-          disabled={isLoadingTransaction}
+          disabled={isLoadingTransaction || cardItems.length === 0}
           type="submit"
           className="w-full bg-greenColor text-white hover:bg-greenColor/80"
         >

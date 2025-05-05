@@ -1,6 +1,5 @@
 "use client";
 
-import { Notifications, UserState } from "@/types/types";
 import Image from "next/image";
 import React from "react";
 
@@ -15,15 +14,13 @@ import { cn } from "@/lib/utils";
 import { Button } from "../ui/button";
 import { ThemeToggle } from "../Theme";
 import NotificationsSidebar from "./notifications";
+import { useUserContext } from "@/providers/user-provider";
 
-type Props = {
-  user: UserState;
-  notifications: Notifications;
-  signOut: () => void;
-};
-
-const AdminNavigation = ({ user, signOut, notifications }: Props) => {
+const AdminNavigation = () => {
   const pathname = usePathname();
+  const { user, notifications: notif, logOutUser: signOut } = useUserContext();
+
+  const notifications = notif ?? [];
 
   return (
     <nav className="w-[25rem] px-8 flex flex-col border-r fixed z-50 ease-in-out h-screen transition-transform -translate-x-[25rem] lg:translate-x-0">
@@ -69,7 +66,6 @@ const AdminNavigation = ({ user, signOut, notifications }: Props) => {
                   ? "bg-green-500 text-background font-black"
                   : "hover:bg-accent"
               )}
-              // onClick={handleOpenMenu}
             >
               <Icon className="size-6 mr-4" />
               {item.title}

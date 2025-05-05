@@ -19,9 +19,9 @@ import {
   BarChart,
   LayoutList,
 } from "lucide-react";
-import { CgProfile } from "react-icons/cg";
+
 import { RxDashboard } from "react-icons/rx";
-import { TbCards, TbSettingsFilled } from "react-icons/tb";
+import { TbCards } from "react-icons/tb";
 import { FiShoppingBag } from "react-icons/fi";
 
 export const ROOT_ROUTE = "/";
@@ -334,14 +334,14 @@ export const businessList = [
 
 export const menuItems = [
   // { icon: CgProfile, title: "Profile", href: "/dashboard" },
-  // { icon: RxDashboard, title: "Dashboard", href: "/dashboard" },
+  { icon: RxDashboard, title: "Dashboard", href: "/dashboard" },
   { icon: TbCards, title: "Cards", href: "/cards" },
   // { icon: FiShoppingBag, title: "Orders", href: "/orders"},
   // { icon: TbSettingsFilled, title: "Settings", href: "/settings" },
 ];
 
 export const adminMenuItems = [
-  { icon: Users, title: "Dashboard", href: "/admin" },
+  { icon: Users, title: "Admin Dashboard", href: "/admin" },
   { icon: FiShoppingBag, title: "Orders", href: "/admin/users-orders" },
   { icon: Mail, title: "Mail", href: "/admin/mail" },
   { icon: BarChart, title: "Insights", href: "/admin/insights" },

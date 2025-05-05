@@ -183,3 +183,10 @@ export function formatCurrency(amount: number): string {
     currency: "PHP",
   }).format(amount);
 }
+
+export function formatDate(timestamp: number): string {
+  if (!timestamp) return "N/A";
+
+  const date = new Date(timestamp);
+  return date.toLocaleString(); // Uses the user's browser/system locale settings
+}

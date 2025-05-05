@@ -4,11 +4,12 @@ import { ShippingInfoProvider } from "@/providers/shipping-info-provider";
 
 const Page = () => {
   return (
-    <main className="w-full flex justify-center h-full">
-      <ShippingInfoProvider>
-        <ShippingAddress />
-      </ShippingInfoProvider>
-    </main>
+    <>Shipping Address</>
+    // <main className="w-full flex justify-center h-full">
+    //   <ShippingInfoProvider>
+    //     <ShippingAddress />
+    //   </ShippingInfoProvider>
+    // </main>
   );
 };
 

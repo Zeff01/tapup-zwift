@@ -5,15 +5,8 @@ import { currentAuthUserDetails, signOutHandler } from "@/lib/firebase/auth";
 import { updateUserById } from "@/lib/firebase/actions/user.action";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { useRouter } from "next/navigation";
-import { createContext, useContext, useEffect, useMemo, useState } from "react";
-import {
-  ExtendedUserInterface,
-  Notifications,
-  UserState,
-  Notification,
-} from "@/types/types";
-import { collection, onSnapshot } from "firebase/firestore";
-import { firebaseDb } from "@/lib/firebase/firebase";
+import { createContext, useContext, useMemo } from "react";
+import { ExtendedUserInterface, Notifications, UserState } from "@/types/types";
 import useNotification from "@/hooks/useNotification";
 
 export type UserProviderContextType = {
