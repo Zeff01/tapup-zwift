@@ -1,6 +1,6 @@
 import React from "react";
 import { getAllUsers } from "@/lib/firebase/actions/user.action";
-import TableComponent from "./_components/TableComponent";
+import TableComponent from "./_components/UsersTable/TableComponent";
 import { authCurrentUserv2 } from "@/lib/firebase/auth";
 import { USER_ROLE_ENUMS } from "@/constants";
 import { notFound } from "next/navigation";

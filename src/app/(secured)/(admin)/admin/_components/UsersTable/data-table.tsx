@@ -64,7 +64,7 @@ export function DataTable<TData, TValue>({
   });
 
   return (
-    <div className="flex-1 w-full max-w-[1200px] flex flex-col">
+    <div className="flex-1 w-full max-w-[1200px] mx-auto flex flex-col">
       <div className="flex items-center py-4">
         <Input
           placeholder="Filter emails..."

@@ -1,11 +1,11 @@
 "use client";
 
-import { ExtendedUserInterface, Users } from "@/types/types";
+import { Card } from "@/types/types";
 import React from "react";
 import { DataTable } from "./data-table";
 import { columns } from "./columns";
 
-const TableComponent = ({ users }: { users: ExtendedUserInterface[] }) => {
+const TableComponent = ({ users }: { users: Card[] }) => {
   return <DataTable columns={columns} data={users} />;
 };
 
