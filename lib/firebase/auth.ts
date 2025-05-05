@@ -22,12 +22,7 @@ import { toast } from "react-toastify";
 import { FirebaseError } from "firebase/app";
 import { z } from "zod";
 import { signupSchema } from "../zod-schema";
-import {
-  CARD_ROUTE,
-  DASHBOARD_ROUTE,
-  UPDATE_ROUTE,
-  USER_ROLE_ENUMS,
-} from "@/constants";
+import { CARD_ROUTE, USER_ROLE_ENUMS } from "@/constants";
 export const onAuthStateChanged = (callback: (user: User | null) => void) => {
   return _onAuthStateChanged(firebaseAuth, callback);
 };
@@ -58,11 +53,17 @@ export const authCurrentUser = async () => {
 export const authCurrentUserv2 = async () => {
   try {
     const cookie = await getSession();
-    if (!cookie) throw new Error("User not found");
+    if (!cookie) {
+      signOutHandler();
+      return;
+    }
 
     const userObj = (await verifySignUserId(cookie)) as SignedUserIdJwtPayload;
 
-    if (!userObj) throw new Error("Invalid User Token");
+    if (!userObj) {
+      signOutHandler();
+      return;
+    }
 
     const userdetails = (await currentAuthUserDetails({
       id: userObj.uid,
@@ -74,7 +75,6 @@ export const authCurrentUserv2 = async () => {
     };
   } catch (error) {
     console.error(error);
-    throw error;
   }
 };
 
