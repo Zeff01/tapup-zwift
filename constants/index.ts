@@ -19,9 +19,9 @@ import {
   BarChart,
   LayoutList,
 } from "lucide-react";
-import { CgProfile } from "react-icons/cg";
+
 import { RxDashboard } from "react-icons/rx";
-import { TbCards, TbSettingsFilled } from "react-icons/tb";
+import { TbCards } from "react-icons/tb";
 import { FiShoppingBag } from "react-icons/fi";
 
 export const ROOT_ROUTE = "/";
