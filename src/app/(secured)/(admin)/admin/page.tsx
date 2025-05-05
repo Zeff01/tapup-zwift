@@ -16,8 +16,14 @@ export default async function UsersPage() {
   const allUsers = JSON.parse(JSON.stringify(users));
 
   return (
-    <main className="flex h-full bg-[#1E1E1E] text-white flex-col items-center pt-12 p-6 ">
-      <TableComponent users={allUsers} />
+    <main className="flex h-full py-4 px-4 flex-col">
+      <h1 className="text-xl sm:text-3xl font-bold">User Accounts</h1>
+      <p className="text-sm text-muted-foreground sm:text-base">
+        Manage user roles, permissions, and account details.
+      </p>
+      <div className="mt-6">
+        <TableComponent users={allUsers} />
+      </div>
     </main>
   );
 }

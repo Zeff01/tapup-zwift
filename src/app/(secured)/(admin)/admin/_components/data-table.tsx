@@ -102,7 +102,7 @@ export function DataTable<TData, TValue>({
         </DropdownMenu>
       </div>
       <div className="flex-1">
-        <div className="rounded-md border border-[#535353] w-full">
+        <div className="rounded-md w-full">
           <Table>
             <TableHeader>
               {table.getHeaderGroups().map((headerGroup) => (
@@ -122,33 +122,7 @@ export function DataTable<TData, TValue>({
                 </TableRow>
               ))}
             </TableHeader>
-            <TableBody className="">
-              {/* {isLoading &&
-                Array.from({ length: 5 }).map((_, i) => (
-                  <TableRow key={`loading-${i}`}>
-                    <TableCell className="py-[26px]">
-                      <Skeleton className="w-[165px] h-3" />
-                    </TableCell>
-                    <TableCell className="py-[26px]">
-                      <Skeleton className="w-36 h-3" />
-                    </TableCell>
-                    <TableCell className="py-[26px]">
-                      <Skeleton className="w-36 h-3" />
-                    </TableCell>
-                    <TableCell className="py-[26px]">
-                      <Skeleton className="w-36 h-3" />
-                    </TableCell>
-                    <TableCell className="py-[26px] ">
-                      <Skeleton className="w-36 h-3" />
-                    </TableCell>
-                    <TableCell className="flex gap-5 justify-center  py-[21px]">
-                      <Skeleton className="size-5 rounded-full" />
-                      <Skeleton className="size-5 rounded-full" />
-                      <Skeleton className="size-5 rounded-full" />
-                      <Skeleton className="size-5 rounded-full" />
-                    </TableCell>
-                  </TableRow>
-                ))} */}
+            <TableBody>
               {table.getRowModel().rows?.length === 0 && (
                 <TableRow>
                   <TableCell

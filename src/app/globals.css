@@ -145,8 +145,8 @@
   }
 
   ::-webkit-scrollbar {
-    width: 4px;
-    height: 12px;
+    width: 6px;
+    height: 6px;
   }
 
   ::-webkit-scrollbar-thumb {

@@ -91,7 +91,7 @@ export const getCardsByOwner = async (owner_id: string) => {
     if (!owner_id) throw new Error("Parameters Missing");
 
     const user = await authCurrentUser();
-    if (user !== owner_id) throw new Error("Auth user ID doesn't match");
+    if (!user) throw new Error("No Auth User");
 
     const cardsCol = collection(firebaseDb, "cards");
     const queryFn = query(cardsCol, where("owner", "==", owner_id), limit(10));
