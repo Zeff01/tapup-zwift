@@ -12,7 +12,7 @@ const TapupLogo = ({ className }: Props) => (
     viewBox="0 0 130 48"
     fill="none"
     xmlns="http://www.w3.org/2000/svg"
-    className={cn("aspect-[98/27]", className)}
+    className={cn("aspect-[130/48]", className)}
   >
     <path
       d="M6.00008 17.6667H0.666748V11H13.984H27.3334V17.6667H22.0001L13.984 11L6.00008 17.6667Z"

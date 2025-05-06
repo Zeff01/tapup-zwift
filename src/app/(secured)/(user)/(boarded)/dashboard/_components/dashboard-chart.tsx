@@ -14,6 +14,7 @@ import {
   ChartTooltip,
   ChartTooltipContent,
 } from "@/components/ui/chart";
+import { cn } from "@/lib/utils";
 
 interface DashboardChartProps {
   className?: string;
@@ -30,7 +31,7 @@ export function DashboardChart({ className }: DashboardChartProps) {
   ];
 
   return (
-    <Card className={className}>
+    <Card className={cn(className)}>
       <CardHeader>
         <CardTitle>Engagement Overview</CardTitle>
         <CardDescription>

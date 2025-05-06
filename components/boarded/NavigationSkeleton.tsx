@@ -19,14 +19,14 @@ const NavigationSkeleton = () => {
           </div>
         </div>
       </div>
-      <div className="flex-1 pb-12 flex flex-col mt-12 gap-2">
+      <div className="flex-1 pb-12 flex flex-col mt-4 md:mt-12 gap-2">
         {Array.from({ length: 6 }).map((_, i) => (
           <Skeleton
             key={`skeleton-navbar-${i}`}
-            className="rounded-sm h-[50px] w-[335px]"
+            className="rounded-sm h-[40px] md:h-[50px] w-full"
           />
         ))}
-        <Skeleton className="rounded-sm h-[50px] w-[335px] mt-auto" />
+        <Skeleton className="rounded-sm h-[40px] md:h-[50px] w-full mt-auto" />
       </div>
     </React.Fragment>
   );

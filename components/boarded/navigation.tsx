@@ -13,7 +13,6 @@ import { usePathname } from "next/navigation";
 import { cn } from "@/lib/utils";
 import { Button } from "../ui/button";
 import { ThemeToggle } from "../Theme";
-import NotificationsSidebar from "./notifications";
 import { useUserContext } from "@/providers/user-provider";
 import NavigationSkeleton from "./NavigationSkeleton";
 
@@ -21,14 +20,11 @@ const NavigationBoarded = () => {
   const pathname = usePathname();
   const {
     user,
-    notifications: notif,
     logOutUser: signOut,
     isLoading: isLoadingUserContext,
   } = useUserContext();
 
   const isAdmin = user?.role === "admin";
-
-  const notifications = notif ?? [];
 
   const navItems = [...menuItems, ...(isAdmin ? adminMenuItems : [])];
 
@@ -48,9 +44,9 @@ const NavigationBoarded = () => {
               alt="user image"
               width={50}
               height={50}
-              className="object-cover rounded-full"
+              className="object-cover rounded-full h-[50px] w-[50px]"
             />
-            <div className="flex flex-col">
+            <div className="flex flex-col w-full">
               <h3 className="font-bold text-sm">
                 {user?.firstName
                   ? `${user?.firstName} ${user?.lastName}`
@@ -59,12 +55,11 @@ const NavigationBoarded = () => {
               <input
                 readOnly
                 value={user?.email || "anonymous@mail.com"}
-                className="text-xs text-foreground/30 border-0 truncate w-32 bg-transparent outline-none"
+                className="text-xs text-foreground/30 border-0 truncate w-full bg-transparent outline-none"
               />
             </div>
             <span className="ml-auto flex mr-2">
               <ThemeToggle variant="boarded" />
-              <NotificationsSidebar user={user} notifications={notifications} />
             </span>
           </div>
           <div className="flex-1 pb-12 flex flex-col mt-12 gap-2">

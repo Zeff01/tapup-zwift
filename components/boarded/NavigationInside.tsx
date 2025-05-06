@@ -7,32 +7,33 @@ import {
   SheetTitle,
 } from "@/components/ui/sheet";
 import Link from "next/link";
-import { useState } from "react";
+import React, { useState } from "react";
 import Image from "next/image";
 import { HiMenuAlt3 } from "react-icons/hi";
 import profilePic from "@/public/assets/template4samplepic.png";
 import { BiLogOut } from "react-icons/bi";
-import { menuItems } from "@/constants";
-import { useUserContext } from "@/providers/user-provider";
+import { adminMenuItems, menuItems } from "@/constants";
 import TapupLogo from "../svgs/TapupLogo";
 import { cn } from "@/lib/utils";
 import { usePathname } from "next/navigation";
 import { Button } from "../ui/button";
 import { useMediaQuery } from "usehooks-ts";
 import { ThemeToggle } from "../Theme";
-import NotificationsSidebar from "./notifications";
-import { Notifications, UserState } from "@/types/types";
+import { useUserContext } from "@/providers/user-provider";
+import NavigationSkeleton from "./NavigationSkeleton";
 
-type Props = {
-  notifications: Notifications;
-  user: UserState;
-  signOut: () => void;
-};
-
-const OverlayMenu = ({ notifications, user, signOut }: Props) => {
+const OverlayMenu = () => {
+  const {
+    user,
+    logOutUser: signOut,
+    isLoading: isLoadingUserContext,
+  } = useUserContext();
   const media = useMediaQuery("(max-width: 1024px)");
   const [openMenu, setOpenMenu] = useState(false);
-  const pathname = usePathname().split("/")[1];
+  const pathname = usePathname();
+
+  const isAdmin = user?.role === "admin";
+  const navItems = [...menuItems, ...(isAdmin ? adminMenuItems : [])];
 
   const handleOpenMenu = () => {
     setOpenMenu(!openMenu);
@@ -52,69 +53,68 @@ const OverlayMenu = ({ notifications, user, signOut }: Props) => {
         className="bg-background flex flex-col sm:w-[25rem] w-full"
       >
         <SheetTitle className="sr-only">Mobile Navigation</SheetTitle>
-        <div className="py-8 pt-20">
-          <TapupLogo />
+        <div className="self-start h-12 w-24">
+          <TapupLogo className="w-full h-full" />
         </div>
-        <div className="relative border p-1 rounded-full outline-white outline-2 flex items-center gap-2">
-          <Image
-            unoptimized={true}
-            src={user?.profilePictureUrl || profilePic}
-            alt="user image"
-            width={50}
-            height={50}
-            className="object-cover rounded-full"
-          />
-          <div className="flex flex-col">
-            <h3 className="font-bold text-sm">
-              {user?.firstName
-                ? `${user?.firstName} ${user?.lastName}`
-                : "Anonymous"}
-            </h3>
-            <input
-              readOnly
-              value={user?.email || "anonymous@mail.com"}
-              className="text-xs text-foreground/30 border-0 truncate w-32 bg-transparent outline-none"
-            />
-          </div>
-          <span className="ml-auto flex mr-2">
-            <ThemeToggle variant="boarded" />
-            <NotificationsSidebar user={user} notifications={notifications} />
-          </span>
-        </div>
-        <div className="flex-1 pb-12 flex flex-col mt-12 gap-2">
-          {menuItems.map((item, index) => {
-            const Icon = item.icon;
-            const href = {
-              // "/dashboard": "/dashboard",
-              "/user": `/user/update/${user?.uid}`,
-              // "/cards": `/cards/${user?.uid}`,
-            };
-            return (
-              <Link
-                key={index}
-                href={href[item.href as keyof typeof href] || item.href}
-                className={cn(
-                  "flex items-center transition-colors duration-200 pl-4 bg-secondary/20 border p-3 rounded-sm",
-                  item.href.includes(pathname)
-                    ? "bg-green-500 text-background font-black"
-                    : "hover:bg-accent"
-                )}
-                onClick={handleOpenMenu}
+        {isLoadingUserContext ? (
+          <NavigationSkeleton />
+        ) : (
+          <React.Fragment>
+            <div className="relative border p-1 rounded-full outline-white outline-2 flex items-center gap-2">
+              <Image
+                unoptimized={true}
+                src={user?.profilePictureUrl || profilePic}
+                alt="user image"
+                width={50}
+                height={50}
+                className="object-cover rounded-full w-[50px] h-[50px]"
+              />
+              <div className="flex flex-col w-full">
+                <h3 className="font-bold text-sm">
+                  {user?.firstName
+                    ? `${user?.firstName} ${user?.lastName}`
+                    : "Anonymous"}
+                </h3>
+                <input
+                  readOnly
+                  value={user?.email || "anonymous@mail.com"}
+                  className="text-xs text-foreground/30 border-0 truncate w-full bg-transparent outline-none"
+                />
+              </div>
+              <span className="ml-auto flex mr-2">
+                <ThemeToggle variant="boarded" />
+              </span>
+            </div>
+            <div className="flex-1 pb-12 flex flex-col mt-4 gap-2">
+              {navItems.map((item, index) => {
+                const Icon = item.icon;
+                return (
+                  <Link
+                    key={index}
+                    href={item.href}
+                    className={cn(
+                      "flex items-center transition-colors text-sm duration-200 pl-4 bg-secondary/20 border p-2 rounded-sm",
+                      item.href === pathname
+                        ? "bg-green-500 text-background font-black"
+                        : "hover:bg-accent"
+                    )}
+                  >
+                    <Icon className="size-6 mr-4" />
+                    {item.title}
+                  </Link>
+                );
+              })}
+              <Button
+                className="mt-auto flex justify-start gap-0 p-2 text-sm bg-secondary/20 border text-foreground "
+                variant="destructive"
+                onClick={signOut}
               >
-                <Icon className="size-6 mr-4" />
-                {item.title}
-              </Link>
-            );
-          })}
-          <Button
-            className="mt-auto flex justify-start gap-0 py-6 bg-secondary/20 border text-foreground text-base active:bg-destructive hover:bg-destructive"
-            variant="destructive"
-            onClick={signOut}
-          >
-            <BiLogOut className="size-8 mr-4" />
-            Sign out
-          </Button>
-        </div>
+                <BiLogOut className="mr-4" />
+                Sign out
+              </Button>
+            </div>
+          </React.Fragment>
+        )}
       </SheetContent>
     </Sheet>
   );
