@@ -273,7 +273,7 @@ export default function TransactionDashboard({
                               </div>
                               <DialogFooter>
                                 <Button
-                                  onClick={handleSaveChanges}
+                                  // onClick={handleSaveChanges}
                                   className="bg-greenColor text-white hover:bg-greenTitle"
                                 >
                                   Save changes
