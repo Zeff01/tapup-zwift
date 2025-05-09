@@ -188,7 +188,16 @@ export default function CardsAndUsersCreateFields({
       onBoardUserMutation({ user_id: user.uid, user: data });
       return;
     }
-    createCardMutation({ user_id: user.uid, data });
+    createCardMutation({
+      user_id: user.uid,
+      data: {
+        ...data,
+        chosenPhysicalCard: {
+          id: data.chosenPhysicalCard,
+          name: data.chosenPhysicalCard,
+        },
+      },
+    });
   };
 
   const isLoading = isLoadingCreateCard || isLoadingOnBoarding;
@@ -442,15 +451,22 @@ export default function CardsAndUsersCreateFields({
                   </div>
                 )}
 
-                {/* Step 3 - Template*/}
+                {/* Step 3 - Template */}
                 {currentStep === 3 && (
                   <div>
-                    <h2>Template Preview</h2>
+                    <h2 className="text-xl font-semibold mb-4">
+                      Template Preview
+                    </h2>
                     {selectedTemplateId ? (
                       <div className="w-full overflow-y-scroll border max-h-[340px] rounded-lg mb-4 ">
                         <SelectedTemplate
                           templateId={selectedTemplateId}
-                          formData={methods.watch()}
+                          formData={{
+                            ...methods.watch(),
+                            chosenPhysicalCard: {
+                              id: methods.watch().chosenPhysicalCard,
+                            },
+                          }}
                         />
                       </div>
                     ) : (
@@ -517,7 +533,12 @@ export default function CardsAndUsersCreateFields({
                     {selectedPhysicalCard ? (
                       <SelectedPhysicalCard
                         cardId={selectedPhysicalCard}
-                        formData={methods.watch()}
+                        formData={{
+                          ...methods.watch(),
+                          chosenPhysicalCard: {
+                            id: selectedPhysicalCard,
+                          },
+                        }}
                       />
                     ) : (
                       <h1 className="text-black">Select a card</h1>
