@@ -13,6 +13,7 @@ import {
   limit,
   Timestamp,
   writeBatch,
+  deleteDoc,
 } from "firebase/firestore";
 import { firebaseAuth, firebaseDb, firebaseStorage } from "../firebase";
 import {
@@ -25,6 +26,7 @@ import {
   Photo,
   RecurringPlanType,
   SubscriptionPlan,
+  TransactionBoard,
   TransactionType,
   Users,
 } from "@/types/types";
@@ -313,7 +315,7 @@ export const addCardForUser = async (
       ...user,
       owner: userId,
       transferCode: transferCode,
-      chosenPhysicalCard: chosenPhysicalCard,
+      chosenPhysicalCard: { id: chosenPhysicalCard },
     };
 
     console.log("Card object before saving:", card);
@@ -611,5 +613,48 @@ export const createTransaction = async (transactionData: TransactionType) => {
   } catch (error) {
     console.error("Error creating transaction:", error);
     throw error;
+  }
+};
+
+export const getAllTransactions = async ({ role }: { role: string }) => {
+  try {
+    if (!role || role !== "admin")
+      throw new Error("This is an Admin Only Request");
+
+    const transactionCollection = collection(firebaseDb, "transactions");
+    const snapshot = await getDocs(transactionCollection);
+
+    const transactions: TransactionBoard[] = snapshot.docs.map((doc) => ({
+      id: doc.id,
+      ...(doc.data() as Omit<TransactionBoard, "id">),
+    }));
+
+    return transactions;
+  } catch (error) {
+    console.error(error);
+    return false;
+  }
+};
+
+export const updateTransactionPerId = async ({
+  role,
+  transaction_id,
+  data,
+}: {
+  role: string;
+  transaction_id: string;
+  data: string;
+}) => {
+  try {
+    if (!role || role !== "admin")
+      throw new Error("This is an Admin Only Request");
+
+    const transactionRef = doc(firebaseDb, "transactions", transaction_id);
+    await updateDoc(transactionRef, { status: data });
+
+    return { success: true, message: "Transaction Deleted" };
+  } catch (error) {
+    console.error(error);
+    return false;
   }
 };

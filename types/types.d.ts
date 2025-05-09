@@ -6,6 +6,8 @@ import {
   resetPasswordSchema,
   signupSchema,
 } from "@/lib/zod-schema";
+import { Timestamp } from "firebase/firestore";
+import { FieldValue } from "react-hook-form";
 
 import { z } from "zod";
 
@@ -111,11 +113,6 @@ export type Transaction = {
   status: "pending" | "completed" | "failed";
 };
 
-export type Notifications = {
-  id: string;
-  data: Notification;
-}[];
-
 export interface ExtendedUserInterface extends Users {
   uid: string;
   role: string;
@@ -150,8 +147,33 @@ export interface Card extends Users {
   disabled?: boolean;
   chosenPhysicalCard?: {
     id: string;
-    name: string;
+    name?: string;
   };
+  subscription_id?: string;
+}
+
+export interface CardItemTransactionBoard {
+  id: string;
+  name: string;
+  quantity: number;
+  imageUrl?: string;
+}
+
+export interface ReceiverTransactionBoard {
+  customerAddress: string;
+  customerEmail: string;
+  customerId: string;
+  customerName: string;
+  customerPhone: string;
+}
+
+export interface TransactionBoard {
+  id: string;
+  amount: number;
+  cards: CardItemTransactionBoard[];
+  createdAt: Timestamp | FieldValue;
+  receiver: ReceiverTransactionBoard;
+  status: "pending" | "completed" | "cancelled" | "processing";
 }
 
 export type GenericCardType = {
@@ -162,7 +184,7 @@ export type GenericCardType = {
 export type GenericCard = {
   transferCode: string;
   chosenPhysicalCard: GenericCardType;
-  createdAt: Timestamp;
+  createdAt: Timestamp | FieldValue;
   printStatus: boolean;
 };
 
@@ -363,6 +385,6 @@ export type TransactionType = {
   }[];
   amount: number;
   status: "pending" | "completed" | "failed";
-  createdAt?: Timestamp;
+  createdAt?: Timestamp | FieldValue;
   user_id?: string;
 };

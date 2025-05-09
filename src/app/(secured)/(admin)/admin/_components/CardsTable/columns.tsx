@@ -17,17 +17,18 @@ export const columns: ColumnDef<Card>[] = [
       return <div className="min-w-[5rem] flex cursor-pointer">Card Type</div>;
     },
     cell: ({ row }) => {
+      console.log(row.original);
       return (
         <div>
           <Image
             src={
-              carouselCards[
-                row.original.chosenPhysicalCard as keyof typeof carouselCards
-              ].image
+              Object.values(carouselCards).filter(
+                (c) => c.title === row?.original?.chosenPhysicalCard?.name
+              )[0].image
             }
             alt={`${row.original.id}-image`}
             width={100}
-            height={100}
+            height={65}
           />
         </div>
       );

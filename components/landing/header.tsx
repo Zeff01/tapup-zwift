@@ -11,7 +11,9 @@ import { headerItems } from "@/constants";
 
 import TapupLogo from "../svgs/TapupLogo";
 import { ThemeToggle } from "../Theme";
-import { ShoppingCart } from "lucide-react";
+import { Loader2, ShoppingCart } from "lucide-react";
+import { useUserContext } from "@/providers/user-provider";
+import { Avatar, AvatarImage, AvatarFallback } from "../ui/avatar";
 
 const Cart = dynamic(() => import("../cart/Cart"), {
   ssr: false,
@@ -19,6 +21,7 @@ const Cart = dynamic(() => import("../cart/Cart"), {
 });
 
 const Header = () => {
+  const { user, isLoading: isLoadingUserContext } = useUserContext();
   const pathname = usePathname();
   const [isMenuOpen, setIsMenuOpen] = useState(false);
 
@@ -51,11 +54,32 @@ const Header = () => {
         </nav>
 
         {/* Desktop Activate Button */}
-        <Link href="/login">
-          <Button className="hidden lg:flex text-lg text-white  bg-buttonColor hover:bg-hoverColor">
-            Sign In
-          </Button>
-        </Link>
+
+        {!user && !isLoadingUserContext && (
+          <Link href="/login">
+            <Button className="hidden lg:flex text-lg text-white  bg-buttonColor hover:bg-hoverColor">
+              Sign In
+            </Button>
+          </Link>
+        )}
+
+        {user && !isLoadingUserContext && (
+          <Link className="hidden lg:block" href={"/dashboard"}>
+            <Avatar className="h-12 w-12">
+              <AvatarImage
+                src={user?.profilePictureUrl || "/placeholder.svg"}
+                alt={`${user?.email}-profile-picture`}
+              />
+              <AvatarFallback className="uppercase">
+                {user?.email[0]}
+              </AvatarFallback>
+            </Avatar>
+          </Link>
+        )}
+
+        {isLoadingUserContext && (
+          <Loader2 className="shrink-0 size-12 animate-spin hidden lg:block" />
+        )}
 
         <Cart />
         <ThemeToggle />
@@ -116,11 +140,31 @@ const Header = () => {
               </Link>
             ))}
 
-            <Link href="/login" className="mt-4" onClick={handleMobileMenu}>
-              <Button className="w-full bg-green-600 text-white hover:bg-green-700">
-                Sign In
-              </Button>
-            </Link>
+            {!user && !isLoadingUserContext && (
+              <Link href="/login">
+                <Button className="hidden lg:flex text-lg text-white  bg-buttonColor hover:bg-hoverColor">
+                  Sign In
+                </Button>
+              </Link>
+            )}
+
+            {user && !isLoadingUserContext && (
+              <Link href={"/dashboard"}>
+                <Avatar className="h-12 w-12">
+                  <AvatarImage
+                    src={user?.profilePictureUrl || "/placeholder.svg"}
+                    alt={`${user?.email}-profile-picture`}
+                  />
+                  <AvatarFallback className="uppercase">
+                    {user?.email[0]}
+                  </AvatarFallback>
+                </Avatar>
+              </Link>
+            )}
+
+            {isLoadingUserContext && (
+              <Loader2 className="shrink-0 size-12 animate-spin" />
+            )}
           </nav>
         </div>
       </div>

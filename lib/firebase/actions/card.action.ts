@@ -407,13 +407,34 @@ export const transferCardOwnership = async ({
 
     const newOwnerId = userSnap.docs[0].id;
 
-    await updateDoc(cardRef, {
-      ...resetCardFields(),
+    const subscriptionRef = doc(
+      firebaseDb,
+      "subscriptions",
+      cardData.subscription_id ?? ""
+    );
+
+    const subscriptionSnap = await getDoc(subscriptionRef);
+    const subscriptionData = subscriptionSnap.data();
+
+    const subscriptionUpdateData: { user_id: string; dateStarted?: any } = {
+      user_id: newOwnerId,
+    };
+
+    if (!subscriptionData?.dateStarted) {
+      subscriptionUpdateData.dateStarted = serverTimestamp();
+    }
+
+    const updateCardPromise = updateDoc(cardRef, {
       owner: newOwnerId,
       transferCode: crypto.randomUUID().split("-").slice(0, 2).join("-"),
-      expiryDate: cardData.expiryDate || null,
-      chosenPhysicalCard: cardData.chosenPhysicalCard,
     });
+
+    const updateSubscriptionPromise = updateDoc(
+      subscriptionRef,
+      subscriptionUpdateData
+    );
+
+    await Promise.all([updateCardPromise, updateSubscriptionPromise]);
 
     return { success: true, message: "Ownership transferred successfully" };
   } catch (error) {
