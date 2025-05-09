@@ -16,7 +16,7 @@ import {
 } from "firebase/firestore";
 import { firebaseDb } from "../firebase";
 import { toast } from "react-toastify";
-import { Card, Subscription } from "@/types/types";
+import { Card } from "@/types/types";
 import { revalidatePath } from "../../revalidate";
 import { authCurrentUser } from "../auth";
 import { differenceInDays } from "date-fns";

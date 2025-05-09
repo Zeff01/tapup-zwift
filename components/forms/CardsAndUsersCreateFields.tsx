@@ -178,7 +178,15 @@ export default function CardsAndUsersCreateFields({
       onBoardUserMutation({ user_id: user.uid, user: data });
       return;
     }
-    createCardMutation({ user_id: user.uid, data });
+    createCardMutation({
+      user_id: user.uid,
+      data: {
+        ...data,
+        chosenPhysicalCard: {
+          id: data.chosenPhysicalCard,
+        },
+      },
+    });
   };
 
   const isLoading = isLoadingCreateCard || isLoadingOnBoarding;
