@@ -391,7 +391,12 @@ export default function CardsAndUsersFields({
                   {selectedPhysicalCardId ? (
                     <SelectedPhysicalCard
                       cardId={selectedPhysicalCardId}
-                      formData={methods.watch()}
+                      formData={{
+                        ...methods.watch(),
+                        chosenPhysicalCard: {
+                          id: methods.watch().chosenPhysicalCard,
+                        },
+                      }}
                     />
                   ) : (
                     <h1 className="text-black">Select a card</h1>
