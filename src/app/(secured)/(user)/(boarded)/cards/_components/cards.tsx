@@ -84,19 +84,20 @@ const Cards = () => {
             >
               Add Card
             </button>
-            <Link
+            {/* TODO: Buy Card per User and Orders Monitor*/}
+            {/* <Link
               href={"/cards/cardShop"}
               className="text-primary-foreground mr-4 bg-green-500 rounded-lg md:text-lg px-6 py-2"
             >
               Buy a Card
-            </Link>
-            <div className="flex items-center justify-center">
+            </Link> */}
+            {/* <div className="flex items-center justify-center">
               <ShoppingBag
                 onClick={() => router.push("/orders")}
                 size={36}
                 className="cursor-pointer"
               />
-            </div>
+            </div> */}
           </div>
         </div>
 

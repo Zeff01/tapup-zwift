@@ -128,7 +128,15 @@ export default function CardsAndUsersFields({
   const formSubmit = async (data: z.infer<typeof createPortfolioSchema>) => {
     if (!userData) return;
     if (isCard) {
-      updateCardMutation({ cardId: userData.id!, data });
+      updateCardMutation({
+        cardId: userData.id!,
+        data: {
+          ...data,
+          chosenPhysicalCard: {
+            id: data.chosenPhysicalCard as string,
+          },
+        },
+      });
       return;
     }
     const id = isCurrentUser ? userData.uid : userData.id || userData.uid;
@@ -383,7 +391,12 @@ export default function CardsAndUsersFields({
                   {selectedPhysicalCardId ? (
                     <SelectedPhysicalCard
                       cardId={selectedPhysicalCardId}
-                      formData={methods.watch()}
+                      formData={{
+                        ...methods.watch(),
+                        chosenPhysicalCard: {
+                          id: methods.watch().chosenPhysicalCard,
+                        },
+                      }}
                     />
                   ) : (
                     <h1 className="text-black">Select a card</h1>

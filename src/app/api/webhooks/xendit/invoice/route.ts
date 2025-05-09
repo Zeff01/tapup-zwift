@@ -27,6 +27,9 @@ export async function POST(req: NextRequest) {
     const body = await req.json();
     const { external_id, status } = body;
 
+    console.log("body: ", body);
+    console.log("external_id: ", external_id);
+
     if (!external_id || !status) {
       console.error("Missing required fields in webhook body");
       return NextResponse.json(

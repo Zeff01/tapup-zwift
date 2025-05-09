@@ -199,9 +199,18 @@ const MultiStepFormUpdate = ({
         return;
       }
       console.log("Proceeding with regular update...");
-
       if (isCard) {
-        await updateCardMutation({ cardId: userData.id!, data });
+        await updateCardMutation({
+          cardId: userData.id!,
+          data: {
+            ...data,
+            chosenPhysicalCard: data.chosenPhysicalCard
+              ? {
+                  id: data.chosenPhysicalCard,
+                }
+              : undefined,
+          },
+        });
         router.push("/dashboard");
         return;
       }
@@ -505,7 +514,12 @@ const MultiStepFormUpdate = ({
                       <div className="w-full border rounded-lg mb-4 max-h-[340px] overflow-y-auto">
                         <SelectedTemplate
                           templateId={selectedTemplateId}
-                          formData={methods.watch()}
+                          formData={{
+                            ...methods.watch(),
+                            chosenPhysicalCard: {
+                              id: methods.watch().chosenPhysicalCard || "",
+                            },
+                          }}
                         />
                       </div>
                     ) : (

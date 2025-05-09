@@ -40,7 +40,7 @@ const PhysicalCard = ({
   const handleFlip = () => setIsFlipped((prev) => !prev);
 
   const renderFrontCard = () => {
-    switch (chosenPhysicalCard) {
+    switch (chosenPhysicalCard?.id) {
       case "card1":
         return (
           <FrontCard1

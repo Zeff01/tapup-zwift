@@ -343,9 +343,9 @@ export const menuItems = [
 export const adminMenuItems = [
   { icon: Users, title: "Admin Dashboard", href: "/admin" },
   { icon: FiShoppingBag, title: "Orders", href: "/admin/users-orders" },
-  { icon: Mail, title: "Mail", href: "/admin/mail" },
-  { icon: BarChart, title: "Insights", href: "/admin/insights" },
-  { icon: LayoutList, title: "Logs", href: "/admin/log" },
+  // { icon: Mail, title: "Mail", href: "/admin/mail" },
+  // { icon: BarChart, title: "Insights", href: "/admin/insights" },
+  // { icon: LayoutList, title: "Logs", href: "/admin/log" },
 ];
 
 export const publicDomain =

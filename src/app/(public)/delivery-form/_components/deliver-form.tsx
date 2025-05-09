@@ -175,11 +175,10 @@ export default function DeliveryForm({
       status: "pending",
     };
 
-    // const transactionId = await createTransaction(transactionData);
     await createTransaction(transactionData);
 
     clearCart();
-    setIsLoadingTransaction(false);
+    // setIsLoadingTransaction(false);
   }
 
   return (

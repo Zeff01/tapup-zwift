@@ -16,7 +16,7 @@ import {
 } from "firebase/firestore";
 import { firebaseDb } from "../firebase";
 import { toast } from "react-toastify";
-import { Card, Subscription } from "@/types/types";
+import { Card } from "@/types/types";
 import { revalidatePath } from "../../revalidate";
 import { authCurrentUser } from "../auth";
 import { differenceInDays } from "date-fns";
@@ -111,7 +111,6 @@ export const getCardsByOwner = async (owner_id: string) => {
         const expiryDate = new Date(expiryTimestamp);
         const today = new Date();
 
-        // Exclude cards that have been expired for more than 30 days
         if (differenceInDays(today, expiryDate) > 30) {
           continue;
         }
@@ -120,7 +119,7 @@ export const getCardsByOwner = async (owner_id: string) => {
       result.push({
         ...cardData,
         id: doc.id,
-        expiryDate: expiryTimestamp ?? undefined, // Keep as number
+        expiryDate: expiryTimestamp ?? undefined,
       });
     }
 
@@ -341,7 +340,7 @@ export const getLatestSubscriptionExpiryDate = async (
   cardId: string
 ): Promise<number | null> => {
   const subscriptionCollection = collection(firebaseDb, "subscriptions");
-  const q = query(subscriptionCollection, where("cardId", "==", cardId));
+  const q = query(subscriptionCollection, where("card_id", "==", cardId));
 
   const snapshot = await getDocs(q);
 
@@ -353,17 +352,16 @@ export const getLatestSubscriptionExpiryDate = async (
     const data = doc.data();
     return {
       id: doc.id,
-      dateAvailed: (data.dateAvailed as Timestamp).toMillis(),
+      dateStarted: (data.dateStarted as Timestamp).toMillis(),
       subscriptionDays: data.subscriptionDays as number,
     };
   });
 
-  // Sort by most recent dateAvailed
-  subscriptions.sort((a, b) => b.dateAvailed - a.dateAvailed);
+  subscriptions.sort((a, b) => b.dateStarted - a.dateStarted);
   const latestSubscription = subscriptions[0];
 
   const expiryDate =
-    latestSubscription.dateAvailed +
+    latestSubscription.dateStarted +
     latestSubscription.subscriptionDays * 24 * 60 * 60 * 1000;
 
   return expiryDate;
@@ -409,13 +407,34 @@ export const transferCardOwnership = async ({
 
     const newOwnerId = userSnap.docs[0].id;
 
-    await updateDoc(cardRef, {
-      ...resetCardFields(),
+    const subscriptionRef = doc(
+      firebaseDb,
+      "subscriptions",
+      cardData.subscription_id ?? ""
+    );
+
+    const subscriptionSnap = await getDoc(subscriptionRef);
+    const subscriptionData = subscriptionSnap.data();
+
+    const subscriptionUpdateData: { user_id: string; dateStarted?: any } = {
+      user_id: newOwnerId,
+    };
+
+    if (!subscriptionData?.dateStarted) {
+      subscriptionUpdateData.dateStarted = serverTimestamp();
+    }
+
+    const updateCardPromise = updateDoc(cardRef, {
       owner: newOwnerId,
       transferCode: crypto.randomUUID().split("-").slice(0, 2).join("-"),
-      expiryDate: cardData.expiryDate || null,
-      chosenPhysicalCard: cardData.chosenPhysicalCard,
     });
+
+    const updateSubscriptionPromise = updateDoc(
+      subscriptionRef,
+      subscriptionUpdateData
+    );
+
+    await Promise.all([updateCardPromise, updateSubscriptionPromise]);
 
     return { success: true, message: "Ownership transferred successfully" };
   } catch (error) {
@@ -456,14 +475,43 @@ export const transferCardOwnershipUsingCode = async (
     }
 
     const cardRef = doc(firebaseDb, "cards", cardDoc.id);
+    const subscriptionRef = doc(
+      firebaseDb,
+      "subscriptions",
+      cardData.subscription_id
+    );
 
-    await updateDoc(cardRef, {
+    const subscriptionSnap = await getDoc(subscriptionRef);
+    const subscriptionData = subscriptionSnap.data();
+
+    const subscriptionUpdateData: { user_id: string; dateStarted?: any } = {
+      user_id: newOwnerId,
+    };
+
+    if (!subscriptionData?.dateStarted) {
+      subscriptionUpdateData.dateStarted = serverTimestamp();
+    }
+
+    const updateCardPromise = updateDoc(cardRef, {
+      ...resetCardFields(),
       owner: newOwnerId,
       transferCode: crypto.randomUUID().split("-").slice(0, 2).join("-"),
-      ...resetCardFields(),
     });
 
-    console.log("Card ownership transferred successfully to:", newOwnerId);
+    const updateSubscriptionPromise = updateDoc(
+      subscriptionRef,
+      subscriptionUpdateData
+    );
+
+    const [updateCardResult, _] = await Promise.all([
+      updateCardPromise,
+      updateSubscriptionPromise,
+    ]);
+
+    console.log(
+      "Card ownership transferred successfully to:",
+      updateCardResult
+    );
     toast.success("Card transferred successfully!");
     return true;
   } catch (error) {

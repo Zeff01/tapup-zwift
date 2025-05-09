@@ -13,7 +13,6 @@ import { usePathname } from "next/navigation";
 import { cn } from "@/lib/utils";
 import { Button } from "../ui/button";
 import { ThemeToggle } from "../Theme";
-import NotificationsSidebar from "./notifications";
 import { useUserContext } from "@/providers/user-provider";
 import NavigationSkeleton from "./NavigationSkeleton";
 
@@ -21,21 +20,18 @@ const NavigationBoarded = () => {
   const pathname = usePathname();
   const {
     user,
-    notifications: notif,
     logOutUser: signOut,
     isLoading: isLoadingUserContext,
   } = useUserContext();
 
   const isAdmin = user?.role === "admin";
 
-  const notifications = notif ?? [];
-
   const navItems = [...menuItems, ...(isAdmin ? adminMenuItems : [])];
 
   return (
-    <nav className="w-[25rem] px-8 flex flex-col border-r fixed z-50 ease-in-out h-screen transition-transform -translate-x-[25rem] lg:translate-x-0">
-      <div className="py-8 flex justify-between items-center px-4">
-        <TapupLogo />
+    <nav className="w-[22rem] px-6 flex flex-col border-r fixed z-50 ease-in-out h-screen transition-transform -translate-x-[25rem] lg:translate-x-0">
+      <div className="flex justify-between items-center self-start w-24 h-12 my-6">
+        <TapupLogo className="size-full" />
       </div>
       {isLoadingUserContext ? (
         <NavigationSkeleton />
@@ -48,9 +44,9 @@ const NavigationBoarded = () => {
               alt="user image"
               width={50}
               height={50}
-              className="object-cover rounded-full"
+              className="object-cover rounded-full h-[50px] w-[50px]"
             />
-            <div className="flex flex-col">
+            <div className="flex flex-col w-full">
               <h3 className="font-bold text-sm">
                 {user?.firstName
                   ? `${user?.firstName} ${user?.lastName}`
@@ -59,12 +55,21 @@ const NavigationBoarded = () => {
               <input
                 readOnly
                 value={user?.email || "anonymous@mail.com"}
-                className="text-xs text-foreground/30 border-0 truncate w-32 bg-transparent outline-none"
+                className="text-xs text-foreground/30 border-0 truncate w-full bg-transparent outline-none"
               />
             </div>
+            <p
+              className={cn(
+                "text-xs px-2 rounded-full capitalize text-white bg-greenColor",
+                {
+                  "bg-red-700": isAdmin,
+                }
+              )}
+            >
+              {user?.role}
+            </p>
             <span className="ml-auto flex mr-2">
               <ThemeToggle variant="boarded" />
-              <NotificationsSidebar user={user} notifications={notifications} />
             </span>
           </div>
           <div className="flex-1 pb-12 flex flex-col mt-12 gap-2">
