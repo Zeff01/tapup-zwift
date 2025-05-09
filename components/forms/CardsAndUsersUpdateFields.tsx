@@ -128,7 +128,15 @@ export default function CardsAndUsersFields({
   const formSubmit = async (data: z.infer<typeof createPortfolioSchema>) => {
     if (!userData) return;
     if (isCard) {
-      updateCardMutation({ cardId: userData.id!, data });
+      updateCardMutation({
+        cardId: userData.id!,
+        data: {
+          ...data,
+          chosenPhysicalCard: {
+            id: data.chosenPhysicalCard as string,
+          },
+        },
+      });
       return;
     }
     const id = isCurrentUser ? userData.uid : userData.id || userData.uid;
