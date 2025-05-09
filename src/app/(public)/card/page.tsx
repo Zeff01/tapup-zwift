@@ -99,7 +99,7 @@ const CardPurchasePreviewPage = () => {
                     })
                   }
                 >
-                  Add to Card <Plus />
+                  Add to Cart <Plus />
                 </Button>
               </div>
             </div>
