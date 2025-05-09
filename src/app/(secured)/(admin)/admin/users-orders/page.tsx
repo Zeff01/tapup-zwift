@@ -32,9 +32,7 @@ import {
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Label } from "@/components/ui/label";
 import { Separator } from "@/components/ui/separator";
-import { getAllTransactions } from "@/lib/firebase/actions/user.action";
-import { TransactionType } from "@/types/types";
-// Define TypeScript interfaces
+
 interface CardItem {
   id: string;
   name: string;
