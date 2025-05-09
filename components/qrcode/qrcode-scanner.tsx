@@ -10,7 +10,7 @@ import {
 import { catchErrorTyped, isValidQRCode } from "@/lib/utils";
 import { getCardById } from "@/lib/firebase/actions/card.action";
 import { SlCreditCard } from "react-icons/sl";
-import { Card } from "@/types/types";
+import { Card, Users } from "@/types/types";
 import Canvas2Card from "@/src/app/(secured)/(user)/(boarded)/cards/[cardId]/_components/canvas";
 
 const QrCodeScanner: React.FC = () => {
@@ -161,7 +161,7 @@ const QrCodeScanner: React.FC = () => {
           />
         ) : (
           <div className="flex items-center justify-center h-full">
-            <Canvas2Card user={card as Card} isQrScanner />
+            <Canvas2Card user={card as Users} isQrScanner />
           </div>
         )}
         {invalidQRCode && (
