@@ -12,12 +12,14 @@ import {
   query,
   limit,
   Timestamp,
+  writeBatch,
 } from "firebase/firestore";
 import { firebaseAuth, firebaseDb, firebaseStorage } from "../firebase";
 import {
   Card,
   CreateInvoiceType,
   CustomerType,
+  ExtendedUserInterface,
   GenericCard,
   GenericCardType,
   Photo,
@@ -30,7 +32,6 @@ import { createUserLink } from "@/lib/utils";
 import { getDownloadURL, ref, uploadBytesResumable } from "firebase/storage";
 import { toast } from "react-toastify";
 import { revalidatePath } from "../../revalidate";
-import { isAfter, addDays } from "date-fns";
 import { createInvoice } from "@/lib/xendit";
 import { xenditClient } from "@/lib/axios";
 type UserCodeLink = {
@@ -110,6 +111,27 @@ export const getAllUsers = async (): Promise<Users[]> => {
   }
 };
 
+export const deleteUser = async () => {
+  try {
+    const currentUser = firebaseAuth.currentUser;
+
+    if (!currentUser) {
+      console.error("No user is currently signed in.");
+      toast.error("No user is currently signed in.");
+      return false;
+    }
+
+    const user = (await getUserById(currentUser.uid)) as ExtendedUserInterface;
+
+    if (!user || user.role.toLowerCase() !== "admin") return false;
+
+    console.log(user);
+  } catch (error) {
+    console.error("Error deleting User: ", error);
+    return [];
+  }
+};
+
 export const updateUserById = async ({
   user_id,
   user,
@@ -152,7 +174,7 @@ export const getUserById = async (id: string) => {
   } catch (error: any) {
     if (error.cause === "document/not-found") {
       console.error("No such document!");
-      throw new Error("No such document!");
+      return null;
     }
     console.error(error);
     throw error;
@@ -320,6 +342,7 @@ export const addCard = async (genericCard: GenericCardType) => {
     const card: GenericCard = {
       transferCode: transferCode,
       chosenPhysicalCard: genericCard,
+      printStatus: false,
       createdAt: serverTimestamp(),
     };
 
@@ -335,23 +358,55 @@ export const addCard = async (genericCard: GenericCardType) => {
 export const addSubscription = async ({
   cardIds,
   subscriptionDays,
+  userId,
 }: {
   cardIds: string[];
   subscriptionDays: number;
-}): Promise<string | null> => {
+  userId?: string;
+}): Promise<string[] | null> => {
   try {
     const subscriptionCollection = collection(firebaseDb, "subscriptions");
 
     const dateAvailedTimestamp = Timestamp.now();
 
-    const subscriptionDoc = await addDoc(subscriptionCollection, {
-      cardIds: cardIds,
-      dateAvailed: dateAvailedTimestamp,
-      subscriptionDays,
-    });
+    const addDocPromises = cardIds.map((id) =>
+      addDoc(subscriptionCollection, {
+        ...(userId && { userId }),
+        card_id: id,
+        dateAvailed: dateAvailedTimestamp,
+        subscriptionDays,
+      })
+    );
 
-    console.log("Subscription added with ID:", subscriptionDoc.id);
-    return subscriptionDoc.id;
+    const subscriptionDocs = await Promise.all(addDocPromises);
+
+    if ((!firebaseDb && !cardIds) || cardIds.length === 0)
+      throw "Firebase db is not initialized or cardIds not defined";
+
+    if (subscriptionDocs.length !== cardIds.length)
+      throw new Error(
+        "Subscription creation process failed: Mismatch in counts between subscriptions and card IDs."
+      );
+
+    const batch = writeBatch(firebaseDb);
+
+    for (let i = 0; i < cardIds.length; i++) {
+      const cardId = cardIds[i];
+      const specificSubscriptionId = subscriptionDocs[i].id;
+      const cardRef = doc(firebaseDb, "cards", cardId);
+      batch.update(cardRef, {
+        subscription_id: specificSubscriptionId,
+      });
+    }
+
+    await batch.commit();
+    console.log(
+      `Successfully updated ${cardIds.length} card(s) with their respective subscription_id.`
+    );
+
+    // The function is expected to return an array of all created subscription IDs.
+    const allCreatedSubscriptionIds = subscriptionDocs.map((sub) => sub.id);
+    return allCreatedSubscriptionIds;
   } catch (error) {
     console.error("Error adding subscription:", error);
     return null;
@@ -379,7 +434,8 @@ export const createCustomerAndRecurringPlan = async (
   customerData: CustomerType,
   subscriptionPlan: SubscriptionPlan,
   cardId: string,
-  totalPrice?: number
+  totalPrice?: number,
+  userId?: string
 ) => {
   try {
     // Create customer in Xendit
@@ -435,7 +491,7 @@ export const createCustomerAndRecurringPlan = async (
       description: `Subscription for ${subscriptionPlan.name}`,
       success_return_url: process.env.NEXT_PUBLIC_SUCCESS_REDIRECT_URL,
       failure_return_url: process.env.NEXT_PUBLIC_FAILURE_REDIRECT_URL,
-      metadata: { cardId },
+      metadata: { cardId: [cardId], ...(userId && { userId }) },
     };
 
     console.log("Recurring Plan Data:", recurringPlanData);

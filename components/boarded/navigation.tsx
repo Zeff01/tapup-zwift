@@ -29,9 +29,9 @@ const NavigationBoarded = () => {
   const navItems = [...menuItems, ...(isAdmin ? adminMenuItems : [])];
 
   return (
-    <nav className="w-[25rem] px-8 flex flex-col border-r fixed z-50 ease-in-out h-screen transition-transform -translate-x-[25rem] lg:translate-x-0">
-      <div className="py-8 flex justify-between items-center px-4">
-        <TapupLogo />
+    <nav className="w-[22rem] px-6 flex flex-col border-r fixed z-50 ease-in-out h-screen transition-transform -translate-x-[25rem] lg:translate-x-0">
+      <div className="flex justify-between items-center self-start w-24 h-12 my-6">
+        <TapupLogo className="size-full" />
       </div>
       {isLoadingUserContext ? (
         <NavigationSkeleton />
@@ -58,6 +58,16 @@ const NavigationBoarded = () => {
                 className="text-xs text-foreground/30 border-0 truncate w-full bg-transparent outline-none"
               />
             </div>
+            <p
+              className={cn(
+                "text-xs px-2 rounded-full capitalize text-white bg-greenColor",
+                {
+                  "bg-red-700": isAdmin,
+                }
+              )}
+            >
+              {user?.role}
+            </p>
             <span className="ml-auto flex mr-2">
               <ThemeToggle variant="boarded" />
             </span>

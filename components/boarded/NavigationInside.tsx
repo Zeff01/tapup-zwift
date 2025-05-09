@@ -81,6 +81,16 @@ const OverlayMenu = () => {
                   className="text-xs text-foreground/30 border-0 truncate w-full bg-transparent outline-none"
                 />
               </div>
+              <p
+                className={cn(
+                  "text-xs px-2 rounded-full capitalize text-white bg-greenColor",
+                  {
+                    "bg-red-700": isAdmin,
+                  }
+                )}
+              >
+                {user?.role}
+              </p>
               <span className="ml-auto flex mr-2">
                 <ThemeToggle variant="boarded" />
               </span>

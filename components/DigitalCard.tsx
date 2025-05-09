@@ -8,7 +8,6 @@ import {
   TooltipArrow,
 } from "@radix-ui/react-tooltip";
 import {
-  CreateInvoiceType,
   CustomerType,
   SubscriptionPlan,
   Users,
@@ -23,22 +22,28 @@ import {
 } from "@/lib/firebase/actions/card.action";
 import { Card } from "@/types/types";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
-import { ArrowRightLeft, Edit2, Link2, Trash, EyeIcon } from "lucide-react";
+import {
+  ArrowRightLeft,
+  CheckCircle2,
+  Edit2,
+  Loader2Icon,
+  Trash,
+} from "lucide-react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import React, { useState } from "react";
 import { toast } from "react-toastify";
-import { CiLink } from "react-icons/ci";
 import * as Dialog from "@radix-ui/react-dialog";
 import { format } from "date-fns";
 import {
   createCustomerAndRecurringPlan,
   getSubscriptionPlans,
   getUserById,
-  handleCreateInvoice,
 } from "@/lib/firebase/actions/user.action";
 import { getLoggedInUser } from "@/lib/session";
-import { cardItems } from "@/constants";
+import { carouselCards } from "@/constants";
+import { TbDisabled } from "react-icons/tb";
+import { IoCloseCircleOutline } from "react-icons/io5";
 
 type Prop = {
   card: Partial<Card>;
@@ -58,6 +63,7 @@ const DigitalCard = ({ card, confirm, user }: Prop) => {
   const [transferOpen, setTransferOpen] = useState(false);
   const [newOwnerEmail, setNewOwnerEmail] = useState("");
   const [expiredDialogOpen, setExpiredDialogOpen] = useState(false);
+  const [enableCardDialogOpen, setEnableCardDialogOpen] = useState(false);
 
   const domain =
     process.env.NODE_ENV === "development"
@@ -77,16 +83,17 @@ const DigitalCard = ({ card, confirm, user }: Prop) => {
     },
   });
 
-  const { mutate: toggleCardMutation } = useMutation({
-    mutationFn: toggleCardDisabled,
-    onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ["cards", user?.uid] });
-      toast.success("Card status updated successfully");
-    },
-    onError: () => {
-      toast.error("Something went wrong");
-    },
-  });
+  const { mutate: toggleCardMutation, isPending: isPendingToggleCard } =
+    useMutation({
+      mutationFn: toggleCardDisabled,
+      onSuccess: () => {
+        queryClient.invalidateQueries({ queryKey: ["cards", user?.uid] });
+        toast.success("Card status updated successfully");
+      },
+      onError: () => {
+        toast.error("Something went wrong");
+      },
+    });
 
   const { mutate: deleteCardMutation } = useMutation({
     mutationFn: deleteCardById,
@@ -112,13 +119,18 @@ const DigitalCard = ({ card, confirm, user }: Prop) => {
   });
 
   const getCardImage = (cardId?: string) => {
-    const cardItem = cardItems.find((item) => item.id === cardId);
+    const cardItem = Object.values(carouselCards).find(
+      (item) => item.id === cardId
+    );
+
     return cardItem ? cardItem.image : undefined;
   };
 
-  const cardImage = getCardImage(card.chosenPhysicalCard);
+  const cardImage = getCardImage(card.chosenPhysicalCard?.id);
 
-  const { data: plans, isLoading } = useQuery<SubscriptionPlan[]>({
+  const { data: plans, isLoading: isLoadingPlans } = useQuery<
+    SubscriptionPlan[]
+  >({
     queryKey: ["subscription-plans"],
     queryFn: getSubscriptionPlans,
   });
@@ -274,10 +286,19 @@ const DigitalCard = ({ card, confirm, user }: Prop) => {
     toggleCardMutation(card.id);
   };
 
+  const formattedExpiryDate = card.expiryDate
+    ? format(new Date(card.expiryDate), "MMMM d, yyyy")
+    : "N/A";
+
+  const isCardDisabled = card.disabled ?? false;
+
   const iconAndFunctionMap = [
     { icon: Edit2, fn: handleUpdate, tooltip: "Edit Card" },
-    { icon: Trash, fn: handleToggleCard, tooltip: "Delete Card" },
-    { icon: Link2, fn: () => setOpen(true), tooltip: "Add Custom URL" },
+    {
+      icon: isCardDisabled ? CheckCircle2 : IoCloseCircleOutline,
+      fn: handleToggleCard,
+      tooltip: "Delete Card",
+    },
     {
       icon: ArrowRightLeft,
       fn: () => setTransferOpen(true),
@@ -285,17 +306,13 @@ const DigitalCard = ({ card, confirm, user }: Prop) => {
     },
   ];
 
-  const formattedExpiryDate = card.expiryDate
-    ? format(new Date(card.expiryDate), "MMMM d, yyyy")
-    : "N/A";
-
-  const isCardDisabled = card.disabled ?? false;
+  const isLoading = isPendingToggleCard || isLoadingPlans;
 
   return (
     <>
       <div
         className={`w-full aspect-[340/208] transition-transform duration-200 flex justify-between text-secondary bg-foreground rounded-[30px] overflow-hidden relative 
-            ${isCardExpired(card.expiryDate) || isCardDisabled ? "opacity-50" : ""}
+            ${isCardExpired(card.expiryDate) || isCardDisabled || isLoading ? "opacity-50" : ""}
             ${open ? "blur-sm pointer-events-none" : ""}
           `}
         style={{
@@ -307,29 +324,31 @@ const DigitalCard = ({ card, confirm, user }: Prop) => {
         onMouseEnter={() => setHovered(true)}
         onMouseLeave={() => setHovered(false)}
       >
-        {(isCardExpired(card.expiryDate) || isCardDisabled) && (
+        {isLoading && (
+          <div className="absolute left-0 top-0 w-[100%] h-full flex items-center justify-center bg-black/60 text-white text-lg font-semibold">
+            <Loader2Icon className="shrink-0 animate-spin size-8" />
+          </div>
+        )}
+
+        {(isCardExpired(card.expiryDate) || isCardDisabled) && !isLoading && (
           <div className="absolute left-0 top-0 w-[100%] h-full flex items-center justify-center bg-black/60 text-white text-lg font-semibold">
             {isCardDisabled ? "Disabled" : "Expired"}
           </div>
         )}
 
-        {!isCardExpired(card.expiryDate) && !isCardDisabled && hovered && (
-          <div className="absolute bottom-5 left-5 bg-black text-white text-xs px-2 py-1 rounded-lg shadow-lg">
+        {!isCardExpired(card.expiryDate) && hovered && !isLoading && (
+          <div className="absolute bottom-5 right-5 bg-black text-white text-xs px-2 py-1 rounded-lg shadow-lg">
             Expires: {formattedExpiryDate}
           </div>
         )}
 
         <Link
-          href={
-            isCardExpired(card.expiryDate) || isCardDisabled
-              ? "#"
-              : `/cards/${card.id}`
-          }
+          href={isCardExpired(card.expiryDate) ? "#" : `/cards/${card.id}`}
           prefetch
           className="flex-1 border-r border-accent/40 p-6 relative"
           onClick={(e) => {
-            if (isCardExpired(card.expiryDate) || isCardDisabled) {
-              e.preventDefault();
+            e.preventDefault();
+            if (isCardExpired(card.expiryDate)) {
               setExpiredDialogOpen(true);
             }
           }}
@@ -344,8 +363,8 @@ const DigitalCard = ({ card, confirm, user }: Prop) => {
           </div>
         </Link>
 
-        <div className="flex flex-col justify-center items-center bg-transparent backdrop-blur-md transition z-10">
-          <Tooltip>
+        <div className="flex flex-col justify-center absolute rounded-tr-[30px] rounded-br-[30px] top-1/2 -translate-y-1/2  items-center  z-10 pr-2 py-2 bg-neutral-950/80 backdrop-blur-sm">
+          {/* <Tooltip>
             <TooltipTrigger asChild>
               <Link
                 href={`/site/${card.id}`}
@@ -366,9 +385,9 @@ const DigitalCard = ({ card, confirm, user }: Prop) => {
                 <TooltipArrow className="fill-black" />
               </TooltipContent>
             </TooltipPortal>
-          </Tooltip>
+          </Tooltip> */}
 
-          <Tooltip>
+          {/* <Tooltip>
             <TooltipTrigger asChild>
               <span
                 className="px-3 py-3 2xl:py-2 hover:opacity-50 cursor-pointer"
@@ -390,7 +409,7 @@ const DigitalCard = ({ card, confirm, user }: Prop) => {
                 <TooltipArrow className="fill-black" />
               </TooltipContent>
             </TooltipPortal>
-          </Tooltip>
+          </Tooltip> */}
 
           {iconAndFunctionMap.map((item, index) => (
             <Tooltip key={index}>

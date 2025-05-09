@@ -148,7 +148,10 @@ export interface Card extends Users {
   transferCode: string;
   expiryDate?: number;
   disabled?: boolean;
-  chosenPhysicalCard?: string;
+  chosenPhysicalCard?: {
+    id: string;
+    name: string;
+  };
 }
 
 export type GenericCardType = {
@@ -160,6 +163,7 @@ export type GenericCard = {
   transferCode: string;
   chosenPhysicalCard: GenericCardType;
   createdAt: Timestamp;
+  printStatus: boolean;
 };
 
 export interface PhysicalCardProps extends Card {
@@ -360,4 +364,5 @@ export type TransactionType = {
   amount: number;
   status: "pending" | "completed" | "failed";
   createdAt?: Timestamp;
+  user_id?: string;
 };
