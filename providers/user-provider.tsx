@@ -28,17 +28,17 @@ export const UserContextProvider = ({ children }: any) => {
   const router = useRouter();
   const queryClient = useQueryClient();
 
-  const { userUid } = useUserSession();
+  const { userUid, isUserSessionLoading } = useUserSession();
   const isAuthenticated = useMemo(() => Boolean(userUid), [userUid]);
 
   const { data: user, isPending: isUserLoading } = useQuery({
+    enabled: !!userUid,
     queryKey: ["current-active-user", userUid],
     queryFn: async () => {
       const data = await currentAuthUserDetails({ id: userUid! });
       return { uid: userUid, ...data };
     },
     staleTime: 1000 * 60 * 5,
-    enabled: !!userUid,
   });
 
   const { mutate: updateUserMutation, isPending: isLoadingUpdateMuitation } =
@@ -51,7 +51,10 @@ export const UserContextProvider = ({ children }: any) => {
       },
     });
 
-  const isLoading = isUserLoading || isLoadingUpdateMuitation;
+  const isLoading =
+    (isUserLoading && !!userUid) ||
+    isLoadingUpdateMuitation ||
+    isUserSessionLoading;
 
   const updateUser = async (uid: string, userData: ExtendedUserInterface) => {
     updateUserMutation({ user_id: uid, user: userData });
