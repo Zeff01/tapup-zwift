@@ -16,6 +16,7 @@ import { SignedUserIdJwtPayload } from "@/types/types";
 export function useUserSession(initSession: string | null = null) {
   const [userUid, setUserUid] = useState<string | null>(initSession);
   const [user, setUser] = useState<User | null>(null);
+  const [isUserSessionLoading, setIsUserSessionLoading] = useState(true);
   const router = useRouter();
 
   const signOutUser = async () => {
@@ -49,6 +50,7 @@ export function useUserSession(initSession: string | null = null) {
 
   useEffect(() => {
     const unsubscribe = onAuthStateChanged(async (authUser) => {
+      setIsUserSessionLoading(true);
       if (!authUser) {
         const sessionCookie = await getSession();
 
@@ -59,13 +61,14 @@ export function useUserSession(initSession: string | null = null) {
           await deleteSession();
           router.push("/login");
         }
-
+        setIsUserSessionLoading(false);
         return;
       }
       await signOutIfInvalidSession(authUser);
 
       setUserUid(authUser.uid);
       setUser(authUser);
+      setIsUserSessionLoading(false);
     });
 
     return () => {
@@ -73,5 +76,5 @@ export function useUserSession(initSession: string | null = null) {
     };
   }, []);
 
-  return { userUid, user };
+  return { userUid, user, isUserSessionLoading };
 }
