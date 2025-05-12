@@ -36,14 +36,12 @@ import {
 import Social from "./social-buttons";
 import { loginHandler } from "@/lib/firebase/auth";
 import { LoginData } from "@/types/types";
-import { useRouter } from "next/navigation";
 import { useMutation } from "@tanstack/react-query";
 import { Loader2 } from "lucide-react";
 import { Eye, EyeOff } from "lucide-react";
 import { useState } from "react";
 
 export function LogInForm() {
-  const router = useRouter();
   const [showPassword, setShowPassword] = useState(false);
 
   const form = useForm<z.infer<typeof loginSchema>>({
@@ -61,7 +59,7 @@ export function LogInForm() {
     mutationFn: loginHandler,
   });
   const onSubmit = async (data: LoginData) => {
-    await loginHandlerMutation({ ...data, router });
+    await loginHandlerMutation({ ...data });
   };
 
   const isLoading = isPending || isSuccess;
