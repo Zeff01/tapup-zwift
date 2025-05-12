@@ -22,6 +22,7 @@ import {
 } from "@/components/ui/select";
 import {
   Dialog,
+  DialogClose,
   DialogContent,
   DialogDescription,
   DialogFooter,
@@ -37,7 +38,6 @@ import { carouselCards } from "@/constants";
 import { useUserContext } from "@/providers/user-provider";
 import { updateTransactionPerId } from "@/lib/firebase/actions/user.action";
 import { toast } from "react-toastify";
-import { DialogClose } from "@radix-ui/react-dialog";
 
 export default function TransactionDashboard({
   transactionsData,
