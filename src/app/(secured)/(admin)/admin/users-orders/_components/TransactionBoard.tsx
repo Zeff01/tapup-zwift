@@ -36,6 +36,8 @@ import { TransactionBoard } from "@/types/types";
 import { carouselCards } from "@/constants";
 import { useUserContext } from "@/providers/user-provider";
 import { updateTransactionPerId } from "@/lib/firebase/actions/user.action";
+import { toast } from "react-toastify";
+import { DialogClose } from "@radix-ui/react-dialog";
 
 export default function TransactionDashboard({
   transactionsData,
@@ -89,6 +91,24 @@ export default function TransactionDashboard({
         : transaction
     );
     setTransactions(updatedTransactions);
+  };
+
+  const handleSaveChanges = async (
+    transactionID: string,
+    newStatus: string
+  ) => {
+    try {
+      const result = await updateTransactionPerId({
+        role: user?.role!,
+        transaction_id: transactionID,
+        data: newStatus,
+      });
+
+      if (!result.success) return toast.error(result.message);
+      toast.success(result.message);
+    } catch (error) {
+      console.log("Error updating transaction", error);
+    }
   };
 
   const getStatusColor = (status: string) => {
@@ -272,12 +292,19 @@ export default function TransactionDashboard({
                                 </div>
                               </div>
                               <DialogFooter>
-                                <Button
-                                  // onClick={handleSaveChanges}
-                                  className="bg-greenColor text-white hover:bg-greenTitle"
-                                >
-                                  Save changes
-                                </Button>
+                                <DialogClose asChild>
+                                  <Button
+                                    onClick={() =>
+                                      handleSaveChanges(
+                                        transaction.id,
+                                        transaction.status
+                                      )
+                                    }
+                                    className="bg-greenColor text-white hover:bg-greenTitle"
+                                  >
+                                    Save changes
+                                  </Button>
+                                </DialogClose>
                               </DialogFooter>
                             </DialogContent>
                           </Dialog>
