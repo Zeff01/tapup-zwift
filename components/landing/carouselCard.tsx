@@ -104,6 +104,18 @@ const TapUpCarousel = ({ viewCard, onChange }: Params) => {
     });
   }, [api, media]);
 
+  const onCardClick = (title: string, index: number) => {
+    if (!api) return;
+
+    // possible current card already selected
+    if ((current - index) == 1) return;
+
+    if (onChange) {
+      onChange(title);
+      api.scrollTo(index - 1);
+    }
+  }
+
   return (
     <section className="py-16" id="cardSelection">
       {!viewCard && (
@@ -131,6 +143,7 @@ const TapUpCarousel = ({ viewCard, onChange }: Params) => {
             {Object.values(carouselCards).map((item, index) => (
               <CarouselItem
                 key={index}
+                onClick={()=>onCardClick(item.title, index)}
                 className={cn(
                   "md:basis-1/2 lg:basis-1/3 flex items-center justify-center rounded-md"
                   // {
