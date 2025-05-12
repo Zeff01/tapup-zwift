@@ -34,6 +34,7 @@ import {
 } from "@/types/types";
 import { AppRouterInstance } from "next/dist/shared/lib/app-router-context.shared-runtime";
 import { addCardForUser, updateUserById } from "./actions/user.action";
+import { redirect } from "next/navigation";
 
 export const authCurrentUser = async () => {
   try {
@@ -160,11 +161,9 @@ export const signUpHandler = async (data: z.infer<typeof signupSchema>) => {
 export const loginHandler = async ({
   email,
   password,
-  router,
 }: {
   email: string;
   password: string;
-  router?: AppRouterInstance;
 }) => {
   try {
     const res = await signInWithEmailAndPassword(firebaseAuth, email, password);
@@ -173,7 +172,7 @@ export const loginHandler = async ({
       await createSession(userID);
     }
     toast.success("Login successful!");
-    if (router) router.push(`${DASHBOARD_ROUTE}`);
+    redirect("/dashboard");
   } catch (error) {
     if (error instanceof FirebaseError) {
       console.log(error.code);
@@ -270,15 +269,12 @@ export const currentAuthUserDetails = async ({ id }: { id: string }) => {
       console.error("Invalid user ID");
       return;
     }
-
     const userRef = doc(firebaseDb, "user-account", id);
     const docSnap = await getDoc(userRef);
-
     if (!docSnap.exists()) {
       console.log("No such document");
       return;
     }
-
     return docSnap.data();
   } catch (error) {
     if (error instanceof FirebaseError) {
