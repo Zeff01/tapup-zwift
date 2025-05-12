@@ -8,7 +8,6 @@ import { getCardsByOwner } from "@/lib/firebase/actions/card.action";
 import TableComponent from "../_components/CardsTable/TableComponent";
 import { Card, ExtendedUserInterface } from "@/types/types";
 import { UserCard } from "../_components/UserCard";
-import CheckBoarded from "@/components/CheckBoarded";
 
 export const revalidate = 0;
 
