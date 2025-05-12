@@ -72,7 +72,7 @@ export function useUserSession(initSession: string | null = null) {
     });
 
     return () => {
-      return unsubscribe();
+      unsubscribe();
     };
   }, []);
 

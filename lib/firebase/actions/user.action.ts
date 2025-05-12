@@ -587,7 +587,6 @@ export const createCustomerAndRecurringPlanBundle = async (
       recurringPlanData
     );
     console.log("Xendit Recurring Plan Response:", recurringPlan);
-    window.location.href = recurringPlan.actions?.[0]?.url;
 
     return { customer, recurringPlan };
   } catch (error) {

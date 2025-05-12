@@ -149,12 +149,18 @@ export default function DeliveryForm({
       cardTotal()
     );
 
+    const newCards = cardItems.flatMap((item) => {
+      return Array.from({ length: item.quantity }, () => ({
+        id: item.id,
+        name: item.name,
+      }));
+    });
+
     const transactionData: TransactionType = {
       amount: cardTotal(),
       cards: cardResults.map((cardIds, i) => ({
         id: cardIds,
-        name: cardItems[i].name,
-        quantity: cardItems[i].quantity,
+        name: newCards[i].name,
       })),
       receiver: {
         customerId: recurringPlan.customer.id,
@@ -178,7 +184,8 @@ export default function DeliveryForm({
     await createTransaction(transactionData);
 
     clearCart();
-    // setIsLoadingTransaction(false);
+
+    window.location.href = recurringPlan.recurringPlan.actions?.[0]?.url;
   }
 
   return (
