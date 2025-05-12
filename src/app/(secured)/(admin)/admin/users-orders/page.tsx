@@ -2,7 +2,7 @@ import React from "react";
 import TransactionDashboard from "./_components/TransactionBoard";
 import { authCurrentUserv2 } from "@/lib/firebase/auth";
 import { USER_ROLE_ENUMS } from "@/constants";
-import { notFound } from "next/navigation";
+import { notFound, redirect } from "next/navigation";
 import { getAllTransactions } from "@/lib/firebase/actions/user.action";
 
 export default async function UserOrdersPage() {
@@ -10,6 +10,10 @@ export default async function UserOrdersPage() {
 
   if (auth?.role !== USER_ROLE_ENUMS.ADMIN) {
     notFound();
+  }
+
+  if (!auth?.onboarding) {
+    redirect("/onboarding");
   }
 
   const transactions = await getAllTransactions({

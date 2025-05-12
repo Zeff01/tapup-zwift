@@ -74,6 +74,7 @@ export const UserContextProvider = ({ children }: any) => {
     updateUser,
     logOutUser,
   };
+
   return (
     <UserProviderContext.Provider value={value}>
       {children}
