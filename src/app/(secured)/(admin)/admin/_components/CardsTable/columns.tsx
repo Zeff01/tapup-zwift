@@ -17,7 +17,6 @@ export const columns: ColumnDef<Card>[] = [
       return <div className="min-w-[5rem] flex cursor-pointer">Card Type</div>;
     },
     cell: ({ row }) => {
-      console.log(row.original);
       return (
         <div>
           <Image

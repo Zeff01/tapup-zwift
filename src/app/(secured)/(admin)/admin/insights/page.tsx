@@ -2,13 +2,17 @@ import React from "react";
 import { Construction } from "lucide-react";
 import { authCurrentUserv2 } from "@/lib/firebase/auth";
 import { USER_ROLE_ENUMS } from "@/constants";
-import { notFound } from "next/navigation";
+import { notFound, redirect } from "next/navigation";
 
 export default async function UsersOrdersPage() {
   const auth = await authCurrentUserv2();
 
   if (auth?.role !== USER_ROLE_ENUMS.ADMIN) {
     notFound();
+  }
+
+  if (!auth?.onboarding) {
+    redirect("/onboarding");
   }
   return (
     <main className="flex h-full flex-col items-center justify-center bg-[#1E1E1E] text-white p-6">
