@@ -20,6 +20,7 @@ export default async function UserOrdersPage() {
     role: auth.role,
   });
 
+  console.log(transactions);
   if (!transactions)
     return (
       <div className="place-self-center my-auto">
