@@ -18,8 +18,6 @@ const PrintCardsPage = async () => {
 
   const cards = await getAllCards({ role: auth.role });
 
-  console.log(cards);
-
   if (!cards)
     return (
       <div className="place-self-center my-auto">
