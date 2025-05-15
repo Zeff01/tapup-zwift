@@ -36,10 +36,15 @@ const PrintCardsTable = ({ cardsData }: { cardsData: PrintCardsInfo[] }) => {
   useEffect(() => {
     let filtered = [...cardsData];
 
-    // if (searchFilter) {
-
-    // }
-
+    if (searchFilter) {
+      filtered = filtered.filter(
+        (card) =>
+          card.customerName
+            ?.toLowerCase()
+            .includes(searchFilter.toLowerCase()) ||
+          card.transactionId?.toLowerCase().includes(searchFilter.toLowerCase())
+      );
+    }
     if (statusFilter !== "all") {
       filtered = filtered.filter((card) => {
         if (statusFilter === "printed") return card.printStatus === true;
@@ -48,7 +53,7 @@ const PrintCardsTable = ({ cardsData }: { cardsData: PrintCardsInfo[] }) => {
     }
 
     setFilteredCards(filtered);
-  }, [cardsData, statusFilter]);
+  }, [cardsData, statusFilter, searchFilter]);
 
   return (
     <div className="container mx-auto py-8 px-4">
