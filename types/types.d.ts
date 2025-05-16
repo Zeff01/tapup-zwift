@@ -382,6 +382,7 @@ export type TransactionType = {
   cards: {
     id: string;
     name: string;
+    quantity: number;
   }[];
   amount: number;
   status: "pending" | "completed" | "failed";

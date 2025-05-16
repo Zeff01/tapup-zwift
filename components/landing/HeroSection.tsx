@@ -1,8 +1,11 @@
+"use client";
+
 import Image from "next/image";
 import { Button } from "../ui/button";
 import tapupImg from "@/public/assets/Cards.png";
 import { LogIn } from "lucide-react";
 import Link from "next/link";
+import { motion } from "framer-motion";
 
 const Hero = () => {
   return (
@@ -26,7 +29,7 @@ const Hero = () => {
           </Button>
         </Link>
       </div>
-      <div className="md:w-[45rem] flex-shrink-0 lg:flex-shrink sm:w-[35rem] w-[22rem] aspect-square relative m-auto">
+      {/* <div className="md:w-[45rem] flex-shrink-0 lg:flex-shrink sm:w-[35rem] w-[22rem] aspect-square relative m-auto">
         <Image
           src={tapupImg}
           alt="tap up image"
@@ -34,7 +37,25 @@ const Hero = () => {
           fill
           className="object-contain"
         />
-      </div>
+      </div> */}
+      <motion.div
+        className="md:w-[45rem] flex-shrink-0 lg:flex-shrink sm:w-[35rem] w-[22rem] aspect-square relative m-auto"
+        animate={{ rotate: 360 }}
+        transition={{
+          repeat: Infinity,
+          repeatType: "loop",
+          ease: "linear",
+          duration: 10, // 10 seconds for a full rotation
+        }}
+      >
+        <Image
+          src={tapupImg}
+          alt="tap up image"
+          priority
+          fill
+          className="object-contain"
+        />
+      </motion.div>
     </section>
   );
 };

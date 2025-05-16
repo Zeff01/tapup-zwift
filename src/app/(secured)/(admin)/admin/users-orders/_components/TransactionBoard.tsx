@@ -289,6 +289,7 @@ export default function TransactionDashboard({
                   <TabsContent value="cards">
                     <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                       {transaction.cards.map((card, index) => {
+                        // console.log("card here", card);
                         const cardImage = Object.values(carouselCards).filter(
                           (item) => item.title === card.name
                         )[0].image;

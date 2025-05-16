@@ -7,6 +7,7 @@ import {
   getDoc,
   getDocs,
   limit,
+  orderBy,
   query,
   serverTimestamp,
   setDoc,
@@ -96,10 +97,13 @@ export const getAllCards = async ({ role }: { role: string }) => {
     if (!user) throw new Error("No Auth User");
 
     const cardCollection = collection(firebaseDb, "cards");
+
+    const q = query(cardCollection, orderBy("createdAt", "desc"));
+
     const transacCollection = collection(firebaseDb, "transactions");
 
     const [cardSnap, transacSnap] = await Promise.all([
-      getDocs(cardCollection),
+      getDocs(q),
       getDocs(transacCollection),
     ]);
 
