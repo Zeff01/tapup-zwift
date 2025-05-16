@@ -335,7 +335,7 @@ export default function TransactionDashboard({
                                 className="object-cover rounded-md"
                               />
                             </div>
-                            <div className="flex-grow-0 sm:flex-1 min-w-0">
+                            <div className="flex-grow-0 sm:flex-1 min-w-0 w-full">
                               <h3 className="font-medium truncate">{card.name}</h3>
                               <p className="text-sm text-gray-500 truncate">
                                 ID: {card.id}
