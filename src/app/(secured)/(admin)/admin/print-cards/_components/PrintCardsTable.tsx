@@ -1,11 +1,14 @@
 "use client";
 
+import Image from "next/image";
 import { useEffect, useState } from "react";
 import { Search, Filter, Printer } from "lucide-react";
 import { Card } from "@/types/types";
 import { Input } from "@/components/ui/input";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
+import { Separator } from "@/components/ui/separator";
+import { carouselCards } from "@/constants";
 import {
   Select,
   SelectContent,
@@ -21,19 +24,13 @@ import {
   TableBody,
   TableCell,
 } from "@/components/ui/table";
-import { Separator } from "@/components/ui/separator";
-
 import {
   Dialog,
   DialogContent,
   DialogDescription,
-  DialogFooter,
   DialogHeader,
   DialogTitle,
-  DialogTrigger,
 } from "@/components/ui/dialog";
-import Image from "next/image";
-import { carouselCards } from "@/constants";
 
 type PrintCardsInfo = Card & {
   transactionId: string | null;
@@ -78,8 +75,6 @@ const PrintCardsTable = ({ cardsData }: { cardsData: PrintCardsInfo[] }) => {
 
     setFilteredCards(filtered);
   }, [cardsData, statusFilter, searchFilter]);
-
-  console.log(filteredCards);
 
   return (
     <div className="container mx-auto py-8 px-4">
@@ -228,11 +223,6 @@ const PrintCardsTable = ({ cardsData }: { cardsData: PrintCardsInfo[] }) => {
               <div className="flex justify-between">
                 <span className="font-medium">Name:</span>
                 <span>{card?.title}</span>
-              </div>
-
-              <div className="flex justify-between">
-                {/* <span className="font-medium">Quantity:</span>
-          <span>{card?.quantity}</span> */}
               </div>
 
               <div className="flex justify-between">

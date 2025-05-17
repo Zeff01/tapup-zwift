@@ -159,7 +159,7 @@ export default function DeliveryForm({
       cardIndex += quantity;
 
       return {
-        id: item.id,
+        id: ids, // changed to ids instead of item.id
         name: item.name,
         quantity,
       };

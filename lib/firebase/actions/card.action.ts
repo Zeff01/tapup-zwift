@@ -97,10 +97,9 @@ export const getAllCards = async ({ role }: { role: string }) => {
     if (!user) throw new Error("No Auth User");
 
     const cardCollection = collection(firebaseDb, "cards");
+    const transacCollection = collection(firebaseDb, "transactions");
 
     const q = query(cardCollection, orderBy("createdAt", "desc"));
-
-    const transacCollection = collection(firebaseDb, "transactions");
 
     const [cardSnap, transacSnap] = await Promise.all([
       getDocs(q),
@@ -124,7 +123,7 @@ export const getAllCards = async ({ role }: { role: string }) => {
       const cardId = cardDoc.id;
 
       const matchingTransaction = transactions.find((t) =>
-        t.cards.some((c) => c.id === cardId)
+        t.cards.some((c) => c.id.includes(cardId))
       );
 
       return {
