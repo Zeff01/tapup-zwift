@@ -380,7 +380,7 @@ export type TransactionType = {
     customerAddress: string;
   };
   cards: {
-    id: string;
+    id: string[]; // changed to array of strings
     name: string;
     quantity: number;
   }[];
