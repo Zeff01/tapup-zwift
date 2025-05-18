@@ -613,6 +613,31 @@ export const toggleCardDisabled = async (cardId: string) => {
   }
 };
 
+export const updateSingleCardPrintStatus = async(cardId: string) => {
+  try {
+    if (!cardId) throw new Error("Parameters Missing");
+
+    const cardRef = doc(firebaseDb, "cards", cardId);
+    const cardSnap = await getDoc(cardRef);
+
+    if (!cardSnap.exists()) {
+      throw new Error("Card not found");
+    }
+    // TODO make sure that this card is belong to the right owner
+    const card = cardSnap.data() as Card;
+
+    console.log("CARD PRINT=>", card)
+    await updateDoc(cardRef, {
+      printStatus: !card.printStatus,
+    });
+
+    revalidatePath("/admin/print-cards");
+    console.log("Updating Card Print Status with ID: ", cardId);
+  } catch(error) {
+    console.error("Error Updating Card Print Status", error);
+  }
+}
+
 const resetCardFields = () => ({
   coverPhotoUrl: "",
   profilePictureUrl: "",

@@ -31,6 +31,7 @@ import {
   DialogHeader,
   DialogTitle,
 } from "@/components/ui/dialog";
+import { updateSingleCardPrintStatus } from "@/lib/firebase/actions/card.action";
 
 type PrintCardsInfo = Card & {
   transactionId: string | null;
@@ -49,6 +50,8 @@ const PrintCardsTable = ({ cardsData }: { cardsData: PrintCardsInfo[] }) => {
 
   const [cardId, setCardId] = useState<string | null>(null);
 
+  const [printBtnDisable, setPrintBtnDisable] = useState(false);
+
   const card = Object.values(carouselCards).find(
     (card) => card.title === selectedCard
   );
@@ -61,8 +64,8 @@ const PrintCardsTable = ({ cardsData }: { cardsData: PrintCardsInfo[] }) => {
         (card) =>
           card.customerName
             ?.toLowerCase()
-            .includes(searchFilter.toLowerCase()) ||
-          card.transactionId?.toLowerCase().includes(searchFilter.toLowerCase())
+            .includes(searchFilter.trim().toLowerCase()) ||
+          card.transactionId?.toLowerCase().includes(searchFilter.trim().toLowerCase())
       );
     }
 
@@ -233,7 +236,13 @@ const PrintCardsTable = ({ cardsData }: { cardsData: PrintCardsInfo[] }) => {
               <Separator />
 
               <div className="flex justify-between ">
-                <Button className="bg-buttonColor mt-3 text-white w-full">
+                <Button 
+                  disabled={printBtnDisable}
+                  onClick={()=> {
+                    updateSingleCardPrintStatus(cardId || "");
+                    setPrintBtnDisable(true);
+                  }}
+                  className="bg-buttonColor mt-3 text-white w-full">
                   Print Card
                 </Button>
               </div>
