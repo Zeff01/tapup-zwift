@@ -1,6 +1,6 @@
 "use client";
 
-import Pagination from "./Pagination";
+import PrintCardPagination from "./Pagination";
 import PreviewDialog from "./PreviewDialog";
 import { useEffect, useState } from "react";
 import { Search, Filter, Printer } from "lucide-react";
@@ -38,16 +38,16 @@ const PrintCardsTable = ({ cardsData }: { cardsData: PrintCardsInfo[] }) => {
   const [selectedCard, setSelectedCard] = useState<string | null>(null);
   const [cardId, setCardId] = useState<string | null>(null);
   const [currentPage, setCurrentPage] = useState(1);
-  const cardsPerpage = 15;
-
-  const card = Object.values(carouselCards).find(
-    (card) => card.title === selectedCard
-  );
+  const cardsPerpage = 10;
 
   const indexOfLastCard = currentPage * cardsPerpage;
   const indefOfFirstCard = indexOfLastCard - cardsPerpage;
   const currentCards = filteredCards.slice(indefOfFirstCard, indexOfLastCard);
   const totalPages = Math.ceil(filteredCards.length / cardsPerpage);
+
+  const card = Object.values(carouselCards).find(
+    (card) => card.title === selectedCard
+  );
 
   useEffect(() => {
     let filtered = [...cardsData];
@@ -57,8 +57,10 @@ const PrintCardsTable = ({ cardsData }: { cardsData: PrintCardsInfo[] }) => {
         (card) =>
           card.customerName
             ?.toLowerCase()
-            .includes(searchFilter.toLowerCase()) ||
-          card.transactionId?.toLowerCase().includes(searchFilter.toLowerCase())
+            .includes(searchFilter.trim().toLowerCase()) ||
+          card.transactionId
+            ?.toLowerCase()
+            .includes(searchFilter.trim().toLowerCase())
       );
     }
 
@@ -172,14 +174,6 @@ const PrintCardsTable = ({ cardsData }: { cardsData: PrintCardsInfo[] }) => {
         </div>
       )}
 
-      {filteredCards.length > currentPage && (
-        <Pagination
-          currentPage={currentPage}
-          totalPages={totalPages}
-          setCurrentPage={setCurrentPage}
-        />
-      )}
-
       {/* card preview dialog */}
       {selectedCard && (
         <PreviewDialog
@@ -187,6 +181,14 @@ const PrintCardsTable = ({ cardsData }: { cardsData: PrintCardsInfo[] }) => {
           setSelectedCard={setSelectedCard}
           card={card}
           cardId={cardId}
+        />
+      )}
+
+      {filteredCards.length > cardsPerpage && (
+        <PrintCardPagination
+          currentPage={currentPage}
+          totalPages={totalPages}
+          setCurrentPage={setCurrentPage}
         />
       )}
     </div>

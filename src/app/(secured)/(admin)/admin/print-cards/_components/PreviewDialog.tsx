@@ -1,3 +1,5 @@
+"use client";
+
 import {
   Dialog,
   DialogContent,
@@ -8,6 +10,8 @@ import {
 import { Separator } from "@/components/ui/separator";
 import { Button } from "@/components/ui/button";
 import { CardItem } from "@/types/types";
+import { updateSingleCardPrintStatus } from "@/lib/firebase/actions/card.action";
+import { useState } from "react";
 import Image from "next/image";
 
 interface PreviewDialogProps {
@@ -23,6 +27,20 @@ const PreviewDialog = ({
   card,
   cardId,
 }: PreviewDialogProps) => {
+  const [printBtnDisable, setPrintBtnDisable] = useState(false);
+
+  const handlePrint = async () => {
+    setPrintBtnDisable(true);
+
+    try {
+      await updateSingleCardPrintStatus(cardId || "");
+    } catch (error) {
+      console.error("Failed to update print status", error);
+    } finally {
+      setPrintBtnDisable(false);
+    }
+  };
+
   return (
     <Dialog
       open={!!selectedCard}
@@ -79,7 +97,11 @@ const PreviewDialog = ({
           <Separator />
 
           <div className="flex justify-between ">
-            <Button className="bg-buttonColor mt-3 text-white w-full">
+            <Button
+              onClick={handlePrint}
+              disabled={printBtnDisable}
+              className="bg-buttonColor mt-3 text-white w-full"
+            >
               Print Card
             </Button>
           </div>
