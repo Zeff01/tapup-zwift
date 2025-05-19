@@ -1,7 +1,7 @@
 "use client";
 
 import Image from "next/image";
-import { useEffect, useState } from "react";
+import { useEffect, useState, ReactNode } from "react";
 import { Search, Filter, Printer } from "lucide-react";
 import { Card } from "@/types/types";
 import { Input } from "@/components/ui/input";
@@ -31,6 +31,15 @@ import {
   DialogHeader,
   DialogTitle,
 } from "@/components/ui/dialog";
+import {
+  Pagination,
+  PaginationContent,
+  PaginationEllipsis,
+  PaginationItem,
+  PaginationLink,
+  PaginationNext,
+  PaginationPrevious,
+} from "@/components/ui/pagination";
 import { updateSingleCardPrintStatus } from "@/lib/firebase/actions/card.action";
 
 type PrintCardsInfo = Card & {
@@ -39,6 +48,10 @@ type PrintCardsInfo = Card & {
 };
 
 const PrintCardsTable = ({ cardsData }: { cardsData: PrintCardsInfo[] }) => {
+  const enablePagination: boolean = true;
+  const perPage: number = 10; // content per page
+  const paginateItemCount: number = 3; //number of paginate button
+
   const [filteredCards, setFilteredCards] =
     useState<PrintCardsInfo[]>(cardsData);
 
@@ -52,9 +65,70 @@ const PrintCardsTable = ({ cardsData }: { cardsData: PrintCardsInfo[] }) => {
 
   const [printBtnDisable, setPrintBtnDisable] = useState(false);
 
+  const [previous, setPrevious] = useState<number>(0);
+
+  const [next, setNext] = useState<number>(paginateItemCount);
+
+  const [start, setStart] = useState<number>(0);
+
+  const [end, setEnd] = useState<number>(perPage);
+
+  const [paginateItemNum, setPaginateItemNum] = useState<ReactNode[]>([]);
+
+  const [activePage, setActivePage] = useState<number>(1);
+
   const card = Object.values(carouselCards).find(
     (card) => card.title === selectedCard
   );
+
+  function onCLickPageNum(pageNum: number) {
+    setActivePage(pageNum);
+    setStart((pageNum - 1) * perPage);
+    setEnd(pageNum * perPage);
+  }
+
+  function nextFn() {
+    const len = cardsData.length;
+    let total = next + paginateItemCount;
+
+    // const max = Math.ceil(total/perPage) * perPage;
+    while (total * perPage > len) total--;
+
+    setPrevious(next);
+    setNext(total);
+    onCLickPageNum(next + 1);
+  }
+
+  function previousFn() {
+    let total = previous - paginateItemCount;
+
+    if (total <= 0) {
+      total = 0;
+    }
+
+    setPrevious(total);
+    setNext(previous || 3);
+    onCLickPageNum(total || 1);
+  }
+
+  function addPaginateBtnItem() {
+    const items: ReactNode[] = [];
+    for (let i = previous; i < next; i++) {
+      const pageNum = i + 1;
+      items.push(
+        <PaginationItem key={i}>
+          <PaginationLink
+            onClick={() => onCLickPageNum(pageNum)}
+            className={pageNum === activePage ? "bg-blue-500 text-white" : ""}
+          >
+            {pageNum}
+          </PaginationLink>
+        </PaginationItem>
+      );
+    }
+
+    setPaginateItemNum(items);
+  }
 
   useEffect(() => {
     let filtered = [...cardsData];
@@ -65,7 +139,9 @@ const PrintCardsTable = ({ cardsData }: { cardsData: PrintCardsInfo[] }) => {
           card.customerName
             ?.toLowerCase()
             .includes(searchFilter.trim().toLowerCase()) ||
-          card.transactionId?.toLowerCase().includes(searchFilter.trim().toLowerCase())
+          card.transactionId
+            ?.toLowerCase()
+            .includes(searchFilter.trim().toLowerCase())
       );
     }
 
@@ -76,8 +152,14 @@ const PrintCardsTable = ({ cardsData }: { cardsData: PrintCardsInfo[] }) => {
       });
     }
 
-    setFilteredCards(filtered);
-  }, [cardsData, statusFilter, searchFilter]);
+    let filteredData = filtered;
+    if (enablePagination) {
+      addPaginateBtnItem();
+      filteredData = filtered.slice(start, end);
+    }
+
+    setFilteredCards(filteredData);
+  }, [cardsData, statusFilter, searchFilter, start, end, previous, next]);
 
   return (
     <div className="container mx-auto py-8 px-4">
@@ -236,19 +318,42 @@ const PrintCardsTable = ({ cardsData }: { cardsData: PrintCardsInfo[] }) => {
               <Separator />
 
               <div className="flex justify-between ">
-                <Button 
+                <Button
                   disabled={printBtnDisable}
-                  onClick={()=> {
+                  onClick={() => {
                     updateSingleCardPrintStatus(cardId || "");
                     setPrintBtnDisable(true);
                   }}
-                  className="bg-buttonColor mt-3 text-white w-full">
+                  className="bg-buttonColor mt-3 text-white w-full"
+                >
                   Print Card
                 </Button>
               </div>
             </div>
           </DialogContent>
         </Dialog>
+      )}
+
+      {enablePagination && (
+        <Pagination className="mt-2">
+          <PaginationContent>
+            <PaginationItem>
+              <PaginationPrevious
+                onClick={() => {
+                  previousFn();
+                }}
+              />
+            </PaginationItem>
+            {paginateItemNum}
+            <PaginationItem>
+              <PaginationNext
+                onClick={() => {
+                  nextFn();
+                }}
+              />
+            </PaginationItem>
+          </PaginationContent>
+        </Pagination>
       )}
     </div>
   );
