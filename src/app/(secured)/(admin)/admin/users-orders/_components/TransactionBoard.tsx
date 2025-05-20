@@ -300,7 +300,7 @@ export default function TransactionDashboard({
                                         transaction.status
                                       )
                                     }
-                                    className="bg-greenColor text-white hover:bg-greenTitle"
+                                    className="bg-greenColor text-white hover:bg-greenTitle mt-4"
                                   >
                                     Save changes
                                   </Button>
@@ -373,7 +373,7 @@ export default function TransactionDashboard({
                         <h3 className="text-sm font-medium text-gray-500">
                           Customer ID
                         </h3>
-                        <p className="truncate">
+                        <p className="text-balance">
                           {transaction.receiver.customerId}
                         </p>
                       </div>
@@ -381,7 +381,7 @@ export default function TransactionDashboard({
                         <h3 className="text-sm font-medium text-gray-500">
                           Email
                         </h3>
-                        <p className="truncate">
+                        <p className="text-balance">
                           {transaction.receiver.customerEmail}
                         </p>
                       </div>
@@ -437,8 +437,8 @@ export default function TransactionDashboard({
                 Card ID: {selectedTransaction.cards[selectedCardIndex].id}
               </DialogDescription>
             </DialogHeader>
-            <div className="flex flex-col items-center py-4">
-              <div className="relative w-full h-80 mb-4">
+            <div className="flex flex-col items-center sm:py-4">
+              <div className="relative w-full h-80 sm:mb-4">
                 <Image
                   src={
                     Object.values(carouselCards).filter(
@@ -453,7 +453,7 @@ export default function TransactionDashboard({
                   className="object-contain rounded-md"
                 />
               </div>
-              <div className="flex gap-2 overflow-x-auto w-full py-2">
+              <div className="flex sm:gap-2 overflow-x-auto w-full pb-4 sm:py-2">
                 {selectedTransaction.cards.map((card, index) => {
                   const cardImage = Object.values(carouselCards).filter(
                     (item) => item.title === card.name
@@ -482,7 +482,7 @@ export default function TransactionDashboard({
                 })}
               </div>
             </div>
-            <div className="space-y-2">
+            <div className="space-y-2 text-sm sm:text-base">
               <div className="flex justify-between">
                 <span className="font-medium">Name:</span>
                 <span>{selectedTransaction.cards[selectedCardIndex].name}</span>
@@ -495,7 +495,7 @@ export default function TransactionDashboard({
               </div>
               <Separator />
               <div className="flex justify-between">
-                <span className="font-medium">Transaction:</span>
+                <span className="font-medium">Transaction ID:</span>
                 <span>{selectedTransaction.id}</span>
               </div>
             </div>
