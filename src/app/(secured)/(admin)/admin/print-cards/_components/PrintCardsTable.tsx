@@ -35,6 +35,7 @@ const PrintCardsTable = ({ cardsData }: { cardsData: PrintCardsInfo[] }) => {
     useState<PrintCardsInfo[]>(cardsData);
   const [statusFilter, setStatusFilter] = useState<string>("all");
   const [searchFilter, setSearchFilter] = useState("");
+  const [timeAscFilter, setTimeAscFilter] = useState<string>("desc");
   const [selectedCard, setSelectedCard] = useState<string | null>(null);
   const [cardId, setCardId] = useState<string | null>(null);
   const [currentPage, setCurrentPage] = useState(1);
@@ -71,8 +72,19 @@ const PrintCardsTable = ({ cardsData }: { cardsData: PrintCardsInfo[] }) => {
       });
     }
 
+    filtered.sort((a, b) => {
+      const aTime = (a.createdAt.seconds * 1e3) + (a.createdAt.nanoseconds / 1e6);
+      const bTime = (b.createdAt.seconds * 1e3) + (b.createdAt.nanoseconds / 1e6);
+
+      return aTime - bTime;
+    })
+
+    if (timeAscFilter === "desc") {
+      filtered.reverse();
+    }
+    
     setFilteredCards(filtered);
-  }, [cardsData, statusFilter, searchFilter]);
+  }, [cardsData, statusFilter, searchFilter, timeAscFilter]);
 
   return (
     <div className="container mx-auto py-8 px-4">
@@ -102,6 +114,15 @@ const PrintCardsTable = ({ cardsData }: { cardsData: PrintCardsInfo[] }) => {
               <SelectItem value="notPrinted">Not Printed</SelectItem>
             </SelectContent>
           </Select>
+          <Select value={timeAscFilter} onValueChange={setTimeAscFilter}>
+            <SelectTrigger className="w-[180px]">
+              <SelectValue placeholder="Filter by status" />
+            </SelectTrigger>
+            <SelectContent>
+              <SelectItem value="asc">Ascending</SelectItem>
+              <SelectItem value="desc">Descending</SelectItem>
+            </SelectContent>
+          </Select>
         </div>
       </div>
 
@@ -129,7 +150,7 @@ const PrintCardsTable = ({ cardsData }: { cardsData: PrintCardsInfo[] }) => {
                     ? new Date(
                         card.createdAt.seconds * 1000 +
                           card.createdAt.nanoseconds / 1000000
-                      ).toLocaleDateString("en-US")
+                      ).toLocaleString("en-US")
                     : "Invalid Date"}
                 </TableCell>
                 <TableCell>
