@@ -656,9 +656,10 @@ export const updateTransactionPerId = async ({
     const transactionRef = doc(firebaseDb, "transactions", transaction_id);
     await updateDoc(transactionRef, { status: data });
 
-    return { success: true, message: "Transaction Deleted" };
+    console.log("Transaction status updated :", data);
+    return { success: true, message: "Transaction updated" };
   } catch (error) {
     console.error(error);
-    return false;
+    return { success: false, message: "Error updating transaction" };
   }
 };
