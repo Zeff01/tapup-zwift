@@ -44,7 +44,7 @@ const TapUpCarousel = ({ viewCard, onChange }: Params) => {
 
   //match the carousel card based on the title in params
   React.useEffect(() => {
-    if (!api || !title) return;
+    if (!api || title == null) return;
 
     const titleIndex = Object.values(carouselCards).findIndex(
       (card) => card.title === title
@@ -58,82 +58,42 @@ const TapUpCarousel = ({ viewCard, onChange }: Params) => {
   }, [title, api]);
 
   React.useEffect(() => {
-    if (!api) {
-      return;
-    }
-    if (media) {
-      setCurrent(api.selectedScrollSnap() + 2);
-      if (onChange) {
-        onChange(
-          carouselCards[
-            `card${api.selectedScrollSnap() + 2}` as CarouselCardKey
-          ]?.title
-        );
+    if (!api) return;
+
+    const handleSelect = () => {
+      const selectedIndex = api.selectedScrollSnap();
+
+      const newCurrent = media ? selectedIndex + 1 : selectedIndex + 2;
+
+      const selectedCard =
+        carouselCards[`card${newCurrent}` as CarouselCardKey];
+
+      //only update when title is change
+      if (selectedCard?.title !== title) {
+        setCurrent(newCurrent);
+        onChange?.(selectedCard?.title);
       }
-    } else {
-      setCurrent(() => {
-        if (api.selectedScrollSnap() === api.scrollSnapList().length - 1) {
-          if (onChange) {
-            onChange(carouselCards[`card${1}` as CarouselCardKey]?.title);
-          }
-          return 1;
-        }
-        if (onChange) {
-          onChange(
-            carouselCards[
-              `card${api.selectedScrollSnap() + 2}` as CarouselCardKey
-            ]?.title
-          );
-        }
-        return api.selectedScrollSnap() + 2;
-      });
-    }
-    api.on("select", () => {
-      if (media) {
-        setCurrent(api.selectedScrollSnap() + 1);
-        if (onChange) {
-          onChange(
-            carouselCards[
-              `card${api.selectedScrollSnap() + 1}` as CarouselCardKey
-            ]?.title
-          );
-        }
-        return;
-      }
-      setCurrent(() => {
-        if (api.selectedScrollSnap() === api.scrollSnapList().length - 1) {
-          if (onChange) {
-            onChange(carouselCards[`card${1}` as CarouselCardKey]?.title);
-          }
-          return 1;
-        }
-        if (onChange) {
-          onChange(
-            carouselCards[
-              `card${api.selectedScrollSnap() + 2}` as CarouselCardKey
-            ]?.title
-          );
-        }
-        return api.selectedScrollSnap() + 2;
-      });
-    });
-  }, [api, media]);
+    };
+
+    api.on("select", handleSelect);
+
+    //clean up
+    return () => {
+      api.off("select", handleSelect);
+    };
+  }, [api, media, onChange, title]);
 
   const onCardClick = (title: string, index: number) => {
     if (!api) return;
 
     // possible current card already selected
-
     if (current - index == 1) return;
-
 
     if (onChange) {
       onChange(title);
       api.scrollTo(index - 1);
     }
-
   };
-
 
   return (
     <section className="py-16" id="cardSelection">
@@ -162,9 +122,7 @@ const TapUpCarousel = ({ viewCard, onChange }: Params) => {
             {Object.values(carouselCards).map((item, index) => (
               <CarouselItem
                 key={index}
-
                 onClick={() => onCardClick(item.title, index)}
-
                 className={cn(
                   "md:basis-1/2 lg:basis-1/3 flex items-center justify-center rounded-md"
                   // {
