@@ -123,7 +123,7 @@ export const getAllCards = async ({ role }: { role: string }) => {
       const cardId = cardDoc.id;
 
       const matchingTransaction = transactions.find((t) =>
-        t.cards.some((c) => c.id.includes(cardId))
+        t.cards.some((c) => c.id === cardId)
       );
 
       return {
@@ -613,8 +613,18 @@ export const toggleCardDisabled = async (cardId: string) => {
   }
 };
 
-export const updateSingleCardPrintStatus = async(cardId: string) => {
+export const updateSingleCardPrintStatus = async ({
+  role,
+  cardId,
+}: {
+  role: string;
+  cardId: string;
+}) => {
   try {
+    if (!role || role !== "admin") {
+      throw new Error("This is an Admin Only Request");
+    }
+
     if (!cardId) throw new Error("Parameters Missing");
 
     const cardRef = doc(firebaseDb, "cards", cardId);
@@ -626,17 +636,17 @@ export const updateSingleCardPrintStatus = async(cardId: string) => {
     // TODO make sure that this card is belong to the right owner
     const card = cardSnap.data() as Card;
 
-    console.log("CARD PRINT=>", card)
     await updateDoc(cardRef, {
       printStatus: !card.printStatus,
     });
 
     revalidatePath("/admin/print-cards");
-    console.log("Updating Card Print Status with ID: ", cardId);
-  } catch(error) {
+    return { success: true, message: "Card status updated" };
+  } catch (error) {
     console.error("Error Updating Card Print Status", error);
+    return { success: false, message: "Error updating card print status" };
   }
-}
+};
 
 const resetCardFields = () => ({
   coverPhotoUrl: "",
