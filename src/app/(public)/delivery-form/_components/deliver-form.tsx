@@ -78,7 +78,6 @@ export default function DeliveryForm({
   subscriptionPlan: SubscriptionPlan;
 }) {
   const { items: cardItems, clearCart } = useCart();
-
   const [open, setOpen] = useState(false);
   const [selectedCountryCode, setSelectedCountryCode] = useState<string | null>(
     null
@@ -135,7 +134,6 @@ export default function DeliveryForm({
     const cardTotal = () =>
       cardItems.reduce((acc, item) => acc + item.quantity, 0) *
       subscriptionPlan.price;
-
     const addCardPromises = cardItems.flatMap((item) => {
       return Array.from({ length: item.quantity }, () =>
         addCard({ id: item.id, name: item.name })
@@ -151,23 +149,19 @@ export default function DeliveryForm({
       cardTotal()
     );
 
-    let cardIndex = 0;
-
-    const groupedCards = cardItems.map((item) => {
-      const quantity = item.quantity;
-      const ids = cardResults.slice(cardIndex, cardIndex + quantity);
-      cardIndex += quantity;
-
-      return {
-        id: ids, // changed to ids instead of item.id
+    const newCards = cardItems.flatMap((item) => {
+      return Array.from({ length: item.quantity }, () => ({
+        id: item.id,
         name: item.name,
-        quantity,
-      };
+      }));
     });
 
     const transactionData: TransactionType = {
       amount: cardTotal(),
-      cards: groupedCards,
+      cards: cardResults.map((cardIds, i) => ({
+        id: cardIds,
+        name: newCards[i].name,
+      })),
       receiver: {
         customerId: recurringPlan.customer.id,
         customerName: values.firstName + " " + values.lastName,
