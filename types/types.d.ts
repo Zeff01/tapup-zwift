@@ -380,9 +380,8 @@ export type TransactionType = {
     customerAddress: string;
   };
   cards: {
-    id: string[]; // changed to array of strings
+    id: string;
     name: string;
-    quantity: number;
   }[];
   amount: number;
   status: "pending" | "completed" | "failed";
