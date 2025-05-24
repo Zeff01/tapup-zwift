@@ -132,6 +132,7 @@ const TapUpCarousel = ({ viewCard, onChange }: Params) => {
       api.scrollTo(index - 1);
     }
 
+
   };
 
 
@@ -165,6 +166,7 @@ const TapUpCarousel = ({ viewCard, onChange }: Params) => {
 
                 onClick={() => onCardClick(item.title, index)}
 
+                
                 className={cn(
                   "md:basis-1/2 lg:basis-1/3 flex items-center justify-center rounded-md"
                   // {
