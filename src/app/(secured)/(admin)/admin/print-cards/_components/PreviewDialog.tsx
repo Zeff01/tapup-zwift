@@ -6,12 +6,15 @@ import {
   DialogDescription,
   DialogHeader,
   DialogTitle,
+  DialogFooter,
 } from "@/components/ui/dialog";
 import { Separator } from "@/components/ui/separator";
 import { Button } from "@/components/ui/button";
 import { CardItem } from "@/types/types";
 import { updateSingleCardPrintStatus } from "@/lib/firebase/actions/card.action";
 import { useState } from "react";
+import { useUserContext } from "@/providers/user-provider";
+import { toast } from "react-toastify";
 import Image from "next/image";
 
 interface PreviewDialogProps {
@@ -28,12 +31,20 @@ const PreviewDialog = ({
   cardId,
 }: PreviewDialogProps) => {
   const [printBtnDisable, setPrintBtnDisable] = useState(false);
+  const { user } = useUserContext();
 
   const handlePrint = async () => {
     setPrintBtnDisable(true);
 
     try {
-      await updateSingleCardPrintStatus(cardId || "");
+      const result = await updateSingleCardPrintStatus({
+        role: user?.role!,
+        cardId: cardId || "",
+      });
+
+      if (!result.success) return toast.error(result.message);
+      toast.success(result.message);
+      setSelectedCard(null);
     } catch (error) {
       console.error("Failed to update print status", error);
     } finally {
@@ -96,15 +107,15 @@ const PreviewDialog = ({
 
           <Separator />
 
-          <div className="flex justify-between ">
+          <DialogFooter>
             <Button
               onClick={handlePrint}
               disabled={printBtnDisable}
-              className="bg-buttonColor mt-3 text-white w-full"
+              className="bg-greenColor text-white hover:bg-greenTitle mt-3 w-full"
             >
               Print Card
             </Button>
-          </div>
+          </DialogFooter>
         </div>
       </DialogContent>
     </Dialog>
