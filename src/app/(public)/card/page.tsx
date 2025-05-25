@@ -20,7 +20,6 @@ const TapUpCarousel = dynamic(
 );
 
 const CardPurchasePreviewPage = () => {
-  
   const searchParams = useSearchParams();
   const router = useRouter();
   const queryParamsTitle = searchParams.get("title");
