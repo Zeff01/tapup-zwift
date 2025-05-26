@@ -38,15 +38,9 @@ const Hero = () => {
           className="object-contain"
         />
       </div> */}
-      <motion.div
+      <div
         className="md:w-[45rem] flex-shrink-0 lg:flex-shrink sm:w-[35rem] w-[22rem] aspect-square relative m-auto"
-        animate={{ rotate: 360 }}
-        transition={{
-          repeat: Infinity,
-          repeatType: "loop",
-          ease: "linear",
-          duration: 10, // 10 seconds for a full rotation
-        }}
+        
       >
         <Image
           src={tapupImg}
@@ -55,7 +49,7 @@ const Hero = () => {
           fill
           className="object-contain"
         />
-      </motion.div>
+      </div>
     </section>
   );
 };
