@@ -11,7 +11,6 @@ import { useRouter, useSearchParams } from "next/navigation";
 import React, { useState } from "react";
 import { BiSolidPurchaseTag } from "react-icons/bi";
 
-
 //prevent mismatch during the first render
 const TapUpCarousel = dynamic(
   () => import("../../../../components/landing/carouselCard"),
