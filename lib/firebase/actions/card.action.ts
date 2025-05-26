@@ -7,6 +7,7 @@ import {
   getDoc,
   getDocs,
   limit,
+  orderBy,
   query,
   serverTimestamp,
   setDoc,
@@ -16,7 +17,7 @@ import {
 } from "firebase/firestore";
 import { firebaseDb } from "../firebase";
 import { toast } from "react-toastify";
-import { Card } from "@/types/types";
+import { Card, TransactionBoard } from "@/types/types";
 import { revalidatePath } from "../../revalidate";
 import { authCurrentUser } from "../auth";
 import { differenceInDays } from "date-fns";
@@ -82,6 +83,60 @@ export const duplicateCard = async ({
     }
   } catch (error) {
     console.log(error);
+    throw error;
+  }
+};
+
+export const getAllCards = async ({ role }: { role: string }) => {
+  try {
+    if (!role || role !== "admin") {
+      throw new Error("This is an Admin Only Request");
+    }
+
+    const user = await authCurrentUser();
+    if (!user) throw new Error("No Auth User");
+
+    const cardCollection = collection(firebaseDb, "cards");
+    const transacCollection = collection(firebaseDb, "transactions");
+
+    const q = query(cardCollection, orderBy("createdAt", "desc"));
+
+    const [cardSnap, transacSnap] = await Promise.all([
+      getDocs(q),
+      getDocs(transacCollection),
+    ]);
+
+    if (cardSnap.empty) {
+      return [];
+    }
+
+    const transactions = transacSnap.docs.map((doc) => {
+      const data = doc.data() as TransactionBoard;
+
+      return {
+        ...data,
+        id: doc.id,
+      };
+    });
+
+    const cards = cardSnap.docs.map((cardDoc) => {
+      const cardId = cardDoc.id;
+
+      const matchingTransaction = transactions.find((t) =>
+        t.cards.some((c) => c.id === cardId)
+      );
+
+      return {
+        id: cardId,
+        ...(cardDoc.data() as Omit<Card, "id">),
+        transactionId: matchingTransaction?.id ?? null,
+        customerName: matchingTransaction?.receiver.customerName ?? null,
+      };
+    });
+
+    return cards;
+  } catch (error) {
+    console.error(error);
     throw error;
   }
 };
@@ -555,6 +610,41 @@ export const toggleCardDisabled = async (cardId: string) => {
       success: false,
       message: error instanceof Error ? error.message : "Unknown error",
     };
+  }
+};
+
+export const updateSingleCardPrintStatus = async ({
+  role,
+  cardId,
+}: {
+  role: string;
+  cardId: string;
+}) => {
+  try {
+    if (!role || role !== "admin") {
+      throw new Error("This is an Admin Only Request");
+    }
+
+    if (!cardId) throw new Error("Parameters Missing");
+
+    const cardRef = doc(firebaseDb, "cards", cardId);
+    const cardSnap = await getDoc(cardRef);
+
+    if (!cardSnap.exists()) {
+      throw new Error("Card not found");
+    }
+    // TODO make sure that this card is belong to the right owner
+    const card = cardSnap.data() as Card;
+
+    await updateDoc(cardRef, {
+      printStatus: !card.printStatus,
+    });
+
+    revalidatePath("/admin/print-cards");
+    return { success: true, message: "Card status updated" };
+  } catch (error) {
+    console.error("Error Updating Card Print Status", error);
+    return { success: false, message: "Error updating card print status" };
   }
 };
 

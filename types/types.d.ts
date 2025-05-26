@@ -150,6 +150,7 @@ export interface Card extends Users {
     name?: string;
   };
   subscription_id?: string;
+  createdAt: Timestamp | FieldValue;
 }
 
 export interface CardItemTransactionBoard {
