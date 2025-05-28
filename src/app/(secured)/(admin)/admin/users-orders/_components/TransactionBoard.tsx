@@ -341,13 +341,10 @@ export default function TransactionDashboard({
                               <p className="text-sm text-gray-500 truncate">
                                 ID: {card.id}
                               </p>
-                              <p className="text-sm">
-                                Quantity: {card.quantity}
-                              </p>
                               <Button
                                 variant="outline"
                                 size="sm"
-                                className="mt-2 w-full sm:w-auto"
+                                className="mt-8 w-full sm:w-auto"
                                 onClick={() => {
                                   setSelectedTransaction(transaction);
                                   setSelectedCardIndex(index);
@@ -487,12 +484,6 @@ export default function TransactionDashboard({
               <div className="flex justify-between">
                 <span className="font-medium">Name:</span>
                 <span>{selectedTransaction.cards[selectedCardIndex].name}</span>
-              </div>
-              <div className="flex justify-between">
-                <span className="font-medium">Quantity:</span>
-                <span>
-                  {selectedTransaction.cards[selectedCardIndex].quantity}
-                </span>
               </div>
               <Separator />
               <div className="flex justify-between">
