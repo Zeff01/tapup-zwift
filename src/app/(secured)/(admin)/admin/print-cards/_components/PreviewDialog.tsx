@@ -10,10 +10,9 @@ import {
 } from "@/components/ui/dialog";
 import { Separator } from "@/components/ui/separator";
 import { Button } from "@/components/ui/button";
-import { CardItem } from "@/types/types";
+import { CardItem, UserState } from "@/types/types";
 import { updateSingleCardPrintStatus } from "@/lib/firebase/actions/card.action";
 import { useState } from "react";
-import { useUserContext } from "@/providers/user-provider";
 import { toast } from "react-toastify";
 import Image from "next/image";
 
@@ -22,6 +21,7 @@ interface PreviewDialogProps {
   setSelectedCard: (value: string | null) => void;
   card?: CardItem;
   cardId: string | null;
+  user: UserState;
 }
 
 const PreviewDialog = ({
@@ -29,9 +29,9 @@ const PreviewDialog = ({
   setSelectedCard,
   card,
   cardId,
+  user,
 }: PreviewDialogProps) => {
   const [printBtnDisable, setPrintBtnDisable] = useState(false);
-  const { user } = useUserContext();
 
   const handlePrint = async () => {
     setPrintBtnDisable(true);
