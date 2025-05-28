@@ -38,10 +38,7 @@ const Hero = () => {
           className="object-contain"
         />
       </div> */}
-      <div
-        className="md:w-[45rem] flex-shrink-0 lg:flex-shrink sm:w-[35rem] w-[22rem] aspect-square relative m-auto"
-        
-      >
+      <div className="md:w-[45rem] flex-shrink-0 lg:flex-shrink sm:w-[35rem] w-[22rem] aspect-square relative m-auto">
         <Image
           src={tapupImg}
           alt="tap up image"

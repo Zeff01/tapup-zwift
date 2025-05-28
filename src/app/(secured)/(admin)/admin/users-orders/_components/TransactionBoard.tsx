@@ -143,7 +143,10 @@ export default function TransactionDashboard({
           />
         </div>
         <div className="relative flex items-center gap-2 justify-end">
-          <Filter size={18} className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-500 md:relative md:left-0 md:top-0 md:translate-y-0" />
+          <Filter
+            size={18}
+            className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-500 md:relative md:left-0 md:top-0 md:translate-y-0"
+          />
           <Select value={statusFilter} onValueChange={setStatusFilter}>
             <SelectTrigger className="pl-10 w-full md:pl-3 md:w-[180px]">
               <SelectValue placeholder="Filter by status" />
@@ -176,12 +179,12 @@ export default function TransactionDashboard({
                     </CardTitle>
                     <CardDescription>
                       {transaction.createdAt &&
-                        typeof transaction.createdAt.seconds === "number" &&
-                        typeof transaction.createdAt.nanoseconds === "number"
+                      typeof transaction.createdAt.seconds === "number" &&
+                      typeof transaction.createdAt.nanoseconds === "number"
                         ? new Date(
-                          transaction.createdAt.seconds * 1000 +
-                          transaction.createdAt.nanoseconds / 1000000
-                        ).toLocaleString()
+                            transaction.createdAt.seconds * 1000 +
+                              transaction.createdAt.nanoseconds / 1000000
+                          ).toLocaleString()
                         : "Invalid Date"}
                     </CardDescription>
                   </div>
@@ -221,12 +224,12 @@ export default function TransactionDashboard({
                         </h3>
                         <p>
                           {transaction.createdAt &&
-                            typeof transaction.createdAt.seconds === "number" &&
-                            typeof transaction.createdAt.nanoseconds === "number"
+                          typeof transaction.createdAt.seconds === "number" &&
+                          typeof transaction.createdAt.nanoseconds === "number"
                             ? new Date(
-                              transaction.createdAt.seconds * 1000 +
-                              transaction.createdAt.nanoseconds / 1000000
-                            ).toLocaleString() // Changed to toLocaleString()
+                                transaction.createdAt.seconds * 1000 +
+                                  transaction.createdAt.nanoseconds / 1000000
+                              ).toLocaleString() // Changed to toLocaleString()
                             : "Invalid Date"}
                         </p>
                       </div>
@@ -235,13 +238,19 @@ export default function TransactionDashboard({
                           Status
                         </h3>
                         <div className="grid grid-cols-3 sm:flex items-center gap-4 sm:gap-2">
-                          <Badge className={`${getStatusColor(transaction.status)} text-center flex justify-center items-center sm:inline`}>
+                          <Badge
+                            className={`${getStatusColor(transaction.status)} text-center flex justify-center items-center sm:inline`}
+                          >
                             {transaction.status.charAt(0).toUpperCase() +
                               transaction.status.slice(1)}
                           </Badge>
                           <Dialog>
                             <DialogTrigger asChild>
-                              <Button variant="outline" size="sm" className="col-span-2">
+                              <Button
+                                variant="outline"
+                                size="sm"
+                                className="col-span-2"
+                              >
                                 <Edit2 size={14} className="mr-1" /> Update
                               </Button>
                             </DialogTrigger>
@@ -264,10 +273,10 @@ export default function TransactionDashboard({
                                       updateTransactionStatus(
                                         transaction.id,
                                         value as
-                                        | "pending"
-                                        | "completed"
-                                        | "cancelled"
-                                        | "processing"
+                                          | "pending"
+                                          | "completed"
+                                          | "cancelled"
+                                          | "processing"
                                       )
                                     }
                                   >
@@ -337,7 +346,9 @@ export default function TransactionDashboard({
                               />
                             </div>
                             <div className="flex-grow-0 sm:flex-1 min-w-0 w-full">
-                              <h3 className="font-medium truncate">{card.name}</h3>
+                              <h3 className="font-medium truncate">
+                                {card.name}
+                              </h3>
                               <p className="text-sm text-gray-500 truncate">
                                 ID: {card.id}
                               </p>
@@ -460,10 +471,11 @@ export default function TransactionDashboard({
                   return (
                     <button
                       key={card.id}
-                      className={`relative w-16 h-24 rounded-md overflow-hidden border-2 ${index === selectedCardIndex
+                      className={`relative w-16 h-24 rounded-md overflow-hidden border-2 ${
+                        index === selectedCardIndex
                           ? "border-primary"
                           : "border-transparent"
-                        }`}
+                      }`}
                       onClick={() => setSelectedCardIndex(index)}
                     >
                       <Image

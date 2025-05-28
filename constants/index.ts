@@ -15,9 +15,6 @@ import {
   Undo2,
   X,
   Users,
-  Mail,
-  BarChart,
-  LayoutList,
 } from "lucide-react";
 
 import { RxDashboard } from "react-icons/rx";

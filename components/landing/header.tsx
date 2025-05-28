@@ -1,7 +1,7 @@
 "use client";
 
 import dynamic from "next/dynamic";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import Link from "next/link";
 import { Button } from "../ui/button";
 import { RxHamburgerMenu } from "react-icons/rx";
@@ -26,16 +26,20 @@ const Header = () => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
 
   const handleMobileMenu = () => {
-    setIsMenuOpen(!isMenuOpen);
+    const newMenuState = !isMenuOpen;
+    setIsMenuOpen(newMenuState);
+    document.body.style.overflow = newMenuState ? "hidden" : "auto";
   };
 
   return (
-    <header className="flex sticky top-0 z-50 bg-background justify-between items-center md:px-10 shadow-xl p-4">
+    <header className="flex sticky top-0 z-50 bg-background justify-between items-center md:px-10 shadow-xl  p-4">
       <Link href="/" rel="preload">
-        <TapupLogo className="w-18 lg:w-28" />
+        <div className="aspect-[130/48] w-20 lg:w-28">
+          <TapupLogo />
+        </div>
       </Link>
 
-      <div className="flex items-center gap-4 lg:gap-8">
+      <div className="flex items-center gap-4  lg:gap-8">
         {/* Desktop Navigation */}
         <nav className="hidden lg:flex gap-6 text-xl">
           {headerItems.map((item, index) => (
@@ -85,10 +89,7 @@ const Header = () => {
         <ThemeToggle />
 
         {/* Mobile Menu Trigger */}
-        <div
-          className="lg:hidden cursor-pointer mr-4"
-          onClick={handleMobileMenu}
-        >
+        <div className="lg:hidden cursor-pointer" onClick={handleMobileMenu}>
           <RxHamburgerMenu size={20} />
         </div>
       </div>
@@ -113,7 +114,9 @@ const Header = () => {
         <div className="flex flex-col h-full">
           {/* Menu Header */}
           <div className="flex justify-between items-center p-4 border-b">
-            <TapupLogo className="w-18" />
+            <div className="aspect-[130/48] w-20 lg:w-28">
+              <TapupLogo />
+            </div>
             <button onClick={handleMobileMenu} className="text-2xl font-bold">
               &times;
             </button>
@@ -142,7 +145,10 @@ const Header = () => {
 
             {!user && !isLoadingUserContext && (
               <Link href="/login">
-                <Button className="hidden lg:flex text-lg text-white  bg-buttonColor hover:bg-hoverColor">
+                <Button
+                  onClick={handleMobileMenu}
+                  className="flex text-lg text-white  bg-buttonColor hover:bg-hoverColor"
+                >
                   Sign In
                 </Button>
               </Link>
