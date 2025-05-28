@@ -23,7 +23,7 @@ import {
 import { RxDashboard } from "react-icons/rx";
 import { TbCards } from "react-icons/tb";
 import { FiShoppingBag } from "react-icons/fi";
-import { IoCardSharp } from "react-icons/io5";
+import { IoCardOutline } from "react-icons/io5";
 
 export const ROOT_ROUTE = "/";
 export const LOGIN_ROUTE = "/login";
@@ -344,7 +344,7 @@ export const menuItems = [
 export const adminMenuItems = [
   { icon: Users, title: "Admin Dashboard", href: "/admin" },
   { icon: FiShoppingBag, title: "Orders", href: "/admin/users-orders" },
-  // { icon: IoCardSharp, title: "Print Cards", href: "/admin/print-cards" },
+  { icon: IoCardOutline, title: "Print Cards", href: "/admin/print-cards" },
   // { icon: Mail, title: "Mail", href: "/admin/mail" },
   // { icon: BarChart, title: "Insights", href: "/admin/insights" },
   // { icon: LayoutList, title: "Logs", href: "/admin/log" },

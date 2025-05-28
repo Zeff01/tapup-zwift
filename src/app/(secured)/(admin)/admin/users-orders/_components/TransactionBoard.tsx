@@ -22,6 +22,7 @@ import {
 } from "@/components/ui/select";
 import {
   Dialog,
+  DialogClose,
   DialogContent,
   DialogDescription,
   DialogFooter,
@@ -36,6 +37,7 @@ import { TransactionBoard } from "@/types/types";
 import { carouselCards } from "@/constants";
 import { useUserContext } from "@/providers/user-provider";
 import { updateTransactionPerId } from "@/lib/firebase/actions/user.action";
+import { toast } from "react-toastify";
 
 export default function TransactionDashboard({
   transactionsData,
@@ -91,6 +93,24 @@ export default function TransactionDashboard({
     setTransactions(updatedTransactions);
   };
 
+  const handleSaveChanges = async (
+    transactionID: string,
+    newStatus: string
+  ) => {
+    try {
+      const result = await updateTransactionPerId({
+        role: user?.role!,
+        transaction_id: transactionID,
+        data: newStatus,
+      });
+
+      if (!result.success) return toast.error(result.message);
+      toast.success(result.message);
+    } catch (error) {
+      console.log("Error updating transaction", error);
+    }
+  };
+
   const getStatusColor = (status: string) => {
     switch (status) {
       case "pending":
@@ -122,10 +142,13 @@ export default function TransactionDashboard({
             className="pl-10"
           />
         </div>
-        <div className="flex items-center gap-2">
-          <Filter size={18} className="text-gray-500" />
+        <div className="relative flex items-center gap-2 justify-end">
+          <Filter
+            size={18}
+            className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-500 md:relative md:left-0 md:top-0 md:translate-y-0"
+          />
           <Select value={statusFilter} onValueChange={setStatusFilter}>
-            <SelectTrigger className="w-[180px]">
+            <SelectTrigger className="pl-10 w-full md:pl-3 md:w-[180px]">
               <SelectValue placeholder="Filter by status" />
             </SelectTrigger>
             <SelectContent>
@@ -182,7 +205,7 @@ export default function TransactionDashboard({
                   </TabsList>
 
                   <TabsContent value="details" className="space-y-4">
-                    <div className="grid grid-cols-2 gap-4">
+                    <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                       <div>
                         <h3 className="text-sm font-medium text-gray-500">
                           Transaction ID
@@ -214,14 +237,20 @@ export default function TransactionDashboard({
                         <h3 className="text-sm font-medium text-gray-500">
                           Status
                         </h3>
-                        <div className="flex items-center gap-2">
-                          <Badge className={getStatusColor(transaction.status)}>
+                        <div className="grid grid-cols-3 sm:flex items-center gap-4 sm:gap-2">
+                          <Badge
+                            className={`${getStatusColor(transaction.status)} text-center flex justify-center items-center sm:inline`}
+                          >
                             {transaction.status.charAt(0).toUpperCase() +
                               transaction.status.slice(1)}
                           </Badge>
                           <Dialog>
                             <DialogTrigger asChild>
-                              <Button variant="outline" size="sm">
+                              <Button
+                                variant="outline"
+                                size="sm"
+                                className="col-span-2"
+                              >
                                 <Edit2 size={14} className="mr-1" /> Update
                               </Button>
                             </DialogTrigger>
@@ -272,12 +301,19 @@ export default function TransactionDashboard({
                                 </div>
                               </div>
                               <DialogFooter>
-                                <Button
-                                  // onClick={handleSaveChanges}
-                                  className="bg-greenColor text-white hover:bg-greenTitle"
-                                >
-                                  Save changes
-                                </Button>
+                                <DialogClose asChild>
+                                  <Button
+                                    onClick={() =>
+                                      handleSaveChanges(
+                                        transaction.id,
+                                        transaction.status
+                                      )
+                                    }
+                                    className="bg-greenColor text-white hover:bg-greenTitle mt-4"
+                                  >
+                                    Save changes
+                                  </Button>
+                                </DialogClose>
                               </DialogFooter>
                             </DialogContent>
                           </Dialog>
@@ -289,6 +325,7 @@ export default function TransactionDashboard({
                   <TabsContent value="cards">
                     <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                       {transaction.cards.map((card, index) => {
+                        // console.log("card here", card);
                         const cardImage = Object.values(carouselCards).filter(
                           (item) => item.title === card.name
                         )[0].image;
@@ -308,9 +345,11 @@ export default function TransactionDashboard({
                                 className="object-cover rounded-md"
                               />
                             </div>
-                            <div className="flex-1">
-                              <h3 className="font-medium">{card.name}</h3>
-                              <p className="text-sm text-gray-500">
+                            <div className="flex-grow-0 sm:flex-1 min-w-0 w-full">
+                              <h3 className="font-medium truncate">
+                                {card.name}
+                              </h3>
+                              <p className="text-sm text-gray-500 truncate">
                                 ID: {card.id}
                               </p>
                               <p className="text-sm">
@@ -319,7 +358,7 @@ export default function TransactionDashboard({
                               <Button
                                 variant="outline"
                                 size="sm"
-                                className="mt-2"
+                                className="mt-2 w-full sm:w-auto"
                                 onClick={() => {
                                   setSelectedTransaction(transaction);
                                   setSelectedCardIndex(index);
@@ -346,7 +385,7 @@ export default function TransactionDashboard({
                         <h3 className="text-sm font-medium text-gray-500">
                           Customer ID
                         </h3>
-                        <p className="truncate">
+                        <p className="text-balance">
                           {transaction.receiver.customerId}
                         </p>
                       </div>
@@ -354,7 +393,7 @@ export default function TransactionDashboard({
                         <h3 className="text-sm font-medium text-gray-500">
                           Email
                         </h3>
-                        <p className="truncate">
+                        <p className="text-balance">
                           {transaction.receiver.customerEmail}
                         </p>
                       </div>
@@ -410,8 +449,8 @@ export default function TransactionDashboard({
                 Card ID: {selectedTransaction.cards[selectedCardIndex].id}
               </DialogDescription>
             </DialogHeader>
-            <div className="flex flex-col items-center py-4">
-              <div className="relative w-full h-80 mb-4">
+            <div className="flex flex-col items-center sm:py-4">
+              <div className="relative w-full h-80 sm:mb-4">
                 <Image
                   src={
                     Object.values(carouselCards).filter(
@@ -426,7 +465,7 @@ export default function TransactionDashboard({
                   className="object-contain rounded-md"
                 />
               </div>
-              <div className="flex gap-2 overflow-x-auto w-full py-2">
+              <div className="flex sm:gap-2 overflow-x-auto w-full pb-4 sm:py-2">
                 {selectedTransaction.cards.map((card, index) => {
                   const cardImage = Object.values(carouselCards).filter(
                     (item) => item.title === card.name
@@ -456,7 +495,7 @@ export default function TransactionDashboard({
                 })}
               </div>
             </div>
-            <div className="space-y-2">
+            <div className="space-y-2 text-sm sm:text-base">
               <div className="flex justify-between">
                 <span className="font-medium">Name:</span>
                 <span>{selectedTransaction.cards[selectedCardIndex].name}</span>
@@ -469,7 +508,7 @@ export default function TransactionDashboard({
               </div>
               <Separator />
               <div className="flex justify-between">
-                <span className="font-medium">Transaction:</span>
+                <span className="font-medium">Transaction ID:</span>
                 <span>{selectedTransaction.id}</span>
               </div>
             </div>

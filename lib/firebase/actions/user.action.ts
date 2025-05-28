@@ -14,6 +14,7 @@ import {
   Timestamp,
   writeBatch,
   deleteDoc,
+  orderBy,
 } from "firebase/firestore";
 import { firebaseAuth, firebaseDb, firebaseStorage } from "../firebase";
 import {
@@ -316,6 +317,9 @@ export const addCardForUser = async (
       owner: userId,
       transferCode: transferCode,
       chosenPhysicalCard: { id: chosenPhysicalCard },
+
+      //error here for the mean time i add createdAt
+      createdAt: serverTimestamp,
     };
 
     console.log("Card object before saving:", card);
@@ -621,6 +625,7 @@ export const getAllTransactions = async ({ role }: { role: string }) => {
       throw new Error("This is an Admin Only Request");
 
     const transactionCollection = collection(firebaseDb, "transactions");
+
     const snapshot = await getDocs(transactionCollection);
 
     const transactions: TransactionBoard[] = snapshot.docs.map((doc) => ({
@@ -651,9 +656,10 @@ export const updateTransactionPerId = async ({
     const transactionRef = doc(firebaseDb, "transactions", transaction_id);
     await updateDoc(transactionRef, { status: data });
 
-    return { success: true, message: "Transaction Deleted" };
+    console.log("Transaction status updated :", data);
+    return { success: true, message: "Transaction updated" };
   } catch (error) {
     console.error(error);
-    return false;
+    return { success: false, message: "Error updating transaction" };
   }
 };

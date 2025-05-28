@@ -1,14 +1,23 @@
 "use client";
-import TapUpCarousel from "@/components/landing/carouselCard";
+//import TapUpCarousel from "@/components/landing/carouselCard";
 import { Button } from "@/components/ui/button";
 import { carouselCards } from "@/constants";
 import { useCart } from "@/hooks/use-cart-v2";
 import { cn, formatCurrency } from "@/lib/utils";
 import { Plus } from "lucide-react";
+import dynamic from "next/dynamic";
 import Image from "next/image";
 import { useRouter, useSearchParams } from "next/navigation";
 import React, { useState } from "react";
 import { BiSolidPurchaseTag } from "react-icons/bi";
+
+//prevent mismatch during the first render
+const TapUpCarousel = dynamic(
+  () => import("../../../../components/landing/carouselCard"),
+  {
+    ssr: false,
+  }
+);
 
 const CardPurchasePreviewPage = () => {
   const searchParams = useSearchParams();
