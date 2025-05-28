@@ -16,6 +16,9 @@ import { ThemeToggle } from "../Theme";
 import { useUserContext } from "@/providers/user-provider";
 import NavigationSkeleton from "./NavigationSkeleton";
 
+import Cart from "../cart/Cart";
+import { ShoppingCart } from "lucide-react";
+
 const NavigationBoarded = () => {
   const pathname = usePathname();
   const {
@@ -30,8 +33,11 @@ const NavigationBoarded = () => {
 
   return (
     <nav className="w-[22rem] px-6 flex flex-col border-r fixed z-50 ease-in-out h-screen transition-transform -translate-x-[25rem] lg:translate-x-0">
-      <div className="flex justify-between items-center self-start w-24 h-12 my-6">
-        <TapupLogo className="size-full" />
+      <div className="flex justify-between items-center self-start w-full h-12 my-6 ">
+        <TapupLogo className="w-20" />
+        <div className="pr-2">
+          {isLoadingUserContext ? (<ShoppingCart className="!size-6 shrink-0" />) : (<Cart />)}
+        </div>
       </div>
       {isLoadingUserContext ? (
         <NavigationSkeleton />
