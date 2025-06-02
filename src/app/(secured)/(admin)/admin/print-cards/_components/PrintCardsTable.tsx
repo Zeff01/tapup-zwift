@@ -2,8 +2,17 @@
 
 import PrintCardPagination from "./Pagination";
 import PreviewDialog from "./PreviewDialog";
+import DeleteDialog from "./DeleteDialog";
 import { useEffect, useState } from "react";
-import { Search, Filter, Printer, ArrowUpDown } from "lucide-react";
+import { useUserContext } from "@/providers/user-provider";
+import {
+  Search,
+  Filter,
+  Printer,
+  ArrowUpDown,
+  MoreHorizontal,
+  PencilLine,
+} from "lucide-react";
 import { Card } from "@/types/types";
 import { Input } from "@/components/ui/input";
 import { Badge } from "@/components/ui/badge";
@@ -24,6 +33,14 @@ import {
   TableBody,
   TableCell,
 } from "@/components/ui/table";
+import {
+  DropdownMenu,
+  DropdownMenuTrigger,
+  DropdownMenuContent,
+  DropdownMenuLabel,
+  DropdownMenuSeparator,
+  DropdownMenuItem,
+} from "@/components/ui/dropdown-menu";
 
 type sortDirectionType = "asc" | "desc" | null;
 
@@ -33,6 +50,7 @@ type PrintCardsInfo = Card & {
 };
 
 const PrintCardsTable = ({ cardsData }: { cardsData: PrintCardsInfo[] }) => {
+  const { user } = useUserContext();
   const [filteredCards, setFilteredCards] =
     useState<PrintCardsInfo[]>(cardsData);
   const [statusFilter, setStatusFilter] = useState<string>("all");
@@ -179,18 +197,37 @@ const PrintCardsTable = ({ cardsData }: { cardsData: PrintCardsInfo[] }) => {
                   </Badge>
                 </TableCell>
                 <TableCell className="w-[100px] text-center">
-                  <Button
-                    onClick={() => {
-                      setSelectedCard(card.chosenPhysicalCard?.name!);
-                      setCardId(card.id!);
-                    }}
-                    variant="outline"
-                    size="sm"
-                    className="mt-2"
-                  >
-                    Print
-                    <Printer size={15} />
-                  </Button>
+                  <DropdownMenu>
+                    <DropdownMenuTrigger asChild>
+                      <Button variant="ghost" size="icon">
+                        <MoreHorizontal className="h-4 w-4" />
+                      </Button>
+                    </DropdownMenuTrigger>
+                    <DropdownMenuContent align="end">
+                      <DropdownMenuLabel>Actions</DropdownMenuLabel>
+                      <DropdownMenuSeparator />
+                      <DropdownMenuItem
+                        onClick={() => {
+                          setSelectedCard(card.chosenPhysicalCard?.name!);
+                          setCardId(card.id!);
+                        }}
+                        className="flex items-center gap-2 justify-between focus:bg-gray-200 dark:focus:bg-accent"
+                      >
+                        <span>Print</span>
+                        <Printer size={15} />
+                      </DropdownMenuItem>
+                      <DropdownMenuItem className="flex items-center gap-2 justify-between focus:bg-gray-200 dark:focus:bg-accent">
+                        <span>Edit</span>
+                        <PencilLine size={15} />
+                      </DropdownMenuItem>
+                      <DropdownMenuItem
+                        className="focus:bg-gray-200 dark:focus:bg-accent"
+                        onSelect={(e) => e.preventDefault()}
+                      >
+                        <DeleteDialog cardId={card.id} user={user} />
+                      </DropdownMenuItem>
+                    </DropdownMenuContent>
+                  </DropdownMenu>
                 </TableCell>
               </TableRow>
             ))}
@@ -220,6 +257,7 @@ const PrintCardsTable = ({ cardsData }: { cardsData: PrintCardsInfo[] }) => {
           setSelectedCard={setSelectedCard}
           card={card}
           cardId={cardId}
+          user={user}
         />
       )}
 
