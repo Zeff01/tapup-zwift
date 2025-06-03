@@ -3,6 +3,7 @@
 import PrintCardPagination from "./Pagination";
 import PreviewDialog from "./PreviewDialog";
 import DeleteDialog from "./DeleteDialog";
+import GenerateCardsDialog from "./GenerateCardsDialog";
 import { useEffect, useState } from "react";
 import { useUserContext } from "@/providers/user-provider";
 import {
@@ -12,6 +13,7 @@ import {
   ArrowUpDown,
   MoreHorizontal,
   PencilLine,
+  Plus,
 } from "lucide-react";
 import { Card } from "@/types/types";
 import { Input } from "@/components/ui/input";
@@ -58,6 +60,7 @@ const PrintCardsTable = ({ cardsData }: { cardsData: PrintCardsInfo[] }) => {
   const [sortDirection, setSortDirection] = useState<sortDirectionType>(null);
   const [selectedCard, setSelectedCard] = useState<string | null>(null);
   const [cardId, setCardId] = useState<string | null>(null);
+  const [isGenModalOpen, setIsGenModalOpen] = useState(false);
   const [currentPage, setCurrentPage] = useState(1);
   const cardsPerpage = 10;
 
@@ -112,7 +115,17 @@ const PrintCardsTable = ({ cardsData }: { cardsData: PrintCardsInfo[] }) => {
 
   return (
     <div className="container mx-auto py-8 px-4">
-      <h1 className="text-3xl font-bold mb-6">List of Print Cards</h1>
+      <div className="flex justify-between items-center mb-6 gap-4">
+        <h1 className="text-3xl font-bold">List of Print Cards</h1>
+        <Button
+          onClick={() => setIsGenModalOpen(true)}
+          className="bg-blue-600 hover:bg-blue-700 font-semibold text-white"
+        >
+          <Plus size={16} className="mr-2" />
+          Generate Cards
+        </Button>
+      </div>
+
       <div className="flex flex-col md:flex-row gap-4 mb-6">
         <div className="relative flex-1">
           <Search
@@ -250,6 +263,14 @@ const PrintCardsTable = ({ cardsData }: { cardsData: PrintCardsInfo[] }) => {
         </div>
       )}
 
+      {filteredCards.length > cardsPerpage && (
+        <PrintCardPagination
+          currentPage={currentPage}
+          totalPages={totalPages}
+          setCurrentPage={setCurrentPage}
+        />
+      )}
+
       {/* card preview dialog */}
       {selectedCard && (
         <PreviewDialog
@@ -261,13 +282,10 @@ const PrintCardsTable = ({ cardsData }: { cardsData: PrintCardsInfo[] }) => {
         />
       )}
 
-      {filteredCards.length > cardsPerpage && (
-        <PrintCardPagination
-          currentPage={currentPage}
-          totalPages={totalPages}
-          setCurrentPage={setCurrentPage}
-        />
-      )}
+      <GenerateCardsDialog
+        isOpen={isGenModalOpen}
+        onClose={() => setIsGenModalOpen(false)}
+      />
     </div>
   );
 };
