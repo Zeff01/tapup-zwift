@@ -1,6 +1,6 @@
 import { authCurrentUserv2 } from "@/lib/firebase/auth";
 import Cards from "./_components/cards";
-import { USER_ROLE_ENUMS } from "@/constants";
+
 import { notFound, redirect } from "next/navigation";
 
 export default async function CardPage() {
@@ -10,7 +10,7 @@ export default async function CardPage() {
     redirect("/login");
   }
 
-  if (auth?.role !== USER_ROLE_ENUMS.USER) return notFound();
+  if (!auth?.role) return notFound();
 
   return (
     <div className="flex-1">
