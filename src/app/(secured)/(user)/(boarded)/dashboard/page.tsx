@@ -1,6 +1,5 @@
 import { notFound, redirect } from "next/navigation";
 import Dashboard from "./_components/DashboardPage";
-import { USER_ROLE_ENUMS } from "@/constants";
 import { authCurrentUserv2 } from "@/lib/firebase/auth";
 
 export default async function DashboardPage() {
@@ -10,7 +9,7 @@ export default async function DashboardPage() {
     redirect("/login");
   }
 
-  if (auth?.role !== USER_ROLE_ENUMS.USER) return notFound();
+  if (!auth?.role) return notFound();
 
   return (
     <div className="flex-1">
