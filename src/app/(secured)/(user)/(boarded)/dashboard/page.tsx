@@ -6,15 +6,11 @@ import { authCurrentUserv2 } from "@/lib/firebase/auth";
 export default async function DashboardPage() {
   const auth = await authCurrentUserv2();
 
-  if (auth?.role !== USER_ROLE_ENUMS.ADMIN) {
-    notFound();
+  if (!auth) {
+    redirect("/login");
   }
 
-  console.log(auth);
-
-  if (!auth?.onboarding) {
-    redirect("/onboarding");
-  }
+  if (auth?.role !== USER_ROLE_ENUMS.USER) return notFound();
 
   return (
     <div className="flex-1">

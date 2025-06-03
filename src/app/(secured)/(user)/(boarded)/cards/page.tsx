@@ -6,13 +6,11 @@ import { notFound, redirect } from "next/navigation";
 export default async function CardPage() {
   const auth = await authCurrentUserv2();
 
-  if (auth?.role !== USER_ROLE_ENUMS.ADMIN) {
-    notFound();
+  if (!auth) {
+    redirect("/login");
   }
 
-  if (!auth?.onboarding) {
-    redirect("/onboarding");
-  }
+  if (auth?.role !== USER_ROLE_ENUMS.USER) return notFound();
 
   return (
     <div className="flex-1">
