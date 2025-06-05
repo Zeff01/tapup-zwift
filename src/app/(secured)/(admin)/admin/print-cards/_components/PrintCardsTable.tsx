@@ -4,6 +4,7 @@ import PrintCardPagination from "./Pagination";
 import PreviewDialog from "./PreviewDialog";
 import DeleteDialog from "./DeleteDialog";
 import GenerateCardsDialog from "./GenerateCardsDialog";
+import ViewDialog from "./ViewDialog";
 import { useEffect, useState } from "react";
 import { useUserContext } from "@/providers/user-provider";
 import {
@@ -19,7 +20,6 @@ import { Card } from "@/types/types";
 import { Input } from "@/components/ui/input";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
-import { carouselCards } from "@/constants";
 import {
   Select,
   SelectContent,
@@ -43,10 +43,11 @@ import {
   DropdownMenuSeparator,
   DropdownMenuItem,
 } from "@/components/ui/dropdown-menu";
+import { FaRegAddressCard } from "react-icons/fa6";
 
 type sortDirectionType = "asc" | "desc" | null;
 
-type PrintCardsInfo = Card & {
+export type PrintCardsInfo = Card & {
   transactionId: string | null;
   customerName: string | null;
 };
@@ -58,8 +59,10 @@ const PrintCardsTable = ({ cardsData }: { cardsData: PrintCardsInfo[] }) => {
   const [statusFilter, setStatusFilter] = useState<string>("all");
   const [searchFilter, setSearchFilter] = useState("");
   const [sortDirection, setSortDirection] = useState<sortDirectionType>(null);
-  const [selectedCard, setSelectedCard] = useState<string | null>(null);
+  const [selectedCard, setSelectedCard] = useState<PrintCardsInfo | null>(null);
   const [cardId, setCardId] = useState<string | null>(null);
+  const [isViewModalOpen, setIsViewModalOpen] = useState(false);
+  const [isPrintModalOpen, setIsPrintModalOpen] = useState(false);
   const [isGenModalOpen, setIsGenModalOpen] = useState(false);
   const [currentPage, setCurrentPage] = useState(1);
   const cardsPerpage = 10;
@@ -68,10 +71,6 @@ const PrintCardsTable = ({ cardsData }: { cardsData: PrintCardsInfo[] }) => {
   const indefOfFirstCard = indexOfLastCard - cardsPerpage;
   const currentCards = filteredCards.slice(indefOfFirstCard, indexOfLastCard);
   const totalPages = Math.ceil(filteredCards.length / cardsPerpage);
-
-  const card = Object.values(carouselCards).find(
-    (card) => card.title === selectedCard
-  );
 
   useEffect(() => {
     let filtered = [...cardsData];
@@ -116,7 +115,7 @@ const PrintCardsTable = ({ cardsData }: { cardsData: PrintCardsInfo[] }) => {
   return (
     <div className="container mx-auto py-8 px-4">
       <div className="flex justify-between items-center mb-6 gap-4">
-        <h1 className="text-3xl font-bold">List of Print Cards</h1>
+        <h1 className="text-3xl font-bold">Manage Print Cards</h1>
         <Button
           onClick={() => setIsGenModalOpen(true)}
           className="bg-blue-600 hover:bg-blue-700 font-semibold text-white"
@@ -221,8 +220,20 @@ const PrintCardsTable = ({ cardsData }: { cardsData: PrintCardsInfo[] }) => {
                       <DropdownMenuSeparator />
                       <DropdownMenuItem
                         onClick={() => {
-                          setSelectedCard(card.chosenPhysicalCard?.name!);
+                          setSelectedCard(card);
                           setCardId(card.id!);
+                          setIsViewModalOpen(true);
+                        }}
+                        className="flex items-center gap-2 justify-between focus:bg-gray-200 dark:focus:bg-accent"
+                      >
+                        <span>View</span>
+                        <FaRegAddressCard size={15} />
+                      </DropdownMenuItem>
+                      <DropdownMenuItem
+                        onClick={() => {
+                          setSelectedCard(card);
+                          setCardId(card.id!);
+                          setIsPrintModalOpen(true);
                         }}
                         className="flex items-center gap-2 justify-between focus:bg-gray-200 dark:focus:bg-accent"
                       >
@@ -271,16 +282,20 @@ const PrintCardsTable = ({ cardsData }: { cardsData: PrintCardsInfo[] }) => {
         />
       )}
 
-      {/* card preview dialog */}
-      {selectedCard && (
-        <PreviewDialog
-          selectedCard={selectedCard}
-          setSelectedCard={setSelectedCard}
-          card={card}
-          cardId={cardId}
-          user={user}
-        />
-      )}
+      <ViewDialog
+        isOpen={isViewModalOpen}
+        onClose={() => setIsViewModalOpen(false)}
+        card={selectedCard}
+        cardId={cardId}
+      />
+
+      <PreviewDialog
+        isOpen={isPrintModalOpen}
+        onClose={() => setIsPrintModalOpen(false)}
+        card={selectedCard}
+        cardId={cardId}
+        user={user}
+      />
 
       <GenerateCardsDialog
         isOpen={isGenModalOpen}
