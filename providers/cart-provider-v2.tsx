@@ -2,7 +2,10 @@
 
 import type React from "react";
 
-import { createContext, useContext, useState, useEffect } from "react";
+import { createContext, useContext, useState, useEffect, useRef } from "react";
+import { useUserContext } from "./user-provider";
+import { useMutation, useQuery } from "@tanstack/react-query";
+import { getCartByUserUid, saveCartItemsByUserUid } from "@/lib/firebase/actions/cart.action";
 
 export type CartItem = {
   id: string;
@@ -14,6 +17,7 @@ export type CartItem = {
 
 type CartContextType = {
   items: CartItem[];
+  isLoading: boolean;
   isOpen: boolean;
   openCart: () => void;
   closeCart: () => void;
@@ -28,25 +32,58 @@ type CartContextType = {
 const CartContext = createContext<CartContextType | undefined>(undefined);
 
 export function CartProvider({ children }: { children: React.ReactNode }) {
-  const [items, setItems] = useState<CartItem[]>(() => {
-    // Initialize from localStorage on component mount (client-side only)
-    if (typeof window !== "undefined") {
-      const savedCart = localStorage.getItem("cart");
-      return savedCart ? JSON.parse(savedCart) : [];
-    }
-    return [];
-  });
   const [isOpen, setIsOpen] = useState(false);
-
   const openCart = () => setIsOpen(true);
   const closeCart = () => setIsOpen(false);
+  const [items, setItems] = useState<CartItem[]>([]);
 
-  // Save to localStorage whenever cart items change
+  const { isAuthenticated, user } = useUserContext();
+  const { data: cartData, isLoading } = useQuery({
+    queryKey: ["userUid", user?.uid],
+    queryFn: () => getCartByUserUid(user?.uid),
+    enabled: isAuthenticated && !!user?.uid,
+  });
+
   useEffect(() => {
-    if (typeof window !== "undefined") {
+    if (isAuthenticated && cartData) {
+      setItems(cartData.cartItems)
+    } else if (!isAuthenticated && typeof window !== "undefined") {
+      const savedCart = localStorage.getItem("cart");
+      setItems(savedCart ? JSON.parse(savedCart) : []);
+    }
+  }, [isAuthenticated, cartData]);
+
+  useEffect(() => {
+    // Clear localStorage after login
+    if (isAuthenticated && user?.uid && typeof window !== "undefined") {
+      localStorage.removeItem("cart");
+    }
+  }, [isAuthenticated, user?.uid])
+
+  const { mutate: saveCart } = useMutation({
+    mutationFn: ({ userUid, items }: { userUid: string, items: CartItem[] }) =>
+      saveCartItemsByUserUid(userUid, items)
+  })
+
+  const saveTimeout = useRef<NodeJS.Timeout>(); // Add delay (debouncer)
+  const isInitialMount = useRef(true); // To prevent saving empty cart to localStorage
+  useEffect(() => {
+    if (isInitialMount.current) {
+      isInitialMount.current = false;
+      return;
+    }
+    if (isAuthenticated && user?.uid) {
+      clearTimeout(saveTimeout.current)
+      saveTimeout.current = setTimeout(() => { saveCart({ userUid: user.uid, items }) }, 500) // 0.5s delay
+    } else if (!isAuthenticated && typeof window !== "undefined") {
       localStorage.setItem("cart", JSON.stringify(items));
     }
-  }, [items]);
+  }, [items, isAuthenticated]);
+
+  useEffect(() => {
+    // Clean up
+    return () => clearTimeout(saveTimeout.current);
+  }, []);
 
   const addItem = (item: Omit<CartItem, "quantity">) => {
     setItems((prevItems) => {
@@ -87,6 +124,7 @@ export function CartProvider({ children }: { children: React.ReactNode }) {
     <CartContext.Provider
       value={{
         items,
+        isLoading,
         isOpen,
         openCart,
         closeCart,
