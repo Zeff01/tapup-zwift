@@ -31,6 +31,17 @@ const Header = () => {
     document.body.style.overflow = newMenuState ? "hidden" : "auto";
   };
 
+  //reset the state when navigation to make scrollable
+  useEffect(() => {
+    if (!isMenuOpen) {
+      document.body.style.overflow = "auto";
+    }
+    // Clean up on unmount
+    return () => {
+      document.body.style.overflow = "auto";
+    };
+  }, [isMenuOpen]);
+
   return (
     <header className="flex sticky top-0 z-50 bg-background justify-between items-center md:px-10 shadow-xl  p-4">
       <Link href="/" rel="preload">
@@ -114,9 +125,11 @@ const Header = () => {
         <div className="flex flex-col h-full">
           {/* Menu Header */}
           <div className="flex justify-between items-center p-4 border-b">
-            <div className="aspect-[130/48] w-20 lg:w-28">
-              <TapupLogo />
-            </div>
+            <Link href={"/"} onClick={handleMobileMenu}>
+              <div className="aspect-[130/48] w-20 lg:w-28">
+                <TapupLogo />
+              </div>
+            </Link>
             <button onClick={handleMobileMenu} className="text-2xl font-bold">
               &times;
             </button>
