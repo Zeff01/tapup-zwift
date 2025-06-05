@@ -168,6 +168,8 @@ const PrintCardsTable = ({ cardsData }: { cardsData: PrintCardsInfo[] }) => {
             <TableRow>
               <TableHead>Customer Name</TableHead>
               <TableHead>Transaction ID</TableHead>
+              <TableHead>Subscription ID</TableHead>
+              <TableHead>Transfer Code</TableHead>
               <TableHead>Date Created</TableHead>
               <TableHead>Status</TableHead>
               <TableHead className="w-[100px] text-center">Actions</TableHead>
@@ -179,6 +181,8 @@ const PrintCardsTable = ({ cardsData }: { cardsData: PrintCardsInfo[] }) => {
               <TableRow key={index}>
                 <TableCell>{card.customerName}</TableCell>
                 <TableCell>{card.transactionId}</TableCell>
+                <TableCell>{card.subscription_id}</TableCell>
+                <TableCell>{card.transferCode}</TableCell>
                 <TableCell>
                   {card.createdAt &&
                   typeof card.createdAt.seconds === "number" &&
