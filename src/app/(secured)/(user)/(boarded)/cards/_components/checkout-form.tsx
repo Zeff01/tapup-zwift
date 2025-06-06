@@ -48,7 +48,6 @@ interface CheckoutUser {
 export default function CheckoutForm() {
   const { user } = useUserContext();
 
-  console.log(user);
   const { items, clearCart } = useCart();
   const [isAddressModalOpen, setIsAddressModalOpen] = useState(false);
   const [isEditMode, setIsEditMode] = useState(false);
@@ -64,7 +63,7 @@ export default function CheckoutForm() {
   }, [user?.deliveryAddresses]);
 
   const currentUser: CheckoutUser = {
-    name: user?.firstName + " " + user?.lastName || "John Doe]",
+    name: user?.firstName + " " + user?.lastName || "John Doe",
     email: user?.email || "john.doe@example.com",
     avatar: user?.profilePictureUrl || "/default-user.png",
   };
@@ -175,10 +174,10 @@ export default function CheckoutForm() {
       reference_id: referenceId,
       type: "INDIVIDUAL",
       email: user?.email,
-      mobile_number: user?.number ?? "",
+      mobile_number: user?.number ?? "+639398351252",
       individual_detail: {
-        given_names: user?.firstName ?? "",
-        surname: user?.lastName ?? "",
+        given_names: user?.firstName ?? "John",
+        surname: user?.lastName ?? "Doe",
       },
     };
 
@@ -223,9 +222,10 @@ export default function CheckoutForm() {
       })),
       receiver: {
         customerId: recurringPlan.customer.id,
-        customerName: user?.firstName + " " + user?.lastName,
+        customerName:
+          (user?.firstName || "John") + " " + (user?.lastName || "Doe"),
         customerEmail: user?.email ?? "",
-        customerPhone: user?.number ?? "",
+        customerPhone: user?.number ?? "+639398351252",
         customerAddress:
           selectedAddressV2?.street +
           ", " +
