@@ -86,7 +86,7 @@ const Cards = () => {
               Add Card
             </button>
             <Link
-              href={"/cards/cardshop"}
+              href={"/cards/card-shop"}
               className="text-primary-foreground mr-4 bg-green-500 rounded-lg md:text-lg px-6 py-2"
             >
               Buy a Card

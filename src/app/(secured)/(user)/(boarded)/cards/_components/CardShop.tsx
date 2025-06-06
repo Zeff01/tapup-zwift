@@ -1,7 +1,7 @@
 "use client";
 
 import { OrderCardsCarousel } from "@/components/OrderCardsCarousel";
-import { cardItems, carouselCards } from "@/constants";
+import { carouselCards } from "@/constants";
 import { createPortfolioSchema } from "@/lib/zod-schema";
 import React, { useEffect, useState } from "react";
 import { z } from "zod";
@@ -25,7 +25,6 @@ export type ChosenPhysicalCardType = z.infer<
 
 const OrderPhysicalCard = () => {
   const { items, addItem } = useCart();
-  console.log(items);
   const [subscriptionPlans, setSubscriptionPlans] = useState<
     SubscriptionPlan[]
   >([]);
