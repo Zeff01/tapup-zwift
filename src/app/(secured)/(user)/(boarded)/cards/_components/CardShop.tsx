@@ -1,7 +1,7 @@
 "use client";
 
 import { OrderCardsCarousel } from "@/components/OrderCardsCarousel";
-import { cardItems } from "@/constants";
+import { cardItems, carouselCards } from "@/constants";
 import { createPortfolioSchema } from "@/lib/zod-schema";
 import React, { useEffect, useState } from "react";
 import { z } from "zod";
@@ -13,32 +13,29 @@ import {
   ChevronUp,
   Check,
 } from "lucide-react";
-import Cart from "./Cart";
 import Image from "next/image";
 import NavBar from "./Navbar";
-import { useCart } from "@/providers/cart-provider";
-import { CartItem, SubscriptionPlan } from "@/types/types";
+import { SubscriptionPlan } from "@/types/types";
 import Link from "next/link";
 import { getSubscriptionPlans } from "@/lib/firebase/actions/user.action";
+import { useCart } from "@/hooks/use-cart-v2";
 export type ChosenPhysicalCardType = z.infer<
   typeof createPortfolioSchema
 >["chosenPhysicalCard"];
 
 const OrderPhysicalCard = () => {
-  const { state, dispatch } = useCart();
-
+  const { items, addItem } = useCart();
+  console.log(items);
   const [subscriptionPlans, setSubscriptionPlans] = useState<
     SubscriptionPlan[]
   >([]);
   const [selectedPlan, setSelectedPlan] = useState<SubscriptionPlan | null>(
     null
   );
-
   useEffect(() => {
     const fetchPlans = async () => {
       const plans = await getSubscriptionPlans();
       setSubscriptionPlans(plans);
-
       if (plans.length > 0) {
         setSelectedPlan(plans[0]); // Set first plan as default
       }
@@ -54,79 +51,23 @@ const OrderPhysicalCard = () => {
     }
   };
 
-  const totalItems = state.items.reduce(
-    (total, item) => total + item.quantity,
-    0
-  );
-
-  const subtotal = state.items.reduce(
-    (total, item) =>
-      total +
-      item.product.price * item.quantity +
-      (item.subscriptionPlan?.price || 0),
-    0
-  );
-
   const [isExpanded, setIsExpanded] = useState(false);
   const [isTrash, setIsTrash] = useState(false);
   const handleButtonTrash = () => {
     setIsTrash(!isTrash);
   };
 
-  const [selectedPhysicalCard, setSelectedPhysicalCard] =
-    useState<ChosenPhysicalCardType>("card1");
+  const [selectedPhysicalCard, setSelectedPhysicalCard] = useState("card1");
 
   const toggleExpand = () => {
     +setIsExpanded(!isExpanded);
   };
 
-  const [quantity, setQuantity] = useState(1);
+  const selectedCard =
+    carouselCards[selectedPhysicalCard as keyof typeof carouselCards];
 
-  const incrementQuantity = () => {
-    setQuantity(quantity + 1);
-  };
-  const decrementQuantity = () => {
-    if (quantity > 1) setQuantity(quantity - 1);
-  };
-
-  const selectedCard = cardItems.find(
-    (card) => card.id === selectedPhysicalCard
-  );
-
-  const addItemToCart = () => {
-    console.log("Attempting to add item to cart...");
-    console.log("Selected Card:", selectedCard);
-    console.log("Selected Subscription Plan:", selectedPlan);
-
-    if (selectedCard) {
-      const existingCartItem = state.items.find(
-        (item) => item.product.id === selectedCard.id
-      );
-
-      if (existingCartItem) {
-        const newQuantity = existingCartItem.quantity + quantity;
-        console.log("Updating existing cart item. New quantity:", newQuantity);
-
-        dispatch({
-          type: "UPDATE_CART_ITEM_QUANTITY",
-          payload: { id: selectedCard.id, quantity: newQuantity },
-        });
-      } else {
-        const cartItem: CartItem = {
-          physicalCardId: selectedCard.id,
-          product: selectedCard,
-          quantity: quantity,
-          subscriptionPlan: selectedPlan,
-        };
-
-        console.log("Adding new item to cart:", cartItem);
-
-        dispatch({ type: "ADD_TO_CART", payload: cartItem });
-      }
-    } else {
-      console.warn("No card selected!");
-    }
-  };
+  const totalItems = items.length;
+  const subtotal = items.reduce((acc, item) => acc + item.price, 0);
 
   return (
     <div className="relative max-h-screen flex flex-col max-w-sm">
@@ -160,8 +101,6 @@ const OrderPhysicalCard = () => {
             <OrderCardsCarousel
               selectedCardId={selectedPhysicalCard}
               setSelectedCardId={(id: string) =>
-                // Update the state `selectedPhysicalCard` with the selected card's ID
-                // Typecast the ID to ensure it matches the `ChosenPhysicalCardType` type
                 setSelectedPhysicalCard(id as ChosenPhysicalCardType)
               }
             />
@@ -170,30 +109,17 @@ const OrderPhysicalCard = () => {
 
         {/* Quantity & Add to Cart */}
         <div className="flex justify-between items-center space-x-4 mt-4">
-          {/* Quantity Controls */}
-          <div className="flex items-center gap-2 text-2xl rounded">
-            <Button
-              onClick={decrementQuantity}
-              variant="outline"
-              className="border-2"
-            >
-              —
-            </Button>
-            <span className="border-2 p-1 text-lg w-12 text-center rounded-md">
-              {quantity}
-            </span>
-            <Button
-              onClick={incrementQuantity}
-              className="border-2"
-              variant="outline"
-            >
-              +
-            </Button>
-          </div>
-
           {/* Add to Cart Button */}
           <Button
-            onClick={addItemToCart}
+            onClick={() =>
+              addItem({
+                id: selectedPhysicalCard,
+                name: selectedCard?.title || "",
+                price: selectedPlan?.price || 0,
+                image: selectedCard?.image || "",
+                subscriptionPlan: selectedPlan ?? undefined,
+              })
+            }
             className="flex gap-2 hover:bg-black dark:hover:bg-grayTemplate"
           >
             <ShoppingCart />
@@ -246,9 +172,7 @@ const OrderPhysicalCard = () => {
         }`}
       >
         <h2 className="text-lg font-bold mb-2">Your Cart</h2>
-        <div className="space-y-4 w-full h-96 overflow-y-auto pb-16 ">
-          <Cart showTrash={isTrash} />
-        </div>
+        <div className="space-y-4 w-full h-96 overflow-y-auto pb-16 "></div>
       </div>
 
       {/* Fixed Bottom Section */}
@@ -261,7 +185,7 @@ const OrderPhysicalCard = () => {
             SubTotal: <span className="text-greenTitle">₱{subtotal}</span>
           </p>
           <Link href="/cards/checkout">
-            <Button variant="green">Check Out</Button>
+            <Button variant="green">Checkout</Button>
           </Link>
         </div>
       </div>

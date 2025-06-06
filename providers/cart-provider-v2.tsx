@@ -5,7 +5,11 @@ import type React from "react";
 import { createContext, useContext, useState, useEffect, useRef } from "react";
 import { useUserContext } from "./user-provider";
 import { useMutation, useQuery } from "@tanstack/react-query";
-import { getCartByUserUid, saveCartItemsByUserUid } from "@/lib/firebase/actions/cart.action";
+import {
+  getCartByUserUid,
+  saveCartItemsByUserUid,
+} from "@/lib/firebase/actions/cart.action";
+import { SubscriptionPlan } from "@/types/types";
 
 export type CartItem = {
   id: string;
@@ -13,6 +17,7 @@ export type CartItem = {
   price: number;
   quantity: number;
   image: string;
+  subscriptionPlan?: SubscriptionPlan;
 };
 
 type CartContextType = {
@@ -46,7 +51,7 @@ export function CartProvider({ children }: { children: React.ReactNode }) {
 
   useEffect(() => {
     if (isAuthenticated && cartData) {
-      setItems(cartData.cartItems)
+      setItems(cartData.cartItems);
     } else if (!isAuthenticated && typeof window !== "undefined") {
       const savedCart = localStorage.getItem("cart");
       setItems(savedCart ? JSON.parse(savedCart) : []);
@@ -58,12 +63,12 @@ export function CartProvider({ children }: { children: React.ReactNode }) {
     if (isAuthenticated && user?.uid && typeof window !== "undefined") {
       localStorage.removeItem("cart");
     }
-  }, [isAuthenticated, user?.uid])
+  }, [isAuthenticated, user?.uid]);
 
   const { mutate: saveCart } = useMutation({
-    mutationFn: ({ userUid, items }: { userUid: string, items: CartItem[] }) =>
-      saveCartItemsByUserUid(userUid, items)
-  })
+    mutationFn: ({ userUid, items }: { userUid: string; items: CartItem[] }) =>
+      saveCartItemsByUserUid(userUid, items),
+  });
 
   const saveTimeout = useRef<NodeJS.Timeout>(); // Add delay (debouncer)
   const isInitialMount = useRef(true); // To prevent saving empty cart to localStorage
@@ -73,8 +78,10 @@ export function CartProvider({ children }: { children: React.ReactNode }) {
       return;
     }
     if (isAuthenticated && user?.uid) {
-      clearTimeout(saveTimeout.current)
-      saveTimeout.current = setTimeout(() => { saveCart({ userUid: user.uid, items }) }, 500) // 0.5s delay
+      clearTimeout(saveTimeout.current);
+      saveTimeout.current = setTimeout(() => {
+        saveCart({ userUid: user.uid, items });
+      }, 500); // 0.5s delay
     } else if (!isAuthenticated && typeof window !== "undefined") {
       localStorage.setItem("cart", JSON.stringify(items));
     }

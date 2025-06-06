@@ -117,6 +117,7 @@ export interface ExtendedUserInterface extends Users {
   uid: string;
   role: string;
   onboarding: boolean;
+  deliveryAddresses?: DeliveryAddress[];
 }
 
 export type UserState = ExtendedUserInterface | null;
@@ -151,6 +152,16 @@ export interface Card extends Users {
   };
   subscription_id?: string;
   createdAt: Timestamp | FieldValue;
+}
+
+export interface DeliveryAddress {
+  id: string;
+  name: string;
+  street: string;
+  city: string;
+  state: string;
+  zipCode: string;
+  isDefault?: boolean;
 }
 
 export interface CardItemTransactionBoard {
