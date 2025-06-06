@@ -119,9 +119,9 @@ const DigitalCard = ({ card, confirm, user }: Prop) => {
   });
 
   const getCardImage = (cardId?: string) => {
-    const cardItem = Object.values(carouselCards).find(
-      (item) => item.id === cardId
-    );
+    const cardItem =
+      Object.values(carouselCards).find((item) => item.id === cardId) ??
+      carouselCards[cardId as keyof typeof carouselCards];
 
     return cardItem ? cardItem.image : undefined;
   };
@@ -356,9 +356,9 @@ const DigitalCard = ({ card, confirm, user }: Prop) => {
           <div className="flex-grow flex flex-col justify-between">
             <div>
               <p className="text-[clamp(1.1rem,1.4vw,1.4rem)] font-semibold capitalize text-white">
-                {card.firstName + " " + card.lastName}
+                {(card.firstName || "") + " " + (card.lastName || "")}
               </p>
-              <p className="text-xs capitalize">{card.position}</p>
+              <p className="text-xs capitalize">{card.position || ""}</p>
             </div>
           </div>
         </Link>
