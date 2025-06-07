@@ -6,13 +6,7 @@ import { createPortfolioSchema } from "@/lib/zod-schema";
 import React, { useEffect, useState } from "react";
 import { z } from "zod";
 import { Button } from "@/components/ui/button";
-import {
-  ShoppingCart,
-  Trash,
-  ChevronDown,
-  ChevronUp,
-  Check,
-} from "lucide-react";
+import { ShoppingCart } from "lucide-react";
 import Image from "next/image";
 import NavBar from "./Navbar";
 import { SubscriptionPlan } from "@/types/types";
@@ -20,12 +14,14 @@ import Link from "next/link";
 import { getSubscriptionPlans } from "@/lib/firebase/actions/user.action";
 import { useCart } from "@/hooks/use-cart-v2";
 import { formatCurrency } from "@/lib/utils";
+
 export type ChosenPhysicalCardType = z.infer<
   typeof createPortfolioSchema
 >["chosenPhysicalCard"];
 
 const OrderPhysicalCard = () => {
-  const { items, addItem, totalItems, subtotal  } = useCart();
+  const { items, addItem } = useCart();
+
   const [subscriptionPlans, setSubscriptionPlans] = useState<
     SubscriptionPlan[]
   >([]);
@@ -65,6 +61,9 @@ const OrderPhysicalCard = () => {
 
   const selectedCard =
     carouselCards[selectedPhysicalCard as keyof typeof carouselCards];
+
+  const totalItems = items.length;
+  const subtotal = items.reduce((acc, item) => acc + item.price, 0);
 
   return (
     <div className="relative max-h-screen flex flex-col max-w-sm">
@@ -179,7 +178,8 @@ const OrderPhysicalCard = () => {
         </p>
         <div className="flex justify-between items-center">
           <p className="space-x-2">
-            SubTotal: <span className="text-greenTitle">{formatCurrency(subtotal)}</span>
+            SubTotal:{" "}
+            <span className="text-greenTitle">{formatCurrency(subtotal)}</span>
           </p>
           <Link href="/cards/checkout">
             <Button variant="green">Checkout</Button>
