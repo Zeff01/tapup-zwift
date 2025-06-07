@@ -49,7 +49,7 @@ type sortDirectionType = "asc" | "desc" | null;
 
 export type PrintCardsInfo = Card & {
   transactionId: string | null;
-  customerName: string | null;
+  cardOwner: string;
 };
 
 const PrintCardsTable = ({ cardsData }: { cardsData: PrintCardsInfo[] }) => {
@@ -78,7 +78,7 @@ const PrintCardsTable = ({ cardsData }: { cardsData: PrintCardsInfo[] }) => {
     if (searchFilter) {
       filtered = filtered.filter(
         (card) =>
-          card.customerName
+          card.cardOwner
             ?.toLowerCase()
             .includes(searchFilter.trim().toLowerCase()) ||
           card.transactionId
@@ -178,7 +178,7 @@ const PrintCardsTable = ({ cardsData }: { cardsData: PrintCardsInfo[] }) => {
         <Table>
           <TableHeader>
             <TableRow>
-              <TableHead>Customer Name</TableHead>
+              <TableHead>Card Owner</TableHead>
               <TableHead>Transaction ID</TableHead>
               <TableHead>Subscription ID</TableHead>
               <TableHead>Transfer Code</TableHead>
@@ -191,7 +191,7 @@ const PrintCardsTable = ({ cardsData }: { cardsData: PrintCardsInfo[] }) => {
           <TableBody>
             {currentCards.map((card, index) => (
               <TableRow key={index}>
-                <TableCell>{card.customerName}</TableCell>
+                <TableCell>{card.cardOwner}</TableCell>
                 <TableCell>{card.transactionId}</TableCell>
                 <TableCell>{card.subscription_id}</TableCell>
                 <TableCell>{card.transferCode}</TableCell>
