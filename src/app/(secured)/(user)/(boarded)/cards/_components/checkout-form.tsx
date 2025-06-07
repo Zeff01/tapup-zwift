@@ -242,7 +242,7 @@ export default function CheckoutForm() {
 
     await createTransaction(transactionData);
 
-    // clearCart();
+    clearCart();
 
     window.location.href = recurringPlan.recurringPlan.actions?.[0]?.url;
   };
