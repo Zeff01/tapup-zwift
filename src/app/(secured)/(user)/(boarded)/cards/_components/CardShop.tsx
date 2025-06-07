@@ -19,12 +19,13 @@ import { SubscriptionPlan } from "@/types/types";
 import Link from "next/link";
 import { getSubscriptionPlans } from "@/lib/firebase/actions/user.action";
 import { useCart } from "@/hooks/use-cart-v2";
+import { formatCurrency } from "@/lib/utils";
 export type ChosenPhysicalCardType = z.infer<
   typeof createPortfolioSchema
 >["chosenPhysicalCard"];
 
 const OrderPhysicalCard = () => {
-  const { items, addItem } = useCart();
+  const { items, addItem, totalItems, subtotal  } = useCart();
   const [subscriptionPlans, setSubscriptionPlans] = useState<
     SubscriptionPlan[]
   >([]);
@@ -50,28 +51,25 @@ const OrderPhysicalCard = () => {
     }
   };
 
-  const [isExpanded, setIsExpanded] = useState(false);
-  const [isTrash, setIsTrash] = useState(false);
-  const handleButtonTrash = () => {
-    setIsTrash(!isTrash);
-  };
+  // const [isExpanded, setIsExpanded] = useState(false);
+  // const [isTrash, setIsTrash] = useState(false);
+  // const handleButtonTrash = () => {
+  //   setIsTrash(!isTrash);
+  // };
 
   const [selectedPhysicalCard, setSelectedPhysicalCard] = useState("card1");
 
-  const toggleExpand = () => {
-    +setIsExpanded(!isExpanded);
-  };
+  // const toggleExpand = () => {
+  //   +setIsExpanded(!isExpanded);
+  // };
 
   const selectedCard =
     carouselCards[selectedPhysicalCard as keyof typeof carouselCards];
 
-  const totalItems = items.length;
-  const subtotal = items.reduce((acc, item) => acc + item.price, 0);
-
   return (
     <div className="relative max-h-screen flex flex-col max-w-sm">
       {/* Dim Background Overlay */}
-      {isExpanded && <div className="absolute inset-0 opacity-50 z-10"></div>}
+      {/* {isExpanded && <div className="absolute inset-0 opacity-50 z-10"></div>} */}
 
       {/* Navigation Bar */}
       <NavBar title="Card Shop" href="/cards" />
@@ -149,7 +147,7 @@ const OrderPhysicalCard = () => {
       </div>
 
       {/* Arrow Toggle Button */}
-      <div className="relative z-20 bg-white dark:bg-transparent flex justify-center items-center border-t rounded-t-xl pt-4">
+      {/* <div className="relative z-20 bg-white dark:bg-transparent flex justify-center items-center border-t rounded-t-xl pt-4">
         <button onClick={toggleExpand} className="p-2 dark:bg-transparent ">
           {!isExpanded ? <ChevronUp /> : <ChevronDown />}
         </button>
@@ -162,26 +160,26 @@ const OrderPhysicalCard = () => {
             {!isTrash ? <Trash /> : <Check />}{" "}
           </Button>
         )}
-      </div>
+      </div> */}
 
       {/* Collapsible Section */}
-      <div
+      {/* <div
         className={`z-20 bg-white dark:bg-transparent overflow-hidden transition-all duration-500 ease-in-out ${
           isExpanded ? "max-h-96 p-4" : "max-h-0 p-0"
         }`}
       >
         <h2 className="text-lg font-bold mb-2">Your Cart</h2>
         <div className="space-y-4 w-full h-96 overflow-y-auto pb-16 "></div>
-      </div>
+      </div> */}
 
       {/* Fixed Bottom Section */}
       <div className=" p-4  z-20 bg-white dark:bg-transparent ">
-        <h1 className="mb-2">
+        <p>
           {totalItems} {totalItems === 1 ? "Card" : "Cards"} in Cart
-        </h1>
+        </p>
         <div className="flex justify-between items-center">
           <p className="space-x-2">
-            SubTotal: <span className="text-greenTitle">₱{subtotal}</span>
+            SubTotal: <span className="text-greenTitle">{formatCurrency(subtotal)}</span>
           </p>
           <Link href="/cards/checkout">
             <Button variant="green">Checkout</Button>
