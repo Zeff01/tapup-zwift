@@ -17,10 +17,11 @@ import {
 } from "firebase/firestore";
 import { firebaseDb } from "../firebase";
 import { toast } from "react-toastify";
-import { Card, TransactionBoard } from "@/types/types";
+import { Card, TransactionBoard, Users } from "@/types/types";
 import { revalidatePath } from "../../revalidate";
 import { authCurrentUser } from "../auth";
 import { differenceInDays } from "date-fns";
+import { getUserName } from "@/lib/utils";
 
 export const createCard = async ({
   user_id,
@@ -570,12 +571,14 @@ export const getAllCards = async ({ role }: { role: string }) => {
 
     const cardCollection = collection(firebaseDb, "cards");
     const transacCollection = collection(firebaseDb, "transactions");
+    const userCollection = collection(firebaseDb, "user-account");
 
     const q = query(cardCollection, orderBy("createdAt", "desc"));
 
-    const [cardSnap, transacSnap] = await Promise.all([
+    const [cardSnap, transacSnap, userSnap] = await Promise.all([
       getDocs(q),
       getDocs(transacCollection),
+      getDocs(userCollection),
     ]);
 
     if (cardSnap.empty) {
@@ -591,18 +594,34 @@ export const getAllCards = async ({ role }: { role: string }) => {
       };
     });
 
+    const users = userSnap.docs.map((doc) => {
+      const data = doc.data() as Users;
+
+      return {
+        ...data,
+        id: doc.id,
+      };
+    });
+
     const cards = cardSnap.docs.map((cardDoc) => {
+      const cardData = cardDoc.data() as Omit<Card, "id">;
       const cardId = cardDoc.id;
 
       const matchingTransaction = transactions.find((t) =>
         t.cards.some((c) => c.id === cardId)
       );
 
+      const matchingCardOwner = users.find(
+        (user) => user.id === cardData.owner
+      );
+
+      const cardOwnerName = getUserName(matchingCardOwner);
+
       return {
         id: cardId,
-        ...(cardDoc.data() as Omit<Card, "id">),
+        ...cardData,
         transactionId: matchingTransaction?.id ?? null,
-        customerName: matchingTransaction?.receiver.customerName ?? null,
+        cardOwner: cardOwnerName,
       };
     });
 
@@ -708,7 +727,7 @@ const resetCardFields = () => ({
   whatsappNumber: "",
   skypeInviteUrl: "",
   websiteUrl: "",
-  printStatus: false,
+  //printStatus: false,
   userCode: "",
   user_link: "",
 });
