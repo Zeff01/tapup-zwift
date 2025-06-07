@@ -54,6 +54,7 @@ const PreviewDialog = ({
       console.error("Failed to update print status", error);
     } finally {
       setPrintBtnDisable(false);
+      onClose();
     }
   };
 
