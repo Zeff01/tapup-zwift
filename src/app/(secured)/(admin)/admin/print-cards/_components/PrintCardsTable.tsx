@@ -115,13 +115,16 @@ const PrintCardsTable = ({ cardsData }: { cardsData: PrintCardsInfo[] }) => {
   return (
     <div className="container mx-auto py-8 px-4">
       <div className="flex justify-between items-center mb-6 gap-4">
-        <h1 className="text-3xl font-bold">Manage Print Cards</h1>
+        <h1 className="text-2xl min-[480px]:text-3xl font-bold">
+          Manage Print Cards
+        </h1>
         <Button
           onClick={() => setIsGenModalOpen(true)}
           className="bg-blue-600 hover:bg-blue-700 font-semibold text-white"
         >
           <Plus size={16} className="mr-2" />
-          Generate Cards
+          <span className="hidden min-[480px]:block">Generate Cards</span>
+          <span className="block min-[480px]:hidden">Create Cards</span>
         </Button>
       </div>
 
@@ -178,12 +181,12 @@ const PrintCardsTable = ({ cardsData }: { cardsData: PrintCardsInfo[] }) => {
         <Table>
           <TableHeader>
             <TableRow>
-              <TableHead>Card Owner</TableHead>
+              <TableHead className="whitespace-nowrap">Card Owner</TableHead>
               <TableHead>Transaction ID</TableHead>
               <TableHead>Subscription ID</TableHead>
-              <TableHead>Transfer Code</TableHead>
-              <TableHead>Date Created</TableHead>
-              <TableHead>Status</TableHead>
+              <TableHead className="whitespace-nowrap">Transfer Code</TableHead>
+              <TableHead className="whitespace-nowrap">Date Created</TableHead>
+              <TableHead className="whitespace-nowrap">Status</TableHead>
               <TableHead className="w-[100px] text-center">Actions</TableHead>
             </TableRow>
           </TableHeader>
@@ -191,10 +194,18 @@ const PrintCardsTable = ({ cardsData }: { cardsData: PrintCardsInfo[] }) => {
           <TableBody>
             {currentCards.map((card, index) => (
               <TableRow key={index}>
-                <TableCell>{card.cardOwner}</TableCell>
-                <TableCell>{card.transactionId}</TableCell>
-                <TableCell>{card.subscription_id}</TableCell>
-                <TableCell>{card.transferCode}</TableCell>
+                <TableCell className="whitespace-nowrap">
+                  {card.cardOwner}
+                </TableCell>
+                <TableCell>
+                  {card.transactionId ? card.transactionId : "N/A"}
+                </TableCell>
+                <TableCell>
+                  {card.subscription_id ? card.subscription_id : "N/A"}
+                </TableCell>
+                <TableCell className="whitespace-nowrap">
+                  {card.transferCode}
+                </TableCell>
                 <TableCell>
                   {card.createdAt &&
                   typeof card.createdAt.seconds === "number" &&
@@ -207,7 +218,7 @@ const PrintCardsTable = ({ cardsData }: { cardsData: PrintCardsInfo[] }) => {
                 </TableCell>
                 <TableCell>
                   <Badge
-                    className={`${card.printStatus ? "bg-green-500 hover:bg-green-600" : "bg-red-500 hover:bg-red-600"} text-white select-none font-normal`}
+                    className={`${card.printStatus ? "bg-green-500 hover:bg-green-600" : "bg-red-500 hover:bg-red-600"} text-white select-none font-normal whitespace-nowrap`}
                   >
                     {card.printStatus ? "Printed" : "Not Printed"}
                   </Badge>
