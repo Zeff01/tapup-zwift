@@ -12,17 +12,18 @@ import {
 import Loading from "@/src/app/loading";
 import { useConfirm } from "@/hooks/useConfirm";
 // import { QrCode, ShoppingBag } from "lucide-react";
-import { ShoppingBag } from "lucide-react";
+// import { ShoppingBag } from "lucide-react";
+
 // import QrCodeModal from "@/components/qrcode/qrcode-modal";
 import * as Dialog from "@radix-ui/react-dialog";
 import { firebaseAuth } from "@/lib/firebase/firebase";
 import { toast } from "react-toastify";
 import { useQueryClient } from "@tanstack/react-query";
 import { TooltipProvider } from "@radix-ui/react-tooltip";
-import { useRouter } from "next/navigation";
+// import { useRouter } from "next/navigation";
 
 const Cards = () => {
-  const router = useRouter();
+  // const router = useRouter();
   const [ConfirmDialog, confirm] = useConfirm(
     "Are you sure",
     "You are about to delete this card"
@@ -84,20 +85,12 @@ const Cards = () => {
             >
               Add Card
             </button>
-            {/* TODO: Buy Card per User and Orders Monitor*/}
-            {/* <Link
-              href={"/cards/cardShop"}
+            <Link
+              href={"/cards/card-shop"}
               className="text-primary-foreground mr-4 bg-green-500 rounded-lg md:text-lg px-6 py-2"
             >
               Buy a Card
-            </Link> */}
-            {/* <div className="flex items-center justify-center">
-              <ShoppingBag
-                onClick={() => router.push("/orders")}
-                size={36}
-                className="cursor-pointer"
-              />
-            </div> */}
+            </Link>
           </div>
         </div>
 

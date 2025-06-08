@@ -10,28 +10,34 @@ import {
 } from "@/components/ui/dialog";
 import { Separator } from "@/components/ui/separator";
 import { Button } from "@/components/ui/button";
-import { CardItem } from "@/types/types";
+import { UserState } from "@/types/types";
 import { updateSingleCardPrintStatus } from "@/lib/firebase/actions/card.action";
 import { useState } from "react";
-import { useUserContext } from "@/providers/user-provider";
 import { toast } from "react-toastify";
+import { carouselCards } from "@/constants";
+import { PrintCardsInfo } from "./PrintCardsTable";
 import Image from "next/image";
 
 interface PreviewDialogProps {
-  selectedCard: string;
-  setSelectedCard: (value: string | null) => void;
-  card?: CardItem;
+  isOpen: boolean;
+  onClose: () => void;
+  card: PrintCardsInfo | null;
   cardId: string | null;
+  user: UserState;
 }
 
 const PreviewDialog = ({
-  selectedCard,
-  setSelectedCard,
+  isOpen,
+  onClose,
   card,
   cardId,
+  user,
 }: PreviewDialogProps) => {
   const [printBtnDisable, setPrintBtnDisable] = useState(false);
-  const { user } = useUserContext();
+
+  const currentCard = Object.values(carouselCards).find(
+    (c) => c.title === card?.chosenPhysicalCard?.name
+  );
 
   const handlePrint = async () => {
     setPrintBtnDisable(true);
@@ -44,7 +50,6 @@ const PreviewDialog = ({
 
       if (!result.success) return toast.error(result.message);
       toast.success(result.message);
-      setSelectedCard(null);
     } catch (error) {
       console.error("Failed to update print status", error);
     } finally {
@@ -53,13 +58,10 @@ const PreviewDialog = ({
   };
 
   return (
-    <Dialog
-      open={!!selectedCard}
-      onOpenChange={(open) => !open && setSelectedCard(null)}
-    >
+    <Dialog open={isOpen} onOpenChange={onClose}>
       <DialogContent className="sm:max-w-md">
         <DialogHeader>
-          <DialogTitle>{card?.title}</DialogTitle>
+          <DialogTitle>{card?.chosenPhysicalCard?.name}</DialogTitle>
           <DialogDescription>Card ID: {cardId}</DialogDescription>
         </DialogHeader>
 
@@ -68,10 +70,10 @@ const PreviewDialog = ({
           <div className="relative w-full h-80 mb-4">
             <Image
               src={
-                card?.image ||
+                currentCard?.image ||
                 "https://ralfvanveen.com/wp-content/uploads/2021/06/Placeholder-_-Glossary.svg"
               }
-              alt={card?.title || "Card image"}
+              alt={card?.chosenPhysicalCard?.name || "Card image"}
               fill
               className="object-contain rounded-md"
             />
@@ -82,10 +84,10 @@ const PreviewDialog = ({
             <button className="relative w-16 h-24 rounded-md overflow-hidden border-2 border-primary">
               <Image
                 src={
-                  card?.image ||
+                  currentCard?.image ||
                   "https://ralfvanveen.com/wp-content/uploads/2021/06/Placeholder-_-Glossary.svg"
                 }
-                alt={card?.title || "Card image"}
+                alt={card?.chosenPhysicalCard?.name || "Card image"}
                 fill
                 className="object-cover"
               />
@@ -97,12 +99,12 @@ const PreviewDialog = ({
         <div className="space-y-2">
           <div className="flex justify-between">
             <span className="font-medium">Name:</span>
-            <span>{card?.title}</span>
+            <span>{card?.chosenPhysicalCard?.name}</span>
           </div>
 
           <div className="flex justify-between">
             <span className="font-medium">Price:</span>
-            <span>{card?.price ? `₱${card?.price}` : "N/A"}</span>
+            <span>{currentCard?.price ? `₱${currentCard?.price}` : "N/A"}</span>
           </div>
 
           <Separator />

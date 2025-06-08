@@ -21,6 +21,7 @@ import {
   Card,
   CreateInvoiceType,
   CustomerType,
+  DeliveryAddress,
   ExtendedUserInterface,
   GenericCard,
   GenericCardType,
@@ -377,9 +378,10 @@ export const addSubscription = async ({
 
     const addDocPromises = cardIds.map((id) =>
       addDoc(subscriptionCollection, {
-        ...(userId && { userId }),
+        ...(userId && { user_id: userId }),
         card_id: id,
         dateAvailed: dateAvailedTimestamp,
+        ...(userId && { dateStarted: dateAvailedTimestamp }),
         subscriptionDays,
       })
     );
@@ -401,6 +403,7 @@ export const addSubscription = async ({
       const specificSubscriptionId = subscriptionDocs[i].id;
       const cardRef = doc(firebaseDb, "cards", cardId);
       batch.update(cardRef, {
+        ...(userId && { owner: userId }),
         subscription_id: specificSubscriptionId,
       });
     }
@@ -433,6 +436,61 @@ export const getSubscriptionPlans = async (): Promise<SubscriptionPlan[]> => {
   } catch (error) {
     console.error("Error fetching subscription plans:", error);
     return [];
+  }
+};
+
+export const manageUserDeliveryAddress = async (
+  userId: string,
+  action: "add" | "update" | "delete",
+  address: DeliveryAddress,
+  index?: number
+) => {
+  if (!userId) throw new Error("User ID is required");
+  try {
+    const userRef = doc(firebaseDb, "user-account", userId);
+    const userDoc = await getDoc(userRef);
+
+    if (!userDoc.exists()) {
+      throw new Error("User document not found");
+    }
+
+    const userData = userDoc.data();
+    const addresses: DeliveryAddress[] = userData.deliveryAddresses || [];
+
+    if (action === "add") {
+      const newAddresses = [...addresses, address];
+      await updateDoc(userRef, { deliveryAddresses: newAddresses });
+      console.log("Successfully added delivery address for user:", userId);
+      return newAddresses.length - 1; // Return new index
+    }
+
+    if (typeof index !== "number") {
+      throw new Error("Index is required for update/delete");
+    }
+
+    if (index < 0 || index >= addresses.length) {
+      throw new Error("Invalid address index");
+    }
+
+    if (action === "update") {
+      const newAddresses = [...addresses];
+      newAddresses[index] = address;
+      await updateDoc(userRef, { deliveryAddresses: newAddresses });
+      console.log("Successfully updated delivery address at index:", index);
+      return index;
+    }
+
+    if (action === "delete") {
+      const newAddresses = addresses.filter((_, i) => i !== index);
+      await updateDoc(userRef, { deliveryAddresses: newAddresses });
+      console.log("Successfully deleted delivery address at index:", index);
+      return index;
+    }
+
+    throw new Error("Invalid action specified");
+  } catch (error) {
+    console.error(`Error ${action}ing delivery address:`, error);
+    throw error;
   }
 };
 
@@ -521,7 +579,8 @@ export const createCustomerAndRecurringPlanBundle = async (
   customerData: CustomerType,
   subscriptionPlan: SubscriptionPlan,
   cardIds: string[],
-  totalPrice?: number
+  totalPrice?: number,
+  userId?: string
 ) => {
   try {
     const { data: customer } = await xenditClient.post(
@@ -578,6 +637,7 @@ export const createCustomerAndRecurringPlanBundle = async (
       success_return_url: process.env.NEXT_PUBLIC_SUCCESS_REDIRECT_URL,
       failure_return_url: process.env.NEXT_PUBLIC_FAILURE_REDIRECT_URL,
       metadata: {
+        ...(userId && { userId }),
         cardIds: cardIds,
         per_card_price: subscriptionPlan.price,
       },
