@@ -10,6 +10,7 @@ import {
   saveCartItemsByUserUid,
 } from "@/lib/firebase/actions/cart.action";
 import { SubscriptionPlan } from "@/types/types";
+import { toast } from "react-toastify";
 
 export type CartItem = {
   id: string;
@@ -95,11 +96,13 @@ export function CartProvider({ children }: { children: React.ReactNode }) {
   const addItem = (item: Omit<CartItem, "quantity">) => {
     setItems((prevItems) => {
       const existingItem = prevItems.find((i) => i.id === item.id);
+
       if (existingItem) {
         return prevItems.map((i) =>
           i.id === item.id ? { ...i, quantity: i.quantity + 1 } : i
         );
       }
+
       return [...prevItems, { ...item, quantity: 1 }];
     });
     // openCart();
