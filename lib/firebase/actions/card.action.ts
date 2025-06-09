@@ -22,6 +22,8 @@ import { revalidatePath } from "../../revalidate";
 import { authCurrentUser } from "../auth";
 import { differenceInDays } from "date-fns";
 import { getUserName } from "@/lib/utils";
+import { CardRequest } from "@/src/app/(secured)/(admin)/admin/print-cards/_components/GenerateCardsDialog";
+import { addCard, addSubscription } from "./user.action";
 
 export const createCard = async ({
   user_id,
@@ -515,6 +517,7 @@ export const transferCardOwnershipUsingCode = async (
       updateCardResult
     );
     toast.success("Card transferred successfully!");
+    revalidatePath("/admin/print-cards");
     return true;
   } catch (error) {
     console.error("Error transferring card:", error);
@@ -665,7 +668,7 @@ export const deletePrintCard = async ({
     // await Promise.all([deleteDoc(cardRef), deleteDoc(subscriptionRef)]);
 
     revalidatePath("/admin/print-cards");
-    return { success: true, message: "Card deleted successfully" };
+    return { success: true, message: "Card deleted successfully!" };
   } catch (error) {
     console.error("Error deleting card", error);
     return { success: false, message: "Failed to delete card" };
@@ -700,10 +703,45 @@ export const updateSingleCardPrintStatus = async ({
     });
 
     revalidatePath("/admin/print-cards");
-    return { success: true, message: "Card status updated" };
+    return { success: true, message: "Card status updated!" };
   } catch (error) {
     console.error("Error Updating Card Print Status", error);
     return { success: false, message: "Error updating card print status" };
+  }
+};
+
+export const generateMultipleCards = async ({
+  cardRequests,
+  subscriptionDays,
+  role,
+}: {
+  cardRequests: CardRequest[];
+  subscriptionDays: number;
+  role: string;
+}) => {
+  try {
+    if (!role || role !== "admin") {
+      throw new Error("This is an Admin Only Request");
+    }
+
+    const addCardPromises = cardRequests.flatMap((item) => {
+      return Array.from({ length: item.quantity }, () =>
+        addCard({ id: item.id, name: item.cardType })
+      );
+    });
+
+    const cardResults = await Promise.all(addCardPromises);
+
+    await addSubscription({
+      cardIds: [...(cardResults || [])],
+      subscriptionDays,
+    });
+
+    revalidatePath("/admin/print-cards");
+    return { success: true, message: "Created multiple cards!" };
+  } catch (error) {
+    console.error("Error generating cards", error);
+    return { success: false, message: "Failed to generate cards" };
   }
 };
 
