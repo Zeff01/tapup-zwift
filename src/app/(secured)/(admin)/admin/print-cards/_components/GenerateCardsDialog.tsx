@@ -20,16 +20,13 @@ import { CreditCard, Plus, Minus, Trash2, LoaderCircle } from "lucide-react";
 import { carouselCards } from "@/constants";
 import { useEffect, useState } from "react";
 import { Badge } from "@/components/ui/badge";
-import {
-  addCard,
-  addSubscription,
-  getSubscriptionPlans,
-} from "@/lib/firebase/actions/user.action";
-import { SubscriptionPlan } from "@/types/types";
+import { getSubscriptionPlans } from "@/lib/firebase/actions/user.action";
+import { generateMultipleCards } from "@/lib/firebase/actions/card.action";
+import { SubscriptionPlan, UserState } from "@/types/types";
 import { toast } from "react-toastify";
 import Image from "next/image";
 
-type CardRequest = {
+export type CardRequest = {
   id: string;
   cardType: string;
   quantity: number;
@@ -38,9 +35,14 @@ type CardRequest = {
 interface GenerateCardsDialogProps {
   isOpen: boolean;
   onClose: () => void;
+  user: UserState;
 }
 
-const GenerateCardsDialog = ({ isOpen, onClose }: GenerateCardsDialogProps) => {
+const GenerateCardsDialog = ({
+  isOpen,
+  onClose,
+  user,
+}: GenerateCardsDialogProps) => {
   const [cardRequests, setCardRequests] = useState<CardRequest[]>([]);
   const [selectedCardType, setSelectedCardType] = useState<string>("");
   const [isLoadingGeneration, setIsLoadingGeneration] = useState(false);
@@ -130,26 +132,29 @@ const GenerateCardsDialog = ({ isOpen, onClose }: GenerateCardsDialogProps) => {
 
   const handleGenerateCards = async () => {
     setIsLoadingGeneration(true);
-    if (!selectedPlan) {
-      toast.error("No subscription plan selected.");
-      return;
+
+    try {
+      if (!selectedPlan) {
+        toast.error("No subscription plan selected.");
+        return;
+      }
+
+      const result = await generateMultipleCards({
+        cardRequests: cardRequests,
+        subscriptionDays: selectedPlan.durationDays,
+        role: user?.role!,
+      });
+
+      if (!result.success) return toast.error(result.message);
+      toast.success(result.message);
+      setCardRequests([]);
+      setSelectedCardType("");
+      onClose();
+    } catch (error) {
+      console.error("Failed to generate multiple cards", error);
+    } finally {
+      setIsLoadingGeneration(false);
     }
-    const addCardPromises = cardRequests.flatMap((item) => {
-      return Array.from({ length: item.quantity }, () =>
-        addCard({ id: item.id, name: item.cardType })
-      );
-    });
-
-    const cardResults = await Promise.all(addCardPromises);
-
-    await addSubscription({
-      cardIds: [...(cardResults || [])],
-      subscriptionDays: selectedPlan.durationDays,
-    });
-    setCardRequests([]);
-    setSelectedCardType("");
-    setIsLoadingGeneration(false);
-    onClose();
   };
 
   const totalCards = cardRequests.reduce((sum, req) => sum + req.quantity, 0);
