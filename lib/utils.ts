@@ -1,4 +1,4 @@
-import { Card } from "@/types/types";
+import { Card, Users } from "@/types/types";
 import { clsx, type ClassValue } from "clsx";
 import { PixelCrop } from "react-image-crop";
 import { twMerge } from "tailwind-merge";
@@ -189,4 +189,17 @@ export function formatDate(timestamp: number): string {
 
   const date = new Date(timestamp);
   return date.toLocaleString(); // Uses the user's browser/system locale settings
+}
+
+export function getUserName(user: Users | undefined) {
+  if (!user) return "N/A";
+
+  const firstName = user.firstName ?? user.firstname ?? "";
+  const lastName = user.lastName ?? user.lastname ?? "";
+
+  const fullname = `${firstName} ${lastName}`.trim();
+
+  if (fullname) return fullname;
+
+  return "N/A";
 }
