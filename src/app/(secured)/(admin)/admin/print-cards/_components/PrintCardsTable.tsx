@@ -315,6 +315,7 @@ const PrintCardsTable = ({ cardsData }: { cardsData: PrintCardsInfo[] }) => {
       <GenerateCardsDialog
         isOpen={isGenModalOpen}
         onClose={() => setIsGenModalOpen(false)}
+        user={user}
       />
     </div>
   );
