@@ -14,6 +14,7 @@ import {
   Timestamp,
   updateDoc,
   where,
+  writeBatch,
 } from "firebase/firestore";
 import { firebaseDb } from "../firebase";
 import { toast } from "react-toastify";
@@ -672,6 +673,48 @@ export const deletePrintCard = async ({
   } catch (error) {
     console.error("Error deleting card", error);
     return { success: false, message: "Failed to delete card" };
+  }
+};
+
+export const deleteMultipleCards = async ({
+  role,
+  cardIds,
+}: {
+  role: string;
+  cardIds: string[];
+}) => {
+  try {
+    if (!role || role !== "admin") {
+      throw new Error("This is an Admin Only Request");
+    }
+    if (!cardIds || cardIds.length === 0)
+      throw new Error("card Ids are missing");
+
+    const user = await authCurrentUser();
+    if (!user) throw new Error("No Auth User");
+
+    const batch = writeBatch(firebaseDb);
+    const subscriptionsRef = collection(firebaseDb, "subscriptions");
+
+    for (const cardId of cardIds) {
+      const cardRef = doc(firebaseDb, "cards", cardId);
+      batch.delete(cardRef);
+
+      const q = query(subscriptionsRef, where("cardId", "==", cardId));
+      const subscriptionSnap = await getDocs(q);
+
+      subscriptionSnap.forEach((docSnap) => {
+        batch.delete(docSnap.ref);
+      });
+    }
+
+    await batch.commit();
+
+    revalidatePath("/admin/print-cards");
+    return { success: true, message: "Cards deleted successfully!" };
+  } catch (error) {
+    console.error("Error deleting cards", error);
+    return { success: false, message: "Failed to delete cards" };
   }
 };
 
