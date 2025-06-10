@@ -316,7 +316,7 @@ export default function CheckoutForm() {
                   <Dialog
                     open={isAddressModalOpen}
                     onOpenChange={(isAddressModalOpen) => {
-                      setIsAddressModalOpen(true);
+                      setIsAddressModalOpen(isAddressModalOpen);
                       if (!isAddressModalOpen) {
                         resetAddressForm();
                       }
