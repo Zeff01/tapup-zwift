@@ -6,14 +6,14 @@ import { createPortfolioSchema } from "@/lib/zod-schema";
 import React, { useEffect, useState } from "react";
 import { z } from "zod";
 import { Button } from "@/components/ui/button";
-import { ShoppingCart } from "lucide-react";
+import { ShoppingCart, Loader2 } from "lucide-react";
 import { BiSolidPurchaseTag } from "react-icons/bi";
 import Image from "next/image";
 import NavBar from "./Navbar";
 import { SubscriptionPlan } from "@/types/types";
-import Link from "next/link";
 import { getSubscriptionPlans } from "@/lib/firebase/actions/user.action";
 import { useCart } from "@/hooks/use-cart-v2";
+import { useRouter } from 'next/navigation';
 
 export type ChosenPhysicalCardType = z.infer<
   typeof createPortfolioSchema
@@ -21,6 +21,7 @@ export type ChosenPhysicalCardType = z.infer<
 
 const OrderPhysicalCard = () => {
   const { addItem } = useCart();
+  const router = useRouter();
 
   const [subscriptionPlans, setSubscriptionPlans] = useState<
     SubscriptionPlan[]
@@ -51,6 +52,9 @@ const OrderPhysicalCard = () => {
 
   const selectedCard =
     carouselCards[selectedPhysicalCard as keyof typeof carouselCards];
+
+  console.log(selectedCard)
+  const [isCheckoutClicked, setIsCheckoutClicked] = useState(false);
 
   return (
     <div className="relative max-h-screen w-full flex flex-col">
@@ -129,17 +133,34 @@ const OrderPhysicalCard = () => {
                   subscriptionPlan: selectedPlan ?? undefined,
                 })
               }
+              disabled={isCheckoutClicked}
               className="flex w-full gap-2 md:text-lg md:py-7 hover:bg-black dark:hover:bg-grayTemplate"
             >
               <ShoppingCart />
               <span>Add to Cart</span>
             </Button>
-            <Link href="/cards/checkout" className="w-full">
-              <Button variant="green" className="w-full flex gap-2 md:text-lg md:py-7">
-                <BiSolidPurchaseTag />
-                <span>Checkout</span>
-              </Button>
-            </Link>
+            <Button
+              onClick={() => {
+                if (!selectedPlan || !selectedCard || isCheckoutClicked) return;
+                setIsCheckoutClicked(true);
+
+                addItem({
+                  id: selectedPhysicalCard,
+                  name: selectedCard?.title || "",
+                  price: selectedPlan?.price || 0,
+                  image: selectedCard?.image || "",
+                  subscriptionPlan: selectedPlan ?? undefined,
+                });
+
+                router.push("/cards/checkout");
+              }}
+              disabled={isCheckoutClicked}
+              variant="green"
+              className="w-full flex gap-2 md:text-lg md:py-7">
+              {isCheckoutClicked
+                ? <><Loader2 className="mr-2 h-4 w-4 animate-spin" /><span>Checking Out...</span></>
+                : <><BiSolidPurchaseTag /><span>Checkout</span></>}
+            </Button>
           </div>
         </div>
       </div>
