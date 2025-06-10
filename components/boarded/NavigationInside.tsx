@@ -53,7 +53,7 @@ const OverlayMenu = () => {
         className="bg-background flex flex-col sm:w-[25rem] w-full"
       >
         <SheetTitle className="sr-only">Mobile Navigation</SheetTitle>
-        <Link href={"/"} onClick={() => setOpenMenu(false)}>
+        <Link href={"/"} onClick={() => setOpenMenu(false)} className="max-w-min">
           <div className="self-start h-12 w-24">
             <TapupLogo className="w-full h-full" />
           </div>
