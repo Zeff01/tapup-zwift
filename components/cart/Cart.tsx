@@ -1,7 +1,9 @@
 "use client";
 
-import { ShoppingCart } from "lucide-react";
-import { useCart } from "@/providers/cart-provider-v2";
+import { ShoppingCart, Trash } from "lucide-react";
+import { Checkbox } from "../ui/checkbox";
+import { Label } from "../ui/label";
+import { type CartItem as CartItemType, useCart } from "@/providers/cart-provider-v2";
 import { Button } from "@/components/ui/button";
 import {
   Sheet,
@@ -17,12 +19,29 @@ import { Separator } from "@/components/ui/separator";
 import { cn } from "@/lib/utils";
 import Link from "next/link";
 import { useUserContext } from "@/providers/user-provider";
+import { useState, useEffect } from "react";
 
 export default function Cart() {
-  const { items, totalItems, isOpen, openCart, closeCart } = useCart();
-
+  const { items, totalItems, isOpen, openCart, closeCart, clearCart, removeItem } = useCart();
+  const [checkedItems, setCheckedItems] = useState<CartItemType[]>([]);
+  const [isAllSelected, setIsAllSelected] = useState(false);
   const { user } = useUserContext();
 
+  const handleSelectAll = (checked: boolean) => {
+    setIsAllSelected(checked);
+    if (checked) {
+      setCheckedItems([...items]);
+    } else {
+      setCheckedItems([]);
+    }
+
+    console.log(checkedItems)
+  };
+
+  useEffect(() => {
+    // Keep "Select All" in sync if individual checkboxes are manually changed
+    setIsAllSelected(checkedItems.length === items.length && items.length > 0);
+  }, [checkedItems, items]);
   return (
     <>
       <div className="relative hover:bg-transparent" onClick={openCart}>
@@ -49,10 +68,56 @@ export default function Cart() {
 
           {items.length > 0 ? (
             <>
-              <ScrollArea className="flex-1 py-4">
+              <div className="flex justify-between items-center gap-4 px-1">
+                <div className="flex items-center gap-4">
+                  <Checkbox
+                    id="select-all"
+                    checked={isAllSelected}
+                    onCheckedChange={(value) => handleSelectAll(Boolean(value))}
+                  />
+                  <Label htmlFor="select-all" className="opacity-50">Select All</Label>
+                </div>
+                <Button
+                  variant="link"
+                  onClick={() => {
+                    if (isAllSelected) {
+                      clearCart();
+                      setCheckedItems([]);
+                    } else {
+                      checkedItems.forEach((checkedItem) => {
+                        removeItem(checkedItem.id);
+                      });
+                      setCheckedItems((prev) =>
+                        prev.filter((item) =>
+                          !checkedItems.some((checkedItem) => checkedItem.id === item.id)
+                        )
+                      );
+                    }
+                  }}
+                  className={(checkedItems.length > 0) ? "text-red-500 px-0" : "px-0"}
+                  disabled={(checkedItems.length === 0)}
+                >
+                  <Trash className="shrink-0" />
+                  <span>Remove</span>
+                </Button>
+              </div>
+              <ScrollArea className="flex-1">
                 <div className="space-y-4 px-1">
                   {items.map((item) => (
-                    <CartItem key={item.id} item={item} />
+                    <div key={item.id} className="flex gap-4 w-full">
+                      <Checkbox
+                        checked={checkedItems.some((i) => i.id === item.id)}
+                        onCheckedChange={(isChecked) => {
+                          if (isChecked) {
+                            setCheckedItems([...checkedItems, item]);
+                          } else {
+                            const updatedCheckedItems = checkedItems.filter((i) => i.id !== item.id);
+                            setCheckedItems(updatedCheckedItems);
+                          }
+                        }}
+                        className="relative top-5 size-4" />
+                      <CartItem item={item} />
+                    </div>
                   ))}
                 </div>
               </ScrollArea>

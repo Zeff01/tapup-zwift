@@ -53,7 +53,6 @@ const OrderPhysicalCard = () => {
   const selectedCard =
     carouselCards[selectedPhysicalCard as keyof typeof carouselCards];
 
-  console.log(selectedCard)
   const [isCheckoutClicked, setIsCheckoutClicked] = useState(false);
 
   return (
