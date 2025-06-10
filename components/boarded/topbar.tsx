@@ -7,7 +7,7 @@ import Link from "next/link";
 const TopbarBoarded = () => {
   return (
     <div className="flex justify-between lg:hidden py-4 border-b px-4 sticky top-0 z-50 bg-transparent backdrop-blur-xl items-center ">
-      <Link href={"/"}>
+      <Link href={"/dashboard"}>
         {" "}
         <div className="w-20 lg:w-28 aspect-[130/48]">
           <TapupLogo />

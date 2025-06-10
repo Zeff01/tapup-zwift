@@ -57,7 +57,6 @@ const OrderPhysicalCard = () => {
       {/* Navigation Bar */}
       <NavBar title="Card Shop" href="/cards" />
 
-
       <div className="flex-1 lg:flex-none flex flex-col lg:grid lg:grid-cols-2 overflow-y-auto p-4 md:px-8 lg:pt-8">
         {/* CONTAINER I */}
         <div className="flex flex-col my-4 pb-4">
@@ -83,8 +82,12 @@ const OrderPhysicalCard = () => {
         <div className="flex-1 flex flex-col">
           {/* Card Description */}
           <div className="relative min-h-36 md:min-h-40 lg:min-h-44">
-            <h1 className="scroll-m-20 text-left text-4xl md:text-5xl font-extrabold tracking-tight text-balance mb-2">{selectedCard.title}</h1>
-            <p className="md:text-lg leading-none font-medium text-pretty text-muted-foreground">{selectedCard.description}</p>
+            <h1 className="scroll-m-20 text-left text-4xl md:text-5xl font-extrabold tracking-tight text-balance mb-2">
+              {selectedCard.title}
+            </h1>
+            <p className="md:text-lg leading-none font-medium text-pretty text-muted-foreground">
+              {selectedCard.description}
+            </p>
           </div>
 
           <div className="lg:hidden">
@@ -135,7 +138,10 @@ const OrderPhysicalCard = () => {
               <span>Add to Cart</span>
             </Button>
             <Link href="/cards/checkout" className="w-full">
-              <Button variant="green" className="w-full flex gap-2 md:text-lg md:py-7">
+              <Button
+                variant="green"
+                className="w-full flex gap-2 md:text-lg md:py-7"
+              >
                 <BiSolidPurchaseTag />
                 <span>Checkout</span>
               </Button>
