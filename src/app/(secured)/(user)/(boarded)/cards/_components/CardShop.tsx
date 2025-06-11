@@ -6,14 +6,14 @@ import { createPortfolioSchema } from "@/lib/zod-schema";
 import React, { useEffect, useState } from "react";
 import { z } from "zod";
 import { Button } from "@/components/ui/button";
-import { ShoppingCart } from "lucide-react";
+import { ShoppingCart, Loader2 } from "lucide-react";
 import { BiSolidPurchaseTag } from "react-icons/bi";
 import Image from "next/image";
 import NavBar from "./Navbar";
 import { SubscriptionPlan } from "@/types/types";
-import Link from "next/link";
 import { getSubscriptionPlans } from "@/lib/firebase/actions/user.action";
 import { useCart } from "@/hooks/use-cart-v2";
+import { useRouter } from 'next/navigation';
 
 export type ChosenPhysicalCardType = z.infer<
   typeof createPortfolioSchema
@@ -21,6 +21,7 @@ export type ChosenPhysicalCardType = z.infer<
 
 const OrderPhysicalCard = () => {
   const { addItem } = useCart();
+  const router = useRouter();
 
   const [subscriptionPlans, setSubscriptionPlans] = useState<
     SubscriptionPlan[]
@@ -28,6 +29,9 @@ const OrderPhysicalCard = () => {
   const [selectedPlan, setSelectedPlan] = useState<SubscriptionPlan | null>(
     null
   );
+
+  console.log(`selectedPlan: ${!selectedPlan}`);
+
   useEffect(() => {
     const fetchPlans = async () => {
       const plans = await getSubscriptionPlans();
@@ -52,14 +56,16 @@ const OrderPhysicalCard = () => {
   const selectedCard =
     carouselCards[selectedPhysicalCard as keyof typeof carouselCards];
 
+  const [isCheckoutClicked, setIsCheckoutClicked] = useState(false);
+
   return (
-    <div className="relative max-h-screen w-full flex flex-col">
+    <div className="relative w-full flex flex-col">
       {/* Navigation Bar */}
       <NavBar title="Card Shop" href="/cards" />
 
-      <div className="flex-1 lg:flex-none flex flex-col lg:grid lg:grid-cols-2 overflow-y-auto p-4 md:px-8 lg:pt-8">
+      <div className="flex-1 md:flex-none flex flex-col lg:grid lg:grid-cols-2 overflow-y-auto p-4 md:px-8 lg:pt-8">
         {/* CONTAINER I */}
-        <div className="flex flex-col my-4 pb-4">
+        <div className="flex flex-col my-4 lg:my-0 pb-4">
           <div className="flex items-center justify-center mx-6 md:mx-0 lg:ml-4 lg:mr-8">
             {selectedPhysicalCard ? (
               <div className="flex items-center aspect-[16/10] relative md:aspect-[1.601] w-full md:w-[28rem] shrink-0">
@@ -81,16 +87,16 @@ const OrderPhysicalCard = () => {
         {/* CONTAINER II */}
         <div className="flex-1 flex flex-col">
           {/* Card Description */}
-          <div className="relative min-h-36 md:min-h-40 lg:min-h-44">
-            <h1 className="scroll-m-20 text-left text-4xl md:text-5xl font-extrabold tracking-tight text-balance mb-2">
+          <div className="relative min-h-28 md:min-h-24 lg:min-h-32">
+            <h1 className="scroll-m-20 text-left text-3xl font-extrabold tracking-tight text-balance mb-2">
               {selectedCard.title}
             </h1>
-            <p className="md:text-lg leading-none font-medium text-pretty text-muted-foreground">
+            <p className="leading-none font-medium text-pretty text-muted-foreground">
               {selectedCard.description}
             </p>
           </div>
 
-          <div className="lg:hidden">
+          <div className="md:hidden">
             <OrderCardsCarousel
               selectedCardId={selectedPhysicalCard}
               setSelectedCardId={(id: string) =>
@@ -99,57 +105,72 @@ const OrderPhysicalCard = () => {
             />
           </div>
 
-          {/* Subscription Plan */}
-          <div className="relative flex-1 md:flex-none flex flex-col max-w-sm">
-            {/* Subscription Plan Dropdown */}
-            <div className="lg:mt-4">
-              <label className="block text-sm md:text-base font-medium text-gray-700 dark:text-gray-300">
-                Choose a Subscription Plan
-              </label>
-              <select
-                value={selectedPlan?.id || ""}
-                onChange={handlePlanChange}
-                className="mt-1 block w-full px-3 py-2 md:py-4 md:text-md border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-primary focus:border-primary dark:bg-gray-800 dark:border-gray-700 dark:text-white"
-              >
-                {subscriptionPlans.map((plan) => (
-                  <option key={plan.id} value={plan.id}>
-                    {plan.name} - ₱{plan.price} ({plan.durationDays} days)
-                  </option>
-                ))}
-              </select>
+          <div className="w-full md:flex md:gap-4 md:items-end md:justify-between lg:grid lg:grid-cols-1">
+            {/* Subscription Plan */}
+            <div className="relative flex-1 md:flex-none flex flex-col w-full md:max-w-xs">
+              {/* Subscription Plan Dropdown */}
+              <div className="lg:mt-4 w-full">
+                <label className="block text-sm md:text-base font-medium text-gray-700 dark:text-gray-300">
+                  Choose a Subscription Plan
+                </label>
+                <select
+                  value={selectedPlan?.id || ""}
+                  onChange={handlePlanChange}
+                  className="mt-1 block w-full px-3 py-2.5 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-primary focus:border-primary dark:bg-gray-800 dark:border-gray-700 dark:text-white"
+                >
+                  {subscriptionPlans.map((plan) => (
+                    <option key={plan.id} value={plan.id}>
+                      {plan.name} - ₱{plan.price} ({plan.durationDays} days)
+                    </option>
+                  ))}
+                </select>
+              </div>
             </div>
-          </div>
 
-          {/* Fixed Bottom Section */}
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-2 md:mt-12 lg:mt-4 md:gap-4 lg:pb-4 bg-white dark:bg-transparent">
-            <Button
-              onClick={() =>
-                addItem({
-                  id: selectedPhysicalCard,
-                  name: selectedCard?.title || "",
-                  price: selectedPlan?.price || 0,
-                  image: selectedCard?.image || "",
-                  subscriptionPlan: selectedPlan ?? undefined,
-                })
-              }
-              className="flex w-full gap-2 md:text-lg md:py-7 hover:bg-black dark:hover:bg-grayTemplate"
-            >
-              <ShoppingCart />
-              <span>Add to Cart</span>
-            </Button>
-            <Link href="/cards/checkout" className="w-full">
+            <div className="grid grid-cols-1 md:flex gap-2 mt-2 md:mt-0 md:gap-2 lg:pb-4 bg-white dark:bg-transparent">
               <Button
-                variant="green"
-                className="w-full flex gap-2 md:text-lg md:py-7"
+                onClick={() =>
+                  addItem({
+                    id: selectedPhysicalCard,
+                    name: selectedCard?.title || "",
+                    price: selectedPlan?.price || 0,
+                    image: selectedCard?.image || "",
+                    subscriptionPlan: selectedPlan ?? undefined,
+                  })
+                }
+                disabled={isCheckoutClicked || !selectedPlan}
+                className="flex w-full md:w-auto gap-2 hover:bg-black dark:hover:bg-grayTemplate"
               >
-                <BiSolidPurchaseTag />
-                <span>Checkout</span>
+                <ShoppingCart />
+                <span>Add to Cart</span>
               </Button>
-            </Link>
+              <Button
+                onClick={() => {
+                  if (!selectedPlan || !selectedCard || isCheckoutClicked) return;
+                  setIsCheckoutClicked(true);
+
+                  addItem({
+                    id: selectedPhysicalCard,
+                    name: selectedCard?.title || "",
+                    price: selectedPlan?.price || 0,
+                    image: selectedCard?.image || "",
+                    subscriptionPlan: selectedPlan ?? undefined,
+                  });
+
+                  router.push("/cards/checkout");
+                }}
+                disabled={isCheckoutClicked || !selectedPlan}
+                variant="green"
+                className="w-full md:w-auto">
+                {isCheckoutClicked
+                  ? <><Loader2 className="mr-2 h-4 w-4 animate-spin" /><span>Checking Out...</span></>
+                  : <><BiSolidPurchaseTag /><span>Checkout</span></>}
+              </Button>
+            </div>
           </div>
         </div>
       </div>
-      <div className="w-full px-12 hidden lg:block">
+      <div className="w-full px-8 hidden md:block lg:px-12">
         <OrderCardsCarousel
           selectedCardId={selectedPhysicalCard}
           setSelectedCardId={(id: string) =>
