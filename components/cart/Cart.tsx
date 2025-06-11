@@ -20,12 +20,14 @@ import { cn } from "@/lib/utils";
 import Link from "next/link";
 import { useUserContext } from "@/providers/user-provider";
 import { useState, useEffect } from "react";
+import { useRouter } from "next/navigation";
 
 export default function Cart() {
   const { items, totalItems, isOpen, openCart, closeCart, clearCart, removeItem } = useCart();
   const [checkedItems, setCheckedItems] = useState<CartItemType[]>([]);
   const [isAllSelected, setIsAllSelected] = useState(false);
   const { user } = useUserContext();
+  const router = useRouter();
 
   const handleSelectAll = (checked: boolean) => {
     setIsAllSelected(checked);
@@ -147,7 +149,14 @@ export default function Cart() {
               <div className="text-center text-muted-foreground">
                 Add items to your cart to see them here.
               </div>
-              <Button variant="outline" className="mt-4" onClick={closeCart}>
+              <Button
+                variant="outline"
+                className="mt-4"
+                onClick={() => {
+                  closeCart();
+                  router.push("/cards/card-shop")
+                }}
+              >
                 Continue Shopping
               </Button>
             </div>
