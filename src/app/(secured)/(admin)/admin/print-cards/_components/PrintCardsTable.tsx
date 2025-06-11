@@ -67,6 +67,12 @@ const PrintCardsTable = ({ cardsData }: { cardsData: PrintCardsInfo[] }) => {
             .includes(searchFilter.trim().toLowerCase()) ||
           card.transactionId
             ?.toLowerCase()
+            .includes(searchFilter.trim().toLowerCase()) ||
+          card.subscription_id
+            ?.toLowerCase()
+            .includes(searchFilter.trim().toLowerCase()) ||
+          card.transferCode
+            ?.toLowerCase()
             .includes(searchFilter.trim().toLowerCase())
       );
     }
@@ -119,7 +125,7 @@ const PrintCardsTable = ({ cardsData }: { cardsData: PrintCardsInfo[] }) => {
             size={18}
           />
           <Input
-            placeholder="Search by customer name or transaction ID"
+            placeholder="Search by card owner, transaction ID, subscription ID or transfer code"
             className="pl-10"
             value={searchFilter}
             onChange={(e) => setSearchFilter(e.target.value)}
