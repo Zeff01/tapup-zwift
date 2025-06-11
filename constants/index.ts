@@ -331,20 +331,14 @@ export const businessList = [
 ];
 
 export const menuItems = [
-  // { icon: CgProfile, title: "Profile", href: "/dashboard" },
   { icon: RxDashboard, title: "Dashboard", href: "/dashboard" },
   { icon: TbCards, title: "Cards", href: "/cards" },
-  // { icon: FiShoppingBag, title: "Orders", href: "/orders"},
-  // { icon: TbSettingsFilled, title: "Settings", href: "/settings" },
 ];
 
 export const adminMenuItems = [
   { icon: Users, title: "Admin Dashboard", href: "/admin" },
   { icon: FiShoppingBag, title: "Orders", href: "/admin/users-orders" },
   { icon: IoCardOutline, title: "Print Cards", href: "/admin/print-cards" },
-  // { icon: Mail, title: "Mail", href: "/admin/mail" },
-  // { icon: BarChart, title: "Insights", href: "/admin/insights" },
-  // { icon: LayoutList, title: "Logs", href: "/admin/log" },
 ];
 
 export const publicDomain =

@@ -21,6 +21,7 @@ import { toast } from "react-toastify";
 import { useQueryClient } from "@tanstack/react-query";
 import { TooltipProvider } from "@radix-ui/react-tooltip";
 import { Loader2 } from "lucide-react";
+import { Button } from "@/components/ui/button";
 // import { useRouter } from "next/navigation";
 
 const Cards = () => {
@@ -90,20 +91,14 @@ const Cards = () => {
       <ConfirmDialog />
       <div className="px-4 flex flex-col min-h-full md:px-16 py-8">
         <div className="flex items-center justify-between">
-          <h1 className="text-2xl md:text-4xl font-semibold">MY CARDS</h1>
+          <h1 className="text-xl md:text-2xl font-semibold">My Cards</h1>
 
           <div className="flex gap-x-2">
-            <button
-              onClick={handleAddCard}
-              className="text-green-500 border border-green-500 rounded-lg md:text-lg px-6 py-2"
-            >
+            <Button variant={"outline"} onClick={handleAddCard}>
               Add Card
-            </button>
-            <Link
-              href={"/cards/card-shop"}
-              className="text-primary-foreground mr-4 bg-green-500 rounded-lg md:text-lg px-6 py-2"
-            >
-              Buy a Card
+            </Button>
+            <Link href={"/cards/card-shop"}>
+              <Button variant={"green"}>Buy a Card</Button>
             </Link>
           </div>
         </div>

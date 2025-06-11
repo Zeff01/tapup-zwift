@@ -53,7 +53,7 @@ const OverlayMenu = () => {
         className="bg-background flex flex-col sm:w-[25rem] w-full"
       >
         <SheetTitle className="sr-only">Mobile Navigation</SheetTitle>
-        <Link href={"/"} onClick={() => setOpenMenu(false)} className="max-w-min">
+        <Link href={"/dashboard"} onClick={() => setOpenMenu(false)}>
           <div className="self-start h-12 w-24">
             <TapupLogo className="w-full h-full" />
           </div>
@@ -97,6 +97,7 @@ const OverlayMenu = () => {
                 <ThemeToggle variant="boarded" />
               </span>
             </div>
+
             <div className="flex-1 pb-12 flex flex-col mt-4 gap-2">
               {navItems.map((item, index) => {
                 const Icon = item.icon;
@@ -104,6 +105,7 @@ const OverlayMenu = () => {
                   <Link
                     key={index}
                     href={item.href}
+                    onClick={() => setOpenMenu(false)}
                     className={cn(
                       "flex items-center transition-colors text-sm duration-200 pl-4 bg-secondary/20 border p-2 rounded-sm",
                       item.href === pathname
