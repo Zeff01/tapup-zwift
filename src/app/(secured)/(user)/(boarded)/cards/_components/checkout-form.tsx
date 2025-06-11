@@ -72,7 +72,7 @@ export default function CheckoutForm() {
   }, [user?.deliveryAddresses]);
 
   useEffect(() => {
-    if (Array.isArray(items) && items.length === 0) {
+    if (Array.isArray(items) && items.length === 0 && !!user) {
       router.push("/cards/card-shop");
     }
   }, [items]);
