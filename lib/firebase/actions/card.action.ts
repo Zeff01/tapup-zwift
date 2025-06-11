@@ -657,7 +657,7 @@ export const deletePrintCard = async ({
 
     // temporary solution for deleting cards with no matching subscription in firestore, until card transaction flow is fixed.
     const subscriptionsRef = collection(firebaseDb, "subscriptions");
-    const q = query(subscriptionsRef, where("cardId", "==", cardId));
+    const q = query(subscriptionsRef, where("card_id", "==", cardId));
     const subscriptionSnap = await getDocs(q);
 
     const deletePromises = subscriptionSnap.docs.map((docSnap) =>
@@ -700,7 +700,7 @@ export const deleteMultipleCards = async ({
       const cardRef = doc(firebaseDb, "cards", cardId);
       batch.delete(cardRef);
 
-      const q = query(subscriptionsRef, where("cardId", "==", cardId));
+      const q = query(subscriptionsRef, where("card_id", "==", cardId));
       const subscriptionSnap = await getDocs(q);
 
       subscriptionSnap.forEach((docSnap) => {
