@@ -29,6 +29,9 @@ const OrderPhysicalCard = () => {
   const [selectedPlan, setSelectedPlan] = useState<SubscriptionPlan | null>(
     null
   );
+
+  console.log(`selectedPlan: ${!selectedPlan}`);
+
   useEffect(() => {
     const fetchPlans = async () => {
       const plans = await getSubscriptionPlans();
@@ -132,7 +135,7 @@ const OrderPhysicalCard = () => {
                   subscriptionPlan: selectedPlan ?? undefined,
                 })
               }
-              disabled={isCheckoutClicked}
+              disabled={isCheckoutClicked || !selectedPlan}
               className="flex w-full gap-2 md:text-lg md:py-7 hover:bg-black dark:hover:bg-grayTemplate"
             >
               <ShoppingCart />
@@ -153,7 +156,7 @@ const OrderPhysicalCard = () => {
 
                 router.push("/cards/checkout");
               }}
-              disabled={isCheckoutClicked}
+              disabled={isCheckoutClicked || !selectedPlan}
               variant="green"
               className="w-full flex gap-2 md:text-lg md:py-7">
               {isCheckoutClicked
