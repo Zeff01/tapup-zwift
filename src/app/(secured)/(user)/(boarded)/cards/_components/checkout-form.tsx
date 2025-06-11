@@ -41,6 +41,7 @@ import { useCart } from "@/hooks/use-cart-v2";
 import { toast } from "react-toastify";
 import Image from "next/image";
 import { Skeleton } from "@/components/ui/skeleton";
+import { useRouter } from 'next/navigation';
 
 interface CheckoutUser {
   name: string;
@@ -49,6 +50,7 @@ interface CheckoutUser {
 }
 
 export default function CheckoutForm() {
+  const router = useRouter();
   const { user, isLoading: isUserLoading } = useUserContext();
 
   const { items, clearCart } = useCart();
@@ -68,6 +70,12 @@ export default function CheckoutForm() {
       setSelectedAddressId(user.deliveryAddresses[0].id);
     }
   }, [user?.deliveryAddresses]);
+
+  useEffect(() => {
+    if (Array.isArray(items) && items.length === 0) {
+      router.push("/cards/card-shop");
+    }
+  }, [items]);
 
   const currentUser: CheckoutUser = {
     name: user?.firstName + " " + user?.lastName || "John Doe",
@@ -430,13 +438,13 @@ export default function CheckoutForm() {
                           }
                           disabled={isAddressModalLoading}
                         >
-                          {isEditMode 
-                          ? isAddressModalLoading
-                            ? <><Loader2 className="mr-2 h-4 w-4 animate-spin" /> Updating Address</>
-                            : "Edit Address"
-                          : isAddressModalLoading
-                            ? <><Loader2 className="mr-2 h-4 w-4 animate-spin" /> Adding Address</>
-                            : "Add Address"}
+                          {isEditMode
+                            ? isAddressModalLoading
+                              ? <><Loader2 className="mr-2 h-4 w-4 animate-spin" /> Updating Address</>
+                              : "Edit Address"
+                            : isAddressModalLoading
+                              ? <><Loader2 className="mr-2 h-4 w-4 animate-spin" /> Adding Address</>
+                              : "Add Address"}
                         </Button>
                       </DialogFooter>
                     </DialogContent>
