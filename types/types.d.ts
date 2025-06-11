@@ -24,6 +24,8 @@ export type Users = {
   chosenPhysicalCard?: string;
   firstName?: string;
   lastName?: string;
+  firstname?: string; // temporary
+  lastname?: string; // temporary
   email: string;
   number?: string;
   facebookUrl?: string;

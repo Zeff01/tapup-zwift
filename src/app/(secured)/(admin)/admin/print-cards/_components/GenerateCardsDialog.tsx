@@ -16,13 +16,17 @@ import {
 import { Label } from "@/components/ui/label";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
-import { CreditCard, Plus, Minus, Trash2 } from "lucide-react";
+import { CreditCard, Plus, Minus, Trash2, LoaderCircle } from "lucide-react";
 import { carouselCards } from "@/constants";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { Badge } from "@/components/ui/badge";
+import { getSubscriptionPlans } from "@/lib/firebase/actions/user.action";
+import { generateMultipleCards } from "@/lib/firebase/actions/card.action";
+import { SubscriptionPlan, UserState } from "@/types/types";
+import { toast } from "react-toastify";
 import Image from "next/image";
 
-type CardRequest = {
+export type CardRequest = {
   id: string;
   cardType: string;
   quantity: number;
@@ -31,22 +35,52 @@ type CardRequest = {
 interface GenerateCardsDialogProps {
   isOpen: boolean;
   onClose: () => void;
+  user: UserState;
 }
 
-const GenerateCardsDialog = ({ isOpen, onClose }: GenerateCardsDialogProps) => {
+const GenerateCardsDialog = ({
+  isOpen,
+  onClose,
+  user,
+}: GenerateCardsDialogProps) => {
   const [cardRequests, setCardRequests] = useState<CardRequest[]>([]);
   const [selectedCardType, setSelectedCardType] = useState<string>("");
+  const [isLoadingGeneration, setIsLoadingGeneration] = useState(false);
+  const [subscriptionPlans, setSubscriptionPlans] = useState<
+    SubscriptionPlan[]
+  >([]);
+  const [selectedPlan, setSelectedPlan] = useState<SubscriptionPlan | null>(
+    null
+  );
+
+  useEffect(() => {
+    const fetchPlans = async () => {
+      const plans = await getSubscriptionPlans();
+      setSubscriptionPlans(plans);
+      if (plans.length > 0) {
+        setSelectedPlan(plans[0]); // Set first plan as default
+      }
+    };
+
+    fetchPlans();
+  }, []);
 
   const addCardType = () => {
     if (
       selectedCardType &&
       !cardRequests.find((card) => card.cardType === selectedCardType)
     ) {
+      const selectedCard = Object.values(carouselCards).find(
+        (card) => card.id === selectedCardType
+      );
+
+      if (!selectedCard) return;
+
       const newCardRequest = {
-        // generate a unique ID for the card request
-        id: crypto.randomUUID(),
-        cardType: selectedCardType,
+        id: selectedCard.id,
+        cardType: selectedCard.title,
         quantity: 1,
+        subscriptionPlan: selectedPlan || null,
       };
 
       setCardRequests([...cardRequests, newCardRequest]);
@@ -83,10 +117,44 @@ const GenerateCardsDialog = ({ isOpen, onClose }: GenerateCardsDialogProps) => {
     );
   };
 
+  const handlePlanChange = (value: string) => {
+    const plan = subscriptionPlans.find((p) => p.id === value);
+    if (plan) {
+      setSelectedPlan(plan);
+    }
+  };
+
   const handleCancel = () => {
     setCardRequests([]);
     setSelectedCardType("");
     onClose();
+  };
+
+  const handleGenerateCards = async () => {
+    setIsLoadingGeneration(true);
+
+    try {
+      if (!selectedPlan) {
+        toast.error("No subscription plan selected.");
+        return;
+      }
+
+      const result = await generateMultipleCards({
+        cardRequests: cardRequests,
+        subscriptionDays: selectedPlan.durationDays,
+        role: user?.role!,
+      });
+
+      if (!result.success) return toast.error(result.message);
+      toast.success(result.message);
+      setCardRequests([]);
+      setSelectedCardType("");
+      onClose();
+    } catch (error) {
+      console.error("Failed to generate multiple cards", error);
+    } finally {
+      setIsLoadingGeneration(false);
+    }
   };
 
   const totalCards = cardRequests.reduce((sum, req) => sum + req.quantity, 0);
@@ -107,7 +175,7 @@ const GenerateCardsDialog = ({ isOpen, onClose }: GenerateCardsDialogProps) => {
 
         <div className="mt-6">
           <Label className="text-lg font-medium">Add Card Type</Label>
-          <div className="flex items-center gap-2 mt-4">
+          <div className="flex items-center gap-2 mt-3">
             <Select
               value={selectedCardType}
               onValueChange={setSelectedCardType}
@@ -117,7 +185,7 @@ const GenerateCardsDialog = ({ isOpen, onClose }: GenerateCardsDialogProps) => {
               </SelectTrigger>
               <SelectContent className="max-h-[250px] overflow-y-auto">
                 {Object.values(carouselCards).map((card) => (
-                  <SelectItem key={card.id} value={card.title}>
+                  <SelectItem key={card.id} value={card.id}>
                     {card.title}
                   </SelectItem>
                 ))}
@@ -135,89 +203,110 @@ const GenerateCardsDialog = ({ isOpen, onClose }: GenerateCardsDialogProps) => {
         </div>
 
         {cardRequests.length > 0 && (
-          <div className="mt-6">
-            <div className="flex items-center justify-between mb-5">
-              <h2 className="text-lg font-medium">Selected Card Types</h2>
-              <Badge
-                variant={"outline"}
-                className="text-blue-700 dark:text-white"
+          <div className="mt-5 flex flex-col gap-5">
+            <div className="flex flex-col gap-3">
+              <p className="text-lg font-medium">Choose a subscription plan</p>
+              <Select
+                value={selectedPlan?.id || ""}
+                onValueChange={handlePlanChange}
               >
-                Total: {cardRequests.length} card
-                {cardRequests.length > 1 ? "s" : ""}
-              </Badge>
+                <SelectTrigger className="flex-1">
+                  <SelectValue placeholder="Select a subscription plan" />
+                </SelectTrigger>
+                <SelectContent className="max-h-[250px] overflow-y-auto">
+                  {subscriptionPlans.map((plan) => (
+                    <SelectItem key={plan.id} value={plan.id}>
+                      {plan.name} - ₱{plan.price} ({plan.durationDays} days)
+                    </SelectItem>
+                  ))}
+                </SelectContent>
+              </Select>
             </div>
 
-            <div className="space-y-3">
-              {cardRequests.map((req) => {
-                const cardImage = Object.values(carouselCards).filter(
-                  (card) => card.title === req.cardType
-                )[0].image;
+            <div className="flex flex-col gap-3">
+              <div className="flex items-center justify-between">
+                <h2 className="text-lg font-medium">Selected Card Types</h2>
+                <Badge
+                  variant={"outline"}
+                  className="text-blue-700 dark:text-white"
+                >
+                  Total: {cardRequests.length} card
+                  {cardRequests.length > 1 ? "s" : ""}
+                </Badge>
+              </div>
 
-                return (
-                  <div
-                    key={req.id}
-                    className="p-4 flex items-center justify-between border rounded-lg border-input"
-                  >
-                    <div className="flex items-center gap-4">
-                      <Image
-                        src={
-                          cardImage ||
-                          "https://ralfvanveen.com/wp-content/uploads/2021/06/Placeholder-_-Glossary.svg"
-                        }
-                        alt={`${req.cardType} image`}
-                        width={55}
-                        height={39}
-                        className="rounded-sm object-cover"
-                      />
-                      <span className="text-base font-semibold text-black dark:text-gray-300">
-                        {req.cardType}
-                      </span>
-                    </div>
+              <div className="space-y-3">
+                {cardRequests.map((req) => {
+                  const cardImage = Object.values(carouselCards).filter(
+                    (card) => card.title === req.cardType
+                  )[0].image;
 
-                    <div className="flex items-center gap-3">
-                      <div className="flex items-center gap-2">
-                        <Button
-                          variant="outline"
-                          size="icon"
-                          className="size-8"
-                          onClick={() => decrementQuantity(req.id)}
-                          disabled={req.quantity <= 1}
-                        >
-                          <Minus className="size-3" />
-                        </Button>
-                        <Input
-                          type="number"
-                          value={req.quantity}
-                          onChange={(e) =>
-                            updateCardQuantity(
-                              req.id,
-                              Number.parseInt(e.target.value) || 1
-                            )
+                  return (
+                    <div
+                      key={req.id}
+                      className="p-4 flex items-center justify-between border rounded-lg border-input"
+                    >
+                      <div className="flex items-center gap-4">
+                        <Image
+                          src={
+                            cardImage ||
+                            "https://ralfvanveen.com/wp-content/uploads/2021/06/Placeholder-_-Glossary.svg"
                           }
-                          className="w-16 text-center"
-                          min={1}
+                          alt={`${req.cardType} image`}
+                          width={55}
+                          height={39}
+                          className="rounded-sm object-cover"
                         />
+                        <span className="text-base font-semibold text-black dark:text-gray-300">
+                          {req.cardType}
+                        </span>
+                      </div>
+
+                      <div className="flex items-center gap-3">
+                        <div className="flex items-center gap-2">
+                          <Button
+                            variant="outline"
+                            size="icon"
+                            className="size-8"
+                            onClick={() => decrementQuantity(req.id)}
+                            disabled={req.quantity <= 1}
+                          >
+                            <Minus className="size-3" />
+                          </Button>
+                          <Input
+                            type="number"
+                            value={req.quantity}
+                            onChange={(e) =>
+                              updateCardQuantity(
+                                req.id,
+                                Number.parseInt(e.target.value) || 1
+                              )
+                            }
+                            className="w-16 text-center"
+                            min={1}
+                          />
+                          <Button
+                            onClick={() => incrementQuantity(req.id)}
+                            variant="outline"
+                            size="icon"
+                            className="size-8"
+                          >
+                            <Plus className="size-3" />
+                          </Button>
+                        </div>
                         <Button
-                          onClick={() => incrementQuantity(req.id)}
-                          variant="outline"
-                          size="icon"
-                          className="size-8"
+                          variant="ghost"
+                          size={"icon"}
+                          onClick={() => removeCardType(req.id)}
+                          className="size-8 hover:bg-transparent text-red-500 hover:text-red-700"
                         >
-                          <Plus className="size-3" />
+                          <Trash2 className="size-3 " />
                         </Button>
                       </div>
-                      <Button
-                        variant="ghost"
-                        size={"icon"}
-                        onClick={() => removeCardType(req.id)}
-                        className="size-8 hover:bg-transparent text-red-500 hover:text-red-700"
-                      >
-                        <Trash2 className="size-3 " />
-                      </Button>
                     </div>
-                  </div>
-                );
-              })}
+                  );
+                })}
+              </div>
             </div>
           </div>
         )}
@@ -246,10 +335,18 @@ const GenerateCardsDialog = ({ isOpen, onClose }: GenerateCardsDialogProps) => {
             Cancel
           </Button>
           <Button
-            disabled={cardRequests.length === 0}
+            onClick={handleGenerateCards}
+            disabled={cardRequests.length === 0 || isLoadingGeneration}
             className="bg-green-600 hover:bg-green-700 text-white font-semibold"
           >
-            Generate {totalCards} Cards
+            {isLoadingGeneration ? (
+              <>
+                <LoaderCircle className="animate-spin size-4 mr-2" />
+                Generating...
+              </>
+            ) : (
+              <>Generate {totalCards} Cards</>
+            )}
           </Button>
         </DialogFooter>
       </DialogContent>

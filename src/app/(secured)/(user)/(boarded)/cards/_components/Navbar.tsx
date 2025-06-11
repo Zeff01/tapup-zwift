@@ -13,7 +13,7 @@ const NavBar: React.FC<NavBarProps> = ({ title, href }) => {
       <Link href={href} className="border p-2 rounded-md">
         <IoArrowBack className="text-lg" />
       </Link>
-      <h1>{title}</h1>
+      <h1 className="text-lg">{title}</h1>
     </div>
   );
 };

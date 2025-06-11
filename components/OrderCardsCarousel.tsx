@@ -3,8 +3,8 @@ import {
   Carousel,
   CarouselContent,
   CarouselItem,
-  CarouselNext,
   CarouselPrevious,
+  CarouselNext,
 } from "@/components/ui/carousel";
 import { Card, CardContent } from "@/components/ui/card";
 import Image from "next/image";
@@ -20,33 +20,31 @@ export function OrderCardsCarousel({
   setSelectedCardId,
 }: OrderCardsCarouselProps) {
   return (
-    <div className="px-12">
+    <div className="relative w-full py-2">
       <Carousel
-        opts={{ align: "start" }}
-        className="w-full max-w-screen-lg mx-auto "
+        opts={{ align: "start", loop: true }}
+        className="w-full relative"
       >
-        <CarouselPrevious />
-        <CarouselContent className="flex justify-start items-center px-4 md:justify-center">
+        <CarouselPrevious className="-left-6 z-10 hidden lg:block size-12" />
+        <CarouselContent className="py-2">
           {Object.keys(carouselCards).map((key) => {
             const card = carouselCards[key as keyof typeof carouselCards];
             return (
-              <CarouselItem key={card.id} className="flex-none p-2">
+              <CarouselItem key={key} className="flex-none rounded-xl">
                 <div
                   className={`block transform hover:scale-105 transition-transform duration-300 cursor-pointer ${
-                    selectedCardId === card.id
-                      ? "border-2 rounded-lg border-green-500"
-                      : ""
+                    selectedCardId === key ? "opacity-60" : ""
                   }`}
                   onClick={() => setSelectedCardId(key)}
                 >
-                  <Card className="bg-black rounded-lg border-none aspect-[16/10] w-24 md:w-28">
-                    <CardContent className="flex flex-col items-center justify-center p-1 text-white">
+                  <Card className="rounded-lg border bg-slate-800 dark:bg-white aspect-[16/10] w-28 md:w-48 lg:w-72">
+                    <CardContent className="relative flex flex-col items-center justify-center p-1 text-white">
                       <Image
                         src={card.image}
                         alt={card.title}
-                        width={100}
-                        height={150}
-                        className="rounded-md w-full object-cover"
+                        width={120}
+                        height={50}
+                        className="rounded-md object-cover"
                         layout="responsive"
                         onClick={() => setSelectedCardId(key)}
                       />
@@ -57,8 +55,7 @@ export function OrderCardsCarousel({
             );
           })}
         </CarouselContent>
-
-        <CarouselNext />
+        <CarouselNext className="-right-6 z-10 hidden lg:block size-12" />
       </Carousel>
     </div>
   );

@@ -10,6 +10,7 @@ import {
   Edit,
   Edit2,
   Delete,
+  Loader2,
 } from "lucide-react";
 
 import { Button } from "@/components/ui/button";
@@ -38,6 +39,8 @@ import {
 } from "@/lib/firebase/actions/user.action";
 import { useCart } from "@/hooks/use-cart-v2";
 import { toast } from "react-toastify";
+import Image from "next/image";
+import { Skeleton } from "@/components/ui/skeleton";
 
 interface CheckoutUser {
   name: string;
@@ -46,7 +49,7 @@ interface CheckoutUser {
 }
 
 export default function CheckoutForm() {
-  const { user } = useUserContext();
+  const { user, isLoading: isUserLoading } = useUserContext();
 
   const { items, clearCart } = useCart();
   const [isAddressModalOpen, setIsAddressModalOpen] = useState(false);
@@ -54,6 +57,8 @@ export default function CheckoutForm() {
   const [editingAddressId, setEditingAddressId] = useState<string | null>(null);
   const [selectedAddressId, setSelectedAddressId] = useState("1");
   const [addresses, setAddresses] = useState<DeliveryAddress[]>([]);
+
+  const [isLoadingTransaction, setIsLoadingTransaction] = useState(false);
 
   useEffect(() => {
     if (user?.deliveryAddresses) {
@@ -166,7 +171,7 @@ export default function CheckoutForm() {
       return;
     }
 
-    // setIsLoadingTransaction(true);
+    setIsLoadingTransaction(true);
 
     const referenceId = `customer-${user?.email}-${new Date().toISOString()}`;
 
@@ -242,7 +247,9 @@ export default function CheckoutForm() {
 
     await createTransaction(transactionData);
 
-    // clearCart();
+    setIsLoadingTransaction(false);
+
+    clearCart();
 
     window.location.href = recurringPlan.recurringPlan.actions?.[0]?.url;
   };
@@ -266,14 +273,29 @@ export default function CheckoutForm() {
               </CardHeader>
               <CardContent>
                 <div className="flex items-center gap-3">
-                  <img
+                  <Image
                     src={currentUser.avatar || "/placeholder.svg"}
                     alt={currentUser.name}
                     className="w-10 h-10 rounded-full"
+                    width={10}
+                    height={10}
                   />
-                  <div>
-                    <p className="font-medium">{currentUser.name}</p>
-                    <p className="text-sm text-gray-600">{currentUser.email}</p>
+                  <div className="flex flex-col">
+                    <span className="font-medium">
+                      {" "}
+                      {isUserLoading ? (
+                        <Skeleton className="h-4 w-44" />
+                      ) : (
+                        currentUser.name
+                      )}{" "}
+                    </span>
+                    <span className="text-sm text-gray-600">
+                      {isUserLoading ? (
+                        <Skeleton className="h-4 w-36 mt-2" />
+                      ) : (
+                        currentUser.email
+                      )}
+                    </span>
                   </div>
                 </div>
               </CardContent>
@@ -388,6 +410,7 @@ export default function CheckoutForm() {
                           Cancel
                         </Button>
                         <Button
+                          className="bg-blue-500 text-white hover:bg-blue-600"
                           onClick={
                             isEditMode ? handleEditAddress : handleAddAddress
                           }
@@ -435,14 +458,22 @@ export default function CheckoutForm() {
                           </div>
                         </Label>
                         <div className="flex items-center gap-2 ">
-                          <Edit2
-                            className="size-4 text-blue-500"
+                          <Button
+                            variant="outline"
+                            size="icon-sm"
                             onClick={() => startEditing(address)}
-                          />
-                          <Trash2
-                            className="size-4 text-red-500"
+                            className="border-none hover:scale-110 "
+                          >
+                            <Edit2 className="size-4 text-blue-500 " />
+                          </Button>
+                          <Button
+                            className="border-none hover:scale-110 "
                             onClick={() => handleDeleteAddress(address.id)}
-                          />
+                            variant="outline"
+                            size="icon-sm"
+                          >
+                            <Trash2 className="size-4 text-red-500  " />
+                          </Button>
                         </div>
                       </div>
                     ))}
@@ -511,11 +542,22 @@ export default function CheckoutForm() {
                   );
                 })()}
 
-                <Button className="w-full" size="lg" onClick={handlePlaceOrder}>
-                  Place Order
+                <Button
+                  onClick={handlePlaceOrder}
+                  disabled={isLoadingTransaction}
+                  className="w-full bg-greenColor  text-white font-medium hover:bg-greenColor/80 "
+                >
+                  {isLoadingTransaction ? (
+                    <>
+                      Placing Order{" "}
+                      <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+                    </>
+                  ) : (
+                    "Place Order"
+                  )}
                 </Button>
 
-                <p className="text-xs text-gray-500 text-center">
+                <p className="text-sm text-gray-500 text-center">
                   By placing your order, you agree to our Terms of Service and
                   Privacy Policy.
                 </p>

@@ -4,6 +4,7 @@ import { Button } from "@/components/ui/button";
 import { carouselCards } from "@/constants";
 import { useCart } from "@/hooks/use-cart-v2";
 import { cn, formatCurrency } from "@/lib/utils";
+import { useUserContext } from "@/providers/user-provider";
 import { Plus } from "lucide-react";
 import dynamic from "next/dynamic";
 import Image from "next/image";
@@ -24,6 +25,8 @@ const CardPurchasePreviewPage = () => {
   const router = useRouter();
   const queryParamsTitle = searchParams.get("title");
   const { addItem } = useCart();
+
+  const { user } = useUserContext();
 
   const [title, setTitle] = useState(queryParamsTitle);
 
@@ -91,7 +94,7 @@ const CardPurchasePreviewPage = () => {
                       price: card?.price || 0,
                       image: card?.image || "",
                     });
-                    router.push("/delivery-form");
+                    router.push(user ? "/cards/checkout" : "/delivery-form");
                   }}
                 >
                   Buy Now

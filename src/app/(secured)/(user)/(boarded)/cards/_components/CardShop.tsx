@@ -6,25 +6,22 @@ import { createPortfolioSchema } from "@/lib/zod-schema";
 import React, { useEffect, useState } from "react";
 import { z } from "zod";
 import { Button } from "@/components/ui/button";
-import {
-  ShoppingCart,
-  Trash,
-  ChevronDown,
-  ChevronUp,
-  Check,
-} from "lucide-react";
+import { ShoppingCart } from "lucide-react";
+import { BiSolidPurchaseTag } from "react-icons/bi";
 import Image from "next/image";
 import NavBar from "./Navbar";
 import { SubscriptionPlan } from "@/types/types";
 import Link from "next/link";
 import { getSubscriptionPlans } from "@/lib/firebase/actions/user.action";
 import { useCart } from "@/hooks/use-cart-v2";
+
 export type ChosenPhysicalCardType = z.infer<
   typeof createPortfolioSchema
 >["chosenPhysicalCard"];
 
 const OrderPhysicalCard = () => {
-  const { items, addItem } = useCart();
+  const { addItem } = useCart();
+
   const [subscriptionPlans, setSubscriptionPlans] = useState<
     SubscriptionPlan[]
   >([]);
@@ -50,45 +47,28 @@ const OrderPhysicalCard = () => {
     }
   };
 
-  const [isExpanded, setIsExpanded] = useState(false);
-  const [isTrash, setIsTrash] = useState(false);
-  const handleButtonTrash = () => {
-    setIsTrash(!isTrash);
-  };
-
   const [selectedPhysicalCard, setSelectedPhysicalCard] = useState("card1");
-
-  const toggleExpand = () => {
-    +setIsExpanded(!isExpanded);
-  };
 
   const selectedCard =
     carouselCards[selectedPhysicalCard as keyof typeof carouselCards];
 
-  const totalItems = items.length;
-  const subtotal = items.reduce((acc, item) => acc + item.price, 0);
-
   return (
-    <div className="relative max-h-screen flex flex-col max-w-sm">
-      {/* Dim Background Overlay */}
-      {isExpanded && <div className="absolute inset-0 opacity-50 z-10"></div>}
-
+    <div className="relative max-h-screen w-full flex flex-col">
       {/* Navigation Bar */}
       <NavBar title="Card Shop" href="/cards" />
 
-      {/* Scrollable Middle Section */}
-      <div className="flex-1 overflow-y-auto p-4 ">
-        {/* Cards Grid */}
-        <div className="flex-grow flex flex-col">
-          <div className="flex-grow flex items-center justify-center mx-6 md:mx-0">
+      <div className="flex-1 lg:flex-none flex flex-col lg:grid lg:grid-cols-2 overflow-y-auto p-4 md:px-8 lg:pt-8">
+        {/* CONTAINER I */}
+        <div className="flex flex-col my-4 pb-4">
+          <div className="flex items-center justify-center mx-6 md:mx-0 lg:ml-4 lg:mr-8">
             {selectedPhysicalCard ? (
-              <div className="flex items-center aspect-[16/10]">
+              <div className="flex items-center aspect-[16/10] relative md:aspect-[1.601] w-full md:w-[28rem] shrink-0">
                 {selectedCard && (
                   <Image
                     src={selectedCard.image}
                     alt={selectedCard.title}
-                    width={300}
-                    height={200}
+                    fill
+                    className="object-contain size-full"
                   />
                 )}
               </div>
@@ -96,7 +76,21 @@ const OrderPhysicalCard = () => {
               <h1 className="text-primary">Select a card</h1>
             )}
           </div>
-          <div className="h-20 md:h-24">
+        </div>
+
+        {/* CONTAINER II */}
+        <div className="flex-1 flex flex-col">
+          {/* Card Description */}
+          <div className="relative min-h-36 md:min-h-40 lg:min-h-44">
+            <h1 className="scroll-m-20 text-left text-4xl md:text-5xl font-extrabold tracking-tight text-balance mb-2">
+              {selectedCard.title}
+            </h1>
+            <p className="md:text-lg leading-none font-medium text-pretty text-muted-foreground">
+              {selectedCard.description}
+            </p>
+          </div>
+
+          <div className="lg:hidden">
             <OrderCardsCarousel
               selectedCardId={selectedPhysicalCard}
               setSelectedCardId={(id: string) =>
@@ -104,89 +98,64 @@ const OrderPhysicalCard = () => {
               }
             />
           </div>
-        </div>
 
-        {/* Quantity & Add to Cart */}
-        <div className="flex justify-between items-center space-x-4 mt-4">
-          {/* Add to Cart Button */}
-          <Button
-            onClick={() =>
-              addItem({
-                id: selectedPhysicalCard,
-                name: selectedCard?.title || "",
-                price: selectedPlan?.price || 0,
-                image: selectedCard?.image || "",
-                subscriptionPlan: selectedPlan ?? undefined,
-              })
-            }
-            className="flex gap-2 hover:bg-black dark:hover:bg-grayTemplate"
-          >
-            <ShoppingCart />
-            <span>Add to Cart</span>
-          </Button>
-        </div>
+          {/* Subscription Plan */}
+          <div className="relative flex-1 md:flex-none flex flex-col max-w-sm">
+            {/* Subscription Plan Dropdown */}
+            <div className="lg:mt-4">
+              <label className="block text-sm md:text-base font-medium text-gray-700 dark:text-gray-300">
+                Choose a Subscription Plan
+              </label>
+              <select
+                value={selectedPlan?.id || ""}
+                onChange={handlePlanChange}
+                className="mt-1 block w-full px-3 py-2 md:py-4 md:text-md border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-primary focus:border-primary dark:bg-gray-800 dark:border-gray-700 dark:text-white"
+              >
+                {subscriptionPlans.map((plan) => (
+                  <option key={plan.id} value={plan.id}>
+                    {plan.name} - ₱{plan.price} ({plan.durationDays} days)
+                  </option>
+                ))}
+              </select>
+            </div>
+          </div>
 
-        {/* Subscription Plan */}
-        <div className="relative max-h-screen flex flex-col max-w-sm">
-          {/* Subscription Plan Dropdown */}
-          <div className="mt-4">
-            <label className="block text-sm font-medium text-gray-700 dark:text-gray-300">
-              Choose a Subscription Plan
-            </label>
-            <select
-              value={selectedPlan?.id || ""}
-              onChange={handlePlanChange}
-              className="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-primary focus:border-primary dark:bg-gray-800 dark:border-gray-700 dark:text-white"
+          {/* Fixed Bottom Section */}
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-2 md:mt-12 lg:mt-4 md:gap-4 lg:pb-4 bg-white dark:bg-transparent">
+            <Button
+              onClick={() =>
+                addItem({
+                  id: selectedPhysicalCard,
+                  name: selectedCard?.title || "",
+                  price: selectedPlan?.price || 0,
+                  image: selectedCard?.image || "",
+                  subscriptionPlan: selectedPlan ?? undefined,
+                })
+              }
+              className="flex w-full gap-2 md:text-lg md:py-7 hover:bg-black dark:hover:bg-grayTemplate"
             >
-              {subscriptionPlans.map((plan) => (
-                <option key={plan.id} value={plan.id}>
-                  {plan.name} - ₱{plan.price} ({plan.durationDays} days)
-                </option>
-              ))}
-            </select>
+              <ShoppingCart />
+              <span>Add to Cart</span>
+            </Button>
+            <Link href="/cards/checkout" className="w-full">
+              <Button
+                variant="green"
+                className="w-full flex gap-2 md:text-lg md:py-7"
+              >
+                <BiSolidPurchaseTag />
+                <span>Checkout</span>
+              </Button>
+            </Link>
           </div>
         </div>
       </div>
-
-      {/* Arrow Toggle Button */}
-      <div className="relative z-20 bg-white dark:bg-transparent flex justify-center items-center border-t rounded-t-xl pt-4">
-        <button onClick={toggleExpand} className="p-2 dark:bg-transparent ">
-          {!isExpanded ? <ChevronUp /> : <ChevronDown />}
-        </button>
-        {isExpanded && (
-          <Button
-            className="p-2 absolute right-4"
-            variant="outline"
-            onClick={handleButtonTrash}
-          >
-            {!isTrash ? <Trash /> : <Check />}{" "}
-          </Button>
-        )}
-      </div>
-
-      {/* Collapsible Section */}
-      <div
-        className={`z-20 bg-white dark:bg-transparent overflow-hidden transition-all duration-500 ease-in-out ${
-          isExpanded ? "max-h-96 p-4" : "max-h-0 p-0"
-        }`}
-      >
-        <h2 className="text-lg font-bold mb-2">Your Cart</h2>
-        <div className="space-y-4 w-full h-96 overflow-y-auto pb-16 "></div>
-      </div>
-
-      {/* Fixed Bottom Section */}
-      <div className=" p-4  z-20 bg-white dark:bg-transparent ">
-        <h1 className="mb-2">
-          {totalItems} {totalItems === 1 ? "Card" : "Cards"} in Cart
-        </h1>
-        <div className="flex justify-between items-center">
-          <p className="space-x-2">
-            SubTotal: <span className="text-greenTitle">₱{subtotal}</span>
-          </p>
-          <Link href="/cards/checkout">
-            <Button variant="green">Checkout</Button>
-          </Link>
-        </div>
+      <div className="w-full px-12 hidden lg:block">
+        <OrderCardsCarousel
+          selectedCardId={selectedPhysicalCard}
+          setSelectedCardId={(id: string) =>
+            setSelectedPhysicalCard(id as ChosenPhysicalCardType)
+          }
+        />
       </div>
     </div>
   );
