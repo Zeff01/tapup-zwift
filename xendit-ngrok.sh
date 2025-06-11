@@ -193,18 +193,20 @@ NEXT_PUBLIC_XENDIT_SECRET_KEY="$NEXT_PUBLIC_XENDIT_SECRET_KEY"
 
 if [ ! -n "$NODE_ENV" ]; then
     print_info "MISING env value NODE_ENV. This treat as development environment"
+elif [ -n  "$NODE_ENV" ] && [ "$NODE_ENV" != "development" ]; then
+    exitf "NODE_ENV is not in development, Only use this script during development"
 fi
 
-if [ -n  "$NODE_ENV" ] && [ "$NODE_ENV" != "development" ]; then
-    exitf "NODE_ENV is not in development"
-elif [ ! -n "$NGROK_API_KEY" ]; then
+if [ ! -n "$NGROK_API_KEY" ]; then
     exitf "MISING env value NGROK_API_KEY"
-elif [ ! -n "$XENDIT_PASSWORD" ]; then
+fi
+
+if [ ! -n "$XENDIT_PASSWORD" ]; then
     exitf "MISING env value XENDIT_PASSWORD"
-elif [ ! -n "$NEXT_PUBLIC_XENDIT_SECRET_KEY" ]; then
+fi
+
+if [ ! -n "$NEXT_PUBLIC_XENDIT_SECRET_KEY" ]; then
     exitf "MISING env value NEXT_PUBLIC_XENDIT_SECRET_KEY"
-elif [ "$NODE_ENV" != "development" ];then
-    exitf "Only use this script during development"
 fi
 
 if [ "$name" == "--help" ]; then
