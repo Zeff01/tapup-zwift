@@ -20,7 +20,7 @@ import { cn } from "@/lib/utils";
 import Link from "next/link";
 import { useUserContext } from "@/providers/user-provider";
 import { useState, useEffect } from "react";
-import { useRouter } from "next/navigation";
+import { useRouter, usePathname } from "next/navigation";
 
 export default function Cart() {
   const { items, totalItems, isOpen, openCart, closeCart, clearCart, removeItem } = useCart();
@@ -28,6 +28,7 @@ export default function Cart() {
   const [isAllSelected, setIsAllSelected] = useState(false);
   const { user } = useUserContext();
   const router = useRouter();
+  const pathname = usePathname();
 
   const handleSelectAll = (checked: boolean) => {
     setIsAllSelected(checked);
@@ -154,7 +155,9 @@ export default function Cart() {
                 className="mt-4"
                 onClick={() => {
                   closeCart();
-                  router.push("/cards/card-shop")
+                  if (pathname !== "/cards/card-shop") {
+                    router.push("/cards/card-shop");
+                  }
                 }}
               >
                 Continue Shopping
