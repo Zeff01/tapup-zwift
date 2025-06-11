@@ -34,7 +34,7 @@ const NavigationBoarded = () => {
   return (
     <nav className="w-[22rem] px-6 flex flex-col border-r fixed z-50 ease-in-out h-screen transition-transform -translate-x-[25rem] lg:translate-x-0">
       <div className="flex justify-between items-center self-start w-full h-12 my-6 ">
-        <Link href={"/"}>
+        <Link href={"/dashboard"}>
           <TapupLogo className="w-20 lg:w-28" />
         </Link>
         <div className="pr-2">
