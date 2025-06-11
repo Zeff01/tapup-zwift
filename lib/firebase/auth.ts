@@ -211,6 +211,8 @@ export const signInWithGoogle = async () => {
     await setDoc(doc(firebaseDb, "user-account", userID), {
       role: USER_ROLE_ENUMS.USER,
       email: res.user.email,
+      firstName: res.user.displayName?.split(" ")[0] || "N/A",
+      lastName: res.user.displayName?.split(" ")[1] || "N/A",
       timestamp: serverTimestamp(),
     });
     await createSession(userID);
