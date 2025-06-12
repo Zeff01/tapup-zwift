@@ -89,7 +89,7 @@ const CardPurchasePreviewPage = () => {
                   className="min-w-fit text-xs lg:text-base lg:w-36 text-white"
                   onClick={() => {
                     addItem({
-                      id: card?.id || "",
+                      id: card?.id.replace(/-/g, "") || "",
                       name: card?.title || "",
                       price: card?.price || 0,
                       image: card?.image || "",
@@ -104,7 +104,7 @@ const CardPurchasePreviewPage = () => {
                   className="bg-grayTemplate min-w-fit text-xs lg:text-base lg:w-36 hover:bg-gray-400"
                   onClick={() =>
                     addItem({
-                      id: card?.id || "",
+                      id: card?.id.replace(/-/g, "") || "",
                       name: card?.title || "",
                       price: card?.price || 0,
                       image: card?.image || "",
