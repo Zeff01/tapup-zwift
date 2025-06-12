@@ -28,6 +28,7 @@ import {
   Edit2,
   Loader2Icon,
   Trash,
+  EyeIcon,
 } from "lucide-react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
@@ -364,17 +365,22 @@ const DigitalCard = ({ card, confirm, user }: Prop) => {
         </Link>
 
         <div className="flex flex-col justify-center absolute rounded-tr-[30px] rounded-br-[30px] top-1/2 -translate-y-1/2  items-center  z-10 pr-2 py-2 bg-neutral-950/80 backdrop-blur-sm">
-          {/* <Tooltip>
+          <Tooltip>
             <TooltipTrigger asChild>
-              <Link
-                href={`/site/${card.id}`}
-                className="px-3 py-3 2xl:py-2 hover:opacity-50 cursor-pointer"
-                prefetch
-                target="_blank"
-                rel="noopener noreferrer"
-              >
-                <EyeIcon className="size-4 text-white drop-shadow-md" />
-              </Link>
+              {card.portfolioStatus
+                ? <Link
+                  href={`/site/${card.id}`}
+                  className="px-3 py-3 2xl:py-2 hover:opacity-50 cursor-pointer"
+                  prefetch
+                  target="_blank"
+                  rel="noopener noreferrer"
+                >
+                  <EyeIcon className="size-4 text-white drop-shadow-md" />
+                </Link>
+                : <span className="p-3 2xl:py-2 opacity-50">
+                  <EyeIcon className="size-4 text-white drop-shadow-md" />
+                </span>
+              }
             </TooltipTrigger>
             <TooltipPortal>
               <TooltipContent
@@ -385,7 +391,7 @@ const DigitalCard = ({ card, confirm, user }: Prop) => {
                 <TooltipArrow className="fill-black" />
               </TooltipContent>
             </TooltipPortal>
-          </Tooltip> */}
+          </Tooltip>
 
           {/* <Tooltip>
             <TooltipTrigger asChild>
