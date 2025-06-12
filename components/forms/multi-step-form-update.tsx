@@ -329,9 +329,7 @@ const MultiStepFormUpdate = ({
       <Form {...methods}>
         <form
           className="space-y-6 h-full"
-          onSubmit={methods.handleSubmit(formSubmit, (errors) => {
-            console.log("Validation errors:", errors);
-          })}
+          onSubmit={methods.handleSubmit(formSubmit)}
         >
           <div className="flex flex-col overflow-auto py-8 px-6 sm:px-0 bg-background h-full">
             <TapupLogo className="mx-auto mb-5" />
