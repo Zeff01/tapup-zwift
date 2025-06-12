@@ -809,6 +809,7 @@ const resetCardFields = () => ({
   skypeInviteUrl: "",
   websiteUrl: "",
   //printStatus: false,
+  portfolioStatus: false,
   userCode: "",
   user_link: "",
 });
