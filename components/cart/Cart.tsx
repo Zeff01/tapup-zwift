@@ -154,9 +154,12 @@ export default function Cart() {
                 className="mt-4"
                 onClick={() => {
                   closeCart();
-                  if (window.location.pathname !== "/cards/card-shop") {
-                    router.push("/cards/card-shop");
-                  }
+
+                  const path = window.location.pathname;
+                  if (path === "/cards/card-shop" ||  path === "/card") return;
+                  
+                  const targetPath = user ? "/cards/card-shop" : "/card";
+                  router.push(targetPath);
                 }}
               >
                 Continue Shopping
