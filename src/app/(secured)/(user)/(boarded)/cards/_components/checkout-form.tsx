@@ -41,6 +41,7 @@ import { useCart } from "@/hooks/use-cart-v2";
 import { toast } from "react-toastify";
 import Image from "next/image";
 import { Skeleton } from "@/components/ui/skeleton";
+import { useRouter } from 'next/navigation';
 
 interface CheckoutUser {
   name: string;
@@ -49,9 +50,11 @@ interface CheckoutUser {
 }
 
 export default function CheckoutForm() {
+  const router = useRouter();
   const { user, isLoading: isUserLoading } = useUserContext();
 
   const { items, clearCart } = useCart();
+  const [isAddressModalLoading, setIsAddressModalLoading] = useState(false);
   const [isAddressModalOpen, setIsAddressModalOpen] = useState(false);
   const [isEditMode, setIsEditMode] = useState(false);
   const [editingAddressId, setEditingAddressId] = useState<string | null>(null);
@@ -61,11 +64,18 @@ export default function CheckoutForm() {
   const [isLoadingTransaction, setIsLoadingTransaction] = useState(false);
 
   useEffect(() => {
-    if (user?.deliveryAddresses) {
+    if (user?.deliveryAddresses && user?.deliveryAddresses.length > 0) {
+      console.log(user?.deliveryAddresses)
       setAddresses(user.deliveryAddresses);
       setSelectedAddressId(user.deliveryAddresses[0].id);
     }
   }, [user?.deliveryAddresses]);
+
+  useEffect(() => {
+    if (Array.isArray(items) && items.length === 0 && !!user) {
+      router.push("/cards/card-shop");
+    }
+  }, [items]);
 
   const currentUser: CheckoutUser = {
     name: user?.firstName + " " + user?.lastName || "John Doe",
@@ -89,6 +99,7 @@ export default function CheckoutForm() {
       newAddress.state &&
       newAddress.zipCode
     ) {
+      setIsAddressModalLoading(true);
       const address: DeliveryAddress = {
         id: Date.now().toString(),
         ...newAddress,
@@ -115,6 +126,7 @@ export default function CheckoutForm() {
       ...newAddress,
     };
 
+    setIsAddressModalLoading(true);
     await manageUserDeliveryAddress(
       user?.uid as string,
       "update",
@@ -148,8 +160,9 @@ export default function CheckoutForm() {
   const resetAddressForm = () => {
     setNewAddress({ name: "", street: "", city: "", state: "", zipCode: "" });
     setIsAddressModalOpen(false);
-    setIsEditMode(false);
     setEditingAddressId(null);
+    setIsEditMode(false);
+    setIsAddressModalLoading(false);
   };
 
   const startEditing = (address: DeliveryAddress) => {
@@ -310,7 +323,12 @@ export default function CheckoutForm() {
                   </CardTitle>
                   <Dialog
                     open={isAddressModalOpen}
-                    onOpenChange={setIsAddressModalOpen}
+                    onOpenChange={(isAddressModalOpen) => {
+                      setIsAddressModalOpen(isAddressModalOpen);
+                      if (!isAddressModalOpen) {
+                        resetAddressForm();
+                      }
+                    }}
                   >
                     <DialogTrigger asChild>
                       <Button variant="outline" size="sm">
@@ -344,6 +362,7 @@ export default function CheckoutForm() {
                                 name: e.target.value,
                               })
                             }
+                            disabled={isAddressModalLoading}
                           />
                         </div>
                         <div className="grid gap-2">
@@ -358,6 +377,7 @@ export default function CheckoutForm() {
                                 street: e.target.value,
                               })
                             }
+                            disabled={isAddressModalLoading}
                           />
                         </div>
                         <div className="grid grid-cols-2 gap-4">
@@ -373,6 +393,7 @@ export default function CheckoutForm() {
                                   city: e.target.value,
                                 })
                               }
+                              disabled={isAddressModalLoading}
                             />
                           </div>
                           <div className="grid gap-2">
@@ -402,11 +423,12 @@ export default function CheckoutForm() {
                                 zipCode: e.target.value,
                               })
                             }
+                            disabled={isAddressModalLoading}
                           />
                         </div>
                       </div>
                       <DialogFooter>
-                        <Button variant="outline" onClick={resetAddressForm}>
+                        <Button variant="outline" onClick={resetAddressForm} disabled={isAddressModalLoading}>
                           Cancel
                         </Button>
                         <Button
@@ -414,8 +436,15 @@ export default function CheckoutForm() {
                           onClick={
                             isEditMode ? handleEditAddress : handleAddAddress
                           }
+                          disabled={isAddressModalLoading}
                         >
-                          {isEditMode ? "Update Address" : "Add Address"}
+                          {isEditMode
+                            ? isAddressModalLoading
+                              ? <><Loader2 className="mr-2 h-4 w-4 animate-spin" /> Updating Address</>
+                              : "Edit Address"
+                            : isAddressModalLoading
+                              ? <><Loader2 className="mr-2 h-4 w-4 animate-spin" /> Adding Address</>
+                              : "Add Address"}
                         </Button>
                       </DialogFooter>
                     </DialogContent>

@@ -55,6 +55,10 @@ export default async function middleware(request: NextRequest) {
     return NextResponse.next();
   }
 
+  if (session && pathname === "/") {
+    return NextResponse.redirect(redirectTo(DASHBOARD_ROUTE));
+  }
+
   if (authRoutes.some((route) => pathname === route)) {
     return NextResponse.redirect(redirectTo(DASHBOARD_ROUTE));
   }

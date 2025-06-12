@@ -17,7 +17,7 @@ export function CartItem({ item }: CartItemProps) {
   const { updateQuantity, removeItem } = useCart();
 
   return (
-    <div className="flex items-start gap-4">
+    <div className="flex items-start gap-4 w-full">
       <div className="relative h-16 w-16 overflow-hidden rounded-md border">
         <Image
           src={item.image || "/placeholder.svg"}
