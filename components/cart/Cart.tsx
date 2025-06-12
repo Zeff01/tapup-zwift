@@ -36,8 +36,6 @@ export default function Cart() {
     } else {
       setCheckedItems([]);
     }
-
-    console.log(checkedItems)
   };
 
   useEffect(() => {
@@ -154,8 +152,12 @@ export default function Cart() {
                 className="mt-4"
                 onClick={() => {
                   closeCart();
-                  if (window.location.pathname !== "/cards/card-shop") {
+                  const path = window.location.pathname;
+                  if (path === "/cards/card-shop" || path === "/card") return;
+                  if (user) {
                     router.push("/cards/card-shop");
+                  } else {
+                    router.push("/card");
                   }
                 }}
               >
