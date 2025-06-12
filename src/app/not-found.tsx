@@ -18,7 +18,7 @@ export default function NotFound() {
 
           {/* Button */}
           <Link
-            href="/dashboard"
+            href="/"
             className="inline-block mt-8 bg-[#22A348] hover:bg-[#1B8A3A] text-white px-6 py-2.5 rounded-md transition-colors duration-200"
           >
             Back To Main

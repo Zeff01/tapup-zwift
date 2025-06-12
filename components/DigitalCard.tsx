@@ -367,9 +367,9 @@ const DigitalCard = ({ card, confirm, user }: Prop) => {
         <div className="flex flex-col justify-center absolute rounded-tr-[30px] rounded-br-[30px] top-1/2 -translate-y-1/2  items-center  z-10 pr-2 py-2 bg-neutral-950/80 backdrop-blur-sm">
           <Tooltip>
             <TooltipTrigger asChild>
-              {card.portfolioStatus
-                ? <Link
-                  href={`/site/${card.id}`}
+              {card.portfolioStatus ? (
+                <Link
+                  href={`/site/${card.customUrl ? card.customUrl : card.id}`}
                   className="px-3 py-3 2xl:py-2 hover:opacity-50 cursor-pointer"
                   prefetch
                   target="_blank"
@@ -377,10 +377,11 @@ const DigitalCard = ({ card, confirm, user }: Prop) => {
                 >
                   <EyeIcon className="size-4 text-white drop-shadow-md" />
                 </Link>
-                : <span className="p-3 2xl:py-2 opacity-50">
+              ) : (
+                <span className="p-3 2xl:py-2 opacity-50">
                   <EyeIcon className="size-4 text-white drop-shadow-md" />
                 </span>
-              }
+              )}
             </TooltipTrigger>
             <TooltipPortal>
               <TooltipContent

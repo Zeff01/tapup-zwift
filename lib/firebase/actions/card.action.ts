@@ -153,6 +153,7 @@ export const getCardById = async (
       console.log("Searching for card by custom URL...");
 
       const cardsCollection = collection(firebaseDb, "cards");
+
       const customUrlQuery = query(
         cardsCollection,
         where("customUrl", "==", input)
