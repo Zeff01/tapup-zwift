@@ -579,10 +579,10 @@ const MultiStepFormUpdate = ({
                     {isLoading ? (
                       <>
                         <LoaderCircle className="animate-spin size-5" />
-                        Submitting...
+                        Saving...
                       </>
                     ) : (
-                      "Submit button"
+                      "Save"
                     )}
                   </Button>
                 )}
