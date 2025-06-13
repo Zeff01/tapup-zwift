@@ -27,6 +27,7 @@ import SelectedTemplate from "./SelectedTemplate";
 import { useRouter } from "next/navigation";
 import { toast } from "react-toastify";
 import { Button } from "../ui/button";
+import { FormControl, FormField, FormMessage } from "@/components/ui/form";
 
 export type ChosenTemplateType =
   | "template1"
@@ -105,10 +106,10 @@ const MultiStepFormUpdate = ({
 
   const steps: Array<(keyof z.infer<typeof editCardSchema>)[]> = isOnboarding
     ? [
-        ["coverPhotoUrl", "company", "position"],
-        ["firstName", "lastName", "email", "number", "profilePictureUrl"],
-        ["chosenTemplate"],
-      ]
+      ["coverPhotoUrl", "company", "position"],
+      ["firstName", "lastName", "email", "number", "profilePictureUrl"],
+      ["customUrl", "chosenTemplate"],
+    ]
     : [[], ["firstName", "lastName", "email", "number"], ["chosenTemplate"]];
 
   const [selectedTemplateId, setSelectedTemplateId] =
@@ -147,6 +148,7 @@ const MultiStepFormUpdate = ({
             "card1")
           : ((userData.chosenPhysicalCard as ChosenPhysicalCardType) ??
             "card1"),
+      customUrl: userData.customUrl || "",
       firstName: userData.firstName || "",
       lastName: userData.lastName || "",
       email: userData.email || "",
@@ -219,8 +221,8 @@ const MultiStepFormUpdate = ({
             portfolioStatus: true,
             chosenPhysicalCard: data.chosenPhysicalCard
               ? {
-                  id: data.chosenPhysicalCard,
-                }
+                id: data.chosenPhysicalCard,
+              }
               : undefined,
           },
         });
@@ -286,11 +288,11 @@ const MultiStepFormUpdate = ({
         if (errorKeys.length > 0) {
           const firstError =
             methods.formState.errors[
-              errorKeys[0] as keyof typeof methods.formState.errors
+            errorKeys[0] as keyof typeof methods.formState.errors
             ];
           toast.error(
             firstError?.message ||
-              "Please fill in all required fields correctly"
+            "Please fill in all required fields correctly"
           );
         }
         return;
@@ -518,6 +520,39 @@ const MultiStepFormUpdate = ({
               {/* Step 3 - Template and Physical Card */}
               {currentStep === 3 && (
                 <div className="space-y-8">
+                  <div>
+                    <h2 className="text-lg font-semibold mb-2">
+                      Custom URL <sup className="font-normal">(optional)</sup>
+                    </h2>
+
+                    <FormField
+                      control={methods.control}
+                      name={"customUrl"}
+                      render={({ field }) => (
+                        <div className="flex flex-col gap-2">
+                          <div className="flex w-full flex-col">
+                            <small className="text-muted-foreground text-xs italic pl-2 mb-0.5">
+                              {(() => {
+                                const customUrl = methods.getValues("customUrl");
+                                const baseUrl = `www.tapup.tech/site/`;
+                                return customUrl ? `${baseUrl}${customUrl}` : `${baseUrl}${userData.id}`;
+                              })()}
+                            </small>
+                            <FormControl>
+                              <Input
+                                placeholder={"Enter custom URL..."}
+                                className="mt-1 placeholder-placeholder-input block w-full px-4 py-2 bg-secondary border border-border-input rounded-md"
+                                {...field}
+                              />
+                            </FormControl>
+                            <FormMessage className="text-12 text-red-500 mt-2">
+                              {methods.formState.errors.customUrl?.message ?? ""}
+                            </FormMessage>
+                          </div>
+                        </div>
+                      )}
+                    />
+                  </div>
                   <div>
                     <h2 className="text-lg font-semibold mb-4">
                       Choose Template

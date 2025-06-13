@@ -22,6 +22,7 @@ export type Users = {
   servicePhotos?: string[];
   chosenTemplate?: string;
   chosenPhysicalCard?: string;
+  customUrl?: string; // added for multi-step-form, not really sure
   firstName?: string;
   lastName?: string;
   firstname?: string; // temporary
