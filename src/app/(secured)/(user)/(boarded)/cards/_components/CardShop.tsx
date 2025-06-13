@@ -20,7 +20,7 @@ export type ChosenPhysicalCardType = z.infer<
 >["chosenPhysicalCard"];
 
 const OrderPhysicalCard = () => {
-  const { addItem } = useCart();
+  const { addItem, totalItems } = useCart();
   const router = useRouter();
 
   const [subscriptionPlans, setSubscriptionPlans] = useState<
@@ -29,8 +29,6 @@ const OrderPhysicalCard = () => {
   const [selectedPlan, setSelectedPlan] = useState<SubscriptionPlan | null>(
     null
   );
-
-  console.log(`selectedPlan: ${!selectedPlan}`);
 
   useEffect(() => {
     const fetchPlans = async () => {
@@ -139,7 +137,7 @@ const OrderPhysicalCard = () => {
                   })
                 }
                 disabled={isCheckoutClicked || !selectedPlan}
-                className="flex w-full md:w-auto gap-2 hover:bg-black dark:hover:bg-grayTemplate"
+                className="flex w-full md:w-32 gap-2 hover:bg-black dark:hover:bg-grayTemplate"
               >
                 <ShoppingCart />
                 <span>Add to Cart</span>
@@ -150,19 +148,11 @@ const OrderPhysicalCard = () => {
                     return;
                   setIsCheckoutClicked(true);
 
-                  addItem({
-                    id: selectedPhysicalCard,
-                    name: selectedCard?.title || "",
-                    price: selectedPlan?.price || 0,
-                    image: selectedCard?.image || "",
-                    subscriptionPlan: selectedPlan ?? undefined,
-                  });
-
                   router.push("/cards/checkout");
                 }}
-                disabled={isCheckoutClicked || !selectedPlan}
+                disabled={isCheckoutClicked || !selectedPlan || (totalItems === 0)}
                 variant="green"
-                className="w-full md:w-auto"
+                className="w-full md:w-32"
               >
                 {isCheckoutClicked ? (
                   <>
