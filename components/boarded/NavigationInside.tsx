@@ -53,11 +53,14 @@ const OverlayMenu = () => {
         className="bg-background flex flex-col sm:w-[25rem] w-full"
       >
         <SheetTitle className="sr-only">Mobile Navigation</SheetTitle>
-        <Link href={"/dashboard"} onClick={() => setOpenMenu(false)}>
-          <div className="self-start h-12 w-24">
-            <TapupLogo className="w-full h-full" />
-          </div>
+        <Link
+          href={"/dashboard"}
+          onClick={() => setOpenMenu(false)}
+          className="inline-block self-start h-12 w-24"
+        >
+          <TapupLogo className="w-full h-full" />
         </Link>
+
         {isLoadingUserContext ? (
           <NavigationSkeleton />
         ) : (
@@ -77,11 +80,9 @@ const OverlayMenu = () => {
                     ? `${user?.firstName} ${user?.lastName}`
                     : "Anonymous"}
                 </h3>
-                <input
-                  readOnly
-                  value={user?.email || "anonymous@mail.com"}
-                  className="text-xs text-foreground/30 border-0 truncate w-full bg-transparent outline-none"
-                />
+                <p className="text-xs text-foreground/30 border-0 truncate w-full bg-transparent outline-none">
+                  {user?.email || "anonymous@gmail.com"}
+                </p>
               </div>
               <p
                 className={cn(

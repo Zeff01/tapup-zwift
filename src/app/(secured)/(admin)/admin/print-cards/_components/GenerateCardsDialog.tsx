@@ -77,7 +77,7 @@ const GenerateCardsDialog = ({
       if (!selectedCard) return;
 
       const newCardRequest = {
-        id: selectedCard.id,
+        id: selectedCard.id.replace(/-/g, ""),
         cardType: selectedCard.title,
         quantity: 1,
         subscriptionPlan: selectedPlan || null,

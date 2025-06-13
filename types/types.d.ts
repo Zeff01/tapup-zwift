@@ -154,6 +154,7 @@ export interface Card extends Users {
   };
   subscription_id?: string;
   createdAt: Timestamp | FieldValue;
+  portfolioStatus?: boolean;
 }
 
 export interface DeliveryAddress {

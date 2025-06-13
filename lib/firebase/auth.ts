@@ -99,8 +99,8 @@ export const signUpHandler = async (data: z.infer<typeof signupSchema>) => {
     await setDoc(doc(firebaseDb, "user-account", userID), {
       role: USER_ROLE_ENUMS.USER,
       email: res.user.email,
-      firstname: data.firstName,
-      lastname: data.lastName,
+      firstName: data.firstName,
+      lastName: data.lastName,
       timestamp: serverTimestamp(),
     });
 

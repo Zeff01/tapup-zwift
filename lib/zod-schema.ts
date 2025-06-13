@@ -197,7 +197,21 @@ export const editCardSchema = z.object({
       "template12",
     ])
     .optional(),
-  chosenPhysicalCard: z.enum(["card1", "card2", "card3", "card4"]).optional(),
+  chosenPhysicalCard: z
+    .enum([
+      "card1",
+      "card2",
+      "card3",
+      "card4",
+      "card5",
+      "card6",
+      "card7",
+      "card8",
+      "card9",
+      "card10",
+      "card11",
+    ])
+    .optional(),
   firstName: z
     .string()
     .min(3, "First name must be at least 3 characters")

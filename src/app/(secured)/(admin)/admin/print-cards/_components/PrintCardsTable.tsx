@@ -2,20 +2,13 @@
 
 import PrintCardPagination from "./Pagination";
 import PreviewDialog from "./PreviewDialog";
-import DeleteDialog from "./DeleteDialog";
 import GenerateCardsDialog from "./GenerateCardsDialog";
 import ViewDialog from "./ViewDialog";
+import PrintCardsDataTable from "./data-table";
+import { useCreateColumns } from "./useColumns";
 import { useEffect, useState } from "react";
 import { useUserContext } from "@/providers/user-provider";
-import {
-  Search,
-  Filter,
-  Printer,
-  ArrowUpDown,
-  MoreHorizontal,
-  PencilLine,
-  Plus,
-} from "lucide-react";
+import { Search, Filter, ArrowUpDown, Plus } from "lucide-react";
 import { Card } from "@/types/types";
 import { Input } from "@/components/ui/input";
 import { Badge } from "@/components/ui/badge";
@@ -27,23 +20,6 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
-import {
-  Table,
-  TableHeader,
-  TableRow,
-  TableHead,
-  TableBody,
-  TableCell,
-} from "@/components/ui/table";
-import {
-  DropdownMenu,
-  DropdownMenuTrigger,
-  DropdownMenuContent,
-  DropdownMenuLabel,
-  DropdownMenuSeparator,
-  DropdownMenuItem,
-} from "@/components/ui/dropdown-menu";
-import { FaRegAddressCard } from "react-icons/fa6";
 
 type sortDirectionType = "asc" | "desc" | null;
 
@@ -72,6 +48,14 @@ const PrintCardsTable = ({ cardsData }: { cardsData: PrintCardsInfo[] }) => {
   const currentCards = filteredCards.slice(indefOfFirstCard, indexOfLastCard);
   const totalPages = Math.ceil(filteredCards.length / cardsPerpage);
 
+  const columns = useCreateColumns({
+    setSelectedCard,
+    setCardId,
+    setIsViewModalOpen,
+    setIsPrintModalOpen,
+    user,
+  });
+
   useEffect(() => {
     let filtered = [...cardsData];
 
@@ -82,6 +66,12 @@ const PrintCardsTable = ({ cardsData }: { cardsData: PrintCardsInfo[] }) => {
             ?.toLowerCase()
             .includes(searchFilter.trim().toLowerCase()) ||
           card.transactionId
+            ?.toLowerCase()
+            .includes(searchFilter.trim().toLowerCase()) ||
+          card.subscription_id
+            ?.toLowerCase()
+            .includes(searchFilter.trim().toLowerCase()) ||
+          card.transferCode
             ?.toLowerCase()
             .includes(searchFilter.trim().toLowerCase())
       );
@@ -135,7 +125,7 @@ const PrintCardsTable = ({ cardsData }: { cardsData: PrintCardsInfo[] }) => {
             size={18}
           />
           <Input
-            placeholder="Search by customer name or transaction ID"
+            placeholder="Search by card owner, transaction ID, subscription ID or transfer code"
             className="pl-10"
             value={searchFilter}
             onChange={(e) => setSearchFilter(e.target.value)}
@@ -178,100 +168,11 @@ const PrintCardsTable = ({ cardsData }: { cardsData: PrintCardsInfo[] }) => {
       )}
 
       {currentCards.length > 0 ? (
-        <Table>
-          <TableHeader>
-            <TableRow>
-              <TableHead className="whitespace-nowrap">Card Owner</TableHead>
-              <TableHead>Transaction ID</TableHead>
-              <TableHead>Subscription ID</TableHead>
-              <TableHead className="whitespace-nowrap">Transfer Code</TableHead>
-              <TableHead className="whitespace-nowrap">Date Created</TableHead>
-              <TableHead className="whitespace-nowrap">Status</TableHead>
-              <TableHead className="w-[100px] text-center">Actions</TableHead>
-            </TableRow>
-          </TableHeader>
-
-          <TableBody>
-            {currentCards.map((card, index) => (
-              <TableRow key={index}>
-                <TableCell className="whitespace-nowrap">
-                  {card.cardOwner}
-                </TableCell>
-                <TableCell>
-                  {card.transactionId ? card.transactionId : "N/A"}
-                </TableCell>
-                <TableCell>
-                  {card.subscription_id ? card.subscription_id : "N/A"}
-                </TableCell>
-                <TableCell className="whitespace-nowrap">
-                  {card.transferCode}
-                </TableCell>
-                <TableCell>
-                  {card.createdAt &&
-                  typeof card.createdAt.seconds === "number" &&
-                  typeof card.createdAt.nanoseconds === "number"
-                    ? new Date(
-                        card.createdAt.seconds * 1000 +
-                          card.createdAt.nanoseconds / 1000000
-                      ).toLocaleDateString("en-US")
-                    : "Invalid Date"}
-                </TableCell>
-                <TableCell>
-                  <Badge
-                    className={`${card.printStatus ? "bg-green-500 hover:bg-green-600" : "bg-red-500 hover:bg-red-600"} text-white select-none font-normal whitespace-nowrap`}
-                  >
-                    {card.printStatus ? "Printed" : "Not Printed"}
-                  </Badge>
-                </TableCell>
-                <TableCell className="w-[100px] text-center">
-                  <DropdownMenu>
-                    <DropdownMenuTrigger asChild>
-                      <Button variant="ghost" size="icon">
-                        <MoreHorizontal className="h-4 w-4" />
-                      </Button>
-                    </DropdownMenuTrigger>
-                    <DropdownMenuContent align="end">
-                      <DropdownMenuLabel>Actions</DropdownMenuLabel>
-                      <DropdownMenuSeparator />
-                      <DropdownMenuItem
-                        onClick={() => {
-                          setSelectedCard(card);
-                          setCardId(card.id!);
-                          setIsViewModalOpen(true);
-                        }}
-                        className="flex items-center gap-2 justify-between focus:bg-gray-200 dark:focus:bg-accent"
-                      >
-                        <span>View</span>
-                        <FaRegAddressCard size={15} />
-                      </DropdownMenuItem>
-                      <DropdownMenuItem
-                        onClick={() => {
-                          setSelectedCard(card);
-                          setCardId(card.id!);
-                          setIsPrintModalOpen(true);
-                        }}
-                        className="flex items-center gap-2 justify-between focus:bg-gray-200 dark:focus:bg-accent"
-                      >
-                        <span>Print</span>
-                        <Printer size={15} />
-                      </DropdownMenuItem>
-                      <DropdownMenuItem className="flex items-center gap-2 justify-between focus:bg-gray-200 dark:focus:bg-accent">
-                        <span>Edit</span>
-                        <PencilLine size={15} />
-                      </DropdownMenuItem>
-                      <DropdownMenuItem
-                        className="focus:bg-gray-200 dark:focus:bg-accent"
-                        onSelect={(e) => e.preventDefault()}
-                      >
-                        <DeleteDialog cardId={card.id} user={user} />
-                      </DropdownMenuItem>
-                    </DropdownMenuContent>
-                  </DropdownMenu>
-                </TableCell>
-              </TableRow>
-            ))}
-          </TableBody>
-        </Table>
+        <PrintCardsDataTable
+          columns={columns}
+          data={currentCards}
+          user={user}
+        />
       ) : (
         <div className="text-center py-8">
           <p className="text-gray-500">

@@ -42,7 +42,18 @@ export type ChosenTemplateType =
   | "template11"
   | "template12";
 
-export type ChosenPhysicalCardType = "card1" | "card2" | "card3" | "card4";
+export type ChosenPhysicalCardType =
+  | "card1"
+  | "card2"
+  | "card3"
+  | "card4"
+  | "card5"
+  | "card6"
+  | "card7"
+  | "card8"
+  | "card9"
+  | "card10"
+  | "card11";
 
 type CardSpecificFields = {
   owner: string;
@@ -131,7 +142,11 @@ const MultiStepFormUpdate = ({
       chosenTemplate:
         (userData.chosenTemplate as ChosenTemplateType) ?? "template1",
       chosenPhysicalCard:
-        (userData.chosenPhysicalCard as ChosenPhysicalCardType) ?? "card1",
+        typeof userData.chosenPhysicalCard === "object"
+          ? ((userData.chosenPhysicalCard?.id as ChosenPhysicalCardType) ??
+            "card1")
+          : ((userData.chosenPhysicalCard as ChosenPhysicalCardType) ??
+            "card1"),
       firstName: userData.firstName || "",
       lastName: userData.lastName || "",
       email: userData.email || "",
@@ -172,9 +187,6 @@ const MultiStepFormUpdate = ({
     });
 
   const formSubmit = async (data: z.infer<typeof editCardSchema>) => {
-    console.log("formSubmit function called");
-    console.log("isOnboarding:", isOnboarding);
-
     try {
       console.log("formSubmit");
       if (isOnboarding) {
@@ -198,12 +210,13 @@ const MultiStepFormUpdate = ({
         router.push("/login");
         return;
       }
-      console.log("Proceeding with regular update...");
+
       if (isCard) {
         await updateCardMutation({
           cardId: userData.id!,
           data: {
             ...data,
+            portfolioStatus: true,
             chosenPhysicalCard: data.chosenPhysicalCard
               ? {
                   id: data.chosenPhysicalCard,
@@ -211,7 +224,7 @@ const MultiStepFormUpdate = ({
               : undefined,
           },
         });
-        router.push("/dashboard");
+        router.push("/cards");
         return;
       }
 
@@ -255,11 +268,12 @@ const MultiStepFormUpdate = ({
         if (!fullIsValid) return;
       }
       const hasImageErrors =
-        (currentStep === 1 && isOnboarding && !coverPhotoUrl) ||
-        (currentStep === 2 && isOnboarding && !imageUrl);
+        (currentStep === 1 && !coverPhotoUrl) ||
+        (currentStep === 2 && !imageUrl);
 
       if (!isValid || hasImageErrors) {
         // Handle image validation errors first
+
         if (hasImageErrors) {
           if (!coverPhotoUrl) toast.error("Cover photo is required");
           if (!imageUrl && currentStep === 2)
@@ -282,14 +296,8 @@ const MultiStepFormUpdate = ({
         return;
       }
 
-      if (currentStep === steps.length) {
-        console.log("Submitting form...");
-
-        await methods.handleSubmit(formSubmit)();
-      } else {
-        console.log("Next step");
-        setCurrentStep((prev) => prev + 1);
-      }
+      console.log("Next step");
+      setCurrentStep((prev) => prev + 1);
     } catch (error) {
       console.error("Error in handleNextStep:", error);
       toast.error("An unexpected error occurred. Please try again.");
@@ -373,9 +381,6 @@ const MultiStepFormUpdate = ({
                       </div>
                     </div>
                   </div>
-                  <span className="text-sm text-red-500">
-                    {methods.formState.errors.profilePictureUrl?.message ?? ""}
-                  </span>
 
                   <div className="space-y-6">
                     <CompanyInfoForm
@@ -480,6 +485,11 @@ const MultiStepFormUpdate = ({
                         We support PNG, JPEG, and GIF files under 25MB
                       </p>
                     </div>
+
+                    <span className="text-sm text-red-500 pt-4">
+                      {methods.formState.errors.profilePictureUrl?.message ??
+                        ""}
+                    </span>
                   </div>
                   <PersonalInfoForm control={methods.control} isCard />
                   <SocialLinksSelector onAddLink={handleAddLink} />
@@ -544,24 +554,36 @@ const MultiStepFormUpdate = ({
                     type="button"
                     onClick={goToPreviousStep}
                     className="px-8 py-2 bg-gray-400 text-white rounded-full hover:bg-slate-700"
+                    disabled={isLoading}
                   >
                     Back
                   </button>
                 )}
-                <Button
-                  type="button"
-                  onClick={handleNextStep}
-                  className="px-8 py-2 bg-green-600 text-white rounded-full hover:bg-green-500"
-                  disabled={isLoading}
-                >
-                  {isLoading ? (
-                    <LoaderCircle className="animate-spin size-5" />
-                  ) : currentStep === steps.length ? (
-                    "Submit"
-                  ) : (
-                    "Next"
-                  )}{" "}
-                </Button>
+                {currentStep < steps.length ? (
+                  <Button
+                    type="button"
+                    onClick={handleNextStep}
+                    className="px-8 py-2 bg-green-600 text-white rounded-full hover:bg-green-500"
+                    disabled={isLoading}
+                  >
+                    Next
+                  </Button>
+                ) : (
+                  <Button
+                    type="submit"
+                    className="px-8 py-2 bg-green-600 text-white rounded-full hover:bg-green-500"
+                    disabled={isLoading}
+                  >
+                    {isLoading ? (
+                      <>
+                        <LoaderCircle className="animate-spin size-5" />
+                        Submitting...
+                      </>
+                    ) : (
+                      "Submit button"
+                    )}
+                  </Button>
+                )}
               </div>
             </div>
           </div>
