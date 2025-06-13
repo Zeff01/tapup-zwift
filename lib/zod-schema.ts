@@ -212,6 +212,17 @@ export const editCardSchema = z.object({
       "card11",
     ])
     .optional(),
+  customUrl: z
+    .string()
+    .min(1, "Custom URL must at least contain 1 character.")
+    .optional()
+    .refine(value => {
+      if (value) {
+        const pathRegex = /^[a-zA-Z0-9-_]+$/;
+        return pathRegex.test(value);
+      }
+      return true;
+    }, "Custom URL can only contain letters, numbers, hyphens, and underscores."),
   firstName: z
     .string()
     .min(3, "First name must be at least 3 characters")
