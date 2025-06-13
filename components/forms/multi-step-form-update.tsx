@@ -122,8 +122,6 @@ const MultiStepFormUpdate = ({
       (userData.chosenPhysicalCard as ChosenPhysicalCardType) ?? "card1"
     );
 
-  const [customUrl, setCustomUrl] = useState<string | null>(userData.customUrl || null);
-
   const addServicePhoto = (photo: Photo) => {
     setServicePhotos([...servicePhotos, photo]);
   };
@@ -521,15 +519,23 @@ const MultiStepFormUpdate = ({
               {currentStep === 3 && (
                 <div className="space-y-8">
                   <div>
-                    <h2 className="text-lg font-semibold mb-4">
+                    <h2 className="text-lg font-semibold mb-2">
                       Custom URL <sup className="font-normal">(optional)</sup>
                     </h2>
+
                     <FormField
                       control={methods.control}
                       name={"customUrl"}
                       render={({ field }) => (
                         <div className="flex flex-col gap-2">
                           <div className="flex w-full flex-col">
+                            <small className="text-muted-foreground text-xs italic pl-2 mb-0.5">
+                              {(() => {
+                                const customUrl = methods.getValues("customUrl");
+                                const baseUrl = `www.tapup.tech/site/`;
+                                return customUrl ? `${baseUrl}${customUrl}` : `${baseUrl}${userData.id}`;
+                              })()}
+                            </small>
                             <FormControl>
                               <Input
                                 placeholder={"Enter custom URL..."}
