@@ -214,7 +214,6 @@ export const editCardSchema = z.object({
     .optional(),
   customUrl: z
     .string()
-    .min(1, "Custom URL must at least contain 1 character.")
     .optional()
     .refine(value => {
       if (value) {
