@@ -3,7 +3,10 @@
 import { ShoppingCart, Trash } from "lucide-react";
 import { Checkbox } from "../ui/checkbox";
 import { Label } from "../ui/label";
-import { type CartItem as CartItemType, useCart } from "@/providers/cart-provider-v2";
+import {
+  type CartItem as CartItemType,
+  useCart,
+} from "@/providers/cart-provider-v2";
 import { Button } from "@/components/ui/button";
 import {
   Sheet,
@@ -23,7 +26,15 @@ import { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
 
 export default function Cart() {
-  const { items, totalItems, isOpen, openCart, closeCart, clearCart, removeItem } = useCart();
+  const {
+    items,
+    totalItems,
+    isOpen,
+    openCart,
+    closeCart,
+    clearCart,
+    removeItem,
+  } = useCart();
   const [checkedItems, setCheckedItems] = useState<CartItemType[]>([]);
   const [isAllSelected, setIsAllSelected] = useState(false);
   const { user } = useUserContext();
@@ -37,7 +48,7 @@ export default function Cart() {
       setCheckedItems([]);
     }
 
-    console.log(checkedItems)
+    console.log(checkedItems);
   };
 
   useEffect(() => {
@@ -77,7 +88,9 @@ export default function Cart() {
                     checked={isAllSelected}
                     onCheckedChange={(value) => handleSelectAll(Boolean(value))}
                   />
-                  <Label htmlFor="select-all" className="opacity-50">Select All</Label>
+                  <Label htmlFor="select-all" className="opacity-50">
+                    Select All
+                  </Label>
                 </div>
                 <Button
                   variant="link"
@@ -90,14 +103,19 @@ export default function Cart() {
                         removeItem(checkedItem.id);
                       });
                       setCheckedItems((prev) =>
-                        prev.filter((item) =>
-                          !checkedItems.some((checkedItem) => checkedItem.id === item.id)
+                        prev.filter(
+                          (item) =>
+                            !checkedItems.some(
+                              (checkedItem) => checkedItem.id === item.id
+                            )
                         )
                       );
                     }
                   }}
-                  className={(checkedItems.length > 0) ? "text-red-500 px-0" : "px-0"}
-                  disabled={(checkedItems.length === 0)}
+                  className={
+                    checkedItems.length > 0 ? "text-red-500 px-0" : "px-0"
+                  }
+                  disabled={checkedItems.length === 0}
                 >
                   <Trash className="shrink-0" />
                   <span>Remove</span>
@@ -113,11 +131,14 @@ export default function Cart() {
                           if (isChecked) {
                             setCheckedItems([...checkedItems, item]);
                           } else {
-                            const updatedCheckedItems = checkedItems.filter((i) => i.id !== item.id);
+                            const updatedCheckedItems = checkedItems.filter(
+                              (i) => i.id !== item.id
+                            );
                             setCheckedItems(updatedCheckedItems);
                           }
                         }}
-                        className="relative top-5 size-4" />
+                        className="relative top-5 size-4"
+                      />
                       <CartItem item={item} />
                     </div>
                   ))}
@@ -156,8 +177,8 @@ export default function Cart() {
                   closeCart();
 
                   const path = window.location.pathname;
-                  if (path === "/cards/card-shop" ||  path === "/card") return;
-                  
+                  if (path === "/cards/card-shop" || path === "/card") return;
+
                   const targetPath = user ? "/cards/card-shop" : "/card";
                   router.push(targetPath);
                 }}

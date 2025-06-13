@@ -332,7 +332,9 @@ const MultiStepFormUpdate = ({
           onSubmit={methods.handleSubmit(formSubmit)}
         >
           <div className="flex flex-col overflow-auto py-8 px-6 sm:px-0 bg-background h-full">
-            <TapupLogo className="mx-auto mb-5" />
+            <div className="aspect-[130/48] w-80 mx-auto mb-10">
+              <TapupLogo />
+            </div>
             <div className="w-full mx-auto max-w-sm">
               {formHeaderItems.map((item) => (
                 <div key={item.id} className="mb-4">
