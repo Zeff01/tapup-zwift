@@ -148,6 +148,7 @@ export interface Card extends Users {
   transferCode: string;
   expiryDate?: number;
   disabled?: boolean;
+  customUrl?: string;
   chosenPhysicalCard?: {
     id: string;
     name?: string;
