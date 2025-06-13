@@ -50,10 +50,9 @@ interface CheckoutUser {
 }
 
 export default function CheckoutForm() {
-  const router = useRouter();
   const { user, isLoading: isUserLoading } = useUserContext();
 
-  const { items, clearCart } = useCart();
+  const { items, totalItems, clearCart } = useCart();
   const [isAddressModalLoading, setIsAddressModalLoading] = useState(false);
   const [isAddressModalOpen, setIsAddressModalOpen] = useState(false);
   const [isEditMode, setIsEditMode] = useState(false);
@@ -70,12 +69,6 @@ export default function CheckoutForm() {
       setSelectedAddressId(user.deliveryAddresses[0].id);
     }
   }, [user?.deliveryAddresses]);
-
-  useEffect(() => {
-    if (Array.isArray(items) && items.length === 0 && !!user) {
-      router.push("/cards/card-shop");
-    }
-  }, [items]);
 
   const currentUser: CheckoutUser = {
     name: user?.firstName + " " + user?.lastName || "John Doe",
@@ -587,7 +580,7 @@ export default function CheckoutForm() {
 
                 <Button
                   onClick={handlePlaceOrder}
-                  disabled={isLoadingTransaction}
+                  disabled={isLoadingTransaction || (totalItems === 0)}
                   className="w-full bg-greenColor  text-white font-medium hover:bg-greenColor/80 "
                 >
                   {isLoadingTransaction ? (
