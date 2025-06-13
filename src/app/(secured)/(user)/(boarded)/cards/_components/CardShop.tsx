@@ -13,7 +13,7 @@ import NavBar from "./Navbar";
 import { SubscriptionPlan } from "@/types/types";
 import { getSubscriptionPlans } from "@/lib/firebase/actions/user.action";
 import { useCart } from "@/hooks/use-cart-v2";
-import { useRouter } from 'next/navigation';
+import { useRouter } from "next/navigation";
 
 export type ChosenPhysicalCardType = z.infer<
   typeof createPortfolioSchema
@@ -146,7 +146,8 @@ const OrderPhysicalCard = () => {
               </Button>
               <Button
                 onClick={() => {
-                  if (!selectedPlan || !selectedCard || isCheckoutClicked) return;
+                  if (!selectedPlan || !selectedCard || isCheckoutClicked)
+                    return;
                   setIsCheckoutClicked(true);
 
                   addItem({
@@ -161,10 +162,19 @@ const OrderPhysicalCard = () => {
                 }}
                 disabled={isCheckoutClicked || !selectedPlan}
                 variant="green"
-                className="w-full md:w-auto">
-                {isCheckoutClicked
-                  ? <><Loader2 className="mr-2 h-4 w-4 animate-spin" /><span>Checking Out...</span></>
-                  : <><BiSolidPurchaseTag /><span>Checkout</span></>}
+                className="w-full md:w-auto"
+              >
+                {isCheckoutClicked ? (
+                  <>
+                    <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+                    <span>Checking Out...</span>
+                  </>
+                ) : (
+                  <>
+                    <BiSolidPurchaseTag />
+                    <span>Checkout</span>
+                  </>
+                )}
               </Button>
             </div>
           </div>

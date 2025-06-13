@@ -52,7 +52,7 @@ const UserPage = ({ userData }: { userData: cardType }) => {
 
               {/* Description */}
               <p className="text-[20px] md:text-[28px] lg:text-[36px] text-foreground font-bold leading-[1.5] max-w-[700px]">
-               Page template is not available.
+                Page template is not available.
               </p>
 
               {/* Button */}

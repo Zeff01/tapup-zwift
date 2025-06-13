@@ -79,7 +79,7 @@ const Cards = () => {
       clearTimeout(ctxTimeout);
     }
 
-    ctxTimeout = setTimeout(()=> {
+    ctxTimeout = setTimeout(() => {
       setLoadTransferCode(false);
     }, 1500);
   };
@@ -145,23 +145,26 @@ const Cards = () => {
                   disabled={loadTransferCode}
                 />
                 <div className="flex justify-end gap-2 mt-4">
-                 {!loadTransferCode && <Dialog.Close asChild>
-                    <button className="px-4 py-2 bg-gray-300 dark:bg-gray-700 rounded">
-                      Cancel
-                    </button>
-                  </Dialog.Close> }
+                  {!loadTransferCode && (
+                    <Dialog.Close asChild>
+                      <button className="px-4 py-2 bg-gray-300 dark:bg-gray-700 rounded">
+                        Cancel
+                      </button>
+                    </Dialog.Close>
+                  )}
                   <button
-                    className={`${loadTransferCode && 'opacity-75'} bg-green-500 px-4 py-2 text-white rounded flex items-center`}
+                    className={`${loadTransferCode && "opacity-75"} bg-green-500 px-4 py-2 text-white rounded flex items-center`}
                     onClick={handleTransferOwnership}
                     disabled={loadTransferCode}
                   >
-                    {loadTransferCode ? 
+                    {loadTransferCode ? (
                       <>
                         Transfering &nbsp;
                         <Loader2 className="mr-2 h-4 w-4 animate-spin" />
                       </>
-                      : "Add"
-                    }
+                    ) : (
+                      "Add"
+                    )}
                   </button>
                 </div>
               </div>

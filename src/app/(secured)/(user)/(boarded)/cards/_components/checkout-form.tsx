@@ -41,7 +41,7 @@ import { useCart } from "@/hooks/use-cart-v2";
 import { toast } from "react-toastify";
 import Image from "next/image";
 import { Skeleton } from "@/components/ui/skeleton";
-import { useRouter } from 'next/navigation';
+import { useRouter } from "next/navigation";
 
 interface CheckoutUser {
   name: string;
@@ -65,7 +65,7 @@ export default function CheckoutForm() {
 
   useEffect(() => {
     if (user?.deliveryAddresses && user?.deliveryAddresses.length > 0) {
-      console.log(user?.deliveryAddresses)
+      console.log(user?.deliveryAddresses);
       setAddresses(user.deliveryAddresses);
       setSelectedAddressId(user.deliveryAddresses[0].id);
     }
@@ -428,7 +428,11 @@ export default function CheckoutForm() {
                         </div>
                       </div>
                       <DialogFooter>
-                        <Button variant="outline" onClick={resetAddressForm} disabled={isAddressModalLoading}>
+                        <Button
+                          variant="outline"
+                          onClick={resetAddressForm}
+                          disabled={isAddressModalLoading}
+                        >
                           Cancel
                         </Button>
                         <Button
@@ -438,13 +442,23 @@ export default function CheckoutForm() {
                           }
                           disabled={isAddressModalLoading}
                         >
-                          {isEditMode
-                            ? isAddressModalLoading
-                              ? <><Loader2 className="mr-2 h-4 w-4 animate-spin" /> Updating Address</>
-                              : "Edit Address"
-                            : isAddressModalLoading
-                              ? <><Loader2 className="mr-2 h-4 w-4 animate-spin" /> Adding Address</>
-                              : "Add Address"}
+                          {isEditMode ? (
+                            isAddressModalLoading ? (
+                              <>
+                                <Loader2 className="mr-2 h-4 w-4 animate-spin" />{" "}
+                                Updating Address
+                              </>
+                            ) : (
+                              "Edit Address"
+                            )
+                          ) : isAddressModalLoading ? (
+                            <>
+                              <Loader2 className="mr-2 h-4 w-4 animate-spin" />{" "}
+                              Adding Address
+                            </>
+                          ) : (
+                            "Add Address"
+                          )}
                         </Button>
                       </DialogFooter>
                     </DialogContent>
