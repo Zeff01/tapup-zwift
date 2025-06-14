@@ -36,12 +36,14 @@ import {
   createCustomerAndRecurringPlanBundle,
   createTransaction,
   manageUserDeliveryAddress,
+  updateUserInfo,
 } from "@/lib/firebase/actions/user.action";
 import { useCart } from "@/hooks/use-cart-v2";
 import { toast } from "react-toastify";
 import Image from "next/image";
 import { Skeleton } from "@/components/ui/skeleton";
 import { useRouter } from "next/navigation";
+import { PhoneInput } from "@/components/ui/phone-input";
 
 interface CheckoutUser {
   name: string;
@@ -84,6 +86,9 @@ export default function CheckoutForm() {
   };
 
   const [newAddress, setNewAddress] = useState({
+    firstName: "",
+    lastName: "",
+    phone: "",
     name: "",
     street: "",
     city: "",
@@ -93,11 +98,14 @@ export default function CheckoutForm() {
 
   const handleAddAddress = async () => {
     if (
-      newAddress.name &&
-      newAddress.street &&
-      newAddress.city &&
-      newAddress.state &&
-      newAddress.zipCode
+      newAddress.firstName.trim() &&
+      newAddress.lastName.trim() &&
+      newAddress.phone.trim() &&
+      newAddress.name.trim() &&
+      newAddress.street.trim() &&
+      newAddress.city.trim() &&
+      newAddress.state.trim() &&
+      newAddress.zipCode.trim()
     ) {
       setIsAddressModalLoading(true);
       const address: DeliveryAddress = {
@@ -158,7 +166,16 @@ export default function CheckoutForm() {
   };
 
   const resetAddressForm = () => {
-    setNewAddress({ name: "", street: "", city: "", state: "", zipCode: "" });
+    setNewAddress({
+      firstName: "",
+      lastName: "",
+      phone: "",
+      name: "",
+      street: "",
+      city: "",
+      state: "",
+      zipCode: "",
+    });
     setIsAddressModalOpen(false);
     setEditingAddressId(null);
     setIsEditMode(false);
@@ -167,6 +184,9 @@ export default function CheckoutForm() {
 
   const startEditing = (address: DeliveryAddress) => {
     setNewAddress({
+      firstName: address.firstName,
+      lastName: address.lastName,
+      phone: address.phone,
       name: address.name,
       street: address.street,
       city: address.city,
@@ -184,18 +204,27 @@ export default function CheckoutForm() {
       return;
     }
 
+    if (addresses.length === 0) {
+      toast.error("Please Add a Delivery Address");
+      return;
+    }
+
     setIsLoadingTransaction(true);
 
     const referenceId = `customer-${user?.email}-${new Date().toISOString()}`;
+
+    const selectedAddressV2 = addresses.find(
+      (address) => address.id === selectedAddressId
+    );
 
     const customerData: CustomerType = {
       reference_id: referenceId,
       type: "INDIVIDUAL",
       email: user?.email,
-      mobile_number: user?.number ?? "+639398351252",
+      mobile_number: user?.number ?? selectedAddressV2?.phone,
       individual_detail: {
-        given_names: user?.firstName ?? "John",
-        surname: user?.lastName ?? "Doe",
+        given_names: user?.firstName ?? selectedAddressV2?.firstName ?? "",
+        surname: user?.lastName ?? selectedAddressV2?.lastName,
       },
     };
 
@@ -228,10 +257,6 @@ export default function CheckoutForm() {
       }));
     });
 
-    const selectedAddressV2 = addresses.find(
-      (address) => address.id === selectedAddressId
-    );
-
     const transactionData: TransactionType = {
       amount: cardTotal(),
       cards: cardResults.map((cardIds, i) => ({
@@ -241,9 +266,11 @@ export default function CheckoutForm() {
       receiver: {
         customerId: recurringPlan.customer.id,
         customerName:
-          (user?.firstName || "John") + " " + (user?.lastName || "Doe"),
+          (user?.firstName || selectedAddressV2?.firstName) +
+          " " +
+          (user?.lastName || selectedAddressV2?.lastName),
         customerEmail: user?.email ?? "",
-        customerPhone: user?.number ?? "+639398351252",
+        customerPhone: user?.number ?? selectedAddressV2?.phone ?? "",
         customerAddress:
           selectedAddressV2?.street +
           ", " +
@@ -259,6 +286,15 @@ export default function CheckoutForm() {
     };
 
     await createTransaction(transactionData);
+
+    if (!user?.firstName || !user?.lastName || !user?.number) {
+      await updateUserInfo({
+        userId: user?.uid as string,
+        firstName: selectedAddressV2?.firstName || "",
+        lastName: selectedAddressV2?.lastName || "",
+        phoneNumber: selectedAddressV2?.phone || "",
+      });
+    }
 
     setIsLoadingTransaction(false);
 
@@ -350,6 +386,57 @@ export default function CheckoutForm() {
                         </DialogDescription>
                       </DialogHeader>
                       <div className="grid gap-4 py-4">
+                        <div className="flex gap-4">
+                          <div className="flex-1 grid gap-2">
+                            <Label htmlFor="first-name">First Name</Label>
+                            <Input
+                              id="first-name"
+                              placeholder="John"
+                              value={newAddress.firstName}
+                              onChange={(e) =>
+                                setNewAddress({
+                                  ...newAddress,
+                                  firstName: e.target.value,
+                                })
+                              }
+                              className="placeholder:text-slate-500/60 dark:placeholder:text-slate-500"
+                              disabled={isAddressModalLoading}
+                            />
+                          </div>
+                          <div className="flex-1 grid gap-2">
+                            <Label htmlFor="last-name">Last Name</Label>
+                            <Input
+                              id="last-name"
+                              placeholder="Doe"
+                              value={newAddress.lastName}
+                              onChange={(e) =>
+                                setNewAddress({
+                                  ...newAddress,
+                                  lastName: e.target.value,
+                                })
+                              }
+                              className="placeholder:text-slate-500/60 dark:placeholder:text-slate-500"
+                              disabled={isAddressModalLoading}
+                            />
+                          </div>
+                        </div>
+                        <div className="grid gap-2">
+                          <Label htmlFor="phone">Phone Number</Label>
+                          <PhoneInput
+                            id="phone"
+                            defaultCountry="PH"
+                            placeholder="0911 111 1111"
+                            value={newAddress.phone}
+                            onChange={(value) =>
+                              setNewAddress({
+                                ...newAddress,
+                                phone: value,
+                              })
+                            }
+                            className="placeholder:text-slate-500/60 dark:placeholder:text-slate-500"
+                            disabled={isAddressModalLoading}
+                          />
+                        </div>
                         <div className="grid gap-2">
                           <Label htmlFor="address-name">Address Name</Label>
                           <Input
@@ -362,6 +449,7 @@ export default function CheckoutForm() {
                                 name: e.target.value,
                               })
                             }
+                            className="placeholder:text-slate-500/60 dark:placeholder:text-slate-500"
                             disabled={isAddressModalLoading}
                           />
                         </div>
@@ -377,6 +465,7 @@ export default function CheckoutForm() {
                                 street: e.target.value,
                               })
                             }
+                            className="placeholder:text-slate-500/60 dark:placeholder:text-slate-500"
                             disabled={isAddressModalLoading}
                           />
                         </div>
@@ -385,7 +474,7 @@ export default function CheckoutForm() {
                             <Label htmlFor="city">City</Label>
                             <Input
                               id="city"
-                              placeholder="New York"
+                              placeholder="Manila"
                               value={newAddress.city}
                               onChange={(e) =>
                                 setNewAddress({
@@ -393,14 +482,15 @@ export default function CheckoutForm() {
                                   city: e.target.value,
                                 })
                               }
+                              className="placeholder:text-slate-500/60 dark:placeholder:text-slate-500"
                               disabled={isAddressModalLoading}
                             />
                           </div>
                           <div className="grid gap-2">
-                            <Label htmlFor="state">State</Label>
+                            <Label htmlFor="state">Province</Label>
                             <Input
                               id="state"
-                              placeholder="NY"
+                              placeholder="Metro Manila"
                               value={newAddress.state}
                               onChange={(e) =>
                                 setNewAddress({
@@ -408,6 +498,7 @@ export default function CheckoutForm() {
                                   state: e.target.value,
                                 })
                               }
+                              className="placeholder:text-slate-500/60 dark:placeholder:text-slate-500"
                             />
                           </div>
                         </div>
@@ -415,7 +506,7 @@ export default function CheckoutForm() {
                           <Label htmlFor="zip">ZIP Code</Label>
                           <Input
                             id="zip"
-                            placeholder="10001"
+                            placeholder="1000"
                             value={newAddress.zipCode}
                             onChange={(e) =>
                               setNewAddress({
@@ -423,6 +514,7 @@ export default function CheckoutForm() {
                                 zipCode: e.target.value,
                               })
                             }
+                            className="placeholder:text-slate-500/60 dark:placeholder:text-slate-500"
                             disabled={isAddressModalLoading}
                           />
                         </div>
@@ -486,7 +578,9 @@ export default function CheckoutForm() {
                           className="flex-1 cursor-pointer"
                         >
                           <div className="flex items-center gap-2 mb-1">
-                            <span className="font-medium">{address.name}</span>
+                            <span className="font-medium">
+                              {address.firstName} {address.lastName}
+                            </span>
                             {address.isDefault && (
                               <Badge variant="secondary" className="text-xs">
                                 Default
@@ -494,6 +588,8 @@ export default function CheckoutForm() {
                             )}
                           </div>
                           <div className="text-sm text-gray-600">
+                            <span>{address.name}</span>
+                            <p>{address.phone}</p>
                             <p>{address.street}</p>
                             <p>
                               {address.city}, {address.state} {address.zipCode}
