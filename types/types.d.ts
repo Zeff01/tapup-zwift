@@ -161,6 +161,9 @@ export interface Card extends Users {
 
 export interface DeliveryAddress {
   id: string;
+  firstName: string;
+  lastName: string;
+  phone: string;
   name: string;
   street: string;
   city: string;

@@ -723,3 +723,51 @@ export const updateTransactionPerId = async ({
     return { success: false, message: "Error updating transaction" };
   }
 };
+
+export const updateUserInfo = async ({
+  userId,
+  firstName,
+  lastName,
+  phoneNumber,
+}: {
+  userId: string;
+  firstName: string;
+  lastName: string;
+  phoneNumber: string;
+}) => {
+  try {
+    if (!userId) throw new Error("User id is not found");
+
+    const userRef = doc(firebaseDb, "user-account", userId);
+    const snapShot = await getDoc(userRef);
+
+    if (!snapShot.exists()) throw new Error("User not found");
+
+    const existingData = snapShot.data();
+
+    const updatePayload: Partial<{
+      firstName: string;
+      lastName: string;
+      number: string;
+    }> = {};
+
+    if (!existingData.firstName && firstName) {
+      updatePayload.firstName = firstName;
+    }
+
+    if (!existingData.lastName && lastName) {
+      updatePayload.lastName = lastName;
+    }
+
+    if (!existingData.number && phoneNumber) {
+      updatePayload.number = phoneNumber;
+    }
+
+    if (Object.keys(updatePayload).length === 0) return;
+
+    await updateDoc(userRef, updatePayload);
+  } catch (error) {
+    console.error("Error updating user info", error);
+    throw new Error("Failed to update user info");
+  }
+};
