@@ -10,7 +10,7 @@ import {
   signUserId,
   verifySignUserId,
 } from "@/lib/session";
-import { useRouter } from "next/navigation";
+import { usePathname, useRouter } from "next/navigation";
 import { SignedUserIdJwtPayload } from "@/types/types";
 
 export function useUserSession(initSession: string | null = null) {
@@ -18,6 +18,8 @@ export function useUserSession(initSession: string | null = null) {
   const [user, setUser] = useState<User | null>(null);
   const [isUserSessionLoading, setIsUserSessionLoading] = useState(true);
   const router = useRouter();
+
+  const pathname = usePathname();
 
   const signOutUser = async () => {
     await signOutHandler();
@@ -37,7 +39,9 @@ export function useUserSession(initSession: string | null = null) {
 
     if (!sessionCookie) {
       await createSession(authUser.uid);
-      router.push("/dashboard");
+      if (pathname !== "/dashboard") {
+        router.push("/dashboard");
+      }
       return;
     }
 

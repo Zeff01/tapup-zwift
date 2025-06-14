@@ -66,7 +66,7 @@ const OrderPhysicalCard = () => {
         <div className="flex flex-col my-4 lg:my-0 pb-4">
           <div className="flex items-center justify-center mx-6 md:mx-0 lg:ml-4 lg:mr-8">
             {selectedPhysicalCard ? (
-              <div className="flex items-center aspect-[16/10] relative md:aspect-[1.601] w-full md:w-[28rem] shrink-0">
+              <div className="flex  items-center aspect-[16/10] relative md:aspect-[1.601] w-full md:w-[28rem] shrink-0">
                 {selectedCard && (
                   <Image
                     src={selectedCard.image}
@@ -144,13 +144,16 @@ const OrderPhysicalCard = () => {
               </Button>
               <Button
                 onClick={() => {
-                  if (!selectedPlan || !selectedCard || isCheckoutClicked) return;
-                  
+                  if (!selectedPlan || !selectedCard || isCheckoutClicked)
+                    return;
+
                   setIsCheckoutClicked(true);
 
                   router.push("/cards/checkout");
                 }}
-                disabled={isCheckoutClicked || !selectedPlan || (totalItems === 0)}
+                disabled={
+                  isCheckoutClicked || !selectedPlan || totalItems === 0
+                }
                 variant="green"
                 className="flex w-full md:w-36 gap-2"
               >

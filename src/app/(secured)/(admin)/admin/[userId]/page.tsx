@@ -27,14 +27,17 @@ export async function generateStaticParams() {
 
 export default async function ViewUsersPage({ params }: ViewUsersPageProps) {
   const auth = await authCurrentUserv2();
+  if (!auth) {
+    redirect("/login");
+  }
 
   if (auth?.role !== USER_ROLE_ENUMS.ADMIN) {
     notFound();
   }
 
-  if (!auth?.onboarding) {
-    redirect("/onboarding");
-  }
+  // if (!auth?.onboarding) {
+  //   redirect("/onboarding");
+  // }
 
   const { userId } = params;
   const [cards, user] = await Promise.all([

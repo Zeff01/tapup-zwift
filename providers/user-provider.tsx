@@ -38,7 +38,8 @@ export const UserContextProvider = ({ children }: any) => {
       const data = await currentAuthUserDetails({ id: userUid! });
       return { uid: userUid, ...data };
     },
-    staleTime: 1000 * 60 * 5,
+    staleTime: 60 * 60 * 1000, // 1 hour
+    refetchOnMount: true, // refetch when component mounts after stale
   });
 
   const { mutate: updateUserMutation, isPending: isLoadingUpdateMuitation } =
