@@ -8,13 +8,17 @@ import { notFound, redirect } from "next/navigation";
 export default async function UsersPage() {
   const auth = await authCurrentUserv2();
 
+  if (!auth) {
+    redirect("/login");
+  }
+
   if (auth?.role !== USER_ROLE_ENUMS.ADMIN) {
     notFound();
   }
 
-  if (!auth?.onboarding) {
-    redirect("/onboarding");
-  }
+  // if (!auth?.onboarding) {
+  //   redirect("/onboarding");
+  // }
 
   const users = await getAllUsers();
   const allUsers = JSON.parse(JSON.stringify(users));

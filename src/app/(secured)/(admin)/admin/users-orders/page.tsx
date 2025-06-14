@@ -8,13 +8,16 @@ import { getAllTransactions } from "@/lib/firebase/actions/user.action";
 export default async function UserOrdersPage() {
   const auth = await authCurrentUserv2();
 
+  if (!auth) {
+    redirect("/login");
+  }
   if (auth?.role !== USER_ROLE_ENUMS.ADMIN) {
     notFound();
   }
 
-  if (!auth?.onboarding) {
-    redirect("/onboarding");
-  }
+  // if (!auth?.onboarding) {
+  //   redirect("/onboarding");
+  // }
 
   const transactions = await getAllTransactions({
     role: auth.role,

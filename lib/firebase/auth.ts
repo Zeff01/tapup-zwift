@@ -22,7 +22,7 @@ import { toast } from "react-toastify";
 import { FirebaseError } from "firebase/app";
 import { z } from "zod";
 import { signupSchema } from "../zod-schema";
-import { DASHBOARD_ROUTE, USER_ROLE_ENUMS } from "@/constants";
+import { USER_ROLE_ENUMS } from "@/constants";
 export const onAuthStateChanged = (callback: (user: User | null) => void) => {
   return _onAuthStateChanged(firebaseAuth, callback);
 };
@@ -55,14 +55,14 @@ export const authCurrentUserv2 = async () => {
   try {
     const cookie = await getSession();
     if (!cookie) {
-      signOutHandler();
+      await signOutHandler();
       return;
     }
 
     const userObj = (await verifySignUserId(cookie)) as SignedUserIdJwtPayload;
 
     if (!userObj) {
-      signOutHandler();
+      await signOutHandler();
       return;
     }
 

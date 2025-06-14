@@ -14,7 +14,7 @@ export const createSession = async (uid: string) => {
   cookies().set(SESSION_COOKIE_NAME, token, {
     httpOnly: true,
     secure: process.env.NODE_ENV === "production",
-    maxAge: 60 * 60 * 24,
+    maxAge: 60 * 60, // 1 hour
     path: "/",
   });
 };
