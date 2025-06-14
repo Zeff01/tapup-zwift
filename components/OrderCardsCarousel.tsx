@@ -30,20 +30,25 @@ export function OrderCardsCarousel({
           {Object.keys(carouselCards).map((key) => {
             const card = carouselCards[key as keyof typeof carouselCards];
             return (
-              <CarouselItem key={key} className="flex-none rounded-xl">
+              <CarouselItem
+                key={key}
+                className="flex-none rounded-xl md:mx-1 md:mt-7"
+              >
                 <div
-                  className={`block transform hover:scale-105 transition-transform duration-300 cursor-pointer ${
-                    selectedCardId === key ? "opacity-60" : ""
+                  className={`block transform   transition-transform duration-300 cursor-pointer ${
+                    selectedCardId === key
+                      ? "scale-110 ring-1 ring-green-800 rounded-lg "
+                      : ""
                   }`}
                   onClick={() => setSelectedCardId(key)}
                 >
-                  <Card className="rounded-lg border bg-slate-800 dark:bg-white aspect-[16/10] w-28 md:w-48 lg:w-72">
+                  <Card className="rounded-lg   aspect-[16/10] w-28 md:w-48 lg:w-72">
                     <CardContent className="relative flex flex-col items-center justify-center p-1 text-white">
                       <Image
                         src={card.image}
                         alt={card.title}
                         width={120}
-                        height={50}
+                        height={48}
                         className="rounded-md object-cover"
                         layout="responsive"
                         onClick={() => setSelectedCardId(key)}
