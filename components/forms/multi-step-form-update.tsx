@@ -106,10 +106,10 @@ const MultiStepFormUpdate = ({
 
   const steps: Array<(keyof z.infer<typeof editCardSchema>)[]> = isOnboarding
     ? [
-      ["coverPhotoUrl", "company", "position"],
-      ["firstName", "lastName", "email", "number", "profilePictureUrl"],
-      ["customUrl", "chosenTemplate"],
-    ]
+        ["coverPhotoUrl", "company", "position"],
+        ["firstName", "lastName", "email", "number", "profilePictureUrl"],
+        ["customUrl", "chosenTemplate"],
+      ]
     : [[], ["firstName", "lastName", "email", "number"], ["chosenTemplate"]];
 
   const [selectedTemplateId, setSelectedTemplateId] =
@@ -221,8 +221,8 @@ const MultiStepFormUpdate = ({
             portfolioStatus: true,
             chosenPhysicalCard: data.chosenPhysicalCard
               ? {
-                id: data.chosenPhysicalCard,
-              }
+                  id: data.chosenPhysicalCard,
+                }
               : undefined,
           },
         });
@@ -288,11 +288,11 @@ const MultiStepFormUpdate = ({
         if (errorKeys.length > 0) {
           const firstError =
             methods.formState.errors[
-            errorKeys[0] as keyof typeof methods.formState.errors
+              errorKeys[0] as keyof typeof methods.formState.errors
             ];
           toast.error(
             firstError?.message ||
-            "Please fill in all required fields correctly"
+              "Please fill in all required fields correctly"
           );
         }
         return;
@@ -533,9 +533,12 @@ const MultiStepFormUpdate = ({
                           <div className="flex w-full flex-col">
                             <small className="text-muted-foreground text-xs italic pl-2 mb-0.5">
                               {(() => {
-                                const customUrl = methods.getValues("customUrl");
+                                const customUrl =
+                                  methods.getValues("customUrl");
                                 const baseUrl = `www.tapup.tech/site/`;
-                                return customUrl ? `${baseUrl}${customUrl}` : `${baseUrl}${userData.id}`;
+                                return customUrl
+                                  ? `${baseUrl}${customUrl}`
+                                  : `${baseUrl}${userData.id}`;
                               })()}
                             </small>
                             <FormControl>
@@ -546,7 +549,8 @@ const MultiStepFormUpdate = ({
                               />
                             </FormControl>
                             <FormMessage className="text-12 text-red-500 mt-2">
-                              {methods.formState.errors.customUrl?.message ?? ""}
+                              {methods.formState.errors.customUrl?.message ??
+                                ""}
                             </FormMessage>
                           </div>
                         </div>
