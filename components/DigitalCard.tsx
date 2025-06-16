@@ -46,6 +46,17 @@ import { carouselCards } from "@/constants";
 import { TbDisabled } from "react-icons/tb";
 import { IoCloseCircleOutline } from "react-icons/io5";
 
+import {
+  AlertDialog,
+  AlertDialogCancel,
+  AlertDialogContent,
+  AlertDialogDescription,
+  AlertDialogFooter,
+  AlertDialogHeader,
+  AlertDialogTitle,
+} from "@/components/ui/alert-dialog";
+import { Button } from "./ui/button";
+
 type Prop = {
   card: Partial<Card>;
   confirm: (title?: string, message?: string | JSX.Element) => Promise<unknown>;
@@ -64,7 +75,8 @@ const DigitalCard = ({ card, confirm, user }: Prop) => {
   const [transferOpen, setTransferOpen] = useState(false);
   const [newOwnerEmail, setNewOwnerEmail] = useState("");
   const [expiredDialogOpen, setExpiredDialogOpen] = useState(false);
-  const [enableCardDialogOpen, setEnableCardDialogOpen] = useState(false);
+  const [confirmTransferCardDialog, setConfirmTransferCardDialog] =
+    useState(false);
 
   const domain =
     process.env.NODE_ENV === "development"
@@ -441,7 +453,6 @@ const DigitalCard = ({ card, confirm, user }: Prop) => {
           ))}
         </div>
       </div>
-
       {/* <Dialog.Root open={expiredDialogOpen} onOpenChange={setExpiredDialogOpen}>
         <Dialog.Portal>
           <Dialog.Overlay className="fixed inset-0 bg-black/50 backdrop-blur-sm z-50" />
@@ -569,21 +580,57 @@ const DigitalCard = ({ card, confirm, user }: Prop) => {
 
               <div className="flex justify-end gap-2 mt-4">
                 <Dialog.Close asChild>
-                  <button className="px-4 py-2 bg-gray-300 dark:bg-gray-700 rounded">
+                  <Button variant={"secondary"} size={"sm"}>
                     Cancel
-                  </button>
+                  </Button>
                 </Dialog.Close>
-                <button
-                  className="px-4 py-2 bg-green-500 text-white rounded"
-                  onClick={handleTransferOwnership}
+                <Button
+                  className="bg-buttonColor hover:bg-hoverColor"
+                  variant={"ghost"}
+                  size={"sm"}
+                  disabled={!newOwnerEmail}
+                  onClick={() => {
+                    setConfirmTransferCardDialog(true);
+                    setTransferOpen(false);
+                  }}
                 >
                   Transfer
-                </button>
+                </Button>
               </div>
             </div>
           </Dialog.Content>
         </Dialog.Portal>
       </Dialog.Root>
+      {/* Transfer alert dialog */}{" "}
+      <AlertDialog
+        open={confirmTransferCardDialog}
+        onOpenChange={setConfirmTransferCardDialog}
+      >
+        <div className="bg-white dark:bg-gray-900 dark:text-white p-6 rounded-lg shadow-lg max-w-sm w-full">
+          <AlertDialogContent>
+            <AlertDialogHeader>
+              <AlertDialogTitle className="text-lg font-bold">
+                Confirm Card Transfer
+              </AlertDialogTitle>
+              <AlertDialogDescription className="text-md text-gray-500 dark:text-gray-400">
+                You are about to transfer this card to{" "}
+                <span className="text-lg dark:text-white">{newOwnerEmail}</span>{" "}
+                .<br /> Please confirm to proceed with the transfer.
+              </AlertDialogDescription>
+            </AlertDialogHeader>
+            <AlertDialogFooter>
+              <AlertDialogCancel>Cancel</AlertDialogCancel>
+              <Button
+                onClick={handleTransferOwnership}
+                variant={"ghost"}
+                className="bg-buttonColor hover:bg-hoverColor"
+              >
+                Confirm
+              </Button>
+            </AlertDialogFooter>
+          </AlertDialogContent>
+        </div>
+      </AlertDialog>
       <Dialog.Root open={expiredDialogOpen} onOpenChange={setExpiredDialogOpen}>
         <Dialog.Portal>
           <Dialog.Overlay className="fixed inset-0 bg-black/50 backdrop-blur-sm z-50" />
