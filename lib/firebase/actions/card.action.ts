@@ -15,6 +15,7 @@ import {
   updateDoc,
   where,
   writeBatch,
+  deleteField,
 } from "firebase/firestore";
 import { firebaseDb } from "../firebase";
 import { toast } from "react-toastify";
@@ -279,20 +280,17 @@ export const updateCardById = async ({
   }
 };
 
-export const addCustomUrl = async (customUrl: string, cardId: string) => {
+export const addCustomUrl = async (
+  customUrl: string | undefined,
+  cardId: string | undefined
+) => {
   try {
-    if (!customUrl || !cardId) throw new Error("Missing parameters");
-
-    // Convert to lowercase & remove spaces for consistency
-    const formattedUrl = customUrl.trim().toLowerCase().replace(/\s+/g, "-");
-
-    // Prevent users from using a card ID as a custom URL
-    if (formattedUrl === cardId) {
-      throw new Error("Custom URL cannot be the same as the card ID");
+    const rawCardId = (cardId ?? "").trim();
+    if (!rawCardId) {
+      throw new Error("Missing card ID");
     }
 
-    // Check if the card exists
-    const cardRef = doc(firebaseDb, "cards", cardId);
+    const cardRef = doc(firebaseDb, "cards", rawCardId);
     const cardSnap = await getDoc(cardRef);
     if (!cardSnap.exists()) {
       throw new Error("Card not found");
@@ -300,45 +298,53 @@ export const addCustomUrl = async (customUrl: string, cardId: string) => {
 
     const cardData = cardSnap.data();
 
-    if (cardData?.customUrl && cardData.customUrlCreatedAt) {
-      const createdAt = cardData.customUrlCreatedAt.toDate();
+    if (!customUrl) {
+      await updateDoc(cardRef, {
+        customUrl: deleteField(),
+      });
+
+      return { success: true, message: "Custom URL removed successfully" };
+    }
+
+    if (customUrl === rawCardId) {
+      throw new Error("Custom URL cannot be the same as the card ID");
+    }
+
+    // Enforce 30-day limit
+    if (cardData?.customUrl && cardData.customUrlUpdatedAt) {
+      const createdAt = cardData.customUrlUpdatedAt.toDate();
       const now = new Date();
-      const timeDiff = now.getTime() - createdAt.getTime();
-      const daysElapsed = Math.floor(timeDiff / (1000 * 60 * 60 * 24));
+      const daysElapsed = Math.floor((now.getTime() - createdAt.getTime()) / (1000 * 60 * 60 * 24));
       const daysRemaining = 30 - daysElapsed;
 
       if (daysRemaining > 0) {
-        throw new Error(
-          `Custom URL can only be changed after ${daysRemaining} days`
-        );
+        throw new Error(`Custom URL can only be changed after ${daysRemaining} days`);
       }
     }
 
-    // Check if the custom URL is already assigned to another card
-    const cardsCollectionRef = collection(firebaseDb, "cards");
-    const customUrlQuery = query(
-      cardsCollectionRef,
-      where("customUrl", "==", formattedUrl)
+    // Check if formatted URL is already used
+    const existing = await getDocs(
+      query(
+        collection(firebaseDb, "cards"),
+        where("customUrl", "==", customUrl)
+      )
     );
-    const querySnapshot = await getDocs(customUrlQuery);
-
-    if (!querySnapshot.empty) {
+    if (!existing.empty) {
       throw new Error("Custom URL already in use by another card");
     }
 
-    // Update the card document to store the custom URL and timestamp
     await updateDoc(cardRef, {
-      customUrl: formattedUrl,
-      customUrlCreatedAt: serverTimestamp(), // Store the new timestamp
+      customUrl: customUrl,
+      customUrlUpdatedAt: serverTimestamp(),
     });
 
     return { success: true, message: "Custom URL added successfully" };
   } catch (error) {
     console.error("Error adding custom URL:", error);
-
-    const errorMessage =
-      error instanceof Error ? error.message : "Unknown error";
-    return { success: false, message: errorMessage };
+    return {
+      success: false,
+      message: error instanceof Error ? error.message : "Unknown error",
+    };
   }
 };
 
