@@ -290,9 +290,6 @@ export const addCustomUrl = async (
       throw new Error("Missing card ID");
     }
 
-    const rawCustomUrl = (customUrl ?? "").trim();
-    const formattedUrl = rawCustomUrl.toLowerCase().replace(/\s+/g, "-");
-
     const cardRef = doc(firebaseDb, "cards", rawCardId);
     const cardSnap = await getDoc(cardRef);
     if (!cardSnap.exists()) {
@@ -301,7 +298,7 @@ export const addCustomUrl = async (
 
     const cardData = cardSnap.data();
 
-    if (!formattedUrl) {
+    if (!customUrl) {
       await updateDoc(cardRef, {
         customUrl: deleteField(),
       });
@@ -309,7 +306,7 @@ export const addCustomUrl = async (
       return { success: true, message: "Custom URL removed successfully" };
     }
 
-    if (formattedUrl === rawCardId) {
+    if (customUrl === rawCardId) {
       throw new Error("Custom URL cannot be the same as the card ID");
     }
 
@@ -329,7 +326,7 @@ export const addCustomUrl = async (
     const existing = await getDocs(
       query(
         collection(firebaseDb, "cards"),
-        where("customUrl", "==", formattedUrl)
+        where("customUrl", "==", customUrl)
       )
     );
     if (!existing.empty) {
@@ -337,7 +334,7 @@ export const addCustomUrl = async (
     }
 
     await updateDoc(cardRef, {
-      customUrl: formattedUrl,
+      customUrl: customUrl,
       customUrlUpdatedAt: serverTimestamp(),
     });
 
