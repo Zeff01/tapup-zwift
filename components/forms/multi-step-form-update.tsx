@@ -17,7 +17,7 @@ import { IoMdClose } from "react-icons/io";
 import { useUserContext } from "@/providers/user-provider";
 import { Card, ExtendedUserInterface } from "@/types/types";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
-import { updateCardById } from "@/lib/firebase/actions/card.action";
+import { updateCardById, addCustomUrl } from "@/lib/firebase/actions/card.action";
 import MultiStepProgress from "./MultiStepProgress";
 import TapupLogo from "../svgs/TapupLogo";
 import { formHeaderItems } from "@/constants";
@@ -106,11 +106,11 @@ const MultiStepFormUpdate = ({
 
   const steps: Array<(keyof z.infer<typeof editCardSchema>)[]> = isOnboarding
     ? [
-        ["coverPhotoUrl", "company", "position"],
-        ["firstName", "lastName", "email", "number", "profilePictureUrl"],
-        ["customUrl", "chosenTemplate"],
-      ]
-    : [[], ["firstName", "lastName", "email", "number"], ["chosenTemplate"]];
+      ["coverPhotoUrl", "company", "position"],
+      ["firstName", "lastName", "email", "number", "profilePictureUrl"],
+      ["customUrl", "chosenTemplate"],
+    ]
+    : [[], ["firstName", "lastName", "email", "number", ...(selectedLinks.map(link => link.key) as Array<keyof z.infer<typeof editCardSchema>>)], ["chosenTemplate"]];
 
   const [selectedTemplateId, setSelectedTemplateId] =
     useState<ChosenTemplateType>(
@@ -162,6 +162,8 @@ const MultiStepFormUpdate = ({
       whatsappNumber: userData.whatsappNumber || "",
       skypeInviteUrl: userData.skypeInviteUrl || "",
       websiteUrl: userData.websiteUrl || "",
+      viberUrl: userData.viberUrl || "",
+      tiktokUrl: userData.tiktokUrl || "",
     },
   });
 
@@ -180,6 +182,18 @@ const MultiStepFormUpdate = ({
   useEffect(() => {
     methods.setValue("chosenTemplate", selectedTemplateId);
   }, [selectedTemplateId, methods.setValue]);
+
+  const [customUrlError, setCustomUrlError] = useState<string | null>(null);
+  const prevCustomUrl = userData.customUrl;
+
+  const {
+    mutateAsync: mutateCustomUrl,
+    isPending: isCustomUrlLoading,
+    error: customUrlMutationError,
+  } = useMutation({
+    mutationFn: ({ customUrl, cardId }: { customUrl: string; cardId: string }) =>
+      addCustomUrl(customUrl, cardId),
+  });
 
   const { mutate: updateCardMutation, isPending: isLoadingUpdateMutation } =
     useMutation({
@@ -215,18 +229,32 @@ const MultiStepFormUpdate = ({
       }
 
       if (isCard) {
+        const { customUrl, ...remainingData } = data;
+
+        if (customUrl !== undefined && customUrl !== prevCustomUrl) {
+          const result = await mutateCustomUrl({
+            customUrl,
+            cardId: userData.id!,
+          });
+
+          if (!result.success) {
+            toast.error(result.message);
+            setCustomUrlError(result.message);
+            return;
+          }
+        }
+
         await updateCardMutation({
           cardId: userData.id!,
           data: {
-            ...data,
+            ...remainingData,
             portfolioStatus: true,
             chosenPhysicalCard: data.chosenPhysicalCard
-              ? {
-                  id: data.chosenPhysicalCard,
-                }
+              ? { id: data.chosenPhysicalCard }
               : undefined,
           },
         });
+
         router.push("/cards");
         return;
       }
@@ -238,6 +266,7 @@ const MultiStepFormUpdate = ({
       if (!id) return;
       await updateUser(id, data as ExtendedUserInterface);
       toast.success("Profile updated successfully!");
+
     } catch (error) {
       console.error("Submission error:", error);
       let errorMessage = "Failed to save data. Please try again.";
@@ -287,15 +316,8 @@ const MultiStepFormUpdate = ({
         // Handle Zod validation errors
         const errorKeys = Object.keys(methods.formState.errors);
         if (errorKeys.length > 0) {
-          const firstError =
-            methods.formState.errors[
-              errorKeys[0] as keyof typeof methods.formState.errors
-            ];
-          toast.error(
-            firstError?.message ||
-              "Please fill in all required fields correctly"
-          );
-        }
+          toast.error("Please fill in all required fields correctly");
+        };
         return;
       }
 
@@ -311,13 +333,13 @@ const MultiStepFormUpdate = ({
     setCurrentStep((prev) => Math.max(prev - 1, 1));
   };
 
-  const handleAddLink = (link: { label: string; key: string }) => {
+  const handleAddLink = (link: { label: string; key: string, value: string }) => {
     setSelectedLinks((prev) => [
       ...prev,
-      { label: link.label, key: link.key, value: "" },
+      { label: link.label, key: link.key, value: link.value },
     ]);
     // Initialize form value for new link
-    methods.setValue(link.key as keyof z.infer<typeof editCardSchema>, "");
+    methods.setValue(link.key as keyof z.infer<typeof editCardSchema>, link.value);
   };
 
   const handleInputChange = (key: string, value: string) => {
@@ -513,6 +535,11 @@ const MultiStepFormUpdate = ({
                           }
                           className="flex-1 text-primary bg-secondary"
                         />
+                        <span className="text-xs text-red-500">
+                          {
+                            methods.formState.errors?.[link.key as keyof typeof methods.formState.errors]?.message ?? ""
+                          }
+                        </span>
                       </div>
                     ))}
                   </div>
@@ -551,8 +578,7 @@ const MultiStepFormUpdate = ({
                               />
                             </FormControl>
                             <FormMessage className="text-12 text-red-500 mt-2">
-                              {methods.formState.errors.customUrl?.message ??
-                                ""}
+                              {methods.formState.errors.customUrl?.message || customUrlError || customUrlMutationError?.message || ""}
                             </FormMessage>
                           </div>
                         </div>
@@ -615,9 +641,9 @@ const MultiStepFormUpdate = ({
                   <Button
                     type="submit"
                     className="px-8 py-2 bg-green-600 text-white rounded-full hover:bg-green-500"
-                    disabled={isLoading}
+                    disabled={isLoading || isCustomUrlLoading}
                   >
-                    {isLoading ? (
+                    {isLoading || isCustomUrlLoading ? (
                       <>
                         <LoaderCircle className="animate-spin size-5" />
                         Saving...

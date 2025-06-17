@@ -46,6 +46,17 @@ import { carouselCards } from "@/constants";
 import { TbDisabled } from "react-icons/tb";
 import { IoCloseCircleOutline } from "react-icons/io5";
 
+import {
+  AlertDialog,
+  AlertDialogCancel,
+  AlertDialogContent,
+  AlertDialogDescription,
+  AlertDialogFooter,
+  AlertDialogHeader,
+  AlertDialogTitle,
+} from "@/components/ui/alert-dialog";
+import { Button } from "./ui/button";
+
 type Prop = {
   card: Partial<Card>;
   confirm: (title?: string, message?: string | JSX.Element) => Promise<unknown>;
@@ -64,7 +75,8 @@ const DigitalCard = ({ card, confirm, user }: Prop) => {
   const [transferOpen, setTransferOpen] = useState(false);
   const [newOwnerEmail, setNewOwnerEmail] = useState("");
   const [expiredDialogOpen, setExpiredDialogOpen] = useState(false);
-  const [enableCardDialogOpen, setEnableCardDialogOpen] = useState(false);
+  const [confirmTransferCardDialog, setConfirmTransferCardDialog] =
+    useState(false);
 
   const domain =
     process.env.NODE_ENV === "development"
@@ -268,6 +280,7 @@ const DigitalCard = ({ card, confirm, user }: Prop) => {
     } else {
       toast.error(message);
     }
+    setConfirmTransferCardDialog(false);
   };
 
   const handleToggleCard = async () => {
@@ -275,11 +288,18 @@ const DigitalCard = ({ card, confirm, user }: Prop) => {
     const ok = await confirm(
       undefined,
       <>
-        Are you sure you want to{" "}
-        <span className="font-bold text-destructive">
-          {card.disabled ? "enable" : "disable"}
-        </span>{" "}
-        this card?
+        {!card.disabled && (
+          <p className="mb-4 text-sm text-muted-foreground">
+            Disabling this card will make it inaccessible to others and remove it from public view.
+          </p>
+        )}
+        <p>
+          Are you sure you want to{" "}
+          <span className="font-bold text-destructive">
+            {card.disabled ? "enable" : "disable"}
+          </span>{" "}
+          this card?
+        </p>
       </>
     );
 
@@ -441,7 +461,6 @@ const DigitalCard = ({ card, confirm, user }: Prop) => {
           ))}
         </div>
       </div>
-
       {/* <Dialog.Root open={expiredDialogOpen} onOpenChange={setExpiredDialogOpen}>
         <Dialog.Portal>
           <Dialog.Overlay className="fixed inset-0 bg-black/50 backdrop-blur-sm z-50" />
@@ -569,15 +588,59 @@ const DigitalCard = ({ card, confirm, user }: Prop) => {
 
               <div className="flex justify-end gap-2 mt-4">
                 <Dialog.Close asChild>
-                  <button className="px-4 py-2 bg-gray-300 dark:bg-gray-700 rounded">
+                  <Button variant={"secondary"} size={"sm"}>
                     Cancel
-                  </button>
+                  </Button>
                 </Dialog.Close>
-                <button
-                  className="px-4 py-2 bg-green-500 text-white rounded"
-                  onClick={handleTransferOwnership}
+                <Button
+                  className="bg-buttonColor hover:bg-hoverColor"
+                  variant={"ghost"}
+                  size={"sm"}
+                  disabled={!newOwnerEmail}
+                  onClick={() => {
+                    setConfirmTransferCardDialog(true);
+                    setTransferOpen(false);
+                  }}
                 >
                   Transfer
+                </Button>
+              </div>
+            </div>
+          </Dialog.Content>
+        </Dialog.Portal>
+      </Dialog.Root>
+      <Dialog.Root
+        open={confirmTransferCardDialog}
+        onOpenChange={setConfirmTransferCardDialog}
+      >
+        <Dialog.Portal>
+          <Dialog.Overlay className="fixed inset-0 bg-black/50 backdrop-blur-sm z-50" />
+          <Dialog.Content className="fixed inset-0 flex items-center justify-center p-4 z-50">
+            <div className="bg-white dark:bg-gray-900 dark:text-white p-6 rounded-lg shadow-lg max-w-sm w-full">
+              <Dialog.Title className="text-2xl font-bold ">
+                Confirm Card Transfer
+              </Dialog.Title>
+
+              <p className="text-md text-gray-800 dark:text-gray-400 mt-2">
+                You are about to transfer this card to{" "}
+                <span className="text-xl dark:text-white text-black">
+                  {newOwnerEmail}
+                </span>
+                .<br />
+                Please confirm to proceed with the transfer.
+              </p>
+
+              <div className="flex justify-end gap-2 mt-4">
+                <Dialog.Close asChild>
+                  <Button variant="secondary" size="sm">
+                    Cancel
+                  </Button>
+                </Dialog.Close>
+                <button
+                  onClick={handleTransferOwnership}
+                  className="ml-2 px-2 py-1 text-sm bg-blue-600 hover:bg-blue-500 text-white rounded"
+                >
+                  Confirm
                 </button>
               </div>
             </div>

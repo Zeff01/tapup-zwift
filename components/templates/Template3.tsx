@@ -176,13 +176,11 @@ const Template3 = ({
             <a href={`tel:${number}`} className="text-decoration-none">
               <CiPhone size={32} className="cursor-pointer" />
             </a>
-            <p className="text-xs font-light">Call</p>
           </div>
           <div className="flex flex-col justify-center items-center">
             <a href={`mailto:${email}`}>
               <CiMail size={32} className="cursor-pointer" />
             </a>
-            <p className="text-xs font-light">Email</p>
           </div>
           <div className="flex flex-col justify-center items-center">
             <CiSaveDown2
@@ -190,7 +188,6 @@ const Template3 = ({
               className="cursor-pointer"
               onClick={() => downloadVCard(userProfile)}
             />
-            <p className="text-xs font-light">Save</p>
           </div>
         </div>
 
