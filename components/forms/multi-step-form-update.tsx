@@ -110,7 +110,7 @@ const MultiStepFormUpdate = ({
       ["firstName", "lastName", "email", "number", "profilePictureUrl"],
       ["customUrl", "chosenTemplate"],
     ]
-    : [[], ["firstName", "lastName", "email", "number"], ["chosenTemplate"]];
+    : [[], ["firstName", "lastName", "email", "number", ...(selectedLinks.map(link => link.key) as Array<keyof z.infer<typeof editCardSchema>>)], ["chosenTemplate"]];
 
   const [selectedTemplateId, setSelectedTemplateId] =
     useState<ChosenTemplateType>(
@@ -161,6 +161,8 @@ const MultiStepFormUpdate = ({
       whatsappNumber: userData.whatsappNumber || "",
       skypeInviteUrl: userData.skypeInviteUrl || "",
       websiteUrl: userData.websiteUrl || "",
+      viberUrl: userData.viberUrl || "",
+      tiktokUrl: userData.tiktokUrl || "",
     },
   });
 
@@ -313,15 +315,8 @@ const MultiStepFormUpdate = ({
         // Handle Zod validation errors
         const errorKeys = Object.keys(methods.formState.errors);
         if (errorKeys.length > 0) {
-          const firstError =
-            methods.formState.errors[
-            errorKeys[0] as keyof typeof methods.formState.errors
-            ];
-          toast.error(
-            firstError?.message ||
-            "Please fill in all required fields correctly"
-          );
-        }
+          toast.error("Please fill in all required fields correctly");
+        };
         return;
       }
 
@@ -337,13 +332,13 @@ const MultiStepFormUpdate = ({
     setCurrentStep((prev) => Math.max(prev - 1, 1));
   };
 
-  const handleAddLink = (link: { label: string; key: string }) => {
+  const handleAddLink = (link: { label: string; key: string, value: string }) => {
     setSelectedLinks((prev) => [
       ...prev,
-      { label: link.label, key: link.key, value: "" },
+      { label: link.label, key: link.key, value: link.value },
     ]);
     // Initialize form value for new link
-    methods.setValue(link.key as keyof z.infer<typeof editCardSchema>, "");
+    methods.setValue(link.key as keyof z.infer<typeof editCardSchema>, link.value);
   };
 
   const handleInputChange = (key: string, value: string) => {
@@ -538,6 +533,11 @@ const MultiStepFormUpdate = ({
                           }
                           className="flex-1 text-primary bg-secondary"
                         />
+                        <span className="text-xs text-red-500">
+                          {
+                            methods.formState.errors?.[link.key as keyof typeof methods.formState.errors]?.message ?? ""
+                          }
+                        </span>
                       </div>
                     ))}
                   </div>
