@@ -32,9 +32,8 @@ const PersonalInfoForm: React.FC<PersonalInfoFormProps> = ({
       <CustomInput
         control={control}
         name="lastName"
-        label="Last Name"
+        label="Surname (optional)"
         placeholder="Enter your last name"
-        required={true}
       />
       <CustomInput
         control={control}
