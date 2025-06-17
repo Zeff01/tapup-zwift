@@ -73,24 +73,12 @@ const Template7 = ({
             )}
           </div>
           <div className="absolute -bottom-16 rounded-xl left-1/4 transform -translate-x-24 bg-offWhiteTemplate border-8 border-offWhiteTemplate h-custom-29 w-custom-29">
-            {profilePictureUrl ? (
-              <div className="rounded-xl">
-                <Image
-                  src={profilePictureUrl}
-                  alt="Profile Image"
-                  className="rounded-xl"
-                />
-              </div>
-            ) : (
-              <div className="rounded-[20px]">
-                <Image
-                  src={"/assets/template-7-profile-picture.jpeg"}
-                  alt="Profile Image"
-                  fill
-                  className="rounded-xl"
-                />
-              </div>
-            )}
+            <Image
+              src={profilePictureUrl}
+              alt="Profile Image"
+              fill
+              className="rounded-xl"
+            />
           </div>
         </div>
         <div className="flex flex-col px-5">
@@ -118,27 +106,36 @@ const Template7 = ({
           </div>
           {/* SOCIALS */}
           <div className="flex pl-5 mt-3 gap-2">
+            {facebookUrl && (
+              <Button className="rounded-full">
+                <FaFacebook />
+              </Button>
+            )}
+            {instagramUrl && (
+              <Button className="rounded-full">
+                <FaInstagram />
+              </Button>
+            )}
+            {linkedinUrl && (
+              <Button className="rounded-full">
+                <FaLinkedin />
+              </Button>
+            )}
             <Button className="rounded-full">
-              <FaFacebook />
+              <a href={`mailto:${email}`}>
+                <FaEnvelope className="cursor-pointer" />
+              </a>
             </Button>
             <Button className="rounded-full">
-              <FaFacebookMessenger />
+              <a href={`tel:${number}`} className="text-decoration-none">
+                <FaPhone className="cursor-pointer" />
+              </a>
             </Button>
-            <Button className="rounded-full">
-              <FaInstagram />
-            </Button>
-            <Button className="rounded-full">
-              <FaLinkedin />
-            </Button>
-            <Button className="rounded-full">
-              <FaEnvelope />
-            </Button>
-            <Button className="rounded-full">
-              <FaPhone />
-            </Button>
-            <Button className="rounded-full">
-              <FaGlobe />
-            </Button>
+            {websiteUrl && (
+              <Button className="rounded-full">
+                <FaGlobe />
+              </Button>
+            )}
           </div>
           {/* CTA BUTTONS */}
           <div className="grid grid-cols-3 gap-4 mt-5">
@@ -225,15 +222,21 @@ const Template7 = ({
               {company ?? "ABC Company"}
             </div>
             <div className="flex justify-center gap-2.5">
-              <Button className="rounded-full h-2xs w-2xs">
-                <FaFacebookMessenger className="" />
-              </Button>
-              <Button className="rounded-full h-2xs w-2xs">
-                <FaFacebook className="" />
-              </Button>
-              <Button className="rounded-full h-2xs w-2xs">
-                <FaInstagram className="" />
-              </Button>
+              {facebookUrl && (
+                <Button className="rounded-full h-2xs w-2xs">
+                  <FaFacebook />
+                </Button>
+              )}
+              {instagramUrl && (
+                <Button className="rounded-full h-2xs w-2xs">
+                  <FaInstagram />
+                </Button>
+              )}
+              {linkedinUrl && (
+                <Button className="rounded-full h-2xs w-2xs">
+                  <FaLinkedin />
+                </Button>
+              )}
             </div>
             <div className="flex justify-center">
               <p className="text-3xs text-gray-500 font-light">

@@ -68,6 +68,11 @@ const Template1 = ({
       <div className=" w-full mx-auto  relative">
         <div className="flex gap-x-2 z-20 absolute right-0 top-0 text-[#00A9FF] m-2   rounded-bl-3xl">
           <span className=" text-lg font-semibold bg-[#A0E9FF]  rounded-full p-2 ">
+            <a href={`tel:${number}`} className="text-decoration-none">
+              <CiPhone className="cursor-pointer" />
+            </a>
+          </span>
+          <span className=" text-lg font-semibold bg-[#A0E9FF]  rounded-full p-2 ">
             <a href={`mailto:${email}`}>
               <CiMail className="cursor-pointer" />
             </a>
@@ -168,7 +173,7 @@ const Template1 = ({
           </div>
           {/* SOCIAL MEDIA ICONS */}
           <div className=" flex items-center gap-x-2 pb-10 pt-5 text-black text-2xl  h-16 justify-center">
-            {facebookUrl ? (
+            {facebookUrl && (
               <a
                 className="rounded-full p-2 bg-white  opacity-50"
                 href={facebookUrl}
@@ -177,12 +182,8 @@ const Template1 = ({
               >
                 <SlSocialFacebook size={13} />
               </a>
-            ) : (
-              <div className="rounded-full p-2 bg-white  opacity-50">
-                <SlSocialFacebook size={13} />
-              </div>
             )}
-            {twitterUrl ? (
+            {twitterUrl && (
               <a
                 className="rounded-full p-2 bg-white  opacity-50"
                 href={twitterUrl}
@@ -191,12 +192,8 @@ const Template1 = ({
               >
                 <FaXTwitter size={13} />
               </a>
-            ) : (
-              <div className="rounded-full p-2 bg-white  opacity-50">
-                <FaXTwitter size={13} />
-              </div>
             )}
-            {youtubeUrl ? (
+            {youtubeUrl && (
               <a
                 className="rounded-full p-2 bg-white  opacity-50"
                 href={youtubeUrl}
@@ -205,12 +202,8 @@ const Template1 = ({
               >
                 <FiYoutube size={13} />
               </a>
-            ) : (
-              <div className="rounded-full p-2 bg-white  opacity-50">
-                <FiYoutube size={13} />
-              </div>
             )}
-            {instagramUrl ? (
+            {instagramUrl && (
               <a
                 className="rounded-full p-2 bg-white  opacity-50"
                 href={instagramUrl}
@@ -219,12 +212,8 @@ const Template1 = ({
               >
                 <FaInstagram size={13} />
               </a>
-            ) : (
-              <div className="rounded-full p-2 bg-white  opacity-50">
-                <FaInstagram size={13} />
-              </div>
             )}
-            {linkedinUrl ? (
+            {linkedinUrl && (
               <a
                 className="rounded-full p-2 bg-white  opacity-50"
                 href={linkedinUrl}
@@ -233,12 +222,8 @@ const Template1 = ({
               >
                 <FaLinkedin size={13} />
               </a>
-            ) : (
-              <div className="rounded-full p-2 bg-white  opacity-50">
-                <FaLinkedin size={13} />
-              </div>
             )}
-            {whatsappNumber ? (
+            {whatsappNumber && (
               <a
                 className="rounded-full p-2 bg-white  opacity-50"
                 href={`https://wa.me/${whatsappNumber}`}
@@ -247,12 +232,8 @@ const Template1 = ({
               >
                 <FaWhatsapp size={13} />
               </a>
-            ) : (
-              <div className="rounded-full p-2 bg-white  opacity-50">
-                <FaWhatsapp size={13} />
-              </div>
             )}
-            {skypeInviteUrl ? (
+            {skypeInviteUrl && (
               <a
                 className="rounded-full p-2 bg-white  opacity-50"
                 href={`skype:${skypeInviteUrl}?chat`}
@@ -261,12 +242,8 @@ const Template1 = ({
               >
                 <SiSkypeforbusiness size={13} />
               </a>
-            ) : (
-              <div className="rounded-full p-2 bg-white  opacity-50">
-                <SiSkypeforbusiness size={13} />
-              </div>
             )}
-            {!websiteUrl ? (
+            {websiteUrl && (
               <a
                 className="rounded-full p-2 bg-white  opacity-50"
                 href={websiteUrl}
@@ -275,10 +252,6 @@ const Template1 = ({
               >
                 <GoGlobe size={13} />
               </a>
-            ) : (
-              <div className="rounded-full p-2 bg-white  opacity-50">
-                <GoGlobe size={13} />
-              </div>
             )}
           </div>
         </div>

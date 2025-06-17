@@ -1,7 +1,7 @@
 import { downloadVCard } from "@/lib/utils";
 import { Card } from "@/types/types";
 import Image from "next/image";
-import { CiCirclePlus, CiSaveDown2 } from "react-icons/ci";
+import { CiCirclePlus, CiSaveDown2, CiMail, CiPhone } from "react-icons/ci";
 import {
   FaXTwitter,
   FaFacebook,
@@ -172,16 +172,25 @@ const Template3 = ({
         {/* CTA BUTTONS */}
         <div className="flex justify-center space-x-4 mt-2 font-bold">
           {/* Icon buttons */}
-          <div className="flex flex-col justify-center items-center border-2 rounded-full py-2 px-8 bg-white cursor-pointer">
-            <a href={`mailto:${email}`}>
-              <p className="text-xs text-black ">Email Me</p>
+          <div className="flex flex-col justify-center items-center">
+            <a href={`tel:${number}`} className="text-decoration-none">
+              <CiPhone size={32} className="cursor-pointer" />
             </a>
+            <p className="text-xs font-light">Call</p>
           </div>
-          <div
-            className="flex flex-col justify-center items-center border-2 rounded-full py-2 px-8 cursor-pointer"
-            onClick={() => downloadVCard(userProfile)}
-          >
-            <p className="text-xs">Save Contact</p>
+          <div className="flex flex-col justify-center items-center">
+            <a href={`mailto:${email}`}>
+              <CiMail size={32} className="cursor-pointer" />
+            </a>
+            <p className="text-xs font-light">Email</p>
+          </div>
+          <div className="flex flex-col justify-center items-center">
+            <CiSaveDown2
+              size={32}
+              className="cursor-pointer"
+              onClick={() => downloadVCard(userProfile)}
+            />
+            <p className="text-xs font-light">Save</p>
           </div>
         </div>
 

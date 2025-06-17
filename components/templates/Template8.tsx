@@ -92,27 +92,36 @@ const Template8 = ({
           </p>
         </div>
         <div className="flex justify-center gap-2 mb-5">
+          {facebookUrl && (
+            <Button className="rounded-full">
+              <FaFacebook />
+            </Button>
+          )}
+          {instagramUrl && (
+            <Button className="rounded-full">
+              <FaInstagram />
+            </Button>
+          )}
+          {linkedinUrl && (
+            <Button className="rounded-full">
+              <FaLinkedin />
+            </Button>
+          )}
           <Button className="rounded-full">
-            <FaFacebook />
+            <a href={`mailto:${email}`}>
+              <FaEnvelope className="cursor-pointer" />
+            </a>
           </Button>
           <Button className="rounded-full">
-            <FaFacebookMessenger />
+            <a href={`tel:${number}`} className="text-decoration-none">
+              <FaPhone className="cursor-pointer" />
+            </a>
           </Button>
-          <Button className="rounded-full">
-            <FaInstagram />
-          </Button>
-          <Button className="rounded-full">
-            <FaLinkedin />
-          </Button>
-          <Button className="rounded-full">
-            <FaEnvelope />
-          </Button>
-          <Button className="rounded-full">
-            <FaPhone />
-          </Button>
-          <Button className="rounded-full">
-            <FaGlobe />
-          </Button>
+          {websiteUrl && (
+            <Button className="rounded-full">
+              <FaGlobe />
+            </Button>
+          )}
         </div>
         {/* CTA BUTTON */}
         <div className="mb-5">
@@ -181,15 +190,21 @@ const Template8 = ({
               {company ?? "ABC Company"}
             </div>
             <div className="flex justify-center gap-2.5">
-              <Button className="rounded-full h-2xs w-2xs">
-                <FaFacebookMessenger className="" />
-              </Button>
-              <Button className="rounded-full h-2xs w-2xs">
-                <FaFacebook className="" />
-              </Button>
-              <Button className="rounded-full h-2xs w-2xs">
-                <FaInstagram className="" />
-              </Button>
+              {facebookUrl && (
+                <Button className="rounded-full h-2xs w-2xs">
+                  <FaFacebook />
+                </Button>
+              )}
+              {instagramUrl && (
+                <Button className="rounded-full h-2xs w-2xs">
+                  <FaInstagram />
+                </Button>
+              )}
+              {linkedinUrl && (
+                <Button className="rounded-full h-2xs w-2xs">
+                  <FaLinkedin />
+                </Button>
+              )}
             </div>
             <div className="flex justify-center">
               <p className="text-2xs text-gray-500 font-light">

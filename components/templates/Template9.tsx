@@ -51,6 +51,11 @@ const Template1 = ({
       <div className=" h-96 relative   ">
         <div className="absolute flex gap-x-2 m-4 top-0 right-0">
           <span className=" bg-white text-2xl p-2 text-neutral-800 rounded-full">
+            <a href={`tel:${number}`} className="text-decoration-none">
+              <CiPhone className="cursor-pointer" />
+            </a>
+          </span>
+          <span className=" bg-white text-2xl p-2 text-neutral-800 rounded-full">
             <a href={`mailto:${email}`}>
               <CiMail className="cursor-pointer" />
             </a>
@@ -124,40 +129,32 @@ const Template1 = ({
             <p>{number ?? +639123456789}</p>
           </div>
           <div className=" flex items-center gap-x-4 py-4 text-2xl text-neutral-700 h-16 justify-center">
-            {facebookUrl ? (
+            {facebookUrl && (
               <a href={facebookUrl} target="_blank" rel="noopener noreferrer">
                 <SlSocialFacebook size={24} />
               </a>
-            ) : (
-              <SlSocialFacebook size={24} />
             )}
-            {twitterUrl ? (
+            {twitterUrl && (
               <a href={twitterUrl} target="_blank" rel="noopener noreferrer">
                 <FaXTwitter size={24} />
               </a>
-            ) : (
-              <FaXTwitter size={24} />
             )}
-            {youtubeUrl ? (
+            {youtubeUrl && (
               <a href={youtubeUrl} target="_blank" rel="noopener noreferrer">
                 <FiYoutube size={24} />
               </a>
-            ) : (
-              <FiYoutube size={24} />
             )}
-            {instagramUrl ? (
+            {instagramUrl && (
               <a href={instagramUrl} target="_blank" rel="noopener noreferrer">
                 <FaInstagram size={24} />
               </a>
-            ) : (
-              <FaInstagram size={24} />
             )}
             {linkedinUrl && (
               <a href={linkedinUrl} target="_blank" rel="noopener noreferrer">
                 <FaLinkedin size={24} />
               </a>
             )}
-            {whatsappNumber ? (
+            {whatsappNumber && (
               <a
                 href={`https://wa.me/${whatsappNumber}`}
                 target="_blank"
@@ -165,10 +162,8 @@ const Template1 = ({
               >
                 <FaWhatsapp size={24} />
               </a>
-            ) : (
-              <FaWhatsapp size={24} />
             )}
-            {skypeInviteUrl ? (
+            {skypeInviteUrl && (
               <a
                 href={`skype:${skypeInviteUrl}?chat`}
                 target="_blank"
@@ -176,15 +171,11 @@ const Template1 = ({
               >
                 <SiSkypeforbusiness size={24} />
               </a>
-            ) : (
-              <SiSkypeforbusiness size={24} />
             )}
-            {websiteUrl ? (
+            {websiteUrl && (
               <a href={websiteUrl} target="_blank" rel="noopener noreferrer">
                 <GoGlobe size={24} />
               </a>
-            ) : (
-              <GoGlobe size={24} />
             )}
           </div>
         </div>

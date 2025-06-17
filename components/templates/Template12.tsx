@@ -164,8 +164,13 @@ const Template1 = ({
                       variant="outline"
                       className="bg-[#D3F1DF] text-xs hover:bg-[#466b55] transition-colors duration-300 border-none rounded-full h-7 text-black  shadow-md"
                     >
-                      <CiPhone />
-                      Contact Me
+                      <a
+                        className="flex items-center gap-2"
+                        href={`tel:${number}`}
+                      >
+                        <CiPhone />
+                        Contact Me
+                      </a>
                     </Button>
                   </TooltipTrigger>
                   <TooltipContent>
@@ -217,40 +222,32 @@ const Template1 = ({
 
         <div className="text-center flex flex-col absolute top-[205px]  w-full space-y-1bg-[#D3F1DF]  bg-gradient-to-t from-[#85A98F] overflow-hidden to-[#D3F1DF] rounded-t-3xl">
           <div className=" flex  items-center w-full gap-x-4 py-4 text-2xl bg-gradient-to-t from-[#D3F1DF]  to-[#f4fcf7] text-neutral-700 h-16 justify-center">
-            {facebookUrl ? (
+            {facebookUrl && (
               <a href={facebookUrl} target="_blank" rel="noopener noreferrer">
                 <SlSocialFacebook size={20} />
               </a>
-            ) : (
-              <SlSocialFacebook size={20} />
             )}
-            {twitterUrl ? (
+            {twitterUrl && (
               <a href={twitterUrl} target="_blank" rel="noopener noreferrer">
                 <FaXTwitter size={20} />
               </a>
-            ) : (
-              <FaXTwitter size={20} />
             )}
-            {youtubeUrl ? (
+            {youtubeUrl && (
               <a href={youtubeUrl} target="_blank" rel="noopener noreferrer">
                 <FiYoutube size={20} />
               </a>
-            ) : (
-              <FiYoutube size={20} />
             )}
-            {instagramUrl ? (
+            {instagramUrl && (
               <a href={instagramUrl} target="_blank" rel="noopener noreferrer">
                 <FaInstagram size={20} />
               </a>
-            ) : (
-              <FaInstagram size={20} />
             )}
             {linkedinUrl && (
               <a href={linkedinUrl} target="_blank" rel="noopener noreferrer">
                 <FaLinkedin size={20} />
               </a>
             )}
-            {whatsappNumber ? (
+            {whatsappNumber && (
               <a
                 href={`https://wa.me/${whatsappNumber}`}
                 target="_blank"
@@ -258,10 +255,8 @@ const Template1 = ({
               >
                 <FaWhatsapp size={20} />
               </a>
-            ) : (
-              <FaWhatsapp size={20} />
             )}
-            {skypeInviteUrl ? (
+            {skypeInviteUrl && (
               <a
                 href={`skype:${skypeInviteUrl}?chat`}
                 target="_blank"
@@ -269,15 +264,11 @@ const Template1 = ({
               >
                 <SiSkypeforbusiness size={20} />
               </a>
-            ) : (
-              <SiSkypeforbusiness size={20} />
             )}
-            {websiteUrl ? (
+            {websiteUrl && (
               <a href={websiteUrl} target="_blank" rel="noopener noreferrer">
                 <GoGlobe size={20} />
               </a>
-            ) : (
-              <GoGlobe size={20} />
             )}
           </div>
           <div className=" flex flex-col gap-y-6 pt-4  px-5 flex-grow border-t border-t-neutral-300 text-[#5A6C57]">
