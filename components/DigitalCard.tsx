@@ -280,6 +280,7 @@ const DigitalCard = ({ card, confirm, user }: Prop) => {
     } else {
       toast.error(message);
     }
+    setConfirmTransferCardDialog(false);
   };
 
   const handleToggleCard = async () => {
@@ -601,36 +602,44 @@ const DigitalCard = ({ card, confirm, user }: Prop) => {
           </Dialog.Content>
         </Dialog.Portal>
       </Dialog.Root>
-      {/* Transfer alert dialog */}{" "}
-      <AlertDialog
+      <Dialog.Root
         open={confirmTransferCardDialog}
         onOpenChange={setConfirmTransferCardDialog}
       >
-        <div className="bg-white dark:bg-gray-900 dark:text-white p-6 rounded-lg shadow-lg max-w-sm w-full">
-          <AlertDialogContent>
-            <AlertDialogHeader>
-              <AlertDialogTitle className="text-lg font-bold">
+        <Dialog.Portal>
+          <Dialog.Overlay className="fixed inset-0 bg-black/50 backdrop-blur-sm z-50" />
+          <Dialog.Content className="fixed inset-0 flex items-center justify-center p-4 z-50">
+            <div className="bg-white dark:bg-gray-900 dark:text-white p-6 rounded-lg shadow-lg max-w-sm w-full">
+              <Dialog.Title className="text-2xl font-bold ">
                 Confirm Card Transfer
-              </AlertDialogTitle>
-              <AlertDialogDescription className="text-md text-gray-500 dark:text-gray-400">
+              </Dialog.Title>
+
+              <p className="text-md text-gray-800 dark:text-gray-400 mt-2">
                 You are about to transfer this card to{" "}
-                <span className="text-lg dark:text-white">{newOwnerEmail}</span>{" "}
-                .<br /> Please confirm to proceed with the transfer.
-              </AlertDialogDescription>
-            </AlertDialogHeader>
-            <AlertDialogFooter>
-              <AlertDialogCancel>Cancel</AlertDialogCancel>
-              <Button
-                onClick={handleTransferOwnership}
-                variant={"ghost"}
-                className="bg-buttonColor hover:bg-hoverColor"
-              >
-                Confirm
-              </Button>
-            </AlertDialogFooter>
-          </AlertDialogContent>
-        </div>
-      </AlertDialog>
+                <span className="text-xl dark:text-white text-black">
+                  {newOwnerEmail}
+                </span>
+                .<br />
+                Please confirm to proceed with the transfer.
+              </p>
+
+              <div className="flex justify-end gap-2 mt-4">
+                <Dialog.Close asChild>
+                  <Button variant="secondary" size="sm">
+                    Cancel
+                  </Button>
+                </Dialog.Close>
+                <button
+                  onClick={handleTransferOwnership}
+                  className="ml-2 px-2 py-1 text-sm bg-blue-600 hover:bg-blue-500 text-white rounded"
+                >
+                  Confirm
+                </button>
+              </div>
+            </div>
+          </Dialog.Content>
+        </Dialog.Portal>
+      </Dialog.Root>
       <Dialog.Root open={expiredDialogOpen} onOpenChange={setExpiredDialogOpen}>
         <Dialog.Portal>
           <Dialog.Overlay className="fixed inset-0 bg-black/50 backdrop-blur-sm z-50" />
