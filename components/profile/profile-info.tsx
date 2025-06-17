@@ -4,9 +4,7 @@ import { downloadVCard } from "@/lib/utils";
 
 import Image from "next/image";
 import profilePic from "@/public/assets/template4samplepic.png";
-import { FiPhoneCall } from "react-icons/fi";
-import { MdOutlineEmail } from "react-icons/md";
-import { BsBoxArrowInDown } from "react-icons/bs";
+import { CiSaveDown2, CiMail, CiPhone } from "react-icons/ci";
 import profileBgImage from "@/public/assets/profileImage.png";
 
 import Link from "next/link";
@@ -68,15 +66,15 @@ const ProfileInfo = ({
           <Button className="bg-transparent border-2 border-black rounded-full text-black px-[8px] py-[6px] hover:bg-green-600 text-base">
             Edit Profile
           </Button>
-          <div className="flex gap-4 justify-center items-center">
+          <div className="flex gap-2 justify-center items-center">
             <Link href={`tel:${number}`}>
-              <FiPhoneCall className="w-7 h-7 text-[#1A1919CC] cursor-pointer" />
+              <CiPhone className="w-7 h-7 text-[#1A1919CC] cursor-pointer" />
             </Link>
             <Link href={`emailto:${email}`}>
-              <MdOutlineEmail className="w-7 h-7 text-[#1A1919CC] cursor-pointer" />
+              <CiMail className="w-7 h-7 text-[#1A1919CC] cursor-pointer" />
             </Link>
             <div>
-              <BsBoxArrowInDown
+              <CiSaveDown2
                 className="w-7 h-7 text-[#1A1919CC] cursor-pointer"
                 onClick={() => downloadVCard(userProfile)}
               />
