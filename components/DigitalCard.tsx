@@ -287,11 +287,18 @@ const DigitalCard = ({ card, confirm, user }: Prop) => {
     const ok = await confirm(
       undefined,
       <>
-        Are you sure you want to{" "}
-        <span className="font-bold text-destructive">
-          {card.disabled ? "enable" : "disable"}
-        </span>{" "}
-        this card?
+        {!card.disabled && (
+          <p className="mb-4 text-sm text-muted-foreground">
+            Disabling this card will make it inaccessible to others and remove it from public view.
+          </p>
+        )}
+        <p>
+          Are you sure you want to{" "}
+          <span className="font-bold text-destructive">
+            {card.disabled ? "enable" : "disable"}
+          </span>{" "}
+          this card?
+        </p>
       </>
     );
 
