@@ -117,7 +117,7 @@ export function TemplateCarousel({
               <div
                 className={`block transform hover:scale-105 transition-transform duration-300 cursor-pointer  ${
                   selectedTemplateId === template.id
-                    ? "outline outline-[6px] rounded-lg outline-green-500"
+                    ? "outline outline-4 rounded-lg outline-green-500"
                     : ""
                 }`}
                 onClick={() => setSelectedTemplateId(template.id)}
