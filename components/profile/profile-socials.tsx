@@ -17,15 +17,21 @@ const ProfileSocials = ({
 }: Partial<Card>) => {
   return (
     <section className="flex gap-3 w-[15rem] pt-5 pl-2">
-      <Link href={facebookUrl || "/"}>
-        <RiFacebookFill style={style} />
-      </Link>
-      <Link href={linkedinUrl || "/"}>
-        <FaLinkedinIn style={style} />
-      </Link>
-      <Link href={instagramUrl || "/"}>
-        <FiInstagram style={style} />
-      </Link>
+      {facebookUrl && (
+        <Link href={facebookUrl || "/"}>
+          <RiFacebookFill style={style} />
+        </Link>
+      )}
+      {linkedinUrl && (
+        <Link href={linkedinUrl || "/"}>
+          <FaLinkedinIn style={style} />
+        </Link>
+      )}
+      {instagramUrl && (
+        <Link href={instagramUrl || "/"}>
+          <FiInstagram style={style} />
+        </Link>
+      )}
     </section>
   );
 };
