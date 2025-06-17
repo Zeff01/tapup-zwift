@@ -21,6 +21,7 @@ interface SocialLink {
   label: string;
   icon: React.ReactNode;
   key: string;
+  value: string;
 }
 
 interface SocialLinksSelectorProps {
@@ -28,15 +29,15 @@ interface SocialLinksSelectorProps {
 }
 
 const socialLinks: SocialLink[] = [
-  { label: "Facebook", icon: <FaFacebook />, key: "facebook" },
-  { label: "Website", icon: <FaGlobe />, key: "website" },
-  { label: "Instagram", icon: <FaInstagram />, key: "instagram" },
-  { label: "X (Twitter)", icon: <FaTwitter />, key: "twitter" },
-  { label: "WhatsApp", icon: <FaWhatsapp />, key: "whatsapp" },
-  { label: "Viber", icon: <SiViber />, key: "viber" },
-  { label: "LinkedIn", icon: <FaLinkedin />, key: "linkedin" },
-  { label: "YouTube", icon: <FaYoutube />, key: "youtube" },
-  { label: "TikTok", icon: <SiTiktok />, key: "tiktok" },
+  { label: "Facebook", icon: <FaFacebook />, key: "facebook", value: "https://www.facebook.com/" },
+  { label: "Website", icon: <FaGlobe />, key: "website", value: "" },
+  { label: "Instagram", icon: <FaInstagram />, key: "instagram", value: "https://www.instagram.com/" },
+  { label: "X (Twitter)", icon: <FaTwitter />, key: "twitter", value: "https://x.com/" },
+  { label: "WhatsApp", icon: <FaWhatsapp />, key: "whatsapp", value: "https://wa.me/" },
+  { label: "Viber", icon: <SiViber />, key: "viber", value: "https://www.viber.com/" },
+  { label: "LinkedIn", icon: <FaLinkedin />, key: "linkedin", value: "https://www.linkedin.com/" },
+  { label: "YouTube", icon: <FaYoutube />, key: "youtube", value: "https://www.youtube.com/" },
+  { label: "TikTok", icon: <SiTiktok />, key: "tiktok", value: "https://www.tiktok.com/" },
 ];
 
 const SocialLinksSelector: React.FC<SocialLinksSelectorProps> = ({

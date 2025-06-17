@@ -337,13 +337,13 @@ const MultiStepFormUpdate = ({
     setCurrentStep((prev) => Math.max(prev - 1, 1));
   };
 
-  const handleAddLink = (link: { label: string; key: string }) => {
+  const handleAddLink = (link: { label: string; key: string, value: string }) => {
     setSelectedLinks((prev) => [
       ...prev,
-      { label: link.label, key: link.key, value: "" },
+      { label: link.label, key: link.key, value: link.value },
     ]);
     // Initialize form value for new link
-    methods.setValue(link.key as keyof z.infer<typeof editCardSchema>, "");
+    methods.setValue(link.key as keyof z.infer<typeof editCardSchema>, link.value);
   };
 
   const handleInputChange = (key: string, value: string) => {
