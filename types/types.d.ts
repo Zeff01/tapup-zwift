@@ -37,6 +37,8 @@ export type Users = {
   whatsappNumber?: string;
   skypeInviteUrl?: string;
   websiteUrl?: string;
+  tiktokUrl?: string;
+  viberUrl?: string;
   printStatus?: boolean;
   userCode?: string;
   user_link?: string;
