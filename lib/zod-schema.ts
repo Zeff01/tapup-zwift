@@ -215,21 +215,15 @@ export const editCardSchema = z.object({
   customUrl: z
     .string()
     .optional()
-    .refine(value => {
+    .refine((value) => {
       if (value) {
         const pathRegex = /^[a-zA-Z0-9-_]+$/;
         return pathRegex.test(value);
       }
       return true;
     }, "Custom URL can only contain letters, numbers, hyphens, and underscores."),
-  firstName: z
-    .string()
-    .min(3, "First name must be at least 3 characters")
-    .optional(),
-  lastName: z
-    .string()
-    .min(2, "Last name must be at least 2 characters")
-    .optional(),
+  firstName: z.string().min(1, "First name is required").optional(),
+  lastName: z.string().optional(),
   email: z.string().optional(),
   number: z
     .string()
