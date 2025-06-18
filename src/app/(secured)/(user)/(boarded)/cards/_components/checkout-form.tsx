@@ -630,17 +630,34 @@ export default function CheckoutForm() {
                   {items.map((item, index) => (
                     <div
                       key={index}
-                      className="flex justify-between items-start"
+                      className="flex items-center p-4 border rounded-lg space-x-4 h"
                     >
+                      <div className="relative h-36 w-40">
+                        <Image
+                          src={
+                            item.image ||
+                            "https://ralfvanveen.com/wp-content/uploads/2021/06/Placeholder-_-Glossary.svg"
+                          }
+                          alt={`${item.name} card image`}
+                          fill
+                          className="object-contain rounded-md"
+                        />
+                      </div>
+
                       <div className="flex-1">
-                        <p className="font-medium text-sm">{item.name}</p>
-                        <p className="text-sm text-gray-600">
-                          Qty: {item.quantity}
+                        <p className="font-semibold text-sm sm:text-base">
+                          {item.name}
+                        </p>
+                        <p className="text-xs sm:text-sm  text-gray-600">
+                          Quantity: {item.quantity}
                         </p>
                       </div>
-                      <p className="text-xs">
-                        PHP{(item.price * item.quantity).toFixed(2)}
-                      </p>
+
+                      <div className="text-right">
+                        <p className="text-sm sm:text-base font-semibold">
+                          PHP{(item.price * item.quantity).toFixed(2)}
+                        </p>
+                      </div>
                     </div>
                   ))}
                 </div>
@@ -676,7 +693,7 @@ export default function CheckoutForm() {
 
                 <Button
                   onClick={handlePlaceOrder}
-                  disabled={isLoadingTransaction || (totalItems === 0)}
+                  disabled={isLoadingTransaction || totalItems === 0}
                   className="w-full bg-greenColor  text-white font-medium hover:bg-greenColor/80 "
                 >
                   {isLoadingTransaction ? (

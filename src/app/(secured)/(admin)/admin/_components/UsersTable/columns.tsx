@@ -56,7 +56,7 @@ export const columns: ColumnDef<ExtendedUserInterface>[] = [
               alt={`${row.original.email}-image`}
             />
             <AvatarFallback>
-              {row.original.email[0].toUpperCase()}
+              {row.original.email ? row.original.email[0].toUpperCase() : "n/a"}
             </AvatarFallback>
           </Avatar>
           <Link className="underline" href={`/admin/${row.original.id}`}>

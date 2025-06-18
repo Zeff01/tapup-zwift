@@ -67,6 +67,7 @@ interface CropperProps extends HTMLAttributes<HTMLDivElement> {
   circularCrop?: boolean;
   fallback: ReactNode;
   disablePreview?: boolean;
+  disableUpload?: boolean;
   imageClassName?: string;
 }
 
@@ -81,6 +82,7 @@ export default function Cropper({
   fallback,
   className,
   disablePreview = false,
+  disableUpload,
   imageClassName,
   ...rest
 }: CropperProps) {
@@ -259,7 +261,14 @@ export default function Cropper({
           accept="image/*"
           onChange={onSelectFile}
           className="w-full h-full absolute top-0 left-0 opacity-0 z-10"
-          onClick={toggleModal}
+          onClick={(e) => {
+            if (disableUpload) {
+              e.preventDefault();
+              toast.error("Maximum of 5 photos can be uploaded");
+            } else {
+              toggleModal();
+            }
+          }}
           placeholder="cropper"
           // style={{ display: "none" }}
         />

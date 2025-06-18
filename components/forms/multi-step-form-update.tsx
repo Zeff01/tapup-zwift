@@ -128,6 +128,7 @@ const MultiStepFormUpdate = ({
 
   const addServiceImageUrl = (imageUrl: string) => {
     setServiceImageUrls([...serviceImageUrls, imageUrl]);
+    console.log(serviceImageUrls);
   };
 
   const methods = useForm<z.infer<typeof editCardSchema>>({
@@ -424,6 +425,7 @@ const MultiStepFormUpdate = ({
                           setPhoto={addServicePhoto}
                           className="w-full aspect-[16/9] rounded-2xl overflow-hidden border-dashed border-2"
                           imageClassName="rounded-2xl"
+                          disableUpload={serviceImageUrls.length >= 5}
                           fallback={
                             <div className="w-full aspect-[16/9] flex flex-col items-center gap-y-2">
                               <Image
