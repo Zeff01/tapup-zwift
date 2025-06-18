@@ -58,9 +58,12 @@ export const useConfirm = (
           <Button onClick={handleCancel} variant="ghost">
             Cancel
           </Button>
-          <Button onClick={handleConfirm} className="w-20">
+          <button
+            onClick={handleConfirm}
+            className="ml-2 px-2 py-1 text-sm bg-blue-600 hover:bg-blue-500 text-white rounded "
+          >
             Confirm
-          </Button>
+          </button>
         </DialogFooter>
       </DialogContent>
     </Dialog>
