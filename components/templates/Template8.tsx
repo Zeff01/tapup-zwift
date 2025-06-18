@@ -40,6 +40,10 @@ const Template8 = ({
   websiteUrl,
 }: Card) => {
   const userProfile = {
+    companyBackground,
+    serviceDescription,
+    servicePhotos,
+    profilePictureUrl,
     firstName,
     lastName,
     email,
@@ -69,26 +73,32 @@ const Template8 = ({
           {/* Profile picture and bookmark icon */}
           <div className="absolute rounded-full bg-offWhiteTemplate transform left-40 -bottom-1 w-custom-29 h-custom-29 border-offWhiteTemplate border-2xs">
             <Image
-              src={"/assets/template-8-profile-picture.jpeg"}
+              src={
+                userProfile.profilePictureUrl ||
+                "/assets/template-8-profile-picture.jpeg"
+              }
               fill
               alt="profile picture"
               className="rounded-full"
             />
           </div>
-          <Button className="absolute rounded-xl transform left-[19rem] top-40 w-10 h-10 bg-offWhiteTemplate hover:bg-offWhiteTemplate">
+          <Button
+            onClick={() => downloadVCard(userProfile)}
+            className="absolute rounded-xl transform left-[19rem] top-40 w-10 h-10 bg-offWhiteTemplate hover:bg-offWhiteTemplate"
+          >
             <Bookmark className="w-6 h-6" />
           </Button>
         </div>
         {/* Profile details */}
         <div className="flex flex-col items-center mt-6 gap-2 mb-5">
           <h1 className="text-xl font-extrabold text-footerBlueTemplate leading-[25.1px]">
-            Janna Marie Smith
+            {userProfile.firstName}
           </h1>
           <p className="text-xs font-semibold leading-4 text-grayTemplate">
-            ABC Company | UI/UX Designer
+            {userProfile.company}
           </p>
           <p className="font-normal text-grayTemplate text-xs leading-3">
-            jannamariesmith@gmail.com
+            {userProfile.email}
           </p>
         </div>
         <div className="flex justify-center gap-2 mb-5">
@@ -126,28 +136,25 @@ const Template8 = ({
         {/* CTA BUTTON */}
         <div className="mb-5">
           <Button className="rounded-xl bg-footerBlueTemplate text-white w-full hover:bg-footerBlueTemplate">
-            Email me!
+            <a href={`mailto:${email}`}>Email me! </a>
           </Button>
         </div>
         {/*COMPANY DETAILS */}
         <div className="flex flex-col justify-start gap-3">
           <h1 className="text-base font-extrabold leading-8 text-footerBlueTemplate">
-            ABC Company
+            {userProfile.company}
           </h1>
           <h5 className="text-xs font-extrabold leading-4 text-grayTemplate">
             Company Overview
           </h5>
           <p className="text-2xs leading-4 font-light text-grayTemplate">
-            Lorem ipsum dolor sit amet consectetur. Commodo non imperdiet tempus
-            orci non id nibh faucibus. Laoreet at hendrerit at viverra dignissim
-            consequat posuere mi cras.
+            {userProfile.companyBackground}
           </p>
           <h5 className="text-xs font-extrabold leading-4 text-grayTemplate">
             Our Services
           </h5>
           <p className="text-2xs leading-4 font-light text-grayTemplate">
-            Lorem ipsum dolor sit amet consectetur. Commodo non imperdiet tempus
-            orci non id nibh faucibus. Laoreet at hendrerit at viverra
+            {userProfile.serviceDescription}
           </p>
           {/*Photos */}
           <div className="grid grid-cols-2 gap-2">
@@ -155,34 +162,41 @@ const Template8 = ({
               <div className="relative h-36 p-2 rounded-2xl bg-offWhiteTemplate">
                 <div className="relative h-32">
                   <Image
-                    src={"/assets/template-7-image1.jpeg"}
+                    src={userProfile.servicePhotos?.[0] || ""}
                     fill
                     alt="photo"
                     className="rounded-2xs"
                   />
                 </div>
               </div>
-              <div className="relative h-36 p-2 rounded-2xl bg-offWhiteTemplate">
-                <div className="relative h-32">
+              {userProfile.servicePhotos?.[1] && (
+                <div className="relative h-36 p-2 rounded-2xl bg-offWhiteTemplate">
+                  <div className="relative h-32">
+                    <Image
+                      src={userProfile.servicePhotos?.[1] || ""}
+                      fill
+                      alt="photo"
+                      className="rounded-2xs"
+                    />
+                  </div>
+                </div>
+              )}
+            </div>
+            {userProfile.servicePhotos?.[2] && (
+              <div className="relative h-full p-2 rounded-2xl bg-[#F2F2F2]">
+                <div className="relative h-custom-278">
                   <Image
-                    src={"/assets/template-7-image2.jpeg"}
+                    src={
+                      userProfile.servicePhotos?.[2] ||
+                      "/assets/template-7-image1.jpeg"
+                    }
                     fill
                     alt="photo"
                     className="rounded-2xs"
                   />
                 </div>
               </div>
-            </div>
-            <div className="relative h-full p-2 rounded-2xl bg-[#F2F2F2]">
-              <div className="relative h-custom-278">
-                <Image
-                  src={"/assets/template-8-image1.jpeg"}
-                  fill
-                  alt="photo"
-                  className="rounded-2xs"
-                />
-              </div>
-            </div>
+            )}
           </div>
           {/*Footer */}
           <div className="flex flex-col items-center my-3 gap-y-3">
@@ -208,7 +222,7 @@ const Template8 = ({
             </div>
             <div className="flex justify-center">
               <p className="text-2xs text-gray-500 font-light">
-                Copyright 2024 ABC Company. All Right Reserved
+                Copyright 2025 {userProfile.company}. All Right Reserved
               </p>
             </div>
           </div>
