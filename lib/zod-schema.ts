@@ -233,11 +233,9 @@ export const editCardSchema = z.object({
     .string()
     .refine(
       (value) =>
-        value === "" ||
-        /^\b(?:https?:\/\/)?(?:www\.)?[^ "]+\.[a-zA-Z]{2,}\b/.test(value),
+        value === "" || /^https:\/\/(www\.)?facebook\.com\/[^\/\s]+\/?$/.test(value),
       {
-        message: "Invalid URL",
-        // specify the field path for error
+        message: "Must be a complete Facebook profile or page URL.",
       }
     )
     .optional(),
@@ -246,9 +244,11 @@ export const editCardSchema = z.object({
     .refine(
       (value) =>
         value === "" ||
-        /^\b(?:https?:\/\/)?(?:www\.)?[^ "]+\.[a-zA-Z]{2,}\b/.test(value),
+        /^https:\/\/(www\.)?youtube\.com\/(channel|c|user|@)[^\/\s]+\/?$/.test(
+          value
+        ),
       {
-        message: "Invalid URL",
+        message: "Must be a complete YouTube channel or user URL",
       }
     )
     .optional(),
@@ -257,9 +257,9 @@ export const editCardSchema = z.object({
     .refine(
       (value) =>
         value === "" ||
-        /^\b(?:https?:\/\/)?(?:www\.)?[^ "]+\.[a-zA-Z]{2,}\b/.test(value),
+        /^https:\/\/(www\.)?instagram\.com\/[^\/\s]+\/?$/.test(value),
       {
-        message: "Invalid URL",
+        message: "Must be a complete Instagram profile URL",
       }
     )
     .optional(),
@@ -268,9 +268,9 @@ export const editCardSchema = z.object({
     .refine(
       (value) =>
         value === "" ||
-        /^\b(?:https?:\/\/)?(?:www\.)?[^ "]+\.[a-zA-Z]{2,}\b/.test(value),
+        /^https:\/\/(www\.)?(twitter\.com|x\.com)\/[^\/\s]+\/?$/.test(value),
       {
-        message: "Invalid URL",
+        message: "Must be a complete Twitter (X) profile URL",
       }
     )
     .optional(),
@@ -279,9 +279,11 @@ export const editCardSchema = z.object({
     .refine(
       (value) =>
         value === "" ||
-        /^\b(?:https?:\/\/)?(?:www\.)?[^ "]+\.[a-zA-Z]{2,}\b/.test(value),
+        /^https:\/\/(www\.)?linkedin\.com\/(in|company)\/[^\/\s]+\/?$/.test(
+          value
+        ),
       {
-        message: "Invalid URL",
+        message: "Must be a complete LinkedIn profile or company URL",
       }
     )
     .optional(),
@@ -294,11 +296,9 @@ export const editCardSchema = z.object({
     .refine(
       (value) =>
         value === "" ||
-        /^(?:https?:\/\/)?(?:join\.skype\.com\/invite\/[a-zA-Z0-9_-]+)$/.test(
-          value
-        ),
+        /^https:\/\/join\.skype\.com\/[a-zA-Z0-9_-]+$/.test(value),
       {
-        message: "Invalid URL",
+        message: "Must be a valid Skype invite URL",
       }
     )
     .optional(),
@@ -307,9 +307,31 @@ export const editCardSchema = z.object({
     .refine(
       (value) =>
         value === "" ||
-        /^\b(?:https?:\/\/)?(?:www\.)?[^ "]+\.[a-zA-Z]{2,}\b/.test(value),
+        /^https?:\/\/[^\s/$.?#].[^\s]*$/.test(value),
       {
-        message: "Invalid URL",
+        message: "Must be a valid website URL",
+      }
+    )
+    .optional(),
+  tiktokUrl: z
+    .string()
+    .refine(
+      (value) =>
+        value === "" ||
+        /^https:\/\/(www\.)?tiktok\.com\/@[^\/\s]+\/?$/.test(value),
+      {
+        message: "Must be a valid TikTok profile URL",
+      }
+    )
+    .optional(),
+  viberUrl: z
+    .string()
+    .refine(
+      (value) =>
+        value === "" ||
+        /^https:\/\/(invite|chats)\.viber\.com\/[^\/\s]+\/?$/.test(value),
+      {
+        message: "Must be a valid Viber invite or chat link",
       }
     )
     .optional(),
