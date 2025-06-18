@@ -1,17 +1,11 @@
 import { Card } from "@/types/types";
 import Image from "next/image";
-import { CiMail, CiPhone, CiSaveDown2 } from "react-icons/ci";
 import { Button } from "@/components/ui/button";
 import {
-  FaXTwitter,
   FaFacebook,
-  FaYoutube,
   FaInstagram,
   FaLinkedin,
-  FaWhatsapp,
-  FaSkype,
   FaGlobe,
-  FaFacebookMessenger,
   FaEnvelope,
   FaPhone,
 } from "react-icons/fa6";
@@ -39,6 +33,10 @@ const Template7 = ({
   websiteUrl,
 }: Card) => {
   const userProfile = {
+    profilePictureUrl,
+    coverPhotoUrl,
+    servicePhotos,
+    companyBackground,
     firstName,
     lastName,
     email,
@@ -55,7 +53,10 @@ const Template7 = ({
           <div className="w-full h-48">
             {coverPhotoUrl ? (
               <Image
-                src={coverPhotoUrl}
+                src={
+                  userProfile.coverPhotoUrl ||
+                  "/assets/template-7-cover-photo.jpeg"
+                }
                 alt="Cover Image"
                 width={400}
                 height={200}
@@ -75,7 +76,10 @@ const Template7 = ({
           <div className="absolute -bottom-16 rounded-xl left-1/4 transform -translate-x-24 bg-offWhiteTemplate border-8 border-offWhiteTemplate h-custom-29 w-custom-29">
             {profilePictureUrl ? (
               <Image
-                src={profilePictureUrl}
+                src={
+                  userProfile.profilePictureUrl ||
+                  "/assets/template-7-cover-photo.jpeg"
+                }
                 alt="Profile Image"
                 fill
                 className="rounded-xl"
@@ -170,9 +174,7 @@ const Template7 = ({
                 Company Overview
               </div>
               <div className="text-gray-500 text-2xs font-normal leading-4">
-                Lorem ipsum dolor sit amet consectetur. Commodo non imperdiet
-                tempus orci non id nibh faucibus. Laoreet at hendrerit at
-                viverra dignissim consequat posuere mi cras.
+                {userProfile.companyBackground}
               </div>
             </div>
             <div className="flex flex-col gap-y-2 mb-3">
@@ -188,48 +190,68 @@ const Template7 = ({
           {/*Photos */}
           <div className="grid grid-cols-2 gap-2">
             <div className="flex flex-col gap-y-2">
-              <div className="relative h-52 p-2 rounded-lg bg-offWhiteTemplate">
-                <div className="relative h-48">
-                  <Image
-                    src={"/assets/template-7-image1.jpeg"}
-                    alt="Image"
-                    className="rounded-lg"
-                    fill
-                  ></Image>
+              {userProfile.servicePhotos?.[0] && (
+                <div className="relative h-52 p-2 rounded-lg bg-offWhiteTemplate">
+                  <div className="relative h-48">
+                    <Image
+                      src={
+                        userProfile.servicePhotos?.[0] ||
+                        "/assets/template-7-image1.jpeg"
+                      }
+                      alt="Image"
+                      className="rounded-lg"
+                      fill
+                    ></Image>
+                  </div>
                 </div>
-              </div>
-              <div className="relative h-36 p-2 rounded-lg bg-offWhiteTemplate">
-                <div className="relative h-32">
-                  <Image
-                    src={"/assets/template-7-image2.jpeg"}
-                    alt="Image"
-                    className="rounded-lg"
-                    fill
-                  ></Image>
+              )}
+              {userProfile.servicePhotos?.[1] && (
+                <div className="relative h-36 p-2 rounded-lg bg-offWhiteTemplate">
+                  <div className="relative h-32">
+                    <Image
+                      src={
+                        userProfile.servicePhotos?.[1] ||
+                        "/assets/template-7-image1.jpeg"
+                      }
+                      alt="Image"
+                      className="rounded-lg"
+                      fill
+                    ></Image>
+                  </div>
                 </div>
-              </div>
+              )}
             </div>
             <div className="flex flex-col gap-y-2">
-              <div className="relative h-36 p-2 rounded-lg bg-offWhiteTemplate">
-                <div className="relative h-32">
-                  <Image
-                    src={"/assets/template-7-image2.jpeg"}
-                    alt="Image"
-                    className="rounded-lg"
-                    fill
-                  ></Image>
+              {userProfile.servicePhotos?.[2] && (
+                <div className="relative h-36 p-2 rounded-lg bg-offWhiteTemplate">
+                  <div className="relative h-32">
+                    <Image
+                      src={
+                        userProfile.servicePhotos?.[2] ||
+                        "/assets/template-7-image1.jpeg"
+                      }
+                      alt="Image"
+                      className="rounded-lg"
+                      fill
+                    ></Image>
+                  </div>
                 </div>
-              </div>
-              <div className="relative h-52 p-2 rounded-lg bg-offWhiteTemplate">
-                <div className="relative h-48">
-                  <Image
-                    src={"/assets/template-7-image1.jpeg"}
-                    alt="Image"
-                    className="rounded-lg shadow-lg object-cover"
-                    fill
-                  ></Image>
+              )}
+              {userProfile.servicePhotos?.[3] && (
+                <div className="relative h-52 p-2 rounded-lg bg-offWhiteTemplate">
+                  <div className="relative h-48">
+                    <Image
+                      src={
+                        userProfile.servicePhotos?.[3] ||
+                        "/assets/template-7-image1.jpeg"
+                      }
+                      alt="Image"
+                      className="rounded-lg shadow-lg object-cover"
+                      fill
+                    ></Image>
+                  </div>
                 </div>
-              </div>
+              )}
             </div>
           </div>
           {/*Footer */}
@@ -256,7 +278,7 @@ const Template7 = ({
             </div>
             <div className="flex justify-center">
               <p className="text-3xs text-gray-500 font-light">
-                Copyright 2024 ABC Company. All Right Reserved
+                Copyright 2025 {userProfile.company}. All Right Reserved
               </p>
             </div>
           </div>
