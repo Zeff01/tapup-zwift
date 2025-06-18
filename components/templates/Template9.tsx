@@ -13,7 +13,7 @@ import { FiYoutube } from "react-icons/fi";
 import { SiSkypeforbusiness } from "react-icons/si";
 import { downloadVCard } from "@/lib/utils";
 
-const Template1 = ({
+const Template9 = ({
   profilePictureUrl,
   coverPhotoUrl,
   position,
@@ -237,4 +237,4 @@ const Template1 = ({
   );
 };
 
-export default Template1;
+export default Template9;
