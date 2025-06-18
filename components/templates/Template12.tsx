@@ -33,7 +33,7 @@ const michroma = Akatab({
   subsets: ["latin"],
 });
 
-const Template1 = ({
+const Template12 = ({
   profilePictureUrl,
   coverPhotoUrl,
   position,
@@ -355,4 +355,4 @@ const Template1 = ({
   );
 };
 
-export default Template1;
+export default Template12;

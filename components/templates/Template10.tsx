@@ -31,7 +31,7 @@ import {
 import { FiYoutube } from "react-icons/fi";
 import { SiSkypeforbusiness } from "react-icons/si";
 
-const Template1 = ({
+const Template10 = ({
   profilePictureUrl,
   coverPhotoUrl,
   position,
@@ -314,4 +314,4 @@ const Template1 = ({
   );
 };
 
-export default Template1;
+export default Template10;
