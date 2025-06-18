@@ -73,12 +73,23 @@ const Template7 = ({
             )}
           </div>
           <div className="absolute -bottom-16 rounded-xl left-1/4 transform -translate-x-24 bg-offWhiteTemplate border-8 border-offWhiteTemplate h-custom-29 w-custom-29">
-            <Image
-              src={profilePictureUrl}
-              alt="Profile Image"
-              fill
-              className="rounded-xl"
-            />
+            {profilePictureUrl ? (
+              <Image
+                src={profilePictureUrl}
+                alt="Profile Image"
+                fill
+                className="rounded-xl"
+              />
+            ) : (
+              <div className="rounded-[20px]">
+                <Image
+                  src={"/assets/template-7-profile-picture.jpeg"}
+                  alt="Profile Image"
+                  fill
+                  className="rounded-xl"
+                />
+              </div>
+            )}
           </div>
         </div>
         <div className="flex flex-col px-5">
