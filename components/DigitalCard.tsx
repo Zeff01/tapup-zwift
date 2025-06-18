@@ -46,15 +46,6 @@ import { carouselCards } from "@/constants";
 import { TbDisabled } from "react-icons/tb";
 import { IoCloseCircleOutline } from "react-icons/io5";
 
-import {
-  AlertDialog,
-  AlertDialogCancel,
-  AlertDialogContent,
-  AlertDialogDescription,
-  AlertDialogFooter,
-  AlertDialogHeader,
-  AlertDialogTitle,
-} from "@/components/ui/alert-dialog";
 import { Button } from "./ui/button";
 
 type Prop = {
@@ -290,12 +281,13 @@ const DigitalCard = ({ card, confirm, user }: Prop) => {
       <>
         {!card.disabled && (
           <p className="mb-4 text-sm text-muted-foreground">
-            Disabling this card will make it inaccessible to others and remove it from public view.
+            Disabling this card will make it inaccessible to others and remove
+            it from public view.
           </p>
         )}
         <p>
           Are you sure you want to{" "}
-          <span className="font-bold text-destructive">
+          <span className="font-bold ">
             {card.disabled ? "enable" : "disable"}
           </span>{" "}
           this card?
@@ -318,7 +310,7 @@ const DigitalCard = ({ card, confirm, user }: Prop) => {
     {
       icon: isCardDisabled ? CheckCircle2 : IoCloseCircleOutline,
       fn: handleToggleCard,
-      tooltip: "Delete Card",
+      tooltip: isCardDisabled ? "Enable Card" : "Disable Card",
     },
     {
       icon: ArrowRightLeft,
@@ -387,7 +379,7 @@ const DigitalCard = ({ card, confirm, user }: Prop) => {
         <div className="flex flex-col justify-center absolute rounded-tr-[30px] rounded-br-[30px] top-1/2 -translate-y-1/2  items-center  z-10 pr-2 py-2 bg-neutral-950/80 backdrop-blur-sm">
           <Tooltip>
             <TooltipTrigger asChild>
-              {card.portfolioStatus ? (
+              {card.portfolioStatus && !isCardDisabled ? (
                 <Link
                   href={`/site/${card.customUrl ? card.customUrl : card.id}`}
                   className="px-3 py-3 2xl:py-2 hover:opacity-50 cursor-pointer"
@@ -398,7 +390,7 @@ const DigitalCard = ({ card, confirm, user }: Prop) => {
                   <EyeIcon className="size-4 text-white drop-shadow-md" />
                 </Link>
               ) : (
-                <span className="p-3 2xl:py-2 opacity-50">
+                <span className="px-3 py-3 2xl:py-2 opacity-30 cursor-not-allowed">
                   <EyeIcon className="size-4 text-white drop-shadow-md" />
                 </span>
               )}
@@ -408,7 +400,11 @@ const DigitalCard = ({ card, confirm, user }: Prop) => {
                 className="bg-black text-white text-xs px-2 py-1 rounded"
                 side="left"
               >
-                Preview
+                {!card.portfolioStatus && !isCardDisabled
+                  ? "Setup this card first"
+                  : isCardDisabled
+                    ? "Enable this card first"
+                    : "Preview"}
                 <TooltipArrow className="fill-black" />
               </TooltipContent>
             </TooltipPortal>
@@ -438,27 +434,36 @@ const DigitalCard = ({ card, confirm, user }: Prop) => {
             </TooltipPortal>
           </Tooltip> */}
 
-          {iconAndFunctionMap.map((item, index) => (
-            <Tooltip key={index}>
-              <TooltipTrigger asChild>
-                <span
-                  className="px-3 py-3 2xl:py-2 hover:opacity-50 cursor-pointer"
-                  onClick={item.fn}
-                >
-                  <item.icon className="size-4 text-white drop-shadow-md" />
-                </span>
-              </TooltipTrigger>
-              <TooltipPortal>
-                <TooltipContent
-                  className="bg-black text-white text-xs px-2 py-1 rounded"
-                  side="left"
-                >
-                  {item.tooltip}
-                  <TooltipArrow className="fill-black" />
-                </TooltipContent>
-              </TooltipPortal>
-            </Tooltip>
-          ))}
+          {iconAndFunctionMap.map((item, index) => {
+            const isToggleButton = item.fn === handleToggleCard;
+            const isDisabledState = isCardDisabled && !isToggleButton;
+
+            return (
+              <Tooltip key={index}>
+                <TooltipTrigger asChild>
+                  <span
+                    className={`px-3 py-3 2xl:py-2 ${
+                      isDisabledState
+                        ? "opacity-30 cursor-not-allowed"
+                        : "hover:opacity-50 cursor-pointer"
+                    }`}
+                    onClick={!isDisabledState ? item.fn : undefined}
+                  >
+                    <item.icon className="size-4 text-white drop-shadow-md" />
+                  </span>
+                </TooltipTrigger>
+                <TooltipPortal>
+                  <TooltipContent
+                    className="bg-black text-white text-xs px-2 py-1 rounded"
+                    side="left"
+                  >
+                    {isDisabledState ? "Enable this card first" : item.tooltip}
+                    <TooltipArrow className="fill-black" />
+                  </TooltipContent>
+                </TooltipPortal>
+              </Tooltip>
+            );
+          })}
         </div>
       </div>
       {/* <Dialog.Root open={expiredDialogOpen} onOpenChange={setExpiredDialogOpen}>
