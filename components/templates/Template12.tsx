@@ -344,7 +344,7 @@ const Template12 = ({
                 <span className="text-xl">©</span>
                 <span className="text-xs">
                   {" "}
-                  2024 ZwiftTech. All Right Reserved.
+                  2024 Zwiftech. All Right Reserved.
                 </span>
               </p>
             </div>
