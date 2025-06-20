@@ -53,7 +53,7 @@ export default function RootLayout({
                     <span className="hidden xl:block">xl</span>
                   </div>
                 )}
-                <ToastContainer />
+                <ToastContainer autoClose={1000} />
               </CartProvider>
             </UserContextProvider>
           </QueryProvider>

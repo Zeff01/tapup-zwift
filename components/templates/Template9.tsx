@@ -229,7 +229,7 @@ const Template9 = ({
           {company ?? "COMPANY"}
         </h2>
         <div className="flex items-center  justify-center gap-x-2 text-sm text-neutral-600 pb-4">
-          <span className="text-2xl">©</span> 2024 ZwiftTech. All Right
+          <span className="text-2xl">©</span> 2024 Zwiftech. All Right
           Reserved.
         </div>
       </div>

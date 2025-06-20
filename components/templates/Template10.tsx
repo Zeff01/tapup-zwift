@@ -308,7 +308,7 @@ const Template10 = ({
         )) ?? "Company"}
       </h2>
       <div className="flex items-center  justify-center gap-x-2 text-xs text-[#B6BCD2] py-2 ">
-        <span className="text-xl">©</span> 2024 ZwiftTech. All Right Reserved.
+        <span className="text-xl">©</span> 2024 Zwiftech. All Right Reserved.
       </div>
     </div>
   );

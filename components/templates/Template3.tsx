@@ -245,7 +245,7 @@ const Template3 = ({
       </div>
       {/* FOOTER */}
       <div className="text-center text-xs text-grayDescription mt-8 mb-2">
-        © 2024 ZwiftTech. All Right Reserved.
+        © 2024 Zwiftech. All Right Reserved.
       </div>
     </div>
   );

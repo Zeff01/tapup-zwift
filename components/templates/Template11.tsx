@@ -339,7 +339,7 @@ const Template11 = ({
         </h2>
         <p className="flex items-center justify-center text-black opacity-50 gap-x-2">
           <span className="text-lg">©</span>
-          <span>2024 ZwiftTech. All Right Reserved.</span>
+          <span>2024 Zwiftech. All Right Reserved.</span>
         </p>
       </div>
     </div>
