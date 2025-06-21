@@ -13,7 +13,7 @@ import {
   FaGlobe,
 } from "react-icons/fa6";
 
-const Template1 = ({
+const Template5 = ({
   profilePictureUrl,
   coverPhotoUrl,
   position,
@@ -244,4 +244,4 @@ const Template1 = ({
   );
 };
 
-export default Template1;
+export default Template5;

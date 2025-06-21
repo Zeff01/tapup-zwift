@@ -32,7 +32,7 @@ import { FiYoutube } from "react-icons/fi";
 import { SiSkypeforbusiness } from "react-icons/si";
 import { Separator } from "../ui/separator";
 
-const Template1 = ({
+const Template11 = ({
   profilePictureUrl,
   coverPhotoUrl,
   position,
@@ -346,4 +346,4 @@ const Template1 = ({
   );
 };
 
-export default Template1;
+export default Template11;

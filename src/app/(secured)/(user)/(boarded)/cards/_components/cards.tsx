@@ -27,7 +27,7 @@ import { Button } from "@/components/ui/button";
 const Cards = () => {
   // const router = useRouter();
   const [ConfirmDialog, confirm] = useConfirm(
-    "Are you sure",
+    "Are you sure ?",
     "You are about to delete this card"
   );
   const { user } = useUserContext();
