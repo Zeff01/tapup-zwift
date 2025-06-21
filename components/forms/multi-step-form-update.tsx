@@ -3,6 +3,7 @@ import { useState, useEffect } from "react";
 import Image from "next/image";
 import { Photo } from "@/types/types";
 import { Loader2, LoaderCircle } from "lucide-react";
+import CropperMultiple from "../CropperMultiple";
 import Cropper from "../Cropper";
 import { useForm } from "react-hook-form";
 import { Form } from "@/components/ui/form";
@@ -122,14 +123,16 @@ const MultiStepFormUpdate = ({
       (userData.chosenPhysicalCard as ChosenPhysicalCardType) ?? "card1"
     );
 
-  const addServicePhoto = (photo: Photo) => {
-    setServicePhotos([...servicePhotos, photo]);
-  };
 
-  const addServiceImageUrl = (imageUrl: string) => {
-    setServiceImageUrls([...serviceImageUrls, imageUrl]);
-    console.log(serviceImageUrls);
-  };
+  // NO LONGER NEEDED FOR MULTIPLE FILE UPLOAD
+  // const addServicePhoto = (photo: Photo) => {
+  //   setServicePhotos([...servicePhotos, photo]);
+  // };
+
+  // const addServiceImageUrl = (imageUrl: string) => {
+  //   setServiceImageUrls([...serviceImageUrls, imageUrl]);
+  //   console.log(serviceImageUrls);
+  // };
 
   const methods = useForm<z.infer<typeof editCardSchema>>({
     resolver: zodResolver(editCardSchema),
@@ -417,12 +420,14 @@ const MultiStepFormUpdate = ({
                     <div className="">
                       <h1 className="text-lg font-semibold mt-2">Photos</h1>
                       <div className="w-full mt-2">
-                        <Cropper
-                          imageUrl={null}
-                          setImageUrl={addServiceImageUrl}
-                          photo={null}
+                        <CropperMultiple
+                          previewImageUrl={null}
+                          imageUrls={serviceImageUrls}
+                          setImageUrls={setServiceImageUrls}
+                          previewPhoto={null}
                           aspect={1}
-                          setPhoto={addServicePhoto}
+                          photos={servicePhotos}
+                          setPhotos={setServicePhotos}
                           className="w-full aspect-[16/9] rounded-2xl overflow-hidden border-dashed border-2"
                           imageClassName="rounded-2xl"
                           disableUpload={serviceImageUrls.length >= 5}
@@ -447,30 +452,30 @@ const MultiStepFormUpdate = ({
                         />
 
                         <div className="flex gap-2 mt-4 flex-wrap">
-                          {serviceImageUrls.map((url, key) => {
-                            return (
-                              <div
-                                key={`index-${key}`}
-                                className="flex items-center justify-center rounded-md h-[77px] w-[77px] z-auto overflow-hidden relative bg-[#222224] border border-[#2c2c2c]"
+                          {serviceImageUrls.map((url, index) => (
+                            <div
+                              key={`service-image-${index}`}
+                              className="relative flex items-center justify-center h-[77px] w-[77px] overflow-hidden rounded-md bg-[#222224] border border-[#2c2c2c]"
+                            >
+                              {/* Delete Button */}
+                              <button
+                                type="button"
+                                onClick={() => {
+                                  setServiceImageUrls((prev) => prev.filter((_, i) => i !== index));
+                                  setServicePhotos((prev) => prev.filter((_, i) => i !== index));
+                                }}
+                                className="absolute top-1 right-1 flex items-center justify-center h-4 w-4 rounded-full bg-gray-900 z-10 hover:bg-gray-700"
                               >
-                                <div
-                                  className="absolute flex items-center justify-center top-1 right-1 h-4 rounded-full w-4 bg-gray-900 z-[100] cursor-pointer"
-                                  onClick={() =>
-                                    setServiceImageUrls((prev) =>
-                                      prev.filter((_, index) => index !== key)
-                                    )
-                                  }
-                                >
-                                  <IoMdClose className="size-2 text-white" />
-                                </div>
-                                <Loader2 className="animate-spin" />
-                                <ImageLoaded
-                                  className="rounded-md absolute top-0 left-0"
-                                  url={url}
-                                />
-                              </div>
-                            );
-                          })}
+                                <IoMdClose className="size-2 text-white" />
+                              </button>
+
+                              <Loader2 className="animate-spin" />
+                              <ImageLoaded
+                                url={url}
+                                className="absolute top-0 left-0 h-full w-full object-cover rounded-md"
+                              />
+                            </div>
+                          ))}
                         </div>
                       </div>
                     </div>
