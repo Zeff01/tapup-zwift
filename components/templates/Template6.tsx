@@ -4,7 +4,7 @@ import ProfileInfo from "../profile/profile-info";
 import ProfileSocials from "../profile/profile-socials";
 import CarouselService from "../profile/carousel-service";
 import Appointment from "../profile/appointment";
-import Testimonials from "../profile/testimonials";
+// import Testimonials from "../profile/testimonials";
 import Footer from "../profile/footer";
 
 interface ProfilePageProps {
@@ -24,7 +24,7 @@ const Template6: React.FC<ProfilePageProps> = ({ userData }) => {
         />
       </div>
       <Appointment />
-      <Testimonials />
+      {/* <Testimonials /> */}
       <Footer {...userData} />
     </div>
   );
