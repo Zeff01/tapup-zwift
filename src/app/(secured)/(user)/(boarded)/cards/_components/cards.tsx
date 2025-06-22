@@ -9,7 +9,10 @@ import {
   getCardsByOwner,
   transferCardOwnershipUsingCode,
 } from "@/lib/firebase/actions/card.action";
-import { updateUserCardOrdering, getUserCardOrdering } from "@/lib/firebase/actions/user.action";
+import {
+  updateUserCardOrdering,
+  getUserCardOrdering,
+} from "@/lib/firebase/actions/user.action";
 import Loading from "@/src/app/loading";
 import { useConfirm } from "@/hooks/useConfirm";
 import * as Dialog from "@radix-ui/react-dialog";
@@ -57,9 +60,9 @@ const Cards = () => {
       return cards.filter((c): c is Card => !!c.id && !!c.owner); // return in original order (typed safely)
     }
 
-    const cardMap = new Map(cards.map(card => [card.id, card]));
+    const cardMap = new Map(cards.map((card) => [card.id, card]));
     const sorted = ordering
-      .map(id => cardMap.get(id))
+      .map((id) => cardMap.get(id))
       .filter((card): card is Card => !!card?.id && !!card?.owner);
 
     const unordered = cards.filter(
@@ -99,7 +102,7 @@ const Cards = () => {
 
     if (user?.uid) {
       const newCardOrder: string[] = newOrdering
-        .map(card => card.id)
+        .map((card) => card.id)
         .filter((id): id is string => !!id);
       await updateUserCardOrdering(user.uid, newCardOrder);
     }
@@ -156,13 +159,20 @@ const Cards = () => {
               onDragEnd={handleDragEnd}
             >
               <SortableContext
-                items={orderedCards.filter(c => c.id !== undefined).map(c => c.id as string)}
+                items={orderedCards
+                  .filter((c) => c.id !== undefined)
+                  .map((c) => c.id as string)}
                 strategy={rectSortingStrategy}
               >
                 {orderedCards.length > 0 ? (
                   <div className="grid justify-center grid-cols-[repeat(auto-fill,minmax(18rem,24rem))] justify-items-center xl:justify-start xl:grid-cols-[repeat(auto-fill,minmax(18rem,1fr))] gap-4 md:px-2 outline-2 outline-red-400">
                     {orderedCards.map((card) => (
-                      <SortableCard key={card.id} card={card} user={user} confirm={confirm} />
+                      <SortableCard
+                        key={card.id}
+                        card={card}
+                        user={user}
+                        confirm={confirm}
+                      />
                     ))}
                   </div>
                 ) : (
@@ -207,8 +217,9 @@ const Cards = () => {
                     </Dialog.Close>
                   )}
                   <button
-                    className={`$${loadTransferCode && "opacity-75"
-                      } bg-green-500 px-4 py-2 text-white rounded flex items-center`}
+                    className={`$${
+                      loadTransferCode && "opacity-75"
+                    } bg-green-500 px-4 py-2 text-white rounded flex items-center`}
                     onClick={handleTransferOwnership}
                     disabled={loadTransferCode}
                   >

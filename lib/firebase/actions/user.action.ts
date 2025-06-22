@@ -772,7 +772,9 @@ export const updateUserInfo = async ({
   }
 };
 
-export const getUserCardOrdering = async (userId: string): Promise<string[] | null> => {
+export const getUserCardOrdering = async (
+  userId: string
+): Promise<string[] | null> => {
   try {
     const userRef = doc(firebaseDb, "user-account", userId);
     const docSnap = await getDoc(userRef);

@@ -377,27 +377,29 @@ const DigitalCard = ({ card, confirm, user }: Prop) => {
         </Link>
 
         <div className="flex flex-col justify-center absolute rounded-tr-[30px] rounded-br-[30px] top-1/2 -translate-y-1/2  items-center pr-2 py-2 bg-neutral-950/80 backdrop-blur-sm">
+          {/* <div className="w-full flex gap-3"> */}
+          {/* <div className="flex flex-col justify-center  items-center space-y-1"> */}
           <Tooltip>
             <TooltipTrigger asChild>
               {card.portfolioStatus && !isCardDisabled ? (
                 <Link
                   href={`/site/${card.customUrl ? card.customUrl : card.id}`}
-                  className="px-3 py-3 2xl:py-2 hover:opacity-50 cursor-pointer"
+                  className="px-2 py-2 2xl:py-2 hover:opacity-50 cursor-pointer border dark:border-accent border-gray-300 rounded-md"
                   prefetch
                   target="_blank"
                   rel="noopener noreferrer"
                 >
-                  <EyeIcon className="size-4 text-white drop-shadow-md" />
+                  <EyeIcon className="size-4 dark:text-white drop-shadow-md" />
                 </Link>
               ) : (
-                <span className="px-3 py-3 2xl:py-2 opacity-30 cursor-not-allowed">
-                  <EyeIcon className="size-4 text-white drop-shadow-md" />
+                <span className="p-3 2xl:py-2 opacity-30 cursor-not-allowed">
+                  <EyeIcon className="size-4 dark:text-white drop-shadow-md" />
                 </span>
               )}
             </TooltipTrigger>
             <TooltipPortal>
               <TooltipContent
-                className="bg-black text-white text-xs px-2 py-1 rounded"
+                className="bg-black text-white text-xs px-2 py-1 rounded z-50"
                 side="left"
               >
                 {!card.portfolioStatus && !isCardDisabled
@@ -442,19 +444,15 @@ const DigitalCard = ({ card, confirm, user }: Prop) => {
               <Tooltip key={index}>
                 <TooltipTrigger asChild>
                   <span
-                    className={`px-3 py-3 2xl:py-2 ${
-                      isDisabledState
-                        ? "opacity-30 cursor-not-allowed"
-                        : "hover:opacity-50 cursor-pointer"
-                    }`}
+                    className={`px-2 py-2 2xl:py-2 border dark:border-accent border-gray-300 rounded-md ${isDisabledState ? "opacity-30 cursor-not-allowed" : "hover:opacity-50 cursor-pointer"}`}
                     onClick={!isDisabledState ? item.fn : undefined}
                   >
-                    <item.icon className="size-4 text-white drop-shadow-md" />
+                    <item.icon className="size-4 dark:text-white drop-shadow-md" />
                   </span>
                 </TooltipTrigger>
                 <TooltipPortal>
                   <TooltipContent
-                    className="bg-black text-white text-xs px-2 py-1 rounded"
+                    className="bg-black text-white text-xs px-2 py-1 rounded z-50"
                     side="left"
                   >
                     {isDisabledState ? "Enable this card first" : item.tooltip}
@@ -465,7 +463,64 @@ const DigitalCard = ({ card, confirm, user }: Prop) => {
             );
           })}
         </div>
+
+        <div
+          className={`flex-1 w-full aspect-[340/208] transition-transform duration-200 flex justify-between text-secondary bg-foreground rounded-xl overflow-hidden relative 
+            ${isCardExpired(card.expiryDate) || isCardDisabled || isLoading ? "opacity-50" : ""}
+            ${open ? "blur-sm pointer-events-none" : ""}
+          `}
+          style={{
+            backgroundImage: cardImage ? `url(${cardImage})` : "none",
+            backgroundSize: "cover",
+            backgroundPosition: "center",
+            backgroundRepeat: "no-repeat",
+          }}
+          onMouseEnter={() => setHovered(true)}
+          onMouseLeave={() => setHovered(false)}
+        >
+          {isLoading && (
+            <div className="absolute left-0 top-0 w-[100%] h-full flex items-center justify-center bg-black/60 text-white text-lg font-semibold">
+              <Loader2Icon className="shrink-0 animate-spin size-8" />
+            </div>
+          )}
+
+          {(isCardExpired(card.expiryDate) || isCardDisabled) && !isLoading && (
+            <div className="absolute left-0 top-0 w-[100%] h-full flex items-center justify-center bg-black/60 text-white text-lg font-semibold">
+              {isCardDisabled ? "Disabled" : "Expired"}
+            </div>
+          )}
+
+          {!isCardExpired(card.expiryDate) && hovered && !isLoading && (
+            <div className="absolute bottom-5 right-5 bg-black text-white text-xs px-2 py-1 rounded-lg shadow-lg">
+              Expires: {formattedExpiryDate}
+            </div>
+          )}
+
+          <Link
+            href={isCardExpired(card.expiryDate) ? "#" : `/cards/${card.id}`}
+            prefetch
+            className="flex-1 border-r border-accent/40 py-3 px-4 relative"
+            onClick={(e) => {
+              e.preventDefault();
+              if (isCardExpired(card.expiryDate)) {
+                setExpiredDialogOpen(true);
+              }
+            }}
+          >
+            <div className="flex-grow flex flex-col justify-between">
+              <div>
+                <p className="text-[clamp(1.1rem,1.4vw,1.4rem)] font-semibold capitalize text-white">
+                  {(card.firstName || "") + " " + (card.lastName || "")}
+                </p>
+                <p className="text-xs capitalize text-white">
+                  {card.position || ""}
+                </p>
+              </div>
+            </div>
+          </Link>
+        </div>
       </div>
+
       {/* <Dialog.Root open={expiredDialogOpen} onOpenChange={setExpiredDialogOpen}>
         <Dialog.Portal>
           <Dialog.Overlay className="fixed inset-0 bg-black/50 backdrop-blur-sm z-50" />

@@ -233,7 +233,8 @@ export const editCardSchema = z.object({
     .string()
     .refine(
       (value) =>
-        value === "" || /^https:\/\/(www\.)?facebook\.com\/[^\/\s]+\/?$/.test(value),
+        value === "" ||
+        /^https:\/\/(www\.)?facebook\.com\/[^\/\s]+\/?$/.test(value),
       {
         message: "Must be a complete Facebook profile or page URL.",
       }
@@ -305,9 +306,7 @@ export const editCardSchema = z.object({
   websiteUrl: z
     .string()
     .refine(
-      (value) =>
-        value === "" ||
-        /^https?:\/\/[^\s/$.?#].[^\s]*$/.test(value),
+      (value) => value === "" || /^https?:\/\/[^\s/$.?#].[^\s]*$/.test(value),
       {
         message: "Must be a valid website URL",
       }

@@ -314,11 +314,15 @@ export const addCustomUrl = async (
     if (cardData?.customUrl && cardData.customUrlUpdatedAt) {
       const createdAt = cardData.customUrlUpdatedAt.toDate();
       const now = new Date();
-      const daysElapsed = Math.floor((now.getTime() - createdAt.getTime()) / (1000 * 60 * 60 * 24));
+      const daysElapsed = Math.floor(
+        (now.getTime() - createdAt.getTime()) / (1000 * 60 * 60 * 24)
+      );
       const daysRemaining = 30 - daysElapsed;
 
       if (daysRemaining > 0) {
-        throw new Error(`Custom URL can only be changed after ${daysRemaining} days`);
+        throw new Error(
+          `Custom URL can only be changed after ${daysRemaining} days`
+        );
       }
     }
 
