@@ -113,6 +113,7 @@ export default function CheckoutForm() {
         return [...addresses, address];
       });
       resetAddressForm();
+      toast.success("Added new address");
     }
   };
 
@@ -139,6 +140,7 @@ export default function CheckoutForm() {
       addresses.map((a) => (a.id === editingAddressId ? updatedAddress : a))
     );
     resetAddressForm();
+    toast.success("Address updated successfully");
   };
 
   const handleDeleteAddress = async (addressId: string) => {
@@ -531,10 +533,10 @@ export default function CheckoutForm() {
                             isAddressModalLoading ? (
                               <>
                                 <Loader2 className="mr-2 h-4 w-4 animate-spin" />{" "}
-                                Updating Address
+                                Updating
                               </>
                             ) : (
-                              "Edit Address"
+                              "Update"
                             )
                           ) : isAddressModalLoading ? (
                             <>
