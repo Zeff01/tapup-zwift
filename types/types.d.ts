@@ -123,6 +123,7 @@ export interface ExtendedUserInterface extends Users {
   role: string;
   onboarding: boolean;
   deliveryAddresses?: DeliveryAddress[];
+  cardOrdering?: string[];
 }
 
 export type UserState = ExtendedUserInterface | null;

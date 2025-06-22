@@ -376,7 +376,7 @@ const DigitalCard = ({ card, confirm, user }: Prop) => {
           </div>
         </Link>
 
-        <div className="flex flex-col justify-center absolute rounded-tr-[30px] rounded-br-[30px] top-1/2 -translate-y-1/2  items-center  z-10 pr-2 py-2 bg-neutral-950/80 backdrop-blur-sm">
+        <div className="flex flex-col justify-center absolute rounded-tr-[30px] rounded-br-[30px] top-1/2 -translate-y-1/2  items-center pr-2 py-2 bg-neutral-950/80 backdrop-blur-sm">
           <Tooltip>
             <TooltipTrigger asChild>
               {card.portfolioStatus && !isCardDisabled ? (
