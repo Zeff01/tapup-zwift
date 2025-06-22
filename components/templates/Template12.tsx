@@ -86,8 +86,7 @@ const Template12 = ({
         <div className="relative">
           <button
             onClick={() => downloadVCard(userProfile)}
-            className="absolute top-3 right-4 text-lg font-semibold bg-[#D3F1DF] hover:bg-[#466b55] transition-colors
-          duration-300bg-[#A0E9FF] text-black  rounded-full p-2 z-40"
+            className="absolute top-3 right-4 text-lg font-semibold bg-[#D3F1DF] hover:bg-[#466b55] transition-colors duration-300 text-black rounded-full p-2 z-40"
           >
             <CiSaveDown2 />
           </button>
@@ -153,16 +152,12 @@ const Template12 = ({
               )}
             </div>
             <div className="flex items-end justify-center w-full ">
-              {/* <Button className="bg-[#85A98F] rounded-full h-8">
-                <CiPhone />
-                Email me
-              </Button> */}
-              <TooltipProvider>
+              {/* <TooltipProvider>
                 <Tooltip>
                   <TooltipTrigger asChild>
                     <Button
                       variant="outline"
-                      className="bg-[#D3F1DF] text-xs hover:bg-[#466b55] transition-colors duration-300 border-none rounded-full h-7 text-black  shadow-md"
+                      className="bg-[#D3F1DF] text-xs hover:bg-[#466b55] transition-colors duration-300 border-none rounded-full h-7 text-black shadow-md"
                     >
                       <a
                         className="flex items-center gap-2"
@@ -179,8 +174,8 @@ const Template12 = ({
                     </span>
                   </TooltipContent>
                 </Tooltip>
-              </TooltipProvider>
-              <Separator className="mx-8" orientation="vertical" />
+              </TooltipProvider> */}
+              <Separator className="mx-8 h-6" orientation="vertical" />
               <TooltipProvider>
                 <Tooltip>
                   <TooltipTrigger asChild>
@@ -220,7 +215,7 @@ const Template12 = ({
           )}
         </div>
 
-        <div className="text-center flex flex-col absolute top-[205px]  w-full space-y-1bg-[#D3F1DF]  bg-gradient-to-t from-[#85A98F] overflow-hidden to-[#D3F1DF] rounded-t-3xl">
+        <div className="text-center flex flex-col absolute top-[205px] w-full space-y-1 bg-[#D3F1DF] bg-gradient-to-t from-[#85A98F] overflow-hidden to-[#D3F1DF] rounded-t-3xl">
           <div className=" flex  items-center w-full gap-x-4 py-4 text-2xl bg-gradient-to-t from-[#D3F1DF]  to-[#f4fcf7] text-neutral-700 h-16 justify-center">
             {facebookUrl && (
               <a href={facebookUrl} target="_blank" rel="noopener noreferrer">
@@ -311,7 +306,6 @@ const Template12 = ({
                         alt={`Service Photo ${index + 1}`}
                         width={150}
                         height={150}
-                        layout="intrinsic"
                         className="rounded-2xl object-contain"
                       />
                     </div>
@@ -323,7 +317,6 @@ const Template12 = ({
                         alt="Service Photo"
                         width={150}
                         height={150}
-                        layout="intrinsic"
                         className="rounded-2xl object-contain"
                       />
                     </div>
@@ -344,7 +337,7 @@ const Template12 = ({
                 <span className="text-xl">©</span>
                 <span className="text-xs">
                   {" "}
-                  2024 ZwiftTech. All Right Reserved.
+                  2024 Zwiftech. All Right Reserved.
                 </span>
               </p>
             </div>
