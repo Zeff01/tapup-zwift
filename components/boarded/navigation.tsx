@@ -17,7 +17,8 @@ import { useUserContext } from "@/providers/user-provider";
 import NavigationSkeleton from "./NavigationSkeleton";
 
 import Cart from "../cart/Cart";
-import { ShoppingCart } from "lucide-react";
+import { Edit, Edit2, ShoppingCart } from "lucide-react";
+import EditAccountModal from "./EditAccountModal";
 
 const NavigationBoarded = () => {
   const pathname = usePathname();
@@ -59,27 +60,35 @@ const NavigationBoarded = () => {
               className="object-cover rounded-full h-[50px] w-[50px]"
             />
             <div className="flex flex-col w-full">
-              <h3 className="font-bold text-sm">
-                {user?.firstName
-                  ? `${user?.firstName} ${user?.lastName}`
-                  : "Anonymous"}
-              </h3>
+              <div className="flex items-center gap-2">
+                <input
+                  readOnly
+                  value={
+                    user?.firstName
+                      ? `${user?.firstName} ${user?.lastName}`
+                      : "Anonymous"
+                  }
+                  className="text-sm font-bold border-0 truncate w-full bg-transparent outline-none"
+                />
+                <p
+                  className={cn(
+                    "text-xs rounded-full px-1 text-center capitalize flex-1 text-white bg-greenColor",
+                    {
+                      "bg-red-700": isAdmin,
+                    }
+                  )}
+                >
+                  {user?.role}
+                </p>
+              </div>
+
               <input
                 readOnly
                 value={user?.email || "anonymous@mail.com"}
                 className="text-xs text-foreground/30 border-0 truncate w-full bg-transparent outline-none"
               />
             </div>
-            <p
-              className={cn(
-                "text-xs px-2 rounded-full capitalize text-white bg-greenColor",
-                {
-                  "bg-red-700": isAdmin,
-                }
-              )}
-            >
-              {user?.role}
-            </p>
+            <EditAccountModal />
             <span className="ml-auto flex mr-2">
               <ThemeToggle variant="boarded" />
             </span>
