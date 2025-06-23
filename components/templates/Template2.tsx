@@ -13,7 +13,7 @@ import {
 } from "react-icons/fa6";
 import { downloadVCard } from "@/lib/utils";
 
-const Template1 = ({
+const Template2 = ({
   profilePictureUrl,
   coverPhotoUrl,
   position,
@@ -244,4 +244,4 @@ const Template1 = ({
   );
 };
 
-export default Template1;
+export default Template2;

@@ -150,10 +150,15 @@ const Template7 = ({
           </div>
           {/* CTA BUTTONS */}
           <div className="grid grid-cols-3 gap-4 mt-5">
-            <Button className="col-span-2 bg-blueTemplate hover:bg-blueTemplate text-white">
-              Email Me
+            <Button className="col-span-2 hover:bg-blueTemplate bg-blue-700 text-white">
+              <a href={`mailto:${email}`}>Email Me</a>
             </Button>
-            <Button className="bg-gray-500 text-white">Save</Button>
+            <Button
+              onClick={() => downloadVCard(userProfile)}
+              className="bg-gray-800 text-white hover:bg-slate-900"
+            >
+              Save
+            </Button>
           </div>
           {/*COMPANY DETAILS */}
           <div className="flex flex-col mt-5">

@@ -46,15 +46,6 @@ import { carouselCards } from "@/constants";
 import { TbDisabled } from "react-icons/tb";
 import { IoCloseCircleOutline } from "react-icons/io5";
 
-import {
-  AlertDialog,
-  AlertDialogCancel,
-  AlertDialogContent,
-  AlertDialogDescription,
-  AlertDialogFooter,
-  AlertDialogHeader,
-  AlertDialogTitle,
-} from "@/components/ui/alert-dialog";
 import { Button } from "./ui/button";
 
 type Prop = {
@@ -296,7 +287,7 @@ const DigitalCard = ({ card, confirm, user }: Prop) => {
         )}
         <p>
           Are you sure you want to{" "}
-          <span className="font-bold text-destructive">
+          <span className="font-bold ">
             {card.disabled ? "enable" : "disable"}
           </span>{" "}
           this card?
@@ -319,7 +310,7 @@ const DigitalCard = ({ card, confirm, user }: Prop) => {
     {
       icon: isCardDisabled ? CheckCircle2 : IoCloseCircleOutline,
       fn: handleToggleCard,
-      tooltip: "Delete Card",
+      tooltip: isCardDisabled ? "Enable Card" : "Disable Card",
     },
     {
       icon: ArrowRightLeft,
