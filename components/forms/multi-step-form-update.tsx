@@ -3,6 +3,7 @@ import { useState, useEffect } from "react";
 import Image from "next/image";
 import { Photo } from "@/types/types";
 import { Loader2, LoaderCircle } from "lucide-react";
+import CropperMultiple from "../CropperMultiple";
 import Cropper from "../Cropper";
 import { useForm } from "react-hook-form";
 import { Form } from "@/components/ui/form";
@@ -17,7 +18,10 @@ import { IoMdClose } from "react-icons/io";
 import { useUserContext } from "@/providers/user-provider";
 import { Card, ExtendedUserInterface } from "@/types/types";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
-import { updateCardById, addCustomUrl } from "@/lib/firebase/actions/card.action";
+import {
+  updateCardById,
+  addCustomUrl,
+} from "@/lib/firebase/actions/card.action";
 import MultiStepProgress from "./MultiStepProgress";
 import TapupLogo from "../svgs/TapupLogo";
 import { formHeaderItems } from "@/constants";
@@ -106,11 +110,23 @@ const MultiStepFormUpdate = ({
 
   const steps: Array<(keyof z.infer<typeof editCardSchema>)[]> = isOnboarding
     ? [
-      ["coverPhotoUrl", "company", "position"],
-      ["firstName", "lastName", "email", "number", "profilePictureUrl"],
-      ["customUrl", "chosenTemplate"],
-    ]
-    : [[], ["firstName", "lastName", "email", "number", ...(selectedLinks.map(link => link.key) as Array<keyof z.infer<typeof editCardSchema>>)], ["chosenTemplate"]];
+        ["coverPhotoUrl", "company", "position"],
+        ["firstName", "lastName", "email", "number", "profilePictureUrl"],
+        ["customUrl", "chosenTemplate"],
+      ]
+    : [
+        [],
+        [
+          "firstName",
+          "lastName",
+          "email",
+          "number",
+          ...(selectedLinks.map((link) => link.key) as Array<
+            keyof z.infer<typeof editCardSchema>
+          >),
+        ],
+        ["chosenTemplate"],
+      ];
 
   const [selectedTemplateId, setSelectedTemplateId] =
     useState<ChosenTemplateType>(
@@ -122,14 +138,15 @@ const MultiStepFormUpdate = ({
       (userData.chosenPhysicalCard as ChosenPhysicalCardType) ?? "card1"
     );
 
-  const addServicePhoto = (photo: Photo) => {
-    setServicePhotos([...servicePhotos, photo]);
-  };
+  // NO LONGER NEEDED FOR MULTIPLE FILE UPLOAD
+  // const addServicePhoto = (photo: Photo) => {
+  //   setServicePhotos([...servicePhotos, photo]);
+  // };
 
-  const addServiceImageUrl = (imageUrl: string) => {
-    setServiceImageUrls([...serviceImageUrls, imageUrl]);
-    console.log(serviceImageUrls);
-  };
+  // const addServiceImageUrl = (imageUrl: string) => {
+  //   setServiceImageUrls([...serviceImageUrls, imageUrl]);
+  //   console.log(serviceImageUrls);
+  // };
 
   const methods = useForm<z.infer<typeof editCardSchema>>({
     resolver: zodResolver(editCardSchema),
@@ -191,8 +208,13 @@ const MultiStepFormUpdate = ({
     isPending: isCustomUrlLoading,
     error: customUrlMutationError,
   } = useMutation({
-    mutationFn: ({ customUrl, cardId }: { customUrl: string; cardId: string }) =>
-      addCustomUrl(customUrl, cardId),
+    mutationFn: ({
+      customUrl,
+      cardId,
+    }: {
+      customUrl: string;
+      cardId: string;
+    }) => addCustomUrl(customUrl, cardId),
   });
 
   const { mutate: updateCardMutation, isPending: isLoadingUpdateMutation } =
@@ -266,7 +288,6 @@ const MultiStepFormUpdate = ({
       if (!id) return;
       await updateUser(id, data as ExtendedUserInterface);
       toast.success("Profile updated successfully!");
-
     } catch (error) {
       console.error("Submission error:", error);
       let errorMessage = "Failed to save data. Please try again.";
@@ -317,7 +338,7 @@ const MultiStepFormUpdate = ({
         const errorKeys = Object.keys(methods.formState.errors);
         if (errorKeys.length > 0) {
           toast.error("Please fill in all required fields correctly");
-        };
+        }
         return;
       }
 
@@ -333,13 +354,20 @@ const MultiStepFormUpdate = ({
     setCurrentStep((prev) => Math.max(prev - 1, 1));
   };
 
-  const handleAddLink = (link: { label: string; key: string, value: string }) => {
+  const handleAddLink = (link: {
+    label: string;
+    key: string;
+    value: string;
+  }) => {
     setSelectedLinks((prev) => [
       ...prev,
       { label: link.label, key: link.key, value: link.value },
     ]);
     // Initialize form value for new link
-    methods.setValue(link.key as keyof z.infer<typeof editCardSchema>, link.value);
+    methods.setValue(
+      link.key as keyof z.infer<typeof editCardSchema>,
+      link.value
+    );
   };
 
   const handleInputChange = (key: string, value: string) => {
@@ -417,12 +445,14 @@ const MultiStepFormUpdate = ({
                     <div className="">
                       <h1 className="text-lg font-semibold mt-2">Photos</h1>
                       <div className="w-full mt-2">
-                        <Cropper
-                          imageUrl={null}
-                          setImageUrl={addServiceImageUrl}
-                          photo={null}
+                        <CropperMultiple
+                          previewImageUrl={null}
+                          imageUrls={serviceImageUrls}
+                          setImageUrls={setServiceImageUrls}
+                          previewPhoto={null}
                           aspect={1}
-                          setPhoto={addServicePhoto}
+                          photos={servicePhotos}
+                          setPhotos={setServicePhotos}
                           className="w-full aspect-[16/9] rounded-2xl overflow-hidden border-dashed border-2"
                           imageClassName="rounded-2xl"
                           disableUpload={serviceImageUrls.length >= 5}
@@ -447,30 +477,34 @@ const MultiStepFormUpdate = ({
                         />
 
                         <div className="flex gap-2 mt-4 flex-wrap">
-                          {serviceImageUrls.map((url, key) => {
-                            return (
-                              <div
-                                key={`index-${key}`}
-                                className="flex items-center justify-center rounded-md h-[77px] w-[77px] z-auto overflow-hidden relative bg-[#222224] border border-[#2c2c2c]"
+                          {serviceImageUrls.map((url, index) => (
+                            <div
+                              key={`service-image-${index}`}
+                              className="relative flex items-center justify-center h-[77px] w-[77px] overflow-hidden rounded-md bg-[#222224] border border-[#2c2c2c]"
+                            >
+                              {/* Delete Button */}
+                              <button
+                                type="button"
+                                onClick={() => {
+                                  setServiceImageUrls((prev) =>
+                                    prev.filter((_, i) => i !== index)
+                                  );
+                                  setServicePhotos((prev) =>
+                                    prev.filter((_, i) => i !== index)
+                                  );
+                                }}
+                                className="absolute top-1 right-1 flex items-center justify-center h-4 w-4 rounded-full bg-gray-900 z-10 hover:bg-gray-700"
                               >
-                                <div
-                                  className="absolute flex items-center justify-center top-1 right-1 h-4 rounded-full w-4 bg-gray-900 z-[100] cursor-pointer"
-                                  onClick={() =>
-                                    setServiceImageUrls((prev) =>
-                                      prev.filter((_, index) => index !== key)
-                                    )
-                                  }
-                                >
-                                  <IoMdClose className="size-2 text-white" />
-                                </div>
-                                <Loader2 className="animate-spin" />
-                                <ImageLoaded
-                                  className="rounded-md absolute top-0 left-0"
-                                  url={url}
-                                />
-                              </div>
-                            );
-                          })}
+                                <IoMdClose className="size-2 text-white" />
+                              </button>
+
+                              <Loader2 className="animate-spin" />
+                              <ImageLoaded
+                                url={url}
+                                className="absolute top-0 left-0 h-full w-full object-cover rounded-md"
+                              />
+                            </div>
+                          ))}
                         </div>
                       </div>
                     </div>
@@ -536,9 +570,9 @@ const MultiStepFormUpdate = ({
                           className="flex-1 text-primary bg-secondary"
                         />
                         <span className="text-xs text-red-500">
-                          {
-                            methods.formState.errors?.[link.key as keyof typeof methods.formState.errors]?.message ?? ""
-                          }
+                          {methods.formState.errors?.[
+                            link.key as keyof typeof methods.formState.errors
+                          ]?.message ?? ""}
                         </span>
                       </div>
                     ))}
@@ -578,7 +612,10 @@ const MultiStepFormUpdate = ({
                               />
                             </FormControl>
                             <FormMessage className="text-12 text-red-500 mt-2">
-                              {methods.formState.errors.customUrl?.message || customUrlError || customUrlMutationError?.message || ""}
+                              {methods.formState.errors.customUrl?.message ||
+                                customUrlError ||
+                                customUrlMutationError?.message ||
+                                ""}
                             </FormMessage>
                           </div>
                         </div>

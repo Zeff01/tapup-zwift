@@ -80,9 +80,12 @@ const OverlayMenu = () => {
                     ? `${user?.firstName} ${user?.lastName}`
                     : "Anonymous"}
                 </h3>
-                <p className="text-xs text-foreground/30 border-0 truncate w-full bg-transparent outline-none">
-                  {user?.email || "anonymous@gmail.com"}
-                </p>
+
+                <input
+                  readOnly
+                  value={user?.email || "anonymous@mail.com"}
+                  className="text-xs text-foreground/30 border-0 truncate w-full bg-transparent outline-none"
+                />
               </div>
               <p
                 className={cn(

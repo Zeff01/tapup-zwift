@@ -1,31 +1,41 @@
 "use client";
 
-import React, { useState } from "react";
-import DigitalCard from "@/components/DigitalCard";
+import React, { useState, useEffect } from "react";
+import { SortableCard } from "./SortableCard";
 import Link from "next/link";
 import { useUserContext } from "@/providers/user-provider";
-import { useQuery } from "@tanstack/react-query";
+import { useQuery, useQueryClient } from "@tanstack/react-query";
 import {
   getCardsByOwner,
   transferCardOwnershipUsingCode,
 } from "@/lib/firebase/actions/card.action";
+import {
+  updateUserCardOrdering,
+  getUserCardOrdering,
+} from "@/lib/firebase/actions/user.action";
 import Loading from "@/src/app/loading";
 import { useConfirm } from "@/hooks/useConfirm";
-// import { QrCode, ShoppingBag } from "lucide-react";
-// import { ShoppingBag } from "lucide-react";
-
-// import QrCodeModal from "@/components/qrcode/qrcode-modal";
 import * as Dialog from "@radix-ui/react-dialog";
 import { firebaseAuth } from "@/lib/firebase/firebase";
 import { toast } from "react-toastify";
-import { useQueryClient } from "@tanstack/react-query";
 import { TooltipProvider } from "@radix-ui/react-tooltip";
 import { Loader2 } from "lucide-react";
 import { Button } from "@/components/ui/button";
-// import { useRouter } from "next/navigation";
+import { Card } from "@/types/types";
+import {
+  DndContext,
+  PointerSensor,
+  useSensor,
+  useSensors,
+  closestCorners,
+} from "@dnd-kit/core";
+import {
+  arrayMove,
+  SortableContext,
+  rectSortingStrategy,
+} from "@dnd-kit/sortable";
 
 const Cards = () => {
-  // const router = useRouter();
   const [ConfirmDialog, confirm] = useConfirm(
     "Are you sure ?",
     "You are about to delete this card"
@@ -36,52 +46,91 @@ const Cards = () => {
   const [isDialogOpen, setIsDialogOpen] = useState(false);
   const [transferCode, setTransferCode] = useState("");
   const [loadTransferCode, setLoadTransferCode] = useState(false);
+  const [orderedCards, setOrderedCards] = useState<Card[]>([]);
   let ctxTimeout: any = null;
+
+  // Sort cards based on the cardOrdering field from the user-account document
+  const sortCards = async (
+    cards: Partial<Card>[],
+    uid: string
+  ): Promise<Card[]> => {
+    const ordering = await getUserCardOrdering(uid);
+
+    if (!ordering) {
+      return cards.filter((c): c is Card => !!c.id && !!c.owner); // return in original order (typed safely)
+    }
+
+    const cardMap = new Map(cards.map((card) => [card.id, card]));
+    const sorted = ordering
+      .map((id) => cardMap.get(id))
+      .filter((card): card is Card => !!card?.id && !!card?.owner);
+
+    const unordered = cards.filter(
+      (c): c is Card => !!c.id && !!c.owner && !ordering.includes(c.id)
+    );
+
+    return [...sorted, ...unordered];
+  };
 
   const { data: cards, status } = useQuery({
     enabled: !!user?.uid,
     queryKey: ["cards", user?.uid],
-    queryFn: () => getCardsByOwner(user?.uid!),
+    queryFn: async () => {
+      if (!user?.uid) throw new Error("User UID is undefined");
+
+      const cards = await getCardsByOwner(user.uid);
+      const sortedCards = await sortCards(cards, user.uid);
+      return sortedCards;
+    },
     staleTime: 1000 * 60 * 5,
   });
 
-  const handleAddCard = () => {
-    setIsDialogOpen(true);
+  useEffect(() => {
+    if (cards) setOrderedCards(cards);
+  }, [cards]);
+
+  const sensors = useSensors(useSensor(PointerSensor));
+
+  const handleDragEnd = async (event: any) => {
+    const { active, over } = event;
+    if (!over || active.id === over.id) return;
+
+    const oldIndex = orderedCards.findIndex((c) => c.id === active.id);
+    const newIndex = orderedCards.findIndex((c) => c.id === over.id);
+    const newOrdering = arrayMove(orderedCards, oldIndex, newIndex);
+    setOrderedCards(newOrdering);
+
+    if (user?.uid) {
+      const newCardOrder: string[] = newOrdering
+        .map((card) => card.id)
+        .filter((id): id is string => !!id);
+      await updateUserCardOrdering(user.uid, newCardOrder);
+    }
   };
 
   const handleTransferOwnership = async () => {
     const cleanTranferCode = transferCode.trim();
-
     if (!cleanTranferCode) {
       toast.error("Please enter a transfer code.");
       return;
     }
-
     const currentUser = firebaseAuth.currentUser;
     if (!currentUser) {
       toast.error("You must be logged in to transfer a card.");
       return;
     }
-
     setLoadTransferCode(true);
     const success = await transferCardOwnershipUsingCode(
       cleanTranferCode,
       currentUser.uid
     );
-
     if (success) {
       setIsDialogOpen(false);
       setTransferCode("");
       queryClient.invalidateQueries({ queryKey: ["cards", currentUser.uid] });
     }
-
-    if (ctxTimeout) {
-      clearTimeout(ctxTimeout);
-    }
-
-    ctxTimeout = setTimeout(() => {
-      setLoadTransferCode(false);
-    }, 1500);
+    if (ctxTimeout) clearTimeout(ctxTimeout);
+    ctxTimeout = setTimeout(() => setLoadTransferCode(false), 1500);
   };
 
   if (status === "pending") return <Loading />;
@@ -89,45 +138,60 @@ const Cards = () => {
   return (
     <>
       <ConfirmDialog />
-      <div className="px-4 flex flex-col min-h-full md:px-16 py-8">
-        <div className="flex items-center justify-between">
+      <div className="grid grid-cols-1 grid-rows-[auto_1fr] min-h-screen py-4 md:py-8 gap-2 lg:gap-4">
+        <div className="flex items-center justify-between px-4 md:px-16">
           <h1 className="text-xl md:text-2xl font-semibold">My Cards</h1>
-
           <div className="flex gap-x-2">
-            <Button variant={"outline"} onClick={handleAddCard}>
+            <Button variant="outline" onClick={() => setIsDialogOpen(true)}>
               Add Card
             </Button>
-            <Link href={"/cards/card-shop"}>
-              <Button variant={"green"}>Buy a Card</Button>
+            <Link href="/cards/card-shop">
+              <Button variant="green">Buy a Card</Button>
             </Link>
           </div>
         </div>
 
-        <TooltipProvider>
-          <div className="grid justify-center grid-cols-[repeat(auto-fill,minmax(18rem,24rem))] justify-items-center xl:justify-start xl:grid-cols-[repeat(auto-fill,minmax(18rem,1fr))] gap-4 mt-8">
-            {cards && cards.length > 0 ? (
-              cards.map((card) => (
-                <DigitalCard
-                  user={user}
-                  confirm={confirm}
-                  key={card.id}
-                  card={card}
-                />
-              ))
-            ) : (
-              <div className="col-span-full flex flex-col items-center justify-center min-h-[60vh]">
-                <div className="flex flex-col items-center">
-                  <h2 className="text-2xl md:text-3xl font-bold text-greenTitle mb-4">
-                    No Cards Yet
-                  </h2>
-                  <p className="text-base md:text-lg text-grayDescription text-center mb-8 max-w-md">
-                    Create your first digital business card to get started!
-                  </p>
-                </div>
-              </div>
-            )}
-          </div>
-        </TooltipProvider>
+        <div className="px-4 md:px-14">
+          <TooltipProvider>
+            <DndContext
+              sensors={sensors}
+              collisionDetection={closestCorners}
+              onDragEnd={handleDragEnd}
+            >
+              <SortableContext
+                items={orderedCards
+                  .filter((c) => c.id !== undefined)
+                  .map((c) => c.id as string)}
+                strategy={rectSortingStrategy}
+              >
+                {orderedCards.length > 0 ? (
+                  <div className="grid justify-center grid-cols-[repeat(auto-fill,minmax(18rem,24rem))] justify-items-center xl:justify-start xl:grid-cols-[repeat(auto-fill,minmax(18rem,1fr))] gap-4 md:px-2 outline-2 outline-red-400">
+                    {orderedCards.map((card) => (
+                      <SortableCard
+                        key={card.id}
+                        card={card}
+                        user={user}
+                        confirm={confirm}
+                      />
+                    ))}
+                  </div>
+                ) : (
+                  <div className="col-span-full flex flex-col items-center justify-center min-h-[60vh]">
+                    <div className="flex flex-col items-center">
+                      <h2 className="text-2xl md:text-3xl font-bold text-greenTitle mb-4">
+                        No Cards Yet
+                      </h2>
+                      <p className="text-base md:text-lg text-grayDescription text-center mb-8 max-w-md">
+                        Create your first digital business card to get started!
+                      </p>
+                    </div>
+                  </div>
+                )}
+              </SortableContext>
+            </DndContext>
+          </TooltipProvider>
+        </div>
+
         <Dialog.Root open={isDialogOpen} onOpenChange={setIsDialogOpen}>
           <Dialog.Portal>
             <Dialog.Overlay className="fixed inset-0 bg-black/50 backdrop-blur-sm z-50" />
@@ -153,7 +217,9 @@ const Cards = () => {
                     </Dialog.Close>
                   )}
                   <button
-                    className={`${loadTransferCode && "opacity-75"} bg-green-500 px-4 py-2 text-white rounded flex items-center`}
+                    className={`$${
+                      loadTransferCode && "opacity-75"
+                    } bg-green-500 px-4 py-2 text-white rounded flex items-center`}
                     onClick={handleTransferOwnership}
                     disabled={loadTransferCode}
                   >

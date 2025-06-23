@@ -239,7 +239,7 @@ const Template4 = ({
         {company ?? "COMPANY"}
       </h2>
       <div className="text-center text-xs text-gray-800  mb-2">
-        © 2024 ZwiftTech. All Right Reserved.
+        © 2024 Zwiftech. All Right Reserved.
       </div>
     </div>
   );
