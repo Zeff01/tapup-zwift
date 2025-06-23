@@ -310,21 +310,21 @@ export const addCustomUrl = async (
       throw new Error("Custom URL cannot be the same as the card ID");
     }
 
-    // Enforce 30-day limit
-    if (cardData?.customUrl && cardData.customUrlUpdatedAt) {
-      const createdAt = cardData.customUrlUpdatedAt.toDate();
-      const now = new Date();
-      const daysElapsed = Math.floor(
-        (now.getTime() - createdAt.getTime()) / (1000 * 60 * 60 * 24)
-      );
-      const daysRemaining = 30 - daysElapsed;
+    // Enforce 30-day limit (DISABLED FOR TESTING PURPOSES)
+    // if (cardData?.customUrl && cardData.customUrlUpdatedAt) {
+    //   const createdAt = cardData.customUrlUpdatedAt.toDate();
+    //   const now = new Date();
+    //   const daysElapsed = Math.floor(
+    //     (now.getTime() - createdAt.getTime()) / (1000 * 60 * 60 * 24)
+    //   );
+    //   const daysRemaining = 30 - daysElapsed;
 
-      if (daysRemaining > 0) {
-        throw new Error(
-          `Custom URL can only be changed after ${daysRemaining} days`
-        );
-      }
-    }
+    //   if (daysRemaining > 0) {
+    //     throw new Error(
+    //       `Custom URL can only be changed after ${daysRemaining} days`
+    //     );
+    //   }
+    // }
 
     // Check if formatted URL is already used
     const existing = await getDocs(
