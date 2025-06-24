@@ -3,6 +3,7 @@ import Image from "next/image";
 import { SlSocialFacebook } from "react-icons/sl";
 import { GoGlobe } from "react-icons/go";
 import { CiMail, CiBookmark, CiPhone, CiSaveDown2 } from "react-icons/ci";
+import { HiOutlineBookmark } from "react-icons/hi2";
 import {
   FaXTwitter,
   FaInstagram,
@@ -85,10 +86,10 @@ const Template12 = ({
 
         <div className="relative">
           <button
-            onClick={() => downloadVCard(userProfile)}
+            // onClick={() => downloadVCard(userProfile)}
             className="absolute top-3 right-4 text-lg font-semibold bg-[#D3F1DF] hover:bg-[#466b55] transition-colors duration-300 text-black rounded-full p-2 z-40"
           >
-            <CiSaveDown2 />
+            <HiOutlineBookmark />
           </button>
           <div className="absolute w-full  flex flex-col items-center justify-center z-20 top-0 left-1/2 transform -translate-x-1/2  ">
             <div className="flex flex-col w-full items-center justify-center pt-2 ">
@@ -152,7 +153,7 @@ const Template12 = ({
               )}
             </div>
             <div className="flex items-end justify-center w-full ">
-              {/* <TooltipProvider>
+              <TooltipProvider>
                 <Tooltip>
                   <TooltipTrigger asChild>
                     <Button
@@ -174,7 +175,7 @@ const Template12 = ({
                     </span>
                   </TooltipContent>
                 </Tooltip>
-              </TooltipProvider> */}
+              </TooltipProvider>
               <Separator className="mx-8 h-6" orientation="vertical" />
               <TooltipProvider>
                 <Tooltip>
@@ -300,27 +301,27 @@ const Template12 = ({
             <div className="flex gap-4 mt-6 overflow-x-auto scrollbar-hide pb-4">
               {servicePhotos
                 ? servicePhotos.map((photo, index) => (
-                    <div key={index} className="shrink-0">
-                      <Image
-                        src={photo}
-                        alt={`Service Photo ${index + 1}`}
-                        width={150}
-                        height={150}
-                        className="rounded-2xl object-contain"
-                      />
-                    </div>
-                  ))
+                  <div key={index} className="shrink-0">
+                    <Image
+                      src={photo}
+                      alt={`Service Photo ${index + 1}`}
+                      width={150}
+                      height={150}
+                      className="rounded-2xl object-contain"
+                    />
+                  </div>
+                ))
                 : Array.from({ length: 5 }).map((_, index) => (
-                    <div key={index} className="shrink-0">
-                      <Image
-                        src="/assets/sampleService.png"
-                        alt="Service Photo"
-                        width={150}
-                        height={150}
-                        className="rounded-2xl object-contain"
-                      />
-                    </div>
-                  ))}
+                  <div key={index} className="shrink-0">
+                    <Image
+                      src="/assets/sampleService.png"
+                      alt="Service Photo"
+                      width={150}
+                      height={150}
+                      className="rounded-2xl object-contain"
+                    />
+                  </div>
+                ))}
             </div>
 
             <div className="flex flex-col items-center  justify-center gap-x-2 text-sm text-neutral-600 pb-4">
