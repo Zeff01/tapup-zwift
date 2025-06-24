@@ -4,7 +4,10 @@ import { downloadVCard } from "@/lib/utils";
 
 import Image from "next/image";
 import profilePic from "@/public/assets/template4samplepic.png";
-import { CiSaveDown2, CiMail, CiPhone } from "react-icons/ci";
+// import { CiSaveDown2, CiMail, CiPhone } from "react-icons/ci";
+import { BsBoxArrowInDown } from "react-icons/bs";
+import { TbMailPlus } from "react-icons/tb";
+import { LuPhoneCall } from "react-icons/lu";
 import profileBgImage from "@/public/assets/profileImage.png";
 
 import Link from "next/link";
@@ -52,7 +55,7 @@ const ProfileInfo = ({
               className="object-cover rounded-full"
             />
           </div>
-          <div className="px-5 relative bottom-8 text-black">
+          <div className="px-5 relative bottom-16 text-black">
             <h3 className="font-bold text-2xl">
               {firstName ? firstName + " " + lastName : "Anonymous"}
             </h3>
@@ -62,20 +65,21 @@ const ProfileInfo = ({
             </p>
           </div>
         </div>
-        <div className="flex flex-col gap-[4rem] pt-5 pr-5">
-          <Button className="bg-transparent border-2 border-black rounded-full text-black px-[8px] py-[6px] hover:bg-green-600 text-base">
+        <div className="flex flex-col gap-[4rem] pt-3 pr-5">
+          {/* <Button className="bg-transparent border-2 border-black rounded-full text-black px-[8px] py-[6px] hover:bg-green-600 text-base">
             Edit Profile
-          </Button>
-          <div className="flex gap-2 justify-center items-center">
+          </Button> */}
+          <div className="flex gap-3 justify-center items-end">
             <Link href={`tel:${number}`}>
-              <CiPhone className="w-7 h-7 text-[#1A1919CC] cursor-pointer" />
+              <LuPhoneCall size={20} className="text-[#1A1919CC] cursor-pointer" />
             </Link>
             <Link href={`emailto:${email}`}>
-              <CiMail className="w-7 h-7 text-[#1A1919CC] cursor-pointer" />
+              <TbMailPlus size={20} className="text-[#1A1919CC] cursor-pointer" />
             </Link>
             <div>
-              <CiSaveDown2
-                className="w-7 h-7 text-[#1A1919CC] cursor-pointer"
+              <BsBoxArrowInDown
+                size={20}
+                className="text-[#1A1919CC] cursor-pointer font-bold"
                 onClick={() => downloadVCard(userProfile)}
               />
             </div>

@@ -1,6 +1,8 @@
 import { Card } from "@/types/types";
 import Image from "next/image";
-import { CiMail, CiSaveDown2, CiPhone } from "react-icons/ci";
+// import { CiMail, CiSaveDown2, CiPhone } from "react-icons/ci";
+import { BsBookmark } from "react-icons/bs";
+import { RxEnvelopeClosed } from "react-icons/rx";
 import {
   FaXTwitter,
   FaFacebook,
@@ -109,9 +111,9 @@ const Template2 = ({
         </div>
 
         {/* CTA BUTTONS */}
-        <div className="flex justify-center space-x-4 mt-2">
+        <div className="flex justify-center gap-2 mt-4">
           {/* Icon buttons */}
-          <div className="flex flex-col justify-center items-center">
+          {/* <div className="flex flex-col justify-center items-center">
             <a href={`tel:${number}`} className="text-decoration-none">
               <CiPhone size={32} className="cursor-pointer" />
             </a>
@@ -130,6 +132,26 @@ const Template2 = ({
               onClick={() => downloadVCard(userProfile)}
             />
             <p className="text-xs">Save</p>
+          </div> */}
+          <div className="flex flex-col justify-center items-center">
+            <div
+              className="rounded-full border p-2 border-black bg-white text-black cursor-pointer"
+              onClick={() => console.log()}
+            >
+              <RxEnvelopeClosed
+                size={14}
+              />
+            </div>
+          </div>
+          <div className="flex flex-col justify-center items-center">
+            <div
+              className="rounded-full border p-2 border-black bg-white text-black cursor-pointer"
+              onClick={() => console.log()}
+            >
+              <BsBookmark
+                size={14}
+              />
+            </div>
           </div>
         </div>
 
@@ -208,29 +230,29 @@ const Template2 = ({
         <div className="grid grid-cols-2 gap-4 mt-6  ">
           {servicePhotos
             ? servicePhotos.map((photo, index) => (
-                <div key={index} className="col-span-1">
-                  <Image
-                    src={photo}
-                    alt={`Service Photo ${index + 1}`}
-                    width={300}
-                    height={300}
-                    layout="responsive"
-                    className="rounded-md object-cover w-full shadow shadow-white overflow-hidden"
-                  />
-                </div>
-              ))
+              <div key={index} className="col-span-1">
+                <Image
+                  src={photo}
+                  alt={`Service Photo ${index + 1}`}
+                  width={300}
+                  height={300}
+                  layout="responsive"
+                  className="rounded-md object-cover w-full shadow shadow-white overflow-hidden"
+                />
+              </div>
+            ))
             : Array.from({ length: 4 }).map((_, index) => (
-                <div key={index} className="col-span-1">
-                  <Image
-                    src="/assets/sampleService.png"
-                    alt="Service Photo"
-                    width={300}
-                    height={300}
-                    layout="responsive"
-                    className="rounded-md object-cover w-full shadow shadow-white overflow-hidden"
-                  />
-                </div>
-              ))}
+              <div key={index} className="col-span-1">
+                <Image
+                  src="/assets/sampleService.png"
+                  alt="Service Photo"
+                  width={300}
+                  height={300}
+                  layout="responsive"
+                  className="rounded-md object-cover w-full shadow shadow-white overflow-hidden"
+                />
+              </div>
+            ))}
         </div>
       </div>
       {/* FOOTER */}

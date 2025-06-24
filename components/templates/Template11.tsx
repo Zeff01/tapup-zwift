@@ -22,6 +22,7 @@ const mulish = Mulish({
 import { SlSocialFacebook } from "react-icons/sl";
 import { GoGlobe } from "react-icons/go";
 import { CiMail, CiBookmark, CiPhone, CiSaveDown2 } from "react-icons/ci";
+import { HiOutlineBookmark } from "react-icons/hi2";
 import {
   FaXTwitter,
   FaInstagram,
@@ -66,23 +67,23 @@ const Template11 = ({
   return (
     <div className=" flex flex-col bg-white items-center justify-between  min-h-screen">
       <div className=" w-full mx-auto  relative">
-        <div className="flex gap-x-2 z-20 absolute right-0 top-0 text-[#00A9FF] m-2   rounded-bl-3xl">
-          <span className=" text-lg font-semibold bg-[#A0E9FF]  rounded-full p-2 ">
+        <div className="flex gap-x-2 z-20 absolute right-0 top-0 text-[#00A9FF] my-4 mx-3   rounded-bl-3xl">
+          {/* <span className=" text-lg font-semibold bg-[#A0E9FF]  rounded-full p-2 ">
             <a href={`tel:${number}`} className="text-decoration-none">
               <CiPhone className="cursor-pointer" />
             </a>
-          </span>
-          <span className=" text-lg font-semibold bg-[#A0E9FF]  rounded-full p-2 ">
+          </span> */}
+          <span className=" text-lg font-semibold bg-[#A0E9FF]  rounded-full p-1 ">
             <a href={`mailto:${email}`}>
-              <CiMail className="cursor-pointer" />
+              <HiOutlineBookmark size={20 } className="cursor-pointer" />
             </a>
           </span>
-          <span className=" text-lg font-semibold bg-[#A0E9FF]  rounded-full p-2 ">
+          {/* <span className=" text-lg font-semibold bg-[#A0E9FF]  rounded-full p-2 ">
             <CiSaveDown2
               className="cursor-pointer"
               onClick={() => downloadVCard(userProfile)}
             />
-          </span>
+          </span> */}
         </div>
         {/* COVERPHOTO AND PROFILE PIC */}
         <div className="  flex flex-col relative    ">
@@ -292,29 +293,29 @@ const Template11 = ({
         <div className="grid grid-cols-3 gap-4 mt-6 mx-10  rounded-2xl overflow-hidden">
           {servicePhotos
             ? servicePhotos.map((photo, index) => (
-                <div key={index} className="col-span-1">
-                  <Image
-                    src={photo}
-                    alt={`Service Photo ${index + 1}`}
-                    width={500}
-                    height={500}
-                    layout="responsive"
-                    className=" object-cover w-full  "
-                  />
-                </div>
-              ))
+              <div key={index} className="col-span-1">
+                <Image
+                  src={photo}
+                  alt={`Service Photo ${index + 1}`}
+                  width={500}
+                  height={500}
+                  layout="responsive"
+                  className=" object-cover w-full  "
+                />
+              </div>
+            ))
             : Array.from({ length: 4 }).map((_, index) => (
-                <div key={index} className="col-span-1">
-                  <Image
-                    src="/assets/sampleService.png"
-                    alt="Service Photo"
-                    width={500}
-                    height={500}
-                    layout="responsive"
-                    className=" object-cover w-full"
-                  />
-                </div>
-              ))}
+              <div key={index} className="col-span-1">
+                <Image
+                  src="/assets/sampleService.png"
+                  alt="Service Photo"
+                  width={500}
+                  height={500}
+                  layout="responsive"
+                  className=" object-cover w-full"
+                />
+              </div>
+            ))}
         </div>
       </div>
       {/* FOOTER */}

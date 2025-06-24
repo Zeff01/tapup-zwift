@@ -1,6 +1,7 @@
 import { Card } from "@/types/types";
 import Image from "next/image";
-import { CiMail, CiPhone, CiSaveDown2 } from "react-icons/ci";
+// import { CiMail, CiPhone, CiSaveDown2, CiBookmark } from "react-icons/ci";
+import { BsBookmark, BsPlusLg } from "react-icons/bs";
 import {
   FaXTwitter,
   FaFacebook,
@@ -10,6 +11,8 @@ import {
   FaWhatsapp,
   FaSkype,
   FaGlobe,
+  FaPlus,
+  FaRegBookmark,
 } from "react-icons/fa6";
 import { downloadVCard } from "@/lib/utils";
 
@@ -109,9 +112,9 @@ const Template1 = ({
         </div>
 
         {/* CTA BUTTONS */}
-        <div className="flex justify-center space-x-4 mt-2">
-          {/* Icon buttons */}
-          <div className="flex flex-col justify-center items-center">
+        <div className="flex justify-center gap-2 mt-4">
+          {/* Icon buttons () */}
+          {/* <div className="flex flex-col justify-center items-center">
             <a href={`tel:${number}`} className="text-decoration-none">
               <CiPhone size={32} className="cursor-pointer" />
             </a>
@@ -130,6 +133,26 @@ const Template1 = ({
               onClick={() => downloadVCard(userProfile)}
             />
             <p className="text-xs">Save</p>
+          </div> */}
+          <div className="flex flex-col justify-center items-center">
+            <div
+              className="rounded-full border p-2 border-black cursor-pointer"
+              onClick={() => console.log()}
+            >
+              <BsPlusLg
+                size={14}
+              />
+            </div>
+          </div>
+          <div className="flex flex-col justify-center items-center">
+            <div
+              className="rounded-full border p-2 border-black cursor-pointer"
+              onClick={() => console.log()}
+            >
+              <BsBookmark
+                size={14}
+              />
+            </div>
           </div>
         </div>
 
@@ -210,29 +233,29 @@ const Template1 = ({
         <div className="grid grid-cols-2 gap-4 mt-6 ">
           {servicePhotos
             ? servicePhotos.map((photo, index) => (
-                <div key={index} className="col-span-1">
-                  <Image
-                    src={photo}
-                    alt={`Service Photo ${index + 1}`}
-                    width={300}
-                    height={300}
-                    layout="responsive"
-                    className="rounded-md object-cover w-full  "
-                  />
-                </div>
-              ))
+              <div key={index} className="col-span-1">
+                <Image
+                  src={photo}
+                  alt={`Service Photo ${index + 1}`}
+                  width={300}
+                  height={300}
+                  layout="responsive"
+                  className="rounded-md object-cover w-full  "
+                />
+              </div>
+            ))
             : Array.from({ length: 4 }).map((_, index) => (
-                <div key={index} className="col-span-1">
-                  <Image
-                    src="/assets/sampleService.png"
-                    alt="Service Photo"
-                    width={300}
-                    height={300}
-                    layout="responsive"
-                    className="rounded-md object-cover w-full"
-                  />
-                </div>
-              ))}
+              <div key={index} className="col-span-1">
+                <Image
+                  src="/assets/sampleService.png"
+                  alt="Service Photo"
+                  width={300}
+                  height={300}
+                  layout="responsive"
+                  className="rounded-md object-cover w-full"
+                />
+              </div>
+            ))}
         </div>
       </div>
       {/* FOOTER */}
