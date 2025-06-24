@@ -29,6 +29,7 @@ import {
   Loader2Icon,
   Trash,
   EyeIcon,
+  GripVertical,
 } from "lucide-react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
@@ -45,7 +46,9 @@ import { getLoggedInUser } from "@/lib/session";
 import { carouselCards } from "@/constants";
 import { TbDisabled } from "react-icons/tb";
 import { IoCloseCircleOutline } from "react-icons/io5";
-
+import { useSortable } from "@dnd-kit/sortable";
+import { UniqueIdentifier } from "@dnd-kit/core";
+import { CSS } from "@dnd-kit/utilities";
 import { Button } from "./ui/button";
 
 type Prop = {
@@ -73,6 +76,14 @@ const DigitalCard = ({ card, confirm, user }: Prop) => {
     process.env.NODE_ENV === "development"
       ? process.env.NEXT_PUBLIC_RESET_PASSWORD_URL_DEV
       : process.env.NEXT_PUBLIC_RESET_PASSWORD_URL_PROD;
+
+  const { attributes, listeners, setNodeRef, transform, transition } =
+    useSortable({ id: card.id as UniqueIdentifier });
+
+  const style = {
+    transform: CSS.Transform.toString(transform),
+    transition,
+  };
 
   const router = useRouter();
   const queryClient = useQueryClient();
@@ -322,7 +333,12 @@ const DigitalCard = ({ card, confirm, user }: Prop) => {
   const isLoading = isPendingToggleCard || isLoadingPlans;
 
   return (
-    <>
+    <div
+      ref={setNodeRef}
+      style={style}
+      {...attributes}
+      className="w-full relative"
+    >
       <div className="w-full flex gap-3">
         <div className="flex flex-col justify-center  items-center space-y-1">
           <Tooltip>
@@ -424,6 +440,13 @@ const DigitalCard = ({ card, confirm, user }: Prop) => {
           onMouseEnter={() => setHovered(true)}
           onMouseLeave={() => setHovered(false)}
         >
+          <div className="absolute top-0 left-0 w-full h-full flex items-center justify-end">
+            <GripVertical
+              {...listeners}
+              className="size-12 z-10 cursor-grab text-white lg:size-8 opacity-50 hover:opacity-100 transition-opacity duration-150"
+            />
+          </div>
+
           {isLoading && (
             <div className="absolute left-0 top-0 w-[100%] h-full flex items-center justify-center bg-black/60 text-white text-lg font-semibold">
               <Loader2Icon className="shrink-0 animate-spin size-8" />
@@ -701,7 +724,7 @@ const DigitalCard = ({ card, confirm, user }: Prop) => {
           </Dialog.Content>
         </Dialog.Portal>
       </Dialog.Root>
-    </>
+    </div>
   );
 };
 

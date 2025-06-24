@@ -868,3 +868,40 @@ export const updateUserInfo = async ({
     throw new Error("Failed to update user info");
   }
 };
+
+export const getUserCardOrdering = async (
+  userId: string
+): Promise<string[] | null> => {
+  try {
+    const userRef = doc(firebaseDb, "user-account", userId);
+    const docSnap = await getDoc(userRef);
+    if (docSnap.exists()) {
+      const data = docSnap.data();
+      return data.cardOrdering || null;
+    }
+    return null;
+  } catch (error) {
+    console.error("Error fetching cardOrdering:", error);
+    return null;
+  }
+};
+
+export const updateUserCardOrdering = async (
+  userId: string,
+  cardOrdering: string[]
+) => {
+  try {
+    const userRef = doc(collection(firebaseDb, "user-account"), userId);
+
+    await updateDoc(userRef, {
+      cardOrdering: cardOrdering,
+    });
+
+    console.log("Card ordering updated for user:", userId);
+    // toast.success("Card order saved.");
+  } catch (error: any) {
+    toast.error("Failed to save card order.");
+    console.error("Error updating cardOrdering:", error);
+    throw error;
+  }
+};
