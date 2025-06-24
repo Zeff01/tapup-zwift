@@ -1,37 +1,40 @@
 "use client";
-import { useState, useEffect } from "react";
-import Image from "next/image";
-import { Photo } from "@/types/types";
-import { Loader2, LoaderCircle } from "lucide-react";
-import CropperMultiple from "../CropperMultiple";
-import Cropper from "../Cropper";
-import { useForm } from "react-hook-form";
-import { Form } from "@/components/ui/form";
-import { zodResolver } from "@hookform/resolvers/zod";
-import { z } from "zod";
-import { createPortfolioSchema, editCardSchema } from "@/lib/zod-schema";
-import { TemplateCarousel } from "@/components/TemplateCarousel";
-import PersonalInfoForm from "@/components/forms/PersonalInfoForm";
 import CompanyInfoForm from "@/components/forms/CompanyInfoForm";
+import PersonalInfoForm from "@/components/forms/PersonalInfoForm";
 import ImageLoaded from "@/components/ImageLoaded";
-import { IoMdClose } from "react-icons/io";
-import { useUserContext } from "@/providers/user-provider";
-import { Card, ExtendedUserInterface } from "@/types/types";
-import { useMutation, useQueryClient } from "@tanstack/react-query";
+import { TemplateCarousel } from "@/components/TemplateCarousel";
 import {
-  updateCardById,
-  addCustomUrl,
-} from "@/lib/firebase/actions/card.action";
-import MultiStepProgress from "./MultiStepProgress";
-import TapupLogo from "../svgs/TapupLogo";
+  Form,
+  FormControl,
+  FormField,
+  FormMessage,
+} from "@/components/ui/form";
 import { formHeaderItems } from "@/constants";
-import SocialLinksSelector from "./SocialLink";
-import { Input } from "../ui/input";
-import SelectedTemplate from "./SelectedTemplate";
+import {
+  addCustomUrl,
+  updateCardById,
+} from "@/lib/firebase/actions/card.action";
+import { editCardSchema } from "@/lib/zod-schema";
+import { useUserContext } from "@/providers/user-provider";
+import { Card, ExtendedUserInterface, Photo } from "@/types/types";
+import { zodResolver } from "@hookform/resolvers/zod";
+import { useMutation, useQueryClient } from "@tanstack/react-query";
+import { Loader2, LoaderCircle } from "lucide-react";
+import Image from "next/image";
 import { useRouter } from "next/navigation";
+import { useEffect, useState } from "react";
+import { useForm } from "react-hook-form";
+import { IoMdClose } from "react-icons/io";
 import { toast } from "react-toastify";
+import { z } from "zod";
+import Cropper from "../Cropper";
+import CropperMultiple from "../CropperMultiple";
+import TapupLogo from "../svgs/TapupLogo";
 import { Button } from "../ui/button";
-import { FormControl, FormField, FormMessage } from "@/components/ui/form";
+import { Input } from "../ui/input";
+import MultiStepProgress from "./MultiStepProgress";
+import SelectedTemplate from "./SelectedTemplate";
+import SocialLinksSelector from "./SocialLink";
 
 export type ChosenTemplateType =
   | "template1"
@@ -605,11 +608,18 @@ const MultiStepFormUpdate = ({
                               })()}
                             </small>
                             <FormControl>
-                              <Input
-                                placeholder={"Enter custom URL..."}
-                                className="mt-1 placeholder-placeholder-input block w-full px-4 py-2 bg-secondary border border-border-input rounded-md"
-                                {...field}
-                              />
+                              <>
+                                {" "}
+                                <Input
+                                  placeholder={"Enter custom URL..."}
+                                  className="mt-1 placeholder-placeholder-input block w-full px-4 py-2 bg-secondary border border-border-input rounded-md"
+                                  {...field}
+                                />
+                                <p className="text-[11px] text-red-600 text-muted-foreground mt-1 px-1">
+                                  Note: This custom URL cannot be changed for
+                                  the next 30 days.
+                                </p>
+                              </>
                             </FormControl>
                             <FormMessage className="text-12 text-red-500 mt-2">
                               {methods.formState.errors.customUrl?.message ||
