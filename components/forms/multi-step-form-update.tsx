@@ -108,7 +108,36 @@ const MultiStepFormUpdate = ({
     userData.servicePhotos || []
   );
 
-  const [selectedLinks, setSelectedLinks] = useState<SelectedLink[]>([]);
+  const [selectedLinks, setSelectedLinks] = useState<SelectedLink[]>(() => {
+    const existingSocialLinks: SelectedLink[] = [];
+
+    const socialFields = [
+      { key: "facebookUrl", label: "Facebook" },
+      { key: "youtubeUrl", label: "YouTube" },
+      { key: "instagramUrl", label: "Instagram" },
+      { key: "twitterUrl", label: "X (Twitter)" },
+      { key: "linkedinUrl", label: "LinkedIn" },
+      { key: "tiktokUrl", label: "TikTok" },
+      { key: "viberUrl", label: "Viber" },
+      { key: "whatsappNumber", label: "WhatsApp" },
+      { key: "skypeInviteUrl", label: "Skype" },
+      { key: "websiteUrl", label: "Website" },
+    ];
+
+    socialFields.forEach((field) => {
+      const value = userData[field.key as keyof typeof userData] as string;
+      if (value && value !== "") {
+        existingSocialLinks.push({
+          label: field.label,
+          key: field.key,
+          value: value,
+        });
+      }
+    });
+
+    return existingSocialLinks;
+  });
+
   const [currentStep, setCurrentStep] = useState(1);
 
   const steps: Array<(keyof z.infer<typeof editCardSchema>)[]> = isOnboarding
@@ -557,7 +586,10 @@ const MultiStepFormUpdate = ({
                     </span>
                   </div>
                   <PersonalInfoForm control={methods.control} isCard />
-                  <SocialLinksSelector onAddLink={handleAddLink} />
+                  <SocialLinksSelector
+                    onAddLink={handleAddLink}
+                    existingValues={methods.watch()}
+                  />
                   <div className="">
                     {selectedLinks.map((link) => (
                       <div key={link.key} className="flex flex-col gap-3 py-2">

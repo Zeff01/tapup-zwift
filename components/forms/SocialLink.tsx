@@ -25,8 +25,21 @@ interface SocialLink {
   value: string;
 }
 
+interface FormValues {
+  facebookUrl?: string;
+  youtubeUrl?: string;
+  instagramUrl?: string;
+  twitterUrl?: string;
+  linkedinUrl?: string;
+  whatsappNumber?: string;
+  skypeInviteUrl?: string;
+  websiteUrl?: string;
+  viberUrl?: string;
+  tiktokUrl?: string;
+}
 interface SocialLinksSelectorProps {
   onAddLink: (link: SocialLink) => void; // Callback to parent when a link is selected
+  existingValues?: FormValues;
 }
 
 const socialLinks: SocialLink[] = [
@@ -89,10 +102,24 @@ const socialLinks: SocialLink[] = [
 
 const SocialLinksSelector: React.FC<SocialLinksSelectorProps> = ({
   onAddLink,
+  existingValues = {},
 }) => {
   const [search, setSearch] = useState<string>("");
-  const [availableLinks, setAvailableLinks] =
-    useState<SocialLink[]>(socialLinks);
+  const getInitialAvailableLinks = () => {
+    return socialLinks.filter((link) => {
+      const hasValue =
+        existingValues[link.key as keyof FormValues] &&
+        existingValues[link.key as keyof FormValues] !== "";
+      return !hasValue; // Only show links that don't have values yet
+    });
+  };
+
+  const [availableLinks, setAvailableLinks] = useState<SocialLink[]>(
+    getInitialAvailableLinks()
+  );
+  React.useEffect(() => {
+    setAvailableLinks(getInitialAvailableLinks());
+  }, [existingValues]);
 
   const filteredLinks = availableLinks.filter((link) =>
     link.label.toLowerCase().includes(search.toLowerCase())
