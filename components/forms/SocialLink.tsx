@@ -66,7 +66,7 @@ const socialLinks: SocialLink[] = [
     label: "WhatsApp",
     icon: <FaWhatsapp />,
     key: "whatsappNumber",
-    value: "https://wa.me/",
+    value: "",
   },
   {
     label: "Viber",
@@ -96,7 +96,7 @@ const socialLinks: SocialLink[] = [
     label: "Skype",
     icon: <FaSkype />,
     key: "skypeInviteUrl",
-    value: "https://join.skype.com/",
+    value: "",
   },
 ];
 
