@@ -230,22 +230,8 @@ export default function CheckoutForm() {
           total + (item.subscriptionPlan?.price ?? 0) * item.quantity,
         0
       );
-    const addCardPromises = items.flatMap((item) => {
-      return Array.from({ length: item.quantity }, () =>
-        addCard({ id: item.id, name: item.name })
-      );
-    });
 
-    const cardResults = await Promise.all(addCardPromises);
-    // TODO: Need to handle different subscription-plan for each card.
-    const recurringPlan = await createCustomerAndRecurringPlanBundle(
-      customerData,
-      items[0].subscriptionPlan!,
-      cardResults,
-      cardTotal(),
-      user?.uid
-    );
-
+    // BELOW IS THE NEW CHECKOUT FLOW, RECURRING WEBHOOK HANDLES THE CARD AND TRANSACTION CREATION
     const newCards = items.flatMap((item) => {
       return Array.from({ length: item.quantity }, () => ({
         id: item.id,
@@ -253,35 +239,68 @@ export default function CheckoutForm() {
       }));
     });
 
-    const transactionData: TransactionType = {
-      amount: cardTotal(),
-      cards: cardResults.map((cardIds, i) => ({
-        id: cardIds,
-        name: newCards[i].name,
-      })),
-      receiver: {
-        customerId: recurringPlan.customer.id,
-        customerName:
-          (user?.firstName || selectedAddressV2?.firstName) +
-          " " +
-          (user?.lastName || selectedAddressV2?.lastName),
-        customerEmail: user?.email ?? "",
-        customerPhone: user?.number ?? selectedAddressV2?.phone ?? "",
-        customerAddress:
-          selectedAddressV2?.street +
-          ", " +
-          selectedAddressV2?.city +
-          ", " +
-          selectedAddressV2?.state +
-          ", " +
-          selectedAddressV2?.zipCode +
-          ", " +
-          "Philippines",
-      },
-      status: "pending",
-    };
+    const recurringPlan = await createCustomerAndRecurringPlanBundleV2({
+      customerData: customerData,
+      subscriptionPlan: items[0].subscriptionPlan!,
+      cardItems: newCards,
+      totalPrice: cardTotal(),
+      userId: user?.uid,
+      selectedAddress: selectedAddressV2,
+    });
 
-    await createTransaction(transactionData);
+    //COMMENTED LINES BELOW IS THE OLD CHECKOUT FLOW
+    // const addCardPromises = items.flatMap((item) => {
+    //   return Array.from({ length: item.quantity }, () =>
+    //     addCard({ id: item.id, name: item.name })
+    //   );
+    // });
+
+    // const cardResults = await Promise.all(addCardPromises);
+    // // TODO: Need to handle different subscription-plan for each card.
+    // const recurringPlan = await createCustomerAndRecurringPlanBundle(
+    //   customerData,
+    //   items[0].subscriptionPlan!,
+    //   cardResults,
+    //   cardTotal(),
+    //   user?.uid
+    // );
+
+    // const newCards = items.flatMap((item) => {
+    //   return Array.from({ length: item.quantity }, () => ({
+    //     id: item.id,
+    //     name: item.name,
+    //   }));
+    // });
+
+    // const transactionData: TransactionType = {
+    //   amount: cardTotal(),
+    //   cards: cardResults.map((cardIds, i) => ({
+    //     id: cardIds,
+    //     name: newCards[i].name,
+    //   })),
+    //   receiver: {
+    //     customerId: recurringPlan.customer.id,
+    //     customerName:
+    //       (user?.firstName || selectedAddressV2?.firstName) +
+    //       " " +
+    //       (user?.lastName || selectedAddressV2?.lastName),
+    //     customerEmail: user?.email ?? "",
+    //     customerPhone: user?.number ?? selectedAddressV2?.phone ?? "",
+    //     customerAddress:
+    //       selectedAddressV2?.street +
+    //       ", " +
+    //       selectedAddressV2?.city +
+    //       ", " +
+    //       selectedAddressV2?.state +
+    //       ", " +
+    //       selectedAddressV2?.zipCode +
+    //       ", " +
+    //       "Philippines",
+    //   },
+    //   status: "pending",
+    // };
+
+    // await createTransaction(transactionData);
 
     if (!user?.firstName || !user?.lastName || !user?.number) {
       await updateUserInfo({
@@ -293,8 +312,6 @@ export default function CheckoutForm() {
     }
 
     setIsLoadingTransaction(false);
-
-    clearCart();
 
     window.location.href = recurringPlan.recurringPlan.actions?.[0]?.url;
   };
