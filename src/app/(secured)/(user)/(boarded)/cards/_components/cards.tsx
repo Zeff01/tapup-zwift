@@ -1,7 +1,8 @@
 "use client";
 
 import React, { useState, useEffect } from "react";
-import { SortableCard } from "./SortableCard";
+//import { SortableCard } from "./SortableCard";
+import DigitalCard from "@/components/DigitalCard";
 import Link from "next/link";
 import { useUserContext } from "@/providers/user-provider";
 import { useQuery, useQueryClient } from "@tanstack/react-query";
@@ -167,11 +168,11 @@ const Cards = () => {
                 {orderedCards.length > 0 ? (
                   <div className="grid justify-center grid-cols-[repeat(auto-fill,minmax(18rem,24rem))] justify-items-center xl:justify-start xl:grid-cols-[repeat(auto-fill,minmax(18rem,1fr))] gap-4 md:px-2 outline-2 outline-red-400">
                     {orderedCards.map((card) => (
-                      <SortableCard
-                        key={card.id}
-                        card={card}
+                      <DigitalCard
                         user={user}
                         confirm={confirm}
+                        key={card.id}
+                        card={card}
                       />
                     ))}
                   </div>

@@ -34,6 +34,7 @@ import { CustomerType, DeliveryAddress, TransactionType } from "@/types/types";
 import {
   addCard,
   createCustomerAndRecurringPlanBundle,
+  createCustomerAndRecurringPlanBundleV2,
   createTransaction,
   manageUserDeliveryAddress,
   updateUserInfo,

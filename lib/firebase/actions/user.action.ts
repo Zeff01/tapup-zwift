@@ -38,6 +38,7 @@ import { toast } from "react-toastify";
 import { revalidatePath } from "../../revalidate";
 import { createInvoice } from "@/lib/xendit";
 import { xenditClient } from "@/lib/axios";
+import { CartItem } from "@/providers/cart-provider-v2";
 type UserCodeLink = {
   userCode: string;
   user_link: string;
@@ -567,6 +568,102 @@ export const createCustomerAndRecurringPlan = async (
     );
     console.log("Xendit Recurring Plan Response:", recurringPlan);
     window.location.href = recurringPlan.actions?.[0]?.url;
+
+    return { customer, recurringPlan };
+  } catch (error) {
+    console.error("Error creating customer or recurring plan:", error);
+    throw error;
+  }
+};
+
+export const createCustomerAndRecurringPlanBundleV2 = async (
+  customerData: CustomerType,
+  subscriptionPlan: SubscriptionPlan,
+  cardItems: { id: string; name: string }[],
+  totalPrice?: number,
+  userId?: string,
+  selectedAddress?: DeliveryAddress
+) => {
+  try {
+    const { data: customer } = await xenditClient.post(
+      "/customers",
+      customerData
+    );
+
+    const now = new Date();
+    const formattedDateTime = now
+      .toISOString()
+      .replace(/[-:T.Z]/g, "")
+      .slice(0, 14);
+
+    const bundleId = crypto.randomUUID().split("-").slice(0, 2).join("-");
+    const referenceId = `recurring-${customer.id}-${subscriptionPlan.id}-bundle${bundleId}-${formattedDateTime}`;
+
+    let interval: "DAY" | "WEEK" | "MONTH" = "DAY";
+    let intervalCount = subscriptionPlan.durationDays;
+
+    if (subscriptionPlan.durationDays > 365) {
+      console.log(
+        "Subscription duration exceeds 365 days, converting to months"
+      );
+
+      interval = "MONTH";
+      intervalCount = Math.floor(subscriptionPlan.durationDays / 30);
+    } else if (
+      subscriptionPlan.durationDays >= 7 &&
+      subscriptionPlan.durationDays % 7 === 0
+    ) {
+      console.log(
+        "Subscription duration is a multiple of 7, converting to weeks"
+      );
+
+      interval = "WEEK";
+      intervalCount = subscriptionPlan.durationDays / 7;
+    }
+
+    const recurringPlanData: RecurringPlanType = {
+      reference_id: referenceId,
+      customer_id: customer.id,
+      recurring_action: "PAYMENT",
+      currency: "PHP",
+      amount: totalPrice ?? subscriptionPlan.price,
+      schedule: {
+        reference_id: `schedule-${customer.id}-${subscriptionPlan.id}-bundle${bundleId}`,
+        interval: interval,
+        interval_count: intervalCount,
+      },
+      description: `Subscription for ${cardItems.length} Cards. ${subscriptionPlan.name}`,
+      success_return_url: process.env.NEXT_PUBLIC_SUCCESS_REDIRECT_URL,
+      failure_return_url: process.env.NEXT_PUBLIC_FAILURE_REDIRECT_URL,
+      metadata: {
+        ...(userId && { userId }),
+        cardItems: cardItems,
+        per_card_price: subscriptionPlan.price,
+        customerEmail: customerData.email,
+        customerName: `${customerData.individual_detail?.given_names || ""} ${customerData.individual_detail?.surname || ""}`,
+        customerPhone: customerData.mobile_number,
+        customerAddress:
+          selectedAddress?.street +
+          ", " +
+          selectedAddress?.city +
+          ", " +
+          selectedAddress?.state +
+          ", " +
+          selectedAddress?.zipCode +
+          ", " +
+          "Philippines",
+        totalAmount: totalPrice,
+      },
+    };
+
+    console.log("Recurring Plan Data:", recurringPlanData);
+
+    // Create recurring plan in Xendit
+    const { data: recurringPlan } = await xenditClient.post(
+      "/recurring/plans",
+      recurringPlanData
+    );
+    console.log("Xendit Recurring Plan Response:", recurringPlan);
 
     return { customer, recurringPlan };
   } catch (error) {
