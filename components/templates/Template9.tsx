@@ -2,7 +2,9 @@ import { Card } from "@/types/types";
 import Image from "next/image";
 import { SlSocialFacebook } from "react-icons/sl";
 import { GoGlobe } from "react-icons/go";
-import { CiMail, CiBookmark, CiPhone, CiSaveDown2 } from "react-icons/ci";
+// import { CiMail, CiBookmark, CiPhone, CiSaveDown2 } from "react-icons/ci";
+import { BsBookmark } from "react-icons/bs";
+import { RxEnvelopeClosed } from "react-icons/rx";
 import {
   FaXTwitter,
   FaInstagram,
@@ -50,7 +52,7 @@ const Template9 = ({
     <div className="min-h-screen bg-white dark:bg-black flex flex-col ">
       <div className=" h-96 relative   ">
         <div className="absolute flex gap-x-2 m-4 top-0 right-0">
-          <span className=" bg-white text-2xl p-2 text-neutral-800 rounded-full">
+          {/* <span className=" bg-white text-2xl p-2 text-neutral-800 rounded-full">
             <a href={`tel:${number}`} className="text-decoration-none">
               <CiPhone className="cursor-pointer" />
             </a>
@@ -65,7 +67,27 @@ const Template9 = ({
               className="cursor-pointer"
               onClick={() => downloadVCard(userProfile)}
             />
-          </span>
+          </span> */}
+          <div className="flex flex-col justify-center items-center">
+            <div
+              className="rounded-full border p-1.5 border-white bg-white text-black cursor-pointer"
+              onClick={() => console.log()}
+            >
+              <RxEnvelopeClosed
+                size={14}
+              />
+            </div>
+          </div>
+          <div className="flex flex-col justify-center items-center">
+            <div
+              className="rounded-full border p-1.5 border-white bg-white text-black cursor-pointer"
+              onClick={() => console.log()}
+            >
+              <BsBookmark
+                size={14}
+              />
+            </div>
+          </div>
         </div>
 
         <div className="">
@@ -75,7 +97,7 @@ const Template9 = ({
               alt="Cover Image"
               width={400}
               height={200}
-              className="mx-auto w-full object-cover rounded-[2rem] overflow-hidden"
+              className="mx-auto w-full object-cover overflow-hidden"
             />
           ) : (
             <Image
@@ -201,29 +223,29 @@ const Template9 = ({
         <div className="grid grid-cols-2 gap-4 mt-6  ">
           {servicePhotos
             ? servicePhotos.map((photo, index) => (
-                <div key={index} className="col-span-1">
-                  <Image
-                    src={photo}
-                    alt={`Service Photo ${index + 1}`}
-                    width={300}
-                    height={300}
-                    layout="responsive"
-                    className="rounded-2xl object-contain w-full  "
-                  />
-                </div>
-              ))
+              <div key={index} className="col-span-1">
+                <Image
+                  src={photo}
+                  alt={`Service Photo ${index + 1}`}
+                  width={300}
+                  height={300}
+                  layout="responsive"
+                  className="rounded-2xl object-contain w-full  "
+                />
+              </div>
+            ))
             : Array.from({ length: 4 }).map((_, index) => (
-                <div key={index} className="col-span-1">
-                  <Image
-                    src="/assets/sampleService.png"
-                    alt="Service Photo"
-                    width={300}
-                    height={300}
-                    layout="responsive"
-                    className="rounded-2xl object-contain w-full"
-                  />
-                </div>
-              ))}
+              <div key={index} className="col-span-1">
+                <Image
+                  src="/assets/sampleService.png"
+                  alt="Service Photo"
+                  width={300}
+                  height={300}
+                  layout="responsive"
+                  className="rounded-2xl object-contain w-full"
+                />
+              </div>
+            ))}
         </div>
         <h2 className="font-semibold text-xl mx-auto w-full  tracking-wider  text-center">
           {company ?? "COMPANY"}

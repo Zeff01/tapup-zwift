@@ -1,7 +1,9 @@
 import { downloadVCard } from "@/lib/utils";
 import { Card } from "@/types/types";
 import Image from "next/image";
-import { CiCirclePlus, CiSaveDown2, CiMail, CiPhone } from "react-icons/ci";
+// import { CiCirclePlus, CiSaveDown2, CiMail, CiPhone } from "react-icons/ci";
+import { MdOutlinePhone, MdOutlineMailOutline } from "react-icons/md";
+import { PiGlobeHemisphereWestFill } from "react-icons/pi";
 import {
   FaXTwitter,
   FaFacebook,
@@ -117,8 +119,45 @@ const Template3 = ({
           </p>
         </div>
 
+        {/* CTA BUTTONS */}
+        <div className="flex justify-center gap-6 mt-6 font-bold">
+          {/* Icon buttons */}
+          {/* <div className="flex flex-col justify-center items-center">
+            <a href={`tel:${number}`} className="text-decoration-none">
+              <CiPhone size={24} className="cursor-pointer" />
+            </a>
+          </div>
+          <div className="flex flex-col justify-center items-center">
+            <a href={`mailto:${email}`}>
+              <CiMail size={24} className="cursor-pointer" />
+            </a>
+          </div>
+          <div className="flex flex-col justify-center items-center">
+            <CiSaveDown2
+              size={24}
+              className="cursor-pointer"
+              onClick={() => downloadVCard(userProfile)}
+            />
+          </div> */}
+          <div className="flex flex-col justify-center items-center">
+            <a href={`mailto:${email}`} className="text-decoration-none">
+              <MdOutlineMailOutline size={24} className="cursor-pointer" />
+            </a>
+          </div>
+          <div className="flex flex-col justify-center items-center">
+            <a href={websiteUrl} className="text-decoration-none">
+              <PiGlobeHemisphereWestFill size={24} className="cursor-pointer" />
+            </a>
+          </div>
+          <div className="flex flex-col justify-center items-center">
+            <a href={`tel:${number}`} className="text-decoration-none">
+              <MdOutlinePhone size={24} className="cursor-pointer" />
+            </a>
+          </div>
+        </div>
+
         {/* SOCIAL MEDIA ICONS */}
-        <div className="grid grid-cols-4 justify-center gap-4 my-4  w-40 mx-auto">
+        <div className="grid grid-cols-4 justify-center gap-4 mt-6 my-4  w-40 mx-auto">
           {facebookUrl && (
             <a href={facebookUrl} target="_blank" rel="noopener noreferrer">
               <FaFacebook size={24} />
@@ -169,28 +208,6 @@ const Template3 = ({
           )}
         </div>
 
-        {/* CTA BUTTONS */}
-        <div className="flex justify-center space-x-4 mt-2 font-bold">
-          {/* Icon buttons */}
-          <div className="flex flex-col justify-center items-center">
-            <a href={`tel:${number}`} className="text-decoration-none">
-              <CiPhone size={32} className="cursor-pointer" />
-            </a>
-          </div>
-          <div className="flex flex-col justify-center items-center">
-            <a href={`mailto:${email}`}>
-              <CiMail size={32} className="cursor-pointer" />
-            </a>
-          </div>
-          <div className="flex flex-col justify-center items-center">
-            <CiSaveDown2
-              size={32}
-              className="cursor-pointer"
-              onClick={() => downloadVCard(userProfile)}
-            />
-          </div>
-        </div>
-
         {/* COMPANY INFORMATION */}
 
         <h2 className="text-4xl font-extrabold mx-auto w-full text-center mt-6 text-greenTitle px-4">
@@ -218,29 +235,29 @@ const Template3 = ({
         <div className="grid grid-cols-2 gap-2 mt-6  p-2">
           {servicePhotos
             ? servicePhotos.map((photo, index) => (
-                <div key={index} className="col-span-1">
-                  <Image
-                    src={photo}
-                    alt={`Service Photo ${index + 1}`}
-                    width={300}
-                    height={300}
-                    layout="responsive"
-                    className="rounded-md object-cover w-full"
-                  />
-                </div>
-              ))
+              <div key={index} className="col-span-1">
+                <Image
+                  src={photo}
+                  alt={`Service Photo ${index + 1}`}
+                  width={300}
+                  height={300}
+                  layout="responsive"
+                  className="rounded-md object-cover w-full"
+                />
+              </div>
+            ))
             : Array.from({ length: 4 }).map((_, index) => (
-                <div key={index} className="col-span-1">
-                  <Image
-                    src="/assets/sampleService.png"
-                    alt="Service Photo"
-                    width={300}
-                    height={300}
-                    layout="responsive"
-                    className="rounded-md object-cover w-full"
-                  />
-                </div>
-              ))}
+              <div key={index} className="col-span-1">
+                <Image
+                  src="/assets/sampleService.png"
+                  alt="Service Photo"
+                  width={300}
+                  height={300}
+                  layout="responsive"
+                  className="rounded-md object-cover w-full"
+                />
+              </div>
+            ))}
         </div>
       </div>
       {/* FOOTER */}
