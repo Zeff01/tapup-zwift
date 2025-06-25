@@ -36,10 +36,17 @@ import { toast } from "@/hooks/use-toast";
 import { useQuery } from "@tanstack/react-query";
 import { deliveryFormSchema } from "@/lib/zod-schema";
 import { useCart } from "@/providers/cart-provider-v2";
-import { CustomerType, SubscriptionPlan, TransactionType } from "@/types/types";
+import {
+  CustomerType,
+  SubscriptionPlan,
+  TransactionType,
+  DeliveryAddress,
+  AddressFields,
+} from "@/types/types";
 import {
   addCard,
   createCustomerAndRecurringPlanBundle,
+  createCustomerAndRecurringPlanBundleV2,
   createTransaction,
 } from "@/lib/firebase/actions/user.action";
 
@@ -97,11 +104,11 @@ export default function DeliveryForm({
       email: "",
       firstName: "",
       lastName: "",
-      streetAddress: "",
+      street: "",
       city: "",
       country: "",
-      stateProvince: "",
-      postalCode: "",
+      state: "",
+      zipCode: "",
       phoneNumber: "",
     },
   });
@@ -134,21 +141,8 @@ export default function DeliveryForm({
     const cardTotal = () =>
       cardItems.reduce((acc, item) => acc + item.quantity, 0) *
       subscriptionPlan.price;
-    const addCardPromises = cardItems.flatMap((item) => {
-      return Array.from({ length: item.quantity }, () =>
-        addCard({ id: item.id, name: item.name })
-      );
-    });
 
-    const cardResults = await Promise.all(addCardPromises);
-
-    const recurringPlan = await createCustomerAndRecurringPlanBundle(
-      customerData,
-      subscriptionPlan,
-      cardResults,
-      cardTotal()
-    );
-
+    // BELOW IS THE NEW CHECKOUT FLOW, RECURRING WEBHOOK HANDLES THE CARD AND TRANSACTION CREATION
     const newCards = cardItems.flatMap((item) => {
       return Array.from({ length: item.quantity }, () => ({
         id: item.id,
@@ -156,32 +150,63 @@ export default function DeliveryForm({
       }));
     });
 
-    const transactionData: TransactionType = {
-      amount: cardTotal(),
-      cards: cardResults.map((cardIds, i) => ({
-        id: cardIds,
-        name: newCards[i].name,
-      })),
-      receiver: {
-        customerId: recurringPlan.customer.id,
-        customerName: values.firstName + " " + values.lastName,
-        customerEmail: values.email ?? "",
-        customerPhone: values.phoneNumber ?? "",
-        customerAddress:
-          values.streetAddress +
-          ", " +
-          values.city +
-          ", " +
-          values.stateProvince +
-          ", " +
-          values.postalCode +
-          ", " +
-          values.country,
-      },
-      status: "pending",
-    };
+    const recurringPlan = await createCustomerAndRecurringPlanBundleV2({
+      customerData,
+      subscriptionPlan,
+      cardItems: newCards,
+      totalPrice: cardTotal(),
+      selectedAddress: values,
+    });
 
-    await createTransaction(transactionData);
+    // COMMENTED LINES BELOW IS THE OLD CHECKOUT FLOW
+    // const addCardPromises = cardItems.flatMap((item) => {
+    //   return Array.from({ length: item.quantity }, () =>
+    //     addCard({ id: item.id, name: item.name })
+    //   );
+    // });
+
+    // const cardResults = await Promise.all(addCardPromises);
+
+    // const recurringPlan = await createCustomerAndRecurringPlanBundle(
+    //   customerData,
+    //   subscriptionPlan,
+    //   cardResults,
+    //   cardTotal()
+    // );
+
+    // const newCards = cardItems.flatMap((item) => {
+    //   return Array.from({ length: item.quantity }, () => ({
+    //     id: item.id,
+    //     name: item.name,
+    //   }));
+    // });
+
+    // const transactionData: TransactionType = {
+    //   amount: cardTotal(),
+    //   cards: cardResults.map((cardIds, i) => ({
+    //     id: cardIds,
+    //     name: newCards[i].name,
+    //   })),
+    //   receiver: {
+    //     customerId: recurringPlan.customer.id,
+    //     customerName: values.firstName + " " + values.lastName,
+    //     customerEmail: values.email ?? "",
+    //     customerPhone: values.phoneNumber ?? "",
+    //     customerAddress:
+    //       values.streetAddress +
+    //       ", " +
+    //       values.city +
+    //       ", " +
+    //       values.stateProvince +
+    //       ", " +
+    //       values.postalCode +
+    //       ", " +
+    //       values.country,
+    //   },
+    //   status: "pending",
+    // };
+
+    // await createTransaction(transactionData);
 
     clearCart();
 
@@ -311,7 +336,7 @@ export default function DeliveryForm({
                                 onSelect={() => {
                                   form.setValue("country", country.countryName);
                                   setSelectedCountryCode(country.countryCode);
-                                  form.setValue("stateProvince", "");
+                                  form.setValue("state", "");
                                   setOpen(false);
                                 }}
                               >
@@ -337,7 +362,7 @@ export default function DeliveryForm({
 
             <FormField
               control={form.control}
-              name="stateProvince"
+              name="state"
               render={({ field }) => (
                 <FormItem>
                   <FormLabel>State/Province</FormLabel>
@@ -418,7 +443,7 @@ export default function DeliveryForm({
           <FormField
             disabled={isLoadingTransaction || cardItems.length === 0}
             control={form.control}
-            name="streetAddress"
+            name="street"
             render={({ field }) => (
               <FormItem>
                 <FormLabel>Street Address</FormLabel>
@@ -446,7 +471,7 @@ export default function DeliveryForm({
           <FormField
             disabled={isLoadingTransaction || cardItems.length === 0}
             control={form.control}
-            name="postalCode"
+            name="zipCode"
             render={({ field }) => (
               <FormItem>
                 <FormLabel>Postal/ZIP Code</FormLabel>
