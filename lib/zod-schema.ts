@@ -421,13 +421,11 @@ export const deliveryFormSchema = z.object({
   lastName: z
     .string()
     .min(2, { message: "Last name must be at least 2 characters" }),
-  streetAddress: z.string().min(5, { message: "Street address is required" }),
+  street: z.string().min(5, { message: "Street address is required" }),
   city: z.string().min(2, { message: "City is required" }),
   country: z.string().min(1, { message: "Please select a country" }),
-  stateProvince: z
-    .string()
-    .min(1, { message: "Please select a state/province" }),
-  postalCode: z.string().min(1, { message: "Postal/ZIP code is required" }),
+  state: z.string().min(1, { message: "Please select a state/province" }),
+  zipCode: z.string().min(1, { message: "Postal/ZIP code is required" }),
   phoneNumber: z
     .string()
     .min(10, { message: "Please enter a valid phone number" }),
