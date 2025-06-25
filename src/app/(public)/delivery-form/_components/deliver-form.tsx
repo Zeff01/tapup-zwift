@@ -41,7 +41,6 @@ import {
   SubscriptionPlan,
   TransactionType,
   DeliveryAddress,
-  AddressFields,
 } from "@/types/types";
 import {
   addCard,
