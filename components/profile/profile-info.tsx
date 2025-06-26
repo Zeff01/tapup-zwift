@@ -70,10 +70,16 @@ const ProfileInfo = ({
           </Button> */}
           <div className="flex gap-3 justify-center items-end">
             <Link href={`tel:${number}`}>
-              <LuPhoneCall size={20} className="text-[#1A1919CC] cursor-pointer" />
+              <LuPhoneCall
+                size={20}
+                className="text-[#1A1919CC] cursor-pointer"
+              />
             </Link>
             <Link href={`emailto:${email}`}>
-              <TbMailPlus size={20} className="text-[#1A1919CC] cursor-pointer" />
+              <TbMailPlus
+                size={20}
+                className="text-[#1A1919CC] cursor-pointer"
+              />
             </Link>
             <div>
               <BsBoxArrowInDown

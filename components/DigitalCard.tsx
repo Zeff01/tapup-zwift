@@ -745,7 +745,6 @@ const DigitalCard = ({ card, confirm, user }: Prop) => {
         open={openQRCode}
         onClose={() => setOpenQRCode(false)}
       />
-      ;
     </div>
   );
 };

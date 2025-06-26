@@ -235,29 +235,29 @@ const Template3 = ({
         <div className="grid grid-cols-2 gap-2 mt-6  p-2">
           {servicePhotos
             ? servicePhotos.map((photo, index) => (
-              <div key={index} className="col-span-1">
-                <Image
-                  src={photo}
-                  alt={`Service Photo ${index + 1}`}
-                  width={300}
-                  height={300}
-                  layout="responsive"
-                  className="rounded-md object-cover w-full"
-                />
-              </div>
-            ))
+                <div key={index} className="col-span-1">
+                  <Image
+                    src={photo}
+                    alt={`Service Photo ${index + 1}`}
+                    width={300}
+                    height={300}
+                    layout="responsive"
+                    className="rounded-md object-cover w-full"
+                  />
+                </div>
+              ))
             : Array.from({ length: 4 }).map((_, index) => (
-              <div key={index} className="col-span-1">
-                <Image
-                  src="/assets/sampleService.png"
-                  alt="Service Photo"
-                  width={300}
-                  height={300}
-                  layout="responsive"
-                  className="rounded-md object-cover w-full"
-                />
-              </div>
-            ))}
+                <div key={index} className="col-span-1">
+                  <Image
+                    src="/assets/sampleService.png"
+                    alt="Service Photo"
+                    width={300}
+                    height={300}
+                    layout="responsive"
+                    className="rounded-md object-cover w-full"
+                  />
+                </div>
+              ))}
         </div>
       </div>
       {/* FOOTER */}

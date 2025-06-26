@@ -25,6 +25,9 @@ export type Users = {
   customUrl?: string; // added for multi-step-form, not really sure
   firstName?: string;
   lastName?: string;
+  prefix?: string;
+  suffix?: string;
+  middleName?: string;
   firstname?: string; // temporary
   lastname?: string; // temporary
   email: string;

@@ -75,7 +75,7 @@ const Template11 = ({
           </span> */}
           <span className=" text-lg font-semibold bg-[#A0E9FF]  rounded-full p-1 ">
             <a href={`mailto:${email}`}>
-              <HiOutlineBookmark size={20 } className="cursor-pointer" />
+              <HiOutlineBookmark size={20} className="cursor-pointer" />
             </a>
           </span>
           {/* <span className=" text-lg font-semibold bg-[#A0E9FF]  rounded-full p-2 ">
@@ -293,29 +293,29 @@ const Template11 = ({
         <div className="grid grid-cols-3 gap-4 mt-6 mx-10  rounded-2xl overflow-hidden">
           {servicePhotos
             ? servicePhotos.map((photo, index) => (
-              <div key={index} className="col-span-1">
-                <Image
-                  src={photo}
-                  alt={`Service Photo ${index + 1}`}
-                  width={500}
-                  height={500}
-                  layout="responsive"
-                  className=" object-cover w-full  "
-                />
-              </div>
-            ))
+                <div key={index} className="col-span-1">
+                  <Image
+                    src={photo}
+                    alt={`Service Photo ${index + 1}`}
+                    width={500}
+                    height={500}
+                    layout="responsive"
+                    className=" object-cover w-full  "
+                  />
+                </div>
+              ))
             : Array.from({ length: 4 }).map((_, index) => (
-              <div key={index} className="col-span-1">
-                <Image
-                  src="/assets/sampleService.png"
-                  alt="Service Photo"
-                  width={500}
-                  height={500}
-                  layout="responsive"
-                  className=" object-cover w-full"
-                />
-              </div>
-            ))}
+                <div key={index} className="col-span-1">
+                  <Image
+                    src="/assets/sampleService.png"
+                    alt="Service Photo"
+                    width={500}
+                    height={500}
+                    layout="responsive"
+                    className=" object-cover w-full"
+                  />
+                </div>
+              ))}
         </div>
       </div>
       {/* FOOTER */}

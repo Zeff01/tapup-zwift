@@ -121,9 +121,7 @@ const Template4 = ({
               className="rounded-full border p-1.5 border-black cursor-pointer"
               onClick={() => console.log()}
             >
-              <BsPlusLg
-                size={14}
-              />
+              <BsPlusLg size={14} />
             </div>
           </div>
           <div className="flex flex-col justify-center items-center">
@@ -131,9 +129,7 @@ const Template4 = ({
               className="rounded-full border p-1.5 border-black cursor-pointer"
               onClick={() => console.log()}
             >
-              <BsBookmark
-                size={14}
-              />
+              <BsBookmark size={14} />
             </div>
           </div>
         </div>
@@ -180,29 +176,29 @@ const Template4 = ({
         <div className="flex flex-col gap-4 mt-6 px-4">
           {servicePhotos
             ? servicePhotos.map((photo, index) => (
-              <div key={index} className="col-span-1">
-                <Image
-                  src={photo}
-                  alt={`Service Photo ${index + 1}`}
-                  width={500}
-                  height={500}
-                  layout="responsive"
-                  className="rounded-md object-cover w-full"
-                />
-              </div>
-            ))
+                <div key={index} className="col-span-1">
+                  <Image
+                    src={photo}
+                    alt={`Service Photo ${index + 1}`}
+                    width={500}
+                    height={500}
+                    layout="responsive"
+                    className="rounded-md object-cover w-full"
+                  />
+                </div>
+              ))
             : Array.from({ length: 4 }).map((_, index) => (
-              <div key={index} className="col-span-1">
-                <Image
-                  src="/assets/sampleService.png"
-                  alt="Service Photo"
-                  width={500}
-                  height={500}
-                  layout="responsive"
-                  className="rounded-md object-cover w-full"
-                />
-              </div>
-            ))}
+                <div key={index} className="col-span-1">
+                  <Image
+                    src="/assets/sampleService.png"
+                    alt="Service Photo"
+                    width={500}
+                    height={500}
+                    layout="responsive"
+                    className="rounded-md object-cover w-full"
+                  />
+                </div>
+              ))}
         </div>
       </div>
       {/* SOCIAL MEDIA ICONS */}

@@ -62,6 +62,9 @@ export const createPortfolioSchema = z.object({
   chosenPhysicalCard: z.enum(["card1", "card2", "card3", "card4"]),
   firstName: z.string().min(3, "First name must be at least 3 characters"),
   lastName: z.string().min(2, "Last name must be at least 2 characters"),
+  prefix: z.string().optional(),
+  suffix: z.string().optional(),
+  middleName: z.string().optional(),
   email: z.string(),
   number: z
     .string()
@@ -225,6 +228,9 @@ export const editCardSchema = z.object({
   firstName: z.string().min(1, "First name is required").optional(),
   lastName: z.string().optional(),
   email: z.string().optional(),
+  prefix: z.string().optional(),
+  suffix: z.string().optional(),
+  middleName: z.string().optional(),
   number: z
     .string()
     .refine(isValidPhoneNumber, { message: "Invalid phone number" })
