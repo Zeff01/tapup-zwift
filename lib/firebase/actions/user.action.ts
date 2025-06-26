@@ -38,7 +38,9 @@ import { toast } from "react-toastify";
 import { revalidatePath } from "../../revalidate";
 import { createInvoice } from "@/lib/xendit";
 import { xenditClient } from "@/lib/axios";
-import { CartItem } from "@/providers/cart-provider-v2";
+import { deliveryFormSchema } from "@/lib/zod-schema";
+import * as z from "zod";
+
 type UserCodeLink = {
   userCode: string;
   user_link: string;
@@ -576,14 +578,21 @@ export const createCustomerAndRecurringPlan = async (
   }
 };
 
-export const createCustomerAndRecurringPlanBundleV2 = async (
-  customerData: CustomerType,
-  subscriptionPlan: SubscriptionPlan,
-  cardItems: { id: string; name: string }[],
-  totalPrice?: number,
-  userId?: string,
-  selectedAddress?: DeliveryAddress
-) => {
+export const createCustomerAndRecurringPlanBundleV2 = async ({
+  customerData,
+  subscriptionPlan,
+  cardItems,
+  totalPrice,
+  userId,
+  selectedAddress,
+}: {
+  customerData: CustomerType;
+  subscriptionPlan: SubscriptionPlan;
+  cardItems: { id: string; name: string }[];
+  totalPrice?: number;
+  userId?: string;
+  selectedAddress?: DeliveryAddress | z.infer<typeof deliveryFormSchema>;
+}) => {
   try {
     const { data: customer } = await xenditClient.post(
       "/customers",
