@@ -1,34 +1,33 @@
 "use client";
+import { Input } from "@/components/ui/input";
+import { Slider } from "@/components/ui/slider";
+import { uploadImage } from "@/lib/firebase/actions/user.action";
+import { Photo } from "@/types/types";
+import { Loader2, LoaderCircle, Minus, Plus } from "lucide-react";
+import Image from "next/image";
 import React, {
-  useState,
-  useRef,
   Dispatch,
+  HTMLAttributes,
   SetStateAction,
   useEffect,
-  HTMLAttributes,
+  useRef,
+  useState,
 } from "react";
-import { Slider } from "@/components/ui/slider";
 import { createPortal } from "react-dom";
-import { Input } from "@/components/ui/input";
-import { Loader2, Minus, Plus } from "lucide-react";
-import Image from "next/image";
-import { Photo } from "@/types/types";
-import { uploadImage } from "@/lib/firebase/actions/user.action";
-import { LoaderCircle } from "lucide-react";
 
+import { useDebounceEffect } from "@/hooks/useDebounceEffect";
+import { canvasPreview } from "@/lib/utils";
 import ReactCrop, {
   centerCrop,
-  makeAspectCrop,
   Crop,
+  makeAspectCrop,
   PixelCrop,
 } from "react-image-crop";
-import { canvasPreview } from "@/lib/utils";
-import { useDebounceEffect } from "@/hooks/useDebounceEffect";
 
-import "react-image-crop/dist/ReactCrop.css";
-import { toast } from "react-toastify";
 import { cn } from "@/lib/utils";
 import { ReactNode } from "react";
+import "react-image-crop/dist/ReactCrop.css";
+import { toast } from "react-toastify";
 import ImageLoaded from "./ImageLoaded";
 import TapupLogo from "./svgs/TapupLogo";
 

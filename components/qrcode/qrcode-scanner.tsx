@@ -1,5 +1,9 @@
-import React, { useRef, useEffect, useState } from "react";
+import { getCardById } from "@/lib/firebase/actions/card.action";
+import { catchErrorTyped, isValidQRCode } from "@/lib/utils";
+import Canvas2Card from "@/src/app/(secured)/(user)/(boarded)/cards/[cardId]/_components/canvas";
+import { Card, Users } from "@/types/types";
 import QrScanner from "qr-scanner";
+import React, { useEffect, useRef, useState } from "react";
 import {
   Select,
   SelectContent,
@@ -7,11 +11,6 @@ import {
   SelectTrigger,
   SelectValue,
 } from "../ui/select";
-import { catchErrorTyped, isValidQRCode } from "@/lib/utils";
-import { getCardById } from "@/lib/firebase/actions/card.action";
-import { SlCreditCard } from "react-icons/sl";
-import { Card, Users } from "@/types/types";
-import Canvas2Card from "@/src/app/(secured)/(user)/(boarded)/cards/[cardId]/_components/canvas";
 
 const QrCodeScanner: React.FC = () => {
   const videoRef = useRef<HTMLVideoElement>(null);

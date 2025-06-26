@@ -1,17 +1,16 @@
 "use client";
-import { Card } from "@/types/types";
 import { downloadVCard } from "@/lib/utils";
+import { Card } from "@/types/types";
 
-import Image from "next/image";
 import profilePic from "@/public/assets/template4samplepic.png";
+import Image from "next/image";
 // import { CiSaveDown2, CiMail, CiPhone } from "react-icons/ci";
-import { BsBoxArrowInDown } from "react-icons/bs";
-import { TbMailPlus } from "react-icons/tb";
-import { LuPhoneCall } from "react-icons/lu";
 import profileBgImage from "@/public/assets/profileImage.png";
+import { BsBoxArrowInDown } from "react-icons/bs";
+import { LuPhoneCall } from "react-icons/lu";
+import { TbMailPlus } from "react-icons/tb";
 
 import Link from "next/link";
-import { Button } from "@/components/ui/button";
 
 const ProfileInfo = ({
   profilePictureUrl,

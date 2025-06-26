@@ -1,12 +1,11 @@
 "use client";
 
-import { Card } from "@/types/types";
 import { CardContainer } from "@/components/ui/3Dcard";
-import { Button } from "../ui/button";
 import { RefreshCcw } from "lucide-react";
-import FrontCard1 from "./components/FrontCard1";
-import BackCard from "./BackCard";
 import { useState } from "react";
+import { Button } from "../ui/button";
+import BackCard from "./BackCard";
+import FrontCard1 from "./components/FrontCard1";
 
 import { PhysicalCardProps } from "@/types/types";
 

@@ -2,18 +2,17 @@ import { Card } from "@/types/types";
 import Image from "next/image";
 // import { CiMail, CiSaveDown2, CiPhone } from "react-icons/ci";
 import { BsBookmark } from "react-icons/bs";
-import { RxEnvelopeClosed } from "react-icons/rx";
 import {
-  FaXTwitter,
   FaFacebook,
-  FaYoutube,
+  FaGlobe,
   FaInstagram,
   FaLinkedin,
-  FaWhatsapp,
   FaSkype,
-  FaGlobe,
+  FaWhatsapp,
+  FaXTwitter,
+  FaYoutube,
 } from "react-icons/fa6";
-import { downloadVCard } from "@/lib/utils";
+import { RxEnvelopeClosed } from "react-icons/rx";
 
 const Template2 = ({
   profilePictureUrl,
