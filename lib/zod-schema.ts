@@ -229,62 +229,94 @@ export const editCardSchema = z.object({
     .string()
     .refine(isValidPhoneNumber, { message: "Invalid phone number" })
     .optional(),
+
   facebookUrl: z
     .string()
     .refine(
       (value) =>
         value === "" ||
-        /^https:\/\/(www\.)?facebook\.com\/[^\/\s]+\/?$/.test(value),
+        value.startsWith("https://facebook.com/") ||
+        value.startsWith("https://www.facebook.com/"),
       {
-        message: "Must be a complete Facebook profile or page URL.",
+        message: "Must be a valid Facebook URL",
       }
     )
     .optional(),
+
   youtubeUrl: z
     .string()
     .refine(
       (value) =>
         value === "" ||
-        /^https:\/\/(www\.)?youtube\.com\/(channel|c|user|@)[^\/\s]+\/?$/.test(
-          value
-        ),
+        value.startsWith("https://youtube.com/") ||
+        value.startsWith("https://www.youtube.com/"),
       {
-        message: "Must be a complete YouTube channel or user URL",
+        message: "Must be a valid YouTube URL",
       }
     )
     .optional(),
+
   instagramUrl: z
     .string()
     .refine(
       (value) =>
         value === "" ||
-        /^https:\/\/(www\.)?instagram\.com\/[^\/\s]+\/?$/.test(value),
+        value.startsWith("https://instagram.com/") ||
+        value.startsWith("https://www.instagram.com/"),
       {
-        message: "Must be a complete Instagram profile URL",
+        message: "Must be a valid Instagram URL",
       }
     )
     .optional(),
+
   twitterUrl: z
     .string()
     .refine(
       (value) =>
         value === "" ||
-        /^https:\/\/(www\.)?(twitter\.com|x\.com)\/[^\/\s]+\/?$/.test(value),
+        value.startsWith("https://twitter.com/") ||
+        value.startsWith("https://x.com/"),
       {
-        message: "Must be a complete Twitter (X) profile URL",
+        message: "Must be a valid Twitter/X URL",
       }
     )
     .optional(),
+
   linkedinUrl: z
     .string()
     .refine(
       (value) =>
         value === "" ||
-        /^https:\/\/(www\.)?linkedin\.com\/(in|company)\/[^\/\s]+\/?$/.test(
-          value
-        ),
+        value.startsWith("https://linkedin.com/") ||
+        value.startsWith("https://www.linkedin.com/"),
       {
-        message: "Must be a complete LinkedIn profile or company URL",
+        message: "Must be a valid LinkedIn URL",
+      }
+    )
+    .optional(),
+
+  tiktokUrl: z
+    .string()
+    .refine(
+      (value) =>
+        value === "" ||
+        value.startsWith("https://tiktok.com/") ||
+        value.startsWith("https://www.tiktok.com/"),
+      {
+        message: "Must be a valid TikTok URL",
+      }
+    )
+    .optional(),
+
+  viberUrl: z
+    .string()
+    .refine(
+      (value) =>
+        value === "" ||
+        value.startsWith("https://viber.com/") ||
+        value.startsWith("https://www.viber.com/"),
+      {
+        message: "Must be a valid Viber URL",
       }
     )
     .optional(),
@@ -309,28 +341,6 @@ export const editCardSchema = z.object({
       (value) => value === "" || /^https?:\/\/[^\s/$.?#].[^\s]*$/.test(value),
       {
         message: "Must be a valid website URL",
-      }
-    )
-    .optional(),
-  tiktokUrl: z
-    .string()
-    .refine(
-      (value) =>
-        value === "" ||
-        /^https:\/\/(www\.)?tiktok\.com\/@[^\/\s]+\/?$/.test(value),
-      {
-        message: "Must be a valid TikTok profile URL",
-      }
-    )
-    .optional(),
-  viberUrl: z
-    .string()
-    .refine(
-      (value) =>
-        value === "" ||
-        /^https:\/\/(invite|chats)\.viber\.com\/[^\/\s]+\/?$/.test(value),
-      {
-        message: "Must be a valid Viber invite or chat link",
       }
     )
     .optional(),
