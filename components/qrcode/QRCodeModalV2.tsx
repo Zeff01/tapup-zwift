@@ -1,5 +1,6 @@
 import { Button } from "@/components/ui/button";
 import { Dialog, DialogContent, DialogTitle } from "@/components/ui/dialog";
+import { downloadVCard } from "@/lib/utils";
 import { Card } from "@/types/types";
 import { QRCodeCanvas } from "qrcode.react";
 
@@ -13,26 +14,23 @@ export default function QRCodeModal({
   onClose: () => void;
 }) {
   const getVCardData = (profile: Partial<Card>) => {
-    return `BEGIN:VCARD
-VERSION:3.0
-N:${profile.lastName};${profile.firstName}
-FN:${profile.firstName} ${profile.lastName}
-EMAIL:${profile.email}
-TEL:${profile.number}
-COMPANY:${profile.company}
-POSITION:${profile.position}
-URL:${profile.customUrl ?? profile.websiteUrl}
-END:VCARD`;
-  };
+    let vCardString = "BEGIN:VCARD\n";
+    vCardString += "VERSION:3.0\n";
+    vCardString += `FN:${userProfile.firstName} ${userProfile.lastName}\n`;
+    vCardString += `N:${userProfile.lastName};${userProfile.firstName};;;\n`;
+    vCardString += `ORG:${userProfile.company}\n`;
+    vCardString += `TITLE:${userProfile.position}\n`;
+    vCardString += `TEL;TYPE=CELL:${userProfile.number}\n`;
+    vCardString += `EMAIL;TYPE=INTERNET:${userProfile.email}\n`;
 
-  const handleDownload = () => {
-    const canvas = document.getElementById("qrCodeCanvas") as HTMLCanvasElement;
-    if (!canvas) return;
-    const url = canvas.toDataURL("image/png");
-    const link = document.createElement("a");
-    link.href = url;
-    link.download = "qr-code.png";
-    link.click();
+    const url = userProfile.customUrl || userProfile.websiteUrl;
+    if (url) {
+      vCardString += `URL:${url}\n`;
+    }
+
+    vCardString += "END:VCARD";
+
+    return vCardString;
   };
 
   return (
@@ -48,10 +46,10 @@ END:VCARD`;
         />
 
         <Button
-          className="w-full bg-blue-600 text-white hover:bg-blue-500 cursor-pointer "
-          onClick={handleDownload}
+          className="w-full bg-blue-700 text-white hover:bg-blue-500 cursor-pointer "
+          onClick={() => downloadVCard(userProfile)}
         >
-          Download QR Code
+          Download VCF
         </Button>
       </DialogContent>
     </Dialog>
