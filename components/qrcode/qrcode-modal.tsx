@@ -1,4 +1,3 @@
-import React, { ReactNode } from "react";
 import {
   Dialog,
   DialogContent,
@@ -6,6 +5,7 @@ import {
   DialogTitle,
   DialogTrigger,
 } from "@/components/ui/dialog";
+import { ReactNode } from "react";
 import QrCodeScanner from "./qrcode-scanner";
 
 const QrCodeModal = ({ icon }: { icon: ReactNode }) => {

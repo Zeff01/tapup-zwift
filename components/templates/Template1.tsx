@@ -3,18 +3,15 @@ import Image from "next/image";
 // import { CiMail, CiPhone, CiSaveDown2, CiBookmark } from "react-icons/ci";
 import { BsBookmark, BsPlusLg } from "react-icons/bs";
 import {
-  FaXTwitter,
   FaFacebook,
-  FaYoutube,
+  FaGlobe,
   FaInstagram,
   FaLinkedin,
-  FaWhatsapp,
   FaSkype,
-  FaGlobe,
-  FaPlus,
-  FaRegBookmark,
+  FaWhatsapp,
+  FaXTwitter,
+  FaYoutube
 } from "react-icons/fa6";
-import { downloadVCard } from "@/lib/utils";
 
 const Template1 = ({
   profilePictureUrl,

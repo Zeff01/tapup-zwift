@@ -1,12 +1,12 @@
 "use client";
 
-import { QRCodeSVG } from "qrcode.react";
-import { useEffect, useRef, useState } from "react";
-import html2canvas from "html2canvas";
-import { Users } from "@/types/types";
-import MoonLoader from "react-spinners/MoonLoader";
 import ImageWithLoading from "@/components/ImageWithLoading";
 import { createCardLink } from "@/lib/utils";
+import { Users } from "@/types/types";
+import html2canvas from "html2canvas";
+import { QRCodeSVG } from "qrcode.react";
+import { useEffect, useRef, useState } from "react";
+import MoonLoader from "react-spinners/MoonLoader";
 
 export default function Canvas2Card({
   user,

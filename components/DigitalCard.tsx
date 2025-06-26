@@ -1,18 +1,6 @@
 "use client";
 
-import {
-  Tooltip,
-  TooltipTrigger,
-  TooltipContent,
-  TooltipPortal,
-  TooltipArrow,
-} from "@radix-ui/react-tooltip";
-import {
-  CustomerType,
-  SubscriptionPlan,
-  Users,
-  UserState,
-} from "@/types/types";
+import { carouselCards } from "@/constants";
 import {
   addCustomUrl,
   deleteCardById,
@@ -20,35 +8,47 @@ import {
   toggleCardDisabled,
   transferCardOwnership,
 } from "@/lib/firebase/actions/card.action";
-import { Card } from "@/types/types";
-import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
-import {
-  ArrowRightLeft,
-  CheckCircle2,
-  Edit2,
-  Loader2Icon,
-  Trash,
-  EyeIcon,
-  GripVertical,
-} from "lucide-react";
-import Link from "next/link";
-import { useRouter } from "next/navigation";
-import React, { useState } from "react";
-import { toast } from "react-toastify";
-import * as Dialog from "@radix-ui/react-dialog";
-import { format } from "date-fns";
 import {
   createCustomerAndRecurringPlan,
   getSubscriptionPlans,
   getUserById,
 } from "@/lib/firebase/actions/user.action";
 import { getLoggedInUser } from "@/lib/session";
-import { carouselCards } from "@/constants";
-import { TbDisabled } from "react-icons/tb";
-import { IoCloseCircleOutline } from "react-icons/io5";
-import { useSortable } from "@dnd-kit/sortable";
+import {
+  Card,
+  CustomerType,
+  SubscriptionPlan,
+  Users,
+  UserState,
+} from "@/types/types";
 import { UniqueIdentifier } from "@dnd-kit/core";
+import { useSortable } from "@dnd-kit/sortable";
 import { CSS } from "@dnd-kit/utilities";
+import * as Dialog from "@radix-ui/react-dialog";
+import {
+  Tooltip,
+  TooltipArrow,
+  TooltipContent,
+  TooltipPortal,
+  TooltipTrigger,
+} from "@radix-ui/react-tooltip";
+import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
+import { format } from "date-fns";
+import {
+  ArrowRightLeft,
+  CheckCircle2,
+  Edit2,
+  EyeIcon,
+  Forward,
+  GripVertical,
+  Loader2Icon,
+} from "lucide-react";
+import Link from "next/link";
+import { useRouter } from "next/navigation";
+import React, { useState } from "react";
+import { IoCloseCircleOutline } from "react-icons/io5";
+import { toast } from "react-toastify";
+import QRCodeModal from "./qrcode/QRCodeModalV2";
 import { Button } from "./ui/button";
 
 type Prop = {
@@ -71,6 +71,18 @@ const DigitalCard = ({ card, confirm, user }: Prop) => {
   const [expiredDialogOpen, setExpiredDialogOpen] = useState(false);
   const [confirmTransferCardDialog, setConfirmTransferCardDialog] =
     useState(false);
+
+  const userProfile = {
+    firstName: card?.firstName ?? "",
+    lastName: card?.lastName ?? "",
+    email: card?.email ?? "",
+    number: card?.number ?? "",
+    company: card?.company ?? "",
+    position: card?.position ?? "",
+    customUrl: card?.customUrl ?? "",
+  };
+
+  const [openQRCode, setOpenQRCode] = useState(false);
 
   const domain =
     process.env.NODE_ENV === "development"
@@ -328,6 +340,11 @@ const DigitalCard = ({ card, confirm, user }: Prop) => {
       fn: () => setTransferOpen(true),
       tooltip: "Transfer Ownership",
     },
+    {
+      icon: Forward,
+      fn: () => setOpenQRCode(true),
+      tooltip: "Share Card",
+    },
   ];
 
   const isLoading = isPendingToggleCard || isLoadingPlans;
@@ -489,7 +506,6 @@ const DigitalCard = ({ card, confirm, user }: Prop) => {
           </Link>
         </div>
       </div>
-
       {/* <Dialog.Root open={expiredDialogOpen} onOpenChange={setExpiredDialogOpen}>
         <Dialog.Portal>
           <Dialog.Overlay className="fixed inset-0 bg-black/50 backdrop-blur-sm z-50" />
@@ -724,6 +740,12 @@ const DigitalCard = ({ card, confirm, user }: Prop) => {
           </Dialog.Content>
         </Dialog.Portal>
       </Dialog.Root>
+      <QRCodeModal
+        userProfile={userProfile}
+        open={openQRCode}
+        onClose={() => setOpenQRCode(false)}
+      />
+      ;
     </div>
   );
 };

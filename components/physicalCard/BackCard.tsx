@@ -1,14 +1,12 @@
-import Image from "next/image";
-import { StaticImageData } from "next/image";
-import zwiftLogo from "@/public/assets/zwift-logo.png";
-import tapUpLogoWhite from "@/public/assets/tap-up-logo-white.png";
-import tapUpLogoBlack from "@/public/assets/tap-up-logo-black.png";
-import letterTWhite from "@/public/assets/letter-t-white.png";
 import letterTBlack from "@/public/assets/letter-t-black.png";
-import nfcWhite from "@/public/assets/nfc-symbol-white.png";
+import letterTWhite from "@/public/assets/letter-t-white.png";
 import nfcBlack from "@/public/assets/nfc-symbol-black.png";
-import qrWhite from "@/public/assets/qr-white.png";
+import nfcWhite from "@/public/assets/nfc-symbol-white.png";
 import qrBlack from "@/public/assets/qr-black.png";
+import qrWhite from "@/public/assets/qr-white.png";
+import tapUpLogoBlack from "@/public/assets/tap-up-logo-black.png";
+import tapUpLogoWhite from "@/public/assets/tap-up-logo-white.png";
+import Image, { StaticImageData } from "next/image";
 // Front Card Component (NFC/Tap Card)
 const FrontCard = ({
   backgroundImage,
