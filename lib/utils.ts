@@ -40,29 +40,67 @@ export const isValidQRCode = (url: string) => {
   return url.startsWith(devUrl) || url.startsWith(prodUrl);
 };
 
-export const downloadVCard = (userProfile: Partial<Card>) => {
-  const { firstName, lastName, email, number, company, position, websiteUrl } =
-    userProfile;
+export const getVCardData = (card: Partial<Card>) => {
+  // instead of manually passing the data in digital card destructure the card here
+  const {
+    firstName = "",
+    lastName = "",
+    email = "",
+    number = "",
+    company = "",
+    position = "",
+    websiteUrl = "",
+    customUrl = "",
+    facebookUrl = "",
+    instagramUrl = "",
+    linkedinUrl = "",
+    twitterUrl = "",
+    youtubeUrl = "",
+    whatsappNumber = "",
+    skypeInviteUrl = "",
+    viberUrl = "",
+    tiktokUrl = "",
+  } = card;
+
+  const url = customUrl || websiteUrl;
 
   if (!email) {
     console.error("No email available for vCard");
-    return;
+    return "";
   }
 
-  // Manually create vCard data
   let vCardString = "BEGIN:VCARD\n";
-  vCardString += "VERSION:3.0\n";
+  vCardString += "VERSION:4.0\n";
   vCardString += `FN:${firstName} ${lastName}\n`;
   vCardString += `N:${lastName};${firstName};;;\n`;
   vCardString += `ORG:${company}\n`;
   vCardString += `TITLE:${position}\n`;
-  vCardString += `TEL;TYPE=CELL:${number}\n`;
-  vCardString += `EMAIL:${email}\n`;
-  if (websiteUrl) {
-    vCardString += `URL:${websiteUrl}\n`;
-  }
+  vCardString += `TEL;TYPE=cell:${number}\n`;
+  vCardString += `EMAIL;TYPE=work:${email}\n`;
+
+  // this url is optional in vcard data it might be empty the social links
+  if (url) vCardString += `URL:${url}\n`;
+  if (facebookUrl) vCardString += `URL;TYPE=facebook:${facebookUrl}\n`;
+  if (instagramUrl) vCardString += `URL;TYPE=instagram:${instagramUrl}\n`;
+  if (linkedinUrl) vCardString += `URL;TYPE=linkedin:${linkedinUrl}\n`;
+  if (twitterUrl) vCardString += `URL;TYPE=twitter:${twitterUrl}\n`;
+  if (youtubeUrl) vCardString += `URL;TYPE=youtube:${youtubeUrl}\n`;
+  if (whatsappNumber) vCardString += `IMPP:whatsapp:${whatsappNumber}\n`;
+  if (skypeInviteUrl) vCardString += `IMPP:${skypeInviteUrl}\n`;
+  if (viberUrl) vCardString += `IMPP:viber:${viberUrl}\n`;
+  if (tiktokUrl) vCardString += `URL;TYPE=tiktok:${tiktokUrl}\n`;
+
   vCardString += "END:VCARD";
 
+  return vCardString;
+};
+
+export const downloadVCard = (userProfile: Partial<Card>) => {
+  const vCardString = getVCardData(userProfile);
+
+  if (!vCardString) return;
+
+  const { firstName, lastName } = userProfile;
   // Create a Blob from the vCard String
   const blob = new Blob([vCardString], { type: "text/vcard;charset=utf-8" });
   const link = document.createElement("a");
