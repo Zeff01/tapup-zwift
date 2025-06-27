@@ -417,13 +417,27 @@ const DigitalCard = ({ card, confirm, user }: Prop) => {
 
           {iconAndFunctionMap.map((item, index) => {
             const isToggleButton = item.fn === handleToggleCard;
-            const isDisabledState = isCardDisabled && !isToggleButton;
+
+            const isDisabledState =
+              (isCardDisabled && !isToggleButton) ||
+              (item.tooltip === "Share Card" && !card.portfolioStatus);
+
+            const tooltipText =
+              item.tooltip === "Share Card" && !card.portfolioStatus
+                ? "Setup this card first"
+                : isCardDisabled && !isToggleButton
+                  ? "Enable this card first"
+                  : item.tooltip;
 
             return (
               <Tooltip key={index}>
                 <TooltipTrigger asChild>
                   <span
-                    className={`px-2 py-2 2xl:py-2 border dark:border-accent border-gray-300 rounded-md ${isDisabledState ? "opacity-30 cursor-not-allowed" : "hover:opacity-50 cursor-pointer"}`}
+                    className={`px-2 py-2 2xl:py-2 border dark:border-accent border-gray-300 rounded-md ${
+                      isDisabledState
+                        ? "opacity-30 cursor-not-allowed"
+                        : "hover:opacity-50 cursor-pointer"
+                    }`}
                     onClick={!isDisabledState ? item.fn : undefined}
                   >
                     <item.icon className="size-4 dark:text-white drop-shadow-md" />
@@ -434,7 +448,7 @@ const DigitalCard = ({ card, confirm, user }: Prop) => {
                     className="bg-black text-white text-xs px-2 py-1 rounded z-50"
                     side="left"
                   >
-                    {isDisabledState ? "Enable this card first" : item.tooltip}
+                    {tooltipText}
                     <TooltipArrow className="fill-black" />
                   </TooltipContent>
                 </TooltipPortal>
