@@ -2,7 +2,7 @@
 
 import React from "react";
 import CustomInput from "@/components/CustomInput";
-import { FormControl, FormField, FormLabel, FormMessage } from "../ui/form";
+import { FormControl, FormField, FormLabel } from "../ui/form";
 import { PhoneInput } from "../ui/phone-input";
 interface PersonalInfoFormProps {
   control: any;
@@ -31,10 +31,29 @@ const PersonalInfoForm: React.FC<PersonalInfoFormProps> = ({
       />
       <CustomInput
         control={control}
+        name="middleName"
+        label="Middlename (optional)"
+        placeholder="Enter your middle name"
+      />
+      <CustomInput
+        control={control}
         name="lastName"
         label="Surname (optional)"
         placeholder="Enter your last name"
       />
+      <CustomInput
+        control={control}
+        name="prefix"
+        label="Prefix (optional)"
+        placeholder="Mr, Ms, Mrs, Dr, Atty, Engr"
+      />
+      <CustomInput
+        control={control}
+        name="suffix"
+        label="Suffix (optional)"
+        placeholder="Jr, III, IV"
+      />
+
       <CustomInput
         control={control}
         name="email"

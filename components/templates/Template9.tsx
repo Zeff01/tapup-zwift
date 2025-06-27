@@ -73,9 +73,7 @@ const Template9 = ({
               className="rounded-full border p-1.5 border-white bg-white text-black cursor-pointer"
               onClick={() => console.log()}
             >
-              <RxEnvelopeClosed
-                size={14}
-              />
+              <RxEnvelopeClosed size={14} />
             </div>
           </div>
           <div className="flex flex-col justify-center items-center">
@@ -83,9 +81,7 @@ const Template9 = ({
               className="rounded-full border p-1.5 border-white bg-white text-black cursor-pointer"
               onClick={() => console.log()}
             >
-              <BsBookmark
-                size={14}
-              />
+              <BsBookmark size={14} />
             </div>
           </div>
         </div>
@@ -223,29 +219,29 @@ const Template9 = ({
         <div className="grid grid-cols-2 gap-4 mt-6  ">
           {servicePhotos
             ? servicePhotos.map((photo, index) => (
-              <div key={index} className="col-span-1">
-                <Image
-                  src={photo}
-                  alt={`Service Photo ${index + 1}`}
-                  width={300}
-                  height={300}
-                  layout="responsive"
-                  className="rounded-2xl object-contain w-full  "
-                />
-              </div>
-            ))
+                <div key={index} className="col-span-1">
+                  <Image
+                    src={photo}
+                    alt={`Service Photo ${index + 1}`}
+                    width={300}
+                    height={300}
+                    layout="responsive"
+                    className="rounded-2xl object-contain w-full  "
+                  />
+                </div>
+              ))
             : Array.from({ length: 4 }).map((_, index) => (
-              <div key={index} className="col-span-1">
-                <Image
-                  src="/assets/sampleService.png"
-                  alt="Service Photo"
-                  width={300}
-                  height={300}
-                  layout="responsive"
-                  className="rounded-2xl object-contain w-full"
-                />
-              </div>
-            ))}
+                <div key={index} className="col-span-1">
+                  <Image
+                    src="/assets/sampleService.png"
+                    alt="Service Photo"
+                    width={300}
+                    height={300}
+                    layout="responsive"
+                    className="rounded-2xl object-contain w-full"
+                  />
+                </div>
+              ))}
         </div>
         <h2 className="font-semibold text-xl mx-auto w-full  tracking-wider  text-center">
           {company ?? "COMPANY"}
