@@ -17,6 +17,7 @@ import DraftTemplate1 from "@/components/templates/DraftTemplate1";
 import { Card as cardType } from "@/types/types";
 import { Card, CardContent } from "@/components/ui/card";
 import Link from "next/link";
+import Template13 from "@/components/templates/Template13";
 
 const UserPage = ({ userData }: { userData: cardType }) => {
   const renderTemplate = {
@@ -32,7 +33,7 @@ const UserPage = ({ userData }: { userData: cardType }) => {
     template10: <Template10 {...userData} />,
     template11: <Template11 {...userData} />,
     template12: <Template12 {...userData} />,
-    template13: <DraftTemplate1 {...userData} />,
+    template13: <Template13 {...userData} />,
   };
 
   interface ChosenTemplateType {
