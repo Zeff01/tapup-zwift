@@ -41,7 +41,6 @@ export const isValidQRCode = (url: string) => {
 };
 
 export const getVCardData = (card: Partial<Card>) => {
-  // instead of manually passing the data in digital card destructure the card here
   const {
     prefix = "",
     firstName = "",
@@ -72,32 +71,40 @@ export const getVCardData = (card: Partial<Card>) => {
     return "";
   }
 
-  const formattedName = `${prefix ? prefix + "." : ""} ${firstName} ${middleName ? middleName + " " : ""}${lastName} ${suffix ? "" + suffix : ""}`;
+  const formattedName = [
+    prefix && `${prefix}.`,
+    firstName,
+    middleName,
+    lastName,
+    suffix,
+  ]
+    .filter(Boolean)
+    .join(" ")
+    .trim();
 
-  let vCardString = "BEGIN:VCARD\n";
-  vCardString += "VERSION:4.0\n";
-  vCardString += `FN:${formattedName}\n`;
-  vCardString += `N:${lastName};${firstName};${middleName};${prefix};${suffix}\n`;
-  vCardString += `ORG:${company}\n`;
-  vCardString += `TITLE:${position}\n`;
-  vCardString += `TEL;TYPE=cell:${number}\n`;
-  vCardString += `EMAIL;TYPE=work:${email}\n`;
+  const vcardFields = [
+    "BEGIN:VCARD",
+    "VERSION:4.0",
+    `FN:${formattedName}`,
+    `N:${lastName};${firstName};${middleName};${prefix};${suffix}`,
+    company && `ORG:${company}`,
+    position && `TITLE:${position}`,
+    number && `TEL;TYPE=cell:${number}`,
+    `EMAIL;TYPE=work:${email}`,
+    url && `URL:${url}`,
+    facebookUrl && `URL:${facebookUrl}\nNOTE:Facebook`,
+    instagramUrl && `URL:${instagramUrl}\nNOTE:Instagram`,
+    linkedinUrl && `URL:${linkedinUrl}\nNOTE:LinkedIn`,
+    twitterUrl && `URL:${twitterUrl}\nNOTE:Twitter`,
+    youtubeUrl && `URL:${youtubeUrl}\nNOTE:YouTube`,
+    tiktokUrl && `URL:${tiktokUrl}\nNOTE:TikTok`,
+    whatsappNumber && `IMPP:whatsapp:${whatsappNumber}`,
+    skypeInviteUrl && `IMPP:${skypeInviteUrl}`,
+    viberUrl && `IMPP:viber:${viberUrl}`,
+    "END:VCARD",
+  ];
 
-  // this url is optional in vcard data it might be empty the social links
-  if (url) vCardString += `URL;TYPE=website:${url}\n`;
-  if (facebookUrl) vCardString += `URL;TYPE=facebook:${facebookUrl}\n`;
-  if (instagramUrl) vCardString += `URL;TYPE=instagram:${instagramUrl}\n`;
-  if (linkedinUrl) vCardString += `URL;TYPE=linkedin:${linkedinUrl}\n`;
-  if (twitterUrl) vCardString += `URL;TYPE=twitter:${twitterUrl}\n`;
-  if (youtubeUrl) vCardString += `URL;TYPE=youtube:${youtubeUrl}\n`;
-  if (whatsappNumber) vCardString += `IMPP:whatsapp:${whatsappNumber}\n`;
-  if (skypeInviteUrl) vCardString += `IMPP:${skypeInviteUrl}\n`;
-  if (viberUrl) vCardString += `IMPP:viber:${viberUrl}\n`;
-  if (tiktokUrl) vCardString += `URL;TYPE=tiktok:${tiktokUrl}\n`;
-
-  vCardString += "END:VCARD";
-
-  return vCardString;
+  return vcardFields.filter(Boolean).join("\n");
 };
 
 export const downloadVCard = (userProfile: Partial<Card>) => {
