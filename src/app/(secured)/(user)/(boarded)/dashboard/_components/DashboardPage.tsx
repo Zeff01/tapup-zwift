@@ -147,8 +147,8 @@ export default function Dashboard() {
   return (
     <div className="flex min-h-screen flex-col">
       <main className="flex-1 space-y-4 p-4 md:p-4 h-full">
-        <div className="flex items-center justify-between">
-          <h1 className="text-xl sm:text-2xl font-bold tracking-tight">
+        <div className="flex flex-col sm:flex-row gap-4 items-center justify-between">
+          <h1 className="text-lg sm:text-xl font-bold tracking-tight">
             Analytics Dashboard
           </h1>
           <AnalyticsTimeSelector
