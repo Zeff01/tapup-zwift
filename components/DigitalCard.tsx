@@ -72,6 +72,9 @@ const DigitalCard = ({ card, confirm, user }: Prop) => {
   const [confirmTransferCardDialog, setConfirmTransferCardDialog] =
     useState(false);
 
+
+   
+
   const [openQRCode, setOpenQRCode] = useState(false);
 
   const domain =

@@ -43,8 +43,11 @@ export const isValidQRCode = (url: string) => {
 export const getVCardData = (card: Partial<Card>) => {
   // instead of manually passing the data in digital card destructure the card here
   const {
+    prefix = "",
     firstName = "",
+    middleName = "",
     lastName = "",
+    suffix = "",
     email = "",
     number = "",
     company = "",
@@ -69,17 +72,19 @@ export const getVCardData = (card: Partial<Card>) => {
     return "";
   }
 
+  const formattedName = `${prefix ? prefix + "." : ""} ${firstName} ${middleName ? middleName + " " : ""}${lastName} ${suffix ? "" + suffix : ""}`;
+
   let vCardString = "BEGIN:VCARD\n";
   vCardString += "VERSION:4.0\n";
-  vCardString += `FN:${firstName} ${lastName}\n`;
-  vCardString += `N:${lastName};${firstName};;;\n`;
+  vCardString += `FN:${formattedName}\n`;
+  vCardString += `N:${lastName};${firstName};${middleName};${prefix};${suffix}\n`;
   vCardString += `ORG:${company}\n`;
   vCardString += `TITLE:${position}\n`;
   vCardString += `TEL;TYPE=cell:${number}\n`;
   vCardString += `EMAIL;TYPE=work:${email}\n`;
 
   // this url is optional in vcard data it might be empty the social links
-  if (url) vCardString += `URL:${url}\n`;
+  if (url) vCardString += `URL;TYPE=website:${url}\n`;
   if (facebookUrl) vCardString += `URL;TYPE=facebook:${facebookUrl}\n`;
   if (instagramUrl) vCardString += `URL;TYPE=instagram:${instagramUrl}\n`;
   if (linkedinUrl) vCardString += `URL;TYPE=linkedin:${linkedinUrl}\n`;
