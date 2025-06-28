@@ -166,7 +166,7 @@ const Cards = () => {
                 strategy={rectSortingStrategy}
               >
                 {orderedCards.length > 0 ? (
-                  <div className="grid justify-center grid-cols-[repeat(auto-fill,minmax(18rem,24rem))] justify-items-center xl:justify-start xl:grid-cols-[repeat(auto-fill,minmax(18rem,1fr))] gap-4 md:px-2 outline-2 outline-red-400">
+                  <div className="grid justify-center grid-cols-[repeat(auto-fill,minmax(17rem,24rem))] justify-items-center xl:justify-start xl:grid-cols-[repeat(auto-fill,minmax(22rem,1fr))] gap-4 md:px-2 outline-2 outline-red-400">
                     {orderedCards.map((card) => (
                       <DigitalCard
                         user={user}

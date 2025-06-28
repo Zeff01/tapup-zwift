@@ -21,6 +21,7 @@ import { useMediaQuery } from "usehooks-ts";
 import { ThemeToggle } from "../Theme";
 import { useUserContext } from "@/providers/user-provider";
 import NavigationSkeleton from "./NavigationSkeleton";
+import EditAccountModal from "./EditAccountModal";
 
 const OverlayMenu = () => {
   const {
@@ -72,14 +73,30 @@ const OverlayMenu = () => {
                 alt="user image"
                 width={50}
                 height={50}
-                className="object-cover rounded-full w-[50px] h-[50px]"
+                className="object-cover rounded-full h-[50px] w-[50px]"
               />
               <div className="flex flex-col w-full">
-                <h3 className="font-bold text-sm">
-                  {user?.firstName
-                    ? `${user?.firstName} ${user?.lastName}`
-                    : "Anonymous"}
-                </h3>
+                <div className="flex items-center gap-2 w-full max-w-44">
+                  <input
+                    readOnly
+                    value={
+                      user?.firstName
+                        ? `${user?.firstName} ${user?.lastName}`
+                        : "Anonymous"
+                    }
+                    className="text-sm font-bold border-0 truncate w-full bg-transparent outline-none"
+                  />
+                  <p
+                    className={cn(
+                      "text-xs rounded-full px-1 text-center capitalize flex-1 text-white bg-greenColor",
+                      {
+                        "bg-red-700": isAdmin,
+                      }
+                    )}
+                  >
+                    {user?.role}
+                  </p>
+                </div>
 
                 <input
                   readOnly
@@ -87,16 +104,7 @@ const OverlayMenu = () => {
                   className="text-xs text-foreground/30 border-0 truncate w-full bg-transparent outline-none"
                 />
               </div>
-              <p
-                className={cn(
-                  "text-xs px-2 rounded-full capitalize text-white bg-greenColor",
-                  {
-                    "bg-red-700": isAdmin,
-                  }
-                )}
-              >
-                {user?.role}
-              </p>
+              <EditAccountModal />
               <span className="ml-auto flex mr-2">
                 <ThemeToggle variant="boarded" />
               </span>
