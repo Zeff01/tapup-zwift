@@ -1,44 +1,34 @@
 import { Button } from "@/components/ui/button";
-import { Dialog, DialogContent, DialogTitle } from "@/components/ui/dialog";
-import { downloadVCard } from "@/lib/utils";
+import {
+  Dialog,
+  DialogContent,
+  DialogDescription,
+  DialogTitle,
+} from "@/components/ui/dialog";
+import { downloadVCard, getVCardData } from "@/lib/utils";
 import { Card } from "@/types/types";
 import { QRCodeCanvas } from "qrcode.react";
 
-export default function QRCodeModal({
+export default function QRCodeModalV2({
   userProfile,
   open,
   onClose,
 }: {
-  userProfile: Partial<Card>;
+  userProfile?: Partial<Card>;
   open: boolean;
   onClose: () => void;
 }) {
-  const getVCardData = (profile: Partial<Card>) => {
-    let vCardString = "BEGIN:VCARD\n";
-    vCardString += "VERSION:3.0\n";
-    vCardString += `FN:${userProfile.firstName} ${userProfile.lastName}\n`;
-    vCardString += `N:${userProfile.lastName};${userProfile.firstName};;;\n`;
-    vCardString += `ORG:${userProfile.company}\n`;
-    vCardString += `TITLE:${userProfile.position}\n`;
-    vCardString += `TEL;TYPE=CELL:${userProfile.number}\n`;
-    vCardString += `EMAIL;TYPE=INTERNET:${userProfile.email}\n`;
+  if (!open || !userProfile) return null;
 
-    const url = userProfile.customUrl || userProfile.websiteUrl;
-    if (url) {
-      vCardString += `URL:${url}\n`;
-    }
-
-    vCardString += "END:VCARD";
-
-    return vCardString;
-  };
+  const vCardData = getVCardData(userProfile);
 
   return (
     <Dialog open={open} onOpenChange={onClose}>
       <DialogTitle className="text-center mt-4 text-lg font-bold"></DialogTitle>
+      <DialogDescription></DialogDescription>
       <DialogContent className="flex flex-col items-center gap-4 p-6">
         <QRCodeCanvas
-          value={getVCardData(userProfile)}
+          value={vCardData}
           size={200}
           level="H"
           includeMargin

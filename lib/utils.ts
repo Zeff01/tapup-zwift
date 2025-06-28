@@ -40,29 +40,79 @@ export const isValidQRCode = (url: string) => {
   return url.startsWith(devUrl) || url.startsWith(prodUrl);
 };
 
-export const downloadVCard = (userProfile: Partial<Card>) => {
-  const { firstName, lastName, email, number, company, position, websiteUrl } =
-    userProfile;
+export const getVCardData = (card: Partial<Card>) => {
+  const {
+    prefix = "",
+    firstName = "",
+    middleName = "",
+    lastName = "",
+    suffix = "",
+    email = "",
+    number = "",
+    company = "",
+    position = "",
+    websiteUrl = "",
+    customUrl = "",
+    facebookUrl = "",
+    instagramUrl = "",
+    linkedinUrl = "",
+    twitterUrl = "",
+    youtubeUrl = "",
+    whatsappNumber = "",
+    skypeInviteUrl = "",
+    viberUrl = "",
+    tiktokUrl = "",
+  } = card;
+
+  const url = customUrl || websiteUrl;
 
   if (!email) {
     console.error("No email available for vCard");
-    return;
+    return "";
   }
 
-  // Manually create vCard data
-  let vCardString = "BEGIN:VCARD\n";
-  vCardString += "VERSION:3.0\n";
-  vCardString += `FN:${firstName} ${lastName}\n`;
-  vCardString += `N:${lastName};${firstName};;;\n`;
-  vCardString += `ORG:${company}\n`;
-  vCardString += `TITLE:${position}\n`;
-  vCardString += `TEL;TYPE=CELL:${number}\n`;
-  vCardString += `EMAIL:${email}\n`;
-  if (websiteUrl) {
-    vCardString += `URL:${websiteUrl}\n`;
-  }
-  vCardString += "END:VCARD";
+  const formattedName = [
+    prefix && `${prefix}.`,
+    firstName,
+    middleName,
+    lastName,
+    suffix,
+  ]
+    .filter(Boolean)
+    .join(" ")
+    .trim();
 
+  const vcardFields = [
+    "BEGIN:VCARD",
+    "VERSION:4.0",
+    `FN:${formattedName}`,
+    `N:${lastName};${firstName};${middleName};${prefix};${suffix}`,
+    company && `ORG:${company}`,
+    position && `TITLE:${position}`,
+    number && `TEL;TYPE=cell:${number}`,
+    `EMAIL;TYPE=work:${email}`,
+    url && `URL:${url}`,
+    facebookUrl && `URL:${facebookUrl}\nNOTE:Facebook`,
+    instagramUrl && `URL:${instagramUrl}\nNOTE:Instagram`,
+    linkedinUrl && `URL:${linkedinUrl}\nNOTE:LinkedIn`,
+    twitterUrl && `URL:${twitterUrl}\nNOTE:Twitter`,
+    youtubeUrl && `URL:${youtubeUrl}\nNOTE:YouTube`,
+    tiktokUrl && `URL:${tiktokUrl}\nNOTE:TikTok`,
+    whatsappNumber && `IMPP:whatsapp:${whatsappNumber}`,
+    skypeInviteUrl && `IMPP:${skypeInviteUrl}`,
+    viberUrl && `IMPP:viber:${viberUrl}`,
+    "END:VCARD",
+  ];
+
+  return vcardFields.filter(Boolean).join("\n");
+};
+
+export const downloadVCard = (userProfile: Partial<Card>) => {
+  const vCardString = getVCardData(userProfile);
+
+  if (!vCardString) return;
+
+  const { firstName, lastName } = userProfile;
   // Create a Blob from the vCard String
   const blob = new Blob([vCardString], { type: "text/vcard;charset=utf-8" });
   const link = document.createElement("a");

@@ -48,7 +48,7 @@ import { useRouter } from "next/navigation";
 import React, { useState } from "react";
 import { IoCloseCircleOutline } from "react-icons/io5";
 import { toast } from "react-toastify";
-import QRCodeModal from "./qrcode/QRCodeModalV2";
+import QRCodeModalV2 from "./qrcode/QRCodeModalV2";
 import { Button } from "./ui/button";
 
 type Prop = {
@@ -72,15 +72,8 @@ const DigitalCard = ({ card, confirm, user }: Prop) => {
   const [confirmTransferCardDialog, setConfirmTransferCardDialog] =
     useState(false);
 
-  const userProfile = {
-    firstName: card?.firstName ?? "",
-    lastName: card?.lastName ?? "",
-    email: card?.email ?? "",
-    number: card?.number ?? "",
-    company: card?.company ?? "",
-    position: card?.position ?? "",
-    customUrl: card?.customUrl ?? "",
-  };
+
+   
 
   const [openQRCode, setOpenQRCode] = useState(false);
 
@@ -754,8 +747,10 @@ const DigitalCard = ({ card, confirm, user }: Prop) => {
           </Dialog.Content>
         </Dialog.Portal>
       </Dialog.Root>
-      <QRCodeModal
-        userProfile={userProfile}
+
+      <QRCodeModalV2
+        //avoid unnecessary re-renders of passing card
+        userProfile={openQRCode ? card : undefined}
         open={openQRCode}
         onClose={() => setOpenQRCode(false)}
       />
