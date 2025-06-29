@@ -25,21 +25,21 @@ const Template13 = ({
   tiktokUrl,
 }: Card) => {
   return (
-    <div className="min-h-screen bg-gradient-to-br from-[#1a1a1a] via-[#232323] to-[#2d2327] text-white flex flex-col items-center py-8 px-4 relative overflow-hidden">
-      {/* Peach background light top right (background only) */}
-      <div
-        className="absolute -top-14 -right-8 w-52 h-52 pointer-events-none z-0"
-        style={{
-          background: 'radial-gradient(circle at 80% 20%, rgb(95, 56, 59) 85%, transparent 100%)',
-          borderRadius: '9999px',
-          filter: 'blur(32px)',
-          opacity: 0.85,
-        }}
-      ></div>
+    <div className="min-h-screen bg-gradient-to-br from-[#1a1a1a] via-[#232323] to-[#2d2327] text-white flex flex-col items-center justify-center py-8 px-4 relative overflow-hidden">
       {/* Content wrapper with higher z-index */}
-      <div className="relative z-10 w-full flex flex-col items-start">
+      <div className="relative z-10 w-full flex flex-col items-center">
+        {/* Peach background light top right (background only) */}
+        <div
+          className="absolute -top-14 ml-52 w-52 h-52 pointer-events-none z-0"
+          style={{
+            background: 'radial-gradient(circle at 80% 20%, rgb(95, 56, 59) 85%, transparent 100%)',
+            borderRadius: '9999px',
+            filter: 'blur(32px)',
+            opacity: 0.85,
+          }}
+        ></div>
         {/* Top right icons */}
-        <div className="absolute top-2 right-0 flex z-20">
+        <div className="flex justify-end w-full max-w-md mx-auto z-20 mb-2 gap-2">
           <button className="rounded-full transition">
             <img src="/assets/template13mailicon.svg" alt="Mail" className="w-8 h-8" />
           </button>
