@@ -227,12 +227,13 @@ export const editCardSchema = z.object({
     }, "Custom URL can only contain letters, numbers, hyphens, and underscores."),
   firstName: z.string().min(1, "First name is required").optional(),
   lastName: z.string().optional(),
-  email: z.string().optional(),
+  email: z.string().min(1, "Email is required").optional(),
   prefix: z.string().optional(),
   suffix: z.string().optional(),
   middleName: z.string().optional(),
   number: z
     .string()
+    .min(1, "Phone Number is required")
     .refine(isValidPhoneNumber, { message: "Invalid phone number" })
     .optional(),
 
