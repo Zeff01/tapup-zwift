@@ -87,7 +87,7 @@ export const columns: ColumnDef<ExtendedUserInterface>[] = [
       return (
         <div
           className={cn(
-            "place-self-start px-2 rounded-full capitalize bg-green-700 border-green-500 border",
+            "place-self-start px-2 text-white rounded-full capitalize bg-green-700 border-green-500 border",
             {
               "bg-red-700 border-red-500 border":
                 row.original?.role === "admin",

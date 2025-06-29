@@ -105,7 +105,7 @@ const PrintCardsTable = ({ cardsData }: { cardsData: PrintCardsInfo[] }) => {
   return (
     <div className="container mx-auto py-8 px-4">
       <div className="flex justify-between items-center mb-6 gap-4">
-        <h1 className="text-2xl min-[480px]:text-3xl font-bold">
+        <h1 className="text-lg min-[480px]:text-xl font-bold">
           Manage Print Cards
         </h1>
         <Button

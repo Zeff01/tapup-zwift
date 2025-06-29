@@ -128,7 +128,7 @@ export default function TransactionDashboard({
 
   return (
     <div className="container mx-auto py-8 px-4">
-      <h1 className="text-3xl font-bold mb-6">Transaction Dashboard</h1>
+      <h1 className="text-xl font-bold mb-6">Transaction Dashboard</h1>
       <div className="flex flex-col md:flex-row gap-4 mb-6">
         <div className="relative flex-1">
           <Search

@@ -48,7 +48,7 @@ import { useRouter } from "next/navigation";
 import React, { useState } from "react";
 import { IoCloseCircleOutline } from "react-icons/io5";
 import { toast } from "react-toastify";
-import QRCodeModal from "./qrcode/QRCodeModalV2";
+import QRCodeModalV2 from "./qrcode/QRCodeModalV2";
 import { Button } from "./ui/button";
 
 type Prop = {
@@ -72,15 +72,8 @@ const DigitalCard = ({ card, confirm, user }: Prop) => {
   const [confirmTransferCardDialog, setConfirmTransferCardDialog] =
     useState(false);
 
-  const userProfile = {
-    firstName: card?.firstName ?? "",
-    lastName: card?.lastName ?? "",
-    email: card?.email ?? "",
-    number: card?.number ?? "",
-    company: card?.company ?? "",
-    position: card?.position ?? "",
-    customUrl: card?.customUrl ?? "",
-  };
+
+   
 
   const [openQRCode, setOpenQRCode] = useState(false);
 
@@ -357,7 +350,7 @@ const DigitalCard = ({ card, confirm, user }: Prop) => {
       className="w-full relative"
     >
       <div className="w-full flex gap-3">
-        <div className="flex flex-col justify-center  items-center space-y-1">
+        <div className="flex flex-col justify-center  items-center space-y-1 ">
           <Tooltip>
             <TooltipTrigger asChild>
               {card.portfolioStatus && !isCardDisabled ? (
@@ -458,13 +451,13 @@ const DigitalCard = ({ card, confirm, user }: Prop) => {
         </div>
 
         <div
-          className={`flex-1 w-full aspect-[340/208] transition-transform duration-200 flex justify-between text-secondary bg-foreground rounded-xl overflow-hidden relative 
+          className={`flex-1 w-full aspect-[340/208] transition-transform duration-200 flex justify-between text-secondary bg-transparent rounded-xl overflow-hidden relative [background-size:contain] md:[background_size:cover]
             ${isCardExpired(card.expiryDate) || isCardDisabled || isLoading ? "opacity-50" : ""}
             ${open ? "blur-sm pointer-events-none" : ""}
           `}
           style={{
             backgroundImage: cardImage ? `url(${cardImage})` : "none",
-            backgroundSize: "cover",
+            // backgroundSize: "cover",
             backgroundPosition: "center",
             backgroundRepeat: "no-repeat",
           }}
@@ -474,7 +467,7 @@ const DigitalCard = ({ card, confirm, user }: Prop) => {
           <div className="absolute top-0 left-0 w-full h-full flex items-center justify-end">
             <GripVertical
               {...listeners}
-              className="size-12 z-10 cursor-grab text-white lg:size-8 opacity-50 hover:opacity-100 transition-opacity duration-150"
+              className="size-6 sm:size-12 z-10 cursor-grab text-white lg:size-8 opacity-50 hover:opacity-100 transition-opacity duration-150"
             />
           </div>
 
@@ -509,7 +502,7 @@ const DigitalCard = ({ card, confirm, user }: Prop) => {
           >
             <div className="flex-grow flex flex-col justify-between">
               <div>
-                <p className="text-[clamp(1.1rem,1.4vw,1.4rem)] font-semibold capitalize text-white">
+                <p className="text-[clamp(1rem,1.4vw,1.1rem)] mt-3 sm:mt-0 font-semibold capitalize text-white">
                   {(card.firstName || "") + " " + (card.lastName || "")}
                 </p>
                 <p className="text-xs capitalize text-white">
@@ -754,8 +747,10 @@ const DigitalCard = ({ card, confirm, user }: Prop) => {
           </Dialog.Content>
         </Dialog.Portal>
       </Dialog.Root>
-      <QRCodeModal
-        userProfile={userProfile}
+
+      <QRCodeModalV2
+        //avoid unnecessary re-renders of passing card
+        userProfile={openQRCode ? card : undefined}
         open={openQRCode}
         onClose={() => setOpenQRCode(false)}
       />
