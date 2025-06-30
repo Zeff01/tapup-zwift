@@ -39,7 +39,7 @@ import {
   CheckCircle2,
   Edit2,
   EyeIcon,
-  Forward,
+  QrCode,
   GripVertical,
   Loader2Icon,
 } from "lucide-react";
@@ -71,9 +71,6 @@ const DigitalCard = ({ card, confirm, user }: Prop) => {
   const [expiredDialogOpen, setExpiredDialogOpen] = useState(false);
   const [confirmTransferCardDialog, setConfirmTransferCardDialog] =
     useState(false);
-
-
-   
 
   const [openQRCode, setOpenQRCode] = useState(false);
 
@@ -334,7 +331,7 @@ const DigitalCard = ({ card, confirm, user }: Prop) => {
       tooltip: "Transfer Ownership",
     },
     {
-      icon: Forward,
+      icon: QrCode,
       fn: () => setOpenQRCode(true),
       tooltip: "Share Card",
     },
