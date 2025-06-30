@@ -6,13 +6,18 @@ import { FaWhatsapp, FaViber, FaTiktok, FaSkype } from "react-icons/fa6";
 const Template13 = ({
   firstName,
   lastName,
+  middleName,
+  suffix,
+  prefix,
   position,
+  coverPhotoUrl,
   profilePictureUrl,
   email,
   number,
   company,
   companyBackground,
   serviceDescription,
+  servicePhotos,
   facebookUrl,
   linkedinUrl,
   instagramUrl,
@@ -29,6 +34,7 @@ const Template13 = ({
       {/* Content wrapper with higher z-index */}
       <div className="relative z-10 w-full flex flex-col items-center">
         {/* Peach background light top right (background only) */}
+        {/*
         <div
           className="absolute -top-14 ml-52 w-52 h-52 pointer-events-none z-0"
           style={{
@@ -38,61 +44,75 @@ const Template13 = ({
             opacity: 0.85,
           }}
         ></div>
-        {/* Top right icons */}
-        <div className="flex justify-end w-full max-w-md mx-auto z-20 mb-2 gap-2">
-          <button className="rounded-full transition">
-            <img src="/assets/template13mailicon.svg" alt="Mail" className="w-8 h-8" />
-          </button>
-          <button className="rounded-full transition">
-            <img src="/assets/template13hearticon.svg" alt="Heart" className="w-8 h-8" />
-          </button>
-        </div>
-        {/* Profile section */}
-        <div className="flex flex-col items-start mt-20">
-          <div className="w-20 h-20 flex items-center justify-center mb-4 shadow-lg relative">
+        */}
+        {/* Cover Photo with Top Right Icons Overlay, now as background for profile */}
+        <div className="w-full max-w-md mb-8 relative flex flex-col items-center">
+          <div className="w-full h-40 rounded-2xl overflow-hidden bg-neutral-800 relative">
             <img
-              src={profilePictureUrl || "/default-user.png"}
-              alt="avatar"
-              className="w-24 h-24 object-cover"
-              style={{
-                WebkitMaskImage: 'url(/assets/template13profileshape.svg)',
-                maskImage: 'url(/assets/template13profileshape.svg)',
-                WebkitMaskSize: 'cover',
-                maskSize: 'cover',
-                WebkitMaskRepeat: 'no-repeat',
-                maskRepeat: 'no-repeat',
-                WebkitMaskPosition: 'center',
-                maskPosition: 'center',
-                background: '#fff', // fallback
-              }}
+              src={coverPhotoUrl || "/assets/sampleCoverPhoto.png"}
+              alt="Cover Photo"
+              className="object-cover w-full h-full"
             />
+            {/* Top right icons overlay */}
+            {/* <div className="absolute top-3 right-3 flex z-20 gap-2">
+              <button className="rounded-full transition p-1 shadow">
+                <img src="/assets/template13mailicon.svg" alt="Mail" className="w-8 h-8" style={{ filter: 'drop-shadow(0 0 2px #000)' }} />
+              </button>
+              <button className="rounded-full transition p-1 shadow">
+                <img src="/assets/template13hearticon.svg" alt="Heart" className="w-8 h-8" style={{ filter: 'drop-shadow(0 0 2px #000)' }} />
+              </button>
+            </div> */}
           </div>
-          <div className="flex items-center gap-2 mb-1">
-            <h1 className="text-xl font-bold text-white">{firstName} {lastName}</h1>
-            <span
-              className="text-black text-xs font-semibold px-2 py-0.5 rounded"
-              style={{
-                background: "linear-gradient(90deg, #d2ebb9 0%, #fce99c 100%)",
-                display: "inline-block",
-              }}
-            >
-              PRO
-            </span>
+          {/* Profile section, now overlapping the cover photo and aligned left */}
+          <div className="flex flex-col items-start w-full px-4 -mt-12 z-10">
+            <div className="w-24 h-24 flex items-center justify-center mb-4 shadow-lg relative">
+              <img
+                src={profilePictureUrl || "/default-user.png"}
+                alt="avatar"
+                className="w-24 h-24 object-cover"
+                style={{
+                  WebkitMaskImage: 'url(/assets/template13profileshape.svg)',
+                  maskImage: 'url(/assets/template13profileshape.svg)',
+                  WebkitMaskSize: 'cover',
+                  maskSize: 'cover',
+                  WebkitMaskRepeat: 'no-repeat',
+                  maskRepeat: 'no-repeat',
+                  WebkitMaskPosition: 'center',
+                  maskPosition: 'center',
+                  background: '#fff', // fallback
+                }}
+              />
+            </div>
+            <div className="flex items-center gap-2 mb-1">
+              <h1 className="text-xl font-bold text-white">
+                {firstName}
+                {middleName && <span> {middleName}</span>}
+                {lastName && <span> {lastName}</span>}
+                {suffix && <span>, {suffix}</span>}
+                {prefix && <span className="font-normal text-gray-300"> ({prefix})</span>}
+              </h1>
+              {/* <span
+                className="text-black text-xs font-semibold px-2 py-0.5 rounded"
+                style={{
+                  background: "linear-gradient(90deg, #d2ebb9 0%, #fce99c 100%)",
+                  display: "inline-block",
+                }}
+              >
+                PRO
+              </span> */}
+            </div>
+            <div className="text-base text-gray-300 mb-4">{position} {company && <>· {company}</>}</div>
+            <div className="flex gap-2 mb-2">
+              <button className="bg-[#eab8b9] text-black px-4 py-2 rounded-full font-medium flex items-center gap-2 hover:bg-[#d99ca0] transition">
+                <img src="/assets/template13rockhand.svg" alt="Rock hand" className="w-5 h-5" />
+                Let’s Talk
+              </button>
+              <button className="bg-white text-black px-4 py-2 rounded-full font-medium hover:bg-gray-200 transition">Save</button>
+            </div>
           </div>
-          <div className="text-base text-gray-300 mb-4">{position}</div>
-          <div className="flex gap-2 mb-6">
-            <button className="bg-[#eab8b9] text-black px-4 py-2 rounded-full font-medium flex items-center gap-2 hover:bg-[#d99ca0] transition">
-              <img src="/assets/template13rockhand.svg" alt="Rock hand" className="w-5 h-5" />
-              Let’s Talk
-            </button>
-            <button className="bg-white text-black px-4 py-2 rounded-full font-medium hover:bg-gray-200 transition">Save</button>
-          </div>
-          <p className="text-left text-gray-300 max-w-md mb-8">
-            A passionate product designer with experience in building a scalable design system for a company from the ground up.
-          </p>
         </div>
         {/* Contact Info */}
-        <div className="w-full max-w-md mb-8">
+        <div className="w-full max-w-md mb-8 px-4">
           <h2 className="text-lg font-bold mb-4 text-white text-left">Contact Information</h2>
           <div className="grid grid-cols-2 gap-y-2 text-gray-300">
             <span className="text-left">Email</span>
@@ -115,87 +135,40 @@ const Template13 = ({
           </div>
         </div>
         {/* Company Overview */}
-        <div className="w-full max-w-md mb-8">
+        <div className="w-full max-w-md mb-8 px-4">
           <h2 className="text-lg font-bold mb-2 text-white text-left">Company Overview</h2>
           <p className="text-gray-300 text-base text-left">
             {companyBackground || "Codebility is a tech consulting firm that specializes in custom software development, including web and mobile apps. They deliver scalable, user-friendly solutions using agile methodologies."}
           </p>
         </div>
         {/* Our Services */}
-        <div className="w-full max-w-md">
+        <div className="w-full max-w-md px-4">
           <h2 className="text-lg font-bold mb-4 text-white text-left">Our Services</h2>
-          <div className="flex flex-col gap-4">
-            {/* Service 1 */}
-            <div className="rounded-2xl bg-[#caeab8] text-black p-4 flex flex-col gap-2 relative overflow-hidden">
-              {/* Background SVG */}
-              <img
-                src="/assets/template13bgicon1.svg"
-                alt=""
-                aria-hidden="true"
-                className="absolute left-8 bottom-4 w-48 pointer-events-none select-none"
-                style={{ zIndex: 0 }}
-              />
-              <div className="font-bold text-lg text-left relative z-10">Custom Software Development</div>
-              <div className="text-sm text-left relative z-10">
-                We deliver tailored solutions that enhance efficiency, drive growth, and foster innovation for businesses across industries.
-              </div>
-              <div className="flex justify-end relative z-10">
+          {serviceDescription && (
+            <p className="text-gray-300 text-base text-left mb-4">
+              {serviceDescription}
+            </p>
+          )}
+          <div className="flex flex-col gap-4 pb-2">
+            {(servicePhotos && servicePhotos.length > 0
+              ? servicePhotos
+              : Array.from({ length: 5 }).map((_, i) => `/assets/sampleService.png`)
+            ).map((photo, idx) => (
+              <div key={idx} className="w-full flex justify-center">
                 <img
-                  src="/assets/template13service1.svg"
-                  alt="Custom Software Development"
-                  className="w-24 h-24"
-                  style={{ minWidth: 96, minHeight: 96 }}
+                  src={photo}
+                  alt={`Service Photo ${idx + 1}`}
+                  className="rounded-2xl object-cover w-full h-44 bg-white"
+                  style={{ minWidth: 0, minHeight: 176, maxWidth: '100%' }}
                 />
               </div>
-            </div>
-            {/* Service 2 */}
-            <div className="rounded-2xl bg-[#ffea97] text-black p-4 flex flex-col gap-2 relative overflow-hidden">
-              {/* Background SVG */}
-              <img
-                src="/assets/template13bgicon2.svg"
-                alt=""
-                aria-hidden="true"
-                className="absolute left-8 bottom-4 w-48 pointer-events-none select-none"
-                style={{ zIndex: 0 }}
-              />
-              <div className="font-bold text-lg text-left relative z-10">Web & Mobile App Development</div>
-              <div className="text-sm text-left relative z-10">
-                Building responsive, scalable, and secure applications.
-              </div>
-              <div className="flex justify-end relative z-10">
-                <img
-                  src="/assets/template13service2.svg"
-                  alt="Web & Mobile App Development"
-                  className="w-24 h-24"
-                  style={{ minWidth: 96, minHeight: 96 }}
-                />
-              </div>
-            </div>
-            {/* Service 3 */}
-            <div className="rounded-2xl bg-[#b6cce4] text-black p-4 flex flex-col gap-2 relative overflow-hidden">
-              {/* Background SVG */}
-              <img
-                src="/assets/template13bgicon3.svg"
-                alt=""
-                aria-hidden="true"
-                className="absolute left-8 bottom-4 w-48 pointer-events-none select-none"
-                style={{ zIndex: 0 }}
-              />
-              <div className="font-bold text-lg text-left relative z-10">Enterprise Software Development</div>
-              <div className="text-sm text-left relative z-10">
-                We provide scalable, efficient solutions for large organizations, optimizing workflows and supporting growth.
-              </div>
-              <div className="flex justify-end relative z-10">
-                <img
-                  src="/assets/template13service3.svg"
-                  alt="Enterprise Software Development"
-                  className="w-24 h-24"
-                  style={{ minWidth: 96, minHeight: 96 }}
-                />
-              </div>
-            </div>
+            ))}
           </div>
         </div>
+        <footer className="w-full max-w-md mx-auto mt-8 py-4 text-center text-gray-400 text-sm border-t border-neutral-800">
+          <div className="font-semibold text-base text-white mb-1">{company || "Your Company"}</div>
+          <div>© 2024 Zwiftech. All Right Reserved.</div>
+        </footer>
       </div>
     </div>
   );

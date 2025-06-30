@@ -82,7 +82,7 @@ const templates: Template[] = [
   },
   {
     id: "template13",
-    name: "Template 13",
+    name: "Urban Professional",
     imageUrl: "/assets/template13.png",
     route: "/create/template/13",
   },
