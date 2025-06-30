@@ -64,7 +64,8 @@ export const getVCardData = (card: Partial<Card>) => {
     tiktokUrl = "",
   } = card;
 
-  const url = customUrl || websiteUrl;
+  const portfolioUrl = customUrl ? customUrl : card.id;
+  const cardUrl = `https://www.tapup.tech/cards/${card.id}`;
 
   if (!email) {
     console.error("No email available for vCard");
@@ -91,13 +92,15 @@ export const getVCardData = (card: Partial<Card>) => {
     position && `TITLE:${position}`,
     number && `TEL;TYPE=cell:${number}`,
     `EMAIL;TYPE=work:${email}`,
-    url && `URL:${url}`,
+    `URL:${cardUrl}`,
+    portfolioUrl && `URL:https://www.tapup.tech/site/${portfolioUrl}`,
     facebookUrl && `URL:${facebookUrl}\nNOTE:Facebook`,
     instagramUrl && `URL:${instagramUrl}\nNOTE:Instagram`,
     linkedinUrl && `URL:${linkedinUrl}\nNOTE:LinkedIn`,
     twitterUrl && `URL:${twitterUrl}\nNOTE:Twitter`,
     youtubeUrl && `URL:${youtubeUrl}\nNOTE:YouTube`,
     tiktokUrl && `URL:${tiktokUrl}\nNOTE:TikTok`,
+    websiteUrl && `URL:${websiteUrl}`,
     whatsappNumber && `IMPP:whatsapp:${whatsappNumber}`,
     skypeInviteUrl && `IMPP:${skypeInviteUrl}`,
     viberUrl && `IMPP:viber:${viberUrl}`,
