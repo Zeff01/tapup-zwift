@@ -55,9 +55,7 @@ const CardGrid = ({
 }) => {
   const isMobile = useIsMobile();
   const { active } = useDndContext();
-  // const lastYRef = useRef<number | null>(null);
 
-  // Update dragActive state when a card is being dragged
   useEffect(() => {
     setDragActive(Boolean(active));
   }, [active, setDragActive]);
@@ -70,91 +68,89 @@ const CardGrid = ({
 
   const lastYRef = useRef<number | null>(null);
 
+  const cancelScroll = () => {
+    if (scrollRef.current.frame) {
+      cancelAnimationFrame(scrollRef.current.frame);
+      scrollRef.current.frame = null;
+    }
+    scrollRef.current.direction = null;
+    lastYRef.current = null;
+  };
+
   useDndMonitor({
     onDragMove(event) {
       const node = document.querySelector(`[data-id="${event.active.id}"]`) as HTMLElement | null;
       if (!node) return;
 
       const rect = node.getBoundingClientRect();
+      const centerY = rect.top + rect.height / 2;
       const windowHeight = window.innerHeight;
-      const threshold = 60;
+
+      const threshold = 120;
       const maxSpeed = 60;
       const minSpeed = 20;
-
-      const centerY = rect.top + rect.height / 2;
-      const lastY = lastYRef.current;
-
-      // Calculate direction
-      let movementDirection: "up" | "down" | null = null;
-      if (lastY !== null) {
-        const deltaY = centerY - lastY;
-        if (Math.abs(deltaY) > 1) {
-          movementDirection = deltaY > 0 ? "down" : "up";
-        }
-      }
-      lastYRef.current = centerY;
-
-      // Stop if no movement
-      if (!movementDirection) return;
-
       const topEdge = threshold;
       const bottomEdge = windowHeight - threshold;
 
-      let shouldScroll = false;
-      let scrollAmount = 0;
+      // Determine movement direction
+      const lastY = lastYRef.current;
+      let direction: "up" | "down" | null = null;
+      if (lastY !== null) {
+        const deltaY = centerY - lastY;
+        if (Math.abs(deltaY) > 1) {
+          direction = deltaY > 0 ? "down" : "up";
+        }
+      }
+      lastYRef.current = centerY;
+      if (!direction) return;
 
-      if (
-        movementDirection === "down" &&
-        rect.bottom > bottomEdge
-      ) {
-        const distance = Math.min(rect.bottom - bottomEdge, threshold);
-        scrollAmount = Math.max((distance / threshold) * maxSpeed, minSpeed);
-        scrollRef.current.direction = "down";
-        shouldScroll = true;
-      } else if (
-        movementDirection === "up" &&
-        rect.top < topEdge
-      ) {
-        const distance = Math.min(topEdge - rect.top, threshold);
-        scrollAmount = Math.max((distance / threshold) * maxSpeed, minSpeed);
-        scrollRef.current.direction = "up";
-        shouldScroll = true;
+      let distance = 0;
+      if (direction === "down" && rect.bottom > bottomEdge) {
+        distance = Math.min(rect.bottom - bottomEdge, threshold);
+      } else if (direction === "up" && rect.top < topEdge) {
+        distance = Math.min(topEdge - rect.top, threshold);
       } else {
-        scrollRef.current.direction = null;
+        cancelScroll(); // Stop if not near edge
+        return;
       }
 
-      if (!shouldScroll) return;
+      const ratio = distance / threshold;
+      const eased = ratio * ratio; // quadratic ease
+      const amount = minSpeed + (maxSpeed - minSpeed) * eased;
 
-      if (scrollRef.current.frame !== null) return;
+      // If direction changed, cancel existing scroll
+      if (scrollRef.current.direction !== direction && scrollRef.current.frame) {
+        cancelAnimationFrame(scrollRef.current.frame);
+        scrollRef.current.frame = null;
+      }
+
+      scrollRef.current.direction = direction;
+
+      if (scrollRef.current.frame) return;
 
       const scrollLoop = () => {
-        if (scrollRef.current.direction === "down") {
-          window.scrollBy({ top: scrollAmount, behavior: "auto" });
-          scrollRef.current.frame = requestAnimationFrame(scrollLoop);
-        } else if (scrollRef.current.direction === "up") {
-          window.scrollBy({ top: -scrollAmount, behavior: "auto" });
-          scrollRef.current.frame = requestAnimationFrame(scrollLoop);
-        } else {
-          scrollRef.current.frame = null;
+        const currentY = window.scrollY;
+        const maxScroll = document.documentElement.scrollHeight - window.innerHeight;
+
+        if (
+          (direction === "down" && currentY >= maxScroll) ||
+          (direction === "up" && currentY <= 0)
+        ) {
+          cancelScroll();
+          return;
         }
+
+        window.scrollBy({ top: direction === "down" ? amount : -amount });
+        scrollRef.current.frame = requestAnimationFrame(scrollLoop);
       };
 
       scrollRef.current.frame = requestAnimationFrame(scrollLoop);
     },
 
-    onDragEnd() {
-      cancelAnimationFrame(scrollRef.current.frame!);
-      scrollRef.current.frame = null;
-      scrollRef.current.direction = null;
-      lastYRef.current = null;
-    },
-    onDragCancel() {
-      cancelAnimationFrame(scrollRef.current.frame!);
-      scrollRef.current.frame = null;
-      scrollRef.current.direction = null;
-      lastYRef.current = null;
-    },
+    onDragEnd: cancelScroll,
+    onDragCancel: cancelScroll,
   });
+
 
 
   return (
@@ -243,9 +239,9 @@ const Cards = ({ setDragActive }: {
     useSensor(PointerSensor),
     useSensor(TouchSensor, {
       activationConstraint: {
-        delay: 1000,
-        tolerance: 5
-      }
+        delay: 150,
+        tolerance: 2,
+      },
     })
   );
 

@@ -425,11 +425,10 @@ const DigitalCard = ({ card, confirm, user }: Prop) => {
               <Tooltip key={index}>
                 <TooltipTrigger asChild>
                   <span
-                    className={`px-2 py-2 2xl:py-2 border dark:border-accent border-gray-300 rounded-md ${
-                      isDisabledState
-                        ? "opacity-30 cursor-not-allowed"
-                        : "hover:opacity-50 cursor-pointer"
-                    }`}
+                    className={`px-2 py-2 2xl:py-2 border dark:border-accent border-gray-300 rounded-md ${isDisabledState
+                      ? "opacity-30 cursor-not-allowed"
+                      : "hover:opacity-50 cursor-pointer"
+                      }`}
                     onClick={!isDisabledState ? item.fn : undefined}
                   >
                     <item.icon className="size-4 dark:text-white drop-shadow-md" />
@@ -463,21 +462,20 @@ const DigitalCard = ({ card, confirm, user }: Prop) => {
           onMouseEnter={() => setHovered(true)}
           onMouseLeave={() => setHovered(false)}
         >
-          <div className="absolute top-1/2 right-0 -translate-y-1/2 flex items-center justify-end mr-2 group z-10">
-            <div className="relative flex gap-5">
-              <span
-                className={`absolute w-max -left-44 text-lg text-white bg-black/70 px-2 py-1 rounded transition-opacity duration-150 z-10 ${
-                  showHint ? "opacity-100" : "opacity-0"
-                }`}
-              >
-                Hold to drag
-              </span>
+          <div className="absolute w-full top-1/2 right-0 -translate-y-1/2 flex items-center justify-end z-30">
+            <div className="relative flex items-center justify-end group">
+              {/* Tooltip - centered above the grip */}
+              <div className="absolute w-max -left-40 mb-1 transition-opacity duration-200 opacity-0 group-hover:opacity-100 peer-hover:opacity-100">
+                <span className="text-white bg-black/60 px-2 py-1 rounded">
+                  Hold to drag
+                </span>
+              </div>
+
+              {/* Grip */}
               <GripVertical
                 {...listeners}
-                onTouchStart={() => setShowHint(true)}
-                onTouchEnd={() => setShowHint(false)}
-                onTouchCancel={() => setShowHint(false)}
-                className="size-6  mr-2 sm:size-12 z-10 cursor-grab text-white lg:size-8 opacity-90 hover:opacity-100 transition-opacity duration-150 bg-black/20 rounded-md p-1"
+                className="z-30 mr-1.5 md:mr-2 peer size-6 sm:size-12 lg:size-8 cursor-grab text-white opacity-80 hover:opacity-100 transition-opacity duration-150 bg-black/20 rounded-md p-1"
+                style={{ touchAction: 'none' }}
               />
             </div>
           </div>
