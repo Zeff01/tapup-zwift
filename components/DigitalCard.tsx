@@ -39,9 +39,9 @@ import {
   CheckCircle2,
   Edit2,
   EyeIcon,
-  QrCode,
   GripVertical,
   Loader2Icon,
+  QrCode,
 } from "lucide-react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
@@ -425,10 +425,11 @@ const DigitalCard = ({ card, confirm, user }: Prop) => {
               <Tooltip key={index}>
                 <TooltipTrigger asChild>
                   <span
-                    className={`px-2 py-2 2xl:py-2 border dark:border-accent border-gray-300 rounded-md ${isDisabledState
-                      ? "opacity-30 cursor-not-allowed"
-                      : "hover:opacity-50 cursor-pointer"
-                      }`}
+                    className={`px-2 py-2 2xl:py-2 border dark:border-accent border-gray-300 rounded-md ${
+                      isDisabledState
+                        ? "opacity-30 cursor-not-allowed"
+                        : "hover:opacity-50 cursor-pointer"
+                    }`}
                     onClick={!isDisabledState ? item.fn : undefined}
                   >
                     <item.icon className="size-4 dark:text-white drop-shadow-md" />
@@ -465,8 +466,9 @@ const DigitalCard = ({ card, confirm, user }: Prop) => {
           <div className="absolute top-1/2 right-0 -translate-y-1/2 flex items-center justify-end mr-2 group z-10">
             <div className="relative flex gap-5">
               <span
-                className={`absolute w-max -left-44 text-lg text-white bg-black/70 px-2 py-1 rounded transition-opacity duration-150 z-10 ${showHint ? "opacity-100" : "opacity-0"
-                  }`}
+                className={`absolute w-max -left-44 text-lg text-white bg-black/70 px-2 py-1 rounded transition-opacity duration-150 z-10 ${
+                  showHint ? "opacity-100" : "opacity-0"
+                }`}
               >
                 Hold to drag
               </span>
@@ -475,7 +477,7 @@ const DigitalCard = ({ card, confirm, user }: Prop) => {
                 onTouchStart={() => setShowHint(true)}
                 onTouchEnd={() => setShowHint(false)}
                 onTouchCancel={() => setShowHint(false)}
-                className="size-10 sm:size-12 z-10 cursor-grab text-white lg:size-8 opacity-50 hover:opacity-100 transition-opacity duration-150"
+                className="size-6  mr-2 sm:size-12 z-10 cursor-grab text-white lg:size-8 opacity-90 hover:opacity-100 transition-opacity duration-150 bg-black/20 rounded-md p-1"
               />
             </div>
           </div>
