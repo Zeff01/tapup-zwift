@@ -1,11 +1,12 @@
 "use client";
 
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useRef, useMemo } from "react";
 //import { SortableCard } from "./SortableCard";
 import DigitalCard from "@/components/DigitalCard";
 import Link from "next/link";
 import { useUserContext } from "@/providers/user-provider";
 import { useQuery, useQueryClient } from "@tanstack/react-query";
+import { useIsMobile } from "@/hooks/use-mobile";
 import {
   getCardsByOwner,
   transferCardOwnershipUsingCode,
@@ -24,8 +25,11 @@ import { Loader2 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Card } from "@/types/types";
 import {
+  useDndContext,
+  useDndMonitor,
   DndContext,
   PointerSensor,
+  TouchSensor,
   useSensor,
   useSensors,
   closestCorners,
@@ -34,9 +38,154 @@ import {
   arrayMove,
   SortableContext,
   rectSortingStrategy,
+  verticalListSortingStrategy,
 } from "@dnd-kit/sortable";
+import { restrictToVerticalAxis, restrictToParentElement } from "@dnd-kit/modifiers";
 
-const Cards = () => {
+const CardGrid = ({
+  cards,
+  user,
+  confirm,
+  setDragActive,
+}: {
+  cards: Card[];
+  user: any;
+  confirm: any;
+  setDragActive: (dragging: boolean) => void;
+}) => {
+  const isMobile = useIsMobile();
+  const { active } = useDndContext();
+  // const lastYRef = useRef<number | null>(null);
+
+  // Update dragActive state when a card is being dragged
+  useEffect(() => {
+    setDragActive(Boolean(active));
+  }, [active, setDragActive]);
+
+  // Manual auto-scroll when dragging near screen edges
+  const scrollRef = useRef<{
+    frame: number | null;
+    direction: "up" | "down" | null;
+  }>({ frame: null, direction: null });
+
+  const lastYRef = useRef<number | null>(null);
+
+  useDndMonitor({
+    onDragMove(event) {
+      const node = document.querySelector(`[data-id="${event.active.id}"]`) as HTMLElement | null;
+      if (!node) return;
+
+      const rect = node.getBoundingClientRect();
+      const windowHeight = window.innerHeight;
+      const threshold = 60;
+      const maxSpeed = 60;
+      const minSpeed = 20;
+
+      const centerY = rect.top + rect.height / 2;
+      const lastY = lastYRef.current;
+
+      // Calculate direction
+      let movementDirection: "up" | "down" | null = null;
+      if (lastY !== null) {
+        const deltaY = centerY - lastY;
+        if (Math.abs(deltaY) > 1) {
+          movementDirection = deltaY > 0 ? "down" : "up";
+        }
+      }
+      lastYRef.current = centerY;
+
+      // Stop if no movement
+      if (!movementDirection) return;
+
+      const topEdge = threshold;
+      const bottomEdge = windowHeight - threshold;
+
+      let shouldScroll = false;
+      let scrollAmount = 0;
+
+      if (
+        movementDirection === "down" &&
+        rect.bottom > bottomEdge
+      ) {
+        const distance = Math.min(rect.bottom - bottomEdge, threshold);
+        scrollAmount = Math.max((distance / threshold) * maxSpeed, minSpeed);
+        scrollRef.current.direction = "down";
+        shouldScroll = true;
+      } else if (
+        movementDirection === "up" &&
+        rect.top < topEdge
+      ) {
+        const distance = Math.min(topEdge - rect.top, threshold);
+        scrollAmount = Math.max((distance / threshold) * maxSpeed, minSpeed);
+        scrollRef.current.direction = "up";
+        shouldScroll = true;
+      } else {
+        scrollRef.current.direction = null;
+      }
+
+      if (!shouldScroll) return;
+
+      if (scrollRef.current.frame !== null) return;
+
+      const scrollLoop = () => {
+        if (scrollRef.current.direction === "down") {
+          window.scrollBy({ top: scrollAmount, behavior: "auto" });
+          scrollRef.current.frame = requestAnimationFrame(scrollLoop);
+        } else if (scrollRef.current.direction === "up") {
+          window.scrollBy({ top: -scrollAmount, behavior: "auto" });
+          scrollRef.current.frame = requestAnimationFrame(scrollLoop);
+        } else {
+          scrollRef.current.frame = null;
+        }
+      };
+
+      scrollRef.current.frame = requestAnimationFrame(scrollLoop);
+    },
+
+    onDragEnd() {
+      cancelAnimationFrame(scrollRef.current.frame!);
+      scrollRef.current.frame = null;
+      scrollRef.current.direction = null;
+      lastYRef.current = null;
+    },
+    onDragCancel() {
+      cancelAnimationFrame(scrollRef.current.frame!);
+      scrollRef.current.frame = null;
+      scrollRef.current.direction = null;
+      lastYRef.current = null;
+    },
+  });
+
+
+  return (
+    <SortableContext
+      items={cards.map((c) => c.id as string)}
+      strategy={isMobile ? verticalListSortingStrategy : rectSortingStrategy}
+    >
+      <div
+        className="
+          grid justify-center justify-items-center
+          grid-cols-[repeat(auto-fill,minmax(17rem,24rem))]
+          xl:justify-start xl:grid-cols-[repeat(auto-fill,minmax(22rem,1fr))]
+          gap-4 md:px-2
+        "
+      >
+        {cards.map((card) => (
+          <DigitalCard
+            key={card.id}
+            user={user}
+            confirm={confirm}
+            card={card}
+          />
+        ))}
+      </div>
+    </SortableContext>
+  );
+};
+
+const Cards = ({ setDragActive }: {
+  setDragActive: (value: boolean) => void;
+}) => {
   const [ConfirmDialog, confirm] = useConfirm(
     "Are you sure ?",
     "You are about to delete this card"
@@ -90,7 +239,22 @@ const Cards = () => {
     if (cards) setOrderedCards(cards);
   }, [cards]);
 
-  const sensors = useSensors(useSensor(PointerSensor));
+  const sensors = useSensors(
+    useSensor(PointerSensor),
+    useSensor(TouchSensor, {
+      activationConstraint: {
+        delay: 1000,
+        tolerance: 5
+      }
+    })
+  );
+
+  const isMobile = useIsMobile(); // your custom hook
+
+  const dndModifiers = useMemo(() => {
+    const base = [restrictToParentElement];
+    return isMobile ? [restrictToVerticalAxis, ...base] : base;
+  }, [isMobile]);
 
   const handleDragEnd = async (event: any) => {
     const { active, over } = event;
@@ -139,7 +303,7 @@ const Cards = () => {
   return (
     <>
       <ConfirmDialog />
-      <div className="grid grid-cols-1 grid-rows-[auto_1fr] min-h-screen py-4 md:py-8 gap-2 lg:gap-4">
+      <div className="grid grid-cols-1 grid-rows-[auto_1fr] min-h-screen py-4 md:py-8 gap-4">
         <div className="flex items-center justify-between px-4 md:px-16">
           <h1 className="text-xl md:text-2xl font-semibold">My Cards</h1>
           <div className="flex gap-x-2">
@@ -157,38 +321,23 @@ const Cards = () => {
             <DndContext
               sensors={sensors}
               collisionDetection={closestCorners}
+              modifiers={dndModifiers}
               onDragEnd={handleDragEnd}
             >
-              <SortableContext
-                items={orderedCards
-                  .filter((c) => c.id !== undefined)
-                  .map((c) => c.id as string)}
-                strategy={rectSortingStrategy}
-              >
-                {orderedCards.length > 0 ? (
-                  <div className="grid justify-center grid-cols-[repeat(auto-fill,minmax(17rem,24rem))] justify-items-center xl:justify-start xl:grid-cols-[repeat(auto-fill,minmax(22rem,1fr))] gap-4 md:px-2 outline-2 outline-red-400">
-                    {orderedCards.map((card) => (
-                      <DigitalCard
-                        user={user}
-                        confirm={confirm}
-                        key={card.id}
-                        card={card}
-                      />
-                    ))}
+              {orderedCards.length > 0 ? (
+                <CardGrid cards={orderedCards} user={user} confirm={confirm} setDragActive={setDragActive} />
+              ) : (
+                <div className="col-span-full flex flex-col items-center justify-center min-h-[60vh]">
+                  <div className="flex flex-col items-center">
+                    <h2 className="text-2xl md:text-3xl font-bold text-greenTitle mb-4">
+                      No Cards Yet
+                    </h2>
+                    <p className="text-base md:text-lg text-grayDescription text-center mb-8 max-w-md">
+                      Create your first digital business card to get started!
+                    </p>
                   </div>
-                ) : (
-                  <div className="col-span-full flex flex-col items-center justify-center min-h-[60vh]">
-                    <div className="flex flex-col items-center">
-                      <h2 className="text-2xl md:text-3xl font-bold text-greenTitle mb-4">
-                        No Cards Yet
-                      </h2>
-                      <p className="text-base md:text-lg text-grayDescription text-center mb-8 max-w-md">
-                        Create your first digital business card to get started!
-                      </p>
-                    </div>
-                  </div>
-                )}
-              </SortableContext>
+                </div>
+              )}
             </DndContext>
           </TooltipProvider>
         </div>
@@ -218,9 +367,8 @@ const Cards = () => {
                     </Dialog.Close>
                   )}
                   <button
-                    className={`$${
-                      loadTransferCode && "opacity-75"
-                    } bg-green-500 px-4 py-2 text-white rounded flex items-center`}
+                    className={`$${loadTransferCode && "opacity-75"
+                      } bg-green-500 px-4 py-2 text-white rounded flex items-center`}
                     onClick={handleTransferOwnership}
                     disabled={loadTransferCode}
                   >
