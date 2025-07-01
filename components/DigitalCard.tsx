@@ -474,7 +474,7 @@ const DigitalCard = ({ card, confirm, user }: Prop) => {
               {/* Grip */}
               <GripVertical
                 {...listeners}
-                className="z-30 mr-1.5 md:mr-2 peer size-6 sm:size-12 lg:size-8 cursor-grab text-white opacity-80 hover:opacity-100 transition-opacity duration-150 bg-black/20 rounded-md p-1"
+                className="z-30 mr-1.5 md:mr-3.5 peer size-6 sm:size-12 lg:size-8 cursor-grab text-white opacity-80 hover:opacity-100 transition-opacity duration-150 bg-black/20 rounded-md p-1"
                 style={{ touchAction: 'none' }}
               />
             </div>
