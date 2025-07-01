@@ -13,11 +13,12 @@ import Template9 from "@/components/templates/Template9";
 import Template10 from "@/components/templates/Template10";
 import Template11 from "@/components/templates/Template11";
 import Template12 from "@/components/templates/Template12";
+import Template13 from "@/components/templates/Template13";
+import Template14 from "@/components/templates/Template14";
 import DraftTemplate1 from "@/components/templates/DraftTemplate1";
 import { Card as cardType } from "@/types/types";
 import { Card, CardContent } from "@/components/ui/card";
 import Link from "next/link";
-import Template13 from "@/components/templates/Template13";
 
 const UserPage = ({ userData }: { userData: cardType }) => {
   const renderTemplate = {
@@ -34,6 +35,7 @@ const UserPage = ({ userData }: { userData: cardType }) => {
     template11: <Template11 {...userData} />,
     template12: <Template12 {...userData} />,
     template13: <Template13 {...userData} />,
+    template14: <Template14 {...userData} />,
   };
 
   interface ChosenTemplateType {
