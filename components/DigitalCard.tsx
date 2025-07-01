@@ -50,6 +50,7 @@ import { IoCloseCircleOutline } from "react-icons/io5";
 import { toast } from "react-toastify";
 import QRCodeModalV2 from "./qrcode/QRCodeModalV2";
 import { Button } from "./ui/button";
+import { useIsMobile } from "@/hooks/use-mobile";
 
 type Prop = {
   card: Partial<Card>;
@@ -465,7 +466,7 @@ const DigitalCard = ({ card, confirm, user }: Prop) => {
           <div className="absolute w-full top-1/2 right-0 -translate-y-1/2 flex items-center justify-end z-30">
             <div className="relative flex items-center justify-end group">
               {/* Tooltip - centered above the grip */}
-              <div className="absolute w-max -left-40 mb-1 transition-opacity duration-200 opacity-0 group-hover:opacity-100 peer-hover:opacity-100">
+              <div className={`absolute w-max -left-40 mb-1 transition-opacity duration-200  ${showHint ? "opacity-100" : "opacity-0"}`}>
                 <span className="text-white bg-black/60 px-2 py-1 rounded">
                   Hold to drag
                 </span>
@@ -474,6 +475,9 @@ const DigitalCard = ({ card, confirm, user }: Prop) => {
               {/* Grip */}
               <GripVertical
                 {...listeners}
+                onTouchStart={() => setShowHint(true)}
+                onTouchEnd={() => setShowHint(false)}
+                onTouchCancel={() => setShowHint(false)}
                 className="z-30 mr-1.5 md:mr-3.5 peer size-6 sm:size-12 lg:size-8 cursor-grab text-white opacity-80 hover:opacity-100 transition-opacity duration-150 bg-black/20 rounded-md p-1"
                 style={{ touchAction: 'none' }}
               />
