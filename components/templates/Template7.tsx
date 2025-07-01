@@ -12,6 +12,7 @@ import {
 import { downloadVCard } from "@/lib/utils";
 
 const Template7 = ({
+  id,
   profilePictureUrl,
   coverPhotoUrl,
   position,
@@ -31,8 +32,10 @@ const Template7 = ({
   whatsappNumber,
   skypeInviteUrl,
   websiteUrl,
+  customUrl,
 }: Card) => {
   const userProfile = {
+    id,
     profilePictureUrl,
     coverPhotoUrl,
     servicePhotos,
@@ -44,6 +47,7 @@ const Template7 = ({
     company,
     position,
     websiteUrl,
+    customUrl,
   };
 
   return (

@@ -15,6 +15,7 @@ import {
 import { RxEnvelopeClosed } from "react-icons/rx";
 
 const Template2 = ({
+  id,
   profilePictureUrl,
   coverPhotoUrl,
   position,
@@ -34,8 +35,10 @@ const Template2 = ({
   whatsappNumber,
   skypeInviteUrl,
   websiteUrl,
+  customUrl,
 }: Card) => {
   const userProfile = {
+    id,
     firstName,
     lastName,
     email,
@@ -43,6 +46,7 @@ const Template2 = ({
     company,
     position,
     websiteUrl,
+    customUrl,
   };
 
   return (

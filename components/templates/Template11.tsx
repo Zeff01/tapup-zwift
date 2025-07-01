@@ -34,6 +34,7 @@ import { SiSkypeforbusiness } from "react-icons/si";
 import { Separator } from "../ui/separator";
 
 const Template11 = ({
+  id,
   profilePictureUrl,
   coverPhotoUrl,
   position,
@@ -53,8 +54,10 @@ const Template11 = ({
   whatsappNumber,
   skypeInviteUrl,
   websiteUrl,
+  customUrl,
 }: Card) => {
   const userProfile = {
+    id,
     firstName,
     lastName,
     email,
@@ -62,6 +65,7 @@ const Template11 = ({
     company,
     position,
     websiteUrl,
+    customUrl,
   };
 
   return (

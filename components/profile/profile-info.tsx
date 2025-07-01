@@ -13,6 +13,7 @@ import { TbMailPlus } from "react-icons/tb";
 import Link from "next/link";
 
 const ProfileInfo = ({
+  id,
   profilePictureUrl,
   coverPhotoUrl,
   position,
@@ -22,9 +23,11 @@ const ProfileInfo = ({
   email,
   number,
   websiteUrl,
+  customUrl,
   chosenTemplate,
 }: Partial<Card>) => {
   const userProfile = {
+    id,
     firstName,
     lastName,
     email,
@@ -32,6 +35,7 @@ const ProfileInfo = ({
     company,
     position,
     websiteUrl,
+    customUrl,
   };
 
   return (

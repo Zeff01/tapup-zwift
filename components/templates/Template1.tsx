@@ -14,6 +14,7 @@ import {
 } from "react-icons/fa6";
 
 const Template1 = ({
+  id,
   profilePictureUrl,
   coverPhotoUrl,
   position,
@@ -33,8 +34,10 @@ const Template1 = ({
   whatsappNumber,
   skypeInviteUrl,
   websiteUrl,
+  customUrl,
 }: Card) => {
   const userProfile = {
+    id,
     firstName,
     lastName,
     email,
@@ -42,6 +45,7 @@ const Template1 = ({
     company,
     position,
     websiteUrl,
+    customUrl,
   };
 
   return (
