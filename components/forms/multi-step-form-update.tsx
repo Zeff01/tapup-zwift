@@ -677,6 +677,7 @@ const MultiStepFormUpdate = ({
                           templateId={selectedTemplateId}
                           formData={{
                             ...methods.watch(),
+                            id: userData.id!,
                             chosenPhysicalCard: {
                               id: methods.watch().chosenPhysicalCard || "",
                             },
