@@ -16,6 +16,7 @@ import {
 } from "react-icons/fa6";
 
 const Template3 = ({
+  id,
   profilePictureUrl,
   coverPhotoUrl,
   position,
@@ -35,8 +36,10 @@ const Template3 = ({
   whatsappNumber,
   skypeInviteUrl,
   websiteUrl,
+  customUrl,
 }: Card) => {
   const userProfile = {
+    id,
     firstName,
     lastName,
     email,
@@ -44,6 +47,7 @@ const Template3 = ({
     company,
     position,
     websiteUrl,
+    customUrl,
   };
   return (
     <div className="bg-black text-white  flex flex-col items-center justify-between  min-h-screen  ">

@@ -20,7 +20,7 @@ export default function QRCodeModalV2({
 }) {
   if (!open || !userProfile) return null;
 
-  const vCardData = getVCardData(userProfile);
+  const vCardData = getVCardData(userProfile, true);
 
   const handleDownloadQRCode = () => {
     const canvas = document.getElementById("qrCodeCanvas") as HTMLCanvasElement;
