@@ -143,9 +143,10 @@ export default function SortableCards({ cards, user, confirm }: SortableCardsPro
             <DragOverlay
                 modifiers={[restrictToWindowEdges]}
                 dropAnimation={{
-                    duration: 500,
-                    easing: 'cubic-bezier(0.18, 0.67, 0.6, 1.22)',
+                    duration: 250,
+                    easing: 'ease-out',
                 }}
+
             >
                 {activeCard ? (
                     <DigitalCardOverlay card={activeCard} />
