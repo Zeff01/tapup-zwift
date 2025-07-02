@@ -44,7 +44,7 @@ import {
 } from "lucide-react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { IoCloseCircleOutline } from "react-icons/io5";
 import { toast } from "react-toastify";
 import QRCodeModalV2 from "./qrcode/QRCodeModalV2";
@@ -66,7 +66,6 @@ const DigitalCard = ({ card, confirm, user }: Prop) => {
   const [open, setOpen] = useState(false);
   const [customUrl, setCustomUrl] = useState("");
   const [hovered, setHovered] = useState(false);
-  const [isBeingDragged, setIsBeingDragged] = useState(false);
   const [transferOpen, setTransferOpen] = useState(false);
   const [newOwnerEmail, setNewOwnerEmail] = useState("");
   const [expiredDialogOpen, setExpiredDialogOpen] = useState(false);
@@ -80,8 +79,12 @@ const DigitalCard = ({ card, confirm, user }: Prop) => {
       ? process.env.NEXT_PUBLIC_RESET_PASSWORD_URL_DEV
       : process.env.NEXT_PUBLIC_RESET_PASSWORD_URL_PROD;
 
-  const { attributes, listeners, setNodeRef, transform, transition } =
+  const { attributes, listeners, setNodeRef, transform, transition, isDragging } =
     useSortable({ id: card.id as UniqueIdentifier });
+
+  useEffect(() => {
+    console.log(`isDragging: ${isDragging}`)
+  }, [isDragging])
 
   const style = {
     transform: CSS.Transform.toString(transform),
@@ -341,7 +344,7 @@ const DigitalCard = ({ card, confirm, user }: Prop) => {
       className="w-full relative"
     >
       <div className="w-full flex gap-3">
-        <div className={`flex flex-col justify-center  items-center space-y-1 ${isBeingDragged  ? "opacity-20 grayscale" : ""}`}>
+        <div className={`flex flex-col justify-center  items-center space-y-1 ${isDragging ? "opacity-20 grayscale" : ""}`}>
           <Tooltip>
             <TooltipTrigger asChild>
               {card.portfolioStatus && !isCardDisabled ? (
@@ -444,7 +447,7 @@ const DigitalCard = ({ card, confirm, user }: Prop) => {
           className={`flex-1 w-full aspect-[340/208] transition-transform duration-200 flex justify-between text-secondary bg-transparent rounded-xl overflow-hidden relative [background-size:contain] md:[background_size:cover]
             ${isCardExpired(card.expiryDate) || isCardDisabled || isLoading ? "opacity-50" : ""}
             ${open ? "blur-sm pointer-events-none" : ""}
-            ${isBeingDragged  ? "opacity-20 grayscale" : ""}
+            ${isDragging ? "opacity-20 grayscale" : ""}
           `}
           style={{
             backgroundImage: cardImage ? `url(${cardImage})` : "none",
@@ -459,9 +462,6 @@ const DigitalCard = ({ card, confirm, user }: Prop) => {
             <div className="relative flex items-center justify-end group">
               <GripVertical
                 {...listeners}
-                onTouchStart={() => setIsBeingDragged(true)}
-                onTouchEnd={() => setIsBeingDragged(false)}
-                onTouchCancel={() => setIsBeingDragged(false)}
                 className="z-30 mr-2 md:mr-3.5 peer size-6 sm:size-12 lg:size-8 cursor-grab text-white opacity-80 hover:opacity-100 transition-opacity duration-150 bg-black/20 rounded-md p-1"
                 style={{ touchAction: 'none' }}
               />
@@ -475,7 +475,7 @@ const DigitalCard = ({ card, confirm, user }: Prop) => {
           )}
 
           {(isCardExpired(card.expiryDate) || isCardDisabled) && !isLoading && (
-            <div className="absolute left-0 top-0 w-[100%] h-full flex items-center justify-center bg-black/60 text-white text-lg font-semibold">
+            <div className="absolute left-0 top-0 w-full h-full flex items-center justify-center bg-black/60 text-white text-lg font-semibold">
               {isCardDisabled ? "Disabled" : "Expired"}
             </div>
           )}

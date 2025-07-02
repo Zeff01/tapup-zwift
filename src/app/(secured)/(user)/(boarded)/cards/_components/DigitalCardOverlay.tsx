@@ -1,7 +1,6 @@
 "use client";
 
 import { UniqueIdentifier } from "@dnd-kit/core";
-import { useSortable } from "@dnd-kit/sortable";
 import { CSS } from "@dnd-kit/utilities";
 import { GripVertical, EyeIcon, Edit2, CheckCircle2, ArrowRightLeft, QrCode } from "lucide-react";
 import Link from "next/link";
@@ -22,18 +21,9 @@ const isCardExpired = (expiryDate?: number) => {
 };
 
 const DigitalCardOverlay = ({ card }: Prop) => {
-  const [hovered, setHovered] = useState(false);
-
-  const { attributes, listeners, setNodeRef, transform, transition } =
-    useSortable({ id: card.id as UniqueIdentifier });
 
   const cardImage = getCardImage(card.chosenPhysicalCard?.id);
   const isCardDisabled = card.disabled ?? false;
-
-  const style = {
-    transform: CSS.Transform.toString(transform),
-    transition,
-  };
 
   const iconButtons = [
     { icon: EyeIcon, tooltip: "Preview" },
@@ -46,9 +36,6 @@ const DigitalCardOverlay = ({ card }: Prop) => {
   return (
     <div
       data-id={card.id}
-      ref={setNodeRef}
-      style={style}
-      {...attributes}
       className="w-full relative"
     >
       <div className="w-full flex gap-2.5">
@@ -64,24 +51,24 @@ const DigitalCardOverlay = ({ card }: Prop) => {
         </div>
 
         <div
-          className={`flex-1 w-full aspect-[340/208] transition-transform duration-200 flex justify-between text-secondary bg-transparent rounded-xl overflow-hidden relative [background-size:contain] md:[background_size:cover]}`}
+          className={`flex-1 w-full aspect-[340/208] transition-transform duration-200 flex justify-between text-secondary bg-transparent rounded-xl overflow-hidden relative [background-size:contain] md:[background_size:cover]}
+            ${isCardExpired(card.expiryDate) || isCardDisabled ? "opacity-50" : ""}
+            `}
           style={{
             backgroundImage: cardImage ? `url(${cardImage})` : "none",
             backgroundPosition: "center",
             backgroundRepeat: "no-repeat",
-          }} onMouseEnter={() => setHovered(true)}
-          onMouseLeave={() => setHovered(false)}
+          }}
         >
-          {hovered && (
-            <div className="absolute bottom-5 right-5 bg-black text-white text-xs px-2 py-1 rounded-lg shadow-lg">
-              Card Overlay
+          {(isCardExpired(card.expiryDate) || isCardDisabled) && (
+            <div className="absolute left-0 top-0 w-full h-full flex items-center justify-center bg-black/60 text-white text-lg font-semibold">
+              {isCardDisabled ? "Disabled" : "Expired"}
             </div>
           )}
 
           <div className="absolute w-full top-1/2 right-0 -translate-y-1/2 flex items-center justify-end z-30">
             <GripVertical
-              {...listeners}
-              className="z-30 mr-3 size-6 cursor-grab text-white opacity-80 hover:opacity-100 bg-black/20 rounded-md p-1"
+              className="z-30 mr-2 md:mr-3.5 peer size-6 sm:size-12 lg:size-8 cursor-grab text-white opacity-80 hover:opacity-100 transition-opacity duration-150 bg-black/20 rounded-md p-1"
               style={{ touchAction: 'none' }}
             />
           </div>
@@ -95,10 +82,10 @@ const DigitalCardOverlay = ({ card }: Prop) => {
             <div className="flex-grow flex flex-col justify-between">
               <div>
                 <p className="text-[clamp(1rem,1.4vw,1.1rem)] mt-3 sm:mt-0 font-semibold capitalize text-white">
-                  {card.firstName || "First"} {card.lastName || "Last"}
+                  {(card.firstName || "") + " " + (card.lastName || "")}
                 </p>
                 <p className="text-xs capitalize text-white">
-                  {card.position || "Position"}
+                  {card.position || ""}
                 </p>
               </div>
             </div>
