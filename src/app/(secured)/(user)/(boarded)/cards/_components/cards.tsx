@@ -32,9 +32,7 @@ import {
 import { arrayMove } from "@dnd-kit/sortable";
 import { restrictToVerticalAxis, restrictToParentElement } from "@dnd-kit/modifiers";
 
-const Cards = ({ setDragActive }: {
-  setDragActive: (value: boolean) => void;
-}) => {
+const Cards = () => {
   const [ConfirmDialog, confirm] = useConfirm(
     "Are you sure ?",
     "You are about to delete this card"
@@ -150,7 +148,7 @@ const Cards = ({ setDragActive }: {
           <div className="px-4 md:px-14">
             <TooltipProvider>
               {orderedCards.length > 0 ? (
-                <SortableCards cards={orderedCards} user={user} confirm={confirm} setDragActive={setDragActive} />
+                <SortableCards cards={orderedCards} user={user} confirm={confirm} />
               ) : (
                 <div className="col-span-full flex flex-col items-center justify-center min-h-[60vh]">
                   <div className="flex flex-col items-center">

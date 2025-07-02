@@ -1,9 +1,8 @@
-import { useEffect, useRef } from "react";
+import { useRef } from "react";
 import { Card } from "@/types/types";
 import DigitalCard from "@/components/DigitalCard";
 import { useIsMobile } from "@/hooks/use-mobile";
 import {
-    useDndContext,
     useDndMonitor,
 } from "@dnd-kit/core";
 import {
@@ -16,16 +15,10 @@ interface SortableCardsProps {
     cards: Card[];
     user: any;
     confirm: any;
-    setDragActive: (dragging: boolean) => void;
 }
 
-export default function SortableCards({ cards, user, confirm, setDragActive }: SortableCardsProps) {
+export default function SortableCards({ cards, user, confirm }: SortableCardsProps) {
     const isMobile = useIsMobile();
-    const { active } = useDndContext();
-
-    useEffect(() => {
-        setDragActive(Boolean(active));
-    }, [active, setDragActive]);
 
     // Manual auto-scroll when dragging near screen edges
     const scrollRef = useRef<{
@@ -117,8 +110,6 @@ export default function SortableCards({ cards, user, confirm, setDragActive }: S
         onDragEnd: cancelScroll,
         onDragCancel: cancelScroll,
     });
-
-
 
     return (
         <SortableContext
