@@ -3,6 +3,7 @@ import { clsx, type ClassValue } from "clsx";
 import { PixelCrop } from "react-image-crop";
 import { twMerge } from "tailwind-merge";
 import { getUserCardOrdering } from "./firebase/actions/user.action";
+import { carouselCards } from "@/constants";
 
 export function cn(...inputs: ClassValue[]) {
   return twMerge(clsx(inputs));
@@ -280,4 +281,12 @@ export async function sortCards(
   );
 
   return [...sorted, ...unordered];
+};
+
+export const getCardImage = (cardId?: string) => {
+  const cardItem =
+    Object.values(carouselCards).find((item) => item.id === cardId) ??
+    carouselCards[cardId as keyof typeof carouselCards];
+
+  return cardItem ? cardItem.image : undefined;
 };

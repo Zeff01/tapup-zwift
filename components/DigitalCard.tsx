@@ -1,6 +1,5 @@
 "use client";
 
-import { carouselCards } from "@/constants";
 import {
   addCustomUrl,
   deleteCardById,
@@ -50,7 +49,7 @@ import { IoCloseCircleOutline } from "react-icons/io5";
 import { toast } from "react-toastify";
 import QRCodeModalV2 from "./qrcode/QRCodeModalV2";
 import { Button } from "./ui/button";
-import { useIsMobile } from "@/hooks/use-mobile";
+import { getCardImage } from "@/lib/utils";
 
 type Prop = {
   card: Partial<Card>;
@@ -67,7 +66,7 @@ const DigitalCard = ({ card, confirm, user }: Prop) => {
   const [open, setOpen] = useState(false);
   const [customUrl, setCustomUrl] = useState("");
   const [hovered, setHovered] = useState(false);
-  const [showHint, setShowHint] = useState(false);
+  const [isBeingDragged, setIsBeingDragged] = useState(false);
   const [transferOpen, setTransferOpen] = useState(false);
   const [newOwnerEmail, setNewOwnerEmail] = useState("");
   const [expiredDialogOpen, setExpiredDialogOpen] = useState(false);
@@ -136,14 +135,6 @@ const DigitalCard = ({ card, confirm, user }: Prop) => {
       toast.error("Something went wrong");
     },
   });
-
-  const getCardImage = (cardId?: string) => {
-    const cardItem =
-      Object.values(carouselCards).find((item) => item.id === cardId) ??
-      carouselCards[cardId as keyof typeof carouselCards];
-
-    return cardItem ? cardItem.image : undefined;
-  };
 
   const cardImage = getCardImage(card.chosenPhysicalCard?.id);
 
@@ -350,7 +341,7 @@ const DigitalCard = ({ card, confirm, user }: Prop) => {
       className="w-full relative"
     >
       <div className="w-full flex gap-3">
-        <div className="flex flex-col justify-center  items-center space-y-1 ">
+        <div className={`flex flex-col justify-center  items-center space-y-1 ${isBeingDragged  ? "opacity-20 grayscale" : ""}`}>
           <Tooltip>
             <TooltipTrigger asChild>
               {card.portfolioStatus && !isCardDisabled ? (
@@ -453,6 +444,7 @@ const DigitalCard = ({ card, confirm, user }: Prop) => {
           className={`flex-1 w-full aspect-[340/208] transition-transform duration-200 flex justify-between text-secondary bg-transparent rounded-xl overflow-hidden relative [background-size:contain] md:[background_size:cover]
             ${isCardExpired(card.expiryDate) || isCardDisabled || isLoading ? "opacity-50" : ""}
             ${open ? "blur-sm pointer-events-none" : ""}
+            ${isBeingDragged  ? "opacity-20 grayscale" : ""}
           `}
           style={{
             backgroundImage: cardImage ? `url(${cardImage})` : "none",
@@ -465,20 +457,12 @@ const DigitalCard = ({ card, confirm, user }: Prop) => {
         >
           <div className="absolute w-full top-1/2 right-0 -translate-y-1/2 flex items-center justify-end z-30">
             <div className="relative flex items-center justify-end group">
-              {/* Tooltip - centered above the grip */}
-              <div className={`absolute w-max -left-40 mb-1 transition-opacity duration-200  ${showHint ? "opacity-100" : "opacity-0"}`}>
-                <span className="text-white bg-black/60 px-2 py-1 rounded">
-                  Hold to drag
-                </span>
-              </div>
-
-              {/* Grip */}
               <GripVertical
                 {...listeners}
-                onTouchStart={() => setShowHint(true)}
-                onTouchEnd={() => setShowHint(false)}
-                onTouchCancel={() => setShowHint(false)}
-                className="z-30 mr-1.5 md:mr-3.5 peer size-6 sm:size-12 lg:size-8 cursor-grab text-white opacity-80 hover:opacity-100 transition-opacity duration-150 bg-black/20 rounded-md p-1"
+                onTouchStart={() => setIsBeingDragged(true)}
+                onTouchEnd={() => setIsBeingDragged(false)}
+                onTouchCancel={() => setIsBeingDragged(false)}
+                className="z-30 mr-2 md:mr-3.5 peer size-6 sm:size-12 lg:size-8 cursor-grab text-white opacity-80 hover:opacity-100 transition-opacity duration-150 bg-black/20 rounded-md p-1"
                 style={{ touchAction: 'none' }}
               />
             </div>

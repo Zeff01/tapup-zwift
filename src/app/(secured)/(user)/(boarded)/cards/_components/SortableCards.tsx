@@ -1,16 +1,21 @@
 import { useRef } from "react";
 import { Card } from "@/types/types";
 import DigitalCard from "@/components/DigitalCard";
+import DigitalCardOverlay from "./DigitalCardOverlay";
 import { useIsMobile } from "@/hooks/use-mobile";
 import {
     useDndMonitor,
+    DragOverlay,
+    useDndContext,
 } from "@dnd-kit/core";
 import {
     SortableContext,
     rectSortingStrategy,
     verticalListSortingStrategy,
 } from "@dnd-kit/sortable";
-
+import {
+    restrictToWindowEdges,
+} from '@dnd-kit/modifiers';
 interface SortableCardsProps {
     cards: Card[];
     user: any;
@@ -19,6 +24,8 @@ interface SortableCardsProps {
 
 export default function SortableCards({ cards, user, confirm }: SortableCardsProps) {
     const isMobile = useIsMobile();
+    const { active } = useDndContext();
+    const activeCard = cards.find((card) => card.id === active?.id);
 
     // Manual auto-scroll when dragging near screen edges
     const scrollRef = useRef<{
@@ -133,6 +140,17 @@ export default function SortableCards({ cards, user, confirm }: SortableCardsPro
                     />
                 ))}
             </div>
+            <DragOverlay
+                modifiers={[restrictToWindowEdges]}
+                dropAnimation={{
+                    duration: 500,
+                    easing: 'cubic-bezier(0.18, 0.67, 0.6, 1.22)',
+                }}
+            >
+                {activeCard ? (
+                    <DigitalCardOverlay card={activeCard} />
+                ) : null}
+            </DragOverlay>
         </SortableContext>
     );
 };
