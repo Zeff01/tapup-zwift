@@ -2,6 +2,7 @@ import { Card, Users } from "@/types/types";
 import { clsx, type ClassValue } from "clsx";
 import { PixelCrop } from "react-image-crop";
 import { twMerge } from "tailwind-merge";
+import { getUserCardOrdering } from "./firebase/actions/user.action";
 
 export function cn(...inputs: ClassValue[]) {
   return twMerge(clsx(inputs));
@@ -257,3 +258,26 @@ export function getUserName(user: Users | undefined) {
 
   return "N/A";
 }
+
+// Sort cards based on the cardOrdering field from the user-account document
+export async function sortCards(
+  cards: Partial<Card>[],
+  uid: string
+): Promise<Card[]> {
+  const ordering = await getUserCardOrdering(uid);
+
+  if (!ordering) {
+    return cards.filter((c): c is Card => !!c.id && !!c.owner); // return in original order (typed safely)
+  }
+
+  const cardMap = new Map(cards.map((card) => [card.id, card]));
+  const sorted = ordering
+    .map((id) => cardMap.get(id))
+    .filter((card): card is Card => !!card?.id && !!card?.owner);
+
+  const unordered = cards.filter(
+    (c): c is Card => !!c.id && !!c.owner && !ordering.includes(c.id)
+  );
+
+  return [...sorted, ...unordered];
+};
