@@ -60,6 +60,7 @@ export const createPortfolioSchema = z.object({
     "template12",
     "template13",
     "template14",
+    "template15",
     "template16",
   ]),
   chosenPhysicalCard: z.enum(["card1", "card2", "card3", "card4"]),
@@ -203,6 +204,7 @@ export const editCardSchema = z.object({
       "template12",
       "template13",
       "template14",
+      "template15",
       "template16",
     ])
     .optional(),
