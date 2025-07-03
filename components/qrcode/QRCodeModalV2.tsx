@@ -4,7 +4,7 @@ import {
   DialogDescription,
   DialogTitle,
 } from "@/components/ui/dialog";
-import { downloadVCard, getVCardData } from "@/lib/utils";
+import { getVCardData } from "@/lib/utils";
 import { Card } from "@/types/types";
 import { QRCodeCanvas } from "qrcode.react";
 import { Button } from "../ui/button";

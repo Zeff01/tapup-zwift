@@ -40,7 +40,7 @@ export const isValidQRCode = (url: string) => {
   return url.startsWith(devUrl) || url.startsWith(prodUrl);
 };
 
-export const getVCardData = (card: Partial<Card>, qrScan?: boolean) => {
+export const getVCardData = (user: Partial<Card>, qrScan?: boolean) => {
   const {
     id = "",
     prefix = "",
@@ -63,7 +63,7 @@ export const getVCardData = (card: Partial<Card>, qrScan?: boolean) => {
     skypeInviteUrl = "",
     viberUrl = "",
     tiktokUrl = "",
-  } = card;
+  } = user;
 
   const portfolioUrl = customUrl ? customUrl : id;
   const cardUrl = `https://www.tapup.tech/cards/${id}`;
@@ -93,18 +93,20 @@ export const getVCardData = (card: Partial<Card>, qrScan?: boolean) => {
     position && `TITLE:${position}`,
     number && `TEL;TYPE=cell:${number}`,
     `EMAIL;TYPE=work:${email}`,
-    qrScan && `URL:${cardUrl}`,
     portfolioUrl && `URL:https://www.tapup.tech/site/${portfolioUrl}`,
-    facebookUrl && `URL:${facebookUrl}\nNOTE:Facebook`,
-    instagramUrl && `URL:${instagramUrl}\nNOTE:Instagram`,
-    linkedinUrl && `URL:${linkedinUrl}\nNOTE:LinkedIn`,
-    twitterUrl && `URL:${twitterUrl}\nNOTE:Twitter`,
-    youtubeUrl && `URL:${youtubeUrl}\nNOTE:YouTube`,
-    tiktokUrl && `URL:${tiktokUrl}\nNOTE:TikTok`,
-    websiteUrl && `URL:${websiteUrl}`,
-    whatsappNumber && `IMPP:whatsapp:${whatsappNumber}`,
-    skypeInviteUrl && `IMPP:${skypeInviteUrl}`,
-    viberUrl && `IMPP:viber:${viberUrl}`,
+
+    // qrScan && `URL:${cardUrl}`,
+    // portfolioUrl && `URL:https://www.tapup.tech/site/${portfolioUrl}`,
+    // facebookUrl && `URL:${facebookUrl}\nNOTE:Facebook`,
+    // instagramUrl && `URL:${instagramUrl}\nNOTE:Instagram`,
+    // linkedinUrl && `URL:${linkedinUrl}\nNOTE:LinkedIn`,
+    // twitterUrl && `URL:${twitterUrl}\nNOTE:Twitter`,
+    // youtubeUrl && `URL:${youtubeUrl}\nNOTE:YouTube`,
+    // tiktokUrl && `URL:${tiktokUrl}\nNOTE:TikTok`,
+    // websiteUrl && `URL:${websiteUrl}`,
+    // whatsappNumber && `IMPP:whatsapp:${whatsappNumber}`,
+    // skypeInviteUrl && `IMPP:${skypeInviteUrl}`,
+    // viberUrl && `IMPP:viber:${viberUrl}`,
     "END:VCARD",
   ];
 

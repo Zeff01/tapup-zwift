@@ -1,8 +1,9 @@
 "use client";
 
 import ImageWithLoading from "@/components/ImageWithLoading";
-import { createCardLink } from "@/lib/utils";
-import { Users } from "@/types/types";
+import { Dialog, DialogContent } from "@/components/ui/dialog";
+import { getVCardData } from "@/lib/utils";
+import { Card } from "@/types/types";
 import html2canvas from "html2canvas";
 import { QRCodeSVG } from "qrcode.react";
 import { useEffect, useRef, useState } from "react";
@@ -11,9 +12,13 @@ import MoonLoader from "react-spinners/MoonLoader";
 export default function Canvas2Card({
   user,
   isQrScanner,
+  open,
+  onClose,
 }: {
-  user: Users;
+  user?: Partial<Card>;
   isQrScanner?: boolean;
+  open?: boolean;
+  onClose?: () => void;
 }) {
   const cardRef = useRef<HTMLDivElement>(null);
   const [dlTimeout, setDlTimeout] = useState(0);
@@ -21,20 +26,15 @@ export default function Canvas2Card({
   const handleDownloadImage = async () => {
     const card = cardRef.current;
     if (!card || !user) return;
-    const textTop = document.getElementById("text-top") as HTMLDivElement;
-    textTop.style.transform = "translateY(-8px)";
-    html2canvas(card, { scale: 4 }).then((canvas) => {
-      const imgData = canvas.toDataURL("image/png");
 
+    html2canvas(card, { scale: 4, useCORS: true }).then((canvas) => {
+      const imgData = canvas.toDataURL("image/png");
       const link = document.createElement("a");
-      const fileName = `${user?.lastName}.png`;
-      link.download = fileName;
+      link.download = `${user?.lastName}.png`;
       link.href = imgData;
       document.body.appendChild(link);
       link.click();
       document.body.removeChild(link);
-
-      textTop.style.transform = "translateY(0px)";
       setDlTimeout(2);
     });
   };
@@ -47,72 +47,82 @@ export default function Canvas2Card({
     return () => clearTimeout(timeout);
   }, [dlTimeout]);
 
-  return (
-    <div className="bg-background w-full flex-1 flex flex-col items-center px-2 py-16 gap-y-4">
-      <div
-        ref={cardRef}
-        className={`text-black dark:text-black relative w-[400px] scale-[0.8] lg:scale-100 aspect-[1.5882]  shadow-md rounded-md`}
-        style={{ backgroundColor: "white" }}
-      >
-        {user ? (
-          <div className="w-full h-full flex flex-row gap-x-2 justify-between p-5 ">
-            <div className="flex-grow flex flex-col justify-between">
-              <div id="text-top">
-                <p className="text-[12px]">
-                  &#128231; &nbsp;&nbsp;{user.email}
-                </p>
+  if (!open || !user) return null;
 
-                <p className="text-[12px]">
-                  &#128222; &nbsp;&nbsp;{user.number}
-                </p>
-              </div>
-              <div className="flex flex-col gap-y-[2px]">
+  const vCardData = getVCardData(user, true);
+
+  return (
+    <Dialog open={open} onOpenChange={onClose}>
+      <DialogContent className="flex flex-col items-center gap-4 p-10 max-w-md rounded-lg shadow-lg border border-neutral-300 dark:border-neutral-700">
+        <div
+          ref={cardRef}
+          className="w-[340px] md:w-[400px] aspect-[1.5882] rounded-xl shadow-md p-5 flex flex-row gap-4 justify-between relative"
+          style={{
+            background: "linear-gradient(135deg, #22c55e, #16a34a)",
+            color: "white",
+          }}
+        >
+          {user ? (
+            <>
+              <div className="flex flex-col justify-between flex-grow">
+                <div id="text-top" className="text-black mb-2">
+                  <p className="font-extrabold text-lg">
+                    {user.firstName} {user.lastName}
+                  </p>
+                  <p className="font-semibold text-base">{user.company}</p>
+                  <p className="text-sm italic">{user.position}</p>
+                </div>
+
                 {user.profilePictureUrl && (
-                  <div className="shadow-sm rounded-full relative h-[70px] w-[70px] overflow-hidden">
+                  <div className="mt-2 shadow-md rounded-full relative h-[70px] w-[70px] overflow-hidden border-2 border-white">
                     <ImageWithLoading
                       src={user.profilePictureUrl}
                       fill
                       alt="user photo"
                       priority
-                      className="w-full h-full object-fill"
+                      className="object-cover"
                     />
                   </div>
                 )}
-                <div>
-                  <p className="font-semibold text-sm text-black">
-                    {user.firstName}&nbsp;{user.lastName}
-                  </p>
-                  <p className="text-[12px] text-black">{user.position}</p>
+
+                <div className="mt-7 space-y-1 text-[10px]">
+                  {user.email && <p>📩 {user.email}</p>}
+                  {user.number && <p>&#128222;&nbsp;&nbsp;{user.number}</p>}
                 </div>
-                <p className="text-[12px] text-black">{user.company}</p>
               </div>
+              <div className="flex items-center justify-center mt-8 rounded-md overflow-hidden border border-white bg-white p-1 w-[140px] h-[140px]">
+                <QRCodeSVG
+                  value={vCardData}
+                  size={130}
+                  bgColor="#ffffff"
+                  fgColor="#000000"
+                />
+              </div>
+            </>
+          ) : (
+            <div className="w-full h-full flex items-center justify-center">
+              <MoonLoader
+                loading={true}
+                color="white"
+                size={40}
+                aria-label="Loading Spinner"
+                data-testid="loader"
+                speedMultiplier={0.5}
+              />
             </div>
-            <div>
-              <QRCodeSVG value={createCardLink(user.id as string)} size={100} />
-            </div>
-          </div>
-        ) : (
-          <div className="w-full h-full flex items-center justify-center">
-            <MoonLoader
-              loading={true}
-              color="gray"
-              size={40}
-              aria-label="Loading Spinner"
-              data-testid="loader"
-              speedMultiplier={0.5}
-            />
-          </div>
+          )}
+        </div>
+
+        {!isQrScanner && (
+          <button
+            onClick={handleDownloadImage}
+            className="bg-blueColor hover:bg-buttonColor text-white px-6 py-2 rounded-md active:scale-95 transition duration-150 disabled:opacity-50 disabled:cursor-not-allowed"
+            disabled={!user || dlTimeout > 0}
+          >
+            Download QR Code
+          </button>
         )}
-      </div>
-      {!isQrScanner && (
-        <button
-          onClick={handleDownloadImage}
-          className="bg-custom-purple text-white px-6 py-2 font-semibold rounded-md active:scale-95 transition-all duration-150 disabled:opacity-50 disabled:cursor-not-allowed"
-          disabled={Boolean(!user || dlTimeout > 0)}
-        >
-          Convert to PNG
-        </button>
-      )}
-    </div>
+      </DialogContent>
+    </Dialog>
   );
 }
