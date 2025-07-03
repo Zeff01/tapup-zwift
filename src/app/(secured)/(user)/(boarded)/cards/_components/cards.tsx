@@ -30,6 +30,7 @@ import {
   closestCorners,
 } from "@dnd-kit/core";
 import { arrayMove } from "@dnd-kit/sortable";
+
 import { restrictToVerticalAxis, restrictToParentElement } from "@dnd-kit/modifiers";
 
 const Cards = () => {
@@ -209,7 +210,7 @@ const Cards = () => {
             </Dialog.Portal>
           </Dialog.Root>
         </div>
-      </DndContext>
+      </DndContext >
     </>
   );
 };

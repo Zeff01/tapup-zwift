@@ -1,21 +1,15 @@
-import { useRef } from "react";
-import { Card } from "@/types/types";
-import DigitalCard from "@/components/DigitalCard";
-import DigitalCardOverlay from "./DigitalCardOverlay";
-import { useIsMobile } from "@/hooks/use-mobile";
-import {
-    useDndMonitor,
-    DragOverlay,
-    useDndContext,
-} from "@dnd-kit/core";
+import { useDndMonitor, DragOverlay, useDndContext } from "@dnd-kit/core";
 import {
     SortableContext,
     rectSortingStrategy,
     verticalListSortingStrategy,
 } from "@dnd-kit/sortable";
-import {
-    restrictToWindowEdges,
-} from '@dnd-kit/modifiers';
+import { restrictToWindowEdges } from "@dnd-kit/modifiers";
+import { useIsMobile } from "@/hooks/use-mobile";
+import DigitalCard from "@/components/DigitalCard";
+import DigitalCardOverlay from "./DigitalCardOverlay";
+import { Card } from "@/types/types";
+
 interface SortableCardsProps {
     cards: Card[];
     user: any;
@@ -27,95 +21,24 @@ export default function SortableCards({ cards, user, confirm }: SortableCardsPro
     const { active } = useDndContext();
     const activeCard = cards.find((card) => card.id === active?.id);
 
-    // Manual auto-scroll when dragging near screen edges
-    const scrollRef = useRef<{
-        frame: number | null;
-        direction: "up" | "down" | null;
-    }>({ frame: null, direction: null });
-
-    const lastYRef = useRef<number | null>(null);
-
-    const cancelScroll = () => {
-        if (scrollRef.current.frame) {
-            cancelAnimationFrame(scrollRef.current.frame);
-            scrollRef.current.frame = null;
-        }
-        scrollRef.current.direction = null;
-        lastYRef.current = null;
-    };
+    const SCROLL_THRESHOLD = isMobile ? 130 : 80;
+    const SCROLL_AMOUNT = 80;
 
     useDndMonitor({
         onDragMove(event) {
-            const node = document.querySelector(`[data-id="${event.active.id}"]`) as HTMLElement | null;
-            if (!node) return;
+            const el = document.querySelector(`[data-id="${event.active.id}"]`) as HTMLElement | null;
+            if (!el) return;
 
-            const rect = node.getBoundingClientRect();
-            const centerY = rect.top + rect.height / 2;
+            const rect = el.getBoundingClientRect();
             const windowHeight = window.innerHeight;
 
-            const threshold = 120;
-            const maxSpeed = 60;
-            const minSpeed = 20;
-            const topEdge = threshold;
-            const bottomEdge = windowHeight - threshold;
 
-            // Determine movement direction
-            const lastY = lastYRef.current;
-            let direction: "up" | "down" | null = null;
-            if (lastY !== null) {
-                const deltaY = centerY - lastY;
-                if (Math.abs(deltaY) > 1) {
-                    direction = deltaY > 0 ? "down" : "up";
-                }
+            if (rect.bottom > windowHeight - SCROLL_THRESHOLD) {
+                window.scrollBy({ top: SCROLL_AMOUNT });
+            } else if (rect.top < SCROLL_THRESHOLD) {
+                window.scrollBy({ top: -SCROLL_AMOUNT });
             }
-            lastYRef.current = centerY;
-            if (!direction) return;
-
-            let distance = 0;
-            if (direction === "down" && rect.bottom > bottomEdge) {
-                distance = Math.min(rect.bottom - bottomEdge, threshold);
-            } else if (direction === "up" && rect.top < topEdge) {
-                distance = Math.min(topEdge - rect.top, threshold);
-            } else {
-                cancelScroll(); // Stop if not near edge
-                return;
-            }
-
-            const ratio = distance / threshold;
-            const eased = ratio * ratio; // quadratic ease
-            const amount = minSpeed + (maxSpeed - minSpeed) * eased;
-
-            // If direction changed, cancel existing scroll
-            if (scrollRef.current.direction !== direction && scrollRef.current.frame) {
-                cancelAnimationFrame(scrollRef.current.frame);
-                scrollRef.current.frame = null;
-            }
-
-            scrollRef.current.direction = direction;
-
-            if (scrollRef.current.frame) return;
-
-            const scrollLoop = () => {
-                const currentY = window.scrollY;
-                const maxScroll = document.documentElement.scrollHeight - window.innerHeight;
-
-                if (
-                    (direction === "down" && currentY >= maxScroll) ||
-                    (direction === "up" && currentY <= 0)
-                ) {
-                    cancelScroll();
-                    return;
-                }
-
-                window.scrollBy({ top: direction === "down" ? amount : -amount });
-                scrollRef.current.frame = requestAnimationFrame(scrollLoop);
-            };
-
-            scrollRef.current.frame = requestAnimationFrame(scrollLoop);
         },
-
-        onDragEnd: cancelScroll,
-        onDragCancel: cancelScroll,
     });
 
     return (
@@ -124,34 +47,24 @@ export default function SortableCards({ cards, user, confirm }: SortableCardsPro
             strategy={isMobile ? verticalListSortingStrategy : rectSortingStrategy}
         >
             <div
+                data-scroll-container
                 className="
-          grid justify-center justify-items-center
-          grid-cols-[repeat(auto-fill,minmax(17rem,24rem))]
-          xl:justify-start xl:grid-cols-[repeat(auto-fill,minmax(22rem,1fr))]
-          gap-4 md:px-2
-        "
+                    grid justify-center justify-items-center
+                    grid-cols-[repeat(auto-fill,minmax(17rem,24rem))]
+                    xl:justify-start xl:grid-cols-[repeat(auto-fill,minmax(22rem,1fr))]
+                    gap-4 md:px-2 overflow-y-auto"
             >
                 {cards.map((card) => (
-                    <DigitalCard
-                        key={card.id}
-                        user={user}
-                        confirm={confirm}
-                        card={card}
-                    />
+                    <DigitalCard key={card.id} user={user} confirm={confirm} card={card} />
                 ))}
             </div>
+
             <DragOverlay
                 modifiers={[restrictToWindowEdges]}
-                dropAnimation={{
-                    duration: 250,
-                    easing: 'ease-out',
-                }}
-
+                dropAnimation={{ duration: 250, easing: "ease-out" }}
             >
-                {activeCard ? (
-                    <DigitalCardOverlay card={activeCard} />
-                ) : null}
+                {activeCard && <DigitalCardOverlay card={activeCard} />}
             </DragOverlay>
         </SortableContext>
     );
-};
+}
