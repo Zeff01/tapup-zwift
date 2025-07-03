@@ -21,7 +21,7 @@ export default function SortableCards({ cards, user, confirm }: SortableCardsPro
     const { active } = useDndContext();
     const activeCard = cards.find((card) => card.id === active?.id);
 
-    const SCROLL_THRESHOLD = isMobile ? 130 : 80;
+    const SCROLL_THRESHOLD = isMobile ? 130 : 90;
     const SCROLL_AMOUNT = 80;
 
     useDndMonitor({
@@ -60,7 +60,6 @@ export default function SortableCards({ cards, user, confirm }: SortableCardsPro
             </div>
 
             <DragOverlay
-                modifiers={[restrictToWindowEdges]}
                 dropAnimation={{ duration: 250, easing: "ease-out" }}
             >
                 {activeCard && <DigitalCardOverlay card={activeCard} />}
