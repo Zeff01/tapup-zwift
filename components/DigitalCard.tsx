@@ -50,6 +50,7 @@ import { toast } from "react-toastify";
 import QRCodeModalV2 from "./qrcode/QRCodeModalV2";
 import { Button } from "./ui/button";
 import { getCardImage } from "@/lib/utils";
+import { useIsMobile } from "@/hooks/use-mobile";
 
 type Prop = {
   card: Partial<Card>;
@@ -73,6 +74,8 @@ const DigitalCard = ({ card, confirm, user }: Prop) => {
     useState(false);
 
   const [openQRCode, setOpenQRCode] = useState(false);
+
+  const isMobile = useIsMobile();
 
   const domain =
     process.env.NODE_ENV === "development"
@@ -455,8 +458,11 @@ const DigitalCard = ({ card, confirm, user }: Prop) => {
             backgroundPosition: "center",
             backgroundRepeat: "no-repeat",
           }}
-          onMouseEnter={() => setHovered(true)}
-          onMouseLeave={() => setHovered(false)}
+          onMouseEnter={() => !isMobile && setHovered(true)}
+          onMouseLeave={() => !isMobile && setHovered(false)}
+          onTouchStart={() => setHovered(true)}
+          onTouchEnd={() => setHovered(false)}
+          onTouchCancel={() => setHovered(false)}
         >
           <div className="absolute w-full top-1/2 right-0 -translate-y-1/2 flex items-center justify-end z-30">
             <div className="relative flex items-center justify-end group">
@@ -480,7 +486,7 @@ const DigitalCard = ({ card, confirm, user }: Prop) => {
             </div>
           )}
 
-          {!isCardExpired(card.expiryDate) && hovered && !isLoading && (
+          {!isCardExpired(card.expiryDate) && hovered && !isLoading && !isDragging && (
             <div className="absolute bottom-5 right-5 bg-black text-white text-xs px-2 py-1 rounded-lg shadow-lg">
               Expires: {formattedExpiryDate}
             </div>
