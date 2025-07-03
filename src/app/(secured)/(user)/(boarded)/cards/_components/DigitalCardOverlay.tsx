@@ -1,7 +1,5 @@
 "use client";
 
-import { UniqueIdentifier } from "@dnd-kit/core";
-import { CSS } from "@dnd-kit/utilities";
 import { GripVertical, EyeIcon, Edit2, CheckCircle2, ArrowRightLeft, QrCode } from "lucide-react";
 import Link from "next/link";
 import React, { useState } from "react";
