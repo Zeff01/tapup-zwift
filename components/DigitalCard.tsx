@@ -39,9 +39,9 @@ import {
   CheckCircle2,
   Edit2,
   EyeIcon,
-  QrCode,
   GripVertical,
   Loader2Icon,
+  QrCode,
 } from "lucide-react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
@@ -50,6 +50,7 @@ import { IoCloseCircleOutline } from "react-icons/io5";
 import { toast } from "react-toastify";
 import QRCodeModalV2 from "./qrcode/QRCodeModalV2";
 import { Button } from "./ui/button";
+import { useIsMobile } from "@/hooks/use-mobile";
 
 type Prop = {
   card: Partial<Card>;
@@ -66,6 +67,7 @@ const DigitalCard = ({ card, confirm, user }: Prop) => {
   const [open, setOpen] = useState(false);
   const [customUrl, setCustomUrl] = useState("");
   const [hovered, setHovered] = useState(false);
+  const [showHint, setShowHint] = useState(false);
   const [transferOpen, setTransferOpen] = useState(false);
   const [newOwnerEmail, setNewOwnerEmail] = useState("");
   const [expiredDialogOpen, setExpiredDialogOpen] = useState(false);
@@ -341,6 +343,7 @@ const DigitalCard = ({ card, confirm, user }: Prop) => {
 
   return (
     <div
+      data-id={card.id}
       ref={setNodeRef}
       style={style}
       {...attributes}
@@ -423,11 +426,10 @@ const DigitalCard = ({ card, confirm, user }: Prop) => {
               <Tooltip key={index}>
                 <TooltipTrigger asChild>
                   <span
-                    className={`px-2 py-2 2xl:py-2 border dark:border-accent border-gray-300 rounded-md ${
-                      isDisabledState
-                        ? "opacity-30 cursor-not-allowed"
-                        : "hover:opacity-50 cursor-pointer"
-                    }`}
+                    className={`px-2 py-2 2xl:py-2 border dark:border-accent border-gray-300 rounded-md ${isDisabledState
+                      ? "opacity-30 cursor-not-allowed"
+                      : "hover:opacity-50 cursor-pointer"
+                      }`}
                     onClick={!isDisabledState ? item.fn : undefined}
                   >
                     <item.icon className="size-4 dark:text-white drop-shadow-md" />
@@ -461,11 +463,25 @@ const DigitalCard = ({ card, confirm, user }: Prop) => {
           onMouseEnter={() => setHovered(true)}
           onMouseLeave={() => setHovered(false)}
         >
-          <div className="absolute top-0 left-0 w-full h-full flex items-center justify-end">
-            <GripVertical
-              {...listeners}
-              className="size-6 sm:size-12 z-10 cursor-grab text-white lg:size-8 opacity-50 hover:opacity-100 transition-opacity duration-150"
-            />
+          <div className="absolute w-full top-1/2 right-0 -translate-y-1/2 flex items-center justify-end z-30">
+            <div className="relative flex items-center justify-end group">
+              {/* Tooltip - centered above the grip */}
+              <div className={`absolute w-max -left-40 mb-1 transition-opacity duration-200  ${showHint ? "opacity-100" : "opacity-0"}`}>
+                <span className="text-white bg-black/60 px-2 py-1 rounded">
+                  Hold to drag
+                </span>
+              </div>
+
+              {/* Grip */}
+              <GripVertical
+                {...listeners}
+                onTouchStart={() => setShowHint(true)}
+                onTouchEnd={() => setShowHint(false)}
+                onTouchCancel={() => setShowHint(false)}
+                className="z-30 mr-1.5 md:mr-3.5 peer size-6 sm:size-12 lg:size-8 cursor-grab text-white opacity-80 hover:opacity-100 transition-opacity duration-150 bg-black/20 rounded-md p-1"
+                style={{ touchAction: 'none' }}
+              />
+            </div>
           </div>
 
           {isLoading && (

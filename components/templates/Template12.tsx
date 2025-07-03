@@ -35,6 +35,7 @@ const michroma = Akatab({
 });
 
 const Template12 = ({
+  id,
   profilePictureUrl,
   coverPhotoUrl,
   position,
@@ -54,8 +55,10 @@ const Template12 = ({
   whatsappNumber,
   skypeInviteUrl,
   websiteUrl,
+  customUrl,
 }: Card) => {
   const userProfile = {
+    id,
     firstName,
     lastName,
     email,
@@ -63,6 +66,7 @@ const Template12 = ({
     company,
     position,
     websiteUrl,
+    customUrl,
   };
 
   console.log(websiteUrl);

@@ -40,8 +40,9 @@ export const isValidQRCode = (url: string) => {
   return url.startsWith(devUrl) || url.startsWith(prodUrl);
 };
 
-export const getVCardData = (card: Partial<Card>) => {
+export const getVCardData = (card: Partial<Card>, qrScan?: boolean) => {
   const {
+    id = "",
     prefix = "",
     firstName = "",
     middleName = "",
@@ -64,8 +65,8 @@ export const getVCardData = (card: Partial<Card>) => {
     tiktokUrl = "",
   } = card;
 
-  const portfolioUrl = customUrl ? customUrl : card.id;
-  const cardUrl = `https://www.tapup.tech/cards/${card.id}`;
+  const portfolioUrl = customUrl ? customUrl : id;
+  const cardUrl = `https://www.tapup.tech/cards/${id}`;
 
   if (!email) {
     console.error("No email available for vCard");
@@ -92,7 +93,7 @@ export const getVCardData = (card: Partial<Card>) => {
     position && `TITLE:${position}`,
     number && `TEL;TYPE=cell:${number}`,
     `EMAIL;TYPE=work:${email}`,
-    `URL:${cardUrl}`,
+    qrScan && `URL:${cardUrl}`,
     portfolioUrl && `URL:https://www.tapup.tech/site/${portfolioUrl}`,
     facebookUrl && `URL:${facebookUrl}\nNOTE:Facebook`,
     instagramUrl && `URL:${instagramUrl}\nNOTE:Instagram`,

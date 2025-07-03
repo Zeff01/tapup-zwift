@@ -16,6 +16,7 @@ import { SiSkypeforbusiness } from "react-icons/si";
 import { downloadVCard } from "@/lib/utils";
 
 const Template9 = ({
+  id,
   profilePictureUrl,
   coverPhotoUrl,
   position,
@@ -35,8 +36,10 @@ const Template9 = ({
   whatsappNumber,
   skypeInviteUrl,
   websiteUrl,
+  customUrl,
 }: Card) => {
   const userProfile = {
+    id,
     firstName,
     lastName,
     email,
@@ -44,6 +47,7 @@ const Template9 = ({
     company,
     position,
     websiteUrl,
+    customUrl,
   };
 
   console.log(websiteUrl);

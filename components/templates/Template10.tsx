@@ -32,6 +32,7 @@ import { FiYoutube } from "react-icons/fi";
 import { SiSkypeforbusiness } from "react-icons/si";
 
 const Template10 = ({
+  id,
   profilePictureUrl,
   coverPhotoUrl,
   position,
@@ -51,8 +52,10 @@ const Template10 = ({
   whatsappNumber,
   skypeInviteUrl,
   websiteUrl,
+  customUrl,
 }: Card) => {
   const userProfile = {
+    id,
     firstName,
     lastName,
     email,
@@ -60,6 +63,7 @@ const Template10 = ({
     company,
     position,
     websiteUrl,
+    customUrl,
   };
 
   return (
