@@ -13,6 +13,7 @@ import {
   getUserById,
 } from "@/lib/firebase/actions/user.action";
 import { getLoggedInUser } from "@/lib/session";
+import Canvas2Card from "@/src/app/(secured)/(user)/(boarded)/cards/[cardId]/_components/canvas";
 import {
   Card,
   CustomerType,
@@ -47,7 +48,6 @@ import { useRouter } from "next/navigation";
 import React, { useEffect, useState } from "react";
 import { IoCloseCircleOutline } from "react-icons/io5";
 import { toast } from "react-toastify";
-import QRCodeModalV2 from "./qrcode/QRCodeModalV2";
 import { Button } from "./ui/button";
 import { getCardImage } from "@/lib/utils";
 import { useIsMobile } from "@/hooks/use-mobile";
@@ -423,10 +423,11 @@ const DigitalCard = ({ card, confirm, user }: Prop) => {
               <Tooltip key={index}>
                 <TooltipTrigger asChild>
                   <span
-                    className={`px-2 py-2 2xl:py-2 border dark:border-accent border-gray-300 rounded-md ${isDisabledState
-                      ? "opacity-30 cursor-not-allowed"
-                      : "hover:opacity-50 cursor-pointer"
-                      }`}
+                    className={`px-2 py-2 2xl:py-2 border dark:border-accent border-gray-300 rounded-md ${
+                      isDisabledState
+                        ? "opacity-30 cursor-not-allowed"
+                        : "hover:opacity-50 cursor-pointer"
+                    }`}
                     onClick={!isDisabledState ? item.fn : undefined}
                   >
                     <item.icon className="size-4 dark:text-white drop-shadow-md" />
@@ -469,7 +470,7 @@ const DigitalCard = ({ card, confirm, user }: Prop) => {
               <GripVertical
                 {...listeners}
                 className="z-30 mr-2 md:mr-3.5 peer size-6 sm:size-12 lg:size-8 cursor-grab text-white opacity-80 hover:opacity-100 transition-opacity duration-150 bg-black/20 rounded-md p-1"
-                style={{ touchAction: 'none' }}
+                style={{ touchAction: "none" }}
               />
             </div>
           </div>
@@ -750,10 +751,16 @@ const DigitalCard = ({ card, confirm, user }: Prop) => {
           </Dialog.Content>
         </Dialog.Portal>
       </Dialog.Root>
-
+      {/* 
       <QRCodeModalV2
         //avoid unnecessary re-renders of passing card
         userProfile={openQRCode ? card : undefined}
+        open={openQRCode}
+        onClose={() => setOpenQRCode(false)}
+      /> */}
+
+      <Canvas2Card
+        user={openQRCode ? card : undefined}
         open={openQRCode}
         onClose={() => setOpenQRCode(false)}
       />
