@@ -87,11 +87,23 @@ const templates: Template[] = [
     route: "/create/template/13",
   },
   {
-    id: "template14",
+    id: "template15",
     name: "Neon Network",
-    imageUrl: "/assets/template14.png",
-    route: "/create/template/14",
+    imageUrl: "/assets/template15.png",
+    route: "/create/template/15",
   },
+  {
+    id: "template16",
+    name: "Obsidian",
+    imageUrl: "/assets/template16.png",
+    route: "/create/template/16",
+  },
+  // {
+  //   id: "template14",
+  //   name: "template14",
+  //   imageUrl: "/assets/template14.png",
+  //   route: "/create/template/14",
+  // },
   // {
   //   id: "template7",
   //   name: "Simple White",
