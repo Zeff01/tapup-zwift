@@ -203,7 +203,7 @@ const Template16 = ({
                 </div>
                 {/* Buttons */}
                 <div className="flex items-center gap-5 mt-4 w-full mb-6">
-                    <button className="flex-[1.2] flex items-center justify-center gap-2 px-14 py-2 bg-black text-white text-sm font-medium rounded-full hover:bg-gray-800 transition">
+                    <button className="flex-[1.2] flex items-center justify-center gap-2 px-4 py-2 bg-black text-white text-sm font-medium rounded-full hover:bg-gray-800 transition">
                         <LuUserCircle className="text-white text-lg" />
                         Contact Me
                     </button>
