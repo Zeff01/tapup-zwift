@@ -215,15 +215,6 @@ const Template16 = ({
 
             </div>
 
-            {/* About Me */}
-            <div className="w-full max-w-md px-6 mb-6">
-                <h2 className="text-base font-bold mb-2">About Me</h2>
-                <p className="text-sm text-gray-700 leading-relaxed">
-                    {companyBackground ||
-                        "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Lorem ipsum dolor sit amet, consectetur adipiscing elit. Lorem ipsum dolor sit amet, consectetur adipiscing elit."}
-                </p>
-            </div>
-
             {/* Company Overview */}
             <div className="w-full max-w-md px-6 mb-6">
                 <h2 className="text-base font-bold mb-2">Company Overview</h2>
@@ -264,7 +255,7 @@ const Template16 = ({
                 <div className="font-semibold text-black mb-1">
                     {company || "ABC Company"}
                 </div>
-                <div>© 2024 {company || "ABC Company"}. All Rights Reserved.</div>
+                <div>© 2024 Zwiftech. All Rights Reserved.</div>
             </footer>
         </div>
     );
