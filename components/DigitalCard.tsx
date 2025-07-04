@@ -13,7 +13,7 @@ import {
   getUserById,
 } from "@/lib/firebase/actions/user.action";
 import { getLoggedInUser } from "@/lib/session";
-import Canvas2Card from "@/src/app/(secured)/(user)/(boarded)/cards/[cardId]/_components/canvas";
+import QRCodeModalV2 from "./qrcode/QRCodeModalV2";
 import {
   Card,
   CustomerType,
@@ -82,12 +82,18 @@ const DigitalCard = ({ card, confirm, user }: Prop) => {
       ? process.env.NEXT_PUBLIC_RESET_PASSWORD_URL_DEV
       : process.env.NEXT_PUBLIC_RESET_PASSWORD_URL_PROD;
 
-  const { attributes, listeners, setNodeRef, transform, transition, isDragging } =
-    useSortable({ id: card.id as UniqueIdentifier });
+  const {
+    attributes,
+    listeners,
+    setNodeRef,
+    transform,
+    transition,
+    isDragging,
+  } = useSortable({ id: card.id as UniqueIdentifier });
 
   useEffect(() => {
-    console.log(`isDragging: ${isDragging}`)
-  }, [isDragging])
+    console.log(`isDragging: ${isDragging}`);
+  }, [isDragging]);
 
   const style = {
     transform: CSS.Transform.toString(transform),
@@ -337,17 +343,15 @@ const DigitalCard = ({ card, confirm, user }: Prop) => {
   ];
 
   const CardInfo = (
-  <div className="flex-grow flex flex-col justify-between">
-    <div>
-      <p className="text-[clamp(1rem,1.4vw,1.1rem)] mt-3 sm:mt-0 font-semibold capitalize text-white">
-        {(card.firstName || "") + " " + (card.lastName || "")}
-      </p>
-      <p className="text-xs capitalize text-white">
-        {card.position || ""}
-      </p>
+    <div className="flex-grow flex flex-col justify-between">
+      <div>
+        <p className="text-[clamp(1rem,1.4vw,1.1rem)] mt-3 sm:mt-0 font-semibold capitalize text-white">
+          {(card.firstName || "") + " " + (card.lastName || "")}
+        </p>
+        <p className="text-xs capitalize text-white">{card.position || ""}</p>
+      </div>
     </div>
-  </div>
-);
+  );
 
   const isLoading = isPendingToggleCard || isLoadingPlans;
 
@@ -357,10 +361,12 @@ const DigitalCard = ({ card, confirm, user }: Prop) => {
       ref={setNodeRef}
       style={style}
       {...attributes}
-      className={`w-full relative ${isDragging && ("cursor-grab")}`}
+      className={`w-full relative ${isDragging && "cursor-grab"}`}
     >
       <div className="w-full flex gap-3">
-        <div className={`flex flex-col justify-center  items-center space-y-1 ${isDragging ? "opacity-20 grayscale" : ""}`}>
+        <div
+          className={`flex flex-col justify-center  items-center space-y-1 ${isDragging ? "opacity-20 grayscale" : ""}`}
+        >
           <Tooltip>
             <TooltipTrigger asChild>
               {card.portfolioStatus && !isCardDisabled ? (
@@ -436,10 +442,11 @@ const DigitalCard = ({ card, confirm, user }: Prop) => {
               <Tooltip key={index}>
                 <TooltipTrigger asChild>
                   <span
-                    className={`px-2 py-2 2xl:py-2 border dark:border-accent border-gray-300 rounded-md ${isDisabledState
-                      ? "opacity-30 cursor-not-allowed"
-                      : "hover:opacity-50 cursor-pointer"
-                      }`}
+                    className={`px-2 py-2 2xl:py-2 border dark:border-accent border-gray-300 rounded-md ${
+                      isDisabledState
+                        ? "opacity-30 cursor-not-allowed"
+                        : "hover:opacity-50 cursor-pointer"
+                    }`}
                     onClick={!isDisabledState ? item.fn : undefined}
                   >
                     <item.icon className="size-4 dark:text-white drop-shadow-md" />
@@ -499,16 +506,17 @@ const DigitalCard = ({ card, confirm, user }: Prop) => {
             </div>
           )}
 
-          {!isCardExpired(card.expiryDate) && hovered && !isLoading && !isDragging && (
-            <div className="absolute bottom-5 right-5 bg-black text-white text-xs px-2 py-1 rounded-lg shadow-lg">
-              Expires: {formattedExpiryDate}
-            </div>
-          )}
+          {!isCardExpired(card.expiryDate) &&
+            hovered &&
+            !isLoading &&
+            !isDragging && (
+              <div className="absolute bottom-5 right-5 bg-black text-white text-xs px-2 py-1 rounded-lg shadow-lg">
+                Expires: {formattedExpiryDate}
+              </div>
+            )}
 
           {isDragging ? (
-            <div className="flex-1 py-3 px-4 relative">
-              {CardInfo}
-            </div>
+            <div className="flex-1 py-3 px-4 relative">{CardInfo}</div>
           ) : (
             <Link
               href={isCardExpired(card.expiryDate) ? "#" : `/cards/${card.id}`}
@@ -760,20 +768,14 @@ const DigitalCard = ({ card, confirm, user }: Prop) => {
           </Dialog.Content>
         </Dialog.Portal>
       </Dialog.Root>
-      {/* 
+
       <QRCodeModalV2
         //avoid unnecessary re-renders of passing card
         userProfile={openQRCode ? card : undefined}
         open={openQRCode}
         onClose={() => setOpenQRCode(false)}
-      /> */}
-
-      <Canvas2Card
-        user={openQRCode ? card : undefined}
-        open={openQRCode}
-        onClose={() => setOpenQRCode(false)}
       />
-    </div >
+    </div>
   );
 };
 
