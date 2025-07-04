@@ -336,6 +336,19 @@ const DigitalCard = ({ card, confirm, user }: Prop) => {
     },
   ];
 
+  const CardInfo = (
+  <div className="flex-grow flex flex-col justify-between">
+    <div>
+      <p className="text-[clamp(1rem,1.4vw,1.1rem)] mt-3 sm:mt-0 font-semibold capitalize text-white">
+        {(card.firstName || "") + " " + (card.lastName || "")}
+      </p>
+      <p className="text-xs capitalize text-white">
+        {card.position || ""}
+      </p>
+    </div>
+  </div>
+);
+
   const isLoading = isPendingToggleCard || isLoadingPlans;
 
   return (
@@ -344,7 +357,7 @@ const DigitalCard = ({ card, confirm, user }: Prop) => {
       ref={setNodeRef}
       style={style}
       {...attributes}
-      className="w-full relative"
+      className={`w-full relative ${isDragging && ("cursor-grab")}`}
     >
       <div className="w-full flex gap-3">
         <div className={`flex flex-col justify-center  items-center space-y-1 ${isDragging ? "opacity-20 grayscale" : ""}`}>
@@ -423,11 +436,10 @@ const DigitalCard = ({ card, confirm, user }: Prop) => {
               <Tooltip key={index}>
                 <TooltipTrigger asChild>
                   <span
-                    className={`px-2 py-2 2xl:py-2 border dark:border-accent border-gray-300 rounded-md ${
-                      isDisabledState
-                        ? "opacity-30 cursor-not-allowed"
-                        : "hover:opacity-50 cursor-pointer"
-                    }`}
+                    className={`px-2 py-2 2xl:py-2 border dark:border-accent border-gray-300 rounded-md ${isDisabledState
+                      ? "opacity-30 cursor-not-allowed"
+                      : "hover:opacity-50 cursor-pointer"
+                      }`}
                     onClick={!isDisabledState ? item.fn : undefined}
                   >
                     <item.icon className="size-4 dark:text-white drop-shadow-md" />
@@ -493,28 +505,25 @@ const DigitalCard = ({ card, confirm, user }: Prop) => {
             </div>
           )}
 
-          <Link
-            href={isCardExpired(card.expiryDate) ? "#" : `/cards/${card.id}`}
-            prefetch
-            className="flex-1 border-r border-accent/40 py-3 px-4 relative"
-            onClick={(e) => {
-              e.preventDefault();
-              if (isCardExpired(card.expiryDate)) {
-                setExpiredDialogOpen(true);
-              }
-            }}
-          >
-            <div className="flex-grow flex flex-col justify-between">
-              <div>
-                <p className="text-[clamp(1rem,1.4vw,1.1rem)] mt-3 sm:mt-0 font-semibold capitalize text-white">
-                  {(card.firstName || "") + " " + (card.lastName || "")}
-                </p>
-                <p className="text-xs capitalize text-white">
-                  {card.position || ""}
-                </p>
-              </div>
+          {isDragging ? (
+            <div className="flex-1 py-3 px-4 relative">
+              {CardInfo}
             </div>
-          </Link>
+          ) : (
+            <Link
+              href={isCardExpired(card.expiryDate) ? "#" : `/cards/${card.id}`}
+              prefetch
+              className="flex-1 py-3 px-4 relative"
+              onClick={(e) => {
+                if (isCardExpired(card.expiryDate)) {
+                  e.preventDefault();
+                  setExpiredDialogOpen(true);
+                }
+              }}
+            >
+              {CardInfo}
+            </Link>
+          )}
         </div>
       </div>
       {/* <Dialog.Root open={expiredDialogOpen} onOpenChange={setExpiredDialogOpen}>
@@ -764,7 +773,7 @@ const DigitalCard = ({ card, confirm, user }: Prop) => {
         open={openQRCode}
         onClose={() => setOpenQRCode(false)}
       />
-    </div>
+    </div >
   );
 };
 

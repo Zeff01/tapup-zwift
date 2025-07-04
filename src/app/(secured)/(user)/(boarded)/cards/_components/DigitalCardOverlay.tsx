@@ -1,8 +1,6 @@
 "use client";
 
 import { GripVertical, EyeIcon, Edit2, CheckCircle2, ArrowRightLeft, QrCode } from "lucide-react";
-import Link from "next/link";
-import React, { useState } from "react";
 import { Card } from "@/types/types";
 import { getCardImage } from "@/lib/utils";
 
@@ -49,9 +47,9 @@ const DigitalCardOverlay = ({ card }: Prop) => {
         </div>
 
         <div
-          className={`flex-1 w-full aspect-[340/208] transition-transform duration-200 flex justify-between text-secondary bg-transparent rounded-xl overflow-hidden relative [background-size:contain] md:[background_size:cover]}
-            ${isCardExpired(card.expiryDate) || isCardDisabled ? "opacity-50" : ""}
-            `}
+          className={`flex-1 w-full aspect-[340/208] transition-transform duration-200 flex justify-between text-secondary bg-transparent rounded-xl overflow-hidden relative [background-size:contain] md:[background_size:cover]
+          ${isCardExpired(card.expiryDate) || isCardDisabled ? "opacity-50" : ""}
+          `}
           style={{
             backgroundImage: cardImage ? `url(${cardImage})` : "none",
             backgroundPosition: "center",
@@ -71,12 +69,7 @@ const DigitalCardOverlay = ({ card }: Prop) => {
             />
           </div>
 
-          <Link
-            href="#"
-            prefetch
-            className="flex-1 py-3 px-4 border-r border-accent/40 relative cursor-default"
-            onClick={(e) => e.preventDefault()}
-          >
+          <div className="flex-1 py-3 px-4 relative">
             <div className="flex-grow flex flex-col justify-between">
               <div>
                 <p className="text-[clamp(1rem,1.4vw,1.1rem)] mt-3 sm:mt-0 font-semibold capitalize text-white">
@@ -87,7 +80,7 @@ const DigitalCardOverlay = ({ card }: Prop) => {
                 </p>
               </div>
             </div>
-          </Link>
+          </div>
         </div>
       </div>
     </div>
