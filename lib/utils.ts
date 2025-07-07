@@ -95,8 +95,7 @@ export const getVCardData = (user: Partial<Card>, qrScan?: boolean) => {
     position && `TITLE:${position}`,
     number && `TEL;TYPE=cell:${number}`,
     `EMAIL;TYPE=work:${email}`,
-    portfolioUrl && `URL:https://www.tapup.tech/site/${portfolioUrl}`,
-
+    // portfolioUrl && `URL:https://www.tapup.tech/site/${portfolioUrl}`,
     // qrScan && `URL:${cardUrl}`,
     // portfolioUrl && `URL:https://www.tapup.tech/site/${portfolioUrl}`,
     // facebookUrl && `URL:${facebookUrl}\nNOTE:Facebook`,
