@@ -138,7 +138,7 @@ const Template13 = ({
         <div className="w-full max-w-md mb-8 px-4">
           <h2 className="text-lg font-bold mb-2 text-white text-left">Company Overview</h2>
           <p className="text-gray-300 text-base text-left">
-            {companyBackground || "Codebility is a tech consulting firm that specializes in custom software development, including web and mobile apps. They deliver scalable, user-friendly solutions using agile methodologies."}
+            {companyBackground}
           </p>
         </div>
         {/* Our Services */}
@@ -149,21 +149,20 @@ const Template13 = ({
               {serviceDescription}
             </p>
           )}
-          <div className="flex flex-col gap-4 pb-2">
-            {(servicePhotos && servicePhotos.length > 0
-              ? servicePhotos
-              : Array.from({ length: 5 }).map((_, i) => `/assets/sampleService.png`)
-            ).map((photo, idx) => (
-              <div key={idx} className="w-full flex justify-center">
-                <img
-                  src={photo}
-                  alt={`Service Photo ${idx + 1}`}
-                  className="rounded-2xl object-cover w-full h-44 bg-white"
-                  style={{ minWidth: 0, minHeight: 176, maxWidth: '100%' }}
-                />
-              </div>
-            ))}
-          </div>
+          {servicePhotos && servicePhotos.length > 0 && (
+            <div className="flex flex-col gap-4 pb-2">
+              {servicePhotos.map((photo, idx) => (
+                <div key={idx} className="w-full flex justify-center">
+                  <img
+                    src={photo}
+                    alt={`Service Photo ${idx + 1}`}
+                    className="rounded-2xl object-cover w-full h-44 bg-white"
+                    style={{ minWidth: 0, minHeight: 176, maxWidth: '100%' }}
+                  />
+                </div>
+              ))}
+            </div>
+          )}
         </div>
         <footer className="w-full max-w-md mx-auto mt-8 py-4 text-center text-gray-400 text-sm border-t border-neutral-800">
           <div className="font-semibold text-base text-white mb-1">{company || "Your Company"}</div>

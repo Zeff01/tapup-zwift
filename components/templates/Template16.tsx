@@ -219,8 +219,7 @@ const Template16 = ({
             <div className="w-full max-w-md px-6 mb-6">
                 <h2 className="text-base font-bold mb-2">Company Overview</h2>
                 <p className="text-sm text-gray-700 leading-relaxed">
-                    {serviceDescription ||
-                        "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Lorem ipsum dolor sit amet, consectetur adipiscing elit. Lorem ipsum dolor sit amet, consectetur adipiscing elit."}
+                    {serviceDescription}
                 </p>
             </div>
 
@@ -228,26 +227,21 @@ const Template16 = ({
             <div className="w-full max-w-md px-6 mb-8">
                 <h2 className="text-base font-bold mb-2">Our Services</h2>
                 <p className="text-sm text-gray-700 leading-relaxed mb-4">
-                    Lorem ipsum dolor sit amet, consectetur adipiscing elit.
+                    {serviceDescription}
                 </p>
-                <div className="flex flex-col gap-4">
-                    {(servicePhotos && servicePhotos.length > 0
-                        ? servicePhotos.slice(0, 3)
-                        : [
-                            "/assets/sampleService1.jpg",
-                            "/assets/sampleService2.jpg",
-                            "/assets/sampleService3.jpg",
-                        ]
-                    ).map((photo, index) => (
-                        <div key={index} className="w-full overflow-hidden rounded-2xl">
-                            <img
-                                src={photo}
-                                alt={`Service ${index + 1}`}
-                                className="w-full h-40 object-cover"
-                            />
-                        </div>
-                    ))}
-                </div>
+                {servicePhotos && servicePhotos.length > 0 && (
+                    <div className="flex flex-col gap-4">
+                        {servicePhotos.slice(0, 3).map((photo, index) => (
+                            <div key={index} className="w-full overflow-hidden rounded-2xl">
+                                <img
+                                    src={photo}
+                                    alt={`Service ${index + 1}`}
+                                    className="w-full h-40 object-cover"
+                                />
+                            </div>
+                        ))}
+                    </div>
+                )}
             </div>
 
             {/* Footer */}

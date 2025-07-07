@@ -114,21 +114,20 @@ const Template15 = ({
                         {serviceDescription && (
                             <p className="text-gray-300 mb-4">{serviceDescription}</p>
                         )}
-                        <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-                            {(servicePhotos && servicePhotos.length > 0
-                                ? servicePhotos
-                                : Array.from({ length: 5 }).map((_, i) => `/assets/sampleService.png`)
-                            ).map((photo, idx) => (
-                                <div key={idx} className="w-full flex justify-center">
-                                    <img
-                                        src={photo}
-                                        alt={`Service Photo ${idx + 1}`}
-                                        className="rounded-2xl object-cover w-full h-44 bg-white"
-                                        style={{ minWidth: 0, minHeight: 176, maxWidth: '100%' }}
-                                    />
-                                </div>
-                            ))}
-                        </div>
+                        {servicePhotos && servicePhotos.length > 0 && (
+                            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                                {servicePhotos.map((photo, idx) => (
+                                    <div key={idx} className="w-full flex justify-center">
+                                        <img
+                                            src={photo}
+                                            alt={`Service Photo ${idx + 1}`}
+                                            className="rounded-2xl object-cover w-full h-44 bg-white"
+                                            style={{ minWidth: 0, minHeight: 176, maxWidth: '100%' }}
+                                        />
+                                    </div>
+                                ))}
+                            </div>
+                        )}
                     </div>
                     {/* Footer */}
                     <footer className="w-full max-w-md mx-auto mt-14 py-4 text-center text-gray-400 text-sm relative">

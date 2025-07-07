@@ -186,24 +186,19 @@ const Template17 = ({
                 <p className="text-xs sm:text-sm text-gray-700 mb-3 sm:mb-4 leading-relaxed">
                     {serviceDescription}
                 </p>
-                <div className="flex flex-col gap-3 sm:gap-4 mb-3 sm:mb-4">
-                    {(servicePhotos && servicePhotos.length > 0
-                        ? servicePhotos.slice(0, 3)
-                        : [
-                            "/assets/sampleService1.jpg",
-                            "/assets/sampleService2.jpg",
-                            "/assets/sampleService3.jpg",
-                        ]
-                    ).map((photo, idx) => (
-                        <div key={idx} className="w-full overflow-hidden rounded-xl sm:rounded-2xl">
-                            <img
-                                src={photo}
-                                alt={`Service ${idx + 1}`}
-                                className="w-full h-32 sm:h-40 object-cover"
-                            />
-                        </div>
-                    ))}
-                </div>
+                {servicePhotos && servicePhotos.length > 0 && (
+                    <div className="flex flex-col gap-3 sm:gap-4 mb-3 sm:mb-4">
+                        {servicePhotos.slice(0, 3).map((photo, idx) => (
+                            <div key={idx} className="w-full overflow-hidden rounded-xl sm:rounded-2xl">
+                                <img
+                                    src={photo}
+                                    alt={`Service ${idx + 1}`}
+                                    className="w-full h-32 sm:h-40 object-cover"
+                                />
+                            </div>
+                        ))}
+                    </div>
+                )}
             </div>
 
             {/* Footer */}
