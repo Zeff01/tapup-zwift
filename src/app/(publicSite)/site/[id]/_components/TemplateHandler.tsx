@@ -16,6 +16,7 @@ import Template13 from "@/components/templates/Template13";
 import Template14 from "@/components/templates/Template14";
 import Template15 from "@/components/templates/Template15";
 import Template16 from "@/components/templates/Template16";
+import Template17 from "@/components/templates/Template17";
 import DraftTemplate1 from "@/components/templates/DraftTemplate1";
 import { Card as cardType } from "@/types/types";
 import { Card, CardContent } from "@/components/ui/card";
@@ -39,6 +40,7 @@ const UserPage = ({ userData }: { userData: cardType }) => {
     template14: <Template14 {...userData} />,
     template15: <Template15 {...userData} />,
     template16: <Template16 {...userData} />,
+    template17: <Template17 {...userData} />,
   };
 
   interface ChosenTemplateType {
