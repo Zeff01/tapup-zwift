@@ -1,6 +1,5 @@
 "use client";
 
-import { carouselCards } from "@/constants";
 import {
   addCustomUrl,
   deleteCardById,
@@ -14,7 +13,7 @@ import {
   getUserById,
 } from "@/lib/firebase/actions/user.action";
 import { getLoggedInUser } from "@/lib/session";
-import Canvas2Card from "@/src/app/(secured)/(user)/(boarded)/cards/[cardId]/_components/canvas";
+import QRCodeModalV2 from "./qrcode/QRCodeModalV2";
 import {
   Card,
   CustomerType,
@@ -46,10 +45,12 @@ import {
 } from "lucide-react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { IoCloseCircleOutline } from "react-icons/io5";
 import { toast } from "react-toastify";
 import { Button } from "./ui/button";
+import { getCardImage } from "@/lib/utils";
+import { useIsMobile } from "@/hooks/use-mobile";
 
 type Prop = {
   card: Partial<Card>;
@@ -66,7 +67,6 @@ const DigitalCard = ({ card, confirm, user }: Prop) => {
   const [open, setOpen] = useState(false);
   const [customUrl, setCustomUrl] = useState("");
   const [hovered, setHovered] = useState(false);
-  const [showHint, setShowHint] = useState(false);
   const [transferOpen, setTransferOpen] = useState(false);
   const [newOwnerEmail, setNewOwnerEmail] = useState("");
   const [expiredDialogOpen, setExpiredDialogOpen] = useState(false);
@@ -75,13 +75,25 @@ const DigitalCard = ({ card, confirm, user }: Prop) => {
 
   const [openQRCode, setOpenQRCode] = useState(false);
 
+  const isMobile = useIsMobile();
+
   const domain =
     process.env.NODE_ENV === "development"
       ? process.env.NEXT_PUBLIC_RESET_PASSWORD_URL_DEV
       : process.env.NEXT_PUBLIC_RESET_PASSWORD_URL_PROD;
 
-  const { attributes, listeners, setNodeRef, transform, transition } =
-    useSortable({ id: card.id as UniqueIdentifier });
+  const {
+    attributes,
+    listeners,
+    setNodeRef,
+    transform,
+    transition,
+    isDragging,
+  } = useSortable({ id: card.id as UniqueIdentifier });
+
+  useEffect(() => {
+    console.log(`isDragging: ${isDragging}`);
+  }, [isDragging]);
 
   const style = {
     transform: CSS.Transform.toString(transform),
@@ -135,14 +147,6 @@ const DigitalCard = ({ card, confirm, user }: Prop) => {
       toast.error("Something went wrong");
     },
   });
-
-  const getCardImage = (cardId?: string) => {
-    const cardItem =
-      Object.values(carouselCards).find((item) => item.id === cardId) ??
-      carouselCards[cardId as keyof typeof carouselCards];
-
-    return cardItem ? cardItem.image : undefined;
-  };
 
   const cardImage = getCardImage(card.chosenPhysicalCard?.id);
 
@@ -338,6 +342,17 @@ const DigitalCard = ({ card, confirm, user }: Prop) => {
     },
   ];
 
+  const CardInfo = (
+    <div className="flex-grow flex flex-col justify-between">
+      <div>
+        <p className="text-[clamp(1rem,1.4vw,1.1rem)] mt-3 sm:mt-0 font-semibold capitalize text-white">
+          {(card.firstName || "") + " " + (card.lastName || "")}
+        </p>
+        <p className="text-xs capitalize text-white">{card.position || ""}</p>
+      </div>
+    </div>
+  );
+
   const isLoading = isPendingToggleCard || isLoadingPlans;
 
   return (
@@ -346,10 +361,12 @@ const DigitalCard = ({ card, confirm, user }: Prop) => {
       ref={setNodeRef}
       style={style}
       {...attributes}
-      className="w-full relative"
+      className={`w-full relative ${isDragging && "cursor-grab"}`}
     >
       <div className="w-full flex gap-3">
-        <div className="flex flex-col justify-center  items-center space-y-1 ">
+        <div
+          className={`flex flex-col justify-center  items-center space-y-1 ${isDragging ? "opacity-20 grayscale" : ""}`}
+        >
           <Tooltip>
             <TooltipTrigger asChild>
               {card.portfolioStatus && !isCardDisabled ? (
@@ -453,6 +470,7 @@ const DigitalCard = ({ card, confirm, user }: Prop) => {
           className={`flex-1 w-full aspect-[340/208] transition-transform duration-200 flex justify-between text-secondary bg-transparent rounded-xl overflow-hidden relative [background-size:contain] md:[background_size:cover]
             ${isCardExpired(card.expiryDate) || isCardDisabled || isLoading ? "opacity-50" : ""}
             ${open ? "blur-sm pointer-events-none" : ""}
+            ${isDragging ? "opacity-20 grayscale" : ""}
           `}
           style={{
             backgroundImage: cardImage ? `url(${cardImage})` : "none",
@@ -460,27 +478,17 @@ const DigitalCard = ({ card, confirm, user }: Prop) => {
             backgroundPosition: "center",
             backgroundRepeat: "no-repeat",
           }}
-          onMouseEnter={() => setHovered(true)}
-          onMouseLeave={() => setHovered(false)}
+          onMouseEnter={() => !isMobile && setHovered(true)}
+          onMouseLeave={() => !isMobile && setHovered(false)}
+          onTouchStart={() => setHovered(true)}
+          onTouchEnd={() => setHovered(false)}
+          onTouchCancel={() => setHovered(false)}
         >
           <div className="absolute w-full top-1/2 right-0 -translate-y-1/2 flex items-center justify-end z-30">
             <div className="relative flex items-center justify-end group">
-              {/* Tooltip - centered above the grip */}
-              <div
-                className={`absolute w-max -left-40 mb-1 transition-opacity duration-200  ${showHint ? "opacity-100" : "opacity-0"}`}
-              >
-                <span className="text-white bg-black/60 px-2 py-1 rounded">
-                  Hold to drag
-                </span>
-              </div>
-
-              {/* Grip */}
               <GripVertical
                 {...listeners}
-                onTouchStart={() => setShowHint(true)}
-                onTouchEnd={() => setShowHint(false)}
-                onTouchCancel={() => setShowHint(false)}
-                className="z-30 mr-1.5 md:mr-3.5 peer size-6 sm:size-12 lg:size-8 cursor-grab text-white opacity-80 hover:opacity-100 transition-opacity duration-150 bg-black/20 rounded-md p-1"
+                className="z-30 mr-2 md:mr-3.5 peer size-6 sm:size-12 lg:size-8 cursor-grab text-white opacity-80 hover:opacity-100 transition-opacity duration-150 bg-black/20 rounded-md p-1"
                 style={{ touchAction: "none" }}
               />
             </div>
@@ -493,39 +501,37 @@ const DigitalCard = ({ card, confirm, user }: Prop) => {
           )}
 
           {(isCardExpired(card.expiryDate) || isCardDisabled) && !isLoading && (
-            <div className="absolute left-0 top-0 w-[100%] h-full flex items-center justify-center bg-black/60 text-white text-lg font-semibold">
+            <div className="absolute left-0 top-0 w-full h-full flex items-center justify-center bg-black/60 text-white text-lg font-semibold">
               {isCardDisabled ? "Disabled" : "Expired"}
             </div>
           )}
 
-          {!isCardExpired(card.expiryDate) && hovered && !isLoading && (
-            <div className="absolute bottom-5 right-5 bg-black text-white text-xs px-2 py-1 rounded-lg shadow-lg">
-              Expires: {formattedExpiryDate}
-            </div>
-          )}
-
-          <Link
-            href={isCardExpired(card.expiryDate) ? "#" : `/cards/${card.id}`}
-            prefetch
-            className="flex-1 border-r border-accent/40 py-3 px-4 relative"
-            onClick={(e) => {
-              e.preventDefault();
-              if (isCardExpired(card.expiryDate)) {
-                setExpiredDialogOpen(true);
-              }
-            }}
-          >
-            <div className="flex-grow flex flex-col justify-between">
-              <div>
-                <p className="text-[clamp(1rem,1.4vw,1.1rem)] mt-3 sm:mt-0 font-semibold capitalize text-white">
-                  {(card.firstName || "") + " " + (card.lastName || "")}
-                </p>
-                <p className="text-xs capitalize text-white">
-                  {card.position || ""}
-                </p>
+          {!isCardExpired(card.expiryDate) &&
+            hovered &&
+            !isLoading &&
+            !isDragging && (
+              <div className="absolute bottom-5 right-5 bg-black text-white text-xs px-2 py-1 rounded-lg shadow-lg">
+                Expires: {formattedExpiryDate}
               </div>
-            </div>
-          </Link>
+            )}
+
+          {isDragging ? (
+            <div className="flex-1 py-3 px-4 relative">{CardInfo}</div>
+          ) : (
+            <Link
+              href={isCardExpired(card.expiryDate) ? "#" : `/cards/${card.id}`}
+              prefetch
+              className="flex-1 py-3 px-4 relative"
+              onClick={(e) => {
+                if (isCardExpired(card.expiryDate)) {
+                  e.preventDefault();
+                  setExpiredDialogOpen(true);
+                }
+              }}
+            >
+              {CardInfo}
+            </Link>
+          )}
         </div>
       </div>
       {/* <Dialog.Root open={expiredDialogOpen} onOpenChange={setExpiredDialogOpen}>
@@ -762,16 +768,10 @@ const DigitalCard = ({ card, confirm, user }: Prop) => {
           </Dialog.Content>
         </Dialog.Portal>
       </Dialog.Root>
-      {/* 
+
       <QRCodeModalV2
         //avoid unnecessary re-renders of passing card
         userProfile={openQRCode ? card : undefined}
-        open={openQRCode}
-        onClose={() => setOpenQRCode(false)}
-      /> */}
-
-      <Canvas2Card
-        user={openQRCode ? card : undefined}
         open={openQRCode}
         onClose={() => setOpenQRCode(false)}
       />
