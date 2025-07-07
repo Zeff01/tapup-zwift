@@ -1,9 +1,11 @@
 import React from "react";
 import { Card } from "@/types/types";
-import { LuMail, LuHeart, LuGlobe, LuTwitter, LuFacebook, LuLinkedin, LuInstagram, LuYoutube } from "react-icons/lu";
+import { LuMail, LuBookmark, LuGlobe, LuTwitter, LuFacebook, LuLinkedin, LuInstagram, LuYoutube } from "react-icons/lu";
 import { FaWhatsapp, FaViber, FaTiktok, FaSkype } from "react-icons/fa6";
+import { downloadVCard } from "@/lib/utils";
 
 const Template13 = ({
+  id,
   firstName,
   lastName,
   middleName,
@@ -28,7 +30,20 @@ const Template13 = ({
   websiteUrl,
   viberUrl,
   tiktokUrl,
+  customUrl,
 }: Card) => {
+  const userProfile = {
+    id,
+    firstName,
+    lastName,
+    email,
+    number,
+    company,
+    position,
+    websiteUrl,
+    customUrl,
+  };
+
   return (
     <div className="min-h-screen bg-gradient-to-br from-[#1a1a1a] via-[#232323] to-[#2d2327] text-white flex flex-col items-center justify-center py-8 px-4 relative overflow-hidden">
       {/* Content wrapper with higher z-index */}
@@ -54,14 +69,19 @@ const Template13 = ({
               className="object-cover w-full h-full"
             />
             {/* Top right icons overlay */}
-            {/* <div className="absolute top-3 right-3 flex z-20 gap-2">
-              <button className="rounded-full transition p-1 shadow">
-                <img src="/assets/template13mailicon.svg" alt="Mail" className="w-8 h-8" style={{ filter: 'drop-shadow(0 0 2px #000)' }} />
-              </button>
-              <button className="rounded-full transition p-1 shadow">
-                <img src="/assets/template13hearticon.svg" alt="Heart" className="w-8 h-8" style={{ filter: 'drop-shadow(0 0 2px #000)' }} />
-              </button>
-            </div> */}
+            <div className="flex gap-x-2 absolute right-2 top-2 text-white ">
+              <span className=" text-lg font-semibold  border border-[#FFFBD8] rounded-full p-1 ">
+                <a href={`mailto:${email}`}>
+                  <LuMail className="cursor-pointer" />
+                </a>
+              </span>
+              <span className=" text-lg font-semibold  border border-[#FFFBD8] rounded-full p-1 ">
+                <LuBookmark
+                  className="cursor-pointer"
+                  onClick={() => downloadVCard(userProfile)}
+                />
+              </span>
+            </div>
           </div>
           {/* Profile section, now overlapping the cover photo and aligned left */}
           <div className="flex flex-col items-start w-full px-4 -mt-12 z-10">
@@ -91,24 +111,15 @@ const Template13 = ({
                 {suffix && <span>, {suffix}</span>}
                 {prefix && <span className="font-normal text-gray-300"> ({prefix})</span>}
               </h1>
-              {/* <span
-                className="text-black text-xs font-semibold px-2 py-0.5 rounded"
-                style={{
-                  background: "linear-gradient(90deg, #d2ebb9 0%, #fce99c 100%)",
-                  display: "inline-block",
-                }}
-              >
-                PRO
-              </span> */}
             </div>
             <div className="text-base text-gray-300 mb-4">{position} {company && <>· {company}</>}</div>
-            <div className="flex gap-2 mb-2">
+            {/* <div className="flex gap-2 mb-2">
               <button className="bg-[#eab8b9] text-black px-4 py-2 rounded-full font-medium flex items-center gap-2 hover:bg-[#d99ca0] transition">
                 <img src="/assets/template13rockhand.svg" alt="Rock hand" className="w-5 h-5" />
                 Let’s Talk
               </button>
               <button className="bg-white text-black px-4 py-2 rounded-full font-medium hover:bg-gray-200 transition">Save</button>
-            </div>
+            </div> */}
           </div>
         </div>
         {/* Contact Info */}
