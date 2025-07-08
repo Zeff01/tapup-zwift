@@ -1,19 +1,19 @@
 import { Card } from "@/types/types";
 import Image from "next/image";
-import { SlSocialFacebook } from "react-icons/sl";
 import { GoGlobe } from "react-icons/go";
+import { SlSocialFacebook } from "react-icons/sl";
 // import { CiMail, CiBookmark, CiPhone, CiSaveDown2 } from "react-icons/ci";
+import { downloadVCard } from "@/lib/utils";
 import { BsBookmark } from "react-icons/bs";
-import { RxEnvelopeClosed } from "react-icons/rx";
 import {
-  FaXTwitter,
   FaInstagram,
   FaLinkedin,
   FaWhatsapp,
+  FaXTwitter,
 } from "react-icons/fa6";
 import { FiYoutube } from "react-icons/fi";
+import { RxEnvelopeClosed } from "react-icons/rx";
 import { SiSkypeforbusiness } from "react-icons/si";
-import { downloadVCard } from "@/lib/utils";
 
 const Template9 = ({
   id,
@@ -73,17 +73,16 @@ const Template9 = ({
             />
           </span> */}
           <div className="flex flex-col justify-center items-center">
-            <div
-              className="rounded-full border p-1.5 border-white bg-white text-black cursor-pointer"
-              onClick={() => console.log()}
-            >
-              <RxEnvelopeClosed size={14} />
+            <div className="rounded-full border p-1.5 border-white bg-white text-black cursor-pointer">
+              <a href={`mailto:${email}`}>
+                <RxEnvelopeClosed size={14} />
+              </a>
             </div>
           </div>
           <div className="flex flex-col justify-center items-center">
             <div
               className="rounded-full border p-1.5 border-white bg-white text-black cursor-pointer"
-              onClick={() => console.log()}
+              onClick={() => downloadVCard(userProfile)}
             >
               <BsBookmark size={14} />
             </div>

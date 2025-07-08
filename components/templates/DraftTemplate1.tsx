@@ -1,17 +1,16 @@
 import { Card } from "@/types/types";
 import Image from "next/image";
-import { BsBookmark, BsPlusLg } from "react-icons/bs";
 import {
   FaFacebook,
   FaGlobe,
   FaInstagram,
   FaLinkedin,
   FaSkype,
+  FaTiktok,
+  FaViber,
   FaWhatsapp,
   FaXTwitter,
   FaYoutube,
-  FaTiktok,
-  FaViber
 } from "react-icons/fa6";
 
 const DraftTemplate1 = ({
@@ -50,7 +49,7 @@ const DraftTemplate1 = ({
   return (
     <div className="bg-gradient-to-br from-stone-100 via-amber-50 to-yellow-50 text-gray-800 p-4 flex flex-col items-center justify-between min-h-screen relative">
       {/* Paper Texture Background */}
-      <div 
+      <div
         className="absolute inset-0 opacity-40"
         style={{
           backgroundImage: `
@@ -60,13 +59,14 @@ const DraftTemplate1 = ({
             linear-gradient(45deg, transparent 75%, rgba(245, 245, 220, 0.1) 75%),
             linear-gradient(-45deg, transparent 75%, rgba(245, 245, 220, 0.1) 75%)
           `,
-          backgroundSize: '10px 10px, 20px 20px, 20px 20px, 20px 20px, 20px 20px',
-          backgroundPosition: '0 0, 0 0, 10px 0, 0 10px, 10px 10px'
+          backgroundSize:
+            "10px 10px, 20px 20px, 20px 20px, 20px 20px, 20px 20px",
+          backgroundPosition: "0 0, 0 0, 10px 0, 0 10px, 10px 10px",
         }}
       ></div>
-      
+
       {/* Paper grain effect */}
-      <div 
+      <div
         className="absolute inset-0 opacity-20"
         style={{
           backgroundImage: `
@@ -84,7 +84,7 @@ const DraftTemplate1 = ({
               rgba(139, 69, 19, 0.03) 2px,
               rgba(139, 69, 19, 0.03) 4px
             )
-          `
+          `,
         }}
       ></div>
 
@@ -115,18 +115,24 @@ const DraftTemplate1 = ({
           <div className="absolute -bottom-12 left-1/2 transform -translate-x-1/2">
             <div className="relative">
               {/* Artistic outer ring with jagged edges */}
-              <div className="absolute -inset-2 bg-gradient-to-r from-amber-300 via-orange-300 to-yellow-300 rounded-full p-1" 
-                   style={{
-                     clipPath: 'polygon(98% 24%, 94% 35%, 100% 47%, 95% 60%, 99% 72%, 92% 83%, 98% 95%, 85% 92%, 73% 99%, 60% 95%, 47% 100%, 35% 94%, 24% 98%, 12% 91%, 2% 95%, 5% 83%, 0% 72%, 5% 60%, 0% 47%, 6% 35%, 2% 24%, 9% 12%, 2% 5%, 15% 8%, 27% 1%, 40% 5%, 53% 0%, 66% 6%, 76% 2%, 88% 8%)'
-                   }}>
+              <div
+                className="absolute -inset-2 bg-gradient-to-r from-amber-300 via-orange-300 to-yellow-300 rounded-full p-1"
+                style={{
+                  clipPath:
+                    "polygon(98% 24%, 94% 35%, 100% 47%, 95% 60%, 99% 72%, 92% 83%, 98% 95%, 85% 92%, 73% 99%, 60% 95%, 47% 100%, 35% 94%, 24% 98%, 12% 91%, 2% 95%, 5% 83%, 0% 72%, 5% 60%, 0% 47%, 6% 35%, 2% 24%, 9% 12%, 2% 5%, 15% 8%, 27% 1%, 40% 5%, 53% 0%, 66% 6%, 76% 2%, 88% 8%)",
+                }}
+              >
                 <div className="w-28 h-28 rounded-full bg-gradient-to-br from-stone-100 to-amber-50"></div>
               </div>
-              
+
               {/* Main profile picture container with decorative border */}
-              <div className="relative w-24 h-24 rounded-full overflow-hidden border-4 border-white shadow-2xl bg-gradient-to-br from-amber-100 to-orange-100"
-                   style={{
-                     boxShadow: '0 0 0 2px rgba(251, 191, 36, 0.3), 0 0 0 4px rgba(251, 191, 36, 0.1), 0 10px 25px rgba(0, 0, 0, 0.2)'
-                   }}>
+              <div
+                className="relative w-24 h-24 rounded-full overflow-hidden border-4 border-white shadow-2xl bg-gradient-to-br from-amber-100 to-orange-100"
+                style={{
+                  boxShadow:
+                    "0 0 0 2px rgba(251, 191, 36, 0.3), 0 0 0 4px rgba(251, 191, 36, 0.1), 0 10px 25px rgba(0, 0, 0, 0.2)",
+                }}
+              >
                 <Image
                   src={profilePictureUrl || "/default-user.png"}
                   alt="Profile"
@@ -136,7 +142,7 @@ const DraftTemplate1 = ({
                 {/* Inner artistic overlay */}
                 <div className="absolute inset-0 bg-gradient-to-br from-transparent via-transparent to-amber-100/20"></div>
               </div>
-              
+
               {/* Enhanced Artistic Paint Splash Effects */}
               <div className="absolute -top-3 -right-3 w-8 h-8 bg-gradient-to-br from-orange-400 to-red-400 rounded-full opacity-70 blur-sm"></div>
               <div className="absolute -top-1 -right-1 w-4 h-4 bg-orange-500 rounded-full opacity-80"></div>
@@ -161,10 +167,10 @@ const DraftTemplate1 = ({
         {/* CONTACT INFO with Artist Theme */}
         <div className="bg-white/90 backdrop-blur-sm rounded-2xl p-6 mb-6 shadow-lg border border-amber-100 relative overflow-hidden">
           {/* Paper texture overlay */}
-          <div 
+          <div
             className="absolute inset-0 opacity-10"
             style={{
-              backgroundImage: `repeating-linear-gradient(45deg, transparent, transparent 2px, rgba(139, 69, 19, 0.1) 2px, rgba(139, 69, 19, 0.1) 4px)`
+              backgroundImage: `repeating-linear-gradient(45deg, transparent, transparent 2px, rgba(139, 69, 19, 0.1) 2px, rgba(139, 69, 19, 0.1) 4px)`,
             }}
           ></div>
           <div className="relative z-10">
@@ -197,10 +203,10 @@ const DraftTemplate1 = ({
         {companyBackground && (
           <div className="bg-gradient-to-r from-stone-50 to-amber-50 rounded-2xl p-6 mb-6 shadow-lg border border-amber-200 relative overflow-hidden">
             {/* Paper texture overlay */}
-            <div 
+            <div
               className="absolute inset-0 opacity-15"
               style={{
-                backgroundImage: `repeating-linear-gradient(-45deg, transparent, transparent 3px, rgba(139, 69, 19, 0.1) 3px, rgba(139, 69, 19, 0.1) 6px)`
+                backgroundImage: `repeating-linear-gradient(-45deg, transparent, transparent 3px, rgba(139, 69, 19, 0.1) 3px, rgba(139, 69, 19, 0.1) 6px)`,
               }}
             ></div>
             <div className="relative z-10">
@@ -219,10 +225,10 @@ const DraftTemplate1 = ({
         {serviceDescription && (
           <div className="bg-white/90 backdrop-blur-sm rounded-2xl p-6 mb-6 shadow-lg border border-amber-100 relative overflow-hidden">
             {/* Paper texture overlay */}
-            <div 
+            <div
               className="absolute inset-0 opacity-10"
               style={{
-                backgroundImage: `repeating-linear-gradient(45deg, transparent, transparent 2px, rgba(139, 69, 19, 0.1) 2px, rgba(139, 69, 19, 0.1) 4px)`
+                backgroundImage: `repeating-linear-gradient(45deg, transparent, transparent 2px, rgba(139, 69, 19, 0.1) 2px, rgba(139, 69, 19, 0.1) 4px)`,
               }}
             ></div>
             <div className="relative z-10">

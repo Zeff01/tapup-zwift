@@ -1,3 +1,4 @@
+import { downloadVCard } from "@/lib/utils";
 import { Card } from "@/types/types";
 import Image from "next/image";
 // import { CiMail, CiSaveDown2, CiPhone } from "react-icons/ci";
@@ -137,17 +138,16 @@ const Template2 = ({
             <p className="text-xs">Save</p>
           </div> */}
           <div className="flex flex-col justify-center items-center">
-            <div
-              className="rounded-full border p-2 border-black bg-white text-black cursor-pointer"
-              onClick={() => console.log()}
-            >
-              <RxEnvelopeClosed size={14} />
+            <div className="rounded-full border p-2 border-black bg-white text-black cursor-pointer">
+              <a href={`mailto:${email}`}>
+                <RxEnvelopeClosed size={14} />
+              </a>
             </div>
           </div>
           <div className="flex flex-col justify-center items-center">
             <div
               className="rounded-full border p-2 border-black bg-white text-black cursor-pointer"
-              onClick={() => console.log()}
+              onClick={() => downloadVCard(userProfile)}
             >
               <BsBookmark size={14} />
             </div>

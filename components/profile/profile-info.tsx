@@ -79,7 +79,7 @@ const ProfileInfo = ({
                 className="text-[#1A1919CC] cursor-pointer"
               />
             </Link>
-            <Link href={`emailto:${email}`}>
+            <Link href={`mailto:${email}`}>
               <TbMailPlus
                 size={20}
                 className="text-[#1A1919CC] cursor-pointer"

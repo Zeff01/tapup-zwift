@@ -1,5 +1,5 @@
-import React, { useState } from "react";
-import Link from "next/link";
+import { ChosenTemplateType } from "@/components/forms/CardsAndUsersCreateFields";
+import { Card, CardContent } from "@/components/ui/card";
 import {
   Carousel,
   CarouselContent,
@@ -7,10 +7,7 @@ import {
   CarouselNext,
   CarouselPrevious,
 } from "@/components/ui/carousel";
-import { Card, CardContent } from "@/components/ui/card";
 import Image from "next/image";
-import { ChosenTemplateType } from "@/components/forms/CardsAndUsersCreateFields";
-import { EyeIcon } from "lucide-react";
 
 interface Template {
   id: ChosenTemplateType;

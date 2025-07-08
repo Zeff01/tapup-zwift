@@ -1,12 +1,9 @@
-import wavy from "@/public/assets/wavy.png";
 import { Card } from "@/types/types";
 import Image from "next/image";
-import { downloadVCard } from "@/lib/utils";
 
 // fonts
-import { cn } from "@/lib/utils";
-import { Mulish } from "next/font/google";
-import { Roboto_Condensed } from "next/font/google";
+import { cn, downloadVCard } from "@/lib/utils";
+import { Mulish, Roboto_Condensed } from "next/font/google";
 
 const roboto_c = Roboto_Condensed({
   weight: "500",
@@ -19,18 +16,17 @@ const mulish = Mulish({
 });
 
 // icons
-import { SlSocialFacebook } from "react-icons/sl";
-import { GoGlobe } from "react-icons/go";
-import { CiMail, CiBookmark, CiPhone, CiSaveDown2 } from "react-icons/ci";
-import { HiOutlineBookmark } from "react-icons/hi2";
 import {
-  FaXTwitter,
   FaInstagram,
   FaLinkedin,
   FaWhatsapp,
+  FaXTwitter,
 } from "react-icons/fa6";
 import { FiYoutube } from "react-icons/fi";
+import { GoGlobe } from "react-icons/go";
+import { HiOutlineBookmark } from "react-icons/hi2";
 import { SiSkypeforbusiness } from "react-icons/si";
+import { SlSocialFacebook } from "react-icons/sl";
 import { Separator } from "../ui/separator";
 
 const Template11 = ({
@@ -78,14 +74,16 @@ const Template11 = ({
             </a>
           </span> */}
           <span className=" text-lg font-semibold bg-[#A0E9FF]  rounded-full p-1 ">
-            <a href={`mailto:${email}`}>
-              <HiOutlineBookmark size={20} className="cursor-pointer" />
-            </a>
+            <HiOutlineBookmark
+              onClick={() => downloadVCard(userProfile)}
+              size={20}
+              className="cursor-pointer"
+            />
           </span>
           {/* <span className=" text-lg font-semibold bg-[#A0E9FF]  rounded-full p-2 ">
             <CiSaveDown2
               className="cursor-pointer"
-              onClick={() => downloadVCard(userProfile)}
+              
             />
           </span> */}
         </div>
