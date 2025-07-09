@@ -73,7 +73,7 @@ const Template13 = ({
         <div className="w-full max-w-md mb-8 relative flex flex-col items-center">
           <div className="w-full h-40 rounded-2xl overflow-hidden bg-neutral-800 relative">
             <img
-              src={coverPhotoUrl || "/assets/sampleCoverPhoto.png"}
+              src={coverPhotoUrl}
               alt="Cover Photo"
               className="object-cover w-full h-full"
             />
@@ -91,7 +91,7 @@ const Template13 = ({
           <div className="flex flex-col items-start w-full px-4 -mt-12 z-10">
             <div className="w-24 h-24 flex items-center justify-center mb-4 shadow-lg relative">
               <img
-                src={profilePictureUrl || "/default-user.png"}
+                src={profilePictureUrl}
                 alt="avatar"
                 className="w-24 h-24 object-cover"
                 style={{
@@ -234,42 +234,42 @@ const Template13 = ({
             Company Overview
           </h2>
           <p className="text-gray-300 text-base text-left">
-            {/* {companyBackground ||
-              "Codebility is a tech consulting firm that specializes in custom software development, including web and mobile apps. They deliver scalable, user-friendly solutions using agile methodologies."} */}
             {companyBackground}
           </p>
         </div>
         {/* Our Services */}
-        <div className="w-full max-w-md px-4">
-          <h2 className="text-lg font-bold mb-4 text-white text-left">
-            Our Services
-          </h2>
-          {serviceDescription && (
-            <p className="text-gray-300 text-base text-left mb-4">
-              {serviceDescription}
-            </p>
-          )}
-          <div className="flex flex-col gap-4 pb-2">
-            {servicePhotos &&
-              servicePhotos.length > 0 &&
-              servicePhotos.map((photo, idx) => (
-                <div key={idx} className="w-full flex justify-center">
-                  <div className="relative w-full h-44 rounded-2xl overflow-hidden bg-white">
-                    <Image
-                      src={photo}
-                      alt={`Service Photo ${idx + 1}`}
-                      fill
-                      className="object-cover"
-                      sizes="(max-width: 768px) 100vw, 50vw"
-                    />
+        {(serviceDescription || (servicePhotos && servicePhotos.length > 0)) && (
+          <div className="w-full max-w-md px-4">
+            <h2 className="text-lg font-bold mb-4 text-white text-left">
+              Our Services
+            </h2>
+            {serviceDescription && (
+              <p className="text-gray-300 text-base text-left mb-4">
+                {serviceDescription}
+              </p>
+            )}
+            {servicePhotos && servicePhotos.length > 0 && (
+              <div className="flex flex-col gap-4 pb-2">
+                {servicePhotos.map((photo, idx) => (
+                  <div key={idx} className="w-full flex justify-center">
+                    <div className="relative w-full h-44 rounded-2xl overflow-hidden bg-white">
+                      <Image
+                        src={photo}
+                        alt={`Service Photo ${idx + 1}`}
+                        fill
+                        className="object-cover"
+                        sizes="(max-width: 768px) 100vw, 50vw"
+                      />
+                    </div>
                   </div>
-                </div>
-              ))}
+                ))}
+              </div>
+            )}
           </div>
-        </div>
+        )}
         <footer className="w-full max-w-md mx-auto mt-8 py-4 text-center text-gray-400 text-sm border-t border-neutral-800">
           <div className="font-semibold text-base text-white mb-1">
-            {company || "Your Company"}
+            {company}
           </div>
           <div>© 2024 Zwiftech. All Right Reserved.</div>
         </footer>
