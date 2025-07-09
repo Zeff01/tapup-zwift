@@ -19,6 +19,7 @@ import { Button } from "../ui/button";
 import { LuBookmark, LuMail } from "react-icons/lu";
 
 const Template17 = ({
+  id,
   firstName,
   lastName,
   middleName,
@@ -43,7 +44,6 @@ const Template17 = ({
   websiteUrl,
   viberUrl,
   tiktokUrl,
-  id,
   customUrl,
 }: Card) => {
   const userProfile = {

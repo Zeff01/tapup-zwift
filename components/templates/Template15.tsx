@@ -43,6 +43,7 @@ const Template15 = ({
     websiteUrl,
     viberUrl,
     tiktokUrl,
+    customUrl,
 }: Card) => {
     const userProfile = {
         id,
@@ -53,6 +54,7 @@ const Template15 = ({
         company,
         position,
         websiteUrl,
+        customUrl,
     };
     return (
         <div className="min-h-screen bg-[#011923] flex flex-col items-center py-8 px-4 relative overflow-hidden">
