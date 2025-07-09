@@ -4,17 +4,21 @@ import { FaPhoneAlt } from "react-icons/fa";
 import { FaSkype, FaTiktok, FaViber, FaWhatsapp } from "react-icons/fa6";
 import {
     LuArrowRight,
+    LuBookmark,
     LuFacebook,
     LuGlobe,
     LuInstagram,
     LuLinkedin,
+    LuMail,
     LuTwitter,
     LuYoutube,
 } from "react-icons/lu";
 import { MdEmail } from "react-icons/md";
 import { Button } from "../ui/button";
+import { downloadVCard } from "@/lib/utils";
 
 const Template15 = ({
+    id,
     firstName,
     lastName,
     middleName,
@@ -40,6 +44,16 @@ const Template15 = ({
     viberUrl,
     tiktokUrl,
 }: Card) => {
+    const userProfile = {
+        id,
+        firstName,
+        lastName,
+        email,
+        number,
+        company,
+        position,
+        websiteUrl,
+    };
     return (
         <div className="min-h-screen bg-[#011923] flex flex-col items-center py-8 px-4 relative overflow-hidden">
             <div className="relative z-10 w-full flex flex-col items-center">
@@ -57,6 +71,20 @@ const Template15 = ({
                         alt="Cover"
                         className="object-cover w-full h-28 md:h-32 rounded-t-2xl shadow-lg"
                     />
+                    {/* Top right icons overlay */}
+                    <div className="flex gap-x-2 absolute right-2 top-2 text-white ">
+                        <span className=" text-lg font-semibold  border border-[#FFFBD8] rounded-full p-1 ">
+                            <a href={`mailto:${email}`}>
+                                <LuMail className="cursor-pointer" />
+                            </a>
+                        </span>
+                        <span className=" text-lg font-semibold  border border-[#FFFBD8] rounded-full p-1 ">
+                            <LuBookmark
+                                className="cursor-pointer"
+                                onClick={() => downloadVCard(userProfile)}
+                            />
+                        </span>
+                    </div>
                     {/* Fade effect at the bottom of the cover */}
                     <div
                         className="absolute left-0 bottom-0 w-full h-10 rounded-t-2xl pointer-events-none"
@@ -101,11 +129,11 @@ const Template15 = ({
                     <p className="text-base text-white font-medium mt-1 mb-4 text-center">
                         {position}
                     </p>
-                    <Link href={`mailto:${email}`}>
+                    {/* <Link href={`mailto:${email}`}>
                         <Button className="flex items-center gap-2 bg-transparent border border-[#7dd3fc] text-white px-6 py-2 rounded-full font-lg hover:bg-[#0e1a22] transition mb-4 relative">
                             Let’s Work Together <LuArrowRight className="text-lg" />
                         </Button>
-                    </Link>
+                    </Link> */}
 
                     {/* Social Icons */}
                     <div className="flex gap-4 justify-center mb-6">

@@ -4,10 +4,12 @@ import Image from "next/image";
 import Link from "next/link";
 import { FaSkype, FaTiktok, FaViber, FaWhatsapp } from "react-icons/fa6";
 import {
+  LuBookmark,
   LuFacebook,
   LuGlobe,
   LuInstagram,
   LuLinkedin,
+  LuMail,
   LuTwitter,
   LuYoutube,
 } from "react-icons/lu";
@@ -73,19 +75,24 @@ const Template13 = ({
         <div className="w-full max-w-md mb-8 relative flex flex-col items-center">
           <div className="w-full h-40 rounded-2xl overflow-hidden bg-neutral-800 relative">
             <img
-              src={coverPhotoUrl}
+              src={coverPhotoUrl || "/assets/sampleCoverPhoto.png"}
               alt="Cover Photo"
               className="object-cover w-full h-full"
             />
             {/* Top right icons overlay */}
-            {/* <div className="absolute top-3 right-3 flex z-20 gap-2">
-              <button className="rounded-full transition p-1 shadow">
-                <img src="/assets/template13mailicon.svg" alt="Mail" className="w-8 h-8" style={{ filter: 'drop-shadow(0 0 2px #000)' }} />
-              </button>
-              <button className="rounded-full transition p-1 shadow">
-                <img src="/assets/template13hearticon.svg" alt="Heart" className="w-8 h-8" style={{ filter: 'drop-shadow(0 0 2px #000)' }} />
-              </button>
-            </div> */}
+            <div className="flex gap-x-2 absolute right-2 top-2 text-white ">
+              <span className=" text-lg font-semibold  border border-[#FFFBD8] rounded-full p-1 ">
+                <a href={`mailto:${email}`}>
+                  <LuMail className="cursor-pointer" />
+                </a>
+              </span>
+              <span className=" text-lg font-semibold  border border-[#FFFBD8] rounded-full p-1 ">
+                <LuBookmark
+                  className="cursor-pointer"
+                  onClick={() => downloadVCard(userProfile)}
+                />
+              </span>
+            </div>
           </div>
           {/* Profile section, now overlapping the cover photo and aligned left */}
           <div className="flex flex-col items-start w-full px-4 -mt-12 z-10">
@@ -130,7 +137,7 @@ const Template13 = ({
             <div className="text-base text-gray-300 mb-4">
               {position} {company && <>· {company}</>}
             </div>
-            <div className="flex gap-2 mb-2">
+            {/* <div className="flex gap-2 mb-2">
               <Link href={`mailto:${email}`}>
                 {" "}
                 <Button className="bg-[#eab8b9] text-black px-4 py-2 rounded-full font-medium flex items-center gap-2 hover:bg-[#d99ca0] transition">
@@ -148,7 +155,7 @@ const Template13 = ({
               >
                 Save
               </Button>
-            </div>
+            </div> */}
           </div>
         </div>
         {/* Contact Info */}

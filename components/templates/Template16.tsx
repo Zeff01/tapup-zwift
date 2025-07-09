@@ -58,19 +58,33 @@ const Template16 = ({
   return (
     <div className="bg-white min-h-screen w-full flex flex-col items-center font-sans text-black">
       {/* Cover Image */}
-      <div className="w-full max-w-md h-40 overflow-hidden">
+      <div className="w-full max-w-md h-40 overflow-hidden relative">
         <img
           src={coverPhotoUrl}
           alt="Cover"
           className="w-full h-full object-cover"
         />
+        {/* Top right icons overlay */}
+        <div className="flex gap-x-2 absolute right-2 top-2 text-white z-10">
+          <span className="text-lg font-semibold border border-[#FFFBD8] rounded-full p-1">
+            <a href={`mailto:${email}`}>
+              <LuMail className="cursor-pointer" />
+            </a>
+          </span>
+          <span className="text-lg font-semibold border border-[#FFFBD8] rounded-full p-1">
+            <LuBookmark
+              className="cursor-pointer"
+              onClick={() => downloadVCard(userProfile)}
+            />
+          </span>
+        </div>
       </div>
 
       {/* Profile Section */}
       <div className="w-full max-w-md px-6">
         <div className="flex items-start gap-4">
           {/* Avatar */}
-          <div className="w-24 h-24 rounded-full border-[5px] border-white overflow-hidden shadow-md flex-shrink-0  -mt-12">
+          <div className="w-24 h-24 rounded-full border-[5px] border-white overflow-hidden shadow-md flex-shrink-0 -mt-12 relative z-20">
             <img
               src={profilePictureUrl}
               alt="Profile"
@@ -112,7 +126,7 @@ const Template16 = ({
             </div>
 
             {/* Social Icons */}
-            <div className="flex items-center gap-3 mt-3 flex-wrap">
+            <div className="flex items-center gap-3 mt-3 mb-10 flex-wrap">
               {facebookUrl && (
                 <a
                   href={facebookUrl}
@@ -217,7 +231,7 @@ const Template16 = ({
           </div>
         </div>
         {/* Buttons */}
-        <div className="flex items-center gap-5 mt-4 w-full mb-6">
+        {/* <div className="flex items-center gap-5 mt-4 w-full mb-6">
           <Link href={`mailto:${email}`}>
             <Button className="flex-[1.2] flex items-center justify-center gap-2 px-4 py-2 bg-black text-white text-sm font-medium rounded-full hover:bg-gray-800 transition">
               <LuUserCircle className="text-white text-lg" />
@@ -231,7 +245,7 @@ const Template16 = ({
             <LuBookmark className="text-white text-lg" />
             Save
           </Button>
-        </div>
+        </div> */}
       </div>
 
       {/* Company Overview */}

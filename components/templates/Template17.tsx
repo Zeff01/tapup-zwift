@@ -16,6 +16,7 @@ import {
   FaYoutube,
 } from "react-icons/fa";
 import { Button } from "../ui/button";
+import { LuBookmark, LuMail } from "react-icons/lu";
 
 const Template17 = ({
   firstName,
@@ -88,6 +89,20 @@ const Template17 = ({
               alt="Cover"
               className="w-full h-full object-cover rounded-t-xl sm:rounded-t-[2rem]"
             />
+            {/* Top right icons overlay */}
+            <div className="flex gap-x-2 absolute right-2 top-2 text-white ">
+              <span className=" text-lg font-semibold  border border-[#FFFBD8] rounded-full p-1 ">
+                <a href={`mailto:${email}`}>
+                  <LuMail className="cursor-pointer" />
+                </a>
+              </span>
+              <span className=" text-lg font-semibold  border border-[#FFFBD8] rounded-full p-1 ">
+                <LuBookmark
+                  className="cursor-pointer"
+                  onClick={() => downloadVCard(userProfile)}
+                />
+              </span>
+            </div>
           </div>
         </div>
 
@@ -229,7 +244,7 @@ const Template17 = ({
           )}
         </div>
         {/* Buttons */}
-        <div className="flex flex-col sm:flex-row gap-2 sm:gap-3 w-full mt-4 sm:mt-6">
+        {/* <div className="flex flex-col sm:flex-row gap-2 sm:gap-3 w-full mt-4 sm:mt-6">
           <Link href={`mailto:${email}`}>
             <Button className="flex-1 bg-[#FF4B5C] hover:bg-[#e43c4a] text-white py-2.5 sm:py-2 rounded-full font-semibold flex items-center justify-center gap-2 text-sm">
               <FaEnvelope className="text-white text-base align-middle" />
@@ -244,7 +259,7 @@ const Template17 = ({
             <FaRegBookmark className="text-[#FF4B5C] text-base align-middle" />
             <span className="leading-none">Save</span>
           </Button>
-        </div>
+        </div> */}
       </div>
 
       {/* Company Overview */}
