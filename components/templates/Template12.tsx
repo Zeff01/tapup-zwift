@@ -1,22 +1,21 @@
+import { cn, downloadVCard } from "@/lib/utils";
 import { Card } from "@/types/types";
+import { Advent_Pro, Akatab } from "next/font/google";
 import Image from "next/image";
-import { SlSocialFacebook } from "react-icons/sl";
-import { GoGlobe } from "react-icons/go";
-import { CiMail, CiBookmark, CiPhone, CiSaveDown2 } from "react-icons/ci";
-import { HiOutlineBookmark } from "react-icons/hi2";
+import { CiMail, CiPhone } from "react-icons/ci";
 import {
-  FaXTwitter,
   FaInstagram,
   FaLinkedin,
   FaWhatsapp,
+  FaXTwitter,
 } from "react-icons/fa6";
 import { FiYoutube } from "react-icons/fi";
+import { GoGlobe } from "react-icons/go";
+import { HiOutlineBookmark } from "react-icons/hi2";
 import { SiSkypeforbusiness } from "react-icons/si";
-import { cn, downloadVCard } from "@/lib/utils";
-import { Akatab } from "next/font/google";
-import { Advent_Pro } from "next/font/google";
-import { Separator } from "../ui/separator";
+import { SlSocialFacebook } from "react-icons/sl";
 import { Button } from "../ui/button";
+import { Separator } from "../ui/separator";
 import {
   Tooltip,
   TooltipContent,
@@ -89,12 +88,13 @@ const Template12 = ({
         </div> */}
 
         <div className="relative">
-          <button
-            // onClick={() => downloadVCard(userProfile)}
+          <Button
+            onClick={() => downloadVCard(userProfile)}
             className="absolute top-3 right-4 text-lg font-semibold bg-[#D3F1DF] hover:bg-[#466b55] transition-colors duration-300 text-black rounded-full p-2 z-40"
           >
             <HiOutlineBookmark />
-          </button>
+          </Button>
+
           <div className="absolute w-full  flex flex-col items-center justify-center z-20 top-0 left-1/2 transform -translate-x-1/2  ">
             <div className="flex flex-col w-full items-center justify-center pt-2 ">
               {firstName ? (

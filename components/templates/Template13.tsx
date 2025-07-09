@@ -1,9 +1,20 @@
-import React from "react";
+import { downloadVCard } from "@/lib/utils";
 import { Card } from "@/types/types";
-import { LuMail, LuHeart, LuGlobe, LuTwitter, LuFacebook, LuLinkedin, LuInstagram, LuYoutube } from "react-icons/lu";
-import { FaWhatsapp, FaViber, FaTiktok, FaSkype } from "react-icons/fa6";
+import Image from "next/image";
+import Link from "next/link";
+import { FaSkype, FaTiktok, FaViber, FaWhatsapp } from "react-icons/fa6";
+import {
+  LuFacebook,
+  LuGlobe,
+  LuInstagram,
+  LuLinkedin,
+  LuTwitter,
+  LuYoutube,
+} from "react-icons/lu";
+import { Button } from "../ui/button";
 
 const Template13 = ({
+  id,
   firstName,
   lastName,
   middleName,
@@ -28,7 +39,20 @@ const Template13 = ({
   websiteUrl,
   viberUrl,
   tiktokUrl,
+  customUrl,
 }: Card) => {
+  const userProfile = {
+    id,
+    firstName,
+    lastName,
+    email,
+    number,
+    company,
+    position,
+    websiteUrl,
+    customUrl,
+  };
+
   return (
     <div className="min-h-screen bg-gradient-to-br from-[#1a1a1a] via-[#232323] to-[#2d2327] text-white flex flex-col items-center justify-center py-8 px-4 relative overflow-hidden">
       {/* Content wrapper with higher z-index */}
@@ -71,15 +95,15 @@ const Template13 = ({
                 alt="avatar"
                 className="w-24 h-24 object-cover"
                 style={{
-                  WebkitMaskImage: 'url(/assets/template13profileshape.svg)',
-                  maskImage: 'url(/assets/template13profileshape.svg)',
-                  WebkitMaskSize: 'cover',
-                  maskSize: 'cover',
-                  WebkitMaskRepeat: 'no-repeat',
-                  maskRepeat: 'no-repeat',
-                  WebkitMaskPosition: 'center',
-                  maskPosition: 'center',
-                  background: '#fff', // fallback
+                  WebkitMaskImage: "url(/assets/template13profileshape.svg)",
+                  maskImage: "url(/assets/template13profileshape.svg)",
+                  WebkitMaskSize: "cover",
+                  maskSize: "cover",
+                  WebkitMaskRepeat: "no-repeat",
+                  maskRepeat: "no-repeat",
+                  WebkitMaskPosition: "center",
+                  maskPosition: "center",
+                  background: "#fff", // fallback
                 }}
               />
             </div>
@@ -89,7 +113,9 @@ const Template13 = ({
                 {middleName && <span> {middleName}</span>}
                 {lastName && <span> {lastName}</span>}
                 {suffix && <span>, {suffix}</span>}
-                {prefix && <span className="font-normal text-gray-300"> ({prefix})</span>}
+                {prefix && (
+                  <span className="font-normal text-gray-300"> ({prefix})</span>
+                )}
               </h1>
               {/* <span
                 className="text-black text-xs font-semibold px-2 py-0.5 rounded"
@@ -101,19 +127,35 @@ const Template13 = ({
                 PRO
               </span> */}
             </div>
-            <div className="text-base text-gray-300 mb-4">{position} {company && <>· {company}</>}</div>
+            <div className="text-base text-gray-300 mb-4">
+              {position} {company && <>· {company}</>}
+            </div>
             <div className="flex gap-2 mb-2">
-              <button className="bg-[#eab8b9] text-black px-4 py-2 rounded-full font-medium flex items-center gap-2 hover:bg-[#d99ca0] transition">
-                <img src="/assets/template13rockhand.svg" alt="Rock hand" className="w-5 h-5" />
-                Let’s Talk
-              </button>
-              <button className="bg-white text-black px-4 py-2 rounded-full font-medium hover:bg-gray-200 transition">Save</button>
+              <Link href={`mailto:${email}`}>
+                {" "}
+                <Button className="bg-[#eab8b9] text-black px-4 py-2 rounded-full font-medium flex items-center gap-2 hover:bg-[#d99ca0] transition">
+                  <img
+                    src="/assets/template13rockhand.svg"
+                    alt="Rock hand"
+                    className="w-5 h-5"
+                  />
+                  Let’s Talk
+                </Button>
+              </Link>
+              <Button
+                onClick={() => downloadVCard(userProfile)}
+                className="bg-white text-black px-4 py-2 rounded-full font-medium hover:bg-gray-200 transition"
+              >
+                Save
+              </Button>
             </div>
           </div>
         </div>
         {/* Contact Info */}
         <div className="w-full max-w-md mb-8 px-4">
-          <h2 className="text-lg font-bold mb-4 text-white text-left">Contact Information</h2>
+          <h2 className="text-lg font-bold mb-4 text-white text-left">
+            Contact Information
+          </h2>
           <div className="grid grid-cols-2 gap-y-2 text-gray-300">
             <span className="text-left">Email</span>
             <span className="font-medium text-white text-left">{email}</span>
@@ -121,52 +163,114 @@ const Template13 = ({
             <span className="font-medium text-white text-left">{number}</span>
             <span className="text-left">Links</span>
             <span className="flex flex-wrap gap-3 text-xl text-left">
-              {facebookUrl && <a href={facebookUrl} target="_blank" rel="noopener noreferrer"><LuFacebook /></a>}
-              {linkedinUrl && <a href={linkedinUrl} target="_blank" rel="noopener noreferrer"><LuLinkedin /></a>}
-              {instagramUrl && <a href={instagramUrl} target="_blank" rel="noopener noreferrer"><LuInstagram /></a>}
-              {youtubeUrl && <a href={youtubeUrl} target="_blank" rel="noopener noreferrer"><LuYoutube /></a>}
-              {twitterUrl && <a href={twitterUrl} target="_blank" rel="noopener noreferrer"><LuTwitter /></a>}
-              {whatsappNumber && <a href={`https://wa.me/${whatsappNumber}`} target="_blank" rel="noopener noreferrer"><FaWhatsapp /></a>}
-              {skypeInviteUrl && <a href={skypeInviteUrl} target="_blank" rel="noopener noreferrer"><FaSkype /></a>}
-              {websiteUrl && <a href={websiteUrl} target="_blank" rel="noopener noreferrer"><LuGlobe /></a>}
-              {viberUrl && <a href={viberUrl} target="_blank" rel="noopener noreferrer"><FaViber /></a>}
-              {tiktokUrl && <a href={tiktokUrl} target="_blank" rel="noopener noreferrer"><FaTiktok /></a>}
+              {facebookUrl && (
+                <a href={facebookUrl} target="_blank" rel="noopener noreferrer">
+                  <LuFacebook />
+                </a>
+              )}
+              {linkedinUrl && (
+                <a href={linkedinUrl} target="_blank" rel="noopener noreferrer">
+                  <LuLinkedin />
+                </a>
+              )}
+              {instagramUrl && (
+                <a
+                  href={instagramUrl}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                >
+                  <LuInstagram />
+                </a>
+              )}
+              {youtubeUrl && (
+                <a href={youtubeUrl} target="_blank" rel="noopener noreferrer">
+                  <LuYoutube />
+                </a>
+              )}
+              {twitterUrl && (
+                <a href={twitterUrl} target="_blank" rel="noopener noreferrer">
+                  <LuTwitter />
+                </a>
+              )}
+              {whatsappNumber && (
+                <a
+                  href={`https://wa.me/${whatsappNumber}`}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                >
+                  <FaWhatsapp />
+                </a>
+              )}
+              {skypeInviteUrl && (
+                <a
+                  href={skypeInviteUrl}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                >
+                  <FaSkype />
+                </a>
+              )}
+              {websiteUrl && (
+                <a href={websiteUrl} target="_blank" rel="noopener noreferrer">
+                  <LuGlobe />
+                </a>
+              )}
+              {viberUrl && (
+                <a href={viberUrl} target="_blank" rel="noopener noreferrer">
+                  <FaViber />
+                </a>
+              )}
+              {tiktokUrl && (
+                <a href={tiktokUrl} target="_blank" rel="noopener noreferrer">
+                  <FaTiktok />
+                </a>
+              )}
             </span>
           </div>
         </div>
         {/* Company Overview */}
         <div className="w-full max-w-md mb-8 px-4">
-          <h2 className="text-lg font-bold mb-2 text-white text-left">Company Overview</h2>
+          <h2 className="text-lg font-bold mb-2 text-white text-left">
+            Company Overview
+          </h2>
           <p className="text-gray-300 text-base text-left">
-            {companyBackground || "Codebility is a tech consulting firm that specializes in custom software development, including web and mobile apps. They deliver scalable, user-friendly solutions using agile methodologies."}
+            {/* {companyBackground ||
+              "Codebility is a tech consulting firm that specializes in custom software development, including web and mobile apps. They deliver scalable, user-friendly solutions using agile methodologies."} */}
+            {companyBackground}
           </p>
         </div>
         {/* Our Services */}
         <div className="w-full max-w-md px-4">
-          <h2 className="text-lg font-bold mb-4 text-white text-left">Our Services</h2>
+          <h2 className="text-lg font-bold mb-4 text-white text-left">
+            Our Services
+          </h2>
           {serviceDescription && (
             <p className="text-gray-300 text-base text-left mb-4">
               {serviceDescription}
             </p>
           )}
           <div className="flex flex-col gap-4 pb-2">
-            {(servicePhotos && servicePhotos.length > 0
-              ? servicePhotos
-              : Array.from({ length: 5 }).map((_, i) => `/assets/sampleService.png`)
-            ).map((photo, idx) => (
-              <div key={idx} className="w-full flex justify-center">
-                <img
-                  src={photo}
-                  alt={`Service Photo ${idx + 1}`}
-                  className="rounded-2xl object-cover w-full h-44 bg-white"
-                  style={{ minWidth: 0, minHeight: 176, maxWidth: '100%' }}
-                />
-              </div>
-            ))}
+            {servicePhotos &&
+              servicePhotos.length > 0 &&
+              servicePhotos.map((photo, idx) => (
+                <div key={idx} className="w-full flex justify-center">
+                  <div className="relative w-full h-44 rounded-2xl overflow-hidden bg-white">
+                    <Image
+                      src={photo}
+                      alt={`Service Photo ${idx + 1}`}
+                      fill
+                      className="object-cover"
+                      sizes="(max-width: 768px) 100vw, 50vw"
+                    />
+                  </div>
+                </div>
+              ))}
           </div>
         </div>
         <footer className="w-full max-w-md mx-auto mt-8 py-4 text-center text-gray-400 text-sm border-t border-neutral-800">
-          <div className="font-semibold text-base text-white mb-1">{company || "Your Company"}</div>
+          <div className="font-semibold text-base text-white mb-1">
+            {company || "Your Company"}
+          </div>
           <div>© 2024 Zwiftech. All Right Reserved.</div>
         </footer>
       </div>

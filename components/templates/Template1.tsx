@@ -1,3 +1,4 @@
+import { downloadVCard } from "@/lib/utils";
 import { Card } from "@/types/types";
 import Image from "next/image";
 // import { CiMail, CiPhone, CiSaveDown2, CiBookmark } from "react-icons/ci";
@@ -146,7 +147,7 @@ const Template1 = ({
           <div className="flex flex-col justify-center items-center">
             <div
               className="rounded-full border p-2 border-black cursor-pointer"
-              onClick={() => console.log()}
+              onClick={() => downloadVCard(userProfile)}
             >
               <BsBookmark size={14} />
             </div>

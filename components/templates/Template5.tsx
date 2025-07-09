@@ -4,14 +4,14 @@ import Image from "next/image";
 // import { CiCirclePlus, CiMail, CiPhone, CiSaveDown2 } from "react-icons/ci";
 import { BsBookmark, BsPlusLg } from "react-icons/bs";
 import {
-  FaXTwitter,
   FaFacebook,
-  FaYoutube,
+  FaGlobe,
   FaInstagram,
   FaLinkedin,
-  FaWhatsapp,
   FaSkype,
-  FaGlobe,
+  FaWhatsapp,
+  FaXTwitter,
+  FaYoutube,
 } from "react-icons/fa6";
 
 const Template5 = ({
@@ -131,7 +131,7 @@ const Template5 = ({
           <div className="flex flex-col justify-center items-center">
             <div
               className="rounded-full border p-2 border-pink-400 cursor-pointer"
-              onClick={() => console.log()}
+              onClick={() => downloadVCard(userProfile)}
             >
               <BsBookmark size={18} />
             </div>
