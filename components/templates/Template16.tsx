@@ -58,19 +58,33 @@ const Template16 = ({
   return (
     <div className="bg-white min-h-screen w-full flex flex-col items-center font-sans text-black">
       {/* Cover Image */}
-      <div className="w-full max-w-md h-40 overflow-hidden">
+      <div className="w-full max-w-md h-40 overflow-hidden relative">
         <img
           src={coverPhotoUrl}
           alt="Cover"
           className="w-full h-full object-cover"
         />
+        {/* Top right icons overlay */}
+        <div className="flex gap-x-2 absolute right-2 top-2 text-white z-10">
+          <span className="text-lg font-semibold border border-[#FFFBD8] rounded-full p-1">
+            <a href={`mailto:${email}`}>
+              <LuMail className="cursor-pointer" />
+            </a>
+          </span>
+          <span className="text-lg font-semibold border border-[#FFFBD8] rounded-full p-1">
+            <LuBookmark
+              className="cursor-pointer"
+              onClick={() => downloadVCard(userProfile)}
+            />
+          </span>
+        </div>
       </div>
 
       {/* Profile Section */}
       <div className="w-full max-w-md px-6">
         <div className="flex items-start gap-4">
           {/* Avatar */}
-          <div className="w-24 h-24 rounded-full border-[5px] border-white overflow-hidden shadow-md flex-shrink-0  -mt-12">
+          <div className="w-24 h-24 rounded-full border-[5px] border-white overflow-hidden shadow-md flex-shrink-0 -mt-12 relative z-20">
             <img
               src={profilePictureUrl}
               alt="Profile"
@@ -112,7 +126,7 @@ const Template16 = ({
             </div>
 
             {/* Social Icons */}
-            <div className="flex items-center gap-3 mt-3 flex-wrap">
+            <div className="flex items-center gap-3 mt-3 mb-10 flex-wrap">
               {facebookUrl && (
                 <a
                   href={facebookUrl}
@@ -217,7 +231,7 @@ const Template16 = ({
           </div>
         </div>
         {/* Buttons */}
-        <div className="flex items-center gap-5 mt-4 w-full mb-6">
+        {/* <div className="flex items-center gap-5 mt-4 w-full mb-6">
           <Link href={`mailto:${email}`}>
             <Button className="flex-[1.2] flex items-center justify-center gap-2 px-4 py-2 bg-black text-white text-sm font-medium rounded-full hover:bg-gray-800 transition">
               <LuUserCircle className="text-white text-lg" />
@@ -231,48 +245,48 @@ const Template16 = ({
             <LuBookmark className="text-white text-lg" />
             Save
           </Button>
-        </div>
+        </div> */}
       </div>
 
       {/* Company Overview */}
-      <div className="w-full max-w-md px-6 mb-6">
-        <h2 className="text-base font-bold mb-2">Company Overview</h2>
-        <p className="text-sm text-gray-700 leading-relaxed">
-          {serviceDescription ||
-            "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Lorem ipsum dolor sit amet, consectetur adipiscing elit. Lorem ipsum dolor sit amet, consectetur adipiscing elit."}
-        </p>
-      </div>
+      {companyBackground && (
+        <div className="w-full max-w-md px-6 mb-6">
+          <h2 className="text-base font-bold mb-2">Company Overview</h2>
+          <p className="text-sm text-gray-700 leading-relaxed">
+            {companyBackground}
+          </p>
+        </div>
+      )}
 
       {/* Our Services */}
-      <div className="w-full max-w-md px-6 mb-8">
-        <h2 className="text-base font-bold mb-2">Our Services</h2>
-        <p className="text-sm text-gray-700 leading-relaxed mb-4">
-          Lorem ipsum dolor sit amet, consectetur adipiscing elit.
-        </p>
-        <div className="flex flex-col gap-4">
-          {(servicePhotos && servicePhotos.length > 0
-            ? servicePhotos.slice(0, 3)
-            : [
-                "/assets/sampleService1.jpg",
-                "/assets/sampleService2.jpg",
-                "/assets/sampleService3.jpg",
-              ]
-          ).map((photo, index) => (
-            <div key={index} className="w-full overflow-hidden rounded-2xl">
-              <img
-                src={photo}
-                alt={`Service ${index + 1}`}
-                className="w-full h-40 object-cover"
-              />
+      {(serviceDescription || (servicePhotos && servicePhotos.length > 0)) && (
+        <div className="w-full max-w-md px-6 mb-8">
+          <h2 className="text-base font-bold mb-2">Our Services</h2>
+          {serviceDescription && (
+            <p className="text-sm text-gray-700 leading-relaxed mb-4">
+              {serviceDescription}
+            </p>
+          )}
+          {servicePhotos && servicePhotos.length > 0 && (
+            <div className="flex flex-col gap-4">
+              {servicePhotos.slice(0, 3).map((photo, index) => (
+                <div key={index} className="w-full overflow-hidden rounded-2xl">
+                  <img
+                    src={photo}
+                    alt={`Service ${index + 1}`}
+                    className="w-full h-40 object-cover"
+                  />
+                </div>
+              ))}
             </div>
-          ))}
+          )}
         </div>
-      </div>
+      )}
 
       {/* Footer */}
       <footer className="w-full max-w-md px-6 text-center text-gray-500 text-sm pb-8">
         <div className="font-semibold text-black mb-1">
-          {company || "ABC Company"}
+          {company}
         </div>
         <div>© 2024 Zwiftech. All Rights Reserved.</div>
       </footer>

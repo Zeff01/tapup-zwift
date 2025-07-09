@@ -16,8 +16,10 @@ import {
   FaYoutube,
 } from "react-icons/fa";
 import { Button } from "../ui/button";
+import { LuBookmark, LuMail } from "react-icons/lu";
 
 const Template17 = ({
+  id,
   firstName,
   lastName,
   middleName,
@@ -42,7 +44,6 @@ const Template17 = ({
   websiteUrl,
   viberUrl,
   tiktokUrl,
-  id,
   customUrl,
 }: Card) => {
   const userProfile = {
@@ -84,10 +85,24 @@ const Template17 = ({
             }}
           >
             <img
-              src={coverPhotoUrl || "/assets/sampleCoverPhoto.png"}
+              src={coverPhotoUrl}
               alt="Cover"
               className="w-full h-full object-cover rounded-t-xl sm:rounded-t-[2rem]"
             />
+            {/* Top right icons overlay */}
+            <div className="flex gap-x-2 absolute right-2 top-2 text-white ">
+              <span className=" text-lg font-semibold  border border-[#FFFBD8] rounded-full p-1 ">
+                <a href={`mailto:${email}`}>
+                  <LuMail className="cursor-pointer" />
+                </a>
+              </span>
+              <span className=" text-lg font-semibold  border border-[#FFFBD8] rounded-full p-1 ">
+                <LuBookmark
+                  className="cursor-pointer"
+                  onClick={() => downloadVCard(userProfile)}
+                />
+              </span>
+            </div>
           </div>
         </div>
 
@@ -95,7 +110,7 @@ const Template17 = ({
         <div className="absolute left-1/2 -bottom-10 sm:-bottom-12 transform -translate-x-1/2 z-10">
           <div className="w-20 h-20 sm:w-24 sm:h-24 rounded-full border-3 sm:border-4 border-white bg-white overflow-hidden shadow-lg">
             <img
-              src={profilePictureUrl || "/default-user.png"}
+              src={profilePictureUrl}
               alt="Profile"
               className="w-full h-full object-cover"
             />
@@ -229,7 +244,7 @@ const Template17 = ({
           )}
         </div>
         {/* Buttons */}
-        <div className="flex flex-col sm:flex-row gap-2 sm:gap-3 w-full mt-4 sm:mt-6">
+        {/* <div className="flex flex-col sm:flex-row gap-2 sm:gap-3 w-full mt-4 sm:mt-6">
           <Link href={`mailto:${email}`}>
             <Button className="flex-1 bg-[#FF4B5C] hover:bg-[#e43c4a] text-white py-2.5 sm:py-2 rounded-full font-semibold flex items-center justify-center gap-2 text-sm">
               <FaEnvelope className="text-white text-base align-middle" />
@@ -244,42 +259,47 @@ const Template17 = ({
             <FaRegBookmark className="text-[#FF4B5C] text-base align-middle" />
             <span className="leading-none">Save</span>
           </Button>
-        </div>
+        </div> */}
       </div>
 
       {/* Company Overview */}
       <div className="px-4 sm:px-6 pb-2">
-        <h3 className="font-bold text-sm sm:text-base mb-1">
-          Company Overview
-        </h3>
-        <p className="text-xs sm:text-sm text-gray-700 mb-3 sm:mb-4 leading-relaxed">
-          {companyBackground}
-        </p>
-        <h3 className="font-bold text-sm sm:text-base mb-1">Our Services</h3>
-        <p className="text-xs sm:text-sm text-gray-700 mb-3 sm:mb-4 leading-relaxed">
-          {serviceDescription}
-        </p>
-        <div className="flex flex-col gap-3 sm:gap-4 mb-3 sm:mb-4">
-          {(servicePhotos && servicePhotos.length > 0
-            ? servicePhotos.slice(0, 3)
-            : [
-                "/assets/sampleService1.jpg",
-                "/assets/sampleService2.jpg",
-                "/assets/sampleService3.jpg",
-              ]
-          ).map((photo, idx) => (
-            <div
-              key={idx}
-              className="w-full overflow-hidden rounded-xl sm:rounded-2xl"
-            >
-              <img
-                src={photo}
-                alt={`Service ${idx + 1}`}
-                className="w-full h-32 sm:h-40 object-cover"
-              />
-            </div>
-          ))}
-        </div>
+        {companyBackground && (
+          <>
+            <h3 className="font-bold text-sm sm:text-base mb-1">
+              Company Overview
+            </h3>
+            <p className="text-xs sm:text-sm text-gray-700 mb-3 sm:mb-4 leading-relaxed">
+              {companyBackground}
+            </p>
+          </>
+        )}
+        {(serviceDescription || (servicePhotos && servicePhotos.length > 0)) && (
+          <>
+            <h3 className="font-bold text-sm sm:text-base mb-1">Our Services</h3>
+            {serviceDescription && (
+              <p className="text-xs sm:text-sm text-gray-700 mb-3 sm:mb-4 leading-relaxed">
+                {serviceDescription}
+              </p>
+            )}
+            {servicePhotos && servicePhotos.length > 0 && (
+              <div className="flex flex-col gap-3 sm:gap-4 mb-3 sm:mb-4">
+                {servicePhotos.slice(0, 3).map((photo, idx) => (
+                  <div
+                    key={idx}
+                    className="w-full overflow-hidden rounded-xl sm:rounded-2xl"
+                  >
+                    <img
+                      src={photo}
+                      alt={`Service ${idx + 1}`}
+                      className="w-full h-32 sm:h-40 object-cover"
+                    />
+                  </div>
+                ))}
+              </div>
+            )}
+          </>
+        )}
       </div>
 
       {/* Footer */}
