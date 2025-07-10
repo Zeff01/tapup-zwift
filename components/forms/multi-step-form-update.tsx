@@ -7,6 +7,7 @@ import {
   Form,
   FormControl,
   FormField,
+  FormLabel,
   FormMessage,
 } from "@/components/ui/form";
 import { formHeaderItems } from "@/constants";
@@ -204,6 +205,7 @@ const MultiStepFormUpdate = ({
           : ((userData.chosenPhysicalCard as ChosenPhysicalCardType) ??
             "card1"),
       customUrl: userData.customUrl || "",
+      cardName: userData.cardName || "",
       firstName: userData.firstName || "",
       lastName: userData.lastName || "",
       email: userData.email || "",
@@ -257,13 +259,15 @@ const MultiStepFormUpdate = ({
     }) => addCustomUrl(customUrl, cardId),
   });
 
-  const { mutate: updateCardMutation, isPending: isLoadingUpdateMutation } =
-    useMutation({
-      mutationFn: updateCardById,
-      onSuccess: () => {
-        queryClient.invalidateQueries({ queryKey: ["cards", user?.uid] });
-      },
-    });
+  const {
+    mutateAsync: updateCardMutation,
+    isPending: isLoadingUpdateMutation,
+  } = useMutation({
+    mutationFn: updateCardById,
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ["cards", user?.uid] });
+    },
+  });
 
   const formSubmit = async (data: z.infer<typeof editCardSchema>) => {
     try {
@@ -672,6 +676,28 @@ const MultiStepFormUpdate = ({
                       )}
                     />
                   </div>
+
+                  <FormField
+                    control={methods.control}
+                    name={"cardName"}
+                    render={({ field }) => (
+                      <div className="flex flex-col gap-2">
+                        <FormLabel className="text-lg font-semibold">
+                          Card Name
+                        </FormLabel>
+                        <div className="flex w-full flex-col">
+                          <FormControl>
+                            <Input
+                              placeholder={"Enter your card name or tag"}
+                              className="mt-1 placeholder-placeholder-input block w-full px-4 py-2 bg-secondary border border-border-input rounded-md"
+                              {...field}
+                            />
+                          </FormControl>
+                        </div>
+                      </div>
+                    )}
+                  />
+
                   <div>
                     <h2 className="text-lg font-semibold mb-4">
                       Choose Template

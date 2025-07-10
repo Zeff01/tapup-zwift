@@ -23,6 +23,7 @@ export type Users = {
   chosenTemplate?: string;
   chosenPhysicalCard?: string;
   customUrl?: string; // added for multi-step-form, not really sure
+  cardName?: string;
   firstName?: string;
   lastName?: string;
   prefix?: string;

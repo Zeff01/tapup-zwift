@@ -345,10 +345,13 @@ const DigitalCard = ({ card, confirm, user }: Prop) => {
   const CardInfo = (
     <div className="flex-grow flex flex-col justify-between">
       <div>
-        <p className="text-[clamp(1rem,1.4vw,1.1rem)] mt-3 sm:mt-0 font-semibold capitalize text-white">
+        <p className="text-[clamp(1rem,1.4vw,1.1rem)] mt-0 font-semibold capitalize text-white">
           {(card.firstName || "") + " " + (card.lastName || "")}
         </p>
         <p className="text-xs capitalize text-white">{card.position || ""}</p>
+        <p className="text-[clamp(1rem,1.4vw,1.1rem)] pt-2 sm:pt-3 font-semibold capitalize text-white">
+          {card.cardName || ""}
+        </p>
       </div>
     </div>
   );
@@ -380,7 +383,7 @@ const DigitalCard = ({ card, confirm, user }: Prop) => {
                   <EyeIcon className="size-4 dark:text-white drop-shadow-md" />
                 </Link>
               ) : (
-                <span className="p-3 2xl:py-2 opacity-30 cursor-not-allowed">
+                <span className="p-2 2xl:py-2 opacity-30 cursor-not-allowed">
                   <EyeIcon className="size-4 dark:text-white drop-shadow-md" />
                 </span>
               )}
