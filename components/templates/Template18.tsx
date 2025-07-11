@@ -161,7 +161,7 @@ const Template18 = ({
                 {/* Footer */}
                 <div className="bg-[#001d34] text-white text-center py-4 text-xs rounded-b-[30px]">
                     <div className="font-semibold text-sm">{company}</div>
-                    <div>© {new Date().getFullYear()} {company}. All Rights Reserved.</div>
+                    <div>© 2024 Zwiftech. All Rights Reserved.</div>
                 </div>
             </div>
         </div>
