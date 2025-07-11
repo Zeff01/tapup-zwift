@@ -101,6 +101,12 @@ const templates: Template[] = [
     imageUrl: "/assets/template17.png",
     route: "/create/template/17",
   },
+  {
+    id: "template18",
+    name: "Aurora Glass",
+    imageUrl: "/assets/template18.png",
+    route: "/create/template/18",
+  },
   // {
   //   id: "template14",
   //   name: "template14",

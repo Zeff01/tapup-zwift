@@ -53,7 +53,8 @@ export type ChosenTemplateType =
   | "template14"
   | "template15"
   | "template16"
-  | "template17";
+  | "template17"
+  | "template18";
 
 export type ChosenPhysicalCardType =
   | "card1"

@@ -15,6 +15,7 @@ import Template14 from "@/components/templates/Template14";
 import Template15 from "@/components/templates/Template15";
 import Template16 from "@/components/templates/Template16";
 import Template17 from "@/components/templates/Template17";
+import Template18 from "@/components/templates/Template18";
 
 import { Card } from "@/types/types";
 
@@ -43,6 +44,7 @@ const SelectedTemplate = ({
     template15: <Template15 {...(formData as Card)} />,
     template16: <Template16 {...(formData as Card)} />,
     template17: <Template17 {...(formData as Card)} />,
+    template18: <Template18 {...(formData as Card)} />,
   };
 
   return templateId in renderTemplate ? (
