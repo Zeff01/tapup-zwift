@@ -445,11 +445,10 @@ const DigitalCard = ({ card, confirm, user }: Prop) => {
               <Tooltip key={index}>
                 <TooltipTrigger asChild>
                   <span
-                    className={`px-2 py-2 2xl:py-2 border dark:border-accent border-gray-300 rounded-md ${
-                      isDisabledState
+                    className={`px-2 py-2 2xl:py-2 border dark:border-accent border-gray-300 rounded-md ${isDisabledState
                         ? "opacity-30 cursor-not-allowed"
                         : "hover:opacity-50 cursor-pointer"
-                    }`}
+                      }`}
                     onClick={!isDisabledState ? item.fn : undefined}
                   >
                     <item.icon className="size-4 dark:text-white drop-shadow-md" />
@@ -522,7 +521,11 @@ const DigitalCard = ({ card, confirm, user }: Prop) => {
             <div className="flex-1 py-3 px-4 relative">{CardInfo}</div>
           ) : (
             <Link
-              href={isCardExpired(card.expiryDate) || !card.portfolioStatus || isCardDisabled ? "" : (`/site/${card.customUrl ? card.customUrl : card.id}`)}
+              href={
+                isCardExpired(card.expiryDate) || !card.portfolioStatus || isCardDisabled
+                  ? ""
+                  : (`/site/${card.customUrl ? card.customUrl : card.id}`)
+              }
               prefetch
               target="_blank"
               className="flex-1 py-3 px-4 relative"
