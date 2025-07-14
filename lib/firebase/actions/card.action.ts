@@ -243,6 +243,8 @@ export const updateCardById = async ({
   try {
     if (!cardId || !data) throw new Error("Parameters Missing");
 
+    const { cardName } = data;
+
     const userId = await authCurrentUser();
     const cardRef = doc(firebaseDb, "cards", cardId);
     const docSnap = await getDoc(cardRef);
@@ -262,6 +264,21 @@ export const updateCardById = async ({
     const userCollection = collection(firebaseDb, "cards");
     const userRef = doc(userCollection, cardId);
 
+    if (cardName && cardName !== card.cardName) {
+      const existingQuery = query(
+        collection(firebaseDb, "cards"),
+        where("owner", "==", userId),
+        where("cardName", "==", cardName)
+      );
+
+      const existingCardSnap = await getDocs(existingQuery);
+      const existing = existingCardSnap.docs.find((doc) => doc.id !== cardId);
+
+      if (existing) {
+        throw new Error("Card name already exists");
+      }
+    }
+
     await setDoc(
       userRef,
       { ...filteredData, onboarding: true, timestamp: serverTimestamp() },
@@ -274,7 +291,6 @@ export const updateCardById = async ({
 
     toast.success("Card updated successfully");
   } catch (error: any) {
-    toast.error("Something went wrong");
     console.error("Error updating document: ", error);
     throw error;
   }
