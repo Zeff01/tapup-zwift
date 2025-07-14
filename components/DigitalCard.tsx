@@ -372,7 +372,7 @@ const DigitalCard = ({ card, confirm, user }: Prop) => {
         >
           <Tooltip>
             <TooltipTrigger asChild>
-              {card.portfolioStatus && !isCardDisabled ? (
+              {!isCardExpired(card.expiryDate) && card.portfolioStatus && !isCardDisabled ? (
                 <Link
                   href={`/site/${card.customUrl ? card.customUrl : card.id}`}
                   className="px-2 py-2 2xl:py-2 hover:opacity-50 cursor-pointer border dark:border-accent border-gray-300 rounded-md"
@@ -522,8 +522,9 @@ const DigitalCard = ({ card, confirm, user }: Prop) => {
             <div className="flex-1 py-3 px-4 relative">{CardInfo}</div>
           ) : (
             <Link
-              href={isCardExpired(card.expiryDate) ? "#" : `/cards/${card.id}`}
+              href={isCardExpired(card.expiryDate) || !card.portfolioStatus || isCardDisabled ? "" : (`/site/${card.customUrl ? card.customUrl : card.id}`)}
               prefetch
+              target="_blank"
               className="flex-1 py-3 px-4 relative"
               onClick={(e) => {
                 if (isCardExpired(card.expiryDate)) {
