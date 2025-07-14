@@ -237,6 +237,7 @@ export const editCardSchema = z.object({
       }
       return true;
     }, "Custom URL can only contain letters, numbers, hyphens, and underscores."),
+  cardName: z.string().min(1, "Add a card name or tag").optional(),
   firstName: z.string().min(1, "First name is required").optional(),
   lastName: z.string().optional(),
   email: z.string().min(1, "Email is required").optional(),
