@@ -1,53 +1,42 @@
 "use client";
 
-import ImageWithLoading from "@/components/ImageWithLoading";
-import { Dialog, DialogContent } from "@/components/ui/dialog";
-import { getVCardData } from "@/lib/utils";
-import { Card } from "@/types/types";
-import html2canvas from "html2canvas";
 import { QRCodeSVG } from "qrcode.react";
 import { useEffect, useRef, useState } from "react";
+import html2canvas from "html2canvas";
+import { Card } from "@/types/types";
 import MoonLoader from "react-spinners/MoonLoader";
-import { toast } from "react-toastify";
+import ImageWithLoading from "@/components/ImageWithLoading";
+import { getVCardData } from "@/lib/utils";
 
 export default function Canvas2Card({
   user,
   isQrScanner,
-  open = false,
-  onClose,
 }: {
   user?: Partial<Card>;
   isQrScanner?: boolean;
-  open?: boolean;
-  onClose?: () => void;
 }) {
   const cardRef = useRef<HTMLDivElement>(null);
   const [dlTimeout, setDlTimeout] = useState(0);
 
-  const [isdownloading, setIsDownloading] = useState(false);
-
   const handleDownloadImage = async () => {
     const card = cardRef.current;
     if (!card || !user) return;
-
-    setIsDownloading(true);
-    try {
-      const canvas = await html2canvas(card, { scale: 4, useCORS: true });
+    const textTop = document.getElementById("text-top") as HTMLDivElement;
+    textTop.style.transform = "translateY(-8px)";
+    html2canvas(card, { scale: 4 }).then((canvas) => {
       const imgData = canvas.toDataURL("image/png");
+
       const link = document.createElement("a");
-      link.download = `${user?.lastName}.png`;
+      const fileName = `${user?.lastName}.png`;
+      link.download = fileName;
       link.href = imgData;
       document.body.appendChild(link);
       link.click();
       document.body.removeChild(link);
+
+      textTop.style.transform = "translateY(0px)";
       setDlTimeout(2);
-      toast.success("Image downloaded successfully!");
-      onClose?.();
-    } catch (error) {
-      console.error("Error capturing image:", error);
-    } finally {
-      setIsDownloading(false);
-    }
+    });
   };
 
   useEffect(() => {
@@ -58,91 +47,81 @@ export default function Canvas2Card({
     return () => clearTimeout(timeout);
   }, [dlTimeout]);
 
-  if (!open || !user) return null;
+  if (!user) return;
 
   const vCardData = getVCardData(user, true);
 
   return (
-    <Dialog open={open} onOpenChange={onClose}>
-      <DialogContent className="flex flex-col items-center gap-4 p-6 py-7  md:p-8 max-w-xs sm:max-w-sm md:max-w-md rounded-lg shadow-lg border border-neutral-300 dark:border-neutral-700">
-        <div
-          ref={cardRef}
-          className="w-full aspect-[1.5882] rounded-xl shadow-md p-4 sm:p-5 flex flex-row gap-3 sm:gap-4 justify-between relative"
-          style={{
-            background: "linear-gradient(135deg, #22c55e, #16a34a)",
-            color: "white",
-          }}
-        >
-          {user ? (
-            <>
-              <div className="flex flex-col justify-between flex-grow">
-                <div id="text-top" className="text-black mb-2">
-                  <p className="font-extrabold text-base sm:text-lg">
-                    {user.firstName} {user.lastName}
-                  </p>
-                  <p className="font-semibold text-sm sm:text-base">
-                    {user.company}
-                  </p>
-                  <p className="text-xs sm:text-sm italic">{user.position}</p>
-                </div>
+    <div className="bg-background w-full flex-1 flex flex-col items-center px-2 py-16 gap-y-4">
+      <div
+        ref={cardRef}
+        className={`text-black dark:text-black relative w-[400px] scale-[0.8] lg:scale-100 aspect-[1.5882]  shadow-md rounded-md`}
+        style={{ backgroundColor: "white" }}
+      >
+        {user ? (
+          <div className="w-full h-full flex flex-row gap-x-2 justify-between p-5 ">
+            <div className="flex-grow flex flex-col justify-between">
+              <div id="text-top">
+                <p className="text-[12px]">
+                  &#128231; &nbsp;&nbsp;{user.email}
+                </p>
 
+                <p className="text-[12px]">
+                  &#128222; &nbsp;&nbsp;{user.number}
+                </p>
+              </div>
+              <div className="flex flex-col gap-y-[2px]">
                 {user.profilePictureUrl && (
-                  <div className="mt-2 shadow-md rounded-full relative h-[60px] w-[60px] sm:h-[70px] sm:w-[70px] overflow-hidden border-2 border-white">
+                  <div className="shadow-sm rounded-full relative h-[70px] w-[70px] overflow-hidden">
                     <ImageWithLoading
                       src={user.profilePictureUrl}
                       fill
                       alt="user photo"
                       priority
-                      className="object-cover"
+                      className="w-full h-full object-fill"
                     />
                   </div>
                 )}
-
-                <div className="mt-12  space-y-1 text-[8px] md:text-xs">
-                  <div className=" flex flex-row item-center  ">
-                    {user.email && (
-                      <>
-                        {" "}
-                        <p className="mr-1  ">📩 </p> <span>{user.email}</span>
-                      </>
-                    )}
-                  </div>
-                  {user.number && <p>📞 {user.number}</p>}
+                <div>
+                  <p className="font-semibold text-sm text-black">
+                    {user.firstName}&nbsp;{user.lastName}
+                  </p>
+                  <p className="text-[12px] text-black">{user.position}</p>
                 </div>
+                <p className="text-[12px] text-black">{user.company}</p>
               </div>
-              <div className="flex items-center justify-center mt-4 sm:mt-8 rounded-md overflow-hidden border border-white bg-white p-1 w-[100px] h-[100px] sm:w-[130px] sm:h-[130px]">
-                <QRCodeSVG
-                  value={vCardData}
-                  size={100}
-                  bgColor="#ffffff"
-                  fgColor="#000000"
-                />
-              </div>
-            </>
-          ) : (
-            <div className="w-full h-full flex items-center justify-center">
-              <MoonLoader
-                loading={true}
-                color="white"
-                size={40}
-                aria-label="Loading Spinner"
-                data-testid="loader"
-                speedMultiplier={0.5}
+            </div>
+            <div>
+              <QRCodeSVG
+                value={vCardData}
+                size={100}
+                bgColor="#ffffff"
+                fgColor="#000000"
               />
             </div>
-          )}
-        </div>
-
-        {!isQrScanner && (
-          <button
-            onClick={handleDownloadImage}
-            className="bg-blueColor hover:bg-buttonColor text-white px-4 sm:px-6 py-2 rounded-md active:scale-95 transition duration-150 disabled:opacity-50 disabled:cursor-not-allowed text-sm sm:text-base"
-            disabled={!user || dlTimeout > 0 || isdownloading}
-          >
-            {isdownloading ? "Downloading..." : "Download QR Code"}
-          </button>
+          </div>
+        ) : (
+          <div className="w-full h-full flex items-center justify-center">
+            <MoonLoader
+              loading={true}
+              color="gray"
+              size={40}
+              aria-label="Loading Spinner"
+              data-testid="loader"
+              speedMultiplier={0.5}
+            />
+          </div>
         )}
-      </DialogContent>
-    </Dialog>
+      </div>
+      {!isQrScanner && (
+        <button
+          onClick={handleDownloadImage}
+          className="bg-custom-purple text-white px-6 py-2 font-semibold rounded-md active:scale-95 transition-all duration-150 disabled:opacity-50 disabled:cursor-not-allowed"
+          disabled={Boolean(!user || dlTimeout > 0)}
+        >
+          Convert to PNG
+        </button>
+      )}
+    </div>
   );
 }
