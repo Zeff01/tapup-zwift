@@ -63,6 +63,7 @@ export const createPortfolioSchema = z.object({
     "template15",
     "template16",
     "template17",
+    "template18",
   ]),
   chosenPhysicalCard: z.enum(["card1", "card2", "card3", "card4"]),
   firstName: z.string().min(3, "First name must be at least 3 characters"),
@@ -208,6 +209,7 @@ export const editCardSchema = z.object({
       "template15",
       "template16",
       "template17",
+      "template18",
     ])
     .optional(),
   chosenPhysicalCard: z

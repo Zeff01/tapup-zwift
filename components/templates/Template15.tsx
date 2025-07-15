@@ -74,7 +74,7 @@ const Template15 = ({
                         className="object-cover w-full h-28 md:h-32 rounded-t-2xl shadow-lg"
                     />
                     {/* Top right icons overlay */}
-                    <div className="flex gap-x-2 absolute right-2 top-2 text-white ">
+                    {/* <div className="flex gap-x-2 absolute right-2 top-2 text-white ">
                         <span className=" text-lg font-semibold  border border-[#FFFBD8] rounded-full p-1 ">
                             <a href={`mailto:${email}`}>
                                 <LuMail className="cursor-pointer" />
@@ -86,7 +86,7 @@ const Template15 = ({
                                 onClick={() => downloadVCard(userProfile)}
                             />
                         </span>
-                    </div>
+                    </div> */}
                     {/* Fade effect at the bottom of the cover */}
                     <div
                         className="absolute left-0 bottom-0 w-full h-10 rounded-t-2xl pointer-events-none"
@@ -123,30 +123,40 @@ const Template15 = ({
                         <div className="w-24 h-24 rounded-full bg-indigo-500 opacity-40 blur-2xl" />
                     </div>
                     <h1 className="text-2xl font-bold text-white text-center">
-                        {prefix && `${prefix} `}
-                        {firstName} {middleName && `${middleName} `}
+                        {prefix && `${prefix}. `}
+                        {firstName}
+                        {middleName && ` ${middleName}`}
                         {lastName}
                         {suffix && `, ${suffix}`}
                     </h1>
                     <p className="text-base text-white font-medium mt-1 mb-4 text-center">
-                        {position}
+                        {position} {company && `@ ${company}`}
                     </p>
-                    {/* <Link href={`mailto:${email}`}>
-                        <Button className="flex items-center gap-2 bg-transparent border border-[#7dd3fc] text-white px-6 py-2 rounded-full font-lg hover:bg-[#0e1a22] transition mb-4 relative">
-                            Let’s Work Together <LuArrowRight className="text-lg" />
+                    <div className="flex gap-2 mb-2">
+                        <Link href={`mailto:${email}`}>
+                            <Button className="flex items-center gap-1 bg-transparent border border-[#7dd3fc] text-white px-6 py-2 rounded-full font-lg hover:bg-[#0e1a22] transition mb-4 relative">
+                                Let’s Work Together <LuArrowRight className="text-lg" />
+                            </Button>
+                        </Link>
+                        <Button
+                            onClick={() => downloadVCard(userProfile)}
+                            className="flex items-center gap-2 bg-transparent border border-[#7dd3fc] text-white px-6 py-2 rounded-full font-lg hover:bg-[#0e1a22] transition mb-4 relative"
+                        >
+                            <LuBookmark className="w-5 h-5 mt-0.5" />
+                            Save
                         </Button>
-                    </Link> */}
+                    </div>
 
                     {/* Social Icons */}
-                    <div className="flex gap-4 justify-center mb-6">
+                    <div className="flex flex-wrap gap-2 justify-center mb-6 max-w-xs">
                         {facebookUrl && (
                             <a
                                 href={facebookUrl}
                                 target="_blank"
                                 rel="noopener noreferrer"
-                                className="bg-[#1a425b] p-3 rounded-full transition"
+                                className="bg-[#1a425b] p-2 rounded-full transition"
                             >
-                                <LuFacebook className="text-xl" style={{ color: "#7eabc2" }} />
+                                <LuFacebook className="text-lg" style={{ color: "#7eabc2" }} />
                             </a>
                         )}
                         {instagramUrl && (
@@ -154,9 +164,9 @@ const Template15 = ({
                                 href={instagramUrl}
                                 target="_blank"
                                 rel="noopener noreferrer"
-                                className="bg-[#1a425b] p-3 rounded-full transition"
+                                className="bg-[#1a425b] p-2 rounded-full transition"
                             >
-                                <LuInstagram className="text-xl" style={{ color: "#7eabc2" }} />
+                                <LuInstagram className="text-lg" style={{ color: "#7eabc2" }} />
                             </a>
                         )}
                         {linkedinUrl && (
@@ -164,9 +174,9 @@ const Template15 = ({
                                 href={linkedinUrl}
                                 target="_blank"
                                 rel="noopener noreferrer"
-                                className="bg-[#1a425b] p-3 rounded-full transition"
+                                className="bg-[#1a425b] p-2 rounded-full transition"
                             >
-                                <LuLinkedin className="text-xl" style={{ color: "#7eabc2" }} />
+                                <LuLinkedin className="text-lg" style={{ color: "#7eabc2" }} />
                             </a>
                         )}
                         {websiteUrl && (
@@ -174,9 +184,9 @@ const Template15 = ({
                                 href={websiteUrl}
                                 target="_blank"
                                 rel="noopener noreferrer"
-                                className="bg-[#1a425b] p-3 rounded-full transition"
+                                className="bg-[#1a425b] p-2 rounded-full transition"
                             >
-                                <LuGlobe className="text-xl" style={{ color: "#7eabc2" }} />
+                                <LuGlobe className="text-lg" style={{ color: "#7eabc2" }} />
                             </a>
                         )}
                         {twitterUrl && (
@@ -184,9 +194,9 @@ const Template15 = ({
                                 href={twitterUrl}
                                 target="_blank"
                                 rel="noopener noreferrer"
-                                className="bg-[#1a425b] p-3 rounded-full transition"
+                                className="bg-[#1a425b] p-2 rounded-full transition"
                             >
-                                <LuTwitter className="text-xl" style={{ color: "#7eabc2" }} />
+                                <LuTwitter className="text-lg" style={{ color: "#7eabc2" }} />
                             </a>
                         )}
                         {youtubeUrl && (
@@ -194,9 +204,9 @@ const Template15 = ({
                                 href={youtubeUrl}
                                 target="_blank"
                                 rel="noopener noreferrer"
-                                className="bg-[#1a425b] p-3 rounded-full transition"
+                                className="bg-[#1a425b] p-2 rounded-full transition"
                             >
-                                <LuYoutube className="text-xl" style={{ color: "#7eabc2" }} />
+                                <LuYoutube className="text-lg" style={{ color: "#7eabc2" }} />
                             </a>
                         )}
                         {whatsappNumber && (
@@ -204,9 +214,9 @@ const Template15 = ({
                                 href={`https://wa.me/${whatsappNumber}`}
                                 target="_blank"
                                 rel="noopener noreferrer"
-                                className="bg-[#1a425b] p-3 rounded-full transition"
+                                className="bg-[#1a425b] p-2 rounded-full transition"
                             >
-                                <FaWhatsapp className="text-xl" style={{ color: "#7eabc2" }} />
+                                <FaWhatsapp className="text-lg" style={{ color: "#7eabc2" }} />
                             </a>
                         )}
                         {skypeInviteUrl && (
@@ -214,9 +224,9 @@ const Template15 = ({
                                 href={skypeInviteUrl}
                                 target="_blank"
                                 rel="noopener noreferrer"
-                                className="bg-[#1a425b] p-3 rounded-full transition"
+                                className="bg-[#1a425b] p-2 rounded-full transition"
                             >
-                                <FaSkype className="text-xl" style={{ color: "#7eabc2" }} />
+                                <FaSkype className="text-lg" style={{ color: "#7eabc2" }} />
                             </a>
                         )}
                         {viberUrl && (
@@ -224,9 +234,9 @@ const Template15 = ({
                                 href={viberUrl}
                                 target="_blank"
                                 rel="noopener noreferrer"
-                                className="bg-[#1a425b] p-3 rounded-full transition"
+                                className="bg-[#1a425b] p-2 rounded-full transition"
                             >
-                                <FaViber className="text-xl" style={{ color: "#7eabc2" }} />
+                                <FaViber className="text-lg" style={{ color: "#7eabc2" }} />
                             </a>
                         )}
                         {tiktokUrl && (
@@ -234,9 +244,9 @@ const Template15 = ({
                                 href={tiktokUrl}
                                 target="_blank"
                                 rel="noopener noreferrer"
-                                className="bg-[#1a425b] p-3 rounded-full transition"
+                                className="bg-[#1a425b] p-2 rounded-full transition"
                             >
-                                <FaTiktok className="text-xl" style={{ color: "#7eabc2" }} />
+                                <FaTiktok className="text-lg" style={{ color: "#7eabc2" }} />
                             </a>
                         )}
                     </div>

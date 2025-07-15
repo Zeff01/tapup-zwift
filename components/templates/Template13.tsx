@@ -56,7 +56,7 @@ const Template13 = ({
   };
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-[#1a1a1a] via-[#232323] to-[#2d2327] text-white flex flex-col items-center justify-center py-8 px-4 relative overflow-hidden">
+    <div className="min-h-screen bg-gradient-to-br from-[#1a1a1a] via-[#232323] to-[#553838] text-white flex flex-col items-center justify-center py-8 px-4 relative overflow-hidden">
       {/* Content wrapper with higher z-index */}
       <div className="relative z-10 w-full flex flex-col items-center">
         {/* Peach background light top right (background only) */}
@@ -80,7 +80,7 @@ const Template13 = ({
               className="object-cover w-full h-full"
             />
             {/* Top right icons overlay */}
-            <div className="flex gap-x-2 absolute right-2 top-2 text-white ">
+            {/* <div className="flex gap-x-2 absolute right-2 top-2 text-white ">
               <span className=" text-lg font-semibold  border border-[#FFFBD8] rounded-full p-1 ">
                 <a href={`mailto:${email}`}>
                   <LuMail className="cursor-pointer" />
@@ -92,7 +92,7 @@ const Template13 = ({
                   onClick={() => downloadVCard(userProfile)}
                 />
               </span>
-            </div>
+            </div> */}
           </div>
           {/* Profile section, now overlapping the cover photo and aligned left */}
           <div className="flex flex-col items-start w-full px-4 -mt-12 z-10">
@@ -115,29 +115,18 @@ const Template13 = ({
               />
             </div>
             <div className="flex items-center gap-2 mb-1">
-              <h1 className="text-xl font-bold text-white">
+              <h1 className="text-2xl font-semibold tracking-tight text-white leading-snug">
+                {prefix && <span>{prefix}. </span>}
                 {firstName}
                 {middleName && <span> {middleName}</span>}
                 {lastName && <span> {lastName}</span>}
                 {suffix && <span>, {suffix}</span>}
-                {prefix && (
-                  <span className="font-normal text-gray-300"> ({prefix})</span>
-                )}
               </h1>
-              {/* <span
-                className="text-black text-xs font-semibold px-2 py-0.5 rounded"
-                style={{
-                  background: "linear-gradient(90deg, #d2ebb9 0%, #fce99c 100%)",
-                  display: "inline-block",
-                }}
-              >
-                PRO
-              </span> */}
             </div>
             <div className="text-base text-gray-300 mb-4">
               {position} {company && <>· {company}</>}
             </div>
-            {/* <div className="flex gap-2 mb-2">
+            <div className="flex gap-2 mb-2">
               <Link href={`mailto:${email}`}>
                 {" "}
                 <Button className="bg-[#eab8b9] text-black px-4 py-2 rounded-full font-medium flex items-center gap-2 hover:bg-[#d99ca0] transition">
@@ -153,9 +142,10 @@ const Template13 = ({
                 onClick={() => downloadVCard(userProfile)}
                 className="bg-white text-black px-4 py-2 rounded-full font-medium hover:bg-gray-200 transition"
               >
+                <LuBookmark className="w-5 h-5 mt-0.5" />
                 Save
               </Button>
-            </div> */}
+            </div>
           </div>
         </div>
         {/* Contact Info */}
