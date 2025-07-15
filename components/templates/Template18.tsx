@@ -170,13 +170,6 @@ const Template18 = ({
                                 )}
                             </div>
 
-                            {/* About */}
-                            <p className="text-sm mt-4 text-gray-300">
-                                Creative and detail-oriented UI/UX Designer passionate about
-                                crafting intuitive digital experiences that delight users and
-                                drive results.
-                            </p>
-
                             {/* Buttons */}
                             <div className="flex gap-2 mt-4">
                                 {/* Email Me - Larger */}

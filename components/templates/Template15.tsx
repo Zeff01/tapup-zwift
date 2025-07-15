@@ -130,7 +130,7 @@ const Template15 = ({
                         {suffix && `, ${suffix}`}
                     </h1>
                     <p className="text-base text-white font-medium mt-1 mb-4 text-center">
-                        {position}
+                        {position} {company && `@ ${company}`}
                     </p>
                     <div className="flex gap-2 mb-2">
                         <Link href={`mailto:${email}`}>

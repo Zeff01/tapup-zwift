@@ -67,7 +67,7 @@ const Template17 = ({
             className="absolute inset-0 z-0"
             style={{
               clipPath:
-                "polygon(0 0, 100% 0, 100% 100%, 75% 83%, 50% 70%, 25% 83%, 0 100%)",
+                "polygon(0 0, 100% 0, 100% 100%, 75% 85%, 50% 70%, 25% 85%, 0 100%)",
               background:
                 "linear-gradient(to bottom, transparent 70%, rgba(0,0,0,0.15))",
               filter: "blur(10px)",
@@ -81,7 +81,7 @@ const Template17 = ({
             className="relative w-full h-full z-10"
             style={{
               clipPath:
-                "polygon(0 0, 100% 0, 100% 100%, 75% 83%, 50% 70%, 25% 83%, 0 100%)",
+                "polygon(0 0, 100% 0, 100% 100%, 75% 85%, 50% 70%, 25% 85%, 0 100%)",
             }}
           >
             <img
