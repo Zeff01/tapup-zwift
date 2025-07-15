@@ -65,7 +65,7 @@ const Template16 = ({
           className="w-full h-full object-cover"
         />
         {/* Top right icons overlay */}
-        <div className="flex gap-x-2 absolute right-2 top-2 text-white z-10">
+        {/* <div className="flex gap-x-2 absolute right-2 top-2 text-white z-10">
           <span className="text-lg font-semibold border border-[#FFFBD8] rounded-full p-1">
             <a href={`mailto:${email}`}>
               <LuMail className="cursor-pointer" />
@@ -77,7 +77,7 @@ const Template16 = ({
               onClick={() => downloadVCard(userProfile)}
             />
           </span>
-        </div>
+        </div> */}
       </div>
 
       {/* Profile Section */}
@@ -96,7 +96,7 @@ const Template16 = ({
           <div className="flex-1 mt-3">
             {/* Name & Title */}
             <h1 className="text-xl font-semibold">
-              {prefix && `${prefix} `}
+              {prefix && `${prefix}. `}
               {firstName} {middleName && `${middleName} `}
               {lastName}
               {suffix && `, ${suffix}`}
@@ -126,7 +126,7 @@ const Template16 = ({
             </div>
 
             {/* Social Icons */}
-            <div className="flex items-center gap-3 mt-3 mb-10 flex-wrap">
+            <div className="flex items-center gap-3 mt-3 mb-5 flex-wrap">
               {facebookUrl && (
                 <a
                   href={facebookUrl}
@@ -230,22 +230,27 @@ const Template16 = ({
             </div>
           </div>
         </div>
+
         {/* Buttons */}
-        {/* <div className="flex items-center gap-5 mt-4 w-full mb-6">
-          <Link href={`mailto:${email}`}>
-            <Button className="flex-[1.2] flex items-center justify-center gap-2 px-4 py-2 bg-black text-white text-sm font-medium rounded-full hover:bg-gray-800 transition">
-              <LuUserCircle className="text-white text-lg" />
-              Contact Me
+        <div className="flex items-center gap-3 mt-2 w-full mb-6">
+          <div className="flex-grow-[2]">
+            <Link href={`mailto:${email}`}>
+              <Button className="w-full flex items-center justify-center gap-2 px-4 py-2 bg-black text-white text-sm font-medium rounded-full hover:bg-gray-800 transition">
+                <LuUserCircle className="text-white text-lg" />
+                Contact Me
+              </Button>
+            </Link>
+          </div>
+          <div className="flex-grow">
+            <Button
+              onClick={() => downloadVCard(userProfile)}
+              className="w-full flex items-center justify-center gap-2 px-4 py-2 bg-black text-white text-sm font-medium rounded-full hover:bg-gray-800 transition"
+            >
+              <LuBookmark className="text-white text-lg" />
+              Save
             </Button>
-          </Link>
-          <Button
-            onClick={() => downloadVCard(userProfile)}
-            className="flex-[1.2] flex items-center justify-center gap-2 px-4 py-2 bg-black text-white text-sm font-medium rounded-full hover:bg-gray-800 transition"
-          >
-            <LuBookmark className="text-white text-lg" />
-            Save
-          </Button>
-        </div> */}
+          </div>
+        </div>
       </div>
 
       {/* Company Overview */}
@@ -269,7 +274,7 @@ const Template16 = ({
           )}
           {servicePhotos && servicePhotos.length > 0 && (
             <div className="flex flex-col gap-4">
-              {servicePhotos.slice(0, 3).map((photo, index) => (
+              {servicePhotos.map((photo, index) => (
                 <div key={index} className="w-full overflow-hidden rounded-2xl">
                   <img
                     src={photo}

@@ -103,7 +103,7 @@ const templates: Template[] = [
   },
   {
     id: "template18",
-    name: "Aurora Glass",
+    name: "Ocean Depth",
     imageUrl: "/assets/template18.png",
     route: "/create/template/18",
   },

@@ -90,7 +90,7 @@ const Template17 = ({
               className="w-full h-full object-cover rounded-t-xl sm:rounded-t-[2rem]"
             />
             {/* Top right icons overlay */}
-            <div className="flex gap-x-2 absolute right-2 top-2 text-white ">
+            {/* <div className="flex gap-x-2 absolute right-2 top-2 text-white ">
               <span className=" text-lg font-semibold  border border-[#FFFBD8] rounded-full p-1 ">
                 <a href={`mailto:${email}`}>
                   <LuMail className="cursor-pointer" />
@@ -102,7 +102,7 @@ const Template17 = ({
                   onClick={() => downloadVCard(userProfile)}
                 />
               </span>
-            </div>
+            </div> */}
           </div>
         </div>
 
@@ -122,7 +122,7 @@ const Template17 = ({
       <div className="pt-12 sm:pt-16 pb-4 sm:pb-6 px-4 sm:px-6 flex flex-col items-center">
         {/* Name & Position */}
         <h2 className="text-lg sm:text-xl font-bold text-center leading-tight">
-          {prefix && `${prefix} `}
+          {prefix && `${prefix}. `}
           {firstName} {middleName && `${middleName} `}
           {lastName}
           {suffix && `, ${suffix}`}
@@ -130,6 +130,7 @@ const Template17 = ({
         <div className="text-xs sm:text-sm text-gray-700 text-center mt-1">
           {company} {position && `| ${position}`}
         </div>
+
         {/* Contact Info */}
         <div className="text-xs text-gray-500 text-center mt-1 break-all">
           {email && (
@@ -140,6 +141,7 @@ const Template17 = ({
           )}
           {!email && number && <>{number}</>}
         </div>
+
         {/* Social Icons */}
         <div className="flex gap-2 sm:gap-3 justify-center mt-3 sm:mt-4 flex-wrap">
           {facebookUrl && (
@@ -239,27 +241,35 @@ const Template17 = ({
               rel="noopener noreferrer"
               className="bg-gray-100 hover:bg-gray-200 p-2 rounded-full"
             >
-              <FaTiktok className="text-[#69C9D0] text-sm sm:text-lg" />
+              <FaTiktok className="text-black text-sm sm:text-lg" />
             </a>
           )}
         </div>
-        {/* Buttons */}
-        {/* <div className="flex flex-col sm:flex-row gap-2 sm:gap-3 w-full mt-4 sm:mt-6">
-          <Link href={`mailto:${email}`}>
-            <Button className="flex-1 bg-[#FF4B5C] hover:bg-[#e43c4a] text-white py-2.5 sm:py-2 rounded-full font-semibold flex items-center justify-center gap-2 text-sm">
-              <FaEnvelope className="text-white text-base align-middle" />
-              <span className="leading-none">Email Me!</span>
-            </Button>
-          </Link>
 
-          <Button
-            onClick={() => downloadVCard(userProfile)}
-            className="flex-1 border border-[#FF4B5C] text-[#FF4B5C] py-2.5 sm:py-2 rounded-full font-semibold flex items-center justify-center gap-2 text-sm hover:bg-[#FFF0F1]"
-          >
-            <FaRegBookmark className="text-[#FF4B5C] text-base align-middle" />
-            <span className="leading-none">Save</span>
-          </Button>
-        </div> */}
+        {/* Buttons */}
+        <div className="flex flex-col sm:flex-row gap-2 sm:gap-3 w-full mt-4 sm:mt-6">
+          {/* Email Me - Bigger and colored */}
+          <div className="sm:basis-[65%]">
+            <Link href={`mailto:${email}`}>
+              <Button className="w-full bg-[#FF4B5C] hover:bg-[#e43c4a] text-white py-2.5 sm:py-2 rounded-full font-semibold flex items-center justify-center gap-2 text-sm">
+                <FaEnvelope className="text-white text-base align-middle" />
+                <span className="leading-none">Email Me!</span>
+              </Button>
+            </Link>
+          </div>
+
+          {/* Save - Smaller and white */}
+          <div className="sm:basis-[35%]">
+            <Button
+              onClick={() => downloadVCard(userProfile)}
+              className="w-full border border-[#FF4B5C] text-[#FF4B5C] py-2.5 sm:py-2 rounded-full font-semibold flex items-center justify-center gap-2 text-sm hover:bg-[#FFF0F1] bg-white"
+            >
+              <FaRegBookmark className="text-[#FF4B5C] text-base align-middle" />
+              <span className="leading-none">Save</span>
+            </Button>
+          </div>
+        </div>
+
       </div>
 
       {/* Company Overview */}
@@ -284,7 +294,7 @@ const Template17 = ({
             )}
             {servicePhotos && servicePhotos.length > 0 && (
               <div className="flex flex-col gap-3 sm:gap-4 mb-3 sm:mb-4">
-                {servicePhotos.slice(0, 3).map((photo, idx) => (
+                {servicePhotos.map((photo, idx) => (
                   <div
                     key={idx}
                     className="w-full overflow-hidden rounded-xl sm:rounded-2xl"
