@@ -56,11 +56,13 @@ const Template15 = ({
         websiteUrl,
         customUrl,
     };
+
     return (
         <div className="min-h-screen bg-[#011923] flex flex-col items-center py-8 px-4 relative overflow-hidden">
-            <div className="relative z-10 w-full flex flex-col items-center">
-                {/* Profile Section */}
-                <div className="w-full max-w-md mb-8 relative flex flex-col items-center">
+            <div className="max-w-[480px] mx-auto flex flex-col">
+
+                {/* === Profile and Cover Section === */}
+                <section aria-label="Profile Section" className="w-full max-w-md mb-8 relative flex flex-col items-center">
                     {/* Orange circle - right side of 'Let's Work Together' */}
                     <div
                         className="hidden md:block absolute z-0"
@@ -71,22 +73,8 @@ const Template15 = ({
                     <img
                         src={coverPhotoUrl}
                         alt="Cover"
-                        className="object-cover w-full h-28 md:h-32 rounded-t-2xl shadow-lg"
+                        className="object-cover w-full h-32 md:h-36 rounded-t-2xl shadow-lg"
                     />
-                    {/* Top right icons overlay */}
-                    {/* <div className="flex gap-x-2 absolute right-2 top-2 text-white ">
-                        <span className=" text-lg font-semibold  border border-[#FFFBD8] rounded-full p-1 ">
-                            <a href={`mailto:${email}`}>
-                                <LuMail className="cursor-pointer" />
-                            </a>
-                        </span>
-                        <span className=" text-lg font-semibold  border border-[#FFFBD8] rounded-full p-1 ">
-                            <LuBookmark
-                                className="cursor-pointer"
-                                onClick={() => downloadVCard(userProfile)}
-                            />
-                        </span>
-                    </div> */}
                     {/* Fade effect at the bottom of the cover */}
                     <div
                         className="absolute left-0 bottom-0 w-full h-10 rounded-t-2xl pointer-events-none"
@@ -105,9 +93,11 @@ const Template15 = ({
                             />
                         </div>
                     </div>
-                </div>
-                {/* Card Section */}
-                <div className="w-full max-w-md mt-8 relative flex flex-col items-center">
+                </section>
+
+                {/* === Card Section === */}
+                <section aria-label="Card Section" className="w-full max-w-md mt-8 relative flex flex-col items-center">
+
                     {/* Blue circle - left side of Contacts */}
                     <div
                         className="hidden md:block absolute z-0"
@@ -115,13 +105,15 @@ const Template15 = ({
                     >
                         <div className="w-28 h-28 rounded-full bg-blue-400 opacity-40 blur-2xl" />
                     </div>
-                    {/* Indigo circle - slightly right side, center of footer */}
+
+                    {/* Light Blue circle - right side of Contacts */}
                     <div
                         className="hidden md:block absolute z-0"
                         style={{ bottom: 0, left: "60%" }}
                     >
                         <div className="w-24 h-24 rounded-full bg-indigo-500 opacity-40 blur-2xl" />
                     </div>
+
                     <h1 className="text-2xl font-bold text-white text-center">
                         {prefix && `${prefix}. `}
                         {firstName}
@@ -129,9 +121,11 @@ const Template15 = ({
                         {lastName}
                         {suffix && `, ${suffix}`}
                     </h1>
+
                     <p className="text-base text-white font-medium mt-1 mb-4 text-center">
                         {position} {company && `@ ${company}`}
                     </p>
+
                     <div className="flex gap-2 mb-2">
                         <Link href={`mailto:${email}`}>
                             <Button className="flex items-center gap-1 bg-transparent border border-[#7dd3fc] text-white px-6 py-2 rounded-full font-lg hover:bg-[#0e1a22] transition mb-4 relative">
@@ -149,109 +143,38 @@ const Template15 = ({
 
                     {/* Social Icons */}
                     <div className="flex flex-wrap gap-2 justify-center mb-6 max-w-xs">
-                        {facebookUrl && (
-                            <a
-                                href={facebookUrl}
-                                target="_blank"
-                                rel="noopener noreferrer"
-                                className="bg-[#1a425b] p-2 rounded-full transition"
-                            >
-                                <LuFacebook className="text-lg" style={{ color: "#7eabc2" }} />
-                            </a>
-                        )}
-                        {instagramUrl && (
-                            <a
-                                href={instagramUrl}
-                                target="_blank"
-                                rel="noopener noreferrer"
-                                className="bg-[#1a425b] p-2 rounded-full transition"
-                            >
-                                <LuInstagram className="text-lg" style={{ color: "#7eabc2" }} />
-                            </a>
-                        )}
-                        {linkedinUrl && (
-                            <a
-                                href={linkedinUrl}
-                                target="_blank"
-                                rel="noopener noreferrer"
-                                className="bg-[#1a425b] p-2 rounded-full transition"
-                            >
-                                <LuLinkedin className="text-lg" style={{ color: "#7eabc2" }} />
-                            </a>
-                        )}
-                        {websiteUrl && (
-                            <a
-                                href={websiteUrl}
-                                target="_blank"
-                                rel="noopener noreferrer"
-                                className="bg-[#1a425b] p-2 rounded-full transition"
-                            >
-                                <LuGlobe className="text-lg" style={{ color: "#7eabc2" }} />
-                            </a>
-                        )}
-                        {twitterUrl && (
-                            <a
-                                href={twitterUrl}
-                                target="_blank"
-                                rel="noopener noreferrer"
-                                className="bg-[#1a425b] p-2 rounded-full transition"
-                            >
-                                <LuTwitter className="text-lg" style={{ color: "#7eabc2" }} />
-                            </a>
-                        )}
-                        {youtubeUrl && (
-                            <a
-                                href={youtubeUrl}
-                                target="_blank"
-                                rel="noopener noreferrer"
-                                className="bg-[#1a425b] p-2 rounded-full transition"
-                            >
-                                <LuYoutube className="text-lg" style={{ color: "#7eabc2" }} />
-                            </a>
-                        )}
-                        {whatsappNumber && (
-                            <a
-                                href={`https://wa.me/${whatsappNumber}`}
-                                target="_blank"
-                                rel="noopener noreferrer"
-                                className="bg-[#1a425b] p-2 rounded-full transition"
-                            >
-                                <FaWhatsapp className="text-lg" style={{ color: "#7eabc2" }} />
-                            </a>
-                        )}
-                        {skypeInviteUrl && (
-                            <a
-                                href={skypeInviteUrl}
-                                target="_blank"
-                                rel="noopener noreferrer"
-                                className="bg-[#1a425b] p-2 rounded-full transition"
-                            >
-                                <FaSkype className="text-lg" style={{ color: "#7eabc2" }} />
-                            </a>
-                        )}
-                        {viberUrl && (
-                            <a
-                                href={viberUrl}
-                                target="_blank"
-                                rel="noopener noreferrer"
-                                className="bg-[#1a425b] p-2 rounded-full transition"
-                            >
-                                <FaViber className="text-lg" style={{ color: "#7eabc2" }} />
-                            </a>
-                        )}
-                        {tiktokUrl && (
-                            <a
-                                href={tiktokUrl}
-                                target="_blank"
-                                rel="noopener noreferrer"
-                                className="bg-[#1a425b] p-2 rounded-full transition"
-                            >
-                                <FaTiktok className="text-lg" style={{ color: "#7eabc2" }} />
-                            </a>
-                        )}
+                        {[
+                            { url: facebookUrl, icon: LuFacebook, href: facebookUrl },
+                            { url: instagramUrl, icon: LuInstagram, href: instagramUrl },
+                            { url: linkedinUrl, icon: LuLinkedin, href: linkedinUrl },
+                            { url: websiteUrl, icon: LuGlobe, href: websiteUrl },
+                            { url: twitterUrl, icon: LuTwitter, href: twitterUrl },
+                            { url: youtubeUrl, icon: LuYoutube, href: youtubeUrl },
+                            { url: whatsappNumber, icon: FaWhatsapp, href: `https://wa.me/${whatsappNumber}` },
+                            { url: skypeInviteUrl, icon: FaSkype, href: skypeInviteUrl },
+                            { url: viberUrl, icon: FaViber, href: viberUrl },
+                            { url: tiktokUrl, icon: FaTiktok, href: tiktokUrl },
+                        ]
+                            .filter(social => social.url)
+                            .map((social, index) => {
+                                const IconComponent = social.icon;
+                                return (
+                                    <a
+                                        key={index}
+                                        href={social.href}
+                                        target="_blank"
+                                        rel="noopener noreferrer"
+                                        className="bg-[#1a425b] p-2 rounded-full transition"
+                                    >
+                                        <IconComponent className="text-lg" style={{ color: "#7eabc2" }} />
+                                    </a>
+                                );
+                            })
+                        }
                     </div>
-                    {/* Contact Info */}
-                    <div className="w-full mb-6 relative">
+
+                    {/* === Contact Info Section === */}
+                    <section aria-label="Contact Information" className="w-full mb-6 relative">
                         <h2 className="text-lg font-bold text-white mb-2">
                             Contact Information
                         </h2>
@@ -263,17 +186,21 @@ const Template15 = ({
                                 <FaPhoneAlt className="text-[#7dd3fc]" /> <span>{number}</span>
                             </div>
                         </div>
-                    </div>
-                    {/* Company Overview */}
-                    <div className="w-full mb-6">
-                        <h2 className="text-lg font-bold text-white mb-2">
-                            Company Overview
-                        </h2>
-                        <p className="text-gray-300 text-base">{companyBackground}</p>
-                    </div>
-                    {/* Our Services */}
+                    </section>
+
+                    {/* === Company Overview Section === */}
+                    {companyBackground && (
+                        <section aria-label="Company Overview" className="w-full mb-6">
+                            <h2 className="text-lg font-bold text-white mb-2">
+                                Company Overview
+                            </h2>
+                            <p className="text-gray-300 text-base">{companyBackground}</p>
+                        </section>
+                    )}
+
+                    {/* === Services Section === */}
                     {(serviceDescription || (servicePhotos && servicePhotos.length > 0)) && (
-                        <div className="w-full">
+                        <section aria-label="Our Services" className="w-full">
                             <h2 className="text-lg font-bold text-white mb-4">Our Services</h2>
                             {serviceDescription && (
                                 <p className="text-gray-300 mb-4">{serviceDescription}</p>
@@ -292,9 +219,10 @@ const Template15 = ({
                                     ))}
                                 </div>
                             )}
-                        </div>
+                        </section>
                     )}
-                    {/* Footer */}
+
+                    {/* === Footer Section === */}
                     <footer className="w-full max-w-md mx-auto mt-14 py-4 text-center text-gray-400 text-sm relative">
                         <div className="font-semibold text-base text-white mb-1 relative z-10">
                             {company}
@@ -303,7 +231,7 @@ const Template15 = ({
                             © 2024 Zwiftech. All Right Reserved.
                         </div>
                     </footer>
-                </div>
+                </section>
             </div>
         </div>
     );

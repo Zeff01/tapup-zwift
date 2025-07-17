@@ -433,7 +433,7 @@ const MultiStepFormUpdate = ({
             <div className="aspect-[130/48] w-80 mx-auto mb-10">
               <TapupLogo />
             </div>
-            <div className="w-full mx-auto max-w-sm">
+            <div className="w-full mx-auto max-w-md">
               {formHeaderItems.map((item) => (
                 <div key={item.id} className="mb-4">
                   <h2 className="text-2xl">

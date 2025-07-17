@@ -266,7 +266,7 @@ export default function CardsAndUsersCreateFields({
           {currentStep < 4 ? (
             <div className="flex flex-col overflow-auto py-8 px-6 sm:px-0 bg-background h-full">
               <TapupLogo className="mx-auto mb-5" />
-              <div className="w-full mx-auto max-w-sm">
+              <div className="w-full mx-auto max-w-md">
                 {formHeaderItems.map((item) => (
                   <div key={item.id} className="mb-4">
                     <h2 className="text-2xl">
