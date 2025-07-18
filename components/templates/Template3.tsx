@@ -1,9 +1,11 @@
 import { downloadVCard } from "@/lib/utils";
 import { Card } from "@/types/types";
 import Image from "next/image";
-// import { CiCirclePlus, CiSaveDown2, CiMail, CiPhone } from "react-icons/ci";
-import { MdOutlinePhone, MdOutlineMailOutline } from "react-icons/md";
-import { PiGlobeHemisphereWestFill } from "react-icons/pi";
+import {
+  MdOutlinePhone,
+  MdOutlineMailOutline,
+  MdOutlineBookmarkBorder,
+} from "react-icons/md";
 import {
   FaXTwitter,
   FaFacebook,
@@ -13,6 +15,7 @@ import {
   FaWhatsapp,
   FaSkype,
   FaGlobe,
+  FaViber,
 } from "react-icons/fa6";
 
 const Template3 = ({
@@ -35,6 +38,7 @@ const Template3 = ({
   linkedinUrl,
   whatsappNumber,
   skypeInviteUrl,
+  viberUrl,
   websiteUrl,
   customUrl,
 }: Card) => {
@@ -126,42 +130,31 @@ const Template3 = ({
         {/* CTA BUTTONS */}
         <div className="flex justify-center gap-6 mt-6 font-bold">
           {/* Icon buttons */}
-          {/* <div className="flex flex-col justify-center items-center">
+
+          <div className="flex flex-col justify-center items-center bg-white p-2 rounded-full">
             <a href={`tel:${number}`} className="text-decoration-none">
-              <CiPhone size={24} className="cursor-pointer" />
+              <MdOutlinePhone size={24} className="cursor-pointer text-black" />
             </a>
           </div>
-          <div className="flex flex-col justify-center items-center">
-            <a href={`mailto:${email}`}>
-              <CiMail size={24} className="cursor-pointer" />
+          <div className="flex flex-col justify-center items-center bg-white p-2 rounded-full">
+            <a href={`mailto:${email}`} className="text-decoration-none">
+              <MdOutlineMailOutline
+                size={24}
+                className="cursor-pointer text-black"
+              />
             </a>
           </div>
-          <div className="flex flex-col justify-center items-center">
-            <CiSaveDown2
+          <div className="flex flex-col justify-center items-center bg-white p-2 rounded-full">
+            <MdOutlineBookmarkBorder
               size={24}
-              className="cursor-pointer"
+              className="cursor-pointer text-black"
               onClick={() => downloadVCard(userProfile)}
             />
-          </div> */}
-          <div className="flex flex-col justify-center items-center">
-            <a href={`mailto:${email}`} className="text-decoration-none">
-              <MdOutlineMailOutline size={24} className="cursor-pointer" />
-            </a>
-          </div>
-          <div className="flex flex-col justify-center items-center">
-            <a href={websiteUrl} className="text-decoration-none">
-              <PiGlobeHemisphereWestFill size={24} className="cursor-pointer" />
-            </a>
-          </div>
-          <div className="flex flex-col justify-center items-center">
-            <a href={`tel:${number}`} className="text-decoration-none">
-              <MdOutlinePhone size={24} className="cursor-pointer" />
-            </a>
           </div>
         </div>
 
         {/* SOCIAL MEDIA ICONS */}
-        <div className="grid grid-cols-4 justify-center gap-4 mt-6 my-4  w-40 mx-auto">
+        <div className="flex items-center justify-center gap-4 mt-6 my-4  w-40 mx-auto">
           {facebookUrl && (
             <a href={facebookUrl} target="_blank" rel="noopener noreferrer">
               <FaFacebook size={24} />
@@ -185,6 +178,11 @@ const Template3 = ({
           {linkedinUrl && (
             <a href={linkedinUrl} target="_blank" rel="noopener noreferrer">
               <FaLinkedin size={24} />
+            </a>
+          )}
+          {viberUrl && (
+            <a href={viberUrl} target="_blank" rel="noopener noreferrer">
+              <FaViber size={24} />
             </a>
           )}
           {whatsappNumber && (
