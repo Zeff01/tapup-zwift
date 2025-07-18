@@ -1,17 +1,23 @@
 import { downloadVCard } from "@/lib/utils";
 import { Card } from "@/types/types";
 import Image from "next/image";
-// import { CiCirclePlus, CiMail, CiPhone, CiSaveDown2 } from "react-icons/ci";
-import { BsBookmark, BsPlusLg } from "react-icons/bs";
+import Link from "next/link";
 import {
+  MdOutlinePhone,
+  MdOutlineMailOutline,
+  MdOutlineBookmarkBorder,
+} from "react-icons/md";
+import {
+  FaXTwitter,
   FaFacebook,
-  FaGlobe,
+  FaYoutube,
   FaInstagram,
   FaLinkedin,
-  FaSkype,
   FaWhatsapp,
-  FaXTwitter,
-  FaYoutube,
+  FaSkype,
+  FaGlobe,
+  FaViber,
+  FaTiktok,
 } from "react-icons/fa6";
 
 const Template4 = ({
@@ -28,13 +34,15 @@ const Template4 = ({
   email,
   number,
   facebookUrl,
-  youtubeUrl,
+  linkedinUrl,
   instagramUrl,
   twitterUrl,
-  linkedinUrl,
+  tiktokUrl,
+  youtubeUrl,
   whatsappNumber,
   skypeInviteUrl,
   websiteUrl,
+  viberUrl,
   customUrl,
 }: Card) => {
   const userProfile = {
@@ -51,7 +59,7 @@ const Template4 = ({
 
   return (
     <div className="bg-white text-black flex flex-col items-center justify-between  min-h-screen">
-      <div className=" w-full mx-auto  max-w-[480px] bg-[#f8f8f8]">
+      <div className=" w-full mx-auto  max-w-[480px]">
         {/* COVERPHOTO AND PROFILE PIC */}
         <div className=" flex flex-col relative w-full  ">
           <div className="w-full  h-48 overflow-hidden">
@@ -74,7 +82,7 @@ const Template4 = ({
           </div>
           <div className="absolute -bottom-14 left-4 ">
             {profilePictureUrl ? (
-              <div className=" rounded-full mx-auto overflow-hidden">
+              <div className=" rounded-full border-2 border-white mx-auto overflow-hidden">
                 <Image
                   src={profilePictureUrl}
                   alt="Profile Image"
@@ -98,48 +106,36 @@ const Template4 = ({
         </div>
 
         {/* CTA BUTTONS */}
-        <div className="flex justify-end gap-1 pr-4 pt-2">
-          {/* Icon buttons */}
-          {/* <div className="flex flex-col justify-center items-center">
-            <a href={`tel:${number}`} className="text-decoration-none">
-              <CiPhone size={28} className="cursor-pointer" />
-            </a>
-            <p className="text-xs">Call</p>
-          </div>
-          <div className="flex flex-col justify-center items-center">
-            <a href={`mailto:${email}`}>
-              <CiMail size={28} className="cursor-pointer" />
-            </a>
-            <p className="text-xs">Email</p>
-          </div>
-          <div className="flex flex-col justify-center items-center">
-            <CiSaveDown2
-              size={28}
+        <div className="flex justify-end gap-2.5 pr-4 pt-4">
+          <Link
+            href={`tel:${number}`}
+            className="p-1 grid place-content-center rounded-full border-2 border-black "
+          >
+            <MdOutlinePhone
               className="cursor-pointer"
-              onClick={() => downloadVCard(userProfile)}
+              size={24}
             />
-            <p className="text-xs">Save</p>
-          </div> */}
-          <div className="flex flex-col justify-center items-center">
-            <div
-              className="rounded-full border p-1.5 border-black cursor-pointer"
-              onClick={() => console.log()}
-            >
-              <BsPlusLg size={14} />
-            </div>
-          </div>
-          <div className="flex flex-col justify-center items-center">
-            <div
-              className="rounded-full border p-1.5 border-black cursor-pointer"
+          </Link>
+          <Link
+            href={`mailto:${email}`}
+            className="p-1 grid place-content-center rounded-full border-2 border-black "
+          >
+            <MdOutlineMailOutline
+              className="cursor-pointer"
+              size={24}
+            />
+          </Link>
+          <div className="p-1 grid place-content-center rounded-full border-2 border-black ">
+            <MdOutlineBookmarkBorder
+              className="cursor-pointer font-bold"
               onClick={() => downloadVCard(userProfile)}
-            >
-              <BsBookmark size={14} />
-            </div>
+              size={24}
+            />
           </div>
         </div>
 
         {/* PERSONAL INFORMATION */}
-        <div className="mt-4 space-y-1 px-4 mb-4">
+        <div className="space-y-1 px-4 mb-4">
           {firstName ? (
             <h1 className="text-2xl font-bold mt-4 ">
               {firstName + " " + lastName}
@@ -180,78 +176,92 @@ const Template4 = ({
         <div className="flex flex-col gap-4 mt-6 px-4">
           {servicePhotos
             ? servicePhotos.map((photo, index) => (
-                <div key={index} className="col-span-1">
-                  <Image
-                    src={photo}
-                    alt={`Service Photo ${index + 1}`}
-                    width={500}
-                    height={500}
-                    layout="responsive"
-                    className="rounded-md object-cover w-full"
-                  />
-                </div>
-              ))
+              <div key={index} className="col-span-1">
+                <Image
+                  src={photo}
+                  alt={`Service Photo ${index + 1}`}
+                  width={500}
+                  height={500}
+                  layout="responsive"
+                  className="rounded-md object-cover w-full"
+                />
+              </div>
+            ))
             : Array.from({ length: 4 }).map((_, index) => (
-                <div key={index} className="col-span-1">
-                  <Image
-                    src="/assets/sampleService.png"
-                    alt="Service Photo"
-                    width={500}
-                    height={500}
-                    layout="responsive"
-                    className="rounded-md object-cover w-full"
-                  />
-                </div>
-              ))}
+              <div key={index} className="col-span-1">
+                <Image
+                  src="/assets/sampleService.png"
+                  alt="Service Photo"
+                  width={500}
+                  height={500}
+                  layout="responsive"
+                  className="rounded-md object-cover w-full"
+                />
+              </div>
+            ))}
         </div>
       </div>
       {/* SOCIAL MEDIA ICONS */}
-      <div className="flex flex-col justify-center items-center mt-8">
+      <div className="flex flex-col justify-center items-center mt-8 mb-4">
         <h1 className="font-bold mb-2">Socials</h1>
         <div className="flex justify-center gap-4 mb-2">
           {facebookUrl && (
-            <a href={facebookUrl} target="_blank" rel="noopener noreferrer">
+            <Link href={facebookUrl} target="_blank" rel="noopener noreferrer">
               <FaFacebook size={24} />
-            </a>
+            </Link>
           )}
           {twitterUrl && (
-            <a href={twitterUrl} target="_blank" rel="noopener noreferrer">
+            <Link href={twitterUrl} target="_blank" rel="noopener noreferrer">
               <FaXTwitter size={24} />
-            </a>
+            </Link>
+          )}
+          {tiktokUrl && (
+            <Link href={tiktokUrl} target="_blank" rel="noopener noreferrer">
+              <FaTiktok size={24} />
+            </Link>
           )}
           {youtubeUrl && (
-            <a href={youtubeUrl} target="_blank" rel="noopener noreferrer">
+            <Link href={youtubeUrl} target="_blank" rel="noopener noreferrer">
               <FaYoutube size={24} />
-            </a>
+            </Link>
           )}
           {instagramUrl && (
-            <a href={instagramUrl} target="_blank" rel="noopener noreferrer">
+            <Link href={instagramUrl} target="_blank" rel="noopener noreferrer">
               <FaInstagram size={24} />
-            </a>
+            </Link>
           )}
           {linkedinUrl && (
-            <a href={linkedinUrl} target="_blank" rel="noopener noreferrer">
+            <Link href={linkedinUrl} target="_blank" rel="noopener noreferrer">
               <FaLinkedin size={24} />
-            </a>
+            </Link>
+          )}
+          {viberUrl && (
+            <Link href={viberUrl} target="_blank" rel="noopener noreferrer">
+              <FaViber size={24} />
+            </Link>
           )}
           {whatsappNumber && (
-            <a
+            <Link
               href={`https://wa.me/${whatsappNumber}`}
               target="_blank"
               rel="noopener noreferrer"
             >
               <FaWhatsapp size={24} />
-            </a>
+            </Link>
           )}
           {skypeInviteUrl && (
-            <a href={skypeInviteUrl} target="_blank" rel="noopener noreferrer">
+            <Link
+              href={`skype:${skypeInviteUrl}?chat`}
+              target="_blank"
+              rel="noopener noreferrer"
+            >
               <FaSkype size={24} />
-            </a>
+            </Link>
           )}
           {websiteUrl && (
-            <a href={websiteUrl} target="_blank" rel="noopener noreferrer">
+            <Link href={websiteUrl} target="_blank" rel="noopener noreferrer">
               <FaGlobe size={24} />
-            </a>
+            </Link>
           )}
         </div>
       </div>
