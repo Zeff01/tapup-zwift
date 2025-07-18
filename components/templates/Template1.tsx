@@ -17,6 +17,7 @@ import {
   FaSkype,
   FaGlobe,
   FaViber,
+  FaTiktok
 } from "react-icons/fa6";
 
 const Template1 = ({
@@ -124,28 +125,33 @@ const Template1 = ({
         <div className="flex justify-center gap-2.5 mt-5">
           <Link
             href={`tel:${number}`}
-            className="grid place-content-center size-[24px] bg-white rounded-full border-2 border-black "
+            className="p-1 grid place-content-center bg-white rounded-full border-2 border-black "
           >
-            <MdOutlinePhone className="cursor-pointer" />
+            <MdOutlinePhone
+              className="cursor-pointer"
+              size={20}
+            />
           </Link>
           <Link
             href={`mailto:${email}`}
-            className="grid place-content-center size-[24px] bg-white rounded-full border-2 border-black "
+            className="p-1 grid place-content-center bg-white rounded-full border-2 border-black "
           >
             <MdOutlineMailOutline
               className="cursor-pointer"
+              size={20}
             />
           </Link>
-          <div className="grid place-content-center size-[24px] bg-white rounded-full border-2 border-black ">
+          <div className="p-1 grid place-content-center bg-white rounded-full border-2 border-black ">
             <MdOutlineBookmarkBorder
               className="cursor-pointer font-bold"
               onClick={() => downloadVCard(userProfile)}
+              size={20}
             />
           </div>
         </div>
 
         {/* SOCIAL MEDIA ICONS */}
-        <div className="flex justify-center gap-4 sm:gap-6 mt-5 mb-6">
+        <div className="flex justify-center gap-2.5 sm:gap-4 mt-5 mb-6">
           {facebookUrl && (
             <Link href={facebookUrl} target="_blank" rel="noopener noreferrer">
               <FaFacebook size={24} />
@@ -154,6 +160,11 @@ const Template1 = ({
           {twitterUrl && (
             <Link href={twitterUrl} target="_blank" rel="noopener noreferrer">
               <FaXTwitter size={24} />
+            </Link>
+          )}
+          {tiktokUrl && (
+            <Link href={tiktokUrl} target="_blank" rel="noopener noreferrer">
+              <FaTiktok size={24} />
             </Link>
           )}
           {youtubeUrl && (
