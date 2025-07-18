@@ -4,11 +4,12 @@ import { Card } from "@/types/types";
 
 import profilePic from "@/public/assets/template4samplepic.png";
 import Image from "next/image";
-// import { CiSaveDown2, CiMail, CiPhone } from "react-icons/ci";
 import profileBgImage from "@/public/assets/profileImage.png";
-import { BsBoxArrowInDown } from "react-icons/bs";
-import { LuPhoneCall } from "react-icons/lu";
-import { TbMailPlus } from "react-icons/tb";
+import {
+  MdOutlinePhone,
+  MdOutlineMailOutline,
+  MdOutlineBookmarkBorder,
+} from "react-icons/md";
 
 import Link from "next/link";
 
@@ -73,22 +74,25 @@ const ProfileInfo = ({
             Edit Profile
           </Button> */}
           <div className="flex gap-3 justify-center items-end">
-            <Link href={`tel:${number}`}>
-              <LuPhoneCall
-                size={20}
-                className="text-[#1A1919CC] cursor-pointer"
+            <Link
+              href={`tel:${number}`}
+              className="p-1 bg-neutral-800 rounded-full"
+            >
+              <MdOutlinePhone size={24} className="text-white cursor-pointer" />
+            </Link>
+            <Link
+              href={`mailto:${email}`}
+              className="p-1 bg-neutral-800 rounded-full"
+            >
+              <MdOutlineMailOutline
+                size={24}
+                className="text-white cursor-pointer"
               />
             </Link>
-            <Link href={`mailto:${email}`}>
-              <TbMailPlus
-                size={20}
-                className="text-[#1A1919CC] cursor-pointer"
-              />
-            </Link>
-            <div>
-              <BsBoxArrowInDown
-                size={20}
-                className="text-[#1A1919CC] cursor-pointer font-bold"
+            <div className="p-1 bg-neutral-800 rounded-full">
+              <MdOutlineBookmarkBorder
+                size={24}
+                className="text-white cursor-pointer font-bold"
                 onClick={() => downloadVCard(userProfile)}
               />
             </div>

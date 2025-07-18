@@ -4,16 +4,21 @@ import { Advent_Pro, Akatab } from "next/font/google";
 import Image from "next/image";
 import { CiMail, CiPhone } from "react-icons/ci";
 import {
+  MdOutlinePhone,
+  MdOutlineMailOutline,
+  MdOutlineBookmarkBorder,
+} from "react-icons/md";
+import {
+  FaXTwitter,
+  FaFacebook,
+  FaYoutube,
   FaInstagram,
   FaLinkedin,
   FaWhatsapp,
-  FaXTwitter,
+  FaSkype,
+  FaGlobe,
+  FaViber,
 } from "react-icons/fa6";
-import { FiYoutube } from "react-icons/fi";
-import { GoGlobe } from "react-icons/go";
-import { HiOutlineBookmark } from "react-icons/hi2";
-import { SiSkypeforbusiness } from "react-icons/si";
-import { SlSocialFacebook } from "react-icons/sl";
 import { Button } from "../ui/button";
 import { Separator } from "../ui/separator";
 import {
@@ -53,6 +58,7 @@ const Template12 = ({
   linkedinUrl,
   whatsappNumber,
   skypeInviteUrl,
+  viberUrl,
   websiteUrl,
   customUrl,
 }: Card) => {
@@ -88,13 +94,6 @@ const Template12 = ({
         </div> */}
 
         <div className="relative">
-          <Button
-            onClick={() => downloadVCard(userProfile)}
-            className="absolute top-3 right-4 text-lg font-semibold bg-[#D3F1DF] hover:bg-[#466b55] transition-colors duration-300 text-black rounded-full p-2 z-40"
-          >
-            <HiOutlineBookmark />
-          </Button>
-
           <div className="absolute w-full  flex flex-col items-center justify-center z-20 top-0 left-1/2 transform -translate-x-1/2  ">
             <div className="flex flex-col w-full items-center justify-center pt-2 ">
               {firstName ? (
@@ -156,7 +155,7 @@ const Template12 = ({
                 </div>
               )}
             </div>
-            <div className="flex items-end justify-center w-full ">
+            <div className="flex items-end justify-center w-full gap-2">
               <TooltipProvider>
                 <Tooltip>
                   <TooltipTrigger asChild>
@@ -164,12 +163,8 @@ const Template12 = ({
                       variant="outline"
                       className="bg-[#D3F1DF] text-xs hover:bg-[#466b55] transition-colors duration-300 border-none rounded-full h-7 text-black shadow-md"
                     >
-                      <a
-                        className="flex items-center gap-2"
-                        href={`tel:${number}`}
-                      >
-                        <CiPhone />
-                        Contact Me
+                      <a className="flex items-center" href={`tel:${number}`}>
+                        <MdOutlinePhone />
                       </a>
                     </Button>
                   </TooltipTrigger>
@@ -180,7 +175,7 @@ const Template12 = ({
                   </TooltipContent>
                 </Tooltip>
               </TooltipProvider>
-              <Separator className="mx-8 h-6" orientation="vertical" />
+              {/* <Separator className="mx-8 h-6" orientation="vertical" /> */}
               <TooltipProvider>
                 <Tooltip>
                   <TooltipTrigger asChild>
@@ -188,14 +183,31 @@ const Template12 = ({
                       variant="outline"
                       className="bg-[#D3F1DF] text-xs hover:bg-[#466b55] transition-colors duration-300 border-none rounded-full h-7 text-black   shadow-md"
                     >
-                      <CiMail className="cursor-pointer" />
-                      <a href={`mailto:${email}`}>Email Me</a>
+                      <a href={`mailto:${email}`}>
+                        <MdOutlineMailOutline className="cursor-pointer" />
+                      </a>
                     </Button>
                   </TooltipTrigger>
                   <TooltipContent>
                     <span className="text-xs">
                       {email ?? "H.Watkins@gmail.com"}
                     </span>
+                  </TooltipContent>
+                </Tooltip>
+              </TooltipProvider>
+              <TooltipProvider>
+                <Tooltip>
+                  <TooltipTrigger asChild>
+                    <Button
+                      variant="outline"
+                      onClick={() => downloadVCard(userProfile)}
+                      className="bg-[#D3F1DF] text-xs hover:bg-[#466b55] transition-colors duration-300 border-none rounded-full h-7 text-black   shadow-md"
+                    >
+                      <MdOutlineBookmarkBorder className="cursor-pointer" />
+                    </Button>
+                  </TooltipTrigger>
+                  <TooltipContent>
+                    <span className="text-xs">Download VCF</span>
                   </TooltipContent>
                 </Tooltip>
               </TooltipProvider>
@@ -224,7 +236,7 @@ const Template12 = ({
           <div className=" flex  items-center w-full gap-x-4 py-4 text-2xl bg-gradient-to-t from-[#D3F1DF]  to-[#f4fcf7] text-neutral-700 h-16 justify-center">
             {facebookUrl && (
               <a href={facebookUrl} target="_blank" rel="noopener noreferrer">
-                <SlSocialFacebook size={20} />
+                <FaFacebook size={20} />
               </a>
             )}
             {twitterUrl && (
@@ -234,7 +246,7 @@ const Template12 = ({
             )}
             {youtubeUrl && (
               <a href={youtubeUrl} target="_blank" rel="noopener noreferrer">
-                <FiYoutube size={20} />
+                <FaYoutube size={20} />
               </a>
             )}
             {instagramUrl && (
@@ -245,6 +257,11 @@ const Template12 = ({
             {linkedinUrl && (
               <a href={linkedinUrl} target="_blank" rel="noopener noreferrer">
                 <FaLinkedin size={20} />
+              </a>
+            )}
+            {viberUrl && (
+              <a href={viberUrl} target="_blank" rel="noopener noreferrer">
+                <FaViber size={20} />
               </a>
             )}
             {whatsappNumber && (
@@ -262,12 +279,12 @@ const Template12 = ({
                 target="_blank"
                 rel="noopener noreferrer"
               >
-                <SiSkypeforbusiness size={20} />
+                <FaSkype size={20} />
               </a>
             )}
             {websiteUrl && (
               <a href={websiteUrl} target="_blank" rel="noopener noreferrer">
-                <GoGlobe size={20} />
+                <FaGlobe size={20} />
               </a>
             )}
           </div>
