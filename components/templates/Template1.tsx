@@ -124,19 +124,19 @@ const Template1 = ({
         <div className="flex justify-center gap-2.5 mt-5">
           <Link
             href={`tel:${number}`}
-            className="p-1.5 size-[24px] bg-white rounded-full border-2 border-black "
+            className="grid place-content-center size-[24px] bg-white rounded-full border-2 border-black "
           >
             <MdOutlinePhone className="cursor-pointer" />
           </Link>
           <Link
             href={`mailto:${email}`}
-            className="p-1.5 size-[24px] bg-white rounded-full border-2 border-black "
+            className="grid place-content-center size-[24px] bg-white rounded-full border-2 border-black "
           >
             <MdOutlineMailOutline
               className="cursor-pointer"
             />
           </Link>
-          <div className="p-1.5 size-[24px] bg-white rounded-full border-2 border-black ">
+          <div className="grid place-content-center size-[24px] bg-white rounded-full border-2 border-black ">
             <MdOutlineBookmarkBorder
               className="cursor-pointer font-bold"
               onClick={() => downloadVCard(userProfile)}
