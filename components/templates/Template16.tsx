@@ -57,244 +57,161 @@ const Template16 = ({
   };
   return (
     <div className="bg-white min-h-screen w-full flex flex-col items-center font-sans text-black">
-      {/* Cover Image */}
-      <div className="w-full max-w-md h-40 overflow-hidden relative">
-        <img
-          src={coverPhotoUrl}
-          alt="Cover"
-          className="w-full h-full object-cover"
-        />
-        {/* Top right icons overlay */}
-        {/* <div className="flex gap-x-2 absolute right-2 top-2 text-white z-10">
-          <span className="text-lg font-semibold border border-[#FFFBD8] rounded-full p-1">
-            <a href={`mailto:${email}`}>
-              <LuMail className="cursor-pointer" />
-            </a>
-          </span>
-          <span className="text-lg font-semibold border border-[#FFFBD8] rounded-full p-1">
-            <LuBookmark
-              className="cursor-pointer"
-              onClick={() => downloadVCard(userProfile)}
-            />
-          </span>
-        </div> */}
-      </div>
+      <div className="max-w-[480px] mx-auto flex flex-col">
 
-      {/* Profile Section */}
-      <div className="w-full max-w-md px-6">
-        <div className="flex items-start gap-4">
-          {/* Avatar */}
-          <div className="w-24 h-24 rounded-full border-[5px] border-white overflow-hidden shadow-md flex-shrink-0 -mt-12 relative z-20">
-            <img
-              src={profilePictureUrl}
-              alt="Profile"
-              className="w-full h-full object-cover"
-            />
-          </div>
+        {/* === Cover Section === */}
+        <section aria-label="Cover Section" className="w-full max-w-md h-40 overflow-hidden relative">
+          <img
+            src={coverPhotoUrl}
+            alt="Cover"
+            className="w-full h-full object-cover"
+          />
+        </section>
 
-          {/* Info to the right of avatar */}
-          <div className="flex-1 mt-3">
-            {/* Name & Title */}
-            <h1 className="text-xl font-semibold">
-              {prefix && `${prefix}. `}
-              {firstName} {middleName && `${middleName} `}
-              {lastName}
-              {suffix && `, ${suffix}`}
-            </h1>
-            <p className="text-sm text-gray-600 font-medium">
-              {position} {company && `@ ${company}`}
-            </p>
-
-            {/* Contact Info */}
-            <div className="flex flex-wrap items-center gap-4 mt-2 text-xs text-gray-700">
-              {email && (
-                <div className="flex items-center gap-2">
-                  <LuMail />
-                  <a href={`mailto:${email}`} className="hover:underline">
-                    {email}
-                  </a>
-                </div>
-              )}
-              {number && (
-                <div className="flex items-center gap-2">
-                  <LuPhone />
-                  <a href={`tel:${number}`} className="hover:underline">
-                    {number}
-                  </a>
-                </div>
-              )}
+        {/* === Profile Section === */}
+        <section aria-label="Profile Section" className="w-full max-w-md px-6">
+          <div className="flex items-start gap-4">
+            {/* Avatar */}
+            <div className="w-24 h-24 rounded-full border-[5px] border-white overflow-hidden shadow-md flex-shrink-0 -mt-12 relative z-20">
+              <img
+                src={profilePictureUrl}
+                alt="Profile"
+                className="w-full h-full object-cover"
+              />
             </div>
 
-            {/* Social Icons */}
-            <div className="flex items-center gap-3 mt-3 mb-5 flex-wrap">
-              {facebookUrl && (
-                <a
-                  href={facebookUrl}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="bg-black p-1.5 rounded-full hover:bg-gray-800 transition"
-                >
-                  <LuFacebook className="text-white text-base" />
-                </a>
-              )}
-              {linkedinUrl && (
-                <a
-                  href={linkedinUrl}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="bg-black p-1.5 rounded-full hover:bg-gray-800 transition"
-                >
-                  <LuLinkedin className="text-white text-base" />
-                </a>
-              )}
-              {instagramUrl && (
-                <a
-                  href={instagramUrl}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="bg-black p-1.5 rounded-full hover:bg-gray-800 transition"
-                >
-                  <LuInstagram className="text-white text-base" />
-                </a>
-              )}
-              {twitterUrl && (
-                <a
-                  href={twitterUrl}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="bg-black p-1.5 rounded-full hover:bg-gray-800 transition"
-                >
-                  <LuTwitter className="text-white text-base" />
-                </a>
-              )}
-              {youtubeUrl && (
-                <a
-                  href={youtubeUrl}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="bg-black p-1.5 rounded-full hover:bg-gray-800 transition"
-                >
-                  <LuYoutube className="text-white text-base" />
-                </a>
-              )}
-              {whatsappNumber && (
-                <a
-                  href={`https://wa.me/${whatsappNumber}`}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="bg-black p-1.5 rounded-full hover:bg-gray-800 transition"
-                >
-                  <FaWhatsapp className="text-white text-base" />
-                </a>
-              )}
-              {skypeInviteUrl && (
-                <a
-                  href={skypeInviteUrl}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="bg-black p-1.5 rounded-full hover:bg-gray-800 transition"
-                >
-                  <FaSkype className="text-white text-base" />
-                </a>
-              )}
-              {websiteUrl && (
-                <a
-                  href={websiteUrl}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="bg-black p-1.5 rounded-full hover:bg-gray-800 transition"
-                >
-                  <LuGlobe className="text-white text-base" />
-                </a>
-              )}
-              {viberUrl && (
-                <a
-                  href={viberUrl}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="bg-black p-1.5 rounded-full hover:bg-gray-800 transition"
-                >
-                  <FaViber className="text-white text-base" />
-                </a>
-              )}
-              {tiktokUrl && (
-                <a
-                  href={tiktokUrl}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="bg-black p-1.5 rounded-full hover:bg-gray-800 transition"
-                >
-                  <FaTiktok className="text-white text-base" />
-                </a>
-              )}
+            {/* Info to the right of avatar */}
+            <div className="flex-1 mt-3">
+              {/* Name & Title */}
+              <h1 className="text-xl font-semibold">
+                {prefix && `${prefix}. `}
+                {firstName} {middleName && `${middleName} `}
+                {lastName}
+                {suffix && `, ${suffix}`}
+              </h1>
+              <p className="text-sm text-gray-600 font-medium">
+                {position} {company && `@ ${company}`}
+              </p>
+
+              {/* Contact Info */}
+              <div className="flex flex-wrap items-center gap-4 mt-2 text-xs text-gray-700">
+                {email && (
+                  <div className="flex items-center gap-2">
+                    <LuMail />
+                    <a href={`mailto:${email}`} className="hover:underline">
+                      {email}
+                    </a>
+                  </div>
+                )}
+                {number && (
+                  <div className="flex items-center gap-2">
+                    <LuPhone />
+                    <a href={`tel:${number}`} className="hover:underline">
+                      {number}
+                    </a>
+                  </div>
+                )}
+              </div>
+
+              {/* Social Icons */}
+              <div className="flex items-center gap-3 mt-3 mb-5 flex-wrap">
+                {[
+                  { url: facebookUrl, icon: LuFacebook, href: facebookUrl },
+                  { url: linkedinUrl, icon: LuLinkedin, href: linkedinUrl },
+                  { url: instagramUrl, icon: LuInstagram, href: instagramUrl },
+                  { url: twitterUrl, icon: LuTwitter, href: twitterUrl },
+                  { url: youtubeUrl, icon: LuYoutube, href: youtubeUrl },
+                  { url: whatsappNumber, icon: FaWhatsapp, href: `https://wa.me/${whatsappNumber}` },
+                  { url: skypeInviteUrl, icon: FaSkype, href: skypeInviteUrl },
+                  { url: websiteUrl, icon: LuGlobe, href: websiteUrl },
+                  { url: viberUrl, icon: FaViber, href: viberUrl },
+                  { url: tiktokUrl, icon: FaTiktok, href: tiktokUrl },
+                ]
+                  .filter(social => social.url)
+                  .map((social, index) => {
+                    const IconComponent = social.icon;
+                    return (
+                      <a
+                        key={index}
+                        href={social.href}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="bg-black p-1.5 rounded-full hover:bg-gray-800 transition"
+                      >
+                        <IconComponent className="text-white text-base" />
+                      </a>
+                    );
+                  })
+                }
+              </div>
             </div>
           </div>
-        </div>
 
-        {/* Buttons */}
-        <div className="flex items-center gap-3 mt-2 w-full mb-6">
-          <div className="flex-grow-[2]">
-            <Link href={`mailto:${email}`}>
-              <Button className="w-full flex items-center justify-center gap-2 px-4 py-2 bg-black text-white text-sm font-medium rounded-full hover:bg-gray-800 transition">
-                <LuUserCircle className="text-white text-lg" />
-                Contact Me
+          {/* === Buttons Section === */}
+          <section aria-label="Action Buttons" className="flex items-center gap-3 mt-2 w-full mb-6 px-6">
+            <div className="flex-grow-[2]">
+              <Link href={`mailto:${email}`}>
+                <Button className="w-full flex items-center justify-center gap-2 px-4 py-2 bg-black text-white text-sm font-medium rounded-full hover:bg-gray-800 transition">
+                  <LuUserCircle className="text-white text-lg" />
+                  Contact Me
+                </Button>
+              </Link>
+            </div>
+            <div className="flex-grow">
+              <Button
+                onClick={() => downloadVCard(userProfile)}
+                className="w-full flex items-center justify-center gap-2 px-4 py-2 bg-black text-white text-sm font-medium rounded-full hover:bg-gray-800 transition"
+              >
+                <LuBookmark className="text-white text-lg" />
+                Save
               </Button>
-            </Link>
-          </div>
-          <div className="flex-grow">
-            <Button
-              onClick={() => downloadVCard(userProfile)}
-              className="w-full flex items-center justify-center gap-2 px-4 py-2 bg-black text-white text-sm font-medium rounded-full hover:bg-gray-800 transition"
-            >
-              <LuBookmark className="text-white text-lg" />
-              Save
-            </Button>
-          </div>
-        </div>
-      </div>
-
-      {/* Company Overview */}
-      {companyBackground && (
-        <div className="w-full max-w-md px-6 mb-6">
-          <h2 className="text-base font-bold mb-2">Company Overview</h2>
-          <p className="text-sm text-gray-700 leading-relaxed">
-            {companyBackground}
-          </p>
-        </div>
-      )}
-
-      {/* Our Services */}
-      {(serviceDescription || (servicePhotos && servicePhotos.length > 0)) && (
-        <div className="w-full max-w-md px-6 mb-8">
-          <h2 className="text-base font-bold mb-2">Our Services</h2>
-          {serviceDescription && (
-            <p className="text-sm text-gray-700 leading-relaxed mb-4">
-              {serviceDescription}
-            </p>
-          )}
-          {servicePhotos && servicePhotos.length > 0 && (
-            <div className="flex flex-col gap-4">
-              {servicePhotos.map((photo, index) => (
-                <div key={index} className="w-full overflow-hidden rounded-2xl">
-                  <img
-                    src={photo}
-                    alt={`Service ${index + 1}`}
-                    className="w-full h-40 object-cover"
-                  />
-                </div>
-              ))}
             </div>
-          )}
-        </div>
-      )}
+          </section>
+        </section>
 
-      {/* Footer */}
-      <footer className="w-full max-w-md px-6 text-center text-gray-500 text-sm pb-8">
-        <div className="font-semibold text-black mb-1">
-          {company}
-        </div>
-        <div>© 2024 Zwiftech. All Rights Reserved.</div>
-      </footer>
+        {/* === Company Overview Section === */}
+        {companyBackground && (
+          <section aria-label="Company Overview" className="w-full max-w-md px-6 mb-6">
+            <h2 className="text-base font-bold mb-2">Company Overview</h2>
+            <p className="text-sm text-gray-700 leading-relaxed">
+              {companyBackground}
+            </p>
+          </section>
+        )}
+
+        {/* === Services Section === */}
+        {(serviceDescription || (servicePhotos && servicePhotos.length > 0)) && (
+          <section aria-label="Our Services" className="w-full max-w-md px-6 mb-8">
+            <h2 className="text-base font-bold mb-2">Our Services</h2>
+            {serviceDescription && (
+              <p className="text-sm text-gray-700 leading-relaxed mb-4">
+                {serviceDescription}
+              </p>
+            )}
+            {servicePhotos && servicePhotos.length > 0 && (
+              <div className="flex flex-col gap-4">
+                {servicePhotos.map((photo, index) => (
+                  <div key={index} className="w-full overflow-hidden rounded-2xl">
+                    <img
+                      src={photo}
+                      alt={`Service ${index + 1}`}
+                      className="w-full h-40 object-cover"
+                    />
+                  </div>
+                ))}
+              </div>
+            )}
+          </section>
+        )}
+
+        {/* === Footer Section === */}
+        <footer className="w-full max-w-md px-6 text-center text-gray-500 text-sm pb-8">
+          <div className="font-semibold text-black mb-1">
+            {company}
+          </div>
+          <div>© 2024 Zwiftech. All Rights Reserved.</div>
+        </footer>
+      </div>
     </div>
   );
 };

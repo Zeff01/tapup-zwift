@@ -63,45 +63,19 @@ const Template13 = ({
   };
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-[#1a1a1a] via-[#232323] to-[#553838] text-white flex flex-col items-center justify-center py-8 px-4 relative overflow-hidden">
-      {/* Content wrapper with higher z-index */}
-      <div className="relative z-10 w-full flex flex-col items-center">
-        {/* Peach background light top right (background only) */}
-        {/*
-        <div
-          className="absolute -top-14 ml-52 w-52 h-52 pointer-events-none z-0"
-          style={{
-            background: 'radial-gradient(circle at 80% 20%, rgb(95, 56, 59) 85%, transparent 100%)',
-            borderRadius: '9999px',
-            filter: 'blur(32px)',
-            opacity: 0.85,
-          }}
-        ></div>
-        */}
-        {/* Cover Photo with Top Right Icons Overlay, now as background for profile */}
-        <div className="w-full max-w-md mb-8 relative flex flex-col items-center">
+    <div className="min-h-screen bg-gradient-to-br from-[#1a1a1a] via-[#232323] to-[#553838] text-white py-8 px-4">
+      <div className="max-w-[480px] mx-auto flex flex-col">
+
+        {/* === Profile and Cover Section === */}
+        <section aria-label="Profile Section" className="w-full mb-8 relative flex flex-col items-center">
           <div className="w-full h-40 rounded-2xl overflow-hidden bg-neutral-800 relative">
             <img
               src={coverPhotoUrl || "/assets/sampleCoverPhoto.png"}
               alt="Cover Photo"
               className="object-cover w-full h-full"
             />
-            {/* Top right icons overlay */}
-            {/* <div className="flex gap-x-2 absolute right-2 top-2 text-white ">
-              <span className=" text-lg font-semibold  border border-[#FFFBD8] rounded-full p-1 ">
-                <a href={`mailto:${email}`}>
-                  <MdOutlineMailOutline className="cursor-pointer" />
-                </a>
-              </span>
-              <span className=" text-lg font-semibold  border border-[#FFFBD8] rounded-full p-1 ">
-                <MdOutlineBookmarkBorder
-                  className="cursor-pointer"
-                  onClick={() => downloadVCard(userProfile)}
-                />
-              </span>
-            </div> */}
           </div>
-          {/* Profile section, now overlapping the cover photo and aligned left */}
+
           <div className="flex flex-col items-start w-full px-4 -mt-12 z-10">
             <div className="w-24 h-24 flex items-center justify-center mb-4 shadow-lg relative">
               <img
@@ -163,9 +137,10 @@ const Template13 = ({
               </div>
             </div>
           </div>
-        </div>
-        {/* Contact Info */}
-        <div className="w-full max-w-md mb-8 px-4">
+        </section>
+
+        {/* === Contact Info Section === */}
+        <section aria-label="Contact Information" className="w-full mb-8 px-4">
           <h2 className="text-lg font-bold mb-4 text-white text-left">
             Contact Information
           </h2>
@@ -206,22 +181,10 @@ const Template13 = ({
                 </a>
               )}
               {whatsappNumber && (
-                <a
-                  href={`https://wa.me/${whatsappNumber}`}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                >
-                  <FaWhatsapp />
-                </a>
+                <a href={`https://wa.me/${whatsappNumber}`} target="_blank" rel="noopener noreferrer"><FaWhatsapp /></a>
               )}
               {skypeInviteUrl && (
-                <a
-                  href={skypeInviteUrl}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                >
-                  <FaSkype />
-                </a>
+                <a href={`skype:${skypeInviteUrl}?chat`}><FaSkype /></a>
               )}
               {websiteUrl && (
                 <a href={websiteUrl} target="_blank" rel="noopener noreferrer">
@@ -229,31 +192,30 @@ const Template13 = ({
                 </a>
               )}
               {viberUrl && (
-                <a href={viberUrl} target="_blank" rel="noopener noreferrer">
-                  <FaViber />
-                </a>
+                <a href={viberUrl} target="_blank" rel="noopener noreferrer"><FaViber /></a>
               )}
               {tiktokUrl && (
-                <a href={tiktokUrl} target="_blank" rel="noopener noreferrer">
-                  <FaTiktok />
-                </a>
+                <a href={tiktokUrl} target="_blank" rel="noopener noreferrer"><FaTiktok /></a>
               )}
             </span>
           </div>
-        </div>
-        {/* Company Overview */}
-        <div className="w-full max-w-md mb-8 px-4">
-          <h2 className="text-lg font-bold mb-2 text-white text-left">
-            Company Overview
-          </h2>
-          <p className="text-gray-300 text-base text-left">
-            {companyBackground}
-          </p>
-        </div>
-        {/* Our Services */}
-        {(serviceDescription ||
-          (servicePhotos && servicePhotos.length > 0)) && (
-          <div className="w-full max-w-md px-4">
+        </section>
+
+        {/* === Company Overview Section === */}
+        {companyBackground && (
+          <section aria-label="Company Overview" className="w-full mb-8 px-4">
+            <h2 className="text-lg font-bold mb-2 text-white text-left">
+              Company Overview
+            </h2>
+            <p className="text-gray-300 text-base text-left">
+              {companyBackground}
+            </p>
+          </section>
+        )}
+
+        {/* === Services Section === */}
+        {(serviceDescription || (servicePhotos && servicePhotos.length > 0)) && (
+          <section aria-label="Our Services" className="w-full px-4">
             <h2 className="text-lg font-bold mb-4 text-white text-left">
               Our Services
             </h2>
@@ -279,9 +241,11 @@ const Template13 = ({
                 ))}
               </div>
             )}
-          </div>
+          </section>
         )}
-        <footer className="w-full max-w-md mx-auto mt-8 py-4 text-center text-gray-400 text-sm border-t border-neutral-800">
+
+        {/* === Footer Section === */}
+        <footer className="w-full mx-auto mt-8 py-4 text-center text-gray-400 text-sm border-t border-neutral-800">
           <div className="font-semibold text-base text-white mb-1">
             {company}
           </div>
