@@ -1,18 +1,13 @@
 import { downloadVCard } from "@/lib/utils";
 import { Card } from "@/types/types";
 import Image from "next/image";
-// import { CiCirclePlus, CiMail, CiPhone, CiSaveDown2 } from "react-icons/ci";
-import { BsBookmark, BsPlusLg } from "react-icons/bs";
+import Link from "next/link";
 import {
-  FaFacebook,
-  FaGlobe,
-  FaInstagram,
-  FaLinkedin,
-  FaSkype,
-  FaWhatsapp,
-  FaXTwitter,
-  FaYoutube,
-} from "react-icons/fa6";
+  MdOutlinePhone,
+  MdOutlineMailOutline,
+  MdOutlineBookmarkBorder,
+} from "react-icons/md";
+import SocialIconsPopup from "../SocialIconsPopup";
 
 const Template5 = ({
   id,
@@ -28,13 +23,15 @@ const Template5 = ({
   email,
   number,
   facebookUrl,
-  youtubeUrl,
+  linkedinUrl,
   instagramUrl,
   twitterUrl,
-  linkedinUrl,
+  tiktokUrl,
+  youtubeUrl,
   whatsappNumber,
   skypeInviteUrl,
   websiteUrl,
+  viberUrl,
   customUrl,
 }: Card) => {
   const userProfile = {
@@ -50,13 +47,13 @@ const Template5 = ({
   };
 
   return (
-    <div className="bg-white text-black flex flex-col items-center justify-between  min-h-screen">
+    <div className="relative bg-white text-black flex flex-col items-center justify-between  min-h-screen">
       <div
-        className=" w-full mx-auto  max-w-[480px]"
+        className="relative w-full mx-auto  max-w-[480px]"
         style={{
           backgroundImage: 'url("/assets/template5bg.png")',
           backgroundSize: "cover",
-          backgroundPosition: "center",
+          backgroundPosition: "top",
         }}
       >
         {/* COVERPHOTO AND PROFILE PIC */}
@@ -98,93 +95,48 @@ const Template5 = ({
         </div>
 
         {/* CTA BUTTONS */}
-        <div className="flex justify-end gap-2 mx-3 mt-2 text-pink-400 ">
-          {/* Icon buttons */}
-          {/* <div className="flex flex-col justify-center items-center">
-            <a href={`tel:${number}`} className="text-decoration-none">
-              <CiPhone size={28} className="cursor-pointer" />
-            </a>
-            <p className="text-xs text-gray-500 font-semibold">Call</p>
-          </div>
-          <div className="flex flex-col justify-center items-center">
-            <a href={`mailto:${email}`}>
-              <CiMail size={28} className="cursor-pointer" />
-            </a>
-            <p className="text-xs text-gray-500 font-semibold">Email</p>
-          </div>
-          <div className="flex flex-col justify-center items-center">
-            <CiSaveDown2
-              size={28}
+        <div className="flex justify-end gap-2.5 pr-3 pt-3 text-pink-400 ">
+          <Link
+            href={`tel:${number}`}
+            className="p-1.5 grid place-content-center rounded-full border border-pink-400 "
+          >
+            <MdOutlinePhone
               className="cursor-pointer"
-              onClick={() => downloadVCard(userProfile)}
+              size={24}
             />
-            <p className="text-xs text-gray-500 font-semibold">Save</p>
-          </div> */}
-          <div className="flex flex-col justify-center items-center">
-            <div
-              className="rounded-full border p-2 border-pink-400 cursor-pointer"
-              onClick={() => console.log()}
-            >
-              <BsPlusLg size={18} />
-            </div>
-          </div>
-          <div className="flex flex-col justify-center items-center">
-            <div
-              className="rounded-full border p-2 border-pink-400 cursor-pointer"
+          </Link>
+          <Link
+            href={`mailto:${email}`}
+            className="p-1.5 grid place-content-center rounded-full border border-pink-400 "
+          >
+            <MdOutlineMailOutline
+              className="cursor-pointer"
+              size={24}
+            />
+          </Link>
+          <div className="p-1.5 grid place-content-center rounded-full border border-pink-400 ">
+            <MdOutlineBookmarkBorder
+              className="cursor-pointer font-bold"
               onClick={() => downloadVCard(userProfile)}
-            >
-              <BsBookmark size={18} />
-            </div>
+              size={24}
+            />
           </div>
         </div>
 
         {/* SOCIAL MEDIA ICONS */}
-        <div className="flex justify-center sm:gap-6 gap-4 my-4 text-pink-400">
-          {facebookUrl && (
-            <a href={facebookUrl} target="_blank" rel="noopener noreferrer">
-              <FaFacebook size={24} />
-            </a>
-          )}
-          {twitterUrl && (
-            <a href={twitterUrl} target="_blank" rel="noopener noreferrer">
-              <FaXTwitter size={24} />
-            </a>
-          )}
-          {youtubeUrl && (
-            <a href={youtubeUrl} target="_blank" rel="noopener noreferrer">
-              <FaYoutube size={24} />
-            </a>
-          )}
-          {instagramUrl && (
-            <a href={instagramUrl} target="_blank" rel="noopener noreferrer">
-              <FaInstagram size={24} />
-            </a>
-          )}
-          {linkedinUrl && (
-            <a href={linkedinUrl} target="_blank" rel="noopener noreferrer">
-              <FaLinkedin size={24} />
-            </a>
-          )}
-          {whatsappNumber && (
-            <a
-              href={`https://wa.me/${whatsappNumber}`}
-              target="_blank"
-              rel="noopener noreferrer"
-            >
-              <FaWhatsapp size={24} />
-            </a>
-          )}
-          {skypeInviteUrl && (
-            <a href={skypeInviteUrl} target="_blank" rel="noopener noreferrer">
-              <FaSkype size={24} />
-            </a>
-          )}
-          {websiteUrl && (
-            <a href={websiteUrl} target="_blank" rel="noopener noreferrer">
-              <FaGlobe size={24} />
-            </a>
-          )}
-        </div>
+        <SocialIconsPopup
+          facebookUrl={facebookUrl}
+          twitterUrl={twitterUrl}
+          tiktokUrl={tiktokUrl}
+          youtubeUrl={youtubeUrl}
+          instagramUrl={instagramUrl}
+          linkedinUrl={linkedinUrl}
+          viberUrl={viberUrl}
+          whatsappNumber={whatsappNumber}
+          skypeInviteUrl={skypeInviteUrl}
+          websiteUrl={websiteUrl}
+        />
+
         {/* PERSONAL INFORMATION */}
         <div className="text-center mt-4 space-y-1 ">
           {firstName ? (
@@ -229,37 +181,38 @@ const Template5 = ({
         <div className="grid grid-cols-2 gap-2 p-2 mt-6">
           {servicePhotos
             ? servicePhotos.map((photo, index) => (
-                <div key={index} className="col-span-1">
-                  <Image
-                    src={photo}
-                    alt={`Service Photo ${index + 1}`}
-                    width={300}
-                    height={300}
-                    layout="responsive"
-                    className="rounded-md object-cover w-full  "
-                  />
-                </div>
-              ))
+              <div key={index} className="col-span-1">
+                <Image
+                  src={photo}
+                  alt={`Service Photo ${index + 1}`}
+                  width={300}
+                  height={300}
+                  layout="responsive"
+                  className="rounded-md object-cover w-full  "
+                />
+              </div>
+            ))
             : Array.from({ length: 4 }).map((_, index) => (
-                <div key={index} className="col-span-1">
-                  <Image
-                    src="/assets/sampleService.png"
-                    alt="Service Photo"
-                    width={300}
-                    height={300}
-                    layout="responsive"
-                    className="rounded-md object-cover w-full"
-                  />
-                </div>
-              ))}
+              <div key={index} className="col-span-1">
+                <Image
+                  src="/assets/sampleService.png"
+                  alt="Service Photo"
+                  width={300}
+                  height={300}
+                  layout="responsive"
+                  className="rounded-md object-cover w-full"
+                />
+              </div>
+            ))}
         </div>
-      </div>
-      {/* FOOTER */}
-      <h2 className="text-xs font-extrabold mx-auto w-full text-center mt-8 mb-2">
-        {company ?? "COMPANY"}
-      </h2>
-      <div className="text-center text-xs text-gray-800  mb-2">
-        © 2024 Zwiftech. All Right Reserved.
+
+        {/* FOOTER */}
+        <h2 className="text-xs font-extrabold mx-auto w-full text-center mt-8 mb-2">
+          {company ?? "COMPANY"}
+        </h2>
+        <div className="text-center text-xs text-gray-800  mb-2">
+          © 2024 Zwiftech. All Right Reserved.
+        </div>
       </div>
     </div>
   );
