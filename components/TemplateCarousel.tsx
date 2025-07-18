@@ -84,6 +84,12 @@ const templates: Template[] = [
     route: "/create/template/13",
   },
   {
+    id: "template14",
+    name: "Artist Canvas",
+    imageUrl: "/assets/template14.png",
+    route: "/create/template/14",
+  },
+  {
     id: "template15",
     name: "Neon Network",
     imageUrl: "/assets/template15.png",
@@ -107,12 +113,6 @@ const templates: Template[] = [
     imageUrl: "/assets/template18.png",
     route: "/create/template/18",
   },
-  // {
-  //   id: "template14",
-  //   name: "template14",
-  //   imageUrl: "/assets/template14.png",
-  //   route: "/create/template/14",
-  // },
   // {
   //   id: "template7",
   //   name: "Simple White",
@@ -148,11 +148,10 @@ export function TemplateCarousel({
           {templates.map((template) => (
             <CarouselItem key={template.id} className="flex-none w-1/2 p-2">
               <div
-                className={`block transform hover:scale-105 transition-transform duration-300 cursor-pointer  ${
-                  selectedTemplateId === template.id
+                className={`block transform hover:scale-105 transition-transform duration-300 cursor-pointer  ${selectedTemplateId === template.id
                     ? "outline outline-4 rounded-lg outline-green-500"
                     : ""
-                }`}
+                  }`}
                 onClick={() => setSelectedTemplateId(template.id)}
               >
                 <Card className="bg-black rounded-lg overflow-hidden border-none">
