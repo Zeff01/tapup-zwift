@@ -1,17 +1,23 @@
 import { downloadVCard } from "@/lib/utils";
 import { Card } from "@/types/types";
 import Image from "next/image";
-// import { CiMail, CiPhone, CiSaveDown2, CiBookmark } from "react-icons/ci";
-import { BsBookmark, BsPlusLg } from "react-icons/bs";
+import Link from "next/link";
 import {
+  MdOutlinePhone,
+  MdOutlineMailOutline,
+  MdOutlineBookmarkBorder,
+} from "react-icons/md";
+import {
+  FaXTwitter,
   FaFacebook,
-  FaGlobe,
+  FaYoutube,
   FaInstagram,
   FaLinkedin,
-  FaSkype,
   FaWhatsapp,
-  FaXTwitter,
-  FaYoutube,
+  FaSkype,
+  FaGlobe,
+  FaViber,
+  FaTiktok
 } from "react-icons/fa6";
 
 const Template1 = ({
@@ -28,13 +34,15 @@ const Template1 = ({
   email,
   number,
   facebookUrl,
-  youtubeUrl,
+  linkedinUrl,
   instagramUrl,
   twitterUrl,
-  linkedinUrl,
+  tiktokUrl,
+  youtubeUrl,
   whatsappNumber,
   skypeInviteUrl,
   websiteUrl,
+  viberUrl,
   customUrl,
 }: Card) => {
   const userProfile = {
@@ -75,7 +83,7 @@ const Template1 = ({
           </div>
           <div className="absolute -bottom-12 left-1/2 transform -translate-x-1/2">
             {profilePictureUrl ? (
-              <div className="w-28 h-28 rounded-full mx-auto overflow-hidden">
+              <div className="grid place-content-center w-28 h-28 rounded-full mx-auto overflow-hidden">
                 <Image
                   src={profilePictureUrl}
                   alt="Profile Image"
@@ -114,95 +122,93 @@ const Template1 = ({
         </div>
 
         {/* CTA BUTTONS */}
-        <div className="flex justify-center gap-2 mt-4">
-          {/* Icon buttons () */}
-          {/* <div className="flex flex-col justify-center items-center">
-            <a href={`tel:${number}`} className="text-decoration-none">
-              <CiPhone size={32} className="cursor-pointer" />
-            </a>
-            <p className="text-xs">Call</p>
-          </div>
-          <div className="flex flex-col justify-center items-center">
-            <a href={`mailto:${email}`}>
-              <CiMail size={32} className="cursor-pointer" />
-            </a>
-            <p className="text-xs">Email</p>
-          </div>
-          <div className="flex flex-col justify-center items-center">
-            <CiSaveDown2
-              size={32}
+        <div className="flex justify-center gap-2.5 mt-5">
+          <Link
+            href={`tel:${number}`}
+            className="p-1 grid place-content-center bg-white rounded-full border-2 border-black "
+          >
+            <MdOutlinePhone
               className="cursor-pointer"
-              onClick={() => downloadVCard(userProfile)}
+              size={20}
             />
-            <p className="text-xs">Save</p>
-          </div> */}
-          <div className="flex flex-col justify-center items-center">
-            <div
-              className="rounded-full border p-2 border-black cursor-pointer"
-              onClick={() => console.log()}
-            >
-              <BsPlusLg size={14} />
-            </div>
-          </div>
-          <div className="flex flex-col justify-center items-center">
-            <div
-              className="rounded-full border p-2 border-black cursor-pointer"
+          </Link>
+          <Link
+            href={`mailto:${email}`}
+            className="p-1 grid place-content-center bg-white rounded-full border-2 border-black "
+          >
+            <MdOutlineMailOutline
+              className="cursor-pointer"
+              size={20}
+            />
+          </Link>
+          <div className="p-1 grid place-content-center bg-white rounded-full border-2 border-black ">
+            <MdOutlineBookmarkBorder
+              className="cursor-pointer font-bold"
               onClick={() => downloadVCard(userProfile)}
-            >
-              <BsBookmark size={14} />
-            </div>
+              size={20}
+            />
           </div>
         </div>
 
         {/* SOCIAL MEDIA ICONS */}
-        <div className="flex justify-center gap-4 sm:gap-6 my-4">
+        <div className="flex justify-center gap-2.5 sm:gap-4 mt-5 mb-6">
           {facebookUrl && (
-            <a href={facebookUrl} target="_blank" rel="noopener noreferrer">
+            <Link href={facebookUrl} target="_blank" rel="noopener noreferrer">
               <FaFacebook size={24} />
-            </a>
+            </Link>
           )}
           {twitterUrl && (
-            <a href={twitterUrl} target="_blank" rel="noopener noreferrer">
+            <Link href={twitterUrl} target="_blank" rel="noopener noreferrer">
               <FaXTwitter size={24} />
-            </a>
+            </Link>
+          )}
+          {tiktokUrl && (
+            <Link href={tiktokUrl} target="_blank" rel="noopener noreferrer">
+              <FaTiktok size={24} />
+            </Link>
           )}
           {youtubeUrl && (
-            <a href={youtubeUrl} target="_blank" rel="noopener noreferrer">
+            <Link href={youtubeUrl} target="_blank" rel="noopener noreferrer">
               <FaYoutube size={24} />
-            </a>
+            </Link>
           )}
           {instagramUrl && (
-            <a href={instagramUrl} target="_blank" rel="noopener noreferrer">
+            <Link href={instagramUrl} target="_blank" rel="noopener noreferrer">
               <FaInstagram size={24} />
-            </a>
+            </Link>
           )}
           {linkedinUrl && (
-            <a href={linkedinUrl} target="_blank" rel="noopener noreferrer">
+            <Link href={linkedinUrl} target="_blank" rel="noopener noreferrer">
               <FaLinkedin size={24} />
-            </a>
+            </Link>
+          )}
+          {viberUrl && (
+            <Link href={viberUrl} target="_blank" rel="noopener noreferrer">
+              <FaViber size={24} />
+            </Link>
           )}
           {whatsappNumber && (
-            <a
+            <Link
               href={`https://wa.me/${whatsappNumber}`}
               target="_blank"
               rel="noopener noreferrer"
             >
               <FaWhatsapp size={24} />
-            </a>
+            </Link>
           )}
           {skypeInviteUrl && (
-            <a
+            <Link
               href={`skype:${skypeInviteUrl}?chat`}
               target="_blank"
               rel="noopener noreferrer"
             >
               <FaSkype size={24} />
-            </a>
+            </Link>
           )}
           {websiteUrl && (
-            <a href={websiteUrl} target="_blank" rel="noopener noreferrer">
+            <Link href={websiteUrl} target="_blank" rel="noopener noreferrer">
               <FaGlobe size={24} />
-            </a>
+            </Link>
           )}
         </div>
 
@@ -231,29 +237,29 @@ const Template1 = ({
         <div className="grid grid-cols-2 gap-4 mt-6 ">
           {servicePhotos
             ? servicePhotos.map((photo, index) => (
-                <div key={index} className="col-span-1">
-                  <Image
-                    src={photo}
-                    alt={`Service Photo ${index + 1}`}
-                    width={300}
-                    height={300}
-                    layout="responsive"
-                    className="rounded-md object-cover w-full  "
-                  />
-                </div>
-              ))
+              <div key={index} className="col-span-1">
+                <Image
+                  src={photo}
+                  alt={`Service Photo ${index + 1}`}
+                  width={300}
+                  height={300}
+                  layout="responsive"
+                  className="rounded-md object-cover w-full  "
+                />
+              </div>
+            ))
             : Array.from({ length: 4 }).map((_, index) => (
-                <div key={index} className="col-span-1">
-                  <Image
-                    src="/assets/sampleService.png"
-                    alt="Service Photo"
-                    width={300}
-                    height={300}
-                    layout="responsive"
-                    className="rounded-md object-cover w-full"
-                  />
-                </div>
-              ))}
+              <div key={index} className="col-span-1">
+                <Image
+                  src="/assets/sampleService.png"
+                  alt="Service Photo"
+                  width={300}
+                  height={300}
+                  layout="responsive"
+                  className="rounded-md object-cover w-full"
+                />
+              </div>
+            ))}
         </div>
       </div>
       {/* FOOTER */}
