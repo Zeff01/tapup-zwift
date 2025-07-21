@@ -1,12 +1,11 @@
+import { downloadVCard } from "@/lib/utils";
 import wavy from "@/public/assets/wavy.png";
 import { Card } from "@/types/types";
 import Image from "next/image";
-import { downloadVCard } from "@/lib/utils";
 
 // fonts
 import { cn } from "@/lib/utils";
-import { Michroma } from "next/font/google";
-import { Poppins } from "next/font/google";
+import { Michroma, Poppins } from "next/font/google";
 
 const poppins = Poppins({
   weight: "500",
@@ -19,17 +18,22 @@ const michroma = Michroma({
 });
 
 // icons
-import { SlSocialFacebook } from "react-icons/sl";
-import { GoGlobe } from "react-icons/go";
-import { CiMail, CiBookmark, CiPhone, CiSaveDown2 } from "react-icons/ci";
 import {
-  FaXTwitter,
   FaInstagram,
   FaLinkedin,
   FaWhatsapp,
+  FaXTwitter,
 } from "react-icons/fa6";
 import { FiYoutube } from "react-icons/fi";
+import { GoGlobe } from "react-icons/go";
 import { SiSkypeforbusiness } from "react-icons/si";
+import { SlSocialFacebook } from "react-icons/sl";
+
+import {
+  MdOutlineBookmarkBorder,
+  MdOutlineMailOutline,
+  MdOutlinePhone,
+} from "react-icons/md";
 
 const Template10 = ({
   id,
@@ -97,13 +101,23 @@ const Template10 = ({
               height={100}
             />
             <div className="flex gap-x-2 absolute right-0 top-0 text-[#FFFBD8] bg-black pl-4 pb-2 rounded-bl-3xl">
-              <span className=" text-lg font-semibold  border border-[#FFFBD8] rounded-full p-1 ">
+              {/** Phone */}
+              <span className="text-lg font-semibold border border-[#FFFBD8] rounded-full p-1 hover:bg-[#FFFBD8] hover:text-black transition-colors duration-200">
                 <a href={`mailto:${email}`}>
-                  <CiMail className="cursor-pointer" />
+                  <MdOutlinePhone className="cursor-pointer" />
                 </a>
               </span>
-              <span className=" text-lg font-semibold  border border-[#FFFBD8] rounded-full p-1 ">
-                <CiBookmark
+
+              {/** Email */}
+              <span className="text-lg font-semibold border border-[#FFFBD8] rounded-full p-1 hover:bg-[#FFFBD8] hover:text-black transition-colors duration-200">
+                <a href={`tel:${number}`}>
+                  <MdOutlineMailOutline className="cursor-pointer" />
+                </a>
+              </span>
+
+              {/** Bookmark / vCard */}
+              <span className="text-lg font-semibold border border-[#FFFBD8] rounded-full p-1 hover:bg-[#FFFBD8] hover:text-black transition-colors duration-200">
+                <MdOutlineBookmarkBorder
                   className="cursor-pointer"
                   onClick={() => downloadVCard(userProfile)}
                 />
@@ -164,11 +178,8 @@ const Template10 = ({
           <div className="gap-x-2 w-full text-[#B6BCD2] flex justify-center items-center">
             <p className="  text-xs">{email ?? "H.Watkins@gmail.com"}</p>
             <span className=""> |</span>
-            <a
-              href={`tel:${number}`}
-              className="text-decoration-none bg-white text-black px-5 py-1 font-semibold text-xs rounded-full"
-            >
-              Call me
+            <a className="text-decoration-none   py-1 font-semibold text-xs rounded-full">
+              {number}
             </a>
           </div>
         </div>

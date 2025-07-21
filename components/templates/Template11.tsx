@@ -29,6 +29,8 @@ import { SiSkypeforbusiness } from "react-icons/si";
 import { SlSocialFacebook } from "react-icons/sl";
 import { Separator } from "../ui/separator";
 
+import { MdOutlineMailOutline, MdOutlinePhone } from "react-icons/md";
+
 const Template11 = ({
   id,
   profilePictureUrl,
@@ -67,26 +69,36 @@ const Template11 = ({
   return (
     <div className=" flex flex-col bg-white items-center justify-between  min-h-screen">
       <div className=" w-full mx-auto  relative">
-        <div className="flex gap-x-2 z-20 absolute right-0 top-0 text-[#00A9FF] my-4 mx-3   rounded-bl-3xl">
-          {/* <span className=" text-lg font-semibold bg-[#A0E9FF]  rounded-full p-2 ">
-            <a href={`tel:${number}`} className="text-decoration-none">
-              <CiPhone className="cursor-pointer" />
-            </a>
-          </span> */}
-          <span className=" text-lg font-semibold bg-[#A0E9FF]  rounded-full p-1 ">
-            <HiOutlineBookmark
-              onClick={() => downloadVCard(userProfile)}
-              size={20}
-              className="cursor-pointer"
-            />
+        <div className="flex gap-1 z-20 absolute right-0 top-0 my-4 mx-3">
+          {/* Phone */}
+          <a
+            href={`tel:${number}`}
+            className="text-decoration-none text-[#00A9FF] hover:text-white"
+          >
+            <span className="flex items-center justify-center w-10 h-10 bg-[#A0E9FF] hover:bg-[#00A9FF] hover:text-white transition-all duration-200 cursor-pointer rounded-full text-lg">
+              <MdOutlinePhone />
+            </span>
+          </a>
+
+          {/* Email */}
+          <a
+            href={`mailto:${email}`}
+            className="text-decoration-none text-[#00A9FF] hover:text-white"
+          >
+            <span className="flex items-center justify-center w-10 h-10 bg-[#A0E9FF] hover:bg-[#00A9FF] hover:text-white transition-all duration-200 cursor-pointer rounded-full text-lg">
+              <MdOutlineMailOutline />
+            </span>
+          </a>
+
+          {/* Bookmark / vCard */}
+          <span
+            onClick={() => downloadVCard(userProfile)}
+            className="flex items-center justify-center w-10 h-10 bg-[#A0E9FF] hover:bg-[#00A9FF] hover:text-white  text-[#00A9FF]  transition-all duration-200 cursor-pointer rounded-full text-lg"
+          >
+            <HiOutlineBookmark size={20} />
           </span>
-          {/* <span className=" text-lg font-semibold bg-[#A0E9FF]  rounded-full p-2 ">
-            <CiSaveDown2
-              className="cursor-pointer"
-              
-            />
-          </span> */}
         </div>
+
         {/* COVERPHOTO AND PROFILE PIC */}
         <div className="  flex flex-col relative    ">
           {coverPhotoUrl ? (
