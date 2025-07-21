@@ -149,22 +149,29 @@ const Template16 = ({
 
           {/* === Buttons Section === */}
           <section aria-label="Action Buttons" className="flex items-center gap-3 mt-2 w-full mb-6 px-6">
-            <div className="flex-grow-[2]">
-              <Link href={`mailto:${email}`}>
-                <Button className="w-full flex items-center justify-center gap-2 px-4 py-2 bg-black text-white text-sm font-medium rounded-full hover:bg-gray-800 transition">
-                  <LuUserCircle className="text-white text-lg" />
-                  Contact Me
-                </Button>
-              </Link>
-            </div>
-            <div className="flex-grow">
-              <Button
-                onClick={() => downloadVCard(userProfile)}
-                className="w-full flex items-center justify-center gap-2 px-4 py-2 bg-black text-white text-sm font-medium rounded-full hover:bg-gray-800 transition"
+            <div className="flex gap-3 w-full justify-center">
+              <Link
+                href={`tel:${number}`}
+                className="w-10 h-10 flex items-center justify-center rounded-full bg-black hover:bg-gray-800 transition"
+                title="Call"
               >
-                <LuBookmark className="text-white text-lg" />
-                Save
-              </Button>
+                <LuPhone size={20} className="text-white" />
+              </Link>
+              <Link
+                href={`mailto:${email}`}
+                className="w-10 h-10 flex items-center justify-center rounded-full bg-black hover:bg-gray-800 transition"
+                title="Email"
+              >
+                <LuMail size={20} className="text-white" />
+              </Link>
+              <button
+                type="button"
+                onClick={() => downloadVCard(userProfile)}
+                className="w-10 h-10 flex items-center justify-center rounded-full bg-black hover:bg-gray-800 transition"
+                title="Save Contact"
+              >
+                <LuBookmark size={20} className="text-white" />
+              </button>
             </div>
           </section>
         </section>

@@ -17,6 +17,7 @@ import { SiTiktok } from "react-icons/si";
 import { LuMail, LuBookmark } from "react-icons/lu";
 import Link from "next/link";
 import { Button } from "../ui/button";
+import { MdOutlineBookmarkBorder, MdOutlineMailOutline, MdOutlinePhone } from "react-icons/md";
 
 const Template18 = ({
     id,
@@ -115,8 +116,36 @@ const Template18 = ({
                                     {!email && number && number}
                                 </div>
 
+                                {/* Buttons */}
+                                <div className="flex flex-col sm:flex-row gap-2 sm:gap-3 w-full mt-3 sm:mt-4">
+                                    <div className="flex gap-3 w-full justify-center">
+                                        <a
+                                            href={`tel:${number}`}
+                                            className="w-10 h-10 flex items-center justify-center rounded-full border-2 border-[#00d4ff] text-[#00d4ff] hover:bg-[#00d4ff] hover:text-white transition-all duration-300"
+                                            title="Call"
+                                        >
+                                            <MdOutlinePhone size={20} />
+                                        </a>
+                                        <a
+                                            href={`mailto:${email}`}
+                                            className="w-10 h-10 flex items-center justify-center rounded-full border-2 border-[#00d4ff] text-[#00d4ff] hover:bg-[#00d4ff] hover:text-white transition-all duration-300"
+                                            title="Email"
+                                        >
+                                            <MdOutlineMailOutline size={20} />
+                                        </a>
+                                        <button
+                                            type="button"
+                                            onClick={() => downloadVCard(userProfile)}
+                                            className="w-10 h-10 flex items-center justify-center rounded-full border-2 border-[#00d4ff] text-[#00d4ff] hover:bg-[#00d4ff] hover:text-white transition-all duration-300"
+                                            title="Save Contact"
+                                        >
+                                            <MdOutlineBookmarkBorder size={20} />
+                                        </button>
+                                    </div>
+                                </div>
+
                                 {/* Social Icons */}
-                                <div className="flex flex-wrap justify-center gap-2 sm:gap-3 mt-3 sm:mt-4 text-white max-w-xs mx-auto">
+                                <div className="flex flex-wrap justify-center gap-2 sm:gap-3 mt-3 sm:mt-5 text-white max-w-xs mx-auto">
                                     {[
                                         { url: facebookUrl, icon: FaFacebookF, href: facebookUrl, bgColor: "bg-blue-600 hover:bg-blue-700" },
                                         { url: linkedinUrl, icon: FaLinkedinIn, href: linkedinUrl, bgColor: "bg-blue-500 hover:bg-blue-600" },
@@ -145,30 +174,6 @@ const Template18 = ({
                                             );
                                         })
                                     }
-                                </div>
-
-                                {/* Buttons */}
-                                <div className="flex flex-col sm:flex-row gap-2 sm:gap-3 w-full mt-4 sm:mt-6">
-                                    {/* Email Me - Larger */}
-                                    <div className="sm:basis-[65%]">
-                                        <Link href={`mailto:${email}`}>
-                                            <Button className="w-full bg-[#00d4ff] hover:bg-[#00c4e6] text-[#0f172a] text-sm font-semibold py-2.5 sm:py-2 px-6 rounded-full flex items-center justify-center gap-2">
-                                                <FaEnvelope />
-                                                Email Me!
-                                            </Button>
-                                        </Link>
-                                    </div>
-
-                                    {/* Save - Smaller */}
-                                    <div className="sm:basis-[35%]">
-                                        <Button
-                                            onClick={() => downloadVCard(userProfile)}
-                                            className="w-full border border-[#00d4ff] text-[#00d4ff] hover:bg-[#00d4ff] hover:text-[#0f172a] bg-transparent text-sm font-semibold py-2.5 sm:py-2 px-2 rounded-full flex items-center justify-center gap-2"
-                                        >
-                                            <FaRegBookmark />
-                                            Save
-                                        </Button>
-                                    </div>
                                 </div>
                             </div>
                         </div>

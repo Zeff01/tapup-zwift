@@ -63,7 +63,7 @@ const Template13 = ({
   };
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-[#1a1a1a] via-[#232323] to-[#553838] text-white py-8 px-4">
+    <div className="min-h-screen bg-gradient-to-br from-[#1a1a1a] via-[#232323] to-[#553838] text-white py-2 px-1">
       <div className="max-w-[480px] mx-auto flex flex-col">
 
         {/* === Profile and Cover Section === */}

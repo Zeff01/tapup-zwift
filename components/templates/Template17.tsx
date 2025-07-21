@@ -2,12 +2,10 @@ import { downloadVCard } from "@/lib/utils";
 import { Card } from "@/types/types";
 import Link from "next/link";
 import {
-  FaEnvelope,
   FaFacebookF,
   FaGlobe,
   FaInstagram,
   FaLinkedinIn,
-  FaRegBookmark,
   FaSkype,
   FaTiktok,
   FaTwitter,
@@ -15,6 +13,11 @@ import {
   FaWhatsapp,
   FaYoutube,
 } from "react-icons/fa";
+import {
+  MdOutlineBookmarkBorder,
+  MdOutlineMailOutline,
+  MdOutlinePhone,
+} from "react-icons/md";
 import { Button } from "../ui/button";
 import { LuBookmark, LuMail } from "react-icons/lu";
 
@@ -112,8 +115,34 @@ const Template17 = ({
             {!email && number && <>{number}</>}
           </div>
 
+          {/* Buttons */}
+          <div className="flex gap-3 w-full justify-center mt-3 sm:mt-4">
+            <a
+              href={`tel:${number}`}
+              className="w-10 h-10 flex items-center justify-center rounded-full bg-[#FF4B5C] hover:bg-[#e43c4a] transition"
+              title="Call"
+            >
+              <MdOutlinePhone size={20} className="text-white" />
+            </a>
+            <a
+              href={`mailto:${email}`}
+              className="w-10 h-10 flex items-center justify-center rounded-full bg-[#FF4B5C] hover:bg-[#e43c4a] transition"
+              title="Email"
+            >
+              <MdOutlineMailOutline size={20} className="text-white" />
+            </a>
+            <button
+              type="button"
+              onClick={() => downloadVCard(userProfile)}
+              className="w-10 h-10 flex items-center justify-center rounded-full bg-[#FF4B5C] hover:bg-[#e43c4a] transition"
+              title="Save Contact"
+            >
+              <MdOutlineBookmarkBorder size={20} className="text-white" />
+            </button>
+          </div>
+
           {/* Social Icons */}
-          <div className="flex gap-2 sm:gap-3 justify-center mt-3 sm:mt-4 flex-wrap">
+          <div className="flex gap-2 sm:gap-3 justify-center mt-3 sm:mt-5 flex-wrap">
             {[
               { url: facebookUrl, icon: FaFacebookF, href: facebookUrl, color: "#1877F3" },
               { url: linkedinUrl, icon: FaLinkedinIn, href: linkedinUrl, color: "#0A66C2" },
@@ -145,30 +174,6 @@ const Template17 = ({
                 );
               })
             }
-          </div>
-
-          {/* Buttons */}
-          <div className="flex flex-col sm:flex-row gap-2 sm:gap-3 w-full mt-4 sm:mt-6">
-            {/* Email Me - Bigger and colored */}
-            <div className="sm:basis-[65%]">
-              <Link href={`mailto:${email}`}>
-                <Button className="w-full bg-[#FF4B5C] hover:bg-[#e43c4a] text-white py-2.5 sm:py-2 rounded-full font-semibold flex items-center justify-center gap-2 text-sm">
-                  <FaEnvelope className="text-white text-base align-middle" />
-                  <span className="leading-none">Email Me!</span>
-                </Button>
-              </Link>
-            </div>
-
-            {/* Save - Smaller and white */}
-            <div className="sm:basis-[35%]">
-              <Button
-                onClick={() => downloadVCard(userProfile)}
-                className="w-full border border-[#FF4B5C] text-[#FF4B5C] py-2.5 sm:py-2 rounded-full font-semibold flex items-center justify-center gap-2 text-sm hover:bg-[#FFF0F1] bg-white"
-              >
-                <FaRegBookmark className="text-[#FF4B5C] text-base align-middle" />
-                <span className="leading-none">Save</span>
-              </Button>
-            </div>
           </div>
         </section>
 
