@@ -59,12 +59,12 @@ const Template15 = ({
   };
 
   return (
-    <div className="min-h-screen bg-[#011923] flex flex-col items-center py-8 px-4 relative overflow-hidden">
-      <div className="max-w-[480px] mx-auto flex flex-col">
+    <div className="min-h-screen bg-[#011923] flex flex-col items-center py-2 px-1 relative overflow-hidden">
+      <div className="max-w-[480px] mx-auto flex flex-col w-full">
         {/* === Profile and Cover Section === */}
         <section
           aria-label="Profile Section"
-          className="w-full max-w-md mb-8 relative flex flex-col items-center"
+          className="w-full max-w-md mb-8 relative flex flex-col items-center px-2 sm:px-6"
         >
           {/* Orange circle - right side of 'Let's Work Together' */}
           <div
@@ -101,7 +101,7 @@ const Template15 = ({
         {/* === Card Section === */}
         <section
           aria-label="Card Section"
-          className="w-full max-w-md mt-8 relative flex flex-col items-center"
+          className="w-full max-w-md mt-8 relative flex flex-col items-center px-2 sm:px-6"
         >
           {/* Blue circle - left side of Contacts */}
           <div
@@ -187,7 +187,7 @@ const Template15 = ({
           {/* === Contact Info Section === */}
           <section
             aria-label="Contact Information"
-            className="w-full mb-6 relative"
+            className="w-full mb-6 relative px-2 sm:px-6"
           >
             <h2 className="text-lg font-bold text-white mb-2">
               Contact Information
@@ -211,7 +211,7 @@ const Template15 = ({
 
           {/* === Company Overview Section === */}
           {companyBackground && (
-            <section aria-label="Company Overview" className="w-full mb-6">
+            <section aria-label="Company Overview" className="w-full mb-6 px-2 sm:px-6">
               <h2 className="text-lg font-bold text-white mb-2">
                 Company Overview
               </h2>
@@ -222,7 +222,7 @@ const Template15 = ({
           {/* === Services Section === */}
           {(serviceDescription ||
             (servicePhotos && servicePhotos.length > 0)) && (
-            <section aria-label="Our Services" className="w-full">
+            <section aria-label="Our Services" className="w-full px-2 sm:px-6">
               <h2 className="text-lg font-bold text-white mb-4">
                 Our Services
               </h2>
@@ -251,7 +251,7 @@ const Template15 = ({
           )}
 
           {/* === Footer Section === */}
-          <footer className="w-full max-w-md mx-auto mt-14 py-4 text-center text-gray-400 text-sm relative">
+          <footer className="w-full max-w-md mx-auto mt-14 py-4 text-center text-gray-400 text-sm relative px-2 sm:px-6">
             <div className="font-semibold text-base text-white mb-1 relative z-10">
               {company}
             </div>
