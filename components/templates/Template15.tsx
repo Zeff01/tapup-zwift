@@ -123,7 +123,7 @@ const Template15 = ({
             {prefix && `${prefix}. `}
             {firstName}
             {middleName && ` ${middleName}`}
-            {lastName}
+            {lastName && ` ${lastName}`}
             {suffix && `, ${suffix}`}
           </h1>
 
