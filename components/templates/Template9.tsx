@@ -1,10 +1,7 @@
+import { downloadVCard } from "@/lib/utils";
 import { Card } from "@/types/types";
 import Image from "next/image";
-import { GoGlobe } from "react-icons/go";
-import { SlSocialFacebook } from "react-icons/sl";
-// import { CiMail, CiBookmark, CiPhone, CiSaveDown2 } from "react-icons/ci";
-import { downloadVCard } from "@/lib/utils";
-import { BsBookmark } from "react-icons/bs";
+import Link from "next/link";
 import {
   FaInstagram,
   FaLinkedin,
@@ -12,8 +9,14 @@ import {
   FaXTwitter,
 } from "react-icons/fa6";
 import { FiYoutube } from "react-icons/fi";
-import { RxEnvelopeClosed } from "react-icons/rx";
+import { GoGlobe } from "react-icons/go";
+import {
+  MdOutlineBookmarkBorder,
+  MdOutlineMailOutline,
+  MdOutlinePhone,
+} from "react-icons/md";
 import { SiSkypeforbusiness } from "react-icons/si";
+import { SlSocialFacebook } from "react-icons/sl";
 
 const Template9 = ({
   id,
@@ -55,36 +58,26 @@ const Template9 = ({
   return (
     <div className="min-h-screen bg-white dark:bg-black flex flex-col ">
       <div className=" h-96 relative   ">
-        <div className="absolute flex gap-x-2 m-4 top-0 right-0">
-          {/* <span className=" bg-white text-2xl p-2 text-neutral-800 rounded-full">
-            <a href={`tel:${number}`} className="text-decoration-none">
-              <CiPhone className="cursor-pointer" />
-            </a>
-          </span>
-          <span className=" bg-white text-2xl p-2 text-neutral-800 rounded-full">
-            <a href={`mailto:${email}`}>
-              <CiMail className="cursor-pointer" />
-            </a>
-          </span>
-          <span className=" bg-white text-2xl p-2 text-neutral-800 rounded-full">
-            <CiSaveDown2
-              className="cursor-pointer"
-              onClick={() => downloadVCard(userProfile)}
-            />
-          </span> */}
-          <div className="flex flex-col justify-center items-center">
-            <div className="rounded-full border p-1.5 border-white bg-white text-black cursor-pointer">
-              <a href={`mailto:${email}`}>
-                <RxEnvelopeClosed size={14} />
-              </a>
-            </div>
-          </div>
-          <div className="flex flex-col justify-center items-center">
-            <div
-              className="rounded-full border p-1.5 border-white bg-white text-black cursor-pointer"
-              onClick={() => downloadVCard(userProfile)}
+        <div className="absolute flex gap-x-2 m-4 top-0 right-0 ">
+          <div className="flex gap-1 ">
+            <a
+              href={`tel:${number}`}
+              className="p-1 border border-neutral-800 rounded-full  hover:bg-neutral-800 text-neutral-800 hover:text-white transition-colors "
             >
-              <BsBookmark size={14} />
+              <MdOutlinePhone size={20} className=" cursor-pointer" />
+            </a>
+            <a
+              href={`mailto:${email}`}
+              className="p-1 border border-neutral-800  rounded-full hover:bg-neutral-800 text-neutral-800 hover:text-white transition-colors "
+            >
+              <MdOutlineMailOutline size={20} className="cursor-pointer " />
+            </a>
+            <div className="p-1 border border-neutral-800 rounded-full hover:bg-neutral-800 text-neutral-800 hover:text-white transition-colors ">
+              <MdOutlineBookmarkBorder
+                size={20}
+                className="cursor-pointer font-bold "
+                onClick={() => downloadVCard(userProfile)}
+              />
             </div>
           </div>
         </div>
