@@ -17,13 +17,6 @@ const PersonalInfoForm: React.FC<PersonalInfoFormProps> = ({
     <div className="space-y-4">
       <CustomInput
         control={control}
-        name="position"
-        label="Position"
-        placeholder="Enter your position in your company"
-        required={false}
-      />
-      <CustomInput
-        control={control}
         name="firstName"
         label="First Name"
         placeholder="Enter your first name"

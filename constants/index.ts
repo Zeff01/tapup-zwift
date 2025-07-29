@@ -347,18 +347,18 @@ export const publicDomain =
     : process.env.NEXT_PUBLIC_RESET_PASSWORD_URL_PROD;
 
 export const formHeaderItems = [
-  { id: 1, title: "Tell us about your company" },
-  { id: 2, title: "Update your personal information" },
-  { id: 3, title: "Tell us about your company" },
+  { id: 1, title: "Tell us about yourself" },
+  { id: 2, title: "Tell us about your company" },
+  { id: 3, title: "Customize your portfolio" },
 ];
 
 export const steps = [
-  { name: "Company Info", header: "Tell us about your company" },
+  { name: "Personal Info", header: formHeaderItems[0].title },
   {
-    name: "Personal Info",
-    header: "Update your personal information",
+    name: "Company Info",
+    header: formHeaderItems[1].title,
   },
-  { name: "Template", header: "Choose your Template" },
+  { name: "Portfolio", header: formHeaderItems[2].title },
 ];
 
 export const accountItem = [
