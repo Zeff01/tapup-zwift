@@ -10,6 +10,26 @@ const refinePhoneNumber = (phoneNumber: string) => {
   return isValidPhoneNumber(phoneNumber);
 };
 
+export const companySchema = z.object({
+  company: z
+    .string({ required_error: 'Company name is required.' })
+    .min(2, { message: 'Company name must be at least 2 characters long.' }),
+
+  companyBackground: z
+    .string()
+    .optional(),
+
+  serviceDescription: z
+    .string()
+    .optional(),
+
+  servicePhotos: z
+    .array(
+      z.string().url({ message: 'Each service photo must be a valid URL.' })
+    )
+    .optional(),
+});
+
 export const createPortfolioSchema = z.object({
   coverPhotoUrl: z
     .string()
@@ -35,16 +55,17 @@ export const createPortfolioSchema = z.object({
       }
     ), // Profile picture URL is required
   position: z.string().min(3, "Position is required"),
-  company: z.string().min(3, "Company name is required"),
-  companyBackground: z
-    .string()
-    .min(3, "Company background is required")
-    .optional(),
-  serviceDescription: z
-    .string()
-    .min(3, "Service description is required")
-    .optional(),
-  servicePhotos: z.array(z.string().url()).optional(),
+  companies: z.array(companySchema).min(1, { message: 'At least one company must be added.' }),  // allows for multiple companies
+  // company: z.string().min(3, "Company name is required"),
+  // companyBackground: z
+  //   .string()
+  //   .min(3, "Company background is required")
+  //   .optional(),
+  // serviceDescription: z
+  //   .string()
+  //   .min(3, "Service description is required")
+  //   .optional(),
+  // servicePhotos: z.array(z.string().url()).optional(),
   chosenTemplate: z.enum([
     "template1",
     "template2",
@@ -186,10 +207,11 @@ export const editCardSchema = z.object({
     )
     .optional(), // Profile picture URL is required
   position: z.string().optional(),
-  company: z.string().optional(),
-  companyBackground: z.string().optional(),
-  serviceDescription: z.string().optional(),
-  servicePhotos: z.array(z.string().url()).optional(),
+  companies: z.array(companySchema).min(1, { message: 'At least one company must be added.' }), // allows for multiple companies
+  // company: z.string().optional(),
+  // companyBackground: z.string().optional(),
+  // serviceDescription: z.string().optional(),
+  // servicePhotos: z.array(z.string().url()).optional(),
   chosenTemplate: z
     .enum([
       "template1",
