@@ -37,6 +37,12 @@ import MultiStepProgress from "./MultiStepProgress";
 import SelectedTemplate from "./SelectedTemplate";
 import SocialLinksSelector from "./SocialLink";
 
+interface SelectedLink {
+  label: string;
+  key: keyof z.infer<typeof editCardSchema>;
+  value: string;
+}
+
 export type ChosenTemplateType =
   | "template1"
   | "template2"
@@ -77,12 +83,6 @@ type CardSpecificFields = {
   disabled?: boolean;
 };
 
-interface SelectedLink {
-  label: string;
-  key: string;
-  value: string;
-}
-
 interface MultiStepFormUpdateProps {
   userData: Card | ExtendedUserInterface;
   isCurrentUser?: boolean;
@@ -120,7 +120,11 @@ const MultiStepFormUpdate = ({
       servicePhotos?: string[];
     }>
   >(() => {
-    if (userData && Array.isArray((userData as any).companies) && (userData as any).companies.length > 0) {
+    if (
+      userData &&
+      Array.isArray((userData as any).companies) &&
+      (userData as any).companies.length > 0
+    ) {
       return (userData as any).companies.map((company: any) => ({
         company: company.company || '',
         position: company.position || '',
@@ -129,15 +133,7 @@ const MultiStepFormUpdate = ({
         servicePhotos: company.servicePhotos || [],
       }));
     } else {
-      return [
-        {
-          company: '',
-          position: '',
-          companyBackground: '',
-          serviceDescription: '',
-          servicePhotos: [],
-        },
-      ];
+      return [];
     }
   });
 
@@ -162,7 +158,7 @@ const MultiStepFormUpdate = ({
   const [selectedLinks, setSelectedLinks] = useState<SelectedLink[]>(() => {
     const existingSocialLinks: SelectedLink[] = [];
 
-    const socialFields = [
+    const socialFields: { key: keyof z.infer<typeof editCardSchema>; label: string }[] = [
       { key: "facebookUrl", label: "Facebook" },
       { key: "youtubeUrl", label: "YouTube" },
       { key: "instagramUrl", label: "Instagram" },
@@ -196,65 +192,35 @@ const MultiStepFormUpdate = ({
   // Step 2: Company Info, Service Photos
   // Step 3: Custom URL, Card Name, Template Selection
 
-  const steps: Array<(keyof z.infer<typeof editCardSchema>)[]> = isOnboarding
-    ? [
-      // Onboarding: Cover Photo, Profile Photo, Company, Position, Personal Info, Social Links, Custom URL, Template
-      [
-        "profilePictureUrl",
-        "coverPhotoUrl",
-        "company",
-        "position",
-        "firstName",
-        "lastName",
-        "email",
-        "number",
-        ...(selectedLinks.map((link) => link.key) as Array<
-          keyof z.infer<typeof editCardSchema>
-        >),
-      ],
-      [
-        // Company Info, Service Photos
-        "companyBackground",
-        "serviceDescription",
-        "servicePhotos",
-      ],
-      [
-        // Custom URL, Card Name, Template Selection
-        "customUrl",
-        "cardName",
-        "chosenTemplate",
-        "chosenPhysicalCard",
-      ],
-    ]
-    : [
-      [
-        // Step 1: Profile Photo, Cover Photo, Personal Info, Social Links
-        "profilePictureUrl",
-        "coverPhotoUrl",
-        "firstName",
-        "lastName",
-        "email",
-        "number",
-        ...(selectedLinks.map((link) => link.key) as Array<
-          keyof z.infer<typeof editCardSchema>
-        >),
-      ],
-      [
-        // Step 2: Company Info, Service Photos
-        "company",
-        "position",
-        "companyBackground",
-        "serviceDescription",
-        "servicePhotos",
-      ],
-      [
-        // Step 3: Custom URL, Card Name, Template Selection
-        "customUrl",
-        "cardName",
-        "chosenTemplate",
-        "chosenPhysicalCard",
-      ],
-    ];
+  // Steps definition based on current form arrangement:
+  // Step 1: Profile Photo, Cover Photo, Personal Info, Social Links
+  // Step 2: Company Info (multiple), Service Photos (per company)
+  // Step 3: Custom URL, Card Name, Template Selection
+
+  const steps: Array<Array<keyof z.infer<typeof editCardSchema>>> = [
+    [
+      // Step 1: Profile Photo, Cover Photo, Personal Info, Social Links
+      "profilePictureUrl",
+      "coverPhotoUrl",
+      "firstName",
+      "lastName",
+      "email",
+      "number",
+      ...selectedLinks.map((link) => link.key),
+    ],
+    [
+      // Step 2: Companies array (each company has its own fields)
+      // Validation will be handled for the entire companies array
+      "companies",
+    ],
+    [
+      // Step 3: Custom URL, Card Name, Template Selection
+      "customUrl",
+      "cardName",
+      "chosenTemplate",
+      "chosenPhysicalCard",
+    ],
+  ];
 
   const [selectedTemplateId, setSelectedTemplateId] =
     useState<ChosenTemplateType>(
@@ -495,7 +461,7 @@ const MultiStepFormUpdate = ({
 
   const handleAddLink = (link: {
     label: string;
-    key: string;
+    key: keyof z.infer<typeof editCardSchema>;
     value: string;
   }) => {
     setSelectedLinks((prev) => [
@@ -503,10 +469,7 @@ const MultiStepFormUpdate = ({
       { label: link.label, key: link.key, value: link.value },
     ]);
     // Initialize form value for new link
-    methods.setValue(
-      link.key as keyof z.infer<typeof editCardSchema>,
-      link.value
-    );
+    methods.setValue(link.key, link.value);
   };
 
   const handleInputChange = (key: string, value: string) => {
@@ -674,19 +637,17 @@ const MultiStepFormUpdate = ({
                           }}
                           className="flex-1"
                         />
-                        {companies.length > 1 && (
-                          <Button
-                            type="button"
-                            variant="destructive"
-                            onClick={() => {
-                              setCompanies(companies.filter((_, i) => i !== idx));
-                              setServicePhotoPreviews(prev => prev.filter((_, i) => i !== idx));
-                              setServicePhotoFiles(prev => prev.filter((_, i) => i !== idx));
-                            }}
-                          >
-                            <IoMdClose />
-                          </Button>
-                        )}
+                        <Button
+                          type="button"
+                          variant="destructive"
+                          onClick={() => {
+                            setCompanies(companies.filter((_, i) => i !== idx));
+                            setServicePhotoPreviews(prev => prev.filter((_, i) => i !== idx));
+                            setServicePhotoFiles(prev => prev.filter((_, i) => i !== idx));
+                          }}
+                        >
+                          <IoMdClose />
+                        </Button>
                       </div>
                       <Input
                         placeholder="Position"
@@ -828,7 +789,7 @@ const MultiStepFormUpdate = ({
                       setServicePhotoFiles(prev => [...prev, []]);
                     }}
                   >
-                    {companies.length < 5 ? "+ Add Company" : "All Companies Added"}
+                    Add Company
                   </Button>
                   <span className="text-xs text-red-500">
                     {methods.formState.errors.companies?.message ?? ''}
