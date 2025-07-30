@@ -12,13 +12,11 @@ const refinePhoneNumber = (phoneNumber: string) => {
 
 export const companySchema = z.object({
   company: z
-    .string({ required_error: 'Company name is required.' })
-    .min(2, { message: 'Company name must be at least 2 characters long.' })
+    .string()
     .optional(),
 
   position: z
     .string()
-    .min(2, { message: 'Position must be at least 2 characters long.' })
     .optional(),
 
   companyBackground: z

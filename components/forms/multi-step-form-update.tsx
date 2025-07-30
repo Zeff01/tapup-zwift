@@ -149,6 +149,9 @@ const MultiStepFormUpdate = ({
     }
   }, [companies.length]);
 
+  useEffect(() => {
+    methods.setValue("companies", companies);
+  }, [companies]);
 
   const [servicePhotos, setServicePhotos] = useState<Photo[]>([]);
   const [serviceImageUrls, setServiceImageUrls] = useState<string[]>(
@@ -248,6 +251,7 @@ const MultiStepFormUpdate = ({
       coverPhotoUrl: userData.coverPhotoUrl || "",
       profilePictureUrl: userData.profilePictureUrl || "",
       position: userData.position || "",
+      companies: userData.companies || [],
       company: userData.company || "",
       companyBackground: userData.companyBackground || "",
       serviceDescription: userData.serviceDescription || "",
