@@ -7,6 +7,7 @@ import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { useRouter } from "next/navigation";
 import { createContext, useContext, useMemo } from "react";
 import { ExtendedUserInterface, UserState } from "@/types/types";
+import LoadingLogo from "@/components/LoadingLogo";
 
 export type UserProviderContextType = {
   user: UserState;
@@ -78,7 +79,7 @@ export const UserContextProvider = ({ children }: any) => {
 
   return (
     <UserProviderContext.Provider value={value}>
-      {children}
+      {isLoading ? <LoadingLogo /> : children}
     </UserProviderContext.Provider>
   );
 };

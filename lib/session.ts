@@ -3,6 +3,7 @@
 import { cookies } from "next/headers";
 import { SESSION_COOKIE_NAME } from "@/constants";
 import { sign, verify } from "jsonwebtoken";
+import { SignedUserIdJwtPayload } from "@/types/types";
 
 const secret = process.env.JWT_SECRET_KEY!;
 
@@ -53,4 +54,28 @@ export const getLoggedInUser = async () => {
   if (!userData) return null;
 
   return userData;
+};
+
+export const refreshSession = async (uid: string) => {
+  const currentSession = await getSession();
+  if (!currentSession) return false;
+
+  try {
+    const decoded = (await verifySignUserId(
+      currentSession
+    )) as SignedUserIdJwtPayload;
+    const expirationTime = decoded.exp * 1000;
+    const currentTime = Date.now();
+    const timeLeft = expirationTime - currentTime;
+    const tenMinutes = 10 * 60 * 1000;
+
+    if (timeLeft <= tenMinutes) {
+      await createSession(uid);
+      return true;
+    }
+
+    return false;
+  } catch (error) {
+    return false;
+  }
 };
