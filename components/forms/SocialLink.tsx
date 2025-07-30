@@ -18,10 +18,13 @@ import {
 } from "react-icons/fa";
 import { SiTiktok, SiViber } from "react-icons/si";
 
+import { editCardSchema } from "@/lib/zod-schema";
+import { z } from "zod";
+
 interface SocialLink {
   label: string;
   icon: React.ReactNode;
-  key: string;
+  key: keyof z.infer<typeof editCardSchema>;
   value: string;
 }
 
@@ -129,9 +132,9 @@ const SocialLinksSelector: React.FC<SocialLinksSelectorProps> = ({
   );
 
   const handleSelect = (link: SocialLink) => {
-    onAddLink(link); // Notify parent of the selection
-    setAddedLinks((prev) => new Set([...Array.from(prev), link.key])); // Track that this link has been added
-    setAvailableLinks((prev) => prev.filter((item) => item.key !== link.key)); // Remove from the list
+    onAddLink(link);
+    setAddedLinks((prev) => new Set([...Array.from(prev), link.key]));
+    setAvailableLinks((prev) => prev.filter((item) => item.key !== link.key));
   };
 
   return (

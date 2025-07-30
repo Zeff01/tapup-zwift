@@ -26,6 +26,14 @@ export default function CardPreviewEditor() {
     coverPhotoUrl: "",
     profilePictureUrl: "",
     position: "Software Engineer",
+    companies: [
+      {
+        company: "Tech Corp",
+        companyBackground: "Leading tech solutions provider",
+        serviceDescription: "We build modern web and mobile applications.",
+        servicePhotos: ["/images/service1.jpg", "/images/service2.jpg"],
+      }
+    ],
     company: "Tech Corp",
     companyBackground: "Leading tech solutions provider",
     serviceDescription: "We build modern web and mobile applications.",

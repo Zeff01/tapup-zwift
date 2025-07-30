@@ -37,6 +37,13 @@ const CompanyInfoForm: React.FC<CompanyInfoFormProps> = ({
         placeholder="Describe the services you offer"
         required={required}
       />
+      <CustomInput
+        control={control}
+        name="position"
+        label="Position"
+        placeholder="Enter your position in your company"
+        required={false}
+      />
     </div>
   );
 };
