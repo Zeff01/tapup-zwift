@@ -15,6 +15,26 @@ interface CustomInput {
   disabled?: boolean;
 }
 
+function sanitizeInputValue(value: unknown): string {
+  if (typeof value === 'string' || typeof value === 'number') {
+    return value.toString();
+  }
+
+  if (Array.isArray(value)) {
+    throw new Error('CustomInput error: received an array value, which is invalid for a text input.');
+  }
+
+  if (value !== null && typeof value === 'object') {
+    throw new Error('CustomInput error: received an object value, which is invalid for a text input.');
+  }
+
+  if (value === undefined || value === null) {
+    return '';
+  }
+
+  throw new Error(`CustomInput error: received unsupported value type (${typeof value}).`);
+}
+
 const CustomInput = ({
   control,
   name,
@@ -35,9 +55,13 @@ const CustomInput = ({
           <div className="flex w-full flex-col">
             <FormControl>
               <Input
+                value={sanitizeInputValue(field.value)}
+                onChange={field.onChange}
+                onBlur={field.onBlur}
+                name={field.name}
+                ref={field.ref}
                 placeholder={placeholder}
                 className="mt-1 placeholder-placeholder-input block w-full px-4 py-2 bg-secondary border border-border-input rounded-md"
-                {...field}
                 disabled={disabled}
               />
             </FormControl>
