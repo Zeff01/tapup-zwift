@@ -17,6 +17,7 @@ import { SiTiktok } from "react-icons/si";
 import { LuMail, LuBookmark } from "react-icons/lu";
 import Link from "next/link";
 import { Button } from "../ui/button";
+import { MdOutlineBookmarkBorder, MdOutlineMailOutline, MdOutlinePhone } from "react-icons/md";
 
 const Template18 = ({
     id,
@@ -76,13 +77,13 @@ const Template18 = ({
                 }}></div>
 
                 {/* === Cover and Profile Section === */}
-                <section aria-label="Cover and Profile Section" className="relative px-5 pb-6">
+                <section aria-label="Cover and Profile Section" className="relative px-2 sm:px-3 pb-6">
                     {/* Cover Image */}
                     <div className="relative h-64 bg-cover bg-center rounded-t-[30px]" style={{ backgroundImage: `url(${coverPhotoUrl})` }} />
 
                     {/* Profile Content */}
-                    <div className="-mt-20 px-8">
-                        <div className="bg-[#123B57] rounded-xl px-5 py-6 shadow-lg relative text-center">
+                    <div className="-mt-20 px-4 sm:px-6">
+                        <div className="bg-[#123B57] rounded-xl px-4 sm:px-5 py-5 sm:py-6 shadow-lg relative text-center">
                             {/* Profile Picture */}
                             <div className="absolute -top-12 left-1/2 transform -translate-x-1/2">
                                 <div className="w-24 h-24 rounded-full border-4 border-white shadow-md overflow-hidden">
@@ -115,8 +116,36 @@ const Template18 = ({
                                     {!email && number && number}
                                 </div>
 
+                                {/* Buttons */}
+                                <div className="flex flex-col sm:flex-row gap-2 sm:gap-3 w-full mt-3 sm:mt-4">
+                                    <div className="flex gap-3 w-full justify-center">
+                                        <a
+                                            href={`tel:${number}`}
+                                            className="w-10 h-10 flex items-center justify-center rounded-full border-2 border-[#00d4ff] text-[#00d4ff] hover:bg-[#00d4ff] hover:text-white transition-all duration-300"
+                                            title="Call"
+                                        >
+                                            <MdOutlinePhone size={20} />
+                                        </a>
+                                        <a
+                                            href={`mailto:${email}`}
+                                            className="w-10 h-10 flex items-center justify-center rounded-full border-2 border-[#00d4ff] text-[#00d4ff] hover:bg-[#00d4ff] hover:text-white transition-all duration-300"
+                                            title="Email"
+                                        >
+                                            <MdOutlineMailOutline size={20} />
+                                        </a>
+                                        <button
+                                            type="button"
+                                            onClick={() => downloadVCard(userProfile)}
+                                            className="w-10 h-10 flex items-center justify-center rounded-full border-2 border-[#00d4ff] text-[#00d4ff] hover:bg-[#00d4ff] hover:text-white transition-all duration-300"
+                                            title="Save Contact"
+                                        >
+                                            <MdOutlineBookmarkBorder size={20} />
+                                        </button>
+                                    </div>
+                                </div>
+
                                 {/* Social Icons */}
-                                <div className="flex flex-wrap justify-center gap-3 mt-4 text-white max-w-xs mx-auto">
+                                <div className="flex flex-wrap justify-center gap-2 sm:gap-3 mt-3 sm:mt-5 text-white max-w-xs mx-auto">
                                     {[
                                         { url: facebookUrl, icon: FaFacebookF, href: facebookUrl, bgColor: "bg-blue-600 hover:bg-blue-700" },
                                         { url: linkedinUrl, icon: FaLinkedinIn, href: linkedinUrl, bgColor: "bg-blue-500 hover:bg-blue-600" },
@@ -140,35 +169,11 @@ const Template18 = ({
                                                     rel="noopener noreferrer"
                                                     className={`p-2 ${social.bgColor} rounded-full transition`}
                                                 >
-                                                    <IconComponent className="text-sm" />
+                                                    <IconComponent className="text-sm sm:text-base" />
                                                 </a>
                                             );
                                         })
                                     }
-                                </div>
-
-                                {/* Buttons */}
-                                <div className="flex gap-2 mt-4">
-                                    {/* Email Me - Larger */}
-                                    <div className="basis-[65%]">
-                                        <Link href={`mailto:${email}`}>
-                                            <Button className="w-full bg-[#00d4ff] hover:bg-[#00c4e6] text-[#0f172a] text-sm font-semibold py-2 px-6 rounded-full flex items-center justify-center gap-2">
-                                                <FaEnvelope />
-                                                Email Me!
-                                            </Button>
-                                        </Link>
-                                    </div>
-
-                                    {/* Save - Smaller */}
-                                    <div className="basis-[35%]">
-                                        <Button
-                                            onClick={() => downloadVCard(userProfile)}
-                                            className="w-full border border-[#00d4ff] text-[#00d4ff] hover:bg-[#00d4ff] hover:text-[#0f172a] bg-transparent text-sm font-semibold py-2 px-2 rounded-full flex items-center justify-center gap-2"
-                                        >
-                                            <FaRegBookmark />
-                                            Save
-                                        </Button>
-                                    </div>
                                 </div>
                             </div>
                         </div>
@@ -177,35 +182,35 @@ const Template18 = ({
 
                 {/* === Company Overview Section === */}
                 {companyBackground && (
-                    <section aria-label="Company Overview" className="text-white px-4 sm:px-6 pb-3 text-sm">
-                        <h3 className="text-[#00d4ff] font-semibold mb-1">
+                    <section aria-label="Company Overview" className="text-white px-3 sm:px-4 pb-2 text-xs sm:text-sm">
+                        <h3 className="text-[#00d4ff] font-semibold text-sm sm:text-base mb-1">
                             Company Overview
                         </h3>
-                        <p className="text-gray-300 mb-4">{companyBackground}</p>
+                        <p className="text-gray-300 mb-3 sm:mb-4">{companyBackground}</p>
                     </section>
                 )}
 
                 {/* === Services Section === */}
                 {(serviceDescription || (servicePhotos && servicePhotos.length > 0)) && (
-                    <section aria-label="Our Services" className="text-white px-4 sm:px-6 pb-3 text-sm">
+                    <section aria-label="Our Services" className="text-white px-3 sm:px-4 pb-2 text-xs sm:text-sm">
                         {serviceDescription && (
                             <>
-                                <h3 className="text-[#00d4ff] font-semibold mb-1">
+                                <h3 className="text-[#00d4ff] font-semibold text-sm sm:text-base mb-1">
                                     Our Services
                                 </h3>
-                                <p className="text-gray-300 mb-4">{serviceDescription}</p>
+                                <p className="text-gray-300 mb-3 sm:mb-4">{serviceDescription}</p>
                             </>
                         )}
 
                         {servicePhotos && servicePhotos.length > 0 && (
-                            <div className="grid grid-cols-2 gap-3 auto-rows-auto">
+                            <div className="grid grid-cols-2 gap-3 sm:gap-4 auto-rows-auto mb-3 sm:mb-4">
                                 {servicePhotos.map((photo, idx) => {
                                     const isLarge = idx % 2 === 0; // alternate tall and short
 
                                     return (
                                         <div
                                             key={idx}
-                                            className={`overflow-hidden rounded-xl ${isLarge ? 'row-span-2 h-64' : 'row-span-1 h-32'
+                                            className={`overflow-hidden rounded-xl sm:rounded-2xl ${isLarge ? 'row-span-2 h-32 sm:h-40' : 'row-span-1 h-32 sm:h-40'
                                                 }`}
                                         >
                                             <img
@@ -222,9 +227,9 @@ const Template18 = ({
                 )}
 
                 {/* === Footer Section === */}
-                <footer className="bg-[#001d34] text-white text-center py-4 text-xs rounded-b-[30px]">
-                    <div className="font-semibold text-sm">{company}</div>
-                    <div>© 2024 Zwiftech. All Rights Reserved.</div>
+                <footer className="bg-[#001d34] text-white text-center py-3 sm:py-4 text-xs rounded-b-[30px] px-2 sm:px-3">
+                    <div className="font-semibold text-sm sm:text-base">{company}</div>
+                    <div className="mt-1">© 2024 Zwiftech. All Rights Reserved.</div>
                 </footer>
             </div>
         </div>

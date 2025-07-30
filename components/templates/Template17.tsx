@@ -2,12 +2,10 @@ import { downloadVCard } from "@/lib/utils";
 import { Card } from "@/types/types";
 import Link from "next/link";
 import {
-  FaEnvelope,
   FaFacebookF,
   FaGlobe,
   FaInstagram,
   FaLinkedinIn,
-  FaRegBookmark,
   FaSkype,
   FaTiktok,
   FaTwitter,
@@ -15,6 +13,11 @@ import {
   FaWhatsapp,
   FaYoutube,
 } from "react-icons/fa";
+import {
+  MdOutlineBookmarkBorder,
+  MdOutlineMailOutline,
+  MdOutlinePhone,
+} from "react-icons/md";
 import { Button } from "../ui/button";
 import { LuBookmark, LuMail } from "react-icons/lu";
 
@@ -62,36 +65,18 @@ const Template17 = ({
       <div className="max-w-[480px] mx-auto flex flex-col">
 
         {/* === Profile and Cover Section === */}
-        <section aria-label="Cover Section" className="relative h-36 sm:h-44 w-full">
+        <section aria-label="Cover Section" className="relative h-36 sm:h-44 w-full px-2 sm:px-3">
           <div className="relative w-full h-48 sm:h-60 overflow-hidden">
-            {/* Shadow layer */}
-            <div
-              className="absolute inset-0 z-0"
+            {/* Image with clip-path */}
+            <img
+              src={coverPhotoUrl}
+              alt="Cover"
+              className="w-full h-full object-cover rounded-t-xl sm:rounded-t-[2rem]"
               style={{
                 clipPath:
                   "polygon(0 0, 100% 0, 100% 100%, 75% 85%, 50% 70%, 25% 85%, 0 100%)",
-                background:
-                  "linear-gradient(to bottom, transparent 70%, rgba(0,0,0,0.15))",
-                filter: "blur(10px)",
-                transform: "translateY(4px)", // pushes shadow down slightly
-                zIndex: 0,
               }}
             />
-
-            {/* Image layer */}
-            <div
-              className="relative w-full h-full z-10"
-              style={{
-                clipPath:
-                  "polygon(0 0, 100% 0, 100% 100%, 75% 85%, 50% 70%, 25% 85%, 0 100%)",
-              }}
-            >
-              <img
-                src={coverPhotoUrl}
-                alt="Cover"
-                className="w-full h-full object-cover rounded-t-xl sm:rounded-t-[2rem]"
-              />
-            </div>
           </div>
 
           {/* Profile Image */}
@@ -107,7 +92,7 @@ const Template17 = ({
         </section>
 
         {/* === Profile Info Section === */}
-        <section aria-label="Profile Section" className="pt-12 sm:pt-16 pb-4 sm:pb-6 px-4 sm:px-6 flex flex-col items-center">
+        <section aria-label="Profile Section" className="pt-12 sm:pt-16 pb-4 sm:pb-6 px-3 sm:px-4 flex flex-col items-center">
           {/* Name & Position */}
           <h2 className="text-lg sm:text-xl font-bold text-center leading-tight">
             {prefix && `${prefix}. `}
@@ -130,8 +115,34 @@ const Template17 = ({
             {!email && number && <>{number}</>}
           </div>
 
+          {/* Buttons */}
+          <div className="flex gap-3 w-full justify-center mt-3 sm:mt-4">
+            <a
+              href={`tel:${number}`}
+              className="w-10 h-10 flex items-center justify-center rounded-full bg-[#FF4B5C] hover:bg-[#e43c4a] transition"
+              title="Call"
+            >
+              <MdOutlinePhone size={20} className="text-white" />
+            </a>
+            <a
+              href={`mailto:${email}`}
+              className="w-10 h-10 flex items-center justify-center rounded-full bg-[#FF4B5C] hover:bg-[#e43c4a] transition"
+              title="Email"
+            >
+              <MdOutlineMailOutline size={20} className="text-white" />
+            </a>
+            <button
+              type="button"
+              onClick={() => downloadVCard(userProfile)}
+              className="w-10 h-10 flex items-center justify-center rounded-full bg-[#FF4B5C] hover:bg-[#e43c4a] transition"
+              title="Save Contact"
+            >
+              <MdOutlineBookmarkBorder size={20} className="text-white" />
+            </button>
+          </div>
+
           {/* Social Icons */}
-          <div className="flex gap-2 sm:gap-3 justify-center mt-3 sm:mt-4 flex-wrap">
+          <div className="flex gap-2 sm:gap-3 justify-center mt-3 sm:mt-5 flex-wrap">
             {[
               { url: facebookUrl, icon: FaFacebookF, href: facebookUrl, color: "#1877F3" },
               { url: linkedinUrl, icon: FaLinkedinIn, href: linkedinUrl, color: "#0A66C2" },
@@ -164,35 +175,11 @@ const Template17 = ({
               })
             }
           </div>
-
-          {/* Buttons */}
-          <div className="flex flex-col sm:flex-row gap-2 sm:gap-3 w-full mt-4 sm:mt-6">
-            {/* Email Me - Bigger and colored */}
-            <div className="sm:basis-[65%]">
-              <Link href={`mailto:${email}`}>
-                <Button className="w-full bg-[#FF4B5C] hover:bg-[#e43c4a] text-white py-2.5 sm:py-2 rounded-full font-semibold flex items-center justify-center gap-2 text-sm">
-                  <FaEnvelope className="text-white text-base align-middle" />
-                  <span className="leading-none">Email Me!</span>
-                </Button>
-              </Link>
-            </div>
-
-            {/* Save - Smaller and white */}
-            <div className="sm:basis-[35%]">
-              <Button
-                onClick={() => downloadVCard(userProfile)}
-                className="w-full border border-[#FF4B5C] text-[#FF4B5C] py-2.5 sm:py-2 rounded-full font-semibold flex items-center justify-center gap-2 text-sm hover:bg-[#FFF0F1] bg-white"
-              >
-                <FaRegBookmark className="text-[#FF4B5C] text-base align-middle" />
-                <span className="leading-none">Save</span>
-              </Button>
-            </div>
-          </div>
         </section>
 
         {/* === Company Overview Section === */}
         {companyBackground && (
-          <section aria-label="Company Overview" className="px-4 sm:px-6 pb-2">
+          <section aria-label="Company Overview" className="px-3 sm:px-4 pb-2">
             <h3 className="font-bold text-sm sm:text-base mb-1">
               Company Overview
             </h3>
@@ -204,7 +191,7 @@ const Template17 = ({
 
         {/* === Services Section === */}
         {(serviceDescription || (servicePhotos && servicePhotos.length > 0)) && (
-          <section aria-label="Our Services" className="px-4 sm:px-6 pb-2">
+          <section aria-label="Our Services" className="px-3 sm:px-4 pb-2">
             <h3 className="font-bold text-sm sm:text-base mb-1">Our Services</h3>
             {serviceDescription && (
               <p className="text-xs sm:text-sm text-gray-700 mb-3 sm:mb-4 leading-relaxed">
@@ -231,7 +218,7 @@ const Template17 = ({
         )}
 
         {/* === Footer Section === */}
-        <footer className="bg-[#FF4B5C] text-white text-center py-3 sm:py-4 rounded-b-2xl sm:rounded-b-3xl">
+        <footer className="bg-[#FF4B5C] text-white text-center py-3 sm:py-4 rounded-b-2xl sm:rounded-b-3xl px-2 sm:px-3">
           <div className="font-semibold text-sm sm:text-base">{company}</div>
           <div className="text-xs mt-1">
             © 2024 Zwiftech. All Rights Reserved.
