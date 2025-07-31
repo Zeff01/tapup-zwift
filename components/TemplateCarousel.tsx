@@ -141,7 +141,7 @@ export function TemplateCarousel({
       <h1 className="text-lg font-semibold mb-6">Choose Templates</h1>
 
       <Carousel
-        opts={{ align: "start" }}
+        opts={{ align: "start", dragFree: true, containScroll: false }}
         className="w-full max-w-screen-lg mx-auto overflow-hidden "
       >
         <CarouselContent className="flex justify-start items-center  px-4">
