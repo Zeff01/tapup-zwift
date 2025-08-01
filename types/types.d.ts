@@ -13,10 +13,11 @@ import { z } from "zod";
 
 export type Company = {
   company?: string;
+  position?: string;
   companyBackground?: string;
   serviceDescription?: string;
   servicePhotos?: string[];
-}
+};
 
 export type Users = {
   id?: string;
@@ -79,19 +80,19 @@ export interface Order {
   totalAmount: number;
   requiresInfo?: boolean;
   status:
-  | "Pending"
-  | "To Ship"
-  | "To Receive"
-  | "Delivered"
-  | "To Return/Refund"
-  | "Cancelled";
+    | "Pending"
+    | "To Ship"
+    | "To Receive"
+    | "Delivered"
+    | "To Return/Refund"
+    | "Cancelled";
   returnStatus?:
-  | "Return Requested"
-  | "To Return"
-  | "Refunded"
-  | "Delivered"
-  | "Return Rejected"
-  | "Cancelled";
+    | "Return Requested"
+    | "To Return"
+    | "Refunded"
+    | "Delivered"
+    | "Return Rejected"
+    | "Cancelled";
 }
 export interface Address {
   city: string;
@@ -387,12 +388,12 @@ export type RecurringPlanType = {
   failure_return_url?: string;
   items?: {
     type:
-    | "DIGITAL_PRODUCT"
-    | "PHYSICAL_PRODUCT"
-    | "DIGITAL_SERVICE"
-    | "PHYSICAL_SERVICE"
-    | "FEE"
-    | "DISCOUNT";
+      | "DIGITAL_PRODUCT"
+      | "PHYSICAL_PRODUCT"
+      | "DIGITAL_SERVICE"
+      | "PHYSICAL_SERVICE"
+      | "FEE"
+      | "DISCOUNT";
     name: string;
     net_unit_amount: number;
     quantity: number;
