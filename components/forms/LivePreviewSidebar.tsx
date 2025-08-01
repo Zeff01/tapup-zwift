@@ -72,23 +72,44 @@ export default function LivePreviewSidebar({
             </div>
           ) : (
             <div className="flex flex-col items-center justify-center w-full">
-              <Smartphone className="h-6 w-6 text-gray-400 mb-1 rotate-90" />
-              <span className="text-xs text-gray-400 writing-mode-vertical-rl text-center">Preview</span>
+              <Smartphone className="h-5 w-5 text-gray-400" />
             </div>
           )}
           <Button
             onClick={onToggleMinimize}
             variant="ghost"
             size="sm"
-            className={isMinimized ? "mt-2" : "ml-auto"}
+            className={isMinimized ? "absolute -left-2 top-2 rounded-full h-6 w-6 p-0 bg-white dark:bg-gray-800 border shadow-md" : "ml-auto"}
           >
             {isMinimized ? (
-              <Maximize2 className="h-4 w-4" />
+              <ChevronLeft className="h-3 w-3" />
             ) : (
-              <Minimize2 className="h-4 w-4" />
+              <ChevronRight className="h-4 w-4" />
             )}
           </Button>
         </div>
+
+        {/* Minimized Icons */}
+        {isMinimized && (
+          <div className="flex flex-col items-center py-4 space-y-4">
+            <Button
+              variant="ghost"
+              size="sm"
+              className="w-8 h-8 p-0 rounded-lg"
+              onClick={() => onToggleMinimize()}
+            >
+              <Eye className="h-4 w-4 text-gray-500" />
+            </Button>
+            <Button
+              variant="ghost"
+              size="sm"
+              className="w-8 h-8 p-0 rounded-lg"
+              onClick={() => setShowTemplateSelector(!showTemplateSelector)}
+            >
+              <Palette className="h-4 w-4 text-gray-500" />
+            </Button>
+          </div>
+        )}
 
         {/* Content - only show when not minimized */}
         {!isMinimized && (
@@ -154,7 +175,7 @@ export default function LivePreviewSidebar({
 
               {/* Mobile Preview Container */}
               <div className="relative">
-                <div className="max-w-[280px] mx-auto border-2 border-gray-200 rounded-xl overflow-hidden bg-black"
+                <div className="max-w-[320px] mx-auto border-2 border-gray-200 rounded-xl overflow-hidden bg-black"
                      style={{ aspectRatio: "9/16" }}
                 >
                   {/* Mobile Frame */}
@@ -172,19 +193,6 @@ export default function LivePreviewSidebar({
                   </div>
                 </div>
 
-                {/* Loading Overlay */}
-                {!formData.firstName && !formData.company && (
-                  <div className="absolute inset-0 bg-white/80 flex items-center justify-center rounded-lg">
-                    <div className="text-center">
-                      <div className="text-gray-400 mb-2">
-                        <Eye className="h-8 w-8 mx-auto" />
-                      </div>
-                      <p className="text-sm text-gray-500">
-                        Fill in your information to see the preview
-                      </p>
-                    </div>
-                  </div>
-                )}
               </div>
 
               {/* Preview Info */}
@@ -194,12 +202,6 @@ export default function LivePreviewSidebar({
                     <div className="flex justify-between text-sm">
                       <span className="text-gray-500">Template:</span>
                       <span className="font-medium">{currentTemplate?.name}</span>
-                    </div>
-                    <div className="flex justify-between text-sm">
-                      <span className="text-gray-500">Category:</span>
-                      <Badge variant="outline" className="text-xs">
-                        {currentTemplate?.category}
-                      </Badge>
                     </div>
                     <div className="flex justify-between text-sm">
                       <span className="text-gray-500">View:</span>

@@ -743,7 +743,7 @@ const MultiStepFormUpdate = ({
                           className="flex items-center gap-2"
                         >
                           <Eye className="h-4 w-4" />
-                          Show Live Preview
+                          Expand Preview
                         </Button>
                       </div>
 
