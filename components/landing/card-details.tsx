@@ -9,24 +9,30 @@ interface CardDetailsProps {
 
 const CardDetails: React.FC<CardDetailsProps> = ({ card }) => {
   return (
-    <section className="mt-[2rem]  mx-auto w-[80vw]">
-      <h2 className="text-3xl sm:text-4xl md:text-5xl lg:text-[3.5vw] leading-tight md:leading-none text-center font-black">
-        {card?.title}
-      </h2>
-      <h2 className="text-xl sm:text-2xl md:text-3xl lg:text-[2vw] leading-tight md:leading-none text-center font-bold text-greenText my-3">
-        ₱ {card?.price}
-      </h2>
-      <pre className="text-lg w-full max-w-lg leading-snug md:leading-8 sm:text-xl text-muted-foreground text-justify mt-6 whitespace-pre-line font-sans mx-auto h-56 p-4 rounded-md ">
+    <div className="space-y-6">
+      <div>
+        <h2 className="text-3xl sm:text-4xl md:text-5xl font-black text-center lg:text-left">
+          {card?.title}
+        </h2>
+        <p className="text-2xl sm:text-3xl font-bold text-green-600 mt-2 text-center lg:text-left">
+          ₱ {card?.price}
+        </p>
+      </div>
+      
+      <p className="text-lg sm:text-xl text-muted-foreground leading-relaxed">
         {card?.description}
-      </pre>
+      </p>
 
-      <Link href={`/card?title=${card?.title}`}>
-        <Button className="uppercase max-w-[15rem] px-8 py-6 w-full text-white bg-buttonColor mt-[27px] font-bold flex items-center mx-auto hover:bg-hoverColor">
-          Purchase Card
-          <BiPurchaseTag />
+      <Link href={`/card?title=${card?.title}`} className="inline-block">
+        <Button 
+          size="lg"
+          className="bg-gradient-to-r from-green-600 to-emerald-500 hover:from-green-700 hover:to-emerald-600 text-white font-semibold px-8 py-6 rounded-full shadow-lg hover:shadow-xl transition-all duration-300 group"
+        >
+          Purchase This Card
+          <BiPurchaseTag className="ml-2 h-5 w-5 group-hover:translate-x-1 transition-transform" />
         </Button>
       </Link>
-    </section>
+    </div>
   );
 };
 

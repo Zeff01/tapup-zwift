@@ -1,16 +1,16 @@
 "use client";
-//import TapUpCarousel from "@/components/landing/carouselCard";
 import { Button } from "@/components/ui/button";
 import { carouselCards } from "@/constants";
 import { useCart } from "@/hooks/use-cart-v2";
 import { cn, formatCurrency } from "@/lib/utils";
 import { useUserContext } from "@/providers/user-provider";
-import { Plus } from "lucide-react";
+import { Plus, ShoppingCart, Sparkles, CreditCard, Shield } from "lucide-react";
 import dynamic from "next/dynamic";
 import Image from "next/image";
 import { useRouter, useSearchParams } from "next/navigation";
 import React, { useState } from "react";
 import { BiSolidPurchaseTag } from "react-icons/bi";
+import { motion, AnimatePresence } from "framer-motion";
 
 //prevent mismatch during the first render
 const TapUpCarousel = dynamic(
@@ -30,97 +30,202 @@ const CardPurchasePreviewPage = () => {
 
   const [title, setTitle] = useState(queryParamsTitle);
 
-  const handleSetTitle = (title: string) => {
-    setTitle(title);
-    window.history.pushState({}, "", `/card?title=${title}`);
+  const handleSetTitle = (newTitle: string) => {
+    setTitle(newTitle);
+    // Update URL without causing reload
+    const newUrl = `/card?title=${encodeURIComponent(newTitle)}`;
+    window.history.replaceState({}, "", newUrl);
   };
 
   const card =
     Object.values(carouselCards).find((card) => card.title === title) || null;
 
+  const features = [
+    { icon: CreditCard, text: "NFC Enabled" },
+    { icon: Shield, text: "Premium Quality" },
+    { icon: Sparkles, text: "Instant Sharing" }
+  ];
+
   return (
     <React.Fragment>
-      <section className="w-full max-w-[calc(80rem+6rem)] px-4 md:px-10 mx-auto py-8">
-        <article key={title} className="flex flex-col md:flex-row gap-x-8">
-          <figure className="relative aspect-[1.601] w-full md:w-[28rem] lg:w-[40rem] shrink-0">
-            <Image
-              src={card?.image as string}
-              alt={`${card?.title}-image`}
-              fill
-              className="object-contain size-full"
-            />
-          </figure>
-          <div className="flex-1 flex flex-col mt-8 md:mt-0">
-            <h1 className="text-xl lg:text-4xl font-bold w-full">
-              {card?.title}
-            </h1>
-            <p className="text-sm lg:text-xl mt-2 md:mt-4">
-              {card?.description}
-            </p>
-            <div className="flex flex-col mt-auto">
-              <h1 className="mt-2 lg:text-3xl italic">
-                {formatCurrency(card?.price as number)}
-              </h1>
-              <div className="flex gap-4 mt-4 w-full max-w-64 flex-wrap">
-                {Object.values(carouselCards).map((cardItem, i) => (
-                  <div
-                    key={`card-${i}`}
-                    className={cn(
-                      "size-4 relative cursor-pointer  rounded-full",
-                      {
-                        "outline-offset-1 outline outline-2":
-                          title === cardItem.title,
-                      }
-                    )}
-                    onClick={() => handleSetTitle(cardItem.title)}
+      {/* Hero Section with Product */}
+      <section className="min-h-screen py-12 md:py-20 relative overflow-hidden">
+        {/* Animated background */}
+        <div className="absolute inset-0 -z-10">
+          <div className="absolute top-20 left-10 w-72 h-72 bg-green-300 rounded-full mix-blend-multiply filter blur-3xl opacity-20 animate-blob" />
+          <div className="absolute top-40 right-10 w-72 h-72 bg-emerald-300 rounded-full mix-blend-multiply filter blur-3xl opacity-20 animate-blob animation-delay-2000" />
+          <div className="absolute -bottom-8 left-20 w-72 h-72 bg-teal-300 rounded-full mix-blend-multiply filter blur-3xl opacity-20 animate-blob animation-delay-4000" />
+        </div>
+
+        <div className="container mx-auto px-6 sm:px-8 md:px-16 lg:px-24">
+          <motion.article 
+            className="flex flex-col items-center"
+          >
+              {/* Product Image - Large Display */}
+              <motion.div
+                initial={{ opacity: 0, scale: 0.8 }}
+                animate={{ opacity: 1, scale: 1 }}
+                transition={{ duration: 0.6 }}
+                className="w-full mb-12"
+              >
+                <motion.div
+                  animate={{ y: [0, -10, 0] }}
+                  transition={{ duration: 4, repeat: Infinity }}
+                  className="relative aspect-[1.6] max-w-2xl mx-auto"
+                >
+                  <div className="absolute -inset-8 bg-gradient-to-r from-green-400 via-emerald-400 to-teal-400 rounded-3xl blur-3xl opacity-20" />
+                  <AnimatePresence mode="wait">
+                    <motion.div 
+                      key={title}
+                      initial={{ opacity: 0, scale: 0.95 }}
+                      animate={{ opacity: 1, scale: 1 }}
+                      exit={{ opacity: 0, scale: 0.95 }}
+                      transition={{ duration: 0.3 }}
+                      className="relative rounded-3xl p-8 h-full"
+                    >
+                      <Image
+                        src={card?.image as string}
+                        alt={`${card?.title} NFC Business Card`}
+                        fill
+                        className="object-contain drop-shadow-2xl"
+                        priority
+                        sizes="(max-width: 768px) 100vw, (max-width: 1200px) 80vw, 70vw"
+                      />
+                    </motion.div>
+                  </AnimatePresence>
+                </motion.div>
+              </motion.div>
+
+              {/* Product Details Section */}
+              <div className="w-full max-w-6xl mx-auto grid lg:grid-cols-2 gap-12">
+                {/* Left Column - Product Info */}
+                <motion.div 
+                  initial={{ opacity: 0, x: -50 }}
+                  animate={{ opacity: 1, x: 0 }}
+                  transition={{ duration: 0.6, delay: 0.2 }}
+                  className="space-y-6"
+                >
+                {/* Features badges */}
+                <div className="flex flex-wrap gap-3 mb-6">
+                  {features.map((feature, index) => (
+                    <motion.div
+                      key={index}
+                      initial={{ opacity: 0, scale: 0 }}
+                      animate={{ opacity: 1, scale: 1 }}
+                      transition={{ delay: 0.3 + index * 0.1 }}
+                      className="flex items-center gap-2 px-3 py-1 bg-green-100 dark:bg-green-900/30 text-green-700 dark:text-green-300 rounded-full text-sm"
+                    >
+                      <feature.icon className="w-4 h-4" />
+                      <span>{feature.text}</span>
+                    </motion.div>
+                  ))}
+                </div>
+
+                <AnimatePresence mode="wait">
+                  <motion.div
+                    key={title}
+                    initial={{ opacity: 0, y: 20 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    exit={{ opacity: 0, y: -20 }}
+                    transition={{ duration: 0.3 }}
                   >
-                    <Image
-                      src={cardItem.image as string}
-                      alt={`card-thumbnail-${i}`}
-                      fill
-                      className="object-fill size-full rounded-full"
-                    />
+                    <h1 className="text-3xl sm:text-4xl md:text-5xl font-black mb-4">
+                      {card?.title}
+                    </h1>
+                    
+                    <p className="text-lg sm:text-xl text-muted-foreground mb-8 leading-relaxed">
+                      {card?.description}
+                    </p>
+
+                    {/* Price */}
+                    <div className="mb-8">
+                      <p className="text-sm text-muted-foreground mb-1">Price</p>
+                      <p className="text-3xl sm:text-4xl font-bold text-green-600">
+                        {formatCurrency(card?.price as number)}
+                      </p>
+                    </div>
+                  </motion.div>
+                </AnimatePresence>
+
+                {/* Action Buttons */}
+                <div className="flex flex-col sm:flex-row gap-4 mt-8">
+                  <Button
+                    size="lg"
+                    className="flex-1 bg-gradient-to-r from-green-600 to-emerald-500 hover:from-green-700 hover:to-emerald-600 text-white font-semibold px-8 py-6 rounded-full shadow-lg hover:shadow-xl transition-all duration-300 group"
+                    onClick={() => {
+                      addItem({
+                        id: card?.id.replace(/-/g, "") || "",
+                        name: card?.title || "",
+                        price: card?.price || 0,
+                        image: card?.image || "",
+                      });
+                      router.push(user ? "/cards/checkout" : "/delivery-form");
+                    }}
+                  >
+                    Buy Now
+                    <BiSolidPurchaseTag className="ml-2 h-5 w-5 group-hover:translate-x-1 transition-transform" />
+                  </Button>
+                  <Button
+                    size="lg"
+                    variant="outline"
+                    className="flex-1 font-semibold px-8 py-6 rounded-full border-2 hover:bg-gray-50 dark:hover:bg-gray-800"
+                    onClick={() =>
+                      addItem({
+                        id: card?.id.replace(/-/g, "") || "",
+                        name: card?.title || "",
+                        price: card?.price || 0,
+                        image: card?.image || "",
+                      })
+                    }
+                  >
+                    Add to Cart
+                    <ShoppingCart className="ml-2 h-5 w-5" />
+                  </Button>
+                </div>
+                </motion.div>
+
+                {/* Right Column - Available Designs */}
+                <motion.div
+                  initial={{ opacity: 0, x: 50 }}
+                  animate={{ opacity: 1, x: 0 }}
+                  transition={{ duration: 0.6, delay: 0.3 }}
+                  className="space-y-6"
+                >
+                  <div>
+                    <h3 className="text-2xl font-bold mb-6">Available Designs</h3>
+                    <div className="grid grid-cols-3 sm:grid-cols-4 gap-4">
+                      {Object.values(carouselCards).map((cardItem, i) => (
+                        <motion.div
+                          key={`card-${i}`}
+                          whileHover={{ scale: 1.05 }}
+                          whileTap={{ scale: 0.95 }}
+                          className={cn(
+                            "relative cursor-pointer rounded-xl overflow-hidden transition-all duration-300 shadow-md hover:shadow-xl",
+                            title === cardItem.title && "ring-2 ring-green-500 ring-offset-2"
+                          )}
+                          onClick={() => handleSetTitle(cardItem.title)}
+                        >
+                          <div className="relative aspect-[4/3]">
+                            <Image
+                              src={cardItem.image as string}
+                              alt={`${cardItem.title} design`}
+                              fill
+                              className="object-cover"
+                            />
+                          </div>
+                          <div className="p-2">
+                            <p className="text-xs font-medium truncate">{cardItem.title}</p>
+                          </div>
+                        </motion.div>
+                      ))}
+                    </div>
                   </div>
-                ))}
+                </motion.div>
               </div>
-              <div className="flex gap-x-2 mt-4">
-                <Button
-                  variant={"green"}
-                  className="min-w-fit text-xs lg:text-base lg:w-36 text-white"
-                  onClick={() => {
-                    addItem({
-                      id: card?.id.replace(/-/g, "") || "",
-                      name: card?.title || "",
-                      price: card?.price || 0,
-                      image: card?.image || "",
-                    });
-                    router.push(user ? "/cards/checkout" : "/delivery-form");
-                  }}
-                >
-                  Buy Now
-                  <BiSolidPurchaseTag />
-                </Button>
-                <Button
-                  className="bg-grayTemplate min-w-fit text-xs lg:text-base lg:w-36 hover:bg-gray-400"
-                  onClick={() =>
-                    addItem({
-                      id: card?.id.replace(/-/g, "") || "",
-                      name: card?.title || "",
-                      price: card?.price || 0,
-                      image: card?.image || "",
-                    })
-                  }
-                >
-                  Add to Cart <Plus />
-                </Button>
-              </div>
-            </div>
-          </div>
-        </article>
+            </motion.article>
+        </div>
       </section>
-      <div className="md:block hidden">
-        <TapUpCarousel viewCard onChange={handleSetTitle} />
-      </div>
+
     </React.Fragment>
   );
 };
