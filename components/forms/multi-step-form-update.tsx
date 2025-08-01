@@ -365,24 +365,11 @@ const MultiStepFormUpdate = ({
         const fullIsValid = await methods.trigger();
         if (!fullIsValid) return;
       }
-      const hasImageErrors =
-        (currentStep === 1 && !coverPhotoUrl) ||
-        (currentStep === 2 && !imageUrl);
-
-      if (!isValid || hasImageErrors) {
-        // Handle image validation errors first
-
-        if (hasImageErrors) {
-          if (!coverPhotoUrl) toast.error("Cover photo is required");
-          if (!imageUrl && currentStep === 2)
-            toast.error("Profile picture is required");
-          return;
-        }
-
+      if (!isValid) {
         // Handle Zod validation errors
         const errorKeys = Object.keys(methods.formState.errors);
         if (errorKeys.length > 0) {
-          toast.error("Please fill in all required fields correctly");
+          toast.error("Please check the form for errors");
         }
         return;
       }
