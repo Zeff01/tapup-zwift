@@ -20,7 +20,7 @@ import { useUserContext } from "@/providers/user-provider";
 import { Card, ExtendedUserInterface, Photo } from "@/types/types";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
-import { Loader2, LoaderCircle } from "lucide-react";
+import { Loader2, LoaderCircle, Eye, ArrowLeft, ArrowRight, Save, Sparkles } from "lucide-react";
 import Image from "next/image";
 import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
@@ -36,6 +36,7 @@ import { Input } from "../ui/input";
 import MultiStepProgress from "./MultiStepProgress";
 import SelectedTemplate from "./SelectedTemplate";
 import SocialLinksSelector from "./SocialLink";
+import LivePreviewSidebar from "./LivePreviewSidebar";
 
 export type ChosenTemplateType =
   | "template1"
@@ -146,6 +147,8 @@ const MultiStepFormUpdate = ({
   });
 
   const [currentStep, setCurrentStep] = useState(1);
+  const [completedSteps, setCompletedSteps] = useState<number[]>([]);
+  const [previewMinimized, setPreviewMinimized] = useState(false);
 
   const steps: Array<(keyof z.infer<typeof editCardSchema>)[]> = isOnboarding
     ? [
@@ -375,6 +378,8 @@ const MultiStepFormUpdate = ({
       }
 
       console.log("Next step");
+      // Mark current step as completed
+      setCompletedSteps(prev => [...prev.filter(s => s !== currentStep), currentStep]);
       setCurrentStep((prev) => prev + 1);
     } catch (error) {
       console.error("Error in handleNextStep:", error);
@@ -384,6 +389,12 @@ const MultiStepFormUpdate = ({
 
   const goToPreviousStep = () => {
     setCurrentStep((prev) => Math.max(prev - 1, 1));
+  };
+
+  const handleStepNavigation = (step: number) => {
+    if (step <= currentStep || completedSteps.includes(step)) {
+      setCurrentStep(step);
+    }
   };
 
   const handleAddLink = (link: {
@@ -410,7 +421,7 @@ const MultiStepFormUpdate = ({
     methods.setValue(key as keyof z.infer<typeof editCardSchema>, value);
   };
   return (
-    <main className="h-full">
+    <main className={`h-full transition-all duration-300 ease-in-out ${previewMinimized ? 'pr-16' : 'pr-96'}`}>
       <Form {...methods}>
         <form
           className="space-y-6 h-full"
@@ -420,24 +431,42 @@ const MultiStepFormUpdate = ({
             <div className="aspect-[130/48] w-80 mx-auto mb-10">
               <TapupLogo />
             </div>
-            <div className="w-full mx-auto max-w-md">
+            <div className={`w-full mx-auto transition-all duration-300 ${previewMinimized ? 'max-w-4xl' : 'max-w-2xl'}`}>
               {formHeaderItems.map((item) => (
-                <div key={item.id} className="mb-4">
-                  <h2 className="text-2xl">
-                    {currentStep === item.id ? item.title : ""}
-                  </h2>
+                <div key={item.id} className="mb-6">
+                  {currentStep === item.id && (
+                    <div className="space-y-2">
+                      <h2 className="text-2xl font-bold text-gray-900 dark:text-white">
+                        {item.title}
+                      </h2>
+                      <p className="text-gray-600 dark:text-gray-400">
+                        {currentStep === 1 && "Upload your visual content and share your company story"}
+                        {currentStep === 2 && "Add your personal details and connect your social profiles"}
+                        {currentStep === 3 && "Choose your design and finalize your digital business card"}
+                      </p>
+                      {/* Save Progress Indicator */}
+                      <div className="flex items-center gap-2 text-sm text-green-600">
+                        <div className="w-2 h-2 bg-green-500 rounded-full animate-pulse"></div>
+                        Changes are automatically saved
+                      </div>
+                    </div>
+                  )}
                 </div>
               ))}
-              <MultiStepProgress currentStep={currentStep} />
+              <MultiStepProgress 
+                currentStep={currentStep} 
+                completedSteps={completedSteps}
+                onStepClick={handleStepNavigation}
+                allowNavigation={true}
+              />
 
               {/* Step 1 - Cover Photo and Profile Pic */}
               {currentStep === 1 && (
-                <div className="">
-                  <p className="text-lg font-semibold mb-6">Cover Photo</p>
-                  <div className="flex aspect-[16/9] w-full flex-col items-center relative mb-20">
-                    <div className="rounded-lg animate-pulse absolute w-full h-full" />
-                    <div className="flex flex-col items-center relative w-full">
-                      <div className="w-full">
+                <div className="space-y-8">
+                  {/* Cover Photo Section */}
+                  <div>
+                    <h2 className="text-lg font-semibold mb-4">Cover Photo</h2>
+                    <div className="w-full max-w-lg mx-auto">
                         <Cropper
                           imageUrl={coverPhotoUrl}
                           setImageUrl={setCoverPhotoUrl}
@@ -455,7 +484,7 @@ const MultiStepFormUpdate = ({
                                 alt="plus"
                                 className="size-10 lg:size-auto mt-8 border p-2 rounded-md cursor-pointer"
                               />
-                              <p className="text-[#767676] text-xl">
+                              <p className="text-[#767676] text-lg">
                                 Drop your image here or{" "}
                                 <span className="text-green-500">browse</span>
                               </p>
@@ -465,18 +494,21 @@ const MultiStepFormUpdate = ({
                             </div>
                           }
                         />
-                      </div>
                     </div>
                   </div>
 
-                  <div className="space-y-6">
+                  {/* Company Information Section */}
+                  <div>
                     <CompanyInfoForm
                       control={methods.control}
                       isAllFieldsRequired={false}
                     />
-                    <div className="">
-                      <h1 className="text-lg font-semibold mt-2">Photos</h1>
-                      <div className="w-full mt-2">
+                  </div>
+
+                  {/* Service Photos Section */}
+                  <div>
+                    <h2 className="text-lg font-semibold mb-4">Service Photos</h2>
+                    <div className="w-full">
                         <CropperMultiple
                           previewImageUrl={null}
                           imageUrls={serviceImageUrls}
@@ -497,7 +529,7 @@ const MultiStepFormUpdate = ({
                                 alt="plus"
                                 className="size-10 lg:size-auto mt-8 border p-2 rounded-md cursor-pointer"
                               />
-                              <p className="text-[#767676] text-xl">
+                              <p className="text-[#767676] text-lg">
                                 Drop your image here or{" "}
                                 <span className="text-green-500">browse</span>
                               </p>
@@ -508,11 +540,11 @@ const MultiStepFormUpdate = ({
                           }
                         />
 
-                        <div className="flex gap-2 mt-4 flex-wrap">
+                        <div className="grid grid-cols-4 sm:grid-cols-5 md:grid-cols-6 gap-2 mt-4">
                           {serviceImageUrls.map((url, index) => (
                             <div
                               key={`service-image-${index}`}
-                              className="relative flex items-center justify-center h-[77px] w-[77px] overflow-hidden rounded-md bg-[#222224] border border-[#2c2c2c]"
+                              className="relative aspect-square overflow-hidden rounded-md bg-[#222224] border border-[#2c2c2c]"
                             >
                               {/* Delete Button */}
                               <button
@@ -530,15 +562,14 @@ const MultiStepFormUpdate = ({
                                 <IoMdClose className="size-2 text-white" />
                               </button>
 
-                              <Loader2 className="animate-spin" />
+                              <Loader2 className="animate-spin absolute inset-0 m-auto" />
                               <ImageLoaded
                                 url={url}
-                                className="absolute top-0 left-0 h-full w-full object-cover rounded-md"
+                                className="absolute inset-0 w-full h-full object-cover rounded-md"
                               />
                             </div>
                           ))}
                         </div>
-                      </div>
                     </div>
                   </div>
                 </div>
@@ -686,80 +717,149 @@ const MultiStepFormUpdate = ({
                     )}
                   />
 
-                  <div>
-                    <h2 className="text-lg font-semibold mb-4">
-                      Choose Template
-                    </h2>
-                    {selectedTemplateId ? (
-                      <div className="w-full border rounded-lg mb-4 max-h-[340px] overflow-y-auto">
-                        <SelectedTemplate
-                          templateId={selectedTemplateId}
-                          formData={{
-                            ...methods.watch(),
-                            id: userData.id!,
-                            chosenPhysicalCard: {
-                              id: methods.watch().chosenPhysicalCard || "",
-                            },
-                          }}
-                        />
+                  <div className="space-y-6">
+                    <div>
+                      <h2 className="text-lg font-semibold mb-2">
+                        Choose Your Template
+                      </h2>
+                      <p className="text-sm text-gray-600 dark:text-gray-400 mb-4">
+                        Select a design that best represents your professional style. 
+                        Use the live preview to see how your information looks in each template.
+                      </p>
+                      
+                      {/* Preview Toggle Button */}
+                      <div className="flex items-center justify-between mb-4">
+                        <div className="flex items-center gap-2">
+                          <span className="text-sm font-medium">Current Template:</span>
+                          <span className="text-sm text-green-600 font-semibold">
+                            {selectedTemplateId ? selectedTemplateId.replace('template', 'Template ') : 'None'}
+                          </span>
+                        </div>
+                        <Button
+                          type="button"
+                          variant="outline"
+                          size="sm"
+                          onClick={() => setPreviewMinimized(false)}
+                          className="flex items-center gap-2"
+                        >
+                          <Eye className="h-4 w-4" />
+                          Show Live Preview
+                        </Button>
                       </div>
-                    ) : (
-                      <div className="w-full flex items-center justify-center border rounded-lg mb-4 bg-gray-100 h-40">
-                        <p className="text-gray-500">No template selected</p>
-                      </div>
-                    )}
-                    <TemplateCarousel
-                      selectedTemplateId={selectedTemplateId}
-                      setSelectedTemplateId={(id: ChosenTemplateType) =>
-                        setSelectedTemplateId(id)
-                      }
-                    />
+
+                      {/* Compact Template Preview */}
+                      {selectedTemplateId && (
+                        <div className="w-full border rounded-lg mb-4 max-h-[300px] overflow-y-auto bg-gray-50 dark:bg-gray-800">
+                          <div className="transform scale-[0.3] origin-top-left w-[333%] h-[333%]">
+                            <SelectedTemplate
+                              templateId={selectedTemplateId}
+                              formData={{
+                                ...methods.watch(),
+                                id: userData.id!,
+                                chosenPhysicalCard: {
+                                  id: methods.watch().chosenPhysicalCard || "",
+                                },
+                              }}
+                            />
+                          </div>
+                        </div>
+                      )}
+                    </div>
+
+                    {/* Template Selection */}
+                    <div>
+                      <h3 className="text-md font-medium mb-3">Available Templates</h3>
+                      <TemplateCarousel
+                        selectedTemplateId={selectedTemplateId}
+                        setSelectedTemplateId={(id: ChosenTemplateType) => {
+                          setSelectedTemplateId(id);
+                          // Auto-update form data
+                          methods.setValue("chosenTemplate", id);
+                        }}
+                      />
+                      <p className="text-xs text-gray-500 mt-2 text-center">
+                        💡 Tip: Click on any template to instantly see how your card will look
+                      </p>
+                    </div>
                   </div>
                 </div>
               )}
 
               {/* Navigation Buttons */}
-              <div className="flex justify-end gap-5 mt-8">
-                {currentStep > 1 && (
-                  <button
-                    type="button"
-                    onClick={goToPreviousStep}
-                    className="px-8 py-2 bg-gray-400 text-white rounded-full hover:bg-slate-700"
-                    disabled={isLoading}
-                  >
-                    Back
-                  </button>
-                )}
-                {currentStep < steps.length ? (
-                  <Button
-                    type="button"
-                    onClick={handleNextStep}
-                    className="px-8 py-2 bg-green-600 text-white rounded-full hover:bg-green-500"
-                    disabled={isLoading}
-                  >
-                    Next
-                  </Button>
-                ) : (
-                  <Button
-                    type="submit"
-                    className="px-8 py-2 bg-green-600 text-white rounded-full hover:bg-green-500"
-                    disabled={isLoading || isCustomUrlLoading}
-                  >
-                    {isLoading || isCustomUrlLoading ? (
-                      <>
-                        <LoaderCircle className="animate-spin size-5" />
-                        Saving...
-                      </>
-                    ) : (
-                      "Save"
-                    )}
-                  </Button>
-                )}
+              <div className="flex justify-between items-center mt-8 pt-6 border-t">
+                <div className="flex items-center gap-2 text-sm text-gray-500">
+                  <span>Step {currentStep} of {steps.length}</span>
+                  {completedSteps.length > 0 && (
+                    <span className="text-green-600">
+                      • {completedSteps.length} completed
+                    </span>
+                  )}
+                </div>
+                
+                <div className="flex gap-3">
+                  {currentStep > 1 && (
+                    <Button
+                      type="button"
+                      variant="outline"
+                      onClick={goToPreviousStep}
+                      disabled={isLoading}
+                      className="flex items-center gap-2"
+                    >
+                      <ArrowLeft className="h-4 w-4" />
+                      Back
+                    </Button>
+                  )}
+                  
+                  {currentStep < steps.length ? (
+                    <Button
+                      type="button"
+                      onClick={handleNextStep}
+                      disabled={isLoading}
+                      className="flex items-center gap-2 bg-green-600 hover:bg-green-500"
+                    >
+                      Next
+                      <ArrowRight className="h-4 w-4" />
+                    </Button>
+                  ) : (
+                    <Button
+                      type="submit"
+                      disabled={isLoading || isCustomUrlLoading}
+                      className="flex items-center gap-2 bg-green-600 hover:bg-green-500"
+                    >
+                      {isLoading || isCustomUrlLoading ? (
+                        <>
+                          <LoaderCircle className="animate-spin h-4 w-4" />
+                          Saving...
+                        </>
+                      ) : (
+                        <>
+                          <Save className="h-4 w-4" />
+                          Save Card
+                        </>
+                      )}
+                    </Button>
+                  )}
+                </div>
               </div>
             </div>
           </div>
         </form>
       </Form>
+
+      {/* Live Preview Sidebar */}
+      <LivePreviewSidebar
+        selectedTemplateId={selectedTemplateId}
+        formData={{
+          ...methods.watch(),
+          id: userData.id!,
+          chosenPhysicalCard: {
+            id: methods.watch().chosenPhysicalCard || "",
+          },
+        }}
+        isMinimized={previewMinimized}
+        onToggleMinimize={() => setPreviewMinimized(!previewMinimized)}
+        onTemplateChange={(templateId) => setSelectedTemplateId(templateId)}
+      />
     </main>
   );
 };
