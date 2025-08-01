@@ -90,7 +90,7 @@ const NavigationBoarded = () => {
             </div>
             <EditAccountModal />
             <span className="ml-auto flex mr-2">
-              <ThemeToggle variant="boarded" />
+              <ThemeToggle variant="boarded" showLabel />
             </span>
           </div>
           <div className="flex-1 pb-12 flex flex-col mt-12 gap-2">

@@ -106,7 +106,7 @@ const OverlayMenu = () => {
               </div>
               <EditAccountModal />
               <span className="ml-auto flex mr-2">
-                <ThemeToggle variant="boarded" />
+                <ThemeToggle variant="boarded" showLabel />
               </span>
             </div>
 
