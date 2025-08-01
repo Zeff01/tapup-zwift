@@ -15,6 +15,7 @@ import {
   Undo2,
   X,
   Users,
+  Home,
 } from "lucide-react";
 
 import { RxDashboard } from "react-icons/rx";
@@ -331,6 +332,7 @@ export const businessList = [
 ];
 
 export const menuItems = [
+  { icon: Home, title: "Home", href: "/home" },
   { icon: RxDashboard, title: "Dashboard", href: "/dashboard" },
   { icon: TbCards, title: "Cards", href: "/cards" },
 ];
