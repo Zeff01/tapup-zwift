@@ -1,5 +1,6 @@
 "use client";
 
+import { useIsMobile } from "@/hooks/use-mobile";
 import {
   addCustomUrl,
   deleteCardById,
@@ -13,7 +14,7 @@ import {
   getUserById,
 } from "@/lib/firebase/actions/user.action";
 import { getLoggedInUser } from "@/lib/session";
-import QRCodeModalV2 from "./qrcode/QRCodeModalV2";
+import { getCardImage } from "@/lib/utils";
 import {
   Card,
   CustomerType,
@@ -48,9 +49,8 @@ import { useRouter } from "next/navigation";
 import React, { useEffect, useState } from "react";
 import { IoCloseCircleOutline } from "react-icons/io5";
 import { toast } from "react-toastify";
+import QRCodeModalV2 from "./qrcode/QRCodeModalV2";
 import { Button } from "./ui/button";
-import { getCardImage } from "@/lib/utils";
-import { useIsMobile } from "@/hooks/use-mobile";
 
 type Prop = {
   card: Partial<Card>;
@@ -372,7 +372,9 @@ const DigitalCard = ({ card, confirm, user }: Prop) => {
         >
           <Tooltip>
             <TooltipTrigger asChild>
-              {!isCardExpired(card.expiryDate) && card.portfolioStatus && !isCardDisabled ? (
+              {!isCardExpired(card.expiryDate) &&
+              card.portfolioStatus &&
+              !isCardDisabled ? (
                 <Link
                   href={`/site/${card.customUrl ? card.customUrl : card.id}`}
                   className="px-2 py-2 2xl:py-2 hover:opacity-50 cursor-pointer border dark:border-accent border-gray-300 rounded-md"
@@ -445,10 +447,11 @@ const DigitalCard = ({ card, confirm, user }: Prop) => {
               <Tooltip key={index}>
                 <TooltipTrigger asChild>
                   <span
-                    className={`px-2 py-2 2xl:py-2 border dark:border-accent border-gray-300 rounded-md ${isDisabledState
+                    className={`px-2 py-2 2xl:py-2 border dark:border-accent border-gray-300 rounded-md ${
+                      isDisabledState
                         ? "opacity-30 cursor-not-allowed"
                         : "hover:opacity-50 cursor-pointer"
-                      }`}
+                    }`}
                     onClick={!isDisabledState ? item.fn : undefined}
                   >
                     <item.icon className="size-4 dark:text-white drop-shadow-md" />
@@ -522,9 +525,11 @@ const DigitalCard = ({ card, confirm, user }: Prop) => {
           ) : (
             <Link
               href={
-                isCardExpired(card.expiryDate) || !card.portfolioStatus || isCardDisabled
+                isCardExpired(card.expiryDate) ||
+                !card.portfolioStatus ||
+                isCardDisabled
                   ? ""
-                  : (`/site/${card.customUrl ? card.customUrl : card.id}`)
+                  : `/site/${card.customUrl ? card.customUrl : card.id}`
               }
               prefetch
               target="_blank"
