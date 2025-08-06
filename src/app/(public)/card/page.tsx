@@ -43,7 +43,7 @@ const CardPurchasePreviewPage = () => {
   const features = [
     { icon: CreditCard, text: "NFC Enabled" },
     { icon: Shield, text: "Premium Quality" },
-    { icon: Sparkles, text: "Instant Sharing" }
+    { icon: Sparkles, text: "Instant Sharing" },
   ];
 
   return (
@@ -58,53 +58,51 @@ const CardPurchasePreviewPage = () => {
         </div>
 
         <div className="container mx-auto px-6 sm:px-8 md:px-16 lg:px-24">
-          <motion.article 
-            className="flex flex-col items-center"
-          >
-              {/* Product Image - Large Display */}
+          <motion.article className="flex flex-col items-center">
+            {/* Product Image - Large Display */}
+            <motion.div
+              initial={{ opacity: 0, scale: 0.8 }}
+              animate={{ opacity: 1, scale: 1 }}
+              transition={{ duration: 0.6 }}
+              className="w-full mb-12"
+            >
               <motion.div
-                initial={{ opacity: 0, scale: 0.8 }}
-                animate={{ opacity: 1, scale: 1 }}
-                transition={{ duration: 0.6 }}
-                className="w-full mb-12"
+                animate={{ y: [0, -10, 0] }}
+                transition={{ duration: 4, repeat: Infinity }}
+                className="relative aspect-[1.6] max-w-2xl mx-auto"
               >
-                <motion.div
-                  animate={{ y: [0, -10, 0] }}
-                  transition={{ duration: 4, repeat: Infinity }}
-                  className="relative aspect-[1.6] max-w-2xl mx-auto"
-                >
-                  <div className="absolute -inset-8 bg-gradient-to-r from-green-400 via-emerald-400 to-teal-400 rounded-3xl blur-3xl opacity-20" />
-                  <AnimatePresence mode="wait">
-                    <motion.div 
-                      key={title}
-                      initial={{ opacity: 0, scale: 0.95 }}
-                      animate={{ opacity: 1, scale: 1 }}
-                      exit={{ opacity: 0, scale: 0.95 }}
-                      transition={{ duration: 0.3 }}
-                      className="relative rounded-3xl p-8 h-full"
-                    >
-                      <Image
-                        src={card?.image as string}
-                        alt={`${card?.title} NFC Business Card`}
-                        fill
-                        className="object-contain drop-shadow-2xl"
-                        priority
-                        sizes="(max-width: 768px) 100vw, (max-width: 1200px) 80vw, 70vw"
-                      />
-                    </motion.div>
-                  </AnimatePresence>
-                </motion.div>
+                <div className="absolute -inset-8 bg-gradient-to-r from-green-400 via-emerald-400 to-teal-400 rounded-3xl blur-3xl opacity-20" />
+                <AnimatePresence mode="wait">
+                  <motion.div
+                    key={title}
+                    initial={{ opacity: 0, scale: 0.95 }}
+                    animate={{ opacity: 1, scale: 1 }}
+                    exit={{ opacity: 0, scale: 0.95 }}
+                    transition={{ duration: 0.3 }}
+                    className="relative rounded-3xl p-8 h-full"
+                  >
+                    <Image
+                      src={card?.image as string}
+                      alt={`${card?.title} NFC Business Card`}
+                      fill
+                      className="object-contain drop-shadow-2xl"
+                      priority
+                      sizes="(max-width: 768px) 100vw, (max-width: 1200px) 80vw, 70vw"
+                    />
+                  </motion.div>
+                </AnimatePresence>
               </motion.div>
+            </motion.div>
 
-              {/* Product Details Section */}
-              <div className="w-full max-w-6xl mx-auto grid lg:grid-cols-2 gap-12">
-                {/* Left Column - Product Info */}
-                <motion.div 
-                  initial={{ opacity: 0, x: -50 }}
-                  animate={{ opacity: 1, x: 0 }}
-                  transition={{ duration: 0.6, delay: 0.2 }}
-                  className="space-y-6"
-                >
+            {/* Product Details Section */}
+            <div className="w-full max-w-6xl mx-auto grid lg:grid-cols-2 gap-12">
+              {/* Left Column - Product Info */}
+              <motion.div
+                initial={{ opacity: 0, x: -50 }}
+                animate={{ opacity: 1, x: 0 }}
+                transition={{ duration: 0.6, delay: 0.2 }}
+                className="space-y-6"
+              >
                 {/* Features badges */}
                 <div className="flex flex-wrap gap-3 mb-6">
                   {features.map((feature, index) => (
@@ -132,14 +130,16 @@ const CardPurchasePreviewPage = () => {
                     <h1 className="text-3xl sm:text-4xl md:text-5xl font-black mb-4">
                       {card?.title}
                     </h1>
-                    
+
                     <p className="text-lg sm:text-xl text-muted-foreground mb-8 leading-relaxed">
                       {card?.description}
                     </p>
 
                     {/* Price */}
                     <div className="mb-8">
-                      <p className="text-sm text-muted-foreground mb-1">Price</p>
+                      <p className="text-sm text-muted-foreground mb-1">
+                        Price
+                      </p>
                       <p className="text-3xl sm:text-4xl font-bold text-green-600">
                         {formatCurrency(card?.price as number)}
                       </p>
@@ -182,50 +182,52 @@ const CardPurchasePreviewPage = () => {
                     <ShoppingCart className="ml-2 h-5 w-5" />
                   </Button>
                 </div>
-                </motion.div>
+              </motion.div>
 
-                {/* Right Column - Available Designs */}
-                <motion.div
-                  initial={{ opacity: 0, x: 50 }}
-                  animate={{ opacity: 1, x: 0 }}
-                  transition={{ duration: 0.6, delay: 0.3 }}
-                  className="space-y-6"
-                >
-                  <div>
-                    <h3 className="text-2xl font-bold mb-6">Available Designs</h3>
-                    <div className="grid grid-cols-3 sm:grid-cols-4 gap-4">
-                      {Object.values(carouselCards).map((cardItem, i) => (
-                        <motion.div
-                          key={`card-${i}`}
-                          whileHover={{ scale: 1.05 }}
-                          whileTap={{ scale: 0.95 }}
-                          className={cn(
-                            "relative cursor-pointer rounded-xl overflow-hidden transition-all duration-300 shadow-md hover:shadow-xl",
-                            title === cardItem.title && "ring-2 ring-green-500 ring-offset-2"
-                          )}
-                          onClick={() => handleSetTitle(cardItem.title)}
-                        >
-                          <div className="relative aspect-[4/3]">
-                            <Image
-                              src={cardItem.image as string}
-                              alt={`${cardItem.title} design`}
-                              fill
-                              className="object-cover"
-                            />
-                          </div>
-                          <div className="p-2">
-                            <p className="text-xs font-medium truncate">{cardItem.title}</p>
-                          </div>
-                        </motion.div>
-                      ))}
-                    </div>
+              {/* Right Column - Available Designs */}
+              <motion.div
+                initial={{ opacity: 0, x: 50 }}
+                animate={{ opacity: 1, x: 0 }}
+                transition={{ duration: 0.6, delay: 0.3 }}
+                className="space-y-6"
+              >
+                <div>
+                  <h3 className="text-2xl font-bold mb-6">Available Designs</h3>
+                  <div className="grid grid-cols-3 sm:grid-cols-4 gap-4">
+                    {Object.values(carouselCards).map((cardItem, i) => (
+                      <motion.div
+                        key={`card-${i}`}
+                        whileHover={{ scale: 1.05 }}
+                        whileTap={{ scale: 0.95 }}
+                        className={cn(
+                          "relative cursor-pointer rounded-xl overflow-hidden transition-all duration-300 shadow-md hover:shadow-xl",
+                          title === cardItem.title &&
+                            "ring-2 ring-green-500 ring-offset-2"
+                        )}
+                        onClick={() => handleSetTitle(cardItem.title)}
+                      >
+                        <div className="relative aspect-[4/3]">
+                          <Image
+                            src={cardItem.image as string}
+                            alt={`${cardItem.title} design`}
+                            fill
+                            className="object-cover"
+                          />
+                        </div>
+                        <div className="p-2">
+                          <p className="text-xs font-medium truncate">
+                            {cardItem.title}
+                          </p>
+                        </div>
+                      </motion.div>
+                    ))}
                   </div>
-                </motion.div>
-              </div>
-            </motion.article>
+                </div>
+              </motion.div>
+            </div>
+          </motion.article>
         </div>
       </section>
-
     </React.Fragment>
   );
 };

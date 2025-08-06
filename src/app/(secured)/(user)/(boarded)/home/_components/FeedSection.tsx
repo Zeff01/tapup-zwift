@@ -33,7 +33,8 @@ const dummyPosts = [
       company: "TechFlow Inc",
       cardColor: "bg-purple-500",
     },
-    content: "Just launched our new design system! Excited to share this with the community. The components are now more accessible and user-friendly. 🎨✨",
+    content:
+      "Just launched our new design system! Excited to share this with the community. The components are now more accessible and user-friendly. 🎨✨",
     image: "/api/placeholder/500/300",
     timestamp: "2 hours ago",
     likes: 24,
@@ -52,7 +53,8 @@ const dummyPosts = [
       company: "StartupHub",
       cardColor: "bg-blue-500",
     },
-    content: "Coffee break thoughts: The best code is the code you don't have to write. Sometimes the simplest solution is the most elegant one. What's your favorite programming principle?",
+    content:
+      "Coffee break thoughts: The best code is the code you don't have to write. Sometimes the simplest solution is the most elegant one. What's your favorite programming principle?",
     timestamp: "4 hours ago",
     likes: 18,
     comments: 12,
@@ -70,7 +72,8 @@ const dummyPosts = [
       company: "BrandWorks",
       cardColor: "bg-green-500",
     },
-    content: "Our latest campaign exceeded expectations by 300%! Here's what we learned about authentic storytelling in the digital age...",
+    content:
+      "Our latest campaign exceeded expectations by 300%! Here's what we learned about authentic storytelling in the digital age...",
     image: "/api/placeholder/500/200",
     timestamp: "6 hours ago",
     likes: 45,
@@ -86,15 +89,17 @@ export default function FeedSection() {
   const [newPost, setNewPost] = useState("");
 
   const handleLike = (postId: number) => {
-    setPosts(posts.map(post => 
-      post.id === postId 
-        ? { 
-            ...post, 
-            isLiked: !post.isLiked, 
-            likes: post.isLiked ? post.likes - 1 : post.likes + 1 
-          }
-        : post
-    ));
+    setPosts(
+      posts.map((post) =>
+        post.id === postId
+          ? {
+              ...post,
+              isLiked: !post.isLiked,
+              likes: post.isLiked ? post.likes - 1 : post.likes + 1,
+            }
+          : post
+      )
+    );
   };
 
   const handlePost = () => {
@@ -155,7 +160,11 @@ export default function FeedSection() {
                       Location
                     </Button>
                   </div>
-                  <Button onClick={handlePost} disabled={!newPost.trim()} size="sm">
+                  <Button
+                    onClick={handlePost}
+                    disabled={!newPost.trim()}
+                    size="sm"
+                  >
                     <Send className="h-4 w-4 mr-2" />
                     Post
                   </Button>
@@ -183,7 +192,10 @@ export default function FeedSection() {
                       <Avatar>
                         <AvatarImage src={post.user.avatar} />
                         <AvatarFallback className={post.user.cardColor}>
-                          {post.user.name.split(' ').map(n => n[0]).join('')}
+                          {post.user.name
+                            .split(" ")
+                            .map((n) => n[0])
+                            .join("")}
                         </AvatarFallback>
                       </Avatar>
                       <div className="absolute -bottom-1 -right-1 w-4 h-4 bg-green-500 rounded-full border-2 border-white"></div>
@@ -193,11 +205,15 @@ export default function FeedSection() {
                         <h3 className="font-semibold text-gray-900 dark:text-white">
                           {post.user.name}
                         </h3>
-                        <span className="text-gray-500 text-sm">@{post.user.username}</span>
+                        <span className="text-gray-500 text-sm">
+                          @{post.user.username}
+                        </span>
                       </div>
                       <div className="flex items-center space-x-2 text-sm text-gray-600 dark:text-gray-400">
                         <Briefcase className="h-3 w-3" />
-                        <span>{post.user.position} at {post.user.company}</span>
+                        <span>
+                          {post.user.position} at {post.user.company}
+                        </span>
                       </div>
                       <Badge variant="secondary" className="text-xs mt-1">
                         {post.tapConnection}
@@ -217,12 +233,12 @@ export default function FeedSection() {
                 <p className="text-gray-900 dark:text-white mb-3 leading-relaxed">
                   {post.content}
                 </p>
-                
+
                 {post.image && (
                   <div className="mb-4">
-                    <img 
-                      src={post.image} 
-                      alt="Post content" 
+                    <img
+                      src={post.image}
+                      alt="Post content"
                       className="w-full h-64 object-cover rounded-lg"
                     />
                   </div>
@@ -237,7 +253,9 @@ export default function FeedSection() {
                       onClick={() => handleLike(post.id)}
                       className={post.isLiked ? "text-red-500" : ""}
                     >
-                      <Heart className={`h-4 w-4 mr-2 ${post.isLiked ? "fill-current" : ""}`} />
+                      <Heart
+                        className={`h-4 w-4 mr-2 ${post.isLiked ? "fill-current" : ""}`}
+                      />
                       {post.likes}
                     </Button>
                     <Button variant="ghost" size="sm">
@@ -258,8 +276,8 @@ export default function FeedSection() {
                       <AvatarImage src="/api/placeholder/32/32" />
                       <AvatarFallback>YU</AvatarFallback>
                     </Avatar>
-                    <Input 
-                      placeholder="Write a comment..." 
+                    <Input
+                      placeholder="Write a comment..."
                       className="flex-1"
                     />
                     <Button size="sm">

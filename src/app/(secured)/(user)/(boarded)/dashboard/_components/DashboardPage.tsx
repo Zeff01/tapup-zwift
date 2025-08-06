@@ -148,32 +148,28 @@ export default function Dashboard() {
 
   return (
     <div className="flex-1 p-4 md:p-6 h-full overflow-auto">
-        <div className="flex flex-col sm:flex-row gap-4 items-start sm:items-center justify-between mb-6">
-          <div className="space-y-1">
-            <h1 className="text-xl sm:text-2xl font-bold tracking-tight flex items-center gap-2">
-              <Activity className="h-5 w-5 text-green-600" />
-              Analytics Dashboard
-            </h1>
-            <p className="text-sm text-muted-foreground">Track your digital business card performance</p>
-          </div>
-          <AnalyticsTimeSelector
-            selectedRange={selectedTimeRange}
-            onRangeChange={setSelectedTimeRange}
-          />
+      <div className="flex flex-col sm:flex-row gap-4 items-start sm:items-center justify-between mb-6">
+        <div className="space-y-1">
+          <h1 className="text-xl sm:text-2xl font-bold tracking-tight flex items-center gap-2">
+            <Activity className="h-5 w-5 text-green-600" />
+            Analytics Dashboard
+          </h1>
+          <p className="text-sm text-muted-foreground">
+            Track your digital business card performance
+          </p>
         </div>
+        <AnalyticsTimeSelector
+          selectedRange={selectedTimeRange}
+          onRangeChange={setSelectedTimeRange}
+        />
+      </div>
 
-        <AnalyticsCards data={analyticsData} timeRange={selectedTimeRange} />
+      <AnalyticsCards data={analyticsData} timeRange={selectedTimeRange} />
 
-        <div className="grid grid-cols-1 gap-6 lg:grid-cols-2">
-          <AnalyticsChart
-            data={chartData}
-            timeRange={selectedTimeRange}
-          />
-          <AnalyticsTable
-            activities={activities}
-            timeRange={selectedTimeRange}
-          />
-        </div>
+      <div className="grid grid-cols-1 gap-6 lg:grid-cols-2">
+        <AnalyticsChart data={chartData} timeRange={selectedTimeRange} />
+        <AnalyticsTable activities={activities} timeRange={selectedTimeRange} />
+      </div>
     </div>
   );
 }

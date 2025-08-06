@@ -66,23 +66,20 @@ export default function BackGround() {
           animate={{ opacity: 1, x: 0 }}
           transition={{ delay: 0.2, duration: 0.6 }}
         >
-          <h1 className={cn(
-            fonts.className,
-            "text-xl md:text-2xl font-bold text-white mb-2"
-          )}>
+          <h1
+            className={cn(
+              fonts.className,
+              "text-xl md:text-2xl font-bold text-white mb-2"
+            )}
+          >
             Transform Your Networking
             <span className="block text-white/90">
               with Digital Business Cards
             </span>
           </h1>
-          <p className={cn(
-            fonts.className,
-            "text-sm text-white/80 mb-3"
-          )}>
+          <p className={cn(fonts.className, "text-sm text-white/80 mb-3")}>
             Share your professional information instantly
-            <span className="block">
-              with a simple tap.
-            </span>
+            <span className="block">with a simple tap.</span>
           </p>
         </motion.div>
 
@@ -121,10 +118,10 @@ export default function BackGround() {
         transition={{ delay: 0.6, duration: 0.6 }}
         className="absolute bottom-0 right-0 w-[300px] h-[200px] opacity-30"
       >
-        <Image 
-          fill 
-          src={TapUp} 
-          alt="TapUp Card Preview" 
+        <Image
+          fill
+          src={TapUp}
+          alt="TapUp Card Preview"
           className="object-contain"
         />
       </motion.div>

@@ -17,7 +17,14 @@ import { useUserContext } from "@/providers/user-provider";
 import NavigationSkeleton from "./NavigationSkeleton";
 
 import Cart from "../cart/Cart";
-import { Edit, Edit2, ShoppingCart, ChevronLeft, ChevronRight, Menu } from "lucide-react";
+import {
+  Edit,
+  Edit2,
+  ShoppingCart,
+  ChevronLeft,
+  ChevronRight,
+  Menu,
+} from "lucide-react";
 import EditAccountModal from "./EditAccountModal";
 
 const NavigationBoarded = () => {
@@ -34,7 +41,9 @@ const NavigationBoarded = () => {
   const navItems = [...menuItems, ...(isAdmin ? adminMenuItems : [])];
 
   return (
-    <nav className={`${isMinimized ? 'w-16' : 'w-[22rem]'} ${isMinimized ? 'px-2' : 'px-6'} flex flex-col border-r fixed z-50 ease-in-out h-screen transition-all duration-300 -translate-x-[25rem] lg:translate-x-0`}>
+    <nav
+      className={`${isMinimized ? "w-16" : "w-[22rem]"} ${isMinimized ? "px-2" : "px-6"} flex flex-col border-r fixed z-50 ease-in-out h-screen transition-all duration-300 -translate-x-[25rem] lg:translate-x-0`}
+    >
       <div className="flex justify-between items-center self-start w-full h-12 my-6">
         {!isMinimized ? (
           <>
@@ -62,7 +71,7 @@ const NavigationBoarded = () => {
           </div>
         )}
       </div>
-      
+
       {/* Toggle Button for expanded state */}
       {!isMinimized && (
         <Button
@@ -158,7 +167,7 @@ const NavigationBoarded = () => {
                   )}
                   title={isMinimized ? item.title : undefined}
                 >
-                  <Icon className={`size-6 ${isMinimized ? '' : 'mr-4'}`} />
+                  <Icon className={`size-6 ${isMinimized ? "" : "mr-4"}`} />
                   {!isMinimized && item.title}
                 </Link>
               );
@@ -172,7 +181,7 @@ const NavigationBoarded = () => {
               onClick={signOut}
               title={isMinimized ? "Sign out" : undefined}
             >
-              <BiLogOut className={`size-8 ${isMinimized ? '' : 'mr-4'}`} />
+              <BiLogOut className={`size-8 ${isMinimized ? "" : "mr-4"}`} />
               {!isMinimized && "Sign out"}
             </Button>
           </div>

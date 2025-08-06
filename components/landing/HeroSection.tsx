@@ -14,8 +14,8 @@ const Hero = () => {
       duration: 4,
       repeat: Infinity,
       repeatType: "reverse" as const,
-      ease: "easeInOut"
-    }
+      ease: "easeInOut",
+    },
   };
 
   const textVariants = {
@@ -26,9 +26,9 @@ const Hero = () => {
       transition: {
         delay: i * 0.1,
         duration: 0.8,
-        ease: "easeOut"
-      }
-    })
+        ease: "easeOut",
+      },
+    }),
   };
 
   return (
@@ -43,7 +43,7 @@ const Hero = () => {
         <div className="absolute -bottom-8 left-20 w-72 h-72 bg-teal-300 rounded-full mix-blend-multiply filter blur-3xl opacity-20 animate-blob animation-delay-4000" />
       </div>
 
-      <motion.div 
+      <motion.div
         initial="hidden"
         animate="visible"
         className="flex-1 max-w-2xl z-10"
@@ -58,13 +58,13 @@ const Hero = () => {
           <span>NFC-Enabled Digital Business Cards</span>
         </motion.div>
 
-        <motion.h1 
+        <motion.h1
           variants={textVariants}
           custom={1}
           className="text-4xl sm:text-5xl md:text-6xl lg:text-7xl font-black leading-tight tracking-tight text-center lg:text-left"
         >
           The{" "}
-          <motion.span 
+          <motion.span
             className="relative inline-block"
             whileHover={{ scale: 1.05 }}
             transition={{ type: "spring", stiffness: 300 }}
@@ -72,7 +72,7 @@ const Hero = () => {
             <span className="relative z-10 text-transparent bg-clip-text bg-gradient-to-r from-green-600 via-emerald-500 to-teal-500 animate-gradient">
               Ultimate Tool
             </span>
-            <motion.span 
+            <motion.span
               className="absolute inset-0 bg-gradient-to-r from-green-400 to-emerald-400 blur-lg opacity-30"
               animate={{ scale: [1, 1.1, 1] }}
               transition={{ duration: 2, repeat: Infinity }}
@@ -80,24 +80,24 @@ const Hero = () => {
           </motion.span>{" "}
           to Boost Your Business Interactions
         </motion.h1>
-        
-        <motion.p 
+
+        <motion.p
           variants={textVariants}
           custom={2}
           className="text-lg sm:text-xl text-muted-foreground mt-6 md:mt-8 leading-relaxed text-center lg:text-left"
         >
-          Create, share, and manage digital business cards effortlessly. 
-          With customizable designs, instant updates, and seamless integration 
-          across devices, make lasting impressions everywhere.
+          Create, share, and manage digital business cards effortlessly. With
+          customizable designs, instant updates, and seamless integration across
+          devices, make lasting impressions everywhere.
         </motion.p>
-        
-        <motion.div 
+
+        <motion.div
           variants={textVariants}
           custom={3}
           className="flex flex-col sm:flex-row gap-4 mt-8 md:mt-10"
         >
           <Link href="/signup">
-            <Button 
+            <Button
               size="lg"
               className="w-full sm:w-auto relative bg-gradient-to-r from-green-600 to-emerald-500 hover:from-green-700 hover:to-emerald-600 text-white font-semibold px-8 py-6 rounded-full shadow-lg hover:shadow-2xl transition-all duration-300 group overflow-hidden"
             >
@@ -105,7 +105,7 @@ const Hero = () => {
                 Get Started
                 <ArrowRight className="ml-2 h-5 w-5 group-hover:translate-x-1 transition-transform" />
               </span>
-              <motion.div 
+              <motion.div
                 className="absolute inset-0 bg-gradient-to-r from-emerald-600 to-green-600"
                 initial={{ x: "100%" }}
                 whileHover={{ x: 0 }}
@@ -114,7 +114,7 @@ const Hero = () => {
             </Button>
           </Link>
           <Link href="#quickguide">
-            <Button 
+            <Button
               variant="outline"
               size="lg"
               className="w-full sm:w-auto font-semibold px-8 py-6 rounded-full border-2 hover:bg-gray-50 dark:hover:bg-gray-800 hover:border-green-400 transition-all duration-300"
@@ -124,14 +124,14 @@ const Hero = () => {
           </Link>
         </motion.div>
       </motion.div>
-      
-      <motion.div 
+
+      <motion.div
         initial={{ opacity: 0, scale: 0.8 }}
         animate={{ opacity: 1, scale: 1 }}
         transition={{ duration: 0.8, delay: 0.2 }}
         className="flex-1 relative w-full max-w-xl lg:max-w-2xl"
       >
-        <motion.div 
+        <motion.div
           animate={floatingAnimation}
           className="relative w-full h-full"
         >

@@ -1,6 +1,13 @@
 "use client";
 
-import { GripVertical, EyeIcon, Edit2, CheckCircle2, ArrowRightLeft, QrCode } from "lucide-react";
+import {
+  GripVertical,
+  EyeIcon,
+  Edit2,
+  CheckCircle2,
+  ArrowRightLeft,
+  QrCode,
+} from "lucide-react";
 import { Card } from "@/types/types";
 import { getCardImage } from "@/lib/utils";
 
@@ -17,7 +24,6 @@ const isCardExpired = (expiryDate?: number) => {
 };
 
 const DigitalCardOverlay = ({ card }: Prop) => {
-
   const cardImage = getCardImage(card.chosenPhysicalCard?.id);
   const isCardDisabled = card.disabled ?? false;
 
@@ -30,10 +36,7 @@ const DigitalCardOverlay = ({ card }: Prop) => {
   ];
 
   return (
-    <div
-      data-id={card.id}
-      className="w-full relative cursor-grab"
-    >
+    <div data-id={card.id} className="w-full relative cursor-grab">
       <div className="w-full flex gap-2.5">
         <div className="flex flex-col justify-center items-center space-y-1">
           {iconButtons.map((btn, idx) => (
@@ -65,7 +68,7 @@ const DigitalCardOverlay = ({ card }: Prop) => {
           <div className="absolute w-full top-1/2 right-0 -translate-y-1/2 flex items-center justify-end z-30">
             <GripVertical
               className="z-30 mr-2 md:mr-3.5 peer size-6 sm:size-12 lg:size-8 text-white opacity-80 hover:opacity-100 transition-opacity duration-150 bg-black/20 rounded-md p-1"
-              style={{ touchAction: 'none' }}
+              style={{ touchAction: "none" }}
             />
           </div>
 

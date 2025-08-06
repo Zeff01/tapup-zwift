@@ -5,6 +5,7 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 ## Common Development Commands
 
 ### Development
+
 ```bash
 npm run dev          # Start development server with Turbo
 npm run ngrok-live   # Start dev server accessible externally (0.0.0.0:3000)
@@ -14,6 +15,7 @@ npm run lint         # Run Next.js linting
 ```
 
 ### Environment Setup
+
 - Copy `.env.local` from system administrator (contains Firebase and API keys)
 - Firebase credentials required: API key, auth domain, project ID, storage bucket, etc.
 - Xendit payment gateway keys required for payment functionality
@@ -21,6 +23,7 @@ npm run lint         # Run Next.js linting
 ## High-Level Architecture
 
 ### Tech Stack
+
 - **Frontend**: Next.js 14 (App Router), React 18, TypeScript
 - **UI**: Tailwind CSS, Radix UI/shadcn components
 - **Backend**: Firebase (Firestore, Auth, Storage)
@@ -28,6 +31,7 @@ npm run lint         # Run Next.js linting
 - **State**: React Query (TanStack Query) + Context API
 
 ### Routing Structure
+
 ```
 /src/app/
 ├── (public)/          # Unauthenticated routes
@@ -42,12 +46,14 @@ npm run lint         # Run Next.js linting
 ### Core Business Logic
 
 **Digital Business Card Platform**
+
 - Users create/customize digital cards from 18 templates
 - Cards have unique URLs and QR codes for sharing
 - Physical NFC-enabled cards can be ordered
 - Subscription-based model with card expiration
 
 **Key Data Flow**
+
 1. User signs up → Firebase Auth → Create Firestore user doc
 2. Card creation → Select template → Customize → Save to Firestore
 3. Order flow → Add to cart → Xendit payment → Webhook updates status
@@ -56,6 +62,7 @@ npm run lint         # Run Next.js linting
 ### Firebase Integration Patterns
 
 **Collections Structure**:
+
 - `user-account`: User profiles with roles
 - `cards`: Digital card data with template configs
 - `subscriptions`: Card subscription details
@@ -63,16 +70,18 @@ npm run lint         # Run Next.js linting
 - `invoices`: Xendit payment invoices
 
 **Action Pattern** (`lib/firebase/actions/`):
+
 ```typescript
 // All Firebase operations go through action files
-await createCard(cardData)      // card.action.ts
-await updateUser(userId, data)  // user.action.ts
-await getCartItems(userId)      // cart.action.ts
+await createCard(cardData); // card.action.ts
+await updateUser(userId, data); // user.action.ts
+await getCartItems(userId); // cart.action.ts
 ```
 
 ### State Management
 
 **Provider Hierarchy**:
+
 ```tsx
 <QueryProvider>           // React Query
   <UserContextProvider>   // Auth state
@@ -81,6 +90,7 @@ await getCartItems(userId)      // cart.action.ts
 ```
 
 **Key Hooks**:
+
 - `useUserSession()`: Current user auth state
 - `useCart()`: Shopping cart operations
 - `useDebounceEffect()`: Debounced updates
@@ -88,6 +98,7 @@ await getCartItems(userId)      // cart.action.ts
 ### Payment Integration (Xendit)
 
 **Invoice Creation Flow**:
+
 1. User checkouts → Create Xendit invoice
 2. Store invoice in Firestore
 3. Redirect to Xendit payment page
@@ -99,21 +110,25 @@ await getCartItems(userId)      // cart.action.ts
 ### Important Patterns
 
 **Custom URL System**:
+
 - Cards can have custom URLs (e.g., `/site/john-doe`)
 - 30-day cooldown between URL changes
 - Uniqueness enforced at Firestore level
 
 **Template System**:
+
 - 18 pre-built templates (Template1-Template18)
 - Canvas-based editor for customization
 - Physical card designs mapped to templates
 
 **Session Management**:
+
 - JWT tokens stored in cookies
 - Middleware validates on protected routes
 - Session refresh handled automatically
 
 **Card Transfer System**:
+
 - Transfer codes allow card ownership changes
 - Used for bulk enterprise deployments
 

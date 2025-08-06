@@ -109,10 +109,12 @@ export function AnalyticsCards({ data, timeRange }: AnalyticsCardsProps) {
                 <span className="text-3xl font-bold">
                   {data.profileViews.current.toLocaleString()}
                 </span>
-                <span className={cn(
-                  "text-sm font-medium flex items-center gap-1",
-                  profileViewsChange >= 0 ? "text-green-600" : "text-red-600"
-                )}>
+                <span
+                  className={cn(
+                    "text-sm font-medium flex items-center gap-1",
+                    profileViewsChange >= 0 ? "text-green-600" : "text-red-600"
+                  )}
+                >
                   {profileViewsChange >= 0 ? (
                     <TrendingUp className="h-3 w-3" />
                   ) : (
@@ -123,7 +125,10 @@ export function AnalyticsCards({ data, timeRange }: AnalyticsCardsProps) {
               </div>
               {data.profileViews.unique && (
                 <div className="text-sm text-muted-foreground">
-                  <span className="font-medium">{data.profileViews.unique.toLocaleString()}</span> unique viewers
+                  <span className="font-medium">
+                    {data.profileViews.unique.toLocaleString()}
+                  </span>{" "}
+                  unique viewers
                 </div>
               )}
               <p className="text-xs text-muted-foreground">
@@ -152,10 +157,12 @@ export function AnalyticsCards({ data, timeRange }: AnalyticsCardsProps) {
                 <span className="text-3xl font-bold">
                   {data.vcfImports.current.toLocaleString()}
                 </span>
-                <span className={cn(
-                  "text-sm font-medium flex items-center gap-1",
-                  vcfImportsChange >= 0 ? "text-green-600" : "text-red-600"
-                )}>
+                <span
+                  className={cn(
+                    "text-sm font-medium flex items-center gap-1",
+                    vcfImportsChange >= 0 ? "text-green-600" : "text-red-600"
+                  )}
+                >
                   {vcfImportsChange >= 0 ? (
                     <TrendingUp className="h-3 w-3" />
                   ) : (
@@ -190,10 +197,12 @@ export function AnalyticsCards({ data, timeRange }: AnalyticsCardsProps) {
                 <span className="text-3xl font-bold">
                   {data.linkClicks.total.toLocaleString()}
                 </span>
-                <span className={cn(
-                  "text-sm font-medium flex items-center gap-1",
-                  linkClicksChange >= 0 ? "text-green-600" : "text-red-600"
-                )}>
+                <span
+                  className={cn(
+                    "text-sm font-medium flex items-center gap-1",
+                    linkClicksChange >= 0 ? "text-green-600" : "text-red-600"
+                  )}
+                >
                   {linkClicksChange >= 0 ? (
                     <TrendingUp className="h-3 w-3" />
                   ) : (
@@ -205,19 +214,27 @@ export function AnalyticsCards({ data, timeRange }: AnalyticsCardsProps) {
               <div className="space-y-1 text-xs text-muted-foreground">
                 <div className="flex justify-between">
                   <span>Facebook:</span>
-                  <span className="font-medium text-foreground">{data.linkClicks.facebook}</span>
+                  <span className="font-medium text-foreground">
+                    {data.linkClicks.facebook}
+                  </span>
                 </div>
                 <div className="flex justify-between">
                   <span>Instagram:</span>
-                  <span className="font-medium text-foreground">{data.linkClicks.instagram}</span>
+                  <span className="font-medium text-foreground">
+                    {data.linkClicks.instagram}
+                  </span>
                 </div>
                 <div className="flex justify-between">
                   <span>Website 1:</span>
-                  <span className="font-medium text-foreground">{data.linkClicks.website1}</span>
+                  <span className="font-medium text-foreground">
+                    {data.linkClicks.website1}
+                  </span>
                 </div>
                 <div className="flex justify-between">
                   <span>Website 2:</span>
-                  <span className="font-medium text-foreground">{data.linkClicks.website2}</span>
+                  <span className="font-medium text-foreground">
+                    {data.linkClicks.website2}
+                  </span>
                 </div>
               </div>
               <p className="text-xs text-muted-foreground">

@@ -80,7 +80,10 @@ export function ForgotPasswordForm() {
             initial={{ opacity: 0, x: -20 }}
             animate={{ opacity: 1, x: 0 }}
             transition={{ delay: 0.2, duration: 0.5 }}
-            className={cn(fonts.className, "text-lg md:text-xl lg:text-2xl font-black text-center")}
+            className={cn(
+              fonts.className,
+              "text-lg md:text-xl lg:text-2xl font-black text-center"
+            )}
           >
             Forgot Password?
           </motion.h1>
@@ -97,7 +100,7 @@ export function ForgotPasswordForm() {
         <CardContent className="space-y-2 px-0">
           <Form {...form}>
             <form onSubmit={form.handleSubmit(onSubmit)}>
-              <motion.div 
+              <motion.div
                 className="space-y-4"
                 initial={{ opacity: 0 }}
                 animate={{ opacity: 1 }}
@@ -109,7 +112,9 @@ export function ForgotPasswordForm() {
                   disabled={isLoading}
                   render={({ field }) => (
                     <FormItem>
-                      <FormLabel className="text-xs font-medium">Email Address</FormLabel>
+                      <FormLabel className="text-xs font-medium">
+                        Email Address
+                      </FormLabel>
                       <FormControl>
                         <div className="relative">
                           <Mail className="absolute left-3 top-1/2 transform -translate-y-1/2 h-3.5 w-3.5 text-muted-foreground" />

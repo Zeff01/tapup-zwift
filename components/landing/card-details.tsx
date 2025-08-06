@@ -18,13 +18,13 @@ const CardDetails: React.FC<CardDetailsProps> = ({ card }) => {
           ₱ {card?.price}
         </p>
       </div>
-      
+
       <p className="text-lg sm:text-xl text-muted-foreground leading-relaxed">
         {card?.description}
       </p>
 
       <Link href={`/card?title=${card?.title}`} className="inline-block">
-        <Button 
+        <Button
           size="lg"
           className="bg-gradient-to-r from-green-600 to-emerald-500 hover:from-green-700 hover:to-emerald-600 text-white font-semibold px-8 py-6 rounded-full shadow-lg hover:shadow-xl transition-all duration-300 group"
         >

@@ -38,9 +38,7 @@ export function ThemeToggle({
 
   return (
     <div className={cn(containerClasses[variant])}>
-      {showLabel && (
-        <Sun className="h-4 w-4 text-muted-foreground" />
-      )}
+      {showLabel && <Sun className="h-4 w-4 text-muted-foreground" />}
       <Switch
         checked={isDark}
         onCheckedChange={handleToggle}
@@ -49,9 +47,7 @@ export function ThemeToggle({
       >
         <span className="sr-only">Toggle theme</span>
       </Switch>
-      {showLabel && (
-        <Moon className="h-4 w-4 text-muted-foreground" />
-      )}
+      {showLabel && <Moon className="h-4 w-4 text-muted-foreground" />}
     </div>
   );
 }

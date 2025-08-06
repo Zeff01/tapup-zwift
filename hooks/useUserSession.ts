@@ -1,12 +1,17 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import { onAuthStateChanged, signOutHandler } from "@/lib/firebase/auth";
+import {
+  authCurrentUser,
+  onAuthStateChanged,
+  signOutHandler,
+} from "@/lib/firebase/auth";
 import { User } from "firebase/auth";
 import {
   createSession,
   deleteSession,
   getSession,
+  refreshSession,
   signUserId,
   verifySignUserId,
 } from "@/lib/session";
@@ -45,12 +50,34 @@ export function useUserSession(initSession: string | null = null) {
       return;
     }
 
-    if (!cookieSession || cookieSession.uid !== authUser.uid) {
+    if (!cookieSession || !cookieSession.uid) {
       await signOutUser();
       router.push("/login");
       return;
     }
+
+    await refreshSession(authUser.uid);
   };
+
+  useEffect(() => {
+    if (!userUid) return;
+
+    const interval = setInterval(
+      async () => {
+        try {
+          const currentUseUid = await authCurrentUser();
+          if (currentUseUid) {
+            await refreshSession(currentUseUid);
+          }
+        } catch (error) {
+          console.error("Error refreshing session:", error);
+        }
+      },
+      5 * 60 * 1000
+    );
+
+    return () => clearInterval(interval);
+  }, [userUid]);
 
   useEffect(() => {
     const unsubscribe = onAuthStateChanged(async (authUser) => {

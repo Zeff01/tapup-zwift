@@ -50,7 +50,7 @@ export default function SuccessResetPasswordPage() {
                 delay: 0.2,
                 type: "spring",
                 stiffness: 200,
-                damping: 15
+                damping: 15,
               }}
               className="relative"
             >
@@ -64,25 +64,30 @@ export default function SuccessResetPasswordPage() {
                   delay: 0.4,
                   type: "spring",
                   stiffness: 200,
-                  damping: 15
+                  damping: 15,
                 }}
                 className="absolute -inset-4 bg-green-500/20 rounded-full blur-xl"
               />
             </motion.div>
-            
+
             <motion.div
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ delay: 0.3, duration: 0.5 }}
               className="text-center space-y-2"
             >
-              <h1 className={cn(fonts.className, "text-2xl md:text-3xl font-black")}>
+              <h1
+                className={cn(
+                  fonts.className,
+                  "text-2xl md:text-3xl font-black"
+                )}
+              >
                 All Done!
               </h1>
               <p className="text-sm text-muted-foreground">
                 Your password has been successfully reset.
               </p>
-              <motion.p 
+              <motion.p
                 initial={{ opacity: 0 }}
                 animate={{ opacity: 1 }}
                 transition={{ delay: 0.5, duration: 0.5 }}

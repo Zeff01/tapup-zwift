@@ -184,7 +184,7 @@ const Header = () => {
             {isLoadingUserContext && (
               <Loader2 className="shrink-0 size-12 animate-spin" />
             )}
-            
+
             {/* Theme Toggle in Mobile Menu */}
             <div className="pt-4 border-t border-gray-200 dark:border-gray-700">
               <div className="flex items-center justify-between px-2">

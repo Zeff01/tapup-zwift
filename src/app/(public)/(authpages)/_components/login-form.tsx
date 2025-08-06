@@ -79,7 +79,10 @@ export function LogInForm() {
             initial={{ opacity: 0, x: -20 }}
             animate={{ opacity: 1, x: 0 }}
             transition={{ delay: 0.2, duration: 0.5 }}
-            className={cn(fonts.className, "text-lg md:text-xl lg:text-2xl font-black")}
+            className={cn(
+              fonts.className,
+              "text-lg md:text-xl lg:text-2xl font-black"
+            )}
           >
             Sign In to TapUp
           </motion.h1>
@@ -95,7 +98,7 @@ export function LogInForm() {
         <CardContent className="space-y-2 px-0">
           <Form {...form}>
             <form onSubmit={form.handleSubmit(onSubmit)}>
-              <motion.div 
+              <motion.div
                 className="space-y-4"
                 initial={{ opacity: 0 }}
                 animate={{ opacity: 1 }}
@@ -107,7 +110,9 @@ export function LogInForm() {
                   disabled={isLoading}
                   render={({ field }) => (
                     <FormItem>
-                      <FormLabel className="text-xs font-medium">Email Address</FormLabel>
+                      <FormLabel className="text-xs font-medium">
+                        Email Address
+                      </FormLabel>
                       <FormControl>
                         <div className="relative">
                           <Mail className="absolute left-3 top-1/2 transform -translate-y-1/2 h-3.5 w-3.5 text-muted-foreground" />
@@ -130,9 +135,11 @@ export function LogInForm() {
                   render={({ field }) => (
                     <FormItem>
                       <div className="flex items-center justify-between">
-                        <FormLabel className="text-xs font-medium">Password</FormLabel>
-                        <Link 
-                          href="/forgotPassword" 
+                        <FormLabel className="text-xs font-medium">
+                          Password
+                        </FormLabel>
+                        <Link
+                          href="/forgotPassword"
                           className="text-xs text-green-600 hover:text-green-700 transition-colors"
                         >
                           Forgot password?
@@ -167,11 +174,13 @@ export function LogInForm() {
                 {/* Remember me checkbox */}
                 <div className="flex items-center justify-between">
                   <label className="flex items-center gap-2 cursor-pointer">
-                    <input 
-                      type="checkbox" 
+                    <input
+                      type="checkbox"
                       className="w-4 h-4 rounded border-gray-300 dark:border-gray-600 text-green-600 focus:ring-green-500"
                     />
-                    <span className="text-xs text-muted-foreground">Remember me</span>
+                    <span className="text-xs text-muted-foreground">
+                      Remember me
+                    </span>
                   </label>
                 </div>
               </motion.div>
@@ -205,11 +214,11 @@ export function LogInForm() {
                     </>
                   )}
                 </Button>
-                
+
                 <p className="text-center text-sm text-muted-foreground">
                   Don't have an account?{" "}
-                  <Link 
-                    className="text-green-600 hover:text-green-700 font-medium transition-colors" 
+                  <Link
+                    className="text-green-600 hover:text-green-700 font-medium transition-colors"
                     href="/signup"
                   >
                     Sign up for free
@@ -226,7 +235,7 @@ export function LogInForm() {
         >
           <Separator />
         </motion.div>
-        
+
         <CardFooter className="flex flex-col gap-y-3 px-0">
           <motion.div
             initial={{ opacity: 0, y: 20 }}

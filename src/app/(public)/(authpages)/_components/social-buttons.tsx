@@ -48,11 +48,8 @@ export default function Social({ label }: { label: string }) {
       <p className="text-xs text-center text-muted-foreground mb-2">
         Or continue with
       </p>
-      
-      <motion.div
-        whileHover={{ scale: 1.02 }}
-        whileTap={{ scale: 0.98 }}
-      >
+
+      <motion.div whileHover={{ scale: 1.02 }} whileTap={{ scale: 0.98 }}>
         <Button
           onClick={handleGoogleSignIn}
           className="w-full h-9 border-gray-200 dark:border-gray-700 hover:border-gray-300 dark:hover:border-gray-600 rounded-xl font-medium text-sm transition-all duration-300 hover:shadow-md"

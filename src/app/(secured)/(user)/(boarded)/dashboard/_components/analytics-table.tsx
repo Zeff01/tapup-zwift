@@ -202,13 +202,18 @@ export function AnalyticsTable({
                     <TableCell className="font-medium">
                       <div className="flex items-center gap-2">
                         {getActivityIcon(activity.type, activity.platform)}
-                        <span className="text-sm">{getActivityLabel(activity)}</span>
+                        <span className="text-sm">
+                          {getActivityLabel(activity)}
+                        </span>
                       </div>
                     </TableCell>
                     <TableCell>
                       <Badge
                         variant="secondary"
-                        className={cn("text-xs", getActivityColor(activity.type))}
+                        className={cn(
+                          "text-xs",
+                          getActivityColor(activity.type)
+                        )}
                       >
                         {activity.platform
                           ? activity.platform.charAt(0).toUpperCase() +
@@ -219,7 +224,9 @@ export function AnalyticsTable({
                     <TableCell>
                       <div className="flex items-center gap-2 text-sm">
                         {getDeviceIcon(activity.deviceType)}
-                        <span className="capitalize">{activity.deviceType || "Unknown"}</span>
+                        <span className="capitalize">
+                          {activity.deviceType || "Unknown"}
+                        </span>
                       </div>
                     </TableCell>
                     <TableCell className="text-sm text-muted-foreground">

@@ -127,24 +127,28 @@ const TapUpCarousel = ({ viewCard, onChange }: Params) => {
                 <div
                   className={cn(
                     "cursor-pointer relative transition-all duration-700 ease-out transform-gpu",
-                    index === carouselIndex 
-                      ? "scale-110 z-20" 
+                    index === carouselIndex
+                      ? "scale-110 z-20"
                       : "scale-95 hover:scale-100"
                   )}
                 >
                   <div className="relative w-[280px] h-[180px] sm:w-[320px] sm:h-[200px] md:w-[360px] md:h-[220px] lg:w-[400px] lg:h-[240px] group">
-                    <div className={cn(
-                      "absolute -inset-4 bg-gradient-to-r from-green-400 via-emerald-400 to-teal-400 rounded-2xl blur-xl transition-all duration-700",
-                      index === carouselIndex 
-                        ? "opacity-40 animate-pulse" 
-                        : "opacity-0 group-hover:opacity-30"
-                    )} />
-                    <div className={cn(
-                      "relative w-full h-full bg-white dark:bg-gray-800 rounded-2xl overflow-hidden shadow-xl transition-all duration-500",
-                      index === carouselIndex 
-                        ? "shadow-2xl ring-4 ring-green-400/20" 
-                        : "hover:shadow-2xl"
-                    )}>
+                    <div
+                      className={cn(
+                        "absolute -inset-4 bg-gradient-to-r from-green-400 via-emerald-400 to-teal-400 rounded-2xl blur-xl transition-all duration-700",
+                        index === carouselIndex
+                          ? "opacity-40 animate-pulse"
+                          : "opacity-0 group-hover:opacity-30"
+                      )}
+                    />
+                    <div
+                      className={cn(
+                        "relative w-full h-full bg-white dark:bg-gray-800 rounded-2xl overflow-hidden shadow-xl transition-all duration-500",
+                        index === carouselIndex
+                          ? "shadow-2xl ring-4 ring-green-400/20"
+                          : "hover:shadow-2xl"
+                      )}
+                    >
                       <div className="absolute inset-0 bg-gradient-to-br from-transparent via-white/5 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-700" />
                       <Image
                         src={item.image}

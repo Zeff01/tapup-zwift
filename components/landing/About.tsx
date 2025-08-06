@@ -19,9 +19,9 @@ const AboutTapup = () => {
       opacity: 1,
       transition: {
         staggerChildren: 0.2,
-        delayChildren: 0.3
-      }
-    }
+        delayChildren: 0.3,
+      },
+    },
   };
 
   const itemVariants = {
@@ -32,9 +32,9 @@ const AboutTapup = () => {
       transition: {
         type: "spring",
         stiffness: 100,
-        damping: 15
-      }
-    }
+        damping: 15,
+      },
+    },
   };
 
   const cardVariants = {
@@ -46,8 +46,8 @@ const AboutTapup = () => {
       transition: {
         delay: i * 0.1,
         duration: 0.8,
-        ease: "easeOut"
-      }
+        ease: "easeOut",
+      },
     }),
     hover: {
       y: -10,
@@ -56,19 +56,19 @@ const AboutTapup = () => {
       transition: {
         type: "spring",
         stiffness: 300,
-        damping: 20
-      }
-    }
+        damping: 20,
+      },
+    },
   };
 
   return (
-    <section 
+    <section
       ref={ref}
-      className="py-16 md:py-24 bg-gradient-to-b from-gray-50 to-white dark:from-gray-900 dark:to-background overflow-hidden" 
+      className="py-16 md:py-24 bg-gradient-to-b from-gray-50 to-white dark:from-gray-900 dark:to-background overflow-hidden"
       id="features"
     >
       <div className="container mx-auto px-6 sm:px-8 md:px-16 lg:px-24">
-        <motion.div 
+        <motion.div
           initial={{ opacity: 0, y: -20 }}
           animate={isInView ? { opacity: 1, y: 0 } : {}}
           transition={{ duration: 0.6 }}
@@ -84,15 +84,15 @@ const AboutTapup = () => {
             <TapupLogo className="w-24 h-14 sm:w-32 sm:h-16 md:w-40 md:h-20" />
           </motion.div>
         </motion.div>
-        
+
         <div className="flex flex-col lg:flex-row items-center gap-12 lg:gap-16">
-          <motion.div 
+          <motion.div
             initial={{ opacity: 0, scale: 0.8, rotateY: -45 }}
             animate={isInView ? { opacity: 1, scale: 1, rotateY: 0 } : {}}
             transition={{ duration: 0.8, type: "spring" }}
             className="relative w-full max-w-md lg:max-w-lg flex-shrink-0"
           >
-            <motion.div 
+            <motion.div
               animate={isInView ? { y: [0, -10, 0] } : {}}
               transition={{ duration: 4, repeat: Infinity, ease: "easeInOut" }}
               className="relative aspect-square card-3d"
@@ -111,8 +111,8 @@ const AboutTapup = () => {
               </div>
             </motion.div>
           </motion.div>
-          
-          <motion.div 
+
+          <motion.div
             variants={containerVariants}
             initial="hidden"
             animate={isInView ? "visible" : "hidden"}
@@ -130,8 +130,8 @@ const AboutTapup = () => {
                 style={{ transformStyle: "preserve-3d" }}
               >
                 <div className="absolute inset-0 bg-gradient-to-r from-green-400/0 via-green-400/10 to-green-400/0 opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
-                
-                <motion.div 
+
+                <motion.div
                   className="flex-shrink-0 z-10"
                   whileHover={{ rotate: 360 }}
                   transition={{ duration: 0.6 }}
@@ -140,7 +140,7 @@ const AboutTapup = () => {
                     <Check className="w-8 h-8 text-white" />
                   </div>
                 </motion.div>
-                
+
                 <div className="flex-1 z-10">
                   <h3 className="text-xl sm:text-2xl font-bold mb-2 text-gray-900 dark:text-white group-hover:text-green-600 transition-colors">
                     {item.title}

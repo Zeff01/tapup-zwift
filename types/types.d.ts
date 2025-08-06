@@ -11,11 +11,20 @@ import { FieldValue } from "react-hook-form";
 
 import { z } from "zod";
 
+export type Company = {
+  company?: string;
+  position?: string;
+  companyBackground?: string;
+  serviceDescription?: string;
+  servicePhotos?: string[];
+};
+
 export type Users = {
   id?: string;
   coverPhotoUrl?: string;
   profilePictureUrl?: string;
   position?: string;
+  companies: Company[];
   company?: string;
   companyBackground?: string;
   serviceDescription?: string;

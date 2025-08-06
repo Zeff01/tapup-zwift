@@ -80,7 +80,9 @@ export function AnalyticsChart({
                 <BarChart3 className="h-5 w-5 text-green-600" />
                 {getChartTitle(timeRange)}
               </CardTitle>
-              <CardDescription>{getChartDescription(timeRange)}</CardDescription>
+              <CardDescription>
+                {getChartDescription(timeRange)}
+              </CardDescription>
             </div>
           </div>
         </CardHeader>
@@ -102,30 +104,34 @@ export function AnalyticsChart({
             }}
             className="h-[400px] w-full"
           >
-          <LineChart
-            data={data}
-            margin={{
-              top: 5,
-              right: 10,
-              left: 10,
-              bottom: 0,
-            }}
-          >
-              <CartesianGrid strokeDasharray="3 3" vertical={false} stroke="#e5e7eb" />
-            <XAxis
-              dataKey="date"
-              tickLine={false}
-              axisLine={false}
-              tickMargin={10}
-              fontSize={12}
-            />
-            <YAxis
-              tickLine={false}
-              axisLine={false}
-              tickMargin={10}
-              fontSize={12}
-            />
-            <ChartTooltip content={<ChartTooltipContent />} />
+            <LineChart
+              data={data}
+              margin={{
+                top: 5,
+                right: 10,
+                left: 10,
+                bottom: 0,
+              }}
+            >
+              <CartesianGrid
+                strokeDasharray="3 3"
+                vertical={false}
+                stroke="#e5e7eb"
+              />
+              <XAxis
+                dataKey="date"
+                tickLine={false}
+                axisLine={false}
+                tickMargin={10}
+                fontSize={12}
+              />
+              <YAxis
+                tickLine={false}
+                axisLine={false}
+                tickMargin={10}
+                fontSize={12}
+              />
+              <ChartTooltip content={<ChartTooltipContent />} />
               <Line
                 type="monotone"
                 dataKey="profileViews"
@@ -182,8 +188,8 @@ export function AnalyticsChart({
                   fill="freeze"
                 />
               </Line>
-          </LineChart>
-        </ChartContainer>
+            </LineChart>
+          </ChartContainer>
         </CardContent>
       </Card>
     </motion.div>

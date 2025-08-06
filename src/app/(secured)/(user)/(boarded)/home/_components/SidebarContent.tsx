@@ -42,7 +42,7 @@ const recentConnections = [
   },
   {
     name: "Lisa Wang",
-    avatar: "/api/placeholder/32/32", 
+    avatar: "/api/placeholder/32/32",
     position: "Data Scientist",
     company: "DataFlow",
     tapLocation: "Coffee Shop",
@@ -59,10 +59,30 @@ const recentConnections = [
 ];
 
 const achievements = [
-  { icon: Users, title: "Connector", description: "Connected with 50+ people", progress: 85 },
-  { icon: Heart, title: "Influencer", description: "Received 100+ likes", progress: 60 },
-  { icon: MessageCircle, title: "Conversationalist", description: "Made 50+ comments", progress: 40 },
-  { icon: Zap, title: "Active Member", description: "Posted 25+ times", progress: 75 },
+  {
+    icon: Users,
+    title: "Connector",
+    description: "Connected with 50+ people",
+    progress: 85,
+  },
+  {
+    icon: Heart,
+    title: "Influencer",
+    description: "Received 100+ likes",
+    progress: 60,
+  },
+  {
+    icon: MessageCircle,
+    title: "Conversationalist",
+    description: "Made 50+ comments",
+    progress: 40,
+  },
+  {
+    icon: Zap,
+    title: "Active Member",
+    description: "Posted 25+ times",
+    progress: 75,
+  },
 ];
 
 const networkStats = [
@@ -96,7 +116,9 @@ export default function SidebarContent() {
                   variant="outline"
                   className="h-20 flex flex-col items-center justify-center space-y-2 hover:bg-gray-50 dark:hover:bg-gray-800"
                 >
-                  <div className={`p-2 rounded-full ${action.color} text-white`}>
+                  <div
+                    className={`p-2 rounded-full ${action.color} text-white`}
+                  >
                     <action.icon className="h-4 w-4" />
                   </div>
                   <span className="text-xs text-center">{action.label}</span>
@@ -160,7 +182,10 @@ export default function SidebarContent() {
                 <Avatar className="w-10 h-10">
                   <AvatarImage src={connection.avatar} />
                   <AvatarFallback>
-                    {connection.name.split(' ').map(n => n[0]).join('')}
+                    {connection.name
+                      .split(" ")
+                      .map((n) => n[0])
+                      .join("")}
                   </AvatarFallback>
                 </Avatar>
                 <div className="flex-1">
@@ -201,12 +226,18 @@ export default function SidebarContent() {
                 <div className="flex items-center justify-between">
                   <div className="flex items-center space-x-2">
                     <achievement.icon className="h-4 w-4 text-gray-600" />
-                    <span className="font-medium text-sm">{achievement.title}</span>
+                    <span className="font-medium text-sm">
+                      {achievement.title}
+                    </span>
                   </div>
-                  <span className="text-xs text-gray-500">{achievement.progress}%</span>
+                  <span className="text-xs text-gray-500">
+                    {achievement.progress}%
+                  </span>
                 </div>
                 <Progress value={achievement.progress} className="h-2" />
-                <p className="text-xs text-gray-500">{achievement.description}</p>
+                <p className="text-xs text-gray-500">
+                  {achievement.description}
+                </p>
               </div>
             ))}
           </CardContent>
@@ -228,7 +259,8 @@ export default function SidebarContent() {
           </CardHeader>
           <CardContent>
             <p className="text-sm text-gray-700 dark:text-gray-300 mb-3">
-              Share your card at networking events to automatically connect with people you meet!
+              Share your card at networking events to automatically connect with
+              people you meet!
             </p>
             <Button variant="outline" size="sm" className="w-full">
               Learn More

@@ -16,7 +16,7 @@ const UserWebsite = () => {
   const features = [
     { icon: Smartphone, text: "NFC Tap-to-Share" },
     { icon: Globe, text: "Personal Website" },
-    { icon: CreditCard, text: "Digital Business Card" }
+    { icon: CreditCard, text: "Digital Business Card" },
   ];
 
   return (
@@ -25,18 +25,18 @@ const UserWebsite = () => {
       className="py-16 md:py-24 relative overflow-hidden bg-gradient-to-b from-gray-50 to-white dark:from-gray-900 dark:to-background"
       id="userswebsite"
     >
-      <motion.div 
+      <motion.div
         className="absolute bottom-0 left-0 w-96 h-96 bg-gradient-to-tr from-green-100 to-transparent dark:from-green-900/20 rounded-full blur-3xl"
-        animate={{ 
+        animate={{
           scale: [1, 1.2, 1],
-          opacity: [0.3, 0.5, 0.3]
+          opacity: [0.3, 0.5, 0.3],
         }}
         transition={{ duration: 8, repeat: Infinity }}
       />
-      
+
       <div className="container mx-auto px-6 sm:px-8 md:px-16 lg:px-24 relative z-10">
         <div className="flex flex-col lg:flex-row items-center gap-12 lg:gap-16">
-          <motion.div 
+          <motion.div
             initial={{ opacity: 0, x: -50 }}
             animate={isInView ? { opacity: 1, x: 0 } : {}}
             transition={{ duration: 0.8 }}
@@ -57,7 +57,9 @@ const UserWebsite = () => {
                   className="flex items-center gap-2 px-3 py-1 bg-gray-100 dark:bg-gray-800 rounded-full text-sm"
                 >
                   <feature.icon className="w-4 h-4 text-green-600" />
-                  <span className="text-gray-700 dark:text-gray-300">{feature.text}</span>
+                  <span className="text-gray-700 dark:text-gray-300">
+                    {feature.text}
+                  </span>
                 </motion.div>
               ))}
             </motion.div>
@@ -69,18 +71,18 @@ const UserWebsite = () => {
               </span>
             </h2>
             <p className="text-lg sm:text-xl text-muted-foreground mb-8 leading-relaxed max-w-xl">
-              Combine the power of NFC technology with a stunning personal website. 
-              Share your contact information instantly with a tap, while maintaining 
-              a professional online presence that works 24/7.
+              Combine the power of NFC technology with a stunning personal
+              website. Share your contact information instantly with a tap,
+              while maintaining a professional online presence that works 24/7.
             </p>
-            <motion.div 
+            <motion.div
               initial={{ opacity: 0, y: 20 }}
               animate={isInView ? { opacity: 1, y: 0 } : {}}
               transition={{ delay: 0.4 }}
               className="flex flex-col sm:flex-row gap-4 justify-center lg:justify-start"
             >
               <Link href="/signup">
-                <Button 
+                <Button
                   size="lg"
                   className="w-full sm:w-auto bg-gradient-to-r from-green-600 to-emerald-500 hover:from-green-700 hover:to-emerald-600 text-white font-semibold px-8 py-6 rounded-full shadow-lg hover:shadow-xl transition-all duration-300 group"
                 >
@@ -89,7 +91,7 @@ const UserWebsite = () => {
                 </Button>
               </Link>
               <Link href="#templates">
-                <Button 
+                <Button
                   variant="outline"
                   size="lg"
                   className="w-full sm:w-auto font-semibold px-8 py-6 rounded-full border-2 hover:bg-gray-50 dark:hover:bg-gray-800"
@@ -99,14 +101,14 @@ const UserWebsite = () => {
               </Link>
             </motion.div>
           </motion.div>
-          
-          <motion.div 
+
+          <motion.div
             initial={{ opacity: 0, scale: 0.8 }}
             animate={isInView ? { opacity: 1, scale: 1 } : {}}
             transition={{ duration: 0.8, delay: 0.2 }}
             className="flex-1 relative"
           >
-            <motion.div 
+            <motion.div
               animate={{ y: [0, -10, 0] }}
               transition={{ duration: 4, repeat: Infinity }}
               className="relative rounded-2xl overflow-hidden shadow-2xl"
@@ -119,7 +121,7 @@ const UserWebsite = () => {
                 className="w-full h-auto object-cover"
               />
               <div className="absolute inset-0 bg-gradient-to-t from-black/20 to-transparent" />
-              
+
               {/* NFC indicator animation */}
               <motion.div
                 className="absolute top-4 right-4 bg-white/90 dark:bg-gray-800/90 backdrop-blur-sm rounded-full px-4 py-2 flex items-center gap-2"

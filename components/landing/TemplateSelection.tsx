@@ -21,16 +21,16 @@ const TemplateSelection = () => {
       opacity: 1,
       transition: {
         staggerChildren: 0.05,
-        delayChildren: 0.1
-      }
-    }
+        delayChildren: 0.1,
+      },
+    },
   };
 
   const cardVariants = {
-    hidden: { 
-      opacity: 0, 
+    hidden: {
+      opacity: 0,
       y: 20,
-      scale: 0.95
+      scale: 0.95,
     },
     visible: {
       opacity: 1,
@@ -39,19 +39,15 @@ const TemplateSelection = () => {
       transition: {
         type: "spring",
         stiffness: 100,
-        damping: 15
-      }
-    }
+        damping: 15,
+      },
+    },
   };
 
   return (
-    <section
-      ref={ref}
-      className="py-16 md:py-24"
-      id="templates"
-    >
+    <section ref={ref} className="py-16 md:py-24" id="templates">
       <div className="container mx-auto px-6 sm:px-8 md:px-16 lg:px-24">
-        <motion.div 
+        <motion.div
           initial={{ opacity: 0, y: -20 }}
           animate={isInView ? { opacity: 1, y: 0 } : {}}
           transition={{ duration: 0.6 }}
@@ -62,7 +58,7 @@ const TemplateSelection = () => {
           </p>
           <h2 className="text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-black">
             Choose from our{" "}
-            <motion.span 
+            <motion.span
               className="relative inline-block"
               whileHover={{ scale: 1.05 }}
             >
@@ -74,7 +70,7 @@ const TemplateSelection = () => {
         </motion.div>
 
         {/* Card Grid */}
-        <motion.div 
+        <motion.div
           variants={containerVariants}
           initial="hidden"
           animate={isInView ? "visible" : "hidden"}
@@ -84,14 +80,16 @@ const TemplateSelection = () => {
             <motion.div
               key={index}
               variants={cardVariants}
-              whileHover={{ 
+              whileHover={{
                 y: -5,
                 scale: 1.05,
-                transition: { type: "spring", stiffness: 300 }
+                transition: { type: "spring", stiffness: 300 },
               }}
               onClick={() => setSelectedCard(index)}
               className={`relative cursor-pointer group ${
-                selectedCard === index ? 'ring-2 ring-green-500 ring-offset-2' : ''
+                selectedCard === index
+                  ? "ring-2 ring-green-500 ring-offset-2"
+                  : ""
               }`}
             >
               <div className="relative overflow-hidden rounded-xl shadow-md hover:shadow-xl transition-all duration-300">
@@ -103,7 +101,7 @@ const TemplateSelection = () => {
                     className="object-contain"
                     sizes="(max-width: 640px) 50vw, (max-width: 768px) 33vw, (max-width: 1024px) 25vw, 16vw"
                   />
-                  
+
                   {/* Selection indicator */}
                   <AnimatePresence>
                     {selectedCard === index && (
@@ -118,10 +116,12 @@ const TemplateSelection = () => {
                     )}
                   </AnimatePresence>
                 </div>
-                
+
                 {/* Card title on hover */}
                 <div className="absolute bottom-0 left-0 right-0 bg-gradient-to-t from-black/70 to-transparent p-3 opacity-0 group-hover:opacity-100 transition-opacity">
-                  <p className="text-white text-sm font-medium truncate">{card.title}</p>
+                  <p className="text-white text-sm font-medium truncate">
+                    {card.title}
+                  </p>
                 </div>
               </div>
             </motion.div>
@@ -140,7 +140,7 @@ const TemplateSelection = () => {
           >
             <div className="flex flex-col lg:flex-row gap-8 items-center">
               {/* Card Preview */}
-              <motion.div 
+              <motion.div
                 className="flex-1"
                 whileHover={{ scale: 1.02 }}
                 transition={{ type: "spring", stiffness: 300 }}
@@ -156,15 +156,16 @@ const TemplateSelection = () => {
                   />
                 </div>
               </motion.div>
-              
+
               {/* Card Info */}
               <div className="flex-1">
-                <CardDetails card={Object.values(carouselCards)[selectedCard]} />
+                <CardDetails
+                  card={Object.values(carouselCards)[selectedCard]}
+                />
               </div>
             </div>
           </motion.div>
         </AnimatePresence>
-
       </div>
     </section>
   );

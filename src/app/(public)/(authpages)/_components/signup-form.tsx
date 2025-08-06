@@ -2,7 +2,16 @@
 
 import Link from "next/link";
 import { Separator } from "@/src/app/(public)/(authpages)/_components/auth-separator";
-import { Eye, EyeOff, Mail, Lock, User, UserPlus, Shield, CheckCircle } from "lucide-react";
+import {
+  Eye,
+  EyeOff,
+  Mail,
+  Lock,
+  User,
+  UserPlus,
+  Shield,
+  CheckCircle,
+} from "lucide-react";
 //shadcn components
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
@@ -50,7 +59,7 @@ export function RegisterForm() {
   const [showPassword, setShowPassword] = useState(false);
   const [showConfirmPassword, setShowConfirmPassword] = useState(false);
   const [passwordStrength, setPasswordStrength] = useState(0);
-  
+
   const form = useForm<z.infer<typeof signupSchema>>({
     resolver: zodResolver(signupSchema),
     defaultValues: {
@@ -156,7 +165,10 @@ export function RegisterForm() {
             initial={{ opacity: 0, x: -20 }}
             animate={{ opacity: 1, x: 0 }}
             transition={{ delay: 0.2, duration: 0.5 }}
-            className={cn(fonts.className, "text-lg md:text-xl lg:text-2xl font-black")}
+            className={cn(
+              fonts.className,
+              "text-lg md:text-xl lg:text-2xl font-black"
+            )}
           >
             Create your account
           </motion.h1>
@@ -172,7 +184,7 @@ export function RegisterForm() {
         <CardContent className="space-y-2 px-0">
           <Form {...form}>
             <form onSubmit={form.handleSubmit(onSubmit)}>
-              <motion.div 
+              <motion.div
                 className="space-y-4"
                 initial={{ opacity: 0 }}
                 animate={{ opacity: 1 }}
@@ -185,7 +197,9 @@ export function RegisterForm() {
                     name="firstName"
                     render={({ field }) => (
                       <FormItem>
-                        <FormLabel className="text-xs font-medium">First Name</FormLabel>
+                        <FormLabel className="text-xs font-medium">
+                          First Name
+                        </FormLabel>
                         <FormControl>
                           <div className="relative">
                             <User className="absolute left-3 top-1/2 transform -translate-y-1/2 h-3.5 w-3.5 text-muted-foreground" />
@@ -207,7 +221,9 @@ export function RegisterForm() {
                     disabled={isLoading}
                     render={({ field }) => (
                       <FormItem>
-                        <FormLabel className="text-xs font-medium">Last Name</FormLabel>
+                        <FormLabel className="text-xs font-medium">
+                          Last Name
+                        </FormLabel>
                         <FormControl>
                           <div className="relative">
                             <User className="absolute left-3 top-1/2 transform -translate-y-1/2 h-3.5 w-3.5 text-muted-foreground" />
@@ -231,7 +247,9 @@ export function RegisterForm() {
                   disabled={isLoading}
                   render={({ field }) => (
                     <FormItem>
-                      <FormLabel className="text-xs font-medium">Email Address</FormLabel>
+                      <FormLabel className="text-xs font-medium">
+                        Email Address
+                      </FormLabel>
                       <FormControl>
                         <div className="relative">
                           <Mail className="absolute left-3 top-1/2 transform -translate-y-1/2 h-3.5 w-3.5 text-muted-foreground" />
@@ -253,7 +271,9 @@ export function RegisterForm() {
                   disabled={isLoading}
                   render={({ field }) => (
                     <FormItem>
-                      <FormLabel className="text-xs font-medium">Password</FormLabel>
+                      <FormLabel className="text-xs font-medium">
+                        Password
+                      </FormLabel>
                       <FormControl>
                         <div className="relative">
                           <Lock className="absolute left-3 top-1/2 transform -translate-y-1/2 h-3.5 w-3.5 text-muted-foreground" />
@@ -296,9 +316,13 @@ export function RegisterForm() {
                             ))}
                           </div>
                           {passwordStrength > 0 && (
-                            <p className={`text-xs mt-1 ${
-                              passwordStrength < 3 ? "text-yellow-600" : "text-green-600"
-                            }`}>
+                            <p
+                              className={`text-xs mt-1 ${
+                                passwordStrength < 3
+                                  ? "text-yellow-600"
+                                  : "text-green-600"
+                              }`}
+                            >
                               {getPasswordStrengthText()}
                             </p>
                           )}
@@ -313,7 +337,9 @@ export function RegisterForm() {
                   disabled={isLoading}
                   render={({ field }) => (
                     <FormItem>
-                      <FormLabel className="text-xs font-medium">Confirm Password</FormLabel>
+                      <FormLabel className="text-xs font-medium">
+                        Confirm Password
+                      </FormLabel>
                       <FormControl>
                         <div className="relative">
                           <Shield className="absolute left-3 top-1/2 transform -translate-y-1/2 h-3.5 w-3.5 text-muted-foreground" />
@@ -325,7 +351,9 @@ export function RegisterForm() {
                           />
                           <button
                             type="button"
-                            onClick={() => setShowConfirmPassword(!showConfirmPassword)}
+                            onClick={() =>
+                              setShowConfirmPassword(!showConfirmPassword)
+                            }
                             className="absolute inset-y-0 right-0 flex items-center pr-3 text-muted-foreground hover:text-foreground transition-colors"
                           >
                             {showConfirmPassword ? (
@@ -371,11 +399,11 @@ export function RegisterForm() {
                     </>
                   )}
                 </Button>
-                
+
                 <p className="text-center text-xs text-muted-foreground">
                   Already have an account?{" "}
-                  <Link 
-                    className="text-green-600 hover:text-green-700 font-medium transition-colors" 
+                  <Link
+                    className="text-green-600 hover:text-green-700 font-medium transition-colors"
                     href="/login"
                   >
                     Sign in
@@ -385,7 +413,7 @@ export function RegisterForm() {
             </form>
           </Form>
         </CardContent>
-        
+
         <motion.div
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
@@ -393,7 +421,7 @@ export function RegisterForm() {
         >
           <Separator />
         </motion.div>
-        
+
         <CardFooter className="flex flex-col gap-y-3 px-0">
           <motion.div
             initial={{ opacity: 0, y: 20 }}

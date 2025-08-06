@@ -282,7 +282,7 @@ export async function sortCards(
   );
 
   return [...sorted, ...unordered];
-};
+}
 
 export const getCardImage = (cardId?: string) => {
   const cardItem =

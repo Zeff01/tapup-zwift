@@ -15,7 +15,7 @@ export default function HomePageContent() {
     <div className="flex min-h-screen bg-gray-50 dark:bg-gray-900">
       {/* Mobile sidebar overlay */}
       {sidebarOpen && (
-        <div 
+        <div
           className="lg:hidden fixed inset-0 bg-black bg-opacity-50 z-40"
           onClick={() => setSidebarOpen(false)}
         />
@@ -58,11 +58,13 @@ export default function HomePageContent() {
       </div>
 
       {/* Sidebar */}
-      <div className={`
+      <div
+        className={`
         fixed right-0 top-0 h-full w-80 bg-white dark:bg-gray-800 border-l border-gray-200 dark:border-gray-700 overflow-y-auto z-50
         transform transition-transform duration-300 ease-in-out
-        ${sidebarOpen ? 'translate-x-0' : 'translate-x-full lg:translate-x-0'}
-      `}>
+        ${sidebarOpen ? "translate-x-0" : "translate-x-full lg:translate-x-0"}
+      `}
+      >
         {/* Mobile close button */}
         <div className="lg:hidden flex justify-end p-4">
           <Button

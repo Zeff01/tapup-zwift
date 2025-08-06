@@ -13,11 +13,31 @@ const Products = () => {
   const isInView = useInView(ref, { once: true, amount: 0.3 });
 
   const cardTemplates = [
-    { src: "/assets/cards/back/card7.png", alt: "Modern Business Card Template", color: "from-purple-400 to-pink-400" },
-    { src: "/assets/cards/back/card6.png", alt: "Professional Card Template", color: "from-blue-400 to-cyan-400" },
-    { src: "/assets/cards/back/card1.png", alt: "Classic Card Template", color: "from-green-400 to-emerald-400" },
-    { src: "/assets/cards/back/card4.png", alt: "Creative Card Template", color: "from-orange-400 to-red-400" },
-    { src: "/assets/cards/back/card5.png", alt: "Minimalist Card Template", color: "from-indigo-400 to-purple-400" },
+    {
+      src: "/assets/cards/back/card7.png",
+      alt: "Modern Business Card Template",
+      color: "from-purple-400 to-pink-400",
+    },
+    {
+      src: "/assets/cards/back/card6.png",
+      alt: "Professional Card Template",
+      color: "from-blue-400 to-cyan-400",
+    },
+    {
+      src: "/assets/cards/back/card1.png",
+      alt: "Classic Card Template",
+      color: "from-green-400 to-emerald-400",
+    },
+    {
+      src: "/assets/cards/back/card4.png",
+      alt: "Creative Card Template",
+      color: "from-orange-400 to-red-400",
+    },
+    {
+      src: "/assets/cards/back/card5.png",
+      alt: "Minimalist Card Template",
+      color: "from-indigo-400 to-purple-400",
+    },
   ];
 
   const containerVariants = {
@@ -26,17 +46,17 @@ const Products = () => {
       opacity: 1,
       transition: {
         staggerChildren: 0.1,
-        delayChildren: 0.2
-      }
-    }
+        delayChildren: 0.2,
+      },
+    },
   };
 
   const cardVariants = {
-    hidden: { 
-      opacity: 0, 
+    hidden: {
+      opacity: 0,
       y: 50,
       rotateX: -30,
-      scale: 0.8
+      scale: 0.8,
     },
     visible: {
       opacity: 1,
@@ -47,9 +67,9 @@ const Products = () => {
         type: "spring",
         stiffness: 100,
         damping: 15,
-        duration: 0.8
-      }
-    }
+        duration: 0.8,
+      },
+    },
   };
 
   return (
@@ -60,26 +80,26 @@ const Products = () => {
     >
       {/* Floating background elements */}
       <div className="absolute inset-0 overflow-hidden">
-        <motion.div 
+        <motion.div
           className="absolute top-20 left-20 w-64 h-64 bg-gradient-to-br from-green-200 to-emerald-200 rounded-full blur-3xl opacity-20"
-          animate={{ 
+          animate={{
             x: [0, 50, 0],
-            y: [0, -30, 0]
+            y: [0, -30, 0],
           }}
           transition={{ duration: 15, repeat: Infinity }}
         />
-        <motion.div 
+        <motion.div
           className="absolute bottom-20 right-20 w-96 h-96 bg-gradient-to-br from-purple-200 to-pink-200 rounded-full blur-3xl opacity-20"
-          animate={{ 
+          animate={{
             x: [0, -50, 0],
-            y: [0, 30, 0]
+            y: [0, 30, 0],
           }}
           transition={{ duration: 20, repeat: Infinity }}
         />
       </div>
 
       <div className="container mx-auto px-6 sm:px-8 md:px-16 lg:px-24 relative z-10">
-        <motion.div 
+        <motion.div
           initial={{ opacity: 0, y: -20 }}
           animate={isInView ? { opacity: 1, y: 0 } : {}}
           transition={{ duration: 0.6 }}
@@ -96,7 +116,7 @@ const Products = () => {
           </motion.div>
           <h2 className="text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-black">
             With our{" "}
-            <motion.span 
+            <motion.span
               className="relative inline-block"
               whileHover={{ scale: 1.05 }}
             >
@@ -107,7 +127,7 @@ const Products = () => {
           </h2>
         </motion.div>
 
-        <motion.div 
+        <motion.div
           variants={containerVariants}
           initial="hidden"
           animate={isInView ? "visible" : "hidden"}
@@ -117,25 +137,27 @@ const Products = () => {
             <motion.div
               key={index}
               variants={cardVariants}
-              whileHover={{ 
+              whileHover={{
                 y: -15,
                 rotateY: 15,
                 rotateX: -5,
                 scale: 1.05,
-                transition: { type: "spring", stiffness: 300 }
+                transition: { type: "spring", stiffness: 300 },
               }}
               className="group relative"
               style={{ transformStyle: "preserve-3d", perspective: "1000px" }}
             >
               <div className="relative overflow-hidden rounded-2xl shadow-xl hover:shadow-2xl transition-all duration-300">
                 {/* Gradient background */}
-                <div className={`absolute inset-0 bg-gradient-to-br ${card.color} opacity-0 group-hover:opacity-20 transition-opacity duration-500`} />
-                
+                <div
+                  className={`absolute inset-0 bg-gradient-to-br ${card.color} opacity-0 group-hover:opacity-20 transition-opacity duration-500`}
+                />
+
                 {/* Card container */}
                 <div className="relative aspect-[4/3] bg-gradient-to-br from-gray-100 to-gray-200 dark:from-gray-800 dark:to-gray-900 overflow-hidden">
                   {/* Shine effect */}
                   <div className="absolute inset-0 bg-gradient-to-tr from-transparent via-white/20 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-700 -skew-x-12 translate-x-[-200%] group-hover:translate-x-[200%] transition-transform" />
-                  
+
                   <Image
                     src={card.src}
                     alt={card.alt}
@@ -143,17 +165,21 @@ const Products = () => {
                     className="object-contain p-6 transition-transform duration-500 group-hover:scale-110"
                     sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 33vw"
                   />
-                  
+
                   {/* Hover overlay */}
-                  <motion.div 
+                  <motion.div
                     className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/40 to-transparent flex items-end p-6"
                     initial={{ opacity: 0 }}
                     whileHover={{ opacity: 1 }}
                     transition={{ duration: 0.3 }}
                   >
                     <div className="transform translate-y-4 group-hover:translate-y-0 transition-transform duration-300">
-                      <p className="text-white font-bold text-xl mb-2">{card.alt}</p>
-                      <p className="text-white/80 text-sm">Click to preview and customize</p>
+                      <p className="text-white font-bold text-xl mb-2">
+                        {card.alt}
+                      </p>
+                      <p className="text-white/80 text-sm">
+                        Click to preview and customize
+                      </p>
                     </div>
                   </motion.div>
                 </div>
@@ -165,14 +191,14 @@ const Products = () => {
           ))}
         </motion.div>
 
-        <motion.div 
+        <motion.div
           initial={{ opacity: 0, y: 20 }}
           animate={isInView ? { opacity: 1, y: 0 } : {}}
           transition={{ duration: 0.6, delay: 0.5 }}
           className="text-center"
         >
           <Link href="/cards">
-            <Button 
+            <Button
               size="lg"
               className="relative bg-gradient-to-r from-green-600 to-emerald-500 hover:from-green-700 hover:to-emerald-600 text-white font-semibold px-10 py-7 rounded-full shadow-xl hover:shadow-2xl transition-all duration-300 group overflow-hidden"
             >
@@ -180,7 +206,7 @@ const Products = () => {
                 Browse All Templates
                 <ArrowRight className="ml-3 h-6 w-6 group-hover:translate-x-2 transition-transform" />
               </span>
-              <motion.div 
+              <motion.div
                 className="absolute inset-0 bg-gradient-to-r from-emerald-600 to-green-600"
                 initial={{ x: "100%" }}
                 whileHover={{ x: 0 }}

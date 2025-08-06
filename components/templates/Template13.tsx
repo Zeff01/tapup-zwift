@@ -63,11 +63,13 @@ const Template13 = ({
   };
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-[#1a1a1a] via-[#232323] to-[#553838] text-white py-8 px-4">
+    <div className="min-h-screen bg-gradient-to-br from-[#1a1a1a] via-[#232323] to-[#553838] text-white py-2 px-1">
       <div className="max-w-[480px] mx-auto flex flex-col">
-
         {/* === Profile and Cover Section === */}
-        <section aria-label="Profile Section" className="w-full mb-8 relative flex flex-col items-center">
+        <section
+          aria-label="Profile Section"
+          className="w-full mb-8 relative flex flex-col items-center"
+        >
           <div className="w-full h-40 rounded-2xl overflow-hidden bg-neutral-800 relative">
             <img
               src={coverPhotoUrl || "/assets/sampleCoverPhoto.png"}
@@ -181,10 +183,18 @@ const Template13 = ({
                 </a>
               )}
               {whatsappNumber && (
-                <a href={`https://wa.me/${whatsappNumber}`} target="_blank" rel="noopener noreferrer"><FaWhatsapp /></a>
+                <a
+                  href={`https://wa.me/${whatsappNumber}`}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                >
+                  <FaWhatsapp />
+                </a>
               )}
               {skypeInviteUrl && (
-                <a href={`skype:${skypeInviteUrl}?chat`}><FaSkype /></a>
+                <a href={`skype:${skypeInviteUrl}?chat`}>
+                  <FaSkype />
+                </a>
               )}
               {websiteUrl && (
                 <a href={websiteUrl} target="_blank" rel="noopener noreferrer">
@@ -192,10 +202,14 @@ const Template13 = ({
                 </a>
               )}
               {viberUrl && (
-                <a href={viberUrl} target="_blank" rel="noopener noreferrer"><FaViber /></a>
+                <a href={viberUrl} target="_blank" rel="noopener noreferrer">
+                  <FaViber />
+                </a>
               )}
               {tiktokUrl && (
-                <a href={tiktokUrl} target="_blank" rel="noopener noreferrer"><FaTiktok /></a>
+                <a href={tiktokUrl} target="_blank" rel="noopener noreferrer">
+                  <FaTiktok />
+                </a>
               )}
             </span>
           </div>
@@ -214,7 +228,8 @@ const Template13 = ({
         )}
 
         {/* === Services Section === */}
-        {(serviceDescription || (servicePhotos && servicePhotos.length > 0)) && (
+        {(serviceDescription ||
+          (servicePhotos && servicePhotos.length > 0)) && (
           <section aria-label="Our Services" className="w-full px-4">
             <h2 className="text-lg font-bold mb-4 text-white text-left">
               Our Services

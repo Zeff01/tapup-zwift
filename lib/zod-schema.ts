@@ -8,6 +8,22 @@ const refinePhoneNumber = (phoneNumber: string) => {
   return isValidPhoneNumber(phoneNumber);
 };
 
+export const companySchema = z.object({
+  company: z.string().optional(),
+
+  position: z.string().optional(),
+
+  companyBackground: z.string().optional(),
+
+  serviceDescription: z.string().optional(),
+
+  servicePhotos: z
+    .array(
+      z.string().url({ message: "Each service photo must be a valid URL." })
+    )
+    .optional(),
+});
+
 export const createPortfolioSchema = z.object({
   coverPhotoUrl: z
     .string()
@@ -33,6 +49,7 @@ export const createPortfolioSchema = z.object({
       }
     ), // Profile picture URL is required
   position: z.string().min(3, "Position is required"),
+  companies: z.array(companySchema).default([]).optional(), // allows for multiple companies
   company: z.string().min(3, "Company name is required"),
   companyBackground: z
     .string()
@@ -183,6 +200,7 @@ export const editCardSchema = z.object({
     )
     .optional(),
   position: z.string().optional(),
+  companies: z.array(companySchema).default([]).optional(), // allows for multiple companies
   company: z.string().optional(),
   companyBackground: z.string().optional(),
   serviceDescription: z.string().optional(),
