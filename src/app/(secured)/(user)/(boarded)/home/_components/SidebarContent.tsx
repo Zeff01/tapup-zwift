@@ -289,7 +289,7 @@ export default function SidebarContent() {
             </div>
             <Progress value={94} className="h-3" />
             <p className="text-xs text-center text-gray-500">
-              You're so close! Just 3 more connections to reach your goal 🎯
+              You&#39;re so close! Just 3 more connections to reach your goal 🎯
             </p>
           </CardContent>
         </Card>

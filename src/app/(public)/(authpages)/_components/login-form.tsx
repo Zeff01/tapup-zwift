@@ -216,7 +216,7 @@ export function LogInForm() {
                 </Button>
 
                 <p className="text-center text-sm text-muted-foreground">
-                  Don't have an account?{" "}
+                  Don&#39;t have an account?{" "}
                   <Link
                     className="text-green-600 hover:text-green-700 font-medium transition-colors"
                     href="/signup"

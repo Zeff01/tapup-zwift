@@ -93,7 +93,7 @@ export function ForgotPasswordForm() {
             transition={{ delay: 0.3, duration: 0.5 }}
             className="text-xs text-muted-foreground text-center"
           >
-            No worries, we'll send you reset instructions
+            No worries, we&#39;ll send you reset instructions
           </motion.p>
         </CardHeader>
 
