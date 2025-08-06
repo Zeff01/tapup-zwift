@@ -109,7 +109,7 @@ const SocialLinksSelector: React.FC<SocialLinksSelectorProps> = ({
 }) => {
   const [search, setSearch] = useState<string>("");
   const [addedLinks, setAddedLinks] = useState<Set<string>>(new Set());
-  
+
   const getInitialAvailableLinks = () => {
     return socialLinks.filter((link) => {
       const hasValue =
@@ -141,7 +141,9 @@ const SocialLinksSelector: React.FC<SocialLinksSelectorProps> = ({
     <Popover>
       <PopoverTrigger asChild>
         <Button variant="outline" className="mt-4">
-          {availableLinks.length > 0 ? `+ Add Social Link` : "All Social Links Added"}
+          {availableLinks.length > 0
+            ? `+ Add Social Link`
+            : "All Social Links Added"}
         </Button>
       </PopoverTrigger>
       <PopoverContent className="w-80 p-4">
@@ -168,7 +170,9 @@ const SocialLinksSelector: React.FC<SocialLinksSelectorProps> = ({
               ))
             ) : (
               <div className="text-center text-gray-500 py-4">
-                {availableLinks.length === 0 ? "All social links have been added!" : "No social links found."}
+                {availableLinks.length === 0
+                  ? "All social links have been added!"
+                  : "No social links found."}
               </div>
             )}
           </div>

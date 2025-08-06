@@ -5,6 +5,8 @@ import { AnalyticsTimeSelector } from "./analytics-time-selector";
 import { AnalyticsCards } from "./analytics-cards";
 import { AnalyticsChart } from "./analytics-chart";
 import { AnalyticsTable } from "./analytics-table";
+import { motion } from "framer-motion";
+import { TrendingUp, Activity } from "lucide-react";
 
 type TimeRange = "daily" | "weekly" | "monthly";
 
@@ -145,33 +147,29 @@ export default function Dashboard() {
   const activities = getMockActivities(selectedTimeRange);
 
   return (
-    <div className="flex min-h-screen flex-col">
-      <main className="flex-1 space-y-4 p-4 md:p-4 h-full">
-        <div className="flex flex-col sm:flex-row gap-4 items-center justify-between">
-          <h1 className="text-lg sm:text-xl font-bold tracking-tight">
+    <div className="flex-1 p-4 md:p-6 h-full overflow-auto">
+      <div className="flex flex-col sm:flex-row gap-4 items-start sm:items-center justify-between mb-6">
+        <div className="space-y-1">
+          <h1 className="text-xl sm:text-2xl font-bold tracking-tight flex items-center gap-2">
+            <Activity className="h-5 w-5 text-green-600" />
             Analytics Dashboard
           </h1>
-          <AnalyticsTimeSelector
-            selectedRange={selectedTimeRange}
-            onRangeChange={setSelectedTimeRange}
-          />
+          <p className="text-sm text-muted-foreground">
+            Track your digital business card performance
+          </p>
         </div>
+        <AnalyticsTimeSelector
+          selectedRange={selectedTimeRange}
+          onRangeChange={setSelectedTimeRange}
+        />
+      </div>
 
-        <AnalyticsCards data={analyticsData} timeRange={selectedTimeRange} />
+      <AnalyticsCards data={analyticsData} timeRange={selectedTimeRange} />
 
-        <div className="grid grid-cols-1 gap-6 md:grid-cols-2 lg:grid-cols-7">
-          <AnalyticsChart
-            className="lg:col-span-4"
-            data={chartData}
-            timeRange={selectedTimeRange}
-          />
-          <AnalyticsTable
-            className="lg:col-span-3"
-            activities={activities}
-            timeRange={selectedTimeRange}
-          />
-        </div>
-      </main>
+      <div className="grid grid-cols-1 gap-6 lg:grid-cols-2">
+        <AnalyticsChart data={chartData} timeRange={selectedTimeRange} />
+        <AnalyticsTable activities={activities} timeRange={selectedTimeRange} />
+      </div>
     </div>
   );
 }

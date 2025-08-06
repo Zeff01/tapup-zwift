@@ -111,19 +111,13 @@ const Template4 = ({
             href={`tel:${number}`}
             className="p-1 grid place-content-center rounded-full border-2 border-black "
           >
-            <MdOutlinePhone
-              className="cursor-pointer"
-              size={24}
-            />
+            <MdOutlinePhone className="cursor-pointer" size={24} />
           </Link>
           <Link
             href={`mailto:${email}`}
             className="p-1 grid place-content-center rounded-full border-2 border-black "
           >
-            <MdOutlineMailOutline
-              className="cursor-pointer"
-              size={24}
-            />
+            <MdOutlineMailOutline className="cursor-pointer" size={24} />
           </Link>
           <div className="p-1 grid place-content-center rounded-full border-2 border-black ">
             <MdOutlineBookmarkBorder
@@ -176,29 +170,29 @@ const Template4 = ({
         <div className="flex flex-col gap-4 mt-6 px-4">
           {servicePhotos
             ? servicePhotos.map((photo, index) => (
-              <div key={index} className="col-span-1">
-                <Image
-                  src={photo}
-                  alt={`Service Photo ${index + 1}`}
-                  width={500}
-                  height={500}
-                  layout="responsive"
-                  className="rounded-md object-cover w-full"
-                />
-              </div>
-            ))
+                <div key={index} className="col-span-1">
+                  <Image
+                    src={photo}
+                    alt={`Service Photo ${index + 1}`}
+                    width={500}
+                    height={500}
+                    layout="responsive"
+                    className="rounded-md object-cover w-full"
+                  />
+                </div>
+              ))
             : Array.from({ length: 4 }).map((_, index) => (
-              <div key={index} className="col-span-1">
-                <Image
-                  src="/assets/sampleService.png"
-                  alt="Service Photo"
-                  width={500}
-                  height={500}
-                  layout="responsive"
-                  className="rounded-md object-cover w-full"
-                />
-              </div>
-            ))}
+                <div key={index} className="col-span-1">
+                  <Image
+                    src="/assets/sampleService.png"
+                    alt="Service Photo"
+                    width={500}
+                    height={500}
+                    layout="responsive"
+                    className="rounded-md object-cover w-full"
+                  />
+                </div>
+              ))}
         </div>
       </div>
       {/* SOCIAL MEDIA ICONS */}

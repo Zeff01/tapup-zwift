@@ -15,6 +15,7 @@ import {
   Undo2,
   X,
   Users,
+  Home,
 } from "lucide-react";
 
 import { RxDashboard } from "react-icons/rx";
@@ -85,7 +86,7 @@ export const headerItems = [
   { href: "/#about", label: "About" },
   { href: "/#features", label: "Features" },
   { href: "/#quickguide", label: "Quick Guide" },
-  { href: "/#products", label: "Products" },
+  { href: "/#templates", label: "Products" },
   { href: "/#contact", label: "Contact" },
 ];
 
@@ -180,34 +181,34 @@ export const cardItems: CardItem[] = [
 
 export const stepItem = [
   {
-    title: "Sign Up",
+    title: "Sign Up & Create Profile",
     description:
-      "Create an account in a few simple steps.Just enter your basic details and you're ready to go!",
+      "Create your account in seconds. Add your professional details, photo, and contact information to get started.",
   },
   {
-    title: "Choose Your Card Type",
+    title: "Choose Your Template",
     description:
-      "Select from a variety of customizable card templates designed to fit your needs.",
+      "Browse our premium collection of NFC-enabled card designs. Pick a template that matches your style and brand.",
   },
   {
-    title: "Customize Your Card Type",
+    title: "Customize Your Design",
     description:
-      "Personalized your card by adding text, image and other design elements.",
+      "Personalize your card with your logo, colors, and social media links. Make it uniquely yours with our easy editor.",
   },
   {
-    title: "Preview & Save",
+    title: "Order Your NFC Card",
     description:
-      "Once you're happy with the design, preview the card to make sure everything looks perfect.",
+      "Review your design and place your order. Get a physical NFC-enabled card delivered to your doorstep.",
   },
   {
-    title: "Share or Print",
+    title: "Tap to Share",
     description:
-      "You can now share your card digitally or print it out for physical use",
+      "Simply tap your card on any smartphone to instantly share your contact info. No app needed for recipients.",
   },
   {
-    title: "Share or Print",
+    title: "Manage & Update",
     description:
-      "You can now share your card digitally or print it out for physical use",
+      "Update your information anytime from your dashboard. Changes reflect instantly without reprinting cards.",
   },
 ];
 
@@ -331,6 +332,7 @@ export const businessList = [
 ];
 
 export const menuItems = [
+  { icon: Home, title: "Home", href: "/home" },
   { icon: RxDashboard, title: "Dashboard", href: "/dashboard" },
   { icon: TbCards, title: "Cards", href: "/cards" },
 ];
@@ -347,18 +349,18 @@ export const publicDomain =
     : process.env.NEXT_PUBLIC_RESET_PASSWORD_URL_PROD;
 
 export const formHeaderItems = [
-  { id: 1, title: "Tell us about yourself" },
-  { id: 2, title: "Tell us about your company" },
-  { id: 3, title: "Customize your portfolio" },
+  { id: 1, title: "Visual Content & Company Details" },
+  { id: 2, title: "Personal Information & Social Links" },
+  { id: 3, title: "Design & Finalization" },
 ];
 
 export const steps = [
-  { name: "Personal Info", header: formHeaderItems[0].title },
+  { name: "Visual & Company", header: "Visual Content & Company Details" },
   {
-    name: "Company Info",
-    header: formHeaderItems[1].title,
+    name: "Personal & Social",
+    header: "Personal Information & Social Links",
   },
-  { name: "Portfolio", header: formHeaderItems[2].title },
+  { name: "Design & Settings", header: "Design & Finalization" },
 ];
 
 export const accountItem = [

@@ -31,7 +31,10 @@ import {
 } from "@dnd-kit/core";
 import { arrayMove } from "@dnd-kit/sortable";
 
-import { restrictToVerticalAxis, restrictToParentElement } from "@dnd-kit/modifiers";
+import {
+  restrictToVerticalAxis,
+  restrictToParentElement,
+} from "@dnd-kit/modifiers";
 
 const Cards = () => {
   const [ConfirmDialog, confirm] = useConfirm(
@@ -149,7 +152,11 @@ const Cards = () => {
           <div className="px-4 md:px-14">
             <TooltipProvider>
               {orderedCards.length > 0 ? (
-                <SortableCards cards={orderedCards} user={user} confirm={confirm} />
+                <SortableCards
+                  cards={orderedCards}
+                  user={user}
+                  confirm={confirm}
+                />
               ) : (
                 <div className="col-span-full flex flex-col items-center justify-center min-h-[60vh]">
                   <div className="flex flex-col items-center">
@@ -190,8 +197,9 @@ const Cards = () => {
                       </Dialog.Close>
                     )}
                     <button
-                      className={`$${loadTransferCode && "opacity-75"
-                        } bg-green-500 px-4 py-2 text-white rounded flex items-center`}
+                      className={`$${
+                        loadTransferCode && "opacity-75"
+                      } bg-green-500 px-4 py-2 text-white rounded flex items-center`}
                       onClick={handleTransferOwnership}
                       disabled={loadTransferCode}
                     >
@@ -210,7 +218,7 @@ const Cards = () => {
             </Dialog.Portal>
           </Dialog.Root>
         </div>
-      </DndContext >
+      </DndContext>
     </>
   );
 };

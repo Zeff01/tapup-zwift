@@ -3,64 +3,51 @@
 import * as React from "react";
 import { Moon, Sun } from "lucide-react";
 import { useTheme } from "next-themes";
-
-import { Button } from "@/components/ui/button";
-import {
-  DropdownMenu,
-  DropdownMenuContent,
-  DropdownMenuItem,
-  DropdownMenuTrigger,
-} from "@/components/ui/dropdown-menu";
-
-import { type VariantProps } from "class-variance-authority";
+import { Switch } from "@/components/ui/switch";
+import { cn } from "@/lib/utils";
 
 export function ThemeToggle({
   variant = "default",
+  showLabel = false,
 }: {
   variant?: "default" | "boarded";
+  showLabel?: boolean;
 }) {
-  const { setTheme } = useTheme();
+  const { theme, setTheme } = useTheme();
+  const [mounted, setMounted] = React.useState(false);
 
-  const themeVariants: Record<
-    string,
-    VariantProps<typeof Button> & { className: string }
-  > = {
-    default: {
-      className: "",
-      variant: "outline",
-      size: "icon",
-    },
-    boarded: {
-      className: "rounded-full p-0",
-      variant: "ghost",
-      size: "icon-sm",
-    },
+  // Avoid hydration mismatch
+  React.useEffect(() => {
+    setMounted(true);
+  }, []);
+
+  if (!mounted) {
+    return null;
+  }
+
+  const isDark = theme === "dark";
+
+  const handleToggle = () => {
+    setTheme(isDark ? "light" : "dark");
+  };
+
+  const containerClasses = {
+    default: "flex items-center gap-2",
+    boarded: "flex items-center gap-2",
   };
 
   return (
-    <DropdownMenu>
-      <DropdownMenuTrigger asChild>
-        <Button
-          className={themeVariants[variant].className}
-          variant={themeVariants[variant].variant}
-          size={themeVariants[variant].size}
-        >
-          <Sun className="h-[1.2rem] w-[1.2rem] rotate-0 scale-100 transition-all dark:-rotate-90 dark:scale-0" />
-          <Moon className="absolute h-[1.2rem] w-[1.2rem] rotate-90 scale-0 transition-all dark:rotate-0 dark:scale-100" />
-          <span className="sr-only">Toggle theme</span>
-        </Button>
-      </DropdownMenuTrigger>
-      <DropdownMenuContent align="end">
-        <DropdownMenuItem onClick={() => setTheme("light")}>
-          Light
-        </DropdownMenuItem>
-        <DropdownMenuItem onClick={() => setTheme("dark")}>
-          Dark
-        </DropdownMenuItem>
-        <DropdownMenuItem onClick={() => setTheme("system")}>
-          System
-        </DropdownMenuItem>
-      </DropdownMenuContent>
-    </DropdownMenu>
+    <div className={cn(containerClasses[variant])}>
+      {showLabel && <Sun className="h-4 w-4 text-muted-foreground" />}
+      <Switch
+        checked={isDark}
+        onCheckedChange={handleToggle}
+        className="data-[state=checked]:bg-green-600 data-[state=unchecked]:bg-gray-200"
+        aria-label="Toggle theme"
+      >
+        <span className="sr-only">Toggle theme</span>
+      </Switch>
+      {showLabel && <Moon className="h-4 w-4 text-muted-foreground" />}
+    </div>
   );
 }

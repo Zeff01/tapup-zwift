@@ -24,7 +24,13 @@ import {
   ExternalLink,
   Eye,
   Download,
+  Activity,
+  Smartphone,
+  Monitor,
+  Tablet,
 } from "lucide-react";
+import { motion } from "framer-motion";
+import { cn } from "@/lib/utils";
 
 type TimeRange = "daily" | "weekly" | "monthly";
 
@@ -98,13 +104,26 @@ export function AnalyticsTable({
   const getActivityColor = (type: ActivityItem["type"]) => {
     switch (type) {
       case "profile_view":
-        return "bg-blue-100 text-blue-800";
+        return "bg-blue-100 text-blue-800 dark:bg-blue-900/30 dark:text-blue-400";
       case "vcf_download":
-        return "bg-green-100 text-green-800";
+        return "bg-green-100 text-green-800 dark:bg-green-900/30 dark:text-green-400";
       case "link_click":
-        return "bg-purple-100 text-purple-800";
+        return "bg-purple-100 text-purple-800 dark:bg-purple-900/30 dark:text-purple-400";
       default:
-        return "bg-gray-100 text-gray-800";
+        return "bg-gray-100 text-gray-800 dark:bg-gray-800 dark:text-gray-400";
+    }
+  };
+
+  const getDeviceIcon = (deviceType?: string) => {
+    switch (deviceType) {
+      case "mobile":
+        return <Smartphone className="h-4 w-4" />;
+      case "desktop":
+        return <Monitor className="h-4 w-4" />;
+      case "tablet":
+        return <Tablet className="h-4 w-4" />;
+      default:
+        return <Monitor className="h-4 w-4" />;
     }
   };
 
@@ -140,58 +159,89 @@ export function AnalyticsTable({
   };
 
   return (
-    <Card className={className}>
-      <CardHeader>
-        <CardTitle>{getTimeRangeTitle(timeRange)}</CardTitle>
-        <CardDescription>
-          Latest interactions with your profile and links
-        </CardDescription>
-      </CardHeader>
-      <CardContent>
-        <Table>
-          <TableHeader>
-            <TableRow>
-              <TableHead>Activity</TableHead>
-              <TableHead>Platform</TableHead>
-              <TableHead>Device</TableHead>
-              <TableHead>Location</TableHead>
-              <TableHead>Time</TableHead>
-            </TableRow>
-          </TableHeader>
-          <TableBody>
-            {activities.map((activity) => (
-              <TableRow key={activity.id}>
-                <TableCell className="font-medium">
-                  <div className="flex items-center gap-2">
-                    {getActivityIcon(activity.type, activity.platform)}
-                    <span>{getActivityLabel(activity)}</span>
-                  </div>
-                </TableCell>
-                <TableCell>
-                  <Badge
-                    variant="secondary"
-                    className={getActivityColor(activity.type)}
+    <motion.div
+      initial={{ opacity: 0, scale: 0.95 }}
+      animate={{ opacity: 1, scale: 1 }}
+      transition={{ duration: 0.5 }}
+    >
+      <Card className={cn("border shadow-sm h-full flex flex-col", className)}>
+        <CardHeader>
+          <div className="flex items-center justify-between">
+            <div className="space-y-1">
+              <CardTitle className="flex items-center gap-2">
+                <Activity className="h-5 w-5 text-green-600" />
+                {getTimeRangeTitle(timeRange)}
+              </CardTitle>
+              <CardDescription>
+                Latest interactions with your profile and links
+              </CardDescription>
+            </div>
+          </div>
+        </CardHeader>
+        <CardContent className="flex-1 overflow-hidden">
+          <div className="overflow-auto h-full max-h-[400px]">
+            <Table>
+              <TableHeader>
+                <TableRow>
+                  <TableHead className="font-medium">Activity</TableHead>
+                  <TableHead className="font-medium">Platform</TableHead>
+                  <TableHead className="font-medium">Device</TableHead>
+                  <TableHead className="font-medium">Location</TableHead>
+                  <TableHead className="font-medium text-right">Time</TableHead>
+                </TableRow>
+              </TableHeader>
+              <TableBody>
+                {activities.map((activity, index) => (
+                  <motion.tr
+                    key={activity.id}
+                    initial={{ opacity: 0, x: -20 }}
+                    animate={{ opacity: 1, x: 0 }}
+                    transition={{ delay: index * 0.05, duration: 0.3 }}
+                    className="hover:bg-gray-50 dark:hover:bg-gray-800/50 transition-colors"
                   >
-                    {activity.platform
-                      ? activity.platform.charAt(0).toUpperCase() +
-                        activity.platform.slice(1)
-                      : "Direct"}
-                  </Badge>
-                </TableCell>
-                <TableCell className="capitalize">
-                  {activity.deviceType || "Unknown"}
-                </TableCell>
-                <TableCell className="text-muted-foreground">
-                  {activity.location || "Unknown"}
-                </TableCell>
-                <TableCell className="text-muted-foreground">
-                  {formatTimestamp(activity.timestamp)}
-                </TableCell>
-              </TableRow>
-            ))}
-          </TableBody>
-        </Table>
-      </CardContent>
-    </Card>
+                    <TableCell className="font-medium">
+                      <div className="flex items-center gap-2">
+                        {getActivityIcon(activity.type, activity.platform)}
+                        <span className="text-sm">
+                          {getActivityLabel(activity)}
+                        </span>
+                      </div>
+                    </TableCell>
+                    <TableCell>
+                      <Badge
+                        variant="secondary"
+                        className={cn(
+                          "text-xs",
+                          getActivityColor(activity.type)
+                        )}
+                      >
+                        {activity.platform
+                          ? activity.platform.charAt(0).toUpperCase() +
+                            activity.platform.slice(1)
+                          : "Direct"}
+                      </Badge>
+                    </TableCell>
+                    <TableCell>
+                      <div className="flex items-center gap-2 text-sm">
+                        {getDeviceIcon(activity.deviceType)}
+                        <span className="capitalize">
+                          {activity.deviceType || "Unknown"}
+                        </span>
+                      </div>
+                    </TableCell>
+                    <TableCell className="text-sm text-muted-foreground">
+                      {activity.location || "Unknown"}
+                    </TableCell>
+                    <TableCell className="text-sm text-muted-foreground text-right">
+                      {formatTimestamp(activity.timestamp)}
+                    </TableCell>
+                  </motion.tr>
+                ))}
+              </TableBody>
+            </Table>
+          </div>
+        </CardContent>
+      </Card>
+    </motion.div>
   );
 }

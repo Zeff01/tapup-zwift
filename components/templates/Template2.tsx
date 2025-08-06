@@ -127,10 +127,7 @@ const Template2 = ({
             href={`tel:${number}`}
             className="p-1 grid place-content-center bg-white rounded-full border-2 border-black "
           >
-            <MdOutlinePhone
-              className="cursor-pointer text-black"
-              size={20}
-            />
+            <MdOutlinePhone className="cursor-pointer text-black" size={20} />
           </Link>
           <Link
             href={`mailto:${email}`}
@@ -235,29 +232,29 @@ const Template2 = ({
         <div className="grid grid-cols-2 gap-4 mt-6  ">
           {servicePhotos
             ? servicePhotos.map((photo, index) => (
-              <div key={index} className="col-span-1">
-                <Image
-                  src={photo}
-                  alt={`Service Photo ${index + 1}`}
-                  width={300}
-                  height={300}
-                  layout="responsive"
-                  className="rounded-md object-cover w-full shadow shadow-white overflow-hidden"
-                />
-              </div>
-            ))
+                <div key={index} className="col-span-1">
+                  <Image
+                    src={photo}
+                    alt={`Service Photo ${index + 1}`}
+                    width={300}
+                    height={300}
+                    layout="responsive"
+                    className="rounded-md object-cover w-full shadow shadow-white overflow-hidden"
+                  />
+                </div>
+              ))
             : Array.from({ length: 4 }).map((_, index) => (
-              <div key={index} className="col-span-1">
-                <Image
-                  src="/assets/sampleService.png"
-                  alt="Service Photo"
-                  width={300}
-                  height={300}
-                  layout="responsive"
-                  className="rounded-md object-cover w-full shadow shadow-white overflow-hidden"
-                />
-              </div>
-            ))}
+                <div key={index} className="col-span-1">
+                  <Image
+                    src="/assets/sampleService.png"
+                    alt="Service Photo"
+                    width={300}
+                    height={300}
+                    layout="responsive"
+                    className="rounded-md object-cover w-full shadow shadow-white overflow-hidden"
+                  />
+                </div>
+              ))}
         </div>
       </div>
       {/* FOOTER */}

@@ -20,18 +20,24 @@ function sanitizeTextAreaValue(value: unknown): string {
   }
 
   if (Array.isArray(value)) {
-    throw new Error("CustomTextArea error: received an array value, which is invalid for a textarea.");
+    throw new Error(
+      "CustomTextArea error: received an array value, which is invalid for a textarea."
+    );
   }
 
   if (value !== null && typeof value === "object") {
-    throw new Error("CustomTextArea error: received an object value, which is invalid for a textarea.");
+    throw new Error(
+      "CustomTextArea error: received an object value, which is invalid for a textarea."
+    );
   }
 
   if (value === undefined || value === null) {
     return "";
   }
 
-  throw new Error(`CustomTextArea error: received unsupported value type (${typeof value}).`);
+  throw new Error(
+    `CustomTextArea error: received unsupported value type (${typeof value}).`
+  );
 }
 
 const CustomTextArea = ({

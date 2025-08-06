@@ -221,7 +221,10 @@ const Template15 = ({
 
           {/* === Company Overview Section === */}
           {companyBackground && (
-            <section aria-label="Company Overview" className="w-full mb-6 px-2 sm:px-6">
+            <section
+              aria-label="Company Overview"
+              className="w-full mb-6 px-2 sm:px-6"
+            >
               <h2 className="text-lg font-bold text-white mb-2">
                 Company Overview
               </h2>
@@ -232,33 +235,33 @@ const Template15 = ({
           {/* === Services Section === */}
           {(serviceDescription ||
             (servicePhotos && servicePhotos.length > 0)) && (
-              <section aria-label="Our Services" className="w-full px-2 sm:px-6">
-                <h2 className="text-lg font-bold text-white mb-4">
-                  Our Services
-                </h2>
-                {serviceDescription && (
-                  <p className="text-gray-300 mb-4">{serviceDescription}</p>
-                )}
-                {servicePhotos && servicePhotos.length > 0 && (
-                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-                    {servicePhotos.map((photo, idx) => (
-                      <div key={idx} className="w-full flex justify-center">
-                        <img
-                          src={photo}
-                          alt={`Service Photo ${idx + 1}`}
-                          className="rounded-2xl object-cover w-full h-44 bg-white"
-                          style={{
-                            minWidth: 0,
-                            minHeight: 176,
-                            maxWidth: "100%",
-                          }}
-                        />
-                      </div>
-                    ))}
-                  </div>
-                )}
-              </section>
-            )}
+            <section aria-label="Our Services" className="w-full px-2 sm:px-6">
+              <h2 className="text-lg font-bold text-white mb-4">
+                Our Services
+              </h2>
+              {serviceDescription && (
+                <p className="text-gray-300 mb-4">{serviceDescription}</p>
+              )}
+              {servicePhotos && servicePhotos.length > 0 && (
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                  {servicePhotos.map((photo, idx) => (
+                    <div key={idx} className="w-full flex justify-center">
+                      <img
+                        src={photo}
+                        alt={`Service Photo ${idx + 1}`}
+                        className="rounded-2xl object-cover w-full h-44 bg-white"
+                        style={{
+                          minWidth: 0,
+                          minHeight: 176,
+                          maxWidth: "100%",
+                        }}
+                      />
+                    </div>
+                  ))}
+                </div>
+              )}
+            </section>
+          )}
 
           {/* === Footer Section === */}
           <footer className="w-full max-w-md mx-auto mt-10 py-4 text-center text-gray-400 text-sm relative px-2 sm:px-6">

@@ -63,9 +63,11 @@ const Template17 = ({
   return (
     <div className="bg-white rounded-2xl sm:rounded-3xl shadow-xl w-full max-w-full sm:max-w-md mx-auto overflow-hidden font-sans text-black py-2 px-1">
       <div className="max-w-[480px] mx-auto flex flex-col">
-
         {/* === Profile and Cover Section === */}
-        <section aria-label="Cover Section" className="relative h-36 sm:h-44 w-full px-2 sm:px-3">
+        <section
+          aria-label="Cover Section"
+          className="relative h-36 sm:h-44 w-full px-2 sm:px-3"
+        >
           <div className="relative w-full h-48 sm:h-60 overflow-hidden">
             {/* Image with clip-path */}
             <img
@@ -92,7 +94,10 @@ const Template17 = ({
         </section>
 
         {/* === Profile Info Section === */}
-        <section aria-label="Profile Section" className="pt-12 sm:pt-16 pb-4 sm:pb-6 px-3 sm:px-4 flex flex-col items-center">
+        <section
+          aria-label="Profile Section"
+          className="pt-12 sm:pt-16 pb-4 sm:pb-6 px-3 sm:px-4 flex flex-col items-center"
+        >
           {/* Name & Position */}
           <h2 className="text-lg sm:text-xl font-bold text-center leading-tight">
             {prefix && `${prefix}. `}
@@ -144,18 +149,68 @@ const Template17 = ({
           {/* Social Icons */}
           <div className="flex gap-2 sm:gap-3 justify-center mt-3 sm:mt-5 flex-wrap">
             {[
-              { url: facebookUrl, icon: FaFacebookF, href: facebookUrl, color: "#1877F3" },
-              { url: linkedinUrl, icon: FaLinkedinIn, href: linkedinUrl, color: "#0A66C2" },
-              { url: instagramUrl, icon: FaInstagram, href: instagramUrl, color: "#E4405F" },
-              { url: websiteUrl, icon: FaGlobe, href: websiteUrl, color: "#6B7280" },
-              { url: twitterUrl, icon: FaTwitter, href: twitterUrl, color: "#1DA1F2" },
-              { url: youtubeUrl, icon: FaYoutube, href: youtubeUrl, color: "#FF0000" },
-              { url: whatsappNumber, icon: FaWhatsapp, href: `https://wa.me/${whatsappNumber}`, color: "#25D366" },
-              { url: skypeInviteUrl, icon: FaSkype, href: skypeInviteUrl, color: "#00AFF0" },
-              { url: viberUrl, icon: FaViber, href: viberUrl, color: "#665CAC" },
-              { url: tiktokUrl, icon: FaTiktok, href: tiktokUrl, color: "#000000" },
+              {
+                url: facebookUrl,
+                icon: FaFacebookF,
+                href: facebookUrl,
+                color: "#1877F3",
+              },
+              {
+                url: linkedinUrl,
+                icon: FaLinkedinIn,
+                href: linkedinUrl,
+                color: "#0A66C2",
+              },
+              {
+                url: instagramUrl,
+                icon: FaInstagram,
+                href: instagramUrl,
+                color: "#E4405F",
+              },
+              {
+                url: websiteUrl,
+                icon: FaGlobe,
+                href: websiteUrl,
+                color: "#6B7280",
+              },
+              {
+                url: twitterUrl,
+                icon: FaTwitter,
+                href: twitterUrl,
+                color: "#1DA1F2",
+              },
+              {
+                url: youtubeUrl,
+                icon: FaYoutube,
+                href: youtubeUrl,
+                color: "#FF0000",
+              },
+              {
+                url: whatsappNumber,
+                icon: FaWhatsapp,
+                href: `https://wa.me/${whatsappNumber}`,
+                color: "#25D366",
+              },
+              {
+                url: skypeInviteUrl,
+                icon: FaSkype,
+                href: skypeInviteUrl,
+                color: "#00AFF0",
+              },
+              {
+                url: viberUrl,
+                icon: FaViber,
+                href: viberUrl,
+                color: "#665CAC",
+              },
+              {
+                url: tiktokUrl,
+                icon: FaTiktok,
+                href: tiktokUrl,
+                color: "#000000",
+              },
             ]
-              .filter(social => social.url)
+              .filter((social) => social.url)
               .map((social, index) => {
                 const IconComponent = social.icon;
                 return (
@@ -172,8 +227,7 @@ const Template17 = ({
                     />
                   </a>
                 );
-              })
-            }
+              })}
           </div>
         </section>
 
@@ -190,9 +244,12 @@ const Template17 = ({
         )}
 
         {/* === Services Section === */}
-        {(serviceDescription || (servicePhotos && servicePhotos.length > 0)) && (
+        {(serviceDescription ||
+          (servicePhotos && servicePhotos.length > 0)) && (
           <section aria-label="Our Services" className="px-3 sm:px-4 pb-2">
-            <h3 className="font-bold text-sm sm:text-base mb-1">Our Services</h3>
+            <h3 className="font-bold text-sm sm:text-base mb-1">
+              Our Services
+            </h3>
             {serviceDescription && (
               <p className="text-xs sm:text-sm text-gray-700 mb-3 sm:mb-4 leading-relaxed">
                 {serviceDescription}
