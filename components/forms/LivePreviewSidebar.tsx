@@ -41,6 +41,11 @@ const availableTemplates: {
   { id: "template10", name: "Purple Aura", category: "Creative" },
   { id: "template11", name: "Sky", category: "Modern" },
   { id: "template12", name: "Dairy Green", category: "Nature" },
+  { id: "template13", name: "Urban Professional", category: "Creative" },
+  { id: "template15", name: "Neon Network", category: "Modern" },
+  { id: "template16", name: "Obsidian", category: "Creative" },
+  { id: "template17", name: "Designer Brand", category: "Professional" },
+  { id: "template18", name: "Ocean Depth", category: "Nature" },
 ];
 
 export default function LivePreviewSidebar({
@@ -64,52 +69,56 @@ export default function LivePreviewSidebar({
           width: isMinimized ? "4rem" : "24rem",
         }}
         transition={{ type: "spring", damping: 25, stiffness: 200 }}
-        className="fixed right-0 top-0 h-full bg-white dark:bg-gray-800 border-l border-gray-200 dark:border-gray-700 shadow-2xl z-30 overflow-hidden"
+        className="fixed right-0 top-0 h-full bg-white dark:bg-gray-800 border-l border-gray-200 dark:border-gray-700 shadow-2xl z-30"
       >
         {/* Minimize/Maximize Toggle */}
-        <div className="flex justify-between items-center p-4 border-b">
-          {!isMinimized ? (
-            <div>
-              <h3 className="font-semibold text-lg flex items-center gap-2">
-                <Smartphone className="h-5 w-5 text-gray-500" />
-                Mobile Preview
-              </h3>
-              <p className="text-sm text-gray-500">Live preview of your card</p>
-            </div>
-          ) : (
-            <div className="flex flex-col items-center justify-center w-full">
-              <Smartphone className="h-5 w-5 text-gray-400" />
-            </div>
-          )}
-          <Button
-            onClick={onToggleMinimize}
-            variant="ghost"
-            size="sm"
-            className={
-              isMinimized
-                ? "absolute -left-2 top-2 rounded-full h-6 w-6 p-0 bg-white dark:bg-gray-800 border shadow-md"
-                : "ml-auto"
-            }
-          >
-            {isMinimized ? (
-              <ChevronLeft className="h-3 w-3" />
+        <div className="relative">
+          <div className="flex justify-between items-center p-4 border-b">
+            {!isMinimized ? (
+              <div>
+                <h3 className="font-semibold text-lg flex items-center gap-2">
+                  <Smartphone className="h-5 w-5 text-gray-500" />
+                  Mobile Preview
+                </h3>
+                <p className="text-sm text-gray-500">
+                  Live preview of your card
+                </p>
+              </div>
             ) : (
-              <ChevronRight className="h-4 w-4" />
+              <div className="flex flex-col items-center justify-center w-full">
+                <Smartphone className="h-5 w-5 text-gray-400" />
+              </div>
             )}
-          </Button>
+            <Button
+              onClick={onToggleMinimize}
+              variant="ghost"
+              size="sm"
+              className={
+                isMinimized
+                  ? "absolute -left-3 rounded-full h-6 w-6 p-0 bg-white dark:bg-gray-800 border border-gray-400 shadow-md"
+                  : "ml-auto"
+              }
+            >
+              {isMinimized ? (
+                <ChevronLeft className="h-3 w-3" />
+              ) : (
+                <ChevronRight className="h-4 w-4" />
+              )}
+            </Button>
+          </div>
         </div>
 
         {/* Minimized Icons */}
         {isMinimized && (
           <div className="flex flex-col items-center py-4 space-y-4">
-            <Button
+            {/* <Button
               variant="ghost"
               size="sm"
               className="w-8 h-8 p-0 rounded-lg"
               onClick={() => onToggleMinimize()}
             >
               <Eye className="h-4 w-4 text-gray-500" />
-            </Button>
+            </Button> */}
             <Button
               variant="ghost"
               size="sm"
@@ -124,7 +133,7 @@ export default function LivePreviewSidebar({
         {/* Content - only show when not minimized */}
         {!isMinimized && (
           <div
-            className="p-4 space-y-4 overflow-y-auto"
+            className="p-4 space-y-4 overflow-y-auto no-scrollbar"
             style={{ height: "calc(100vh - 80px)" }}
           >
             {/* Current Template Info */}
@@ -172,7 +181,7 @@ export default function LivePreviewSidebar({
                     </CardHeader>
                     <CardContent>
                       <div className="grid grid-cols-2 gap-2 max-h-32 overflow-y-auto">
-                        {availableTemplates.slice(0, 8).map((template) => (
+                        {availableTemplates.map((template) => (
                           <Button
                             key={template.id}
                             variant={
@@ -197,21 +206,17 @@ export default function LivePreviewSidebar({
             {/* Mobile Preview Container */}
             <div className="relative">
               <div
-                className="max-w-[320px] mx-auto border-2 border-gray-200 rounded-xl overflow-hidden bg-black"
+                className="max-w-[320px] mx-auto border-2 border-gray-200 rounded-xl overflow-hidden bg-black flex flex-col"
                 style={{ aspectRatio: "9/16" }}
               >
-                {/* Mobile Frame */}
-                <div className="absolute inset-0 pointer-events-none z-10">
-                  <div className="absolute top-2 left-1/2 -translate-x-1/2 w-16 h-1 bg-gray-300 rounded-full"></div>
-                  <div className="absolute bottom-2 left-1/2 -translate-x-1/2 w-12 h-12 border-2 border-gray-300 rounded-full"></div>
-                </div>
-
-                {/* Template Preview */}
-                <div className="transform origin-top-left scale-[0.25] w-[400%] h-[400%]">
+                <div className="flex-grow max-h-[490px] overflow-y-auto no-scrollbar ">
                   <SelectedTemplate
                     templateId={selectedTemplateId}
                     formData={formData}
                   />
+                </div>
+                <div className="flex-grow w-full flex justify-center items-center">
+                  <div className="h-12 w-12 border-gray-300 border-2 rounded-full"></div>
                 </div>
               </div>
             </div>
