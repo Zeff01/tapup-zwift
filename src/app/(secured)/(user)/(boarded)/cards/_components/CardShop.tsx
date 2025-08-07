@@ -127,15 +127,15 @@ const OrderPhysicalCard = () => {
 
             <div className="grid grid-cols-1 md:flex gap-2 mt-2 md:mt-0 md:gap-2 lg:pb-4 bg-white dark:bg-transparent">
               <Button
-                onClick={() =>
+                onClick={() => {
                   addItem({
                     id: selectedPhysicalCard,
                     name: selectedCard?.title || "",
                     price: selectedPlan?.price || 0,
                     image: selectedCard?.image || "",
                     subscriptionPlan: selectedPlan ?? undefined,
-                  })
-                }
+                  });
+                }}
                 disabled={isCheckoutClicked || !selectedPlan}
                 className="flex w-full md:w-36 gap-2 hover:bg-black dark:hover:bg-grayTemplate"
               >
