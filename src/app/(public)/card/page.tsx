@@ -4,13 +4,13 @@ import { carouselCards } from "@/constants";
 import { useCart } from "@/hooks/use-cart-v2";
 import { cn, formatCurrency } from "@/lib/utils";
 import { useUserContext } from "@/providers/user-provider";
-import { Plus, ShoppingCart, Sparkles, CreditCard, Shield } from "lucide-react";
+import { AnimatePresence, motion } from "framer-motion";
+import { CreditCard, Shield, ShoppingCart, Sparkles } from "lucide-react";
 import dynamic from "next/dynamic";
 import Image from "next/image";
 import { useRouter, useSearchParams } from "next/navigation";
 import React, { useState } from "react";
 import { BiSolidPurchaseTag } from "react-icons/bi";
-import { motion, AnimatePresence } from "framer-motion";
 
 //prevent mismatch during the first render
 const TapUpCarousel = dynamic(
@@ -126,17 +126,20 @@ const CardPurchasePreviewPage = () => {
                     animate={{ opacity: 1, y: 0 }}
                     exit={{ opacity: 0, y: -20 }}
                     transition={{ duration: 0.3 }}
+                    className="flex flex-col justify-between min-h-[320px] md:min-h-[290px]"
                   >
-                    <h1 className="text-3xl sm:text-4xl md:text-5xl font-black mb-4">
-                      {card?.title}
-                    </h1>
+                    <div>
+                      <h1 className="text-3xl sm:text-4xl md:text-5xl font-black mb-4">
+                        {card?.title}
+                      </h1>
 
-                    <p className="text-lg sm:text-xl text-muted-foreground mb-8 leading-relaxed">
-                      {card?.description}
-                    </p>
+                      <p className="text-lg sm:text-xl text-muted-foreground mb-8 leading-relaxed">
+                        {card?.description}
+                      </p>
+                    </div>
 
                     {/* Price */}
-                    <div className="mb-8">
+                    <div className="mb-0">
                       <p className="text-sm text-muted-foreground mb-1">
                         Price
                       </p>

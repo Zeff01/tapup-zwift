@@ -4,15 +4,15 @@ import {
   Carousel,
   CarouselContent,
   CarouselItem,
+  type CarouselApi,
 } from "@/components/ui/carousel";
-import Image from "next/image";
-import CardDetails from "./card-details";
-import React, { useEffect, useRef, useState, useMemo } from "react";
 import { carouselCards } from "@/constants";
 import { cn } from "@/lib/utils";
 import Autoplay from "embla-carousel-autoplay";
+import Image from "next/image";
+import { useEffect, useMemo, useRef, useState } from "react";
 import { useMediaQuery } from "usehooks-ts";
-import { type CarouselApi } from "@/components/ui/carousel";
+import CardDetails from "./card-details";
 // import { CarouselCardKey } from "@/types/types";
 import { useSearchParams } from "next/navigation";
 

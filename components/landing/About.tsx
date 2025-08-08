@@ -1,13 +1,12 @@
 "use client";
 
-import Image from "next/image";
-import demoCard from "@/public/assets/tap-up-demo-card.png";
 import { tapupLearnMoreList } from "@/constants";
-import TapupLogo from "../svgs/TapupLogo";
-import Check from "../svgs/Check";
-import { motion } from "framer-motion";
-import { useInView } from "framer-motion";
+import demoCard from "@/public/assets/tap-up-demo-card.png";
+import { motion, useInView } from "framer-motion";
+import Image from "next/image";
 import { useRef } from "react";
+import Check from "../svgs/Check";
+import TapupLogo from "../svgs/TapupLogo";
 
 const AboutTapup = () => {
   const ref = useRef(null);
