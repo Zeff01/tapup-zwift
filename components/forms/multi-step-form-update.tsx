@@ -833,7 +833,7 @@ const MultiStepFormUpdate = ({
                           updated[idx].companyBackground = e.target.value;
                           setCompanies(updated);
                         }}
-                        className="flex w-full rounded-md border border-input bg-background px-3 py-2 text-base ring-offset-background placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50 md:text-sm mb-2 resize-none min-h-[60px]"
+                        className="flex w-full rounded-md border border-input bg-background px-3 py-2 text-base ring-offset-background placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50 md:text-sm mb-2 resize-none h-[120px]"
                       />
                       <textarea
                         placeholder="Service Description"
@@ -843,7 +843,7 @@ const MultiStepFormUpdate = ({
                           updated[idx].serviceDescription = e.target.value;
                           setCompanies(updated);
                         }}
-                        className="flex w-full rounded-md border border-input bg-background px-3 py-2 text-base ring-offset-background placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50 md:text-sm mb-2 resize-none min-h-[60px]"
+                        className="flex w-full rounded-md border border-input bg-background px-3 py-2 text-base ring-offset-background placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50 md:text-sm mb-2 resize-none h-[120px]"
                       />
                       <div>
                         <h3 className="text-sm leading-none font-medium my-2">
@@ -1088,19 +1088,17 @@ const MultiStepFormUpdate = ({
 
                       {/* Compact Template Preview */}
                       {selectedTemplateId && (
-                        <div className="w-full border rounded-lg mb-4 max-h-[300px] overflow-y-auto bg-gray-50 dark:bg-gray-800">
-                          <div className="transform scale-[0.3] origin-top-left w-[333%] h-[333%]">
-                            <SelectedTemplate
-                              templateId={selectedTemplateId}
-                              formData={{
-                                ...methods.watch(),
-                                id: userData.id!,
-                                chosenPhysicalCard: {
-                                  id: methods.watch().chosenPhysicalCard || "",
-                                },
-                              }}
-                            />
-                          </div>
+                        <div className="w-full border rounded-lg mb-4 max-h-[340px] overflow-y-auto">
+                          <SelectedTemplate
+                            templateId={selectedTemplateId}
+                            formData={{
+                              ...methods.watch(),
+                              id: userData.id!,
+                              chosenPhysicalCard: {
+                                id: methods.watch().chosenPhysicalCard || "",
+                              },
+                            }}
+                          />
                         </div>
                       )}
                     </div>
@@ -1159,16 +1157,16 @@ const MultiStepFormUpdate = ({
                       type="button"
                       onClick={handleNextStep}
                       disabled={isLoading}
-                      className="flex items-center gap-2 bg-green-600 hover:bg-green-500"
+                      className="flex items-center gap-2 text-white bg-green-600 hover:bg-green-500"
                     >
                       Next
-                      <ArrowRight className="h-4 w-4" />
+                      <ArrowRight className="h-4 w-4 text-white" />
                     </Button>
                   ) : (
                     <Button
                       type="submit"
                       disabled={isLoading || isCustomUrlLoading}
-                      className="flex items-center gap-2 bg-green-600 hover:bg-green-500"
+                      className="flex items-center gap-2 text-white bg-green-600 hover:bg-green-500"
                     >
                       {isLoading || isCustomUrlLoading ? (
                         <>
@@ -1177,7 +1175,7 @@ const MultiStepFormUpdate = ({
                         </>
                       ) : (
                         <>
-                          <Save className="h-4 w-4" />
+                          <Save className="h-4 w-4 text-white" />
                           Save Card
                         </>
                       )}

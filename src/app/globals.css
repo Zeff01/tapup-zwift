@@ -162,6 +162,10 @@
   ::-webkit-scrollbar-thumb:active {
     @apply bg-hoverColor;
   }
+
+  .home-panel-scrollbar::-webkit-scrollbar-thumb {
+    @apply bg-slate-500;
+  }
 }
 
 @layer components {
@@ -189,6 +193,14 @@
 
   .no-scrollbar::-webkit-scrollbar {
     display: none;
+  }
+
+  .rtl-scrollbar {
+    direction: rtl;
+  }
+
+  .rtl-scrollbar > * {
+    direction: ltr;
   }
 
   /* Blob animation */
