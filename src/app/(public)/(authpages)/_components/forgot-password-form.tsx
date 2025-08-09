@@ -64,7 +64,7 @@ export function ForgotPasswordForm() {
       initial={{ opacity: 0, y: 20 }}
       animate={{ opacity: 1, y: 0 }}
       transition={{ duration: 0.5 }}
-      className="w-full"
+      className="w-full mb-4"
     >
       <Card className="w-full flex flex-col justify-center border-0 shadow-none bg-transparent">
         <CardHeader className="space-y-0.5 px-0 pb-2">
