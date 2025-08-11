@@ -152,7 +152,7 @@ export function LogInForm() {
                             {...field}
                             type={showPassword ? "text" : "password"}
                             placeholder="Enter your password"
-                            className="pl-10 pr-10 h-12 rounded-xl border-gray-200 focus:border-green-500 transition-colors"
+                            className="pl-10 pr-10 h-8 rounded-xl border-gray-200 dark:border-gray-700 focus:border-green-500 dark:focus:border-green-500 transition-colors"
                           />
                           <button
                             type="button"

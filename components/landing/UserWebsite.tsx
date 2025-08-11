@@ -46,7 +46,7 @@ const UserWebsite = () => {
               initial={{ opacity: 0, y: 20 }}
               animate={isInView ? { opacity: 1, y: 0 } : {}}
               transition={{ delay: 0.2 }}
-              className="flex gap-4 justify-center lg:justify-start mb-6"
+              className="flex gap-4 justify-center lg:justify-start mb-6 flex-wrap"
             >
               {features.map((feature, index) => (
                 <motion.div
@@ -54,7 +54,7 @@ const UserWebsite = () => {
                   initial={{ opacity: 0, scale: 0 }}
                   animate={isInView ? { opacity: 1, scale: 1 } : {}}
                   transition={{ delay: 0.3 + index * 0.1 }}
-                  className="flex items-center gap-2 px-3 py-1 bg-gray-100 dark:bg-gray-800 rounded-full text-sm"
+                  className="flex justify-center items-center gap-2 px-3 py-1 bg-gray-100 dark:bg-gray-800 rounded-full text-sm w-[180px]"
                 >
                   <feature.icon className="w-4 h-4 text-green-600" />
                   <span className="text-gray-700 dark:text-gray-300">

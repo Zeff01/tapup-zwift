@@ -88,7 +88,7 @@ const TemplateSelection = () => {
               onClick={() => setSelectedCard(index)}
               className={`relative cursor-pointer group ${
                 selectedCard === index
-                  ? "ring-2 ring-green-500 ring-offset-2"
+                  ? "ring-2 ring-green-500 ring-offset-2 rounded-md"
                   : ""
               }`}
             >

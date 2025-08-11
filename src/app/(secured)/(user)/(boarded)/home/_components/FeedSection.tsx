@@ -36,7 +36,7 @@ const dummyPosts = [
     content:
       "Just launched our new design system! Excited to share this with the community. The components are now more accessible and user-friendly. 🎨✨",
     image: "/api/placeholder/500/300",
-    timestamp: "2 hours ago",
+    timestamp: "2h",
     likes: 24,
     comments: 8,
     shares: 3,
@@ -55,7 +55,7 @@ const dummyPosts = [
     },
     content:
       "Coffee break thoughts: The best code is the code you don't have to write. Sometimes the simplest solution is the most elegant one. What's your favorite programming principle?",
-    timestamp: "4 hours ago",
+    timestamp: "4h",
     likes: 18,
     comments: 12,
     shares: 2,
@@ -75,7 +75,7 @@ const dummyPosts = [
     content:
       "Our latest campaign exceeded expectations by 300%! Here's what we learned about authentic storytelling in the digital age...",
     image: "/api/placeholder/500/200",
-    timestamp: "6 hours ago",
+    timestamp: "6h",
     likes: 45,
     comments: 15,
     shares: 8,
@@ -147,25 +147,24 @@ export default function FeedSection() {
                   placeholder="Share something with your TapConnect network..."
                   value={newPost}
                   onChange={(e) => setNewPost(e.target.value)}
-                  className="border-0 resize-none focus:ring-0 min-h-[80px]"
+                  className="border-0 resize-none  min-h-[80px] focus-visible:ring-transparent"
                 />
                 <div className="flex justify-between items-center mt-3">
-                  <div className="flex space-x-2">
-                    <Button variant="ghost" size="sm">
-                      <ImageIcon className="h-4 w-4 mr-2" />
-                      Photo
-                    </Button>
-                    <Button variant="ghost" size="sm">
-                      <MapPin className="h-4 w-4 mr-2" />
-                      Location
-                    </Button>
+                  <div className="flex space-x-1">
+                    <button className="py-2 px-2 hover:bg-green-500/20 dark:hover:bg-green-500/10 transition-all duration-100 ease-in rounded-full group">
+                      <ImageIcon className="h-5 w-5 text-slate-600 dark:text-slate-500 group-hover:text-green-500 transition-colors duration-100 ease-in" />
+                    </button>
+                    <button className="py-2 px-2 hover:bg-green-500/20 dark:hover:bg-green-500/10 transition-all duration-100 ease-in rounded-full group">
+                      <MapPin className="h-5 w-5 text-slate-600 dark:text-slate-500 group-hover:text-green-500 transition-colors duration-100 ease-in" />
+                    </button>
                   </div>
                   <Button
                     onClick={handlePost}
                     disabled={!newPost.trim()}
                     size="sm"
+                    className="bg-gradient-to-br from-green-500 to-emerald-500 text-white rounded-full"
                   >
-                    <Send className="h-4 w-4 mr-2" />
+                    <Send className="h-4 w-4 " />
                     Post
                   </Button>
                 </div>
@@ -188,29 +187,38 @@ export default function FeedSection() {
               <CardHeader className="pb-3">
                 <div className="flex items-start justify-between">
                   <div className="flex space-x-3">
-                    <div className="relative">
-                      <Avatar>
-                        <AvatarImage src={post.user.avatar} />
-                        <AvatarFallback className={post.user.cardColor}>
-                          {post.user.name
-                            .split(" ")
-                            .map((n) => n[0])
-                            .join("")}
-                        </AvatarFallback>
-                      </Avatar>
-                      <div className="absolute -bottom-1 -right-1 w-4 h-4 bg-green-500 rounded-full border-2 border-white"></div>
+                    <div>
+                      <div className="relative">
+                        <Avatar>
+                          <AvatarImage src={post.user.avatar} />
+                          <AvatarFallback className={post.user.cardColor}>
+                            {post.user.name
+                              .split(" ")
+                              .map((n) => n[0])
+                              .join("")}
+                          </AvatarFallback>
+                        </Avatar>
+                        <div className="absolute z-50 bottom-0 -right-1 w-[14px] h-[14px] bg-green-500 rounded-full border-2 border-gray-900"></div>
+                      </div>
                     </div>
+
                     <div className="flex-1">
-                      <div className="flex items-center space-x-2">
+                      <div className="flex items-center space-x-2 min-w-0">
                         <h3 className="font-semibold text-gray-900 dark:text-white">
                           {post.user.name}
                         </h3>
-                        <span className="text-gray-500 text-sm">
-                          @{post.user.username}
-                        </span>
+                        <div className="flex items-center space-x-1">
+                          <span className="text-gray-500 text-sm ">
+                            @{post.user.username}
+                          </span>
+                          <span className="text-gray-500">·</span>
+                          <span className="text-sm text-gray-500">
+                            {post.timestamp}
+                          </span>
+                        </div>
                       </div>
                       <div className="flex items-center space-x-2 text-sm text-gray-600 dark:text-gray-400">
-                        <Briefcase className="h-3 w-3" />
+                        {/* <Briefcase className="h-3 w-3" /> */}
                         <span>
                           {post.user.position} at {post.user.company}
                         </span>
@@ -221,10 +229,9 @@ export default function FeedSection() {
                     </div>
                   </div>
                   <div className="flex items-center space-x-2 text-gray-500">
-                    <span className="text-sm">{post.timestamp}</span>
-                    <Button variant="ghost" size="sm">
-                      <MoreHorizontal className="h-4 w-4" />
-                    </Button>
+                    <button className="py-2 px-2 hover:bg-green-500/20 dark:hover:bg-green-500/10 transition-all duration-100 ease-in rounded-full group">
+                      <MoreHorizontal className="h-4 w-4 group-hover:text-green-500 transition-colors duration-100 ease-in" />
+                    </button>
                   </div>
                 </div>
               </CardHeader>
@@ -247,25 +254,31 @@ export default function FeedSection() {
                 {/* Action Buttons */}
                 <div className="flex items-center justify-between pt-3 border-t">
                   <div className="flex space-x-4">
-                    <Button
-                      variant="ghost"
-                      size="sm"
+                    <button
                       onClick={() => handleLike(post.id)}
-                      className={post.isLiked ? "text-red-500" : ""}
+                      className={`flex items-center group  `}
                     >
                       <Heart
-                        className={`h-4 w-4 mr-2 ${post.isLiked ? "fill-current" : ""}`}
+                        className={`h-4 w-4 mr-2 group-hover:text-pink-600 text-slate-500 dark:text-slate-300 transition-colors duration-100 ease-in ${post.isLiked ? "fill-pink-600 stroke-pink-600" : ""}`}
                       />
-                      {post.likes}
-                    </Button>
-                    <Button variant="ghost" size="sm">
-                      <MessageCircle className="h-4 w-4 mr-2" />
-                      {post.comments}
-                    </Button>
-                    <Button variant="ghost" size="sm">
-                      <Share className="h-4 w-4 mr-2" />
-                      {post.shares}
-                    </Button>
+                      <span
+                        className={` group-hover:text-pink-600 transition-colors duration-100 ease-in ${post.isLiked ? "text-pink-600" : "text-slate-500 dark:text-slate-300"}`}
+                      >
+                        {post.likes}
+                      </span>
+                    </button>
+                    <button className="flex items-center group ">
+                      <MessageCircle className="h-4 w-4 mr-2 text-slate-500 dark:text-slate-300 group-hover:text-sky-500 transition-colors duration-100 ease-in" />
+                      <span className="text-slate-500 dark:text-slate-300 group-hover:text-sky-500 transition-colors duration-100 ease-in">
+                        {post.comments}
+                      </span>
+                    </button>
+                    <button className="flex items-center group ">
+                      <Share className="h-4 w-4 mr-2 text-slate-500 dark:text-slate-300 group-hover:text-green-500 transition-colors duration-100 ease-in" />
+                      <span className="text-slate-500 dark:text-slate-300 group-hover:text-green-500 transition-colors duration-100 ease-in">
+                        {post.shares}
+                      </span>
+                    </button>
                   </div>
                 </div>
 
@@ -280,7 +293,7 @@ export default function FeedSection() {
                       placeholder="Write a comment..."
                       className="flex-1"
                     />
-                    <Button size="sm">
+                    <Button size="sm" className="bg-gray-200 hover:bg-white">
                       <Send className="h-4 w-4" />
                     </Button>
                   </div>
