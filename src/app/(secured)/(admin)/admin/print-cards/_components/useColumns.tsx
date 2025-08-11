@@ -161,10 +161,12 @@ export const useCreateColumns = ({
                     <span>Print</span>
                     <Printer size={15} />
                   </DropdownMenuItem>
+
                   <DropdownMenuItem className="flex items-center gap-2 justify-between focus:bg-gray-200 dark:focus:bg-accent">
                     <span>Edit</span>
                     <PencilLine size={15} />
                   </DropdownMenuItem>
+                  
                   <DropdownMenuItem
                     className="focus:bg-gray-200 dark:focus:bg-accent"
                     onSelect={(e) => e.preventDefault()}

@@ -1,24 +1,24 @@
-import { downloadVCard } from "@/lib/utils";
+import { downloadVCard, getCopyrightYear } from "@/lib/utils";
 import { Card } from "@/types/types";
 import Image from "next/image";
 import Link from "next/link";
 import {
-  MdOutlinePhone,
-  MdOutlineMailOutline,
-  MdOutlineBookmarkBorder,
-} from "react-icons/md";
-import {
-  FaXTwitter,
   FaFacebook,
-  FaYoutube,
+  FaGlobe,
   FaInstagram,
   FaLinkedin,
-  FaWhatsapp,
   FaSkype,
-  FaGlobe,
-  FaViber,
   FaTiktok,
+  FaViber,
+  FaWhatsapp,
+  FaXTwitter,
+  FaYoutube,
 } from "react-icons/fa6";
+import {
+  MdOutlineBookmarkBorder,
+  MdOutlineMailOutline,
+  MdOutlinePhone,
+} from "react-icons/md";
 
 const Template4 = ({
   id,
@@ -181,18 +181,7 @@ const Template4 = ({
                   />
                 </div>
               ))
-            : Array.from({ length: 4 }).map((_, index) => (
-                <div key={index} className="col-span-1">
-                  <Image
-                    src="/assets/sampleService.png"
-                    alt="Service Photo"
-                    width={500}
-                    height={500}
-                    layout="responsive"
-                    className="rounded-md object-cover w-full"
-                  />
-                </div>
-              ))}
+            : ""}
         </div>
       </div>
       {/* SOCIAL MEDIA ICONS */}
@@ -263,8 +252,26 @@ const Template4 = ({
       <h2 className="text-xs font-extrabold mx-auto w-full text-center mb-2">
         {company ?? "COMPANY"}
       </h2>
-      <div className="text-center text-xs text-gray-800  mb-2">
-        © 2024 Zwiftech. All Right Reserved.
+
+      <div className="flex flex-col mt-3 mb-1 items-center gap-1 text-center text-xs">
+        <a
+          href={userProfile?.customUrl ?? userProfile?.websiteUrl ?? "#"}
+          target="_blank"
+          rel="noopener noreferrer"
+        >
+          <Image
+            src="/assets/zwift-logo.png"
+            alt="Zwiftech Logo"
+            width={50}
+            height={20}
+            priority
+            className="opacity-90"
+          />
+        </a>
+
+        <span className="tracking-wide text-gray-500 text-[10px] ">
+          © {getCopyrightYear()} Zwiftech. All Rights Reserved.
+        </span>
       </div>
     </div>
   );

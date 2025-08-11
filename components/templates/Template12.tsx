@@ -1,24 +1,23 @@
-import { cn, downloadVCard } from "@/lib/utils";
+import { cn, downloadVCard, getCopyrightYear } from "@/lib/utils";
 import { Card } from "@/types/types";
 import { Advent_Pro, Akatab } from "next/font/google";
 import Image from "next/image";
-import { CiMail, CiPhone } from "react-icons/ci";
 import {
-  MdOutlinePhone,
-  MdOutlineMailOutline,
-  MdOutlineBookmarkBorder,
-} from "react-icons/md";
-import {
-  FaXTwitter,
   FaFacebook,
-  FaYoutube,
+  FaGlobe,
   FaInstagram,
   FaLinkedin,
-  FaWhatsapp,
   FaSkype,
-  FaGlobe,
   FaViber,
+  FaWhatsapp,
+  FaXTwitter,
+  FaYoutube,
 } from "react-icons/fa6";
+import {
+  MdOutlineBookmarkBorder,
+  MdOutlineMailOutline,
+  MdOutlinePhone,
+} from "react-icons/md";
 import { Button } from "../ui/button";
 import { Separator } from "../ui/separator";
 import {
@@ -233,7 +232,7 @@ const Template12 = ({
         </div>
 
         <div className="text-center flex flex-col absolute top-[205px] w-full space-y-1 bg-[#D3F1DF] bg-gradient-to-t from-[#85A98F] overflow-hidden to-[#D3F1DF] rounded-t-3xl">
-          <div className=" flex  items-center w-full gap-x-4 py-4 text-2xl bg-gradient-to-t from-[#D3F1DF]  to-[#f4fcf7] text-neutral-700 h-16 justify-center">
+          <div className=" flex  items-center w-full gap-3 py-4 text-2xl bg-gradient-to-t from-[#D3F1DF]  to-[#f4fcf7] text-neutral-700 h-16 justify-center">
             {facebookUrl && (
               <a href={facebookUrl} target="_blank" rel="noopener noreferrer">
                 <FaFacebook size={20} />
@@ -355,13 +354,28 @@ const Template12 = ({
               >
                 {company ?? "COMPANY"}
               </h2>
-              <p className="flex justify-center items-center">
-                <span className="text-xl">©</span>
-                <span className="text-xs">
-                  {" "}
-                  2024 Zwiftech. All Right Reserved.
-                </span>
-              </p>
+            </div>
+
+            {/* footer */}
+            <div className="flex flex-col items-center mb-1 gap-1 text-center text-xs">
+              <a
+                href={userProfile?.customUrl ?? userProfile?.websiteUrl ?? "#"}
+                target="_blank"
+                rel="noopener noreferrer"
+              >
+                <Image
+                  src="/assets/zwift-logo.png"
+                  alt="Zwiftech Logo"
+                  width={50}
+                  height={20}
+                  priority
+                  className="opacity-90"
+                />
+              </a>
+
+              <span className="tracking-wide text-gray-800 text-[10px] ">
+                © {getCopyrightYear()} Zwiftech. All Rights Reserved.
+              </span>
             </div>
           </div>
         </div>

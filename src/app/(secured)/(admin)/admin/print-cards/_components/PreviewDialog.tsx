@@ -1,22 +1,22 @@
 "use client";
 
+import { Button } from "@/components/ui/button";
 import {
   Dialog,
   DialogContent,
   DialogDescription,
+  DialogFooter,
   DialogHeader,
   DialogTitle,
-  DialogFooter,
 } from "@/components/ui/dialog";
 import { Separator } from "@/components/ui/separator";
-import { Button } from "@/components/ui/button";
-import { UserState } from "@/types/types";
+import { carouselCards } from "@/constants";
 import { updateSingleCardPrintStatus } from "@/lib/firebase/actions/card.action";
+import { UserState } from "@/types/types";
+import Image from "next/image";
 import { useState } from "react";
 import { toast } from "react-toastify";
-import { carouselCards } from "@/constants";
 import { PrintCardsInfo } from "./PrintCardsTable";
-import Image from "next/image";
 
 interface PreviewDialogProps {
   isOpen: boolean;

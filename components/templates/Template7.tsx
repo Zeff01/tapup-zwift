@@ -1,15 +1,15 @@
+import { Button } from "@/components/ui/button";
+import { downloadVCard } from "@/lib/utils";
 import { Card } from "@/types/types";
 import Image from "next/image";
-import { Button } from "@/components/ui/button";
 import {
+  FaEnvelope,
   FaFacebook,
+  FaGlobe,
   FaInstagram,
   FaLinkedin,
-  FaGlobe,
-  FaEnvelope,
   FaPhone,
 } from "react-icons/fa6";
-import { downloadVCard } from "@/lib/utils";
 
 const Template7 = ({
   id,

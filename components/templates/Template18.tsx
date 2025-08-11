@@ -1,27 +1,23 @@
-import { downloadVCard } from "@/lib/utils";
+import { downloadVCard, getCopyrightYear } from "@/lib/utils";
 import { Card } from "@/types/types";
+import Image from "next/image";
 import {
-  FaEnvelope,
   FaFacebookF,
-  FaLinkedinIn,
-  FaInstagram,
   FaGlobe,
-  FaRegBookmark,
-  FaTwitter,
-  FaYoutube,
-  FaWhatsapp,
+  FaInstagram,
+  FaLinkedinIn,
   FaSkype,
+  FaTwitter,
   FaViber,
+  FaWhatsapp,
+  FaYoutube,
 } from "react-icons/fa";
-import { SiTiktok } from "react-icons/si";
-import { LuMail, LuBookmark } from "react-icons/lu";
-import Link from "next/link";
-import { Button } from "../ui/button";
 import {
   MdOutlineBookmarkBorder,
   MdOutlineMailOutline,
   MdOutlinePhone,
 } from "react-icons/md";
+import { SiTiktok } from "react-icons/si";
 
 const Template18 = ({
   id,
@@ -310,9 +306,28 @@ const Template18 = ({
         )}
 
         {/* === Footer Section === */}
-        <footer className="bg-[#001d34] text-white text-center py-3 sm:py-4 text-xs rounded-b-[30px] px-2 sm:px-3">
+        <footer className="bg-[#001d34] text-white text-center  text-xs rounded-b-[30px] px-2 sm:px-3">
           <div className="font-semibold text-sm sm:text-base">{company}</div>
-          <div className="mt-1">© 2024 Zwiftech. All Rights Reserved.</div>
+          <div className="flex flex-col mt-8 items-center  gap-1 text-center text-xs">
+            <a
+              href={userProfile?.customUrl ?? userProfile?.websiteUrl ?? "#"}
+              target="_blank"
+              rel="noopener noreferrer"
+            >
+              <Image
+                src="/assets/zwift-logo.png"
+                alt="Zwiftech Logo"
+                width={50}
+                height={20}
+                priority
+                className="opacity-90"
+              />
+            </a>
+
+            <span className="tracking-wide text-gray-400 text-[10px] ">
+              © {getCopyrightYear()} Zwiftech. All Rights Reserved.
+            </span>
+          </div>{" "}
         </footer>
       </div>
     </div>

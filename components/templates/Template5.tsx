@@ -1,11 +1,11 @@
-import { downloadVCard } from "@/lib/utils";
+import { downloadVCard, getCopyrightYear } from "@/lib/utils";
 import { Card } from "@/types/types";
 import Image from "next/image";
 import Link from "next/link";
 import {
-  MdOutlinePhone,
-  MdOutlineMailOutline,
   MdOutlineBookmarkBorder,
+  MdOutlineMailOutline,
+  MdOutlinePhone,
 } from "react-icons/md";
 import SocialIconsPopup from "../SocialIconsPopup";
 
@@ -95,24 +95,24 @@ const Template5 = ({
         </div>
 
         {/* CTA BUTTONS */}
-        <div className="flex justify-end gap-2.5 pr-3 pt-3 text-pink-400 ">
+        <div className="flex justify-end gap-1 pt-3 text-pink-400 ">
           <Link
             href={`tel:${number}`}
             className="p-1.5 grid place-content-center rounded-full border border-pink-400 "
           >
-            <MdOutlinePhone className="cursor-pointer" size={24} />
+            <MdOutlinePhone className="cursor-pointer" size={18} />
           </Link>
           <Link
             href={`mailto:${email}`}
             className="p-1.5 grid place-content-center rounded-full border border-pink-400 "
           >
-            <MdOutlineMailOutline className="cursor-pointer" size={24} />
+            <MdOutlineMailOutline className="cursor-pointer" size={18} />
           </Link>
           <div className="p-1.5 grid place-content-center rounded-full border border-pink-400 ">
             <MdOutlineBookmarkBorder
               className="cursor-pointer font-bold"
               onClick={() => downloadVCard(userProfile)}
-              size={24}
+              size={18}
             />
           </div>
         </div>
@@ -201,11 +201,29 @@ const Template5 = ({
         </div>
 
         {/* FOOTER */}
-        <h2 className="text-xs font-extrabold mx-auto w-full text-center mt-8 mb-2">
+        <h2 className="text-xs font-extrabold mx-auto w-full text-center mt-3 mb-2">
           {company ?? "COMPANY"}
         </h2>
-        <div className="text-center text-xs text-gray-800  mb-2">
-          © 2024 Zwiftech. All Right Reserved.
+
+        <div className="flex flex-col mt-8 mb-1 items-center gap-1 text-center text-xs">
+          <a
+            href={userProfile?.customUrl ?? userProfile?.websiteUrl ?? "#"}
+            target="_blank"
+            rel="noopener noreferrer"
+          >
+            <Image
+              src="/assets/zwift-logo.png"
+              alt="Zwiftech Logo"
+              width={50}
+              height={20}
+              priority
+              className="opacity-90"
+            />
+          </a>
+
+          <span className="tracking-wide text-gray-800 text-[10px] ">
+            © {getCopyrightYear()} Zwiftech. All Rights Reserved.
+          </span>
         </div>
       </div>
     </div>

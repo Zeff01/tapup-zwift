@@ -1,16 +1,16 @@
+import { Card } from "@/types/types";
+import Link from "next/link";
 import {
-  FaXTwitter,
   FaFacebook,
-  FaYoutube,
+  FaGlobe,
   FaInstagram,
   FaLinkedin,
-  FaWhatsapp,
   FaSkype,
-  FaGlobe,
   FaViber,
+  FaWhatsapp,
+  FaXTwitter,
+  FaYoutube,
 } from "react-icons/fa6";
-import Link from "next/link";
-import { Card } from "@/types/types";
 
 const style = {
   width: "24px",
@@ -31,7 +31,7 @@ const ProfileSocials = ({
   viberUrl,
 }: Partial<Card>) => {
   return (
-    <section className="flex gap-3 w-[15rem] pt-5 pl-2">
+    <section className="flex gap-1 w-[15rem] pt-5 pl-2">
       {facebookUrl && (
         <Link href={facebookUrl} target="_blank" rel="noopener noreferrer">
           <FaFacebook style={style} />

@@ -2,7 +2,7 @@ import { Card } from "@/types/types";
 import Image from "next/image";
 
 // fonts
-import { cn, downloadVCard } from "@/lib/utils";
+import { cn, downloadVCard, getCopyrightYear } from "@/lib/utils";
 import { Mulish, Roboto_Condensed } from "next/font/google";
 
 const roboto_c = Roboto_Condensed({
@@ -69,34 +69,30 @@ const Template11 = ({
   return (
     <div className=" flex flex-col bg-white items-center justify-between  min-h-screen">
       <div className=" w-full mx-auto  relative">
-        <div className="flex gap-1 z-20 absolute right-0 top-0 my-4 mx-3">
+        <div className="flex gap-2 z-20 absolute right-0 top-0 p-1">
           {/* Phone */}
           <a
             href={`tel:${number}`}
-            className="text-decoration-none text-[#00A9FF] hover:text-white"
+            className="flex items-center justify-center w-8 h-8 bg-[#A0E9FF] text-[#00A9FF] rounded-full shadow hover:bg-[#00A9FF] hover:text-white transform hover:scale-110 transition-all duration-200"
           >
-            <span className="flex items-center justify-center w-10 h-10 bg-[#A0E9FF] hover:bg-[#00A9FF] hover:text-white transition-all duration-200 cursor-pointer rounded-full text-lg">
-              <MdOutlinePhone />
-            </span>
+            <MdOutlinePhone size={18} />
           </a>
 
           {/* Email */}
           <a
             href={`mailto:${email}`}
-            className="text-decoration-none text-[#00A9FF] hover:text-white"
+            className="flex items-center justify-center w-8 h-8 bg-[#A0E9FF] text-[#00A9FF] rounded-full shadow hover:bg-[#00A9FF] hover:text-white transform hover:scale-110 transition-all duration-200"
           >
-            <span className="flex items-center justify-center w-10 h-10 bg-[#A0E9FF] hover:bg-[#00A9FF] hover:text-white transition-all duration-200 cursor-pointer rounded-full text-lg">
-              <MdOutlineMailOutline />
-            </span>
+            <MdOutlineMailOutline size={18} />
           </a>
 
           {/* Bookmark / vCard */}
-          <span
+          <button
             onClick={() => downloadVCard(userProfile)}
-            className="flex items-center justify-center w-10 h-10 bg-[#A0E9FF] hover:bg-[#00A9FF] hover:text-white  text-[#00A9FF]  transition-all duration-200 cursor-pointer rounded-full text-lg"
+            className="flex items-center justify-center w-8 h-8 bg-[#A0E9FF] text-[#00A9FF] rounded-full shadow hover:bg-[#00A9FF] hover:text-white transform hover:scale-110 transition-all duration-200"
           >
-            <HiOutlineBookmark size={20} />
-          </span>
+            <HiOutlineBookmark size={18} />
+          </button>
         </div>
 
         {/* COVERPHOTO AND PROFILE PIC */}
@@ -187,7 +183,7 @@ const Template11 = ({
             <p>{number ?? +639123456789}</p>
           </div>
           {/* SOCIAL MEDIA ICONS */}
-          <div className=" flex items-center gap-x-2 pb-10 pt-5 text-black text-2xl  h-16 justify-center">
+          <div className=" flex items-center gap-1 pb-10 pt-5 text-black text-2xl  h-16 justify-center">
             {facebookUrl && (
               <a
                 className="rounded-full p-2 bg-white  opacity-50"
@@ -352,10 +348,26 @@ const Template11 = ({
             {company ?? "Company"}
           </span>
         </h2>
-        <p className="flex items-center justify-center text-black opacity-50 gap-x-2">
-          <span className="text-lg">©</span>
-          <span>2024 Zwiftech. All Right Reserved.</span>
-        </p>
+        <div className="flex flex-col items-center mt-8 gap-1 text-center text-xs">
+          <a
+            href={userProfile?.customUrl ?? userProfile?.websiteUrl ?? "#"}
+            target="_blank"
+            rel="noopener noreferrer"
+          >
+            <Image
+              src="/assets/zwift-logo.png"
+              alt="Zwiftech Logo"
+              width={50}
+              height={20}
+              priority
+              className="opacity-90"
+            />
+          </a>
+
+          <span className="tracking-wide text-gray-800 text-[10px] ">
+            © {getCopyrightYear()} Zwiftech. All Rights Reserved.
+          </span>
+        </div>
       </div>
     </div>
   );
