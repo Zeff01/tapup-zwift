@@ -9,7 +9,7 @@ import { CreditCard, Shield, ShoppingCart, Sparkles } from "lucide-react";
 import dynamic from "next/dynamic";
 import Image from "next/image";
 import { useRouter, useSearchParams } from "next/navigation";
-import React, { useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import { BiSolidPurchaseTag } from "react-icons/bi";
 
 //prevent mismatch during the first render
@@ -25,6 +25,10 @@ const CardPurchasePreviewPage = () => {
   const router = useRouter();
   const queryParamsTitle = searchParams.get("title");
   const { addItem } = useCart();
+  const [animations, setAnimations] = useState<
+    { cardId: string | undefined; key: string }[]
+  >([]);
+  const timeoutRefs = useRef<Record<string, NodeJS.Timeout>>({});
 
   const { user } = useUserContext();
 
@@ -45,6 +49,48 @@ const CardPurchasePreviewPage = () => {
     { icon: Shield, text: "Premium Quality" },
     { icon: Sparkles, text: "Instant Sharing" },
   ];
+
+  useEffect(() => {
+    return () => {
+      Object.values(timeoutRefs.current).forEach((timeout) =>
+        clearTimeout(timeout)
+      );
+    };
+  }, []);
+
+  const addToCart = () => {
+    if (!card?.id) return;
+
+    addItem({
+      id: card.id.replace(/-/g, "") || "",
+      name: card.title || "",
+      price: card.price || 0,
+      image: card.image || "",
+    });
+
+    if (timeoutRefs.current[card.id]) {
+      clearTimeout(timeoutRefs.current[card.id]);
+    }
+
+    setAnimations((prev) => {
+      const filtered = prev.filter((animation) => animation.cardId !== card.id);
+      const newAnimation = {
+        cardId: card.id,
+        key: `${card.id}-${Date.now()}`,
+      };
+
+      return [...filtered, newAnimation];
+    });
+
+    timeoutRefs.current[card.id] = setTimeout(() => {
+      setAnimations((prev) => prev.filter((anim) => anim.cardId !== card.id));
+      delete timeoutRefs.current[card.id];
+    }, 2000);
+  };
+
+  const currentAnimation = animations.find(
+    (animate) => animate.cardId === card?.id
+  );
 
   return (
     <React.Fragment>
@@ -171,18 +217,30 @@ const CardPurchasePreviewPage = () => {
                   <Button
                     size="lg"
                     variant="outline"
-                    className="flex-1 font-semibold px-8 py-6 rounded-full border-2 hover:bg-gray-50 dark:hover:bg-gray-800"
-                    onClick={() =>
-                      addItem({
-                        id: card?.id.replace(/-/g, "") || "",
-                        name: card?.title || "",
-                        price: card?.price || 0,
-                        image: card?.image || "",
-                      })
-                    }
+                    className="flex-1 font-semibold px-8 py-6 rounded-full border-2 hover:bg-gray-50 dark:hover:bg-gray-800 relative"
+                    onClick={addToCart}
                   >
                     Add to Cart
                     <ShoppingCart className="ml-2 h-5 w-5" />
+                    <div className="absolute -top-10 max-[1024px]:left-1/3 lg:top-2 lg:right-4 ml-2 z-10 pointer-events-none">
+                      <AnimatePresence>
+                        {currentAnimation && (
+                          <motion.div
+                            key={currentAnimation.key}
+                            initial={{ opacity: 0, y: 20 }}
+                            animate={{ opacity: 1, y: -10 }}
+                            exit={{ opacity: 0, y: -40 }}
+                            transition={{
+                              duration: 0.6,
+                              ease: "easeOut",
+                            }}
+                            className="absolute whitespace-nowrap text-green-600 font-semibold text-sm bg-green-50 px-3 py-1 rounded-full border border-green-200 shadow-md w-[140px]"
+                          >
+                            +1 {card?.title}
+                          </motion.div>
+                        )}
+                      </AnimatePresence>
+                    </div>
                   </Button>
                 </div>
               </motion.div>
