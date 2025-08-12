@@ -232,10 +232,10 @@ const Template1 = ({
           rel="noopener noreferrer"
         >
           <Image
-            src="/assets/zwift-logo.png"
+            src="/assets/dark-ZwiftechLogo.png"
             alt="Zwiftech Logo"
-            width={50}
-            height={20}
+            width={40}
+            height={15}
             priority
             className="opacity-90"
           />
