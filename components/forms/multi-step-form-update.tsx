@@ -982,7 +982,7 @@ const MultiStepFormUpdate = ({
                 <div className="space-y-8">
                   <div>
                     <h2 className="text-lg font-semibold mb-2">
-                      Custom URL <sup className="font-normal">(optional)</sup>
+                      Custom URL (optional)
                     </h2>
 
                     <FormField
