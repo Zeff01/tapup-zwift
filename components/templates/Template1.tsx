@@ -1,4 +1,4 @@
-import { downloadVCard } from "@/lib/utils";
+import { downloadVCard, getCopyrightYear } from "@/lib/utils";
 import { Card } from "@/types/types";
 import Image from "next/image";
 import Link from "next/link";
@@ -52,7 +52,7 @@ const Template1 = ({
   };
 
   return (
-    <div className="bg-white text-black p-4 flex flex-col items-center overflow-hidden justify-between min-h-screen">
+    <div className="bg-white text-black p-2 flex flex-col items-center overflow-hidden justify-between min-h-screen">
       <div className="w-full mx-auto max-w-[480px]">
         {/* COVER PHOTO + PROFILE */}
         <div className="mt-2 flex flex-col relative rounded-4xl mx-4">
@@ -224,8 +224,26 @@ const Template1 = ({
           ))}
       </div>
 
-      <div className="text-center text-xs text-gray-800 mt-6 mb-2">
-        © 2024 Zwiftech. All Right Reserved.
+      {/* footer */}
+      <div className="flex flex-col mt-8 items-center gap-1 text-center">
+        <a
+          href={userProfile?.customUrl ?? userProfile?.websiteUrl ?? "#"}
+          target="_blank"
+          rel="noopener noreferrer"
+        >
+          <Image
+            src="/assets/dark-ZwiftechLogo.png"
+            alt="Zwiftech Logo"
+            width={40}
+            height={15}
+            priority
+            className="opacity-90"
+          />
+        </a>
+
+        <span className="tracking-wide text-gray-600 text-[10px] ">
+          © {getCopyrightYear()} Zwiftech. All Rights Reserved.
+        </span>
       </div>
     </div>
   );

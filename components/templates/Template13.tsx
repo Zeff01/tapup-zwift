@@ -1,26 +1,25 @@
-import { downloadVCard } from "@/lib/utils";
+import { downloadVCard, getCopyrightYear } from "@/lib/utils";
 import { Card } from "@/types/types";
 import Image from "next/image";
 import Link from "next/link";
 import {
-  FaXTwitter,
   FaFacebook,
-  FaYoutube,
+  FaGlobe,
   FaInstagram,
   FaLinkedin,
-  FaWhatsapp,
   FaSkype,
-  FaGlobe,
-  FaViber,
   FaTiktok,
+  FaViber,
+  FaWhatsapp,
+  FaXTwitter,
+  FaYoutube,
 } from "react-icons/fa6";
 import {
-  MdOutlinePhone,
-  MdOutlineMailOutline,
   MdOutlineBookmarkBorder,
+  MdOutlineMailOutline,
+  MdOutlinePhone,
 } from "react-icons/md";
 // import { LuBookmark, LuMail } from "react-icons/lu";
-import { Button } from "../ui/button";
 
 const Template13 = ({
   id,
@@ -148,9 +147,13 @@ const Template13 = ({
           </h2>
           <div className="grid grid-cols-2 gap-y-2 text-gray-300">
             <span className="text-left">Email</span>
-            <span className="font-medium text-white text-left">{email}</span>
+            <span className="font-medium text-[12px] text-white text-left break-all">
+              {email}
+            </span>
             <span className="text-left">Number</span>
-            <span className="font-medium text-white text-left">{number}</span>
+            <span className="font-medium text-white text-left text-[12px]">
+              {number}
+            </span>
             <span className="text-left">Links</span>
             <span className="flex flex-wrap gap-3 text-xl text-left">
               {facebookUrl && (
@@ -260,11 +263,30 @@ const Template13 = ({
         )}
 
         {/* === Footer Section === */}
-        <footer className="w-full mx-auto mt-8 py-4 text-center text-gray-400 text-sm border-t border-neutral-800">
+        <footer className="w-full mx-auto mt-8  text-center text-gray-400 text-sm border-t border-neutral-800">
           <div className="font-semibold text-base text-white mb-1">
             {company}
           </div>
-          <div>© 2024 Zwiftech. All Right Reserved.</div>
+          <div className="flex flex-col items-center mt-8 gap-1 text-center text-xs">
+            <a
+              href={userProfile?.customUrl ?? userProfile?.websiteUrl ?? "#"}
+              target="_blank"
+              rel="noopener noreferrer"
+            >
+              <Image
+                src="/assets/light-ZwiftechLogo.png"
+                alt="Zwiftech Logo"
+                width={40}
+                height={15}
+                priority
+                className="opacity-90"
+              />
+            </a>
+
+            <span className="tracking-wide text-gray-400 text-[10px] ">
+              © {getCopyrightYear()} Zwiftech. All Rights Reserved.
+            </span>
+          </div>
         </footer>
       </div>
     </div>

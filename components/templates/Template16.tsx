@@ -1,5 +1,6 @@
-import { downloadVCard } from "@/lib/utils";
+import { downloadVCard, getCopyrightYear } from "@/lib/utils";
 import { Card } from "@/types/types";
+import Image from "next/image";
 import Link from "next/link";
 import { FaSkype, FaTiktok, FaViber, FaWhatsapp } from "react-icons/fa6";
 import {
@@ -11,10 +12,8 @@ import {
   LuMail,
   LuPhone,
   LuTwitter,
-  LuUserCircle,
   LuYoutube,
 } from "react-icons/lu";
-import { Button } from "../ui/button";
 
 const Template16 = ({
   id,
@@ -230,9 +229,28 @@ const Template16 = ({
         )}
 
         {/* === Footer Section === */}
-        <footer className="w-full max-w-md px-6 text-center text-gray-500 text-sm pb-8">
+        <footer className="w-full max-w-md px-6 text-center text-gray-500 text-sm ">
           <div className="font-semibold text-black mb-1">{company}</div>
-          <div>© 2024 Zwiftech. All Rights Reserved.</div>
+          <div className="flex flex-col mt-8 mb-1 items-center  gap-1 text-center text-xs">
+            <a
+              href={userProfile?.customUrl ?? userProfile?.websiteUrl ?? "#"}
+              target="_blank"
+              rel="noopener noreferrer"
+            >
+              <Image
+                src="/assets/dark-ZwiftechLogo.png"
+                alt="Zwiftech Logo"
+                width={40}
+                height={15}
+                priority
+                className="opacity-90"
+              />
+            </a>
+
+            <span className="tracking-wide text-gray-400 text-[10px] ">
+              © {getCopyrightYear()} Zwiftech. All Rights Reserved.
+            </span>
+          </div>{" "}
         </footer>
       </div>
     </div>

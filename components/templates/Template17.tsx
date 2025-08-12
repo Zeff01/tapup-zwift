@@ -1,6 +1,6 @@
-import { downloadVCard } from "@/lib/utils";
+import { downloadVCard, getCopyrightYear } from "@/lib/utils";
 import { Card } from "@/types/types";
-import Link from "next/link";
+import Image from "next/image";
 import {
   FaFacebookF,
   FaGlobe,
@@ -18,8 +18,6 @@ import {
   MdOutlineMailOutline,
   MdOutlinePhone,
 } from "react-icons/md";
-import { Button } from "../ui/button";
-import { LuBookmark, LuMail } from "react-icons/lu";
 
 const Template17 = ({
   id,
@@ -275,10 +273,29 @@ const Template17 = ({
         )}
 
         {/* === Footer Section === */}
-        <footer className="bg-[#FF4B5C] text-white text-center py-3 sm:py-4 rounded-b-2xl sm:rounded-b-3xl px-2 sm:px-3">
-          <div className="font-semibold text-sm sm:text-base">{company}</div>
-          <div className="text-xs mt-1">
-            © 2024 Zwiftech. All Rights Reserved.
+        <footer className="bg-[#FF4B5C] text-white text-center   rounded-b-2xl sm:rounded-b-3xl px-2 sm:px-3">
+          <div className="font-semibold mt-3 text-sm sm:text-base">
+            {company}
+          </div>
+          <div className="flex flex-col mt-8 items-center mb-2 gap-1 text-center text-xs">
+            <a
+              href={userProfile?.customUrl ?? userProfile?.websiteUrl ?? "#"}
+              target="_blank"
+              rel="noopener noreferrer"
+            >
+              <Image
+                src="/assets/light-ZwiftechLogo.png"
+                alt="Zwiftech Logo"
+                width={40}
+                height={15}
+                priority
+                className="opacity-90"
+              />
+            </a>
+
+            <span className="tracking-wide text-gray-800 text-[10px] ">
+              © {getCopyrightYear()} Zwiftech. All Rights Reserved.
+            </span>
           </div>
         </footer>
       </div>

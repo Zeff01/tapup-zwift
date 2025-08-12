@@ -1,4 +1,4 @@
-import { downloadVCard } from "@/lib/utils";
+import { downloadVCard, getCopyrightYear } from "@/lib/utils";
 import wavy from "@/public/assets/wavy.png";
 import { Card } from "@/types/types";
 import Image from "next/image";
@@ -322,8 +322,25 @@ const Template10 = ({
           </span>
         )) ?? "Company"}
       </h2>
-      <div className="flex items-center  justify-center gap-x-2 text-xs text-[#B6BCD2] py-2 ">
-        <span className="text-xl">©</span> 2024 Zwiftech. All Right Reserved.
+      <div className="flex flex-col items-center mt-8 gap-1 text-center text-xs">
+        <a
+          href={userProfile?.customUrl ?? userProfile?.websiteUrl ?? "#"}
+          target="_blank"
+          rel="noopener noreferrer"
+        >
+          <Image
+            src="/assets/light-ZwiftechLogo.png"
+            alt="Zwiftech Logo"
+            width={40}
+            height={15}
+            priority
+            className="opacity-90"
+          />
+        </a>
+
+        <span className="tracking-wide text-gray-400 text-[10px] ">
+          © {getCopyrightYear()} Zwiftech. All Rights Reserved.
+        </span>
       </div>
     </div>
   );

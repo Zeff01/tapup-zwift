@@ -1,24 +1,24 @@
-import { downloadVCard } from "@/lib/utils";
+import { downloadVCard, getCopyrightYear } from "@/lib/utils";
 import { Card } from "@/types/types";
 import Image from "next/image";
 import Link from "next/link";
 import {
-  MdOutlinePhone,
-  MdOutlineMailOutline,
-  MdOutlineBookmarkBorder,
-} from "react-icons/md";
-import {
-  FaXTwitter,
   FaFacebook,
-  FaYoutube,
+  FaGlobe,
   FaInstagram,
   FaLinkedin,
-  FaWhatsapp,
   FaSkype,
-  FaGlobe,
-  FaViber,
   FaTiktok,
+  FaViber,
+  FaWhatsapp,
+  FaXTwitter,
+  FaYoutube,
 } from "react-icons/fa6";
+import {
+  MdOutlineBookmarkBorder,
+  MdOutlineMailOutline,
+  MdOutlinePhone,
+} from "react-icons/md";
 
 const Template2 = ({
   id,
@@ -58,7 +58,7 @@ const Template2 = ({
   };
 
   return (
-    <div className="bg-neutral-800 text-white p-4 flex flex-col items-center justify-between  min-h-screen">
+    <div className="bg-neutral-800 text-white p-2  flex flex-col items-center justify-between  min-h-screen">
       <div className=" w-full mx-auto max-w-[480px] ">
         {/* COVERPHOTO AND PROFILE PIC */}
         <div className="mt-2  flex flex-col relative rounded-4xl mx-4 ">
@@ -148,40 +148,40 @@ const Template2 = ({
         </div>
 
         {/* SOCIAL MEDIA ICONS */}
-        <div className="flex justify-center gap-2.5 sm:gap-4 mt-5 mb-6">
+        <div className="flex justify-center gap-2  mt-5 mb-6">
           {facebookUrl && (
             <Link href={facebookUrl} target="_blank" rel="noopener noreferrer">
-              <FaFacebook size={24} />
+              <FaFacebook size={20} />
             </Link>
           )}
           {twitterUrl && (
             <Link href={twitterUrl} target="_blank" rel="noopener noreferrer">
-              <FaXTwitter size={24} />
+              <FaXTwitter size={20} />
             </Link>
           )}
           {tiktokUrl && (
             <Link href={tiktokUrl} target="_blank" rel="noopener noreferrer">
-              <FaTiktok size={24} />
+              <FaTiktok size={20} />
             </Link>
           )}
           {youtubeUrl && (
             <Link href={youtubeUrl} target="_blank" rel="noopener noreferrer">
-              <FaYoutube size={24} />
+              <FaYoutube size={20} />
             </Link>
           )}
           {instagramUrl && (
             <Link href={instagramUrl} target="_blank" rel="noopener noreferrer">
-              <FaInstagram size={24} />
+              <FaInstagram size={20} />
             </Link>
           )}
           {linkedinUrl && (
             <Link href={linkedinUrl} target="_blank" rel="noopener noreferrer">
-              <FaLinkedin size={24} />
+              <FaLinkedin size={20} />
             </Link>
           )}
           {viberUrl && (
             <Link href={viberUrl} target="_blank" rel="noopener noreferrer">
-              <FaViber size={24} />
+              <FaViber size={20} />
             </Link>
           )}
           {whatsappNumber && (
@@ -258,11 +258,29 @@ const Template2 = ({
         </div>
       </div>
       {/* FOOTER */}
-      <h2 className="text-xs font-extrabold mx-auto w-full text-center mt-8 mb-2">
+      <h2 className="text-xs font-extrabold mx-auto w-full text-center mt-6 mb-8">
         {company ?? "COMPANY"}
       </h2>
-      <div className="text-center text-xs text-gray-500  mb-2">
-        © 2024 Zwiftech. All Right Reserved.
+
+      <div className="flex flex-col items-center gap-1 text-center text-xs">
+        <a
+          href={userProfile?.customUrl ?? userProfile?.websiteUrl ?? "#"}
+          target="_blank"
+          rel="noopener noreferrer"
+        >
+          <Image
+            src="/assets/light-ZwiftechLogo.png"
+            alt="Zwiftech Logo"
+            width={40}
+            height={15}
+            priority
+            className="opacity-90"
+          />
+        </a>
+
+        <span className="tracking-wide text-gray-400 text-[10px] ">
+          © {getCopyrightYear()} Zwiftech. All Rights Reserved.
+        </span>
       </div>
     </div>
   );

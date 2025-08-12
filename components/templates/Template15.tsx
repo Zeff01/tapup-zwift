@@ -1,9 +1,9 @@
-import { downloadVCard } from "@/lib/utils";
+import { downloadVCard, getCopyrightYear } from "@/lib/utils";
 import { Card } from "@/types/types";
+import Image from "next/image";
 import Link from "next/link";
 import { FaSkype, FaTiktok, FaViber, FaWhatsapp } from "react-icons/fa6";
 import {
-  LuArrowRight,
   LuFacebook,
   LuGlobe,
   LuInstagram,
@@ -16,8 +16,6 @@ import {
   MdOutlineMailOutline,
   MdOutlinePhone,
 } from "react-icons/md";
-import { Button } from "../ui/button";
-
 const Template15 = ({
   id,
   firstName,
@@ -264,12 +262,29 @@ const Template15 = ({
           )}
 
           {/* === Footer Section === */}
-          <footer className="w-full max-w-md mx-auto mt-10 py-4 text-center text-gray-400 text-sm relative px-2 sm:px-6">
+          <footer className="w-full max-w-md mx-auto mt-3  text-center text-gray-400 text-sm relative px-2 sm:px-6">
             <div className="font-semibold text-base text-white mb-1 relative z-10">
               {company}
             </div>
-            <div className="relative z-10">
-              © 2024 Zwiftech. All Right Reserved.
+            <div className="flex flex-col mt-8 items-center  gap-1 text-center text-xs">
+              <a
+                href={userProfile?.customUrl ?? userProfile?.websiteUrl ?? "#"}
+                target="_blank"
+                rel="noopener noreferrer"
+              >
+                <Image
+                  src="/assets/light-ZwiftechLogo.png"
+                  alt="Zwiftech Logo"
+                  width={40}
+                  height={15}
+                  priority
+                  className="opacity-90"
+                />
+              </a>
+
+              <span className="tracking-wide text-gray-400 text-[10px] ">
+                © {getCopyrightYear()} Zwiftech. All Rights Reserved.
+              </span>
             </div>
           </footer>
         </section>
