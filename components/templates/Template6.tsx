@@ -1,8 +1,8 @@
-import React from "react";
 import { Card } from "@/types/types";
+import React from "react";
+import CarouselService from "../profile/carousel-service";
 import ProfileInfo from "../profile/profile-info";
 import ProfileSocials from "../profile/profile-socials";
-import CarouselService from "../profile/carousel-service";
 // import Testimonials from "../profile/testimonials";
 import Footer from "../profile/footer";
 

@@ -20,7 +20,15 @@ import { useUserContext } from "@/providers/user-provider";
 import { Card, ExtendedUserInterface, Photo } from "@/types/types";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
-import { Loader2, LoaderCircle } from "lucide-react";
+import {
+  Loader2,
+  LoaderCircle,
+  Eye,
+  ArrowLeft,
+  ArrowRight,
+  Save,
+  Sparkles,
+} from "lucide-react";
 import Image from "next/image";
 import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
@@ -36,6 +44,13 @@ import { Input } from "../ui/input";
 import MultiStepProgress from "./MultiStepProgress";
 import SelectedTemplate from "./SelectedTemplate";
 import SocialLinksSelector from "./SocialLink";
+import LivePreviewSidebar from "./LivePreviewSidebar";
+
+interface SelectedLink {
+  label: string;
+  key: keyof z.infer<typeof editCardSchema>;
+  value: string;
+}
 
 export type ChosenTemplateType =
   | "template1"
@@ -77,12 +92,6 @@ type CardSpecificFields = {
   disabled?: boolean;
 };
 
-interface SelectedLink {
-  label: string;
-  key: string;
-  value: string;
-}
-
 interface MultiStepFormUpdateProps {
   userData: Card | ExtendedUserInterface;
   isCurrentUser?: boolean;
@@ -110,6 +119,51 @@ const MultiStepFormUpdate = ({
     userData.coverPhotoUrl || null
   );
 
+  // State for multiple companies with all schema fields
+  const [companies, setCompanies] = useState<
+    Array<{
+      company: string;
+      position?: string;
+      companyBackground?: string;
+      serviceDescription?: string;
+      servicePhotos?: string[];
+    }>
+  >(() => {
+    if (
+      userData &&
+      Array.isArray((userData as any).companies) &&
+      (userData as any).companies.length > 0
+    ) {
+      return (userData as any).companies.map((company: any) => ({
+        company: company.company || "",
+        position: company.position || "",
+        companyBackground: company.companyBackground || "",
+        serviceDescription: company.serviceDescription || "",
+        servicePhotos: company.servicePhotos || [],
+      }));
+    } else {
+      return [];
+    }
+  });
+
+  const [servicePhotoPreviews, setServicePhotoPreviews] = useState<string[][]>(
+    []
+  );
+  const [servicePhotoFiles, setServicePhotoFiles] = useState<any[][]>([]);
+
+  useEffect(() => {
+    if (servicePhotoPreviews.length !== companies.length) {
+      setServicePhotoPreviews(Array(companies.length).fill([]));
+    }
+    if (servicePhotoFiles.length !== companies.length) {
+      setServicePhotoFiles(Array(companies.length).fill([]));
+    }
+  }, [companies.length]);
+
+  useEffect(() => {
+    methods.setValue("companies", companies);
+  }, [companies]);
+
   const [servicePhotos, setServicePhotos] = useState<Photo[]>([]);
   const [serviceImageUrls, setServiceImageUrls] = useState<string[]>(
     userData.servicePhotos || []
@@ -118,7 +172,10 @@ const MultiStepFormUpdate = ({
   const [selectedLinks, setSelectedLinks] = useState<SelectedLink[]>(() => {
     const existingSocialLinks: SelectedLink[] = [];
 
-    const socialFields = [
+    const socialFields: {
+      key: keyof z.infer<typeof editCardSchema>;
+      label: string;
+    }[] = [
       { key: "facebookUrl", label: "Facebook" },
       { key: "youtubeUrl", label: "YouTube" },
       { key: "instagramUrl", label: "Instagram" },
@@ -146,26 +203,43 @@ const MultiStepFormUpdate = ({
   });
 
   const [currentStep, setCurrentStep] = useState(1);
+  const [completedSteps, setCompletedSteps] = useState<number[]>([]);
+  const [previewMinimized, setPreviewMinimized] = useState(false);
 
-  const steps: Array<(keyof z.infer<typeof editCardSchema>)[]> = isOnboarding
-    ? [
-        ["coverPhotoUrl", "company", "position"],
-        ["firstName", "lastName", "email", "number", "profilePictureUrl"],
-        ["customUrl", "chosenTemplate"],
-      ]
-    : [
-        [],
-        [
-          "firstName",
-          "lastName",
-          "email",
-          "number",
-          ...(selectedLinks.map((link) => link.key) as Array<
-            keyof z.infer<typeof editCardSchema>
-          >),
-        ],
-        ["chosenTemplate"],
-      ];
+  // Steps definition based on current form arrangement:
+  // Step 1: Profile Photo, Cover Photo, Personal Info, Social Links
+  // Step 2: Company Info, Service Photos
+  // Step 3: Custom URL, Card Name, Template Selection
+
+  // Steps definition based on current form arrangement:
+  // Step 1: Profile Photo, Cover Photo, Personal Info, Social Links
+  // Step 2: Company Info (multiple), Service Photos (per company)
+  // Step 3: Custom URL, Card Name, Template Selection
+
+  const steps: Array<Array<keyof z.infer<typeof editCardSchema>>> = [
+    [
+      // Step 1: Profile Photo, Cover Photo, Personal Info, Social Links
+      "profilePictureUrl",
+      "coverPhotoUrl",
+      "firstName",
+      "lastName",
+      "email",
+      "number",
+      ...selectedLinks.map((link) => link.key),
+    ],
+    [
+      // Step 2: Companies array (each company has its own fields)
+      // Validation will be handled for the entire companies array
+      "companies",
+    ],
+    [
+      // Step 3: Custom URL, Card Name, Template Selection
+      "customUrl",
+      "cardName",
+      "chosenTemplate",
+      "chosenPhysicalCard",
+    ],
+  ];
 
   const [selectedTemplateId, setSelectedTemplateId] =
     useState<ChosenTemplateType>(
@@ -193,6 +267,7 @@ const MultiStepFormUpdate = ({
       coverPhotoUrl: userData.coverPhotoUrl || "",
       profilePictureUrl: userData.profilePictureUrl || "",
       position: userData.position || "",
+      companies: userData.companies || [],
       company: userData.company || "",
       companyBackground: userData.companyBackground || "",
       serviceDescription: userData.serviceDescription || "",
@@ -226,6 +301,11 @@ const MultiStepFormUpdate = ({
       tiktokUrl: userData.tiktokUrl || "",
     },
   });
+
+  // Sync companies state with form value "companies"
+  useEffect(() => {
+    methods.setValue("companies", companies);
+  }, [companies, methods]);
 
   useEffect(() => {
     methods.setValue("coverPhotoUrl", coverPhotoUrl || "");
@@ -365,29 +445,21 @@ const MultiStepFormUpdate = ({
         const fullIsValid = await methods.trigger();
         if (!fullIsValid) return;
       }
-      const hasImageErrors =
-        (currentStep === 1 && !coverPhotoUrl) ||
-        (currentStep === 2 && !imageUrl);
-
-      if (!isValid || hasImageErrors) {
-        // Handle image validation errors first
-
-        if (hasImageErrors) {
-          if (!coverPhotoUrl) toast.error("Cover photo is required");
-          if (!imageUrl && currentStep === 2)
-            toast.error("Profile picture is required");
-          return;
-        }
-
+      if (!isValid) {
         // Handle Zod validation errors
         const errorKeys = Object.keys(methods.formState.errors);
         if (errorKeys.length > 0) {
-          toast.error("Please fill in all required fields correctly");
+          toast.error("Please check the form for errors");
         }
         return;
       }
 
       console.log("Next step");
+      // Mark current step as completed
+      setCompletedSteps((prev) => [
+        ...prev.filter((s) => s !== currentStep),
+        currentStep,
+      ]);
       setCurrentStep((prev) => prev + 1);
     } catch (error) {
       console.error("Error in handleNextStep:", error);
@@ -399,9 +471,15 @@ const MultiStepFormUpdate = ({
     setCurrentStep((prev) => Math.max(prev - 1, 1));
   };
 
+  const handleStepNavigation = (step: number) => {
+    if (step <= currentStep || completedSteps.includes(step)) {
+      setCurrentStep(step);
+    }
+  };
+
   const handleAddLink = (link: {
     label: string;
-    key: string;
+    key: keyof z.infer<typeof editCardSchema>;
     value: string;
   }) => {
     setSelectedLinks((prev) => [
@@ -409,10 +487,7 @@ const MultiStepFormUpdate = ({
       { label: link.label, key: link.key, value: link.value },
     ]);
     // Initialize form value for new link
-    methods.setValue(
-      link.key as keyof z.infer<typeof editCardSchema>,
-      link.value
-    );
+    methods.setValue(link.key, link.value);
   };
 
   const handleInputChange = (key: string, value: string) => {
@@ -423,134 +498,163 @@ const MultiStepFormUpdate = ({
     methods.setValue(key as keyof z.infer<typeof editCardSchema>, value);
   };
   return (
-    <main className="h-full">
+    <main
+      className={`h-full transition-all duration-300 ease-in-out ${previewMinimized ? "pr-16" : "pr-96"}`}
+    >
       <Form {...methods}>
         <form
           className="space-y-6 h-full"
           onSubmit={methods.handleSubmit(formSubmit)}
         >
-          <div className="flex flex-col overflow-auto py-8 px-6 sm:px-0 bg-background h-full">
+          <div className="flex flex-col py-8 px-4 sm:px-0 bg-background h-full">
             <div className="aspect-[130/48] w-80 mx-auto mb-10">
               <TapupLogo />
             </div>
-            <div className="w-full mx-auto max-w-md">
+            <div
+              className={`w-full mx-auto transition-all duration-300 ${previewMinimized ? "max-w-4xl" : "max-w-2xl"}`}
+            >
               {formHeaderItems.map((item) => (
-                <div key={item.id} className="mb-4">
-                  <h2 className="text-2xl">
-                    {currentStep === item.id ? item.title : ""}
-                  </h2>
+                <div key={item.id} className="mb-6">
+                  {currentStep === item.id && (
+                    <div className="space-y-2">
+                      <h2 className="text-2xl font-bold text-gray-900 dark:text-white">
+                        {item.title}
+                      </h2>
+                      <p className="text-gray-600 dark:text-gray-400">
+                        {currentStep === 1 &&
+                          "Upload your visual content and share your company story"}
+                        {currentStep === 2 &&
+                          "Add your personal details and connect your social profiles"}
+                        {currentStep === 3 &&
+                          "Choose your design and finalize your digital business card"}
+                      </p>
+                      {/* Save Progress Indicator */}
+                      <div className="flex items-center gap-2 text-sm text-green-600">
+                        <div className="w-2 h-2 bg-green-500 rounded-full animate-pulse"></div>
+                        Changes are automatically saved
+                      </div>
+                    </div>
+                  )}
                 </div>
               ))}
-              <MultiStepProgress currentStep={currentStep} />
+              <MultiStepProgress
+                currentStep={currentStep}
+                completedSteps={completedSteps}
+                onStepClick={handleStepNavigation}
+                allowNavigation={true}
+              />
 
               {/* Step 1 - Cover Photo and Profile Pic */}
               {currentStep === 1 && (
-                <div className="">
-                  <p className="text-lg font-semibold mb-6">Cover Photo</p>
-                  <div className="flex aspect-[16/9] w-full flex-col items-center relative mb-20">
-                    <div className="rounded-lg animate-pulse absolute w-full h-full" />
-                    <div className="flex flex-col items-center relative w-full">
-                      <div className="w-full">
-                        <Cropper
-                          imageUrl={coverPhotoUrl}
-                          setImageUrl={setCoverPhotoUrl}
-                          photo={coverPhoto}
-                          aspect={16 / 9}
-                          setPhoto={setCoverPhoto}
-                          className="w-full aspect-[16/9] rounded-2xl overflow-hidden border-none "
-                          imageClassName="rounded-2xl"
-                          fallback={
-                            <div className="w-full aspect-[16/9] flex flex-col items-center gap-y-2 rounded-2xl border-dashed border-2 border-gray-500">
-                              <Image
-                                src={"/assets/image-plus.svg"}
-                                width={50}
-                                height={50}
-                                alt="plus"
-                                className="size-10 lg:size-auto mt-8 border p-2 rounded-md cursor-pointer"
-                              />
-                              <p className="text-[#767676] text-xl">
-                                Drop your image here or{" "}
-                                <span className="text-green-500">browse</span>
-                              </p>
-                              <p className="text-[#767676] text-xs">
-                                We support PNG, JPEG, and GIF files under 25MB
-                              </p>
-                            </div>
-                          }
-                        />
-                      </div>
+                <div className="space-y-8">
+                  {/* Cover Photo Section */}
+                  <div>
+                    <h2 className="text-lg font-semibold mb-4">Cover Photo</h2>
+                    <div className="w-full max-w-lg mx-auto">
+                      <Cropper
+                        imageUrl={coverPhotoUrl}
+                        setImageUrl={setCoverPhotoUrl}
+                        photo={coverPhoto}
+                        aspect={16 / 9}
+                        setPhoto={setCoverPhoto}
+                        className="w-full aspect-[16/9] rounded-2xl overflow-hidden border-none "
+                        imageClassName="rounded-2xl"
+                        fallback={
+                          <div className="w-full aspect-[16/9] flex flex-col items-center gap-y-2 rounded-2xl border-dashed border-2 border-gray-500">
+                            <Image
+                              src={"/assets/image-plus.svg"}
+                              width={50}
+                              height={50}
+                              alt="plus"
+                              className="size-10 lg:size-auto mt-8 border p-2 rounded-md cursor-pointer"
+                            />
+                            <p className="text-[#767676] text-lg">
+                              Drop your image here or{" "}
+                              <span className="text-green-500">browse</span>
+                            </p>
+                            <p className="text-[#767676] text-xs">
+                              We support PNG, JPEG, and GIF files under 25MB
+                            </p>
+                          </div>
+                        }
+                      />
                     </div>
                   </div>
 
-                  <div className="space-y-6">
+                  {/* Company Information Section */}
+                  <div>
                     <CompanyInfoForm
                       control={methods.control}
                       isAllFieldsRequired={false}
                     />
-                    <div className="">
-                      <h1 className="text-lg font-semibold mt-2">Photos</h1>
-                      <div className="w-full mt-2">
-                        <CropperMultiple
-                          previewImageUrl={null}
-                          imageUrls={serviceImageUrls}
-                          setImageUrls={setServiceImageUrls}
-                          previewPhoto={null}
-                          aspect={1}
-                          photos={servicePhotos}
-                          setPhotos={setServicePhotos}
-                          className="w-full aspect-[16/9] rounded-2xl overflow-hidden border-dashed border-2"
-                          imageClassName="rounded-2xl"
-                          disableUpload={serviceImageUrls.length >= 5}
-                          fallback={
-                            <div className="w-full aspect-[16/9] flex flex-col items-center gap-y-2">
-                              <Image
-                                src={"/assets/image-plus.svg"}
-                                width={50}
-                                height={50}
-                                alt="plus"
-                                className="size-10 lg:size-auto mt-8 border p-2 rounded-md cursor-pointer"
-                              />
-                              <p className="text-[#767676] text-xl">
-                                Drop your image here or{" "}
-                                <span className="text-green-500">browse</span>
-                              </p>
-                              <p className="text-[#767676] text-xs">
-                                We support PNG, JPEG, and GIF files under 25MB
-                              </p>
-                            </div>
-                          }
-                        />
+                  </div>
 
-                        <div className="flex gap-2 mt-4 flex-wrap">
-                          {serviceImageUrls.map((url, index) => (
-                            <div
-                              key={`service-image-${index}`}
-                              className="relative flex items-center justify-center h-[77px] w-[77px] overflow-hidden rounded-md bg-[#222224] border border-[#2c2c2c]"
+                  {/* Service Photos Section */}
+                  <div>
+                    <h2 className="text-lg font-semibold mb-4">
+                      Service Photos
+                    </h2>
+                    <div className="w-full">
+                      <CropperMultiple
+                        previewImageUrl={null}
+                        imageUrls={serviceImageUrls}
+                        setImageUrls={setServiceImageUrls}
+                        previewPhoto={null}
+                        aspect={1}
+                        photos={servicePhotos}
+                        setPhotos={setServicePhotos}
+                        className="w-full aspect-[16/9] rounded-2xl overflow-hidden border-dashed border-2"
+                        imageClassName="rounded-2xl"
+                        disableUpload={serviceImageUrls.length >= 5}
+                        fallback={
+                          <div className="w-full aspect-[16/9] flex flex-col items-center gap-y-2">
+                            <Image
+                              src={"/assets/image-plus.svg"}
+                              width={50}
+                              height={50}
+                              alt="plus"
+                              className="size-10 lg:size-auto mt-8 border p-2 rounded-md cursor-pointer"
+                            />
+                            <p className="text-[#767676] text-lg">
+                              Drop your image here or{" "}
+                              <span className="text-green-500">browse</span>
+                            </p>
+                            <p className="text-[#767676] text-xs">
+                              We support PNG, JPEG, and GIF files under 25MB
+                            </p>
+                          </div>
+                        }
+                      />
+
+                      <div className="grid grid-cols-4 sm:grid-cols-5 md:grid-cols-6 gap-2 mt-4">
+                        {serviceImageUrls.map((url, index) => (
+                          <div
+                            key={`service-image-${index}`}
+                            className="relative aspect-square overflow-hidden rounded-md bg-[#222224] border border-[#2c2c2c]"
+                          >
+                            {/* Delete Button */}
+                            <button
+                              type="button"
+                              onClick={() => {
+                                setServiceImageUrls((prev) =>
+                                  prev.filter((_, i) => i !== index)
+                                );
+                                setServicePhotos((prev) =>
+                                  prev.filter((_, i) => i !== index)
+                                );
+                              }}
+                              className="absolute top-1 right-1 flex items-center justify-center h-4 w-4 rounded-full bg-gray-900 z-10 hover:bg-gray-700"
                             >
-                              {/* Delete Button */}
-                              <button
-                                type="button"
-                                onClick={() => {
-                                  setServiceImageUrls((prev) =>
-                                    prev.filter((_, i) => i !== index)
-                                  );
-                                  setServicePhotos((prev) =>
-                                    prev.filter((_, i) => i !== index)
-                                  );
-                                }}
-                                className="absolute top-1 right-1 flex items-center justify-center h-4 w-4 rounded-full bg-gray-900 z-10 hover:bg-gray-700"
-                              >
-                                <IoMdClose className="size-2 text-white" />
-                              </button>
+                              <IoMdClose className="size-2 text-white" />
+                            </button>
 
-                              <Loader2 className="animate-spin" />
-                              <ImageLoaded
-                                url={url}
-                                className="absolute top-0 left-0 h-full w-full object-cover rounded-md"
-                              />
-                            </div>
-                          ))}
-                        </div>
+                            <Loader2 className="animate-spin absolute inset-0 m-auto" />
+                            <ImageLoaded
+                              url={url}
+                              className="absolute inset-0 w-full h-full object-cover rounded-md"
+                            />
+                          </div>
+                        ))}
                       </div>
                     </div>
                   </div>
@@ -569,7 +673,7 @@ const MultiStepFormUpdate = ({
                       aspect={1}
                       setPhoto={setPhoto}
                       circularCrop
-                      className="w-[120px] h-[120px] lg:w-[150px] lg:h-[150px] rounded-full "
+                      className="w-[120px] h-[120px] lg:w-[150px] lg:h-[150px] rounded-full"
                       fallback={
                         <div className="relative w-full h-full rounded-full flex items-center justify-center border-2  border-dashed">
                           <Image
@@ -598,14 +702,62 @@ const MultiStepFormUpdate = ({
                         ""}
                     </span>
                   </div>
+
+                  <h2>Cover Photo</h2>
+                  <div className="w-full flex justify-center items-center flex-col my-4">
+                    <div className="flex flex-col items-center relative w-full">
+                      <div className="w-full relative">
+                        <Cropper
+                          imageUrl={coverPhotoUrl}
+                          setImageUrl={setCoverPhotoUrl}
+                          photo={coverPhoto}
+                          aspect={16 / 9}
+                          setPhoto={setCoverPhoto}
+                          className="w-full aspect-[16/9] rounded-2xl overflow-hidden border-input border-2"
+                          fallback={
+                            <div className="w-full aspect-[16/9] flex flex-col items-center gap-y-2 rounded-2xl border-dashed border-2 border-gray-500">
+                              <Image
+                                src={"/assets/image-plus.svg"}
+                                width={50}
+                                height={50}
+                                alt="plus"
+                                className="size-10 lg:size-auto mt-8 border p-2 rounded-md cursor-pointer"
+                              />
+                              <p className="text-[#767676] text-xl">
+                                Drop your image here or{" "}
+                                <span className="text-green-500">browse</span>
+                              </p>
+                              <p className="text-[#767676] text-xs">
+                                We support PNG, JPEG, and GIF files under 25MB
+                              </p>
+                            </div>
+                          }
+                        />
+                        <div className="flex flex-col items-center justify-center mt-2">
+                          <p className="text-[#767676] text-base">
+                            Drop your image here or{" "}
+                            <span className="text-green-500">browse</span>
+                          </p>
+                          <p className="text-[#767676] text-xs">
+                            We support PNG, JPEG, and GIF files under 25MB
+                          </p>
+                        </div>
+
+                        <span className="text-sm text-red-500 pt-4">
+                          {methods.formState.errors.profilePictureUrl
+                            ?.message ?? ""}
+                        </span>
+                      </div>
+                    </div>
+                  </div>
                   <PersonalInfoForm control={methods.control} isCard />
                   <SocialLinksSelector
                     onAddLink={handleAddLink}
                     existingValues={methods.watch()}
                   />
-                  <div className="">
+                  <div className="mt-2">
                     {selectedLinks.map((link) => (
-                      <div key={link.key} className="flex flex-col gap-3 py-2">
+                      <div key={link.key} className="flex flex-col gap-3">
                         <span className="font-medium text-primary">
                           {link.label}
                         </span>
@@ -628,12 +780,209 @@ const MultiStepFormUpdate = ({
                 </div>
               )}
 
+              {/* Step 2 - Company Info and Personal Info */}
+              {currentStep === 2 && (
+                <div className="space-y-6">
+                  {companies.map((company, idx) => (
+                    <div
+                      key={idx}
+                      className="border rounded-lg p-4 mb-4 bg-secondary"
+                    >
+                      <div className="flex gap-2 items-center mb-2">
+                        <Input
+                          placeholder="Company Name"
+                          value={company.company}
+                          onChange={(e) => {
+                            const updated = [...companies];
+                            updated[idx].company = e.target.value;
+                            setCompanies(updated);
+                          }}
+                          className="flex-1"
+                        />
+                        <Button
+                          type="button"
+                          variant="destructive"
+                          onClick={() => {
+                            setCompanies(companies.filter((_, i) => i !== idx));
+                            setServicePhotoPreviews((prev) =>
+                              prev.filter((_, i) => i !== idx)
+                            );
+                            setServicePhotoFiles((prev) =>
+                              prev.filter((_, i) => i !== idx)
+                            );
+                          }}
+                        >
+                          <IoMdClose />
+                        </Button>
+                      </div>
+                      <Input
+                        placeholder="Position"
+                        value={company.position ?? ""}
+                        onChange={(e) => {
+                          const updated = [...companies];
+                          updated[idx].position = e.target.value;
+                          setCompanies(updated);
+                        }}
+                        className="flex-1 mb-2"
+                      />
+                      <textarea
+                        placeholder="Company Background"
+                        value={company.companyBackground ?? ""}
+                        onChange={(e) => {
+                          const updated = [...companies];
+                          updated[idx].companyBackground = e.target.value;
+                          setCompanies(updated);
+                        }}
+                        className="flex w-full rounded-md border border-input bg-background px-3 py-2 text-base ring-offset-background placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50 md:text-sm mb-2 resize-none h-[120px]"
+                      />
+                      <textarea
+                        placeholder="Service Description"
+                        value={company.serviceDescription ?? ""}
+                        onChange={(e) => {
+                          const updated = [...companies];
+                          updated[idx].serviceDescription = e.target.value;
+                          setCompanies(updated);
+                        }}
+                        className="flex w-full rounded-md border border-input bg-background px-3 py-2 text-base ring-offset-background placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50 md:text-sm mb-2 resize-none h-[120px]"
+                      />
+                      <div>
+                        <h3 className="text-sm leading-none font-medium my-2">
+                          Service Photos
+                        </h3>
+                        <CropperMultiple
+                          previewImageUrl={null}
+                          imageUrls={company.servicePhotos ?? []}
+                          setImageUrls={(urls: string[]) => {
+                            const updated = [...companies];
+                            updated[idx].servicePhotos = urls;
+                            setCompanies(updated);
+                          }}
+                          previewPhoto={null}
+                          aspect={1}
+                          photos={servicePhotoFiles[idx] ?? []}
+                          setPhotos={(photos: Photo[]) => {
+                            setServicePhotoFiles((prev) => {
+                              const updated = [...prev];
+                              updated[idx] = photos;
+                              return updated;
+                            });
+                            setServicePhotoPreviews((prev) => {
+                              const updated = [...prev];
+                              updated[idx] = photos.map(
+                                (p: Photo) => p.preview
+                              );
+                              return updated;
+                            });
+                          }}
+                          className="w-full aspect-[16/9] rounded-2xl overflow-hidden border-dashed border-2"
+                          imageClassName="rounded-2xl"
+                          disableUpload={
+                            (company.servicePhotos?.length ?? 0) >= 5
+                          }
+                          fallback={
+                            <div className="w-full aspect-[16/9] flex flex-col items-center gap-y-2">
+                              <Image
+                                src={"/assets/image-plus.svg"}
+                                width={50}
+                                height={50}
+                                alt="plus"
+                                className="size-10 lg:size-auto mt-8 border p-2 rounded-md cursor-pointer"
+                              />
+                              <p className="text-[#767676] text-xl">
+                                Drop your image here or{" "}
+                                <span className="text-green-500">browse</span>
+                              </p>
+                              <p className="text-[#767676] text-xs">
+                                We support PNG, JPEG, and GIF files under 25MB
+                              </p>
+                            </div>
+                          }
+                        />
+
+                        {/* Service photo previews for this company */}
+                        <div className="flex gap-2 mt-4 flex-wrap">
+                          {(company.servicePhotos ?? []).map((url, index) => (
+                            <div
+                              key={`service-image-${idx}-${index}`}
+                              className="relative flex items-center justify-center h-[77px] w-[77px] overflow-hidden rounded-md bg-[#222224] border border-[#2c2c2c]"
+                            >
+                              {/* Delete Button */}
+                              <button
+                                type="button"
+                                onClick={() => {
+                                  // Remove from this company's servicePhotos
+                                  const updatedCompanies = [...companies];
+                                  updatedCompanies[idx].servicePhotos =
+                                    updatedCompanies[idx].servicePhotos?.filter(
+                                      (_, i) => i !== index
+                                    ) ?? [];
+                                  setCompanies(updatedCompanies);
+
+                                  // Optionally, also remove from previews/files if you use those for display
+                                  setServicePhotoPreviews((prev) => {
+                                    const updated = [...prev];
+                                    updated[idx] = updated[idx].filter(
+                                      (_, i) => i !== index
+                                    );
+                                    return updated;
+                                  });
+                                  setServicePhotoFiles((prev) => {
+                                    const updated = [...prev];
+                                    updated[idx] = updated[idx].filter(
+                                      (_, i) => i !== index
+                                    );
+                                    return updated;
+                                  });
+                                }}
+                                className="absolute top-1 right-1 flex items-center justify-center h-4 w-4 rounded-full bg-gray-900 z-10 hover:bg-gray-700"
+                              >
+                                <IoMdClose className="size-2 text-white" />
+                              </button>
+
+                              <Loader2 className="animate-spin" />
+                              <ImageLoaded
+                                url={url}
+                                className="absolute top-0 left-0 h-full w-full object-cover rounded-md"
+                              />
+                            </div>
+                          ))}
+                        </div>
+                      </div>
+                    </div>
+                  ))}
+                  <Button
+                    variant="outline"
+                    type="button"
+                    className="mt-4"
+                    onClick={() => {
+                      setCompanies([
+                        ...companies,
+                        {
+                          company: "",
+                          position: "",
+                          companyBackground: "",
+                          serviceDescription: "",
+                          servicePhotos: [],
+                        },
+                      ]);
+                      setServicePhotoPreviews((prev) => [...prev, []]);
+                      setServicePhotoFiles((prev) => [...prev, []]);
+                    }}
+                  >
+                    Add Company
+                  </Button>
+                  <span className="text-xs text-red-500">
+                    {methods.formState.errors.companies?.message ?? ""}
+                  </span>
+                </div>
+              )}
+
               {/* Step 3 - Template and Physical Card */}
               {currentStep === 3 && (
                 <div className="space-y-8">
                   <div>
                     <h2 className="text-lg font-semibold mb-2">
-                      Custom URL <sup className="font-normal">(optional)</sup>
+                      Custom URL (optional)
                     </h2>
 
                     <FormField
@@ -699,80 +1048,160 @@ const MultiStepFormUpdate = ({
                     )}
                   />
 
-                  <div>
-                    <h2 className="text-lg font-semibold mb-4">
-                      Choose Template
-                    </h2>
-                    {selectedTemplateId ? (
-                      <div className="w-full border rounded-lg mb-4 max-h-[340px] overflow-y-auto">
-                        <SelectedTemplate
-                          templateId={selectedTemplateId}
-                          formData={{
-                            ...methods.watch(),
-                            id: userData.id!,
-                            chosenPhysicalCard: {
-                              id: methods.watch().chosenPhysicalCard || "",
-                            },
-                          }}
-                        />
+                  <div className="space-y-6">
+                    <div>
+                      <h2 className="text-lg font-semibold mb-2">
+                        Choose Your Template
+                      </h2>
+                      <p className="text-sm text-gray-600 dark:text-gray-400 mb-4">
+                        Select a design that best represents your professional
+                        style. Use the live preview to see how your information
+                        looks in each template.
+                      </p>
+
+                      {/* Preview Toggle Button */}
+                      <div className="flex items-center justify-between mb-4">
+                        <div className="flex items-center gap-2">
+                          <span className="text-sm font-medium">
+                            Current Template:
+                          </span>
+                          <span className="text-sm text-green-600 font-semibold">
+                            {selectedTemplateId
+                              ? selectedTemplateId.replace(
+                                  "template",
+                                  "Template "
+                                )
+                              : "None"}
+                          </span>
+                        </div>
+                        <Button
+                          type="button"
+                          variant="outline"
+                          size="sm"
+                          onClick={() => setPreviewMinimized(false)}
+                          className="flex items-center gap-2"
+                        >
+                          <Eye className="h-4 w-4" />
+                          Expand Preview
+                        </Button>
                       </div>
-                    ) : (
-                      <div className="w-full flex items-center justify-center border rounded-lg mb-4 bg-gray-100 h-40">
-                        <p className="text-gray-500">No template selected</p>
-                      </div>
-                    )}
-                    <TemplateCarousel
-                      selectedTemplateId={selectedTemplateId}
-                      setSelectedTemplateId={(id: ChosenTemplateType) =>
-                        setSelectedTemplateId(id)
-                      }
-                    />
+
+                      {/* Compact Template Preview */}
+                      {selectedTemplateId && (
+                        <div className="w-full border rounded-lg mb-4 max-h-[340px] overflow-y-auto">
+                          <SelectedTemplate
+                            templateId={selectedTemplateId}
+                            formData={{
+                              ...methods.watch(),
+                              id: userData.id!,
+                              chosenPhysicalCard: {
+                                id: methods.watch().chosenPhysicalCard || "",
+                              },
+                            }}
+                          />
+                        </div>
+                      )}
+                    </div>
+
+                    {/* Template Selection */}
+                    <div>
+                      <h3 className="text-md font-medium mb-3">
+                        Available Templates
+                      </h3>
+                      <TemplateCarousel
+                        selectedTemplateId={selectedTemplateId}
+                        setSelectedTemplateId={(id: ChosenTemplateType) => {
+                          setSelectedTemplateId(id);
+                          // Auto-update form data
+                          methods.setValue("chosenTemplate", id);
+                        }}
+                      />
+                      <p className="text-xs text-gray-500 mt-2 text-center">
+                        💡 Tip: Click on any template to instantly see how your
+                        card will look
+                      </p>
+                    </div>
                   </div>
                 </div>
               )}
 
               {/* Navigation Buttons */}
-              <div className="flex justify-end gap-5 mt-8">
-                {currentStep > 1 && (
-                  <button
-                    type="button"
-                    onClick={goToPreviousStep}
-                    className="px-8 py-2 bg-gray-400 text-white rounded-full hover:bg-slate-700"
-                    disabled={isLoading}
-                  >
-                    Back
-                  </button>
-                )}
-                {currentStep < steps.length ? (
-                  <Button
-                    type="button"
-                    onClick={handleNextStep}
-                    className="px-8 py-2 bg-green-600 text-white rounded-full hover:bg-green-500"
-                    disabled={isLoading}
-                  >
-                    Next
-                  </Button>
-                ) : (
-                  <Button
-                    type="submit"
-                    className="px-8 py-2 bg-green-600 text-white rounded-full hover:bg-green-500"
-                    disabled={isLoading || isCustomUrlLoading}
-                  >
-                    {isLoading || isCustomUrlLoading ? (
-                      <>
-                        <LoaderCircle className="animate-spin size-5" />
-                        Saving...
-                      </>
-                    ) : (
-                      "Save"
-                    )}
-                  </Button>
-                )}
+              <div className="flex justify-between items-center mt-8 pt-6 border-t">
+                <div className="flex items-center gap-2 text-sm text-gray-500">
+                  <span>
+                    Step {currentStep} of {steps.length}
+                  </span>
+                  {completedSteps.length > 0 && (
+                    <span className="text-green-600">
+                      • {completedSteps.length} completed
+                    </span>
+                  )}
+                </div>
+
+                <div className="flex gap-3">
+                  {currentStep > 1 && (
+                    <Button
+                      type="button"
+                      variant="outline"
+                      onClick={goToPreviousStep}
+                      disabled={isLoading}
+                      className="flex items-center gap-2"
+                    >
+                      <ArrowLeft className="h-4 w-4" />
+                      Back
+                    </Button>
+                  )}
+
+                  {currentStep < steps.length ? (
+                    <Button
+                      type="button"
+                      onClick={handleNextStep}
+                      disabled={isLoading}
+                      className="flex items-center gap-2 text-white bg-green-600 hover:bg-green-500"
+                    >
+                      Next
+                      <ArrowRight className="h-4 w-4 text-white" />
+                    </Button>
+                  ) : (
+                    <Button
+                      type="submit"
+                      disabled={isLoading || isCustomUrlLoading}
+                      className="flex items-center gap-2 text-white bg-green-600 hover:bg-green-500"
+                    >
+                      {isLoading || isCustomUrlLoading ? (
+                        <>
+                          <LoaderCircle className="animate-spin h-4 w-4" />
+                          Saving...
+                        </>
+                      ) : (
+                        <>
+                          <Save className="h-4 w-4 text-white" />
+                          Save Card
+                        </>
+                      )}
+                    </Button>
+                  )}
+                </div>
               </div>
             </div>
           </div>
         </form>
       </Form>
+
+      {/* Live Preview Sidebar */}
+      <LivePreviewSidebar
+        selectedTemplateId={selectedTemplateId}
+        formData={{
+          ...methods.watch(),
+          id: userData.id!,
+          chosenPhysicalCard: {
+            id: methods.watch().chosenPhysicalCard || "",
+          },
+        }}
+        isMinimized={previewMinimized}
+        onToggleMinimize={() => setPreviewMinimized(!previewMinimized)}
+        onTemplateChange={(templateId) => setSelectedTemplateId(templateId)}
+      />
     </main>
   );
 };

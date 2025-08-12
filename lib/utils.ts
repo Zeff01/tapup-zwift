@@ -1,9 +1,9 @@
+import { carouselCards } from "@/constants";
 import { Card, Users } from "@/types/types";
 import { clsx, type ClassValue } from "clsx";
 import { PixelCrop } from "react-image-crop";
 import { twMerge } from "tailwind-merge";
 import { getUserCardOrdering } from "./firebase/actions/user.action";
-import { carouselCards } from "@/constants";
 
 export function cn(...inputs: ClassValue[]) {
   return twMerge(clsx(inputs));
@@ -282,7 +282,7 @@ export async function sortCards(
   );
 
   return [...sorted, ...unordered];
-};
+}
 
 export const getCardImage = (cardId?: string) => {
   const cardItem =
@@ -291,3 +291,7 @@ export const getCardImage = (cardId?: string) => {
 
   return cardItem ? cardItem.image : undefined;
 };
+
+export function getCopyrightYear() {
+  return new Date().getFullYear();
+}

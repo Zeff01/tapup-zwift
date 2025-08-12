@@ -1,5 +1,3 @@
-"use client";
-
 import { z } from "zod";
 import { isValidPhoneNumber } from "react-phone-number-input";
 
@@ -9,6 +7,22 @@ const refinePhoneNumber = (phoneNumber: string) => {
   }
   return isValidPhoneNumber(phoneNumber);
 };
+
+export const companySchema = z.object({
+  company: z.string().optional(),
+
+  position: z.string().optional(),
+
+  companyBackground: z.string().optional(),
+
+  serviceDescription: z.string().optional(),
+
+  servicePhotos: z
+    .array(
+      z.string().url({ message: "Each service photo must be a valid URL." })
+    )
+    .optional(),
+});
 
 export const createPortfolioSchema = z.object({
   coverPhotoUrl: z
@@ -35,6 +49,7 @@ export const createPortfolioSchema = z.object({
       }
     ), // Profile picture URL is required
   position: z.string().min(3, "Position is required"),
+  companies: z.array(companySchema).default([]).optional(), // allows for multiple companies
   company: z.string().min(3, "Company name is required"),
   companyBackground: z
     .string()
@@ -175,17 +190,17 @@ export const editCardSchema = z.object({
     .optional(),
   profilePictureUrl: z
     .string()
-    .min(3, "Profile Picture is required")
     .refine(
       (value) =>
         value === "" ||
         /^\b(?:https?:\/\/)?(?:www\.)?[^ "]+\.[a-zA-Z]{2,}\b/.test(value),
       {
-        message: "Invalid Coverphoto URL",
+        message: "Invalid Profile Picture URL",
       }
     )
-    .optional(), // Profile picture URL is required
+    .optional(),
   position: z.string().optional(),
+  companies: z.array(companySchema).default([]).optional(), // allows for multiple companies
   company: z.string().optional(),
   companyBackground: z.string().optional(),
   serviceDescription: z.string().optional(),
@@ -237,17 +252,16 @@ export const editCardSchema = z.object({
       }
       return true;
     }, "Custom URL can only contain letters, numbers, hyphens, and underscores."),
-  cardName: z.string().min(1, "Add a card name or tag").optional(),
-  firstName: z.string().min(1, "First name is required").optional(),
+  cardName: z.string().optional(),
+  firstName: z.string().optional(),
   lastName: z.string().optional(),
-  email: z.string().min(1, "Email is required").optional(),
+  email: z.string().optional(),
   prefix: z.string().optional(),
   suffix: z.string().optional(),
   middleName: z.string().optional(),
   number: z
     .string()
-    .min(1, "Phone Number is required")
-    .refine(isValidPhoneNumber, { message: "Invalid phone number" })
+    .refine(refinePhoneNumber, { message: "Invalid phone number" })
     .optional(),
 
   facebookUrl: z

@@ -1,9 +1,9 @@
-import { downloadVCard } from "@/lib/utils";
+import { downloadVCard, getCopyrightYear } from "@/lib/utils";
 import { Card } from "@/types/types";
+import Image from "next/image";
 import Link from "next/link";
 import { FaSkype, FaTiktok, FaViber, FaWhatsapp } from "react-icons/fa6";
 import {
-  LuArrowRight,
   LuFacebook,
   LuGlobe,
   LuInstagram,
@@ -16,8 +16,6 @@ import {
   MdOutlineMailOutline,
   MdOutlinePhone,
 } from "react-icons/md";
-import { Button } from "../ui/button";
-
 const Template15 = ({
   id,
   firstName,
@@ -59,12 +57,12 @@ const Template15 = ({
   };
 
   return (
-    <div className="min-h-screen bg-[#011923] flex flex-col items-center py-8 px-4 relative overflow-hidden">
-      <div className="max-w-[480px] mx-auto flex flex-col">
+    <div className="min-h-screen bg-[#011923] flex flex-col items-center py-2 px-1 relative overflow-hidden">
+      <div className="max-w-[480px] mx-auto flex flex-col w-full">
         {/* === Profile and Cover Section === */}
         <section
           aria-label="Profile Section"
-          className="w-full max-w-md mb-8 relative flex flex-col items-center"
+          className="w-full max-w-md mb-8 relative flex flex-col items-center px-2 sm:px-6"
         >
           {/* Orange circle - right side of 'Let's Work Together' */}
           <div
@@ -101,7 +99,7 @@ const Template15 = ({
         {/* === Card Section === */}
         <section
           aria-label="Card Section"
-          className="w-full max-w-md mt-8 relative flex flex-col items-center"
+          className="w-full max-w-md mt-8 relative flex flex-col items-center px-2 sm:px-6"
         >
           {/* Blue circle - left side of Contacts */}
           <div
@@ -123,27 +121,37 @@ const Template15 = ({
             {prefix && `${prefix}. `}
             {firstName}
             {middleName && ` ${middleName}`}
-            {lastName}
+            {lastName && ` ${lastName}`}
             {suffix && `, ${suffix}`}
           </h1>
 
-          <p className="text-base text-white font-medium mt-1 mb-4 text-center">
+          <p className="text-base text-white font-medium mt-1 mb-5 text-center">
             {position} {company && `@ ${company}`}
           </p>
 
-          <div className="flex gap-2 mb-2">
-            <Link href={`mailto:${email}`}>
-              <Button className="flex items-center gap-1 bg-transparent border border-[#7dd3fc] text-white px-6 py-2 rounded-full font-lg hover:bg-[#0e1a22] transition mb-4 relative">
-                Let’s Work Together <LuArrowRight className="text-lg" />
-              </Button>
-            </Link>
-            <Button
-              onClick={() => downloadVCard(userProfile)}
-              className="flex items-center gap-2 bg-transparent border border-[#7dd3fc] text-white px-6 py-2 rounded-full font-lg hover:bg-[#0e1a22] transition mb-4 relative"
+          <div className="flex gap-2 mb-5">
+            <Link
+              href={`tel:${number}`}
+              className="w-11 h-11 flex items-center justify-center rounded-full bg-[#122b3a] border border-[#38bdf8] hover:bg-[#19384a] hover:border-[#7dd3fc] transition duration-200"
+              title="Call"
             >
-              <MdOutlineBookmarkBorder className="w-5 h-5 mt-0.5" />
-              Save
-            </Button>
+              <MdOutlinePhone size={20} className="text-[#7dd3fc]" />
+            </Link>
+            <Link
+              href={`mailto:${email}`}
+              className="w-11 h-11 flex items-center justify-center rounded-full bg-[#122b3a] border border-[#38bdf8] hover:bg-[#19384a] hover:border-[#7dd3fc] transition duration-200"
+              title="Email"
+            >
+              <MdOutlineMailOutline size={20} className="text-[#7dd3fc]" />
+            </Link>
+            <button
+              type="button"
+              onClick={() => downloadVCard(userProfile)}
+              className="w-11 h-11 flex items-center justify-center rounded-full bg-[#122b3a] border border-[#38bdf8] hover:bg-[#19384a] hover:border-[#7dd3fc] transition duration-200"
+              title="Save Contact"
+            >
+              <MdOutlineBookmarkBorder size={20} className="text-[#7dd3fc]" />
+            </button>
           </div>
 
           {/* Social Icons */}
@@ -187,7 +195,7 @@ const Template15 = ({
           {/* === Contact Info Section === */}
           <section
             aria-label="Contact Information"
-            className="w-full mb-6 relative"
+            className="w-full mb-6 relative px-2 sm:px-6"
           >
             <h2 className="text-lg font-bold text-white mb-2">
               Contact Information
@@ -211,7 +219,10 @@ const Template15 = ({
 
           {/* === Company Overview Section === */}
           {companyBackground && (
-            <section aria-label="Company Overview" className="w-full mb-6">
+            <section
+              aria-label="Company Overview"
+              className="w-full mb-6 px-2 sm:px-6"
+            >
               <h2 className="text-lg font-bold text-white mb-2">
                 Company Overview
               </h2>
@@ -222,7 +233,7 @@ const Template15 = ({
           {/* === Services Section === */}
           {(serviceDescription ||
             (servicePhotos && servicePhotos.length > 0)) && (
-            <section aria-label="Our Services" className="w-full">
+            <section aria-label="Our Services" className="w-full px-2 sm:px-6">
               <h2 className="text-lg font-bold text-white mb-4">
                 Our Services
               </h2>
@@ -251,12 +262,29 @@ const Template15 = ({
           )}
 
           {/* === Footer Section === */}
-          <footer className="w-full max-w-md mx-auto mt-14 py-4 text-center text-gray-400 text-sm relative">
+          <footer className="w-full max-w-md mx-auto mt-3  text-center text-gray-400 text-sm relative px-2 sm:px-6">
             <div className="font-semibold text-base text-white mb-1 relative z-10">
               {company}
             </div>
-            <div className="relative z-10">
-              © 2024 Zwiftech. All Right Reserved.
+            <div className="flex flex-col mt-8 items-center  gap-1 text-center text-xs">
+              <a
+                href={userProfile?.customUrl ?? userProfile?.websiteUrl ?? "#"}
+                target="_blank"
+                rel="noopener noreferrer"
+              >
+                <Image
+                  src="/assets/light-ZwiftechLogo.png"
+                  alt="Zwiftech Logo"
+                  width={40}
+                  height={15}
+                  priority
+                  className="opacity-90"
+                />
+              </a>
+
+              <span className="tracking-wide text-gray-400 text-[10px] ">
+                © {getCopyrightYear()} Zwiftech. All Rights Reserved.
+              </span>
             </div>
           </footer>
         </section>

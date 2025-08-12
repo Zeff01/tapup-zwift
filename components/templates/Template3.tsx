@@ -1,22 +1,22 @@
-import { downloadVCard } from "@/lib/utils";
+import { downloadVCard, getCopyrightYear } from "@/lib/utils";
 import { Card } from "@/types/types";
 import Image from "next/image";
 import {
-  MdOutlinePhone,
-  MdOutlineMailOutline,
-  MdOutlineBookmarkBorder,
-} from "react-icons/md";
-import {
-  FaXTwitter,
   FaFacebook,
-  FaYoutube,
+  FaGlobe,
   FaInstagram,
   FaLinkedin,
-  FaWhatsapp,
   FaSkype,
-  FaGlobe,
   FaViber,
+  FaWhatsapp,
+  FaXTwitter,
+  FaYoutube,
 } from "react-icons/fa6";
+import {
+  MdOutlineBookmarkBorder,
+  MdOutlineMailOutline,
+  MdOutlinePhone,
+} from "react-icons/md";
 
 const Template3 = ({
   id,
@@ -154,7 +154,7 @@ const Template3 = ({
         </div>
 
         {/* SOCIAL MEDIA ICONS */}
-        <div className="flex items-center justify-center gap-4 mt-6 my-4  w-40 mx-auto">
+        <div className="flex items-center justify-center gap-2 mt-6 my-4  w-40 mx-auto">
           {facebookUrl && (
             <a href={facebookUrl} target="_blank" rel="noopener noreferrer">
               <FaFacebook size={24} />
@@ -263,8 +263,25 @@ const Template3 = ({
         </div>
       </div>
       {/* FOOTER */}
-      <div className="text-center text-xs text-grayDescription mt-8 mb-2">
-        © 2024 Zwiftech. All Right Reserved.
+      <div className="flex flex-col items-center gap-1 text-center mt-8">
+        <a
+          href={userProfile?.customUrl ?? userProfile?.websiteUrl ?? "#"}
+          target="_blank"
+          rel="noopener noreferrer"
+        >
+          <Image
+            src="/assets/light-ZwiftechLogo.png"
+            alt="Zwiftech Logo"
+            width={40}
+            height={15}
+            priority
+            className="opacity-90"
+          />
+        </a>
+
+        <span className="tracking-wide text-gray-400 text-[10px] ">
+          © {getCopyrightYear()} Zwiftech. All Rights Reserved.
+        </span>
       </div>
     </div>
   );

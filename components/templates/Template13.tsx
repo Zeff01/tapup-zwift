@@ -1,26 +1,25 @@
-import { downloadVCard } from "@/lib/utils";
+import { downloadVCard, getCopyrightYear } from "@/lib/utils";
 import { Card } from "@/types/types";
 import Image from "next/image";
 import Link from "next/link";
 import {
-  FaXTwitter,
   FaFacebook,
-  FaYoutube,
+  FaGlobe,
   FaInstagram,
   FaLinkedin,
-  FaWhatsapp,
   FaSkype,
-  FaGlobe,
-  FaViber,
   FaTiktok,
+  FaViber,
+  FaWhatsapp,
+  FaXTwitter,
+  FaYoutube,
 } from "react-icons/fa6";
 import {
-  MdOutlinePhone,
-  MdOutlineMailOutline,
   MdOutlineBookmarkBorder,
+  MdOutlineMailOutline,
+  MdOutlinePhone,
 } from "react-icons/md";
 // import { LuBookmark, LuMail } from "react-icons/lu";
-import { Button } from "../ui/button";
 
 const Template13 = ({
   id,
@@ -63,11 +62,13 @@ const Template13 = ({
   };
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-[#1a1a1a] via-[#232323] to-[#553838] text-white py-8 px-4">
+    <div className="min-h-screen bg-gradient-to-br from-[#1a1a1a] via-[#232323] to-[#553838] text-white py-2 px-1">
       <div className="max-w-[480px] mx-auto flex flex-col">
-
         {/* === Profile and Cover Section === */}
-        <section aria-label="Profile Section" className="w-full mb-8 relative flex flex-col items-center">
+        <section
+          aria-label="Profile Section"
+          className="w-full mb-8 relative flex flex-col items-center"
+        >
           <div className="w-full h-40 rounded-2xl overflow-hidden bg-neutral-800 relative">
             <img
               src={coverPhotoUrl || "/assets/sampleCoverPhoto.png"}
@@ -146,9 +147,13 @@ const Template13 = ({
           </h2>
           <div className="grid grid-cols-2 gap-y-2 text-gray-300">
             <span className="text-left">Email</span>
-            <span className="font-medium text-white text-left">{email}</span>
+            <span className="font-medium text-[12px] text-white text-left break-all">
+              {email}
+            </span>
             <span className="text-left">Number</span>
-            <span className="font-medium text-white text-left">{number}</span>
+            <span className="font-medium text-white text-left text-[12px]">
+              {number}
+            </span>
             <span className="text-left">Links</span>
             <span className="flex flex-wrap gap-3 text-xl text-left">
               {facebookUrl && (
@@ -181,10 +186,18 @@ const Template13 = ({
                 </a>
               )}
               {whatsappNumber && (
-                <a href={`https://wa.me/${whatsappNumber}`} target="_blank" rel="noopener noreferrer"><FaWhatsapp /></a>
+                <a
+                  href={`https://wa.me/${whatsappNumber}`}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                >
+                  <FaWhatsapp />
+                </a>
               )}
               {skypeInviteUrl && (
-                <a href={`skype:${skypeInviteUrl}?chat`}><FaSkype /></a>
+                <a href={`skype:${skypeInviteUrl}?chat`}>
+                  <FaSkype />
+                </a>
               )}
               {websiteUrl && (
                 <a href={websiteUrl} target="_blank" rel="noopener noreferrer">
@@ -192,10 +205,14 @@ const Template13 = ({
                 </a>
               )}
               {viberUrl && (
-                <a href={viberUrl} target="_blank" rel="noopener noreferrer"><FaViber /></a>
+                <a href={viberUrl} target="_blank" rel="noopener noreferrer">
+                  <FaViber />
+                </a>
               )}
               {tiktokUrl && (
-                <a href={tiktokUrl} target="_blank" rel="noopener noreferrer"><FaTiktok /></a>
+                <a href={tiktokUrl} target="_blank" rel="noopener noreferrer">
+                  <FaTiktok />
+                </a>
               )}
             </span>
           </div>
@@ -214,7 +231,8 @@ const Template13 = ({
         )}
 
         {/* === Services Section === */}
-        {(serviceDescription || (servicePhotos && servicePhotos.length > 0)) && (
+        {(serviceDescription ||
+          (servicePhotos && servicePhotos.length > 0)) && (
           <section aria-label="Our Services" className="w-full px-4">
             <h2 className="text-lg font-bold mb-4 text-white text-left">
               Our Services
@@ -245,11 +263,30 @@ const Template13 = ({
         )}
 
         {/* === Footer Section === */}
-        <footer className="w-full mx-auto mt-8 py-4 text-center text-gray-400 text-sm border-t border-neutral-800">
+        <footer className="w-full mx-auto mt-8  text-center text-gray-400 text-sm border-t border-neutral-800">
           <div className="font-semibold text-base text-white mb-1">
             {company}
           </div>
-          <div>© 2024 Zwiftech. All Right Reserved.</div>
+          <div className="flex flex-col items-center mt-8 gap-1 text-center text-xs">
+            <a
+              href={userProfile?.customUrl ?? userProfile?.websiteUrl ?? "#"}
+              target="_blank"
+              rel="noopener noreferrer"
+            >
+              <Image
+                src="/assets/light-ZwiftechLogo.png"
+                alt="Zwiftech Logo"
+                width={40}
+                height={15}
+                priority
+                className="opacity-90"
+              />
+            </a>
+
+            <span className="tracking-wide text-gray-400 text-[10px] ">
+              © {getCopyrightYear()} Zwiftech. All Rights Reserved.
+            </span>
+          </div>
         </footer>
       </div>
     </div>

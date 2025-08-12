@@ -1,7 +1,6 @@
-import { downloadVCard } from "@/lib/utils";
+import { downloadVCard, getCopyrightYear } from "@/lib/utils";
 import { Card } from "@/types/types";
 import Image from "next/image";
-import Link from "next/link";
 import {
   FaInstagram,
   FaLinkedin,
@@ -58,27 +57,28 @@ const Template9 = ({
   return (
     <div className="min-h-screen bg-white dark:bg-black flex flex-col ">
       <div className=" h-96 relative   ">
-        <div className="absolute flex gap-x-2 m-4 top-0 right-0 ">
-          <div className="flex gap-1 ">
+        <div className="absolute flex m-1  top-0 right-0 ">
+          <div className="flex gap-2">
             <a
               href={`tel:${number}`}
-              className="p-1 border border-neutral-800 rounded-full  hover:bg-neutral-800 text-neutral-800 hover:text-white transition-colors "
+              className="p-1 rounded-full bg-white text-black border border-neutral-300 shadow hover:bg-black hover:text-white transition-colors duration-200"
             >
-              <MdOutlinePhone size={20} className=" cursor-pointer" />
+              <MdOutlinePhone size={18} />
             </a>
+
             <a
               href={`mailto:${email}`}
-              className="p-1 border border-neutral-800  rounded-full hover:bg-neutral-800 text-neutral-800 hover:text-white transition-colors "
+              className="p-1 rounded-full bg-white text-black border border-neutral-300 shadow hover:bg-black hover:text-white transition-colors duration-200"
             >
-              <MdOutlineMailOutline size={20} className="cursor-pointer " />
+              <MdOutlineMailOutline size={18} />
             </a>
-            <div className="p-1 border border-neutral-800 rounded-full hover:bg-neutral-800 text-neutral-800 hover:text-white transition-colors ">
-              <MdOutlineBookmarkBorder
-                size={20}
-                className="cursor-pointer font-bold "
-                onClick={() => downloadVCard(userProfile)}
-              />
-            </div>
+
+            <button
+              onClick={() => downloadVCard(userProfile)}
+              className="p-1 rounded-full bg-white text-black border border-neutral-300 shadow hover:bg-black hover:text-white transition-colors duration-200"
+            >
+              <MdOutlineBookmarkBorder size={18} />
+            </button>
           </div>
         </div>
 
@@ -239,12 +239,30 @@ const Template9 = ({
                 </div>
               ))}
         </div>
+
+        {/* footer */}
         <h2 className="font-semibold text-xl mx-auto w-full  tracking-wider  text-center">
           {company ?? "COMPANY"}
         </h2>
-        <div className="flex items-center  justify-center gap-x-2 text-sm text-neutral-600 pb-4">
-          <span className="text-2xl">©</span> 2024 Zwiftech. All Right
-          Reserved.
+        <div className="flex flex-col mt-3 mb-1 items-center gap-1 text-center text-xs">
+          <a
+            href={userProfile?.customUrl ?? userProfile?.websiteUrl ?? "#"}
+            target="_blank"
+            rel="noopener noreferrer"
+          >
+            <Image
+              src="/assets/dark-ZwiftechLogo.png"
+              alt="Zwiftech Logo"
+              width={40}
+              height={15}
+              priority
+              className="opacity-90"
+            />
+          </a>
+
+          <span className="tracking-wide text-gray-800 text-[10px] ">
+            © {getCopyrightYear()} Zwiftech. All Rights Reserved.
+          </span>
         </div>
       </div>
     </div>

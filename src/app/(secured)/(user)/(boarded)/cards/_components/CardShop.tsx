@@ -3,7 +3,7 @@
 import { OrderCardsCarousel } from "@/components/OrderCardsCarousel";
 import { carouselCards } from "@/constants";
 import { createPortfolioSchema } from "@/lib/zod-schema";
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import { z } from "zod";
 import { Button } from "@/components/ui/button";
 import { ShoppingCart, Loader2 } from "lucide-react";
@@ -14,6 +14,7 @@ import { SubscriptionPlan } from "@/types/types";
 import { getSubscriptionPlans } from "@/lib/firebase/actions/user.action";
 import { useCart } from "@/hooks/use-cart-v2";
 import { useRouter } from "next/navigation";
+import { AnimatePresence, motion } from "framer-motion";
 
 export type ChosenPhysicalCardType = z.infer<
   typeof createPortfolioSchema
@@ -22,6 +23,10 @@ export type ChosenPhysicalCardType = z.infer<
 const OrderPhysicalCard = () => {
   const { addItem, totalItems } = useCart();
   const router = useRouter();
+  const [animations, setAnimations] = useState<
+    { cardId: string | undefined; key: string }[]
+  >([]);
+  const timeoutRefs = useRef<Record<string, NodeJS.Timeout>>({});
 
   const [subscriptionPlans, setSubscriptionPlans] = useState<
     SubscriptionPlan[]
@@ -29,6 +34,14 @@ const OrderPhysicalCard = () => {
   const [selectedPlan, setSelectedPlan] = useState<SubscriptionPlan | null>(
     null
   );
+
+  useEffect(() => {
+    return () => {
+      Object.values(timeoutRefs.current).forEach((timeout) =>
+        clearTimeout(timeout)
+      );
+    };
+  }, []);
 
   useEffect(() => {
     const fetchPlans = async () => {
@@ -55,6 +68,43 @@ const OrderPhysicalCard = () => {
     carouselCards[selectedPhysicalCard as keyof typeof carouselCards];
 
   const [isCheckoutClicked, setIsCheckoutClicked] = useState(false);
+
+  const addToCart = () => {
+    addItem({
+      id: selectedPhysicalCard,
+      name: selectedCard?.title || "",
+      price: selectedPlan?.price || 0,
+      image: selectedCard?.image || "",
+      subscriptionPlan: selectedPlan ?? undefined,
+    });
+
+    if (timeoutRefs.current[selectedPhysicalCard]) {
+      clearTimeout(timeoutRefs.current[selectedPhysicalCard]);
+    }
+
+    setAnimations((prev) => {
+      const filtered = prev.filter(
+        (animation) => animation.cardId !== selectedPhysicalCard
+      );
+      const newAnimation = {
+        cardId: selectedPhysicalCard,
+        key: `${selectedPhysicalCard}-${Date.now()}`,
+      };
+
+      return [...filtered, newAnimation];
+    });
+
+    timeoutRefs.current[selectedPhysicalCard] = setTimeout(() => {
+      setAnimations((prev) =>
+        prev.filter((anim) => anim.cardId !== selectedPhysicalCard)
+      );
+      delete timeoutRefs.current[selectedPhysicalCard];
+    }, 2000);
+  };
+
+  const currentAnimation = animations.find(
+    (animate) => animate.cardId === selectedPhysicalCard
+  );
 
   return (
     <div className="relative w-full flex flex-col">
@@ -127,20 +177,33 @@ const OrderPhysicalCard = () => {
 
             <div className="grid grid-cols-1 md:flex gap-2 mt-2 md:mt-0 md:gap-2 lg:pb-4 bg-white dark:bg-transparent">
               <Button
-                onClick={() =>
-                  addItem({
-                    id: selectedPhysicalCard,
-                    name: selectedCard?.title || "",
-                    price: selectedPlan?.price || 0,
-                    image: selectedCard?.image || "",
-                    subscriptionPlan: selectedPlan ?? undefined,
-                  })
-                }
+                size="lg"
+                onClick={addToCart}
+                variant="outline"
                 disabled={isCheckoutClicked || !selectedPlan}
-                className="flex w-full md:w-36 gap-2 hover:bg-black dark:hover:bg-grayTemplate"
+                className="flex w-full font-semibold md:w-36 gap-2 rounded-full border-2 hover:bg-gray-50 dark:hover:bg-gray-800 relative"
               >
                 <ShoppingCart />
                 <span>Add to Cart</span>
+                <div className="absolute -top-10 max-[768px]:left-1/2 max-[768px]:-translate-x-1/2  md:top-1 md:right-4 ml-2 z-10 pointer-events-none">
+                  <AnimatePresence>
+                    {currentAnimation && (
+                      <motion.div
+                        key={currentAnimation.key}
+                        initial={{ opacity: 0, y: 20 }}
+                        animate={{ opacity: 1, y: -10 }}
+                        exit={{ opacity: 0, y: -40 }}
+                        transition={{
+                          duration: 0.6,
+                          ease: "easeOut",
+                        }}
+                        className="absolute whitespace-nowrap text-green-600 font-semibold text-sm bg-green-50 px-3 py-1 rounded-full border border-green-200 shadow-md w-[140px]"
+                      >
+                        +1 {selectedCard?.title}
+                      </motion.div>
+                    )}
+                  </AnimatePresence>
+                </div>
               </Button>
               <Button
                 onClick={() => {
@@ -154,8 +217,8 @@ const OrderPhysicalCard = () => {
                 disabled={
                   isCheckoutClicked || !selectedPlan || totalItems === 0
                 }
-                variant="green"
-                className="flex w-full md:w-36 gap-2"
+                size="lg"
+                className="flex w-full md:w-36 gap-2 rounded-full bg-gradient-to-r from-green-600 to-emerald-500 hover:from-green-700 hover:to-emerald-600 text-white font-semibold"
               >
                 {isCheckoutClicked ? (
                   <>

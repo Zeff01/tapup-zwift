@@ -7,8 +7,12 @@ import {
   Download,
   ExternalLink,
   Users,
+  TrendingUp,
+  TrendingDown,
 } from "lucide-react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { motion } from "framer-motion";
+import { cn } from "@/lib/utils";
 
 type TimeRange = "daily" | "weekly" | "monthly";
 
@@ -72,114 +76,174 @@ export function AnalyticsCards({ data, timeRange }: AnalyticsCardsProps) {
     data.linkClicks.previous
   );
 
+  const cardVariants = {
+    hidden: { opacity: 0, y: 20 },
+    visible: (i: number) => ({
+      opacity: 1,
+      y: 0,
+      transition: {
+        delay: i * 0.1,
+        duration: 0.5,
+        ease: "easeOut",
+      },
+    }),
+  };
+
   return (
-    <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-3">
+    <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-3 mb-6">
       {/* Profile Views */}
-      <Card>
-        <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-          <CardTitle className="text-sm font-medium">Profile Views</CardTitle>
-          <Eye className="h-4 w-4 text-muted-foreground" />
-        </CardHeader>
-        <CardContent>
-          <div className="text-2xl font-bold">
-            {data.profileViews.current.toLocaleString()}
-          </div>
-          {data.profileViews.unique && (
-            <div className="text-sm text-muted-foreground mb-1">
-              {data.profileViews.unique.toLocaleString()} unique viewers
-            </div>
-          )}
-          <p className="text-xs text-muted-foreground">
-            <span
-              className={`flex items-center ${
-                profileViewsChange >= 0 ? "text-emerald-500" : "text-rose-500"
-              }`}
-            >
-              {profileViewsChange >= 0 ? (
-                <ArrowUp className="mr-1 h-4 w-4" />
-              ) : (
-                <ArrowDown className="mr-1 h-4 w-4" />
+      <motion.div
+        custom={0}
+        initial="hidden"
+        animate="visible"
+        variants={cardVariants}
+      >
+        <Card className="border shadow-sm hover:shadow-md transition-all duration-300 h-full">
+          <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
+            <CardTitle className="text-sm font-medium">Profile Views</CardTitle>
+            <Eye className="h-4 w-4 text-muted-foreground" />
+          </CardHeader>
+          <CardContent>
+            <div className="space-y-2">
+              <div className="flex items-baseline gap-2">
+                <span className="text-3xl font-bold">
+                  {data.profileViews.current.toLocaleString()}
+                </span>
+                <span
+                  className={cn(
+                    "text-sm font-medium flex items-center gap-1",
+                    profileViewsChange >= 0 ? "text-green-600" : "text-red-600"
+                  )}
+                >
+                  {profileViewsChange >= 0 ? (
+                    <TrendingUp className="h-3 w-3" />
+                  ) : (
+                    <TrendingDown className="h-3 w-3" />
+                  )}
+                  {formatPercentage(profileViewsChange)}
+                </span>
+              </div>
+              {data.profileViews.unique && (
+                <div className="text-sm text-muted-foreground">
+                  <span className="font-medium">
+                    {data.profileViews.unique.toLocaleString()}
+                  </span>{" "}
+                  unique viewers
+                </div>
               )}
-              {formatPercentage(profileViewsChange)}
-            </span>{" "}
-            from {getTimeRangeLabel(timeRange)}
-          </p>
-        </CardContent>
-      </Card>
+              <p className="text-xs text-muted-foreground">
+                Compared to {getTimeRangeLabel(timeRange)}
+              </p>
+            </div>
+          </CardContent>
+        </Card>
+      </motion.div>
 
       {/* VCF Imports */}
-      <Card>
-        <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-          <CardTitle className="text-sm font-medium">VCF Downloads</CardTitle>
-          <Download className="h-4 w-4 text-muted-foreground" />
-        </CardHeader>
-        <CardContent>
-          <div className="text-2xl font-bold">
-            {data.vcfImports.current.toLocaleString()}
-          </div>
-          <p className="text-xs text-muted-foreground">
-            <span
-              className={`flex items-center ${
-                vcfImportsChange >= 0 ? "text-emerald-500" : "text-rose-500"
-              }`}
-            >
-              {vcfImportsChange >= 0 ? (
-                <ArrowUp className="mr-1 h-4 w-4" />
-              ) : (
-                <ArrowDown className="mr-1 h-4 w-4" />
-              )}
-              {formatPercentage(vcfImportsChange)}
-            </span>{" "}
-            from {getTimeRangeLabel(timeRange)}
-          </p>
-        </CardContent>
-      </Card>
+      <motion.div
+        custom={1}
+        initial="hidden"
+        animate="visible"
+        variants={cardVariants}
+      >
+        <Card className="border shadow-sm hover:shadow-md transition-all duration-300 h-full">
+          <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
+            <CardTitle className="text-sm font-medium">VCF Downloads</CardTitle>
+            <Download className="h-4 w-4 text-muted-foreground" />
+          </CardHeader>
+          <CardContent>
+            <div className="space-y-2">
+              <div className="flex items-baseline gap-2">
+                <span className="text-3xl font-bold">
+                  {data.vcfImports.current.toLocaleString()}
+                </span>
+                <span
+                  className={cn(
+                    "text-sm font-medium flex items-center gap-1",
+                    vcfImportsChange >= 0 ? "text-green-600" : "text-red-600"
+                  )}
+                >
+                  {vcfImportsChange >= 0 ? (
+                    <TrendingUp className="h-3 w-3" />
+                  ) : (
+                    <TrendingDown className="h-3 w-3" />
+                  )}
+                  {formatPercentage(vcfImportsChange)}
+                </span>
+              </div>
+              <p className="text-xs text-muted-foreground">
+                Compared to {getTimeRangeLabel(timeRange)}
+              </p>
+            </div>
+          </CardContent>
+        </Card>
+      </motion.div>
 
       {/* Link Clicks */}
-      <Card>
-        <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-          <CardTitle className="text-sm font-medium">Link Clicks</CardTitle>
-          <ExternalLink className="h-4 w-4 text-muted-foreground" />
-        </CardHeader>
-        <CardContent>
-          <div className="text-2xl font-bold">
-            {data.linkClicks.total.toLocaleString()}
-          </div>
-          <div className="text-xs text-muted-foreground space-y-1 mb-2">
-            <div className="flex justify-between">
-              <span>Facebook:</span>
-              <span>{data.linkClicks.facebook}</span>
+      <motion.div
+        custom={2}
+        initial="hidden"
+        animate="visible"
+        variants={cardVariants}
+      >
+        <Card className="border shadow-sm hover:shadow-md transition-all duration-300 h-full">
+          <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
+            <CardTitle className="text-sm font-medium">Link Clicks</CardTitle>
+            <ExternalLink className="h-4 w-4 text-muted-foreground" />
+          </CardHeader>
+          <CardContent>
+            <div className="space-y-2">
+              <div className="flex items-baseline gap-2">
+                <span className="text-3xl font-bold">
+                  {data.linkClicks.total.toLocaleString()}
+                </span>
+                <span
+                  className={cn(
+                    "text-sm font-medium flex items-center gap-1",
+                    linkClicksChange >= 0 ? "text-green-600" : "text-red-600"
+                  )}
+                >
+                  {linkClicksChange >= 0 ? (
+                    <TrendingUp className="h-3 w-3" />
+                  ) : (
+                    <TrendingDown className="h-3 w-3" />
+                  )}
+                  {formatPercentage(linkClicksChange)}
+                </span>
+              </div>
+              <div className="space-y-1 text-xs text-muted-foreground">
+                <div className="flex justify-between">
+                  <span>Facebook:</span>
+                  <span className="font-medium text-foreground">
+                    {data.linkClicks.facebook}
+                  </span>
+                </div>
+                <div className="flex justify-between">
+                  <span>Instagram:</span>
+                  <span className="font-medium text-foreground">
+                    {data.linkClicks.instagram}
+                  </span>
+                </div>
+                <div className="flex justify-between">
+                  <span>Website 1:</span>
+                  <span className="font-medium text-foreground">
+                    {data.linkClicks.website1}
+                  </span>
+                </div>
+                <div className="flex justify-between">
+                  <span>Website 2:</span>
+                  <span className="font-medium text-foreground">
+                    {data.linkClicks.website2}
+                  </span>
+                </div>
+              </div>
+              <p className="text-xs text-muted-foreground">
+                Compared to {getTimeRangeLabel(timeRange)}
+              </p>
             </div>
-            <div className="flex justify-between">
-              <span>Instagram:</span>
-              <span>{data.linkClicks.instagram}</span>
-            </div>
-            <div className="flex justify-between">
-              <span>Website 1:</span>
-              <span>{data.linkClicks.website1}</span>
-            </div>
-            <div className="flex justify-between">
-              <span>Website 2:</span>
-              <span>{data.linkClicks.website2}</span>
-            </div>
-          </div>
-          <p className="text-xs text-muted-foreground">
-            <span
-              className={`flex items-center ${
-                linkClicksChange >= 0 ? "text-emerald-500" : "text-rose-500"
-              }`}
-            >
-              {linkClicksChange >= 0 ? (
-                <ArrowUp className="mr-1 h-4 w-4" />
-              ) : (
-                <ArrowDown className="mr-1 h-4 w-4" />
-              )}
-              {formatPercentage(linkClicksChange)}
-            </span>{" "}
-            from {getTimeRangeLabel(timeRange)}
-          </p>
-        </CardContent>
-      </Card>
+          </CardContent>
+        </Card>
+      </motion.div>
     </div>
   );
 }

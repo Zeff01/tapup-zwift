@@ -1,24 +1,24 @@
-import { downloadVCard } from "@/lib/utils";
+import { downloadVCard, getCopyrightYear } from "@/lib/utils";
 import { Card } from "@/types/types";
 import Image from "next/image";
 import Link from "next/link";
 import {
-  MdOutlinePhone,
-  MdOutlineMailOutline,
-  MdOutlineBookmarkBorder,
-} from "react-icons/md";
-import {
-  FaXTwitter,
   FaFacebook,
-  FaYoutube,
+  FaGlobe,
   FaInstagram,
   FaLinkedin,
-  FaWhatsapp,
   FaSkype,
-  FaGlobe,
-  FaViber,
   FaTiktok,
+  FaViber,
+  FaWhatsapp,
+  FaXTwitter,
+  FaYoutube,
 } from "react-icons/fa6";
+import {
+  MdOutlineBookmarkBorder,
+  MdOutlineMailOutline,
+  MdOutlinePhone,
+} from "react-icons/md";
 
 const Template4 = ({
   id,
@@ -111,19 +111,13 @@ const Template4 = ({
             href={`tel:${number}`}
             className="p-1 grid place-content-center rounded-full border-2 border-black "
           >
-            <MdOutlinePhone
-              className="cursor-pointer"
-              size={24}
-            />
+            <MdOutlinePhone className="cursor-pointer" size={24} />
           </Link>
           <Link
             href={`mailto:${email}`}
             className="p-1 grid place-content-center rounded-full border-2 border-black "
           >
-            <MdOutlineMailOutline
-              className="cursor-pointer"
-              size={24}
-            />
+            <MdOutlineMailOutline className="cursor-pointer" size={24} />
           </Link>
           <div className="p-1 grid place-content-center rounded-full border-2 border-black ">
             <MdOutlineBookmarkBorder
@@ -176,29 +170,18 @@ const Template4 = ({
         <div className="flex flex-col gap-4 mt-6 px-4">
           {servicePhotos
             ? servicePhotos.map((photo, index) => (
-              <div key={index} className="col-span-1">
-                <Image
-                  src={photo}
-                  alt={`Service Photo ${index + 1}`}
-                  width={500}
-                  height={500}
-                  layout="responsive"
-                  className="rounded-md object-cover w-full"
-                />
-              </div>
-            ))
-            : Array.from({ length: 4 }).map((_, index) => (
-              <div key={index} className="col-span-1">
-                <Image
-                  src="/assets/sampleService.png"
-                  alt="Service Photo"
-                  width={500}
-                  height={500}
-                  layout="responsive"
-                  className="rounded-md object-cover w-full"
-                />
-              </div>
-            ))}
+                <div key={index} className="col-span-1">
+                  <Image
+                    src={photo}
+                    alt={`Service Photo ${index + 1}`}
+                    width={500}
+                    height={500}
+                    layout="responsive"
+                    className="rounded-md object-cover w-full"
+                  />
+                </div>
+              ))
+            : ""}
         </div>
       </div>
       {/* SOCIAL MEDIA ICONS */}
@@ -269,8 +252,26 @@ const Template4 = ({
       <h2 className="text-xs font-extrabold mx-auto w-full text-center mb-2">
         {company ?? "COMPANY"}
       </h2>
-      <div className="text-center text-xs text-gray-800  mb-2">
-        © 2024 Zwiftech. All Right Reserved.
+
+      <div className="flex flex-col mt-3 mb-1 items-center gap-1 text-center text-xs">
+        <a
+          href={userProfile?.customUrl ?? userProfile?.websiteUrl ?? "#"}
+          target="_blank"
+          rel="noopener noreferrer"
+        >
+          <Image
+            src="/assets/dark-ZwiftechLogo.png"
+            alt="Zwiftech Logo"
+            width={40}
+            height={15}
+            priority
+            className="opacity-90"
+          />
+        </a>
+
+        <span className="tracking-wide text-gray-500 text-[10px] ">
+          © {getCopyrightYear()} Zwiftech. All Rights Reserved.
+        </span>
       </div>
     </div>
   );

@@ -1,7 +1,7 @@
 import { USER_ROLE_ENUMS } from "@/constants";
+import { getAllCards } from "@/lib/firebase/actions/card.action";
 import { authCurrentUserv2 } from "@/lib/firebase/auth";
 import { notFound, redirect } from "next/navigation";
-import { getAllCards } from "@/lib/firebase/actions/card.action";
 import PrintCardsTable from "./_components/PrintCardsTable";
 
 const PrintCardsPage = async () => {
