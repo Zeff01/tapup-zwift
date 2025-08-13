@@ -225,6 +225,7 @@ const Template16 = ({
                       <div className="grid grid-cols-2 gap-4 mt-4">
                         {company.servicePhotos.map((photo, index) => (
                           <img
+                            key={index}
                             src={photo}
                             alt={`Service ${index + 1}`}
                             className="rounded-md object-cover w-full"
