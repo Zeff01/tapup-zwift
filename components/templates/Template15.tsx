@@ -43,6 +43,7 @@ const Template15 = ({
   viberUrl,
   tiktokUrl,
   customUrl,
+  companies,
 }: Card) => {
   const userProfile = {
     id,
@@ -99,7 +100,7 @@ const Template15 = ({
         {/* === Card Section === */}
         <section
           aria-label="Card Section"
-          className="w-full max-w-md mt-8 relative flex flex-col items-center px-2 sm:px-6"
+          className="w-full max-w-md mt-8 relative flex flex-col items-center "
         >
           {/* Blue circle - left side of Contacts */}
           <div
@@ -117,79 +118,81 @@ const Template15 = ({
             <div className="w-24 h-24 rounded-full bg-indigo-500 opacity-40 blur-2xl" />
           </div>
 
-          <h1 className="text-2xl font-bold text-white text-center">
-            {prefix && `${prefix}. `}
-            {firstName}
-            {middleName && ` ${middleName}`}
-            {lastName && ` ${lastName}`}
-            {suffix && `, ${suffix}`}
-          </h1>
+          <div className="w-full flex flex-col items-center px-2 sm:px-6">
+            <h1 className="text-2xl font-bold text-white text-center">
+              {prefix && `${prefix}. `}
+              {firstName}
+              {middleName && ` ${middleName}`}
+              {lastName && ` ${lastName}`}
+              {suffix && `, ${suffix}`}
+            </h1>
 
-          <p className="text-base text-white font-medium mt-1 mb-5 text-center">
-            {position} {company && `@ ${company}`}
-          </p>
+            <p className="text-base text-white font-medium mt-1 mb-5 text-center">
+              {position} {company && `@ ${company}`}
+            </p>
 
-          <div className="flex gap-2 mb-5">
-            <Link
-              href={`tel:${number}`}
-              className="w-11 h-11 flex items-center justify-center rounded-full bg-[#122b3a] border border-[#38bdf8] hover:bg-[#19384a] hover:border-[#7dd3fc] transition duration-200"
-              title="Call"
-            >
-              <MdOutlinePhone size={20} className="text-[#7dd3fc]" />
-            </Link>
-            <Link
-              href={`mailto:${email}`}
-              className="w-11 h-11 flex items-center justify-center rounded-full bg-[#122b3a] border border-[#38bdf8] hover:bg-[#19384a] hover:border-[#7dd3fc] transition duration-200"
-              title="Email"
-            >
-              <MdOutlineMailOutline size={20} className="text-[#7dd3fc]" />
-            </Link>
-            <button
-              type="button"
-              onClick={() => downloadVCard(userProfile)}
-              className="w-11 h-11 flex items-center justify-center rounded-full bg-[#122b3a] border border-[#38bdf8] hover:bg-[#19384a] hover:border-[#7dd3fc] transition duration-200"
-              title="Save Contact"
-            >
-              <MdOutlineBookmarkBorder size={20} className="text-[#7dd3fc]" />
-            </button>
-          </div>
+            <div className="flex gap-2 mb-5">
+              <Link
+                href={`tel:${number}`}
+                className="w-11 h-11 flex items-center justify-center rounded-full bg-[#122b3a] border border-[#38bdf8] hover:bg-[#19384a] hover:border-[#7dd3fc] transition duration-200"
+                title="Call"
+              >
+                <MdOutlinePhone size={20} className="text-[#7dd3fc]" />
+              </Link>
+              <Link
+                href={`mailto:${email}`}
+                className="w-11 h-11 flex items-center justify-center rounded-full bg-[#122b3a] border border-[#38bdf8] hover:bg-[#19384a] hover:border-[#7dd3fc] transition duration-200"
+                title="Email"
+              >
+                <MdOutlineMailOutline size={20} className="text-[#7dd3fc]" />
+              </Link>
+              <button
+                type="button"
+                onClick={() => downloadVCard(userProfile)}
+                className="w-11 h-11 flex items-center justify-center rounded-full bg-[#122b3a] border border-[#38bdf8] hover:bg-[#19384a] hover:border-[#7dd3fc] transition duration-200"
+                title="Save Contact"
+              >
+                <MdOutlineBookmarkBorder size={20} className="text-[#7dd3fc]" />
+              </button>
+            </div>
 
-          {/* Social Icons */}
-          <div className="flex flex-wrap gap-2 justify-center mb-6 max-w-xs">
-            {[
-              { url: facebookUrl, icon: LuFacebook, href: facebookUrl },
-              { url: instagramUrl, icon: LuInstagram, href: instagramUrl },
-              { url: linkedinUrl, icon: LuLinkedin, href: linkedinUrl },
-              { url: websiteUrl, icon: LuGlobe, href: websiteUrl },
-              { url: twitterUrl, icon: LuTwitter, href: twitterUrl },
-              { url: youtubeUrl, icon: LuYoutube, href: youtubeUrl },
-              {
-                url: whatsappNumber,
-                icon: FaWhatsapp,
-                href: `https://wa.me/${whatsappNumber}`,
-              },
-              { url: skypeInviteUrl, icon: FaSkype, href: skypeInviteUrl },
-              { url: viberUrl, icon: FaViber, href: viberUrl },
-              { url: tiktokUrl, icon: FaTiktok, href: tiktokUrl },
-            ]
-              .filter((social) => social.url)
-              .map((social, index) => {
-                const IconComponent = social.icon;
-                return (
-                  <a
-                    key={index}
-                    href={social.href}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className="bg-[#1a425b] p-2 rounded-full transition"
-                  >
-                    <IconComponent
-                      className="text-lg"
-                      style={{ color: "#7eabc2" }}
-                    />
-                  </a>
-                );
-              })}
+            {/* Social Icons */}
+            <div className="flex flex-wrap gap-2 justify-center mb-6 max-w-xs">
+              {[
+                { url: facebookUrl, icon: LuFacebook, href: facebookUrl },
+                { url: instagramUrl, icon: LuInstagram, href: instagramUrl },
+                { url: linkedinUrl, icon: LuLinkedin, href: linkedinUrl },
+                { url: websiteUrl, icon: LuGlobe, href: websiteUrl },
+                { url: twitterUrl, icon: LuTwitter, href: twitterUrl },
+                { url: youtubeUrl, icon: LuYoutube, href: youtubeUrl },
+                {
+                  url: whatsappNumber,
+                  icon: FaWhatsapp,
+                  href: `https://wa.me/${whatsappNumber}`,
+                },
+                { url: skypeInviteUrl, icon: FaSkype, href: skypeInviteUrl },
+                { url: viberUrl, icon: FaViber, href: viberUrl },
+                { url: tiktokUrl, icon: FaTiktok, href: tiktokUrl },
+              ]
+                .filter((social) => social.url)
+                .map((social, index) => {
+                  const IconComponent = social.icon;
+                  return (
+                    <a
+                      key={index}
+                      href={social.href}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="bg-[#1a425b] p-2 rounded-full transition"
+                    >
+                      <IconComponent
+                        className="text-lg"
+                        style={{ color: "#7eabc2" }}
+                      />
+                    </a>
+                  );
+                })}
+            </div>
           </div>
 
           {/* === Contact Info Section === */}
@@ -217,55 +220,73 @@ const Template15 = ({
             </div>
           </section>
 
-          {/* === Company Overview Section === */}
-          {companyBackground && (
-            <section
-              aria-label="Company Overview"
-              className="w-full mb-6 px-2 sm:px-6"
-            >
-              <h2 className="text-lg font-bold text-white mb-2">
-                Company Overview
-              </h2>
-              <p className="text-gray-300 text-base">{companyBackground}</p>
-            </section>
-          )}
+          {companies?.length > 0 &&
+            companies.map((company, idx) => (
+              <div key={idx} className="w-full pb-4">
+                <h2 className="font-bold text-lg text-white mb-4 mt-2 text-center">
+                  {company.company}
+                </h2>
 
-          {/* === Services Section === */}
-          {(serviceDescription ||
-            (servicePhotos && servicePhotos.length > 0)) && (
-            <section aria-label="Our Services" className="w-full px-2 sm:px-6">
-              <h2 className="text-lg font-bold text-white mb-4">
-                Our Services
-              </h2>
-              {serviceDescription && (
-                <p className="text-gray-300 mb-4">{serviceDescription}</p>
-              )}
-              {servicePhotos && servicePhotos.length > 0 && (
-                <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-                  {servicePhotos.map((photo, idx) => (
-                    <div key={idx} className="w-full flex justify-center">
-                      <img
-                        src={photo}
-                        alt={`Service Photo ${idx + 1}`}
-                        className="rounded-2xl object-cover w-full h-44 bg-white"
-                        style={{
-                          minWidth: 0,
-                          minHeight: 176,
-                          maxWidth: "100%",
-                        }}
-                      />
-                    </div>
-                  ))}
-                </div>
-              )}
-            </section>
-          )}
+                {/* === Company Overview Section === */}
+                {company.companyBackground && (
+                  <div
+                    aria-label="Company Overview"
+                    className="mb-6 px-2 sm:px-6"
+                  >
+                    <h2 className="text-base font-semibold text-white mb-2">
+                      Company Overview
+                    </h2>
+                    <p className="text-gray-300 text-base leading-relaxed break-words whitespace-pre-line">
+                      {company.companyBackground}
+                    </p>
+                  </div>
+                )}
+
+                {/* === Services Section === */}
+                {(company.serviceDescription ||
+                  (company.servicePhotos &&
+                    company.servicePhotos.length > 0)) && (
+                  <section
+                    aria-label="Our Services"
+                    className="w-full px-2 sm:px-6"
+                  >
+                    <h2 className="text-base font-semibold text-white mb-4">
+                      Our Services
+                    </h2>
+                    {company.serviceDescription && (
+                      <p className="text-gray-300 mb-4 leading-relaxed break-words whitespace-pre-line">
+                        {company.serviceDescription}
+                      </p>
+                    )}
+                    {company.servicePhotos &&
+                      company.servicePhotos.length > 0 && (
+                        <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                          {company.servicePhotos.map((photo, idx) => (
+                            <div
+                              key={idx}
+                              className="w-full flex justify-center"
+                            >
+                              <img
+                                src={photo}
+                                alt={`Service Photo ${idx + 1}`}
+                                className="rounded-2xl object-cover w-full h-44 bg-white"
+                                style={{
+                                  minWidth: 0,
+                                  minHeight: 176,
+                                  maxWidth: "100%",
+                                }}
+                              />
+                            </div>
+                          ))}
+                        </div>
+                      )}
+                  </section>
+                )}
+              </div>
+            ))}
 
           {/* === Footer Section === */}
           <footer className="w-full max-w-md mx-auto mt-3  text-center text-gray-400 text-sm relative px-2 sm:px-6">
-            <div className="font-semibold text-base text-white mb-1 relative z-10">
-              {company}
-            </div>
             <div className="flex flex-col mt-8 items-center  gap-1 text-center text-xs">
               <a
                 href={userProfile?.customUrl ?? userProfile?.websiteUrl ?? "#"}
