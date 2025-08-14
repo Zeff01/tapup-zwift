@@ -288,61 +288,55 @@ const Template12 = ({
             )}
           </div>
           <div className=" flex flex-col gap-y-6 pt-4  px-5 flex-grow border-t border-t-neutral-300 text-[#5A6C57]">
-            <div>
-              <h1
-                className={cn(
-                  "font-normal text-xl tracking-wider text-start",
+            {companyBackground && (
+              <div>
+                <h1
+                  className={cn(
+                    "font-normal text-xl tracking-wider text-start",
 
-                  poppins.className
-                )}
-              >
-                Company Overview
-              </h1>
-              <p className="font-light text-sm text-start text-black pt-2">
-                {companyBackground ??
-                  "Lorem Ipsum is simply dummy text of the printing and typesetting industry."}
-              </p>
-            </div>
-            <div>
-              <h1
-                className={cn(
-                  "font-normal text-xl tracking-wider text-start",
+                    poppins.className
+                  )}
+                >
+                  Company Overview
+                </h1>
+                <p className="font-light text-sm text-start text-black pt-2">
+                  {companyBackground}
+                </p>
+              </div>
+            )}
+            {(serviceDescription || (servicePhotos && servicePhotos.length > 0)) && (
+              <div>
+                <h1
+                  className={cn(
+                    "font-normal text-xl tracking-wider text-start",
 
-                  poppins.className
+                    poppins.className
+                  )}
+                >
+                  Our Services
+                </h1>
+                {serviceDescription && (
+                  <p className="font-light text-sm text-start text-black pt-2">
+                    {serviceDescription}
+                  </p>
                 )}
-              >
-                Our Services
-              </h1>
-              <p className="font-light text-sm text-start text-black pt-2">
-                {serviceDescription ??
-                  "Lorem Ipsum is simply dummy text of the printing and typesetting industry."}
-              </p>
-            </div>
-            <div className="flex gap-4 mt-6 overflow-x-auto scrollbar-hide pb-4">
-              {servicePhotos
-                ? servicePhotos.map((photo, index) => (
-                    <div key={index} className="shrink-0">
-                      <Image
-                        src={photo}
-                        alt={`Service Photo ${index + 1}`}
-                        width={150}
-                        height={150}
-                        className="rounded-2xl object-contain"
-                      />
-                    </div>
-                  ))
-                : Array.from({ length: 5 }).map((_, index) => (
-                    <div key={index} className="shrink-0">
-                      <Image
-                        src="/assets/sampleService.png"
-                        alt="Service Photo"
-                        width={150}
-                        height={150}
-                        className="rounded-2xl object-contain"
-                      />
-                    </div>
-                  ))}
-            </div>
+              </div>
+            )}
+            {servicePhotos && servicePhotos.length > 0 && (
+              <div className="flex gap-4 mt-6 overflow-x-auto scrollbar-hide pb-4">
+                {servicePhotos.map((photo, index) => (
+                  <div key={index} className="shrink-0">
+                    <Image
+                      src={photo}
+                      alt={`Service Photo ${index + 1}`}
+                      width={150}
+                      height={150}
+                      className="rounded-2xl object-contain"
+                    />
+                  </div>
+                ))}
+              </div>
+            )}
 
             <div className="flex flex-col items-center  justify-center gap-x-2 text-sm text-neutral-600 pb-4">
               <h2

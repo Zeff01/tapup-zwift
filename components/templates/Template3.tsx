@@ -216,51 +216,48 @@ const Template3 = ({
           {company ?? "COMPANY"}
         </h2>
         <div className="mt-6 px-4">
-          <h2 className="text-md font-bold text-greenTitle">
-            Company Background
-          </h2>
-          <p className="text-xs text-grayDescription mt-4">
-            {companyBackground ??
-              "Lorem Ipsum is simply dummy text of the printing and typesetting industry."}
-          </p>
+          {companyBackground && (
+            <>
+              <h2 className="text-md font-bold text-greenTitle">
+                Company Background
+              </h2>
+              <p className="text-xs text-grayDescription mt-4">
+                {companyBackground}
+              </p>
+            </>
+          )}
 
           {/* SERVICE INFORMATION */}
-          <h3 className="text-md font-bold mt-6 text-greenTitle">
-            Our Services
-          </h3>
-          <p className="text-xs text-grayDescription mt-4">
-            {serviceDescription ??
-              "Lorem Ipsum is simply dummy text of the printing and typesetting industry."}
-          </p>
+          {(serviceDescription || (servicePhotos && servicePhotos.length > 0)) && (
+            <>
+              <h3 className="text-md font-bold mt-6 text-greenTitle">
+                Our Services
+              </h3>
+              {serviceDescription && (
+                <p className="text-xs text-grayDescription mt-4">
+                  {serviceDescription}
+                </p>
+              )}
+            </>
+          )}
         </div>
 
-        <div className="grid grid-cols-2 gap-2 mt-6  p-2">
-          {servicePhotos
-            ? servicePhotos.map((photo, index) => (
-                <div key={index} className="col-span-1">
-                  <Image
-                    src={photo}
-                    alt={`Service Photo ${index + 1}`}
-                    width={300}
-                    height={300}
-                    layout="responsive"
-                    className="rounded-md object-cover w-full"
-                  />
-                </div>
-              ))
-            : Array.from({ length: 4 }).map((_, index) => (
-                <div key={index} className="col-span-1">
-                  <Image
-                    src="/assets/sampleService.png"
-                    alt="Service Photo"
-                    width={300}
-                    height={300}
-                    layout="responsive"
-                    className="rounded-md object-cover w-full"
-                  />
-                </div>
-              ))}
-        </div>
+        {servicePhotos && servicePhotos.length > 0 && (
+          <div className="grid grid-cols-2 gap-2 mt-6  p-2">
+            {servicePhotos.map((photo, index) => (
+              <div key={index} className="col-span-1">
+                <Image
+                  src={photo}
+                  alt={`Service Photo ${index + 1}`}
+                  width={300}
+                  height={300}
+                  layout="responsive"
+                  className="rounded-md object-cover w-full"
+                />
+              </div>
+            ))}
+          </div>
+        )}
       </div>
       {/* FOOTER */}
       <div className="flex flex-col items-center gap-1 text-center mt-8">

@@ -499,7 +499,7 @@ const MultiStepFormUpdate = ({
   };
   return (
     <main
-      className={`h-full transition-all duration-300 ease-in-out ${previewMinimized ? "pr-16" : "pr-96"}`}
+      className={`h-full transition-all duration-300 ease-in-out ${previewMinimized ? "lg:pr-16" : "lg:pr-96"}`}
     >
       <Form {...methods}>
         <form
@@ -511,7 +511,7 @@ const MultiStepFormUpdate = ({
               <TapupLogo />
             </div>
             <div
-              className={`w-full mx-auto transition-all duration-300 ${previewMinimized ? "max-w-4xl" : "max-w-2xl"}`}
+              className={`w-full mx-auto transition-all duration-300 ${previewMinimized ? "lg:max-w-4xl" : "lg:max-w-2xl"} max-w-4xl`}
             >
               {formHeaderItems.map((item) => (
                 <div key={item.id} className="mb-6">
@@ -762,7 +762,11 @@ const MultiStepFormUpdate = ({
                           {link.label}
                         </span>
                         <Input
-                          placeholder={`Enter ${link.label} URL`}
+                          placeholder={
+                            link.key === "viberUrl" || link.key === "whatsappNumber"
+                              ? `Enter ${link.label} phone number`
+                              : `Enter ${link.label} URL`
+                          }
                           value={link.value}
                           onChange={(e) =>
                             handleInputChange(link.key, e.target.value)

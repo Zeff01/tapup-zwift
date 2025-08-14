@@ -270,63 +270,60 @@ const Template11 = ({
         {/* COMPANY INFORMATION */}
 
         <div className="mt-[110px] px-10 ">
-          <h2
-            className={cn(
-              "text-lg text-[#00A9FF] font-light pt-1",
-              firstName ? "mt-5" : "mt-3",
-              mulish.className
-            )}
-          >
-            Company Overview
-          </h2>
-          <p className="text-xs mt-1 text-black opacity-50">
-            {companyBackground ??
-              "Lorem Ipsum is simply dummy text of the printing and typesetting industry."}
-          </p>
+          {companyBackground && (
+            <>
+              <h2
+                className={cn(
+                  "text-lg text-[#00A9FF] font-light pt-1",
+                  firstName ? "mt-5" : "mt-3",
+                  mulish.className
+                )}
+              >
+                Company Overview
+              </h2>
+              <p className="text-xs mt-1 text-black opacity-50">
+                {companyBackground}
+              </p>
+            </>
+          )}
 
           {/* SERVICE INFORMATION */}
-          <h3
-            className={cn(
-              "text-lg text-[#00A9FF] font-light pt-1",
-              firstName ? "mt-5" : "mt-3",
-              mulish.className
-            )}
-          >
-            Our Services
-          </h3>
-          <p className="text-xs mt-1 text-black opacity-50">
-            {serviceDescription ??
-              "Lorem Ipsum is simply dummy text of the printing and typesetting industry."}
-          </p>
+          {(serviceDescription || (servicePhotos && servicePhotos.length > 0)) && (
+            <>
+              <h3
+                className={cn(
+                  "text-lg text-[#00A9FF] font-light pt-1",
+                  firstName ? "mt-5" : "mt-3",
+                  mulish.className
+                )}
+              >
+                Our Services
+              </h3>
+              {serviceDescription && (
+                <p className="text-xs mt-1 text-black opacity-50">
+                  {serviceDescription}
+                </p>
+              )}
+            </>
+          )}
         </div>
 
-        <div className="grid grid-cols-3 gap-4 mt-6 mx-10  rounded-2xl overflow-hidden">
-          {servicePhotos
-            ? servicePhotos.map((photo, index) => (
-                <div key={index} className="col-span-1">
-                  <Image
-                    src={photo}
-                    alt={`Service Photo ${index + 1}`}
-                    width={500}
-                    height={500}
-                    layout="responsive"
-                    className=" object-cover w-full  "
-                  />
-                </div>
-              ))
-            : Array.from({ length: 4 }).map((_, index) => (
-                <div key={index} className="col-span-1">
-                  <Image
-                    src="/assets/sampleService.png"
-                    alt="Service Photo"
-                    width={500}
-                    height={500}
-                    layout="responsive"
-                    className=" object-cover w-full"
-                  />
-                </div>
-              ))}
-        </div>
+        {servicePhotos && servicePhotos.length > 0 && (
+          <div className="grid grid-cols-3 gap-4 mt-6 mx-10  rounded-2xl overflow-hidden">
+            {servicePhotos.map((photo, index) => (
+              <div key={index} className="col-span-1">
+                <Image
+                  src={photo}
+                  alt={`Service Photo ${index + 1}`}
+                  width={500}
+                  height={500}
+                  layout="responsive"
+                  className=" object-cover w-full  "
+                />
+              </div>
+            ))}
+          </div>
+        )}
       </div>
       {/* FOOTER */}
 

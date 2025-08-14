@@ -344,15 +344,7 @@ export const editCardSchema = z.object({
 
   viberUrl: z
     .string()
-    .refine(
-      (value) =>
-        value === "" ||
-        value.startsWith("https://viber.com/") ||
-        value.startsWith("https://www.viber.com/"),
-      {
-        message: "Must be a valid Viber URL",
-      }
-    )
+    .refine(refinePhoneNumber, { message: "Invalid phone number" })
     .optional(),
   whatsappNumber: z
     .string()
