@@ -434,37 +434,15 @@ const MultiStepFormUpdate = ({
   const handleNextStep = async (event: React.FormEvent) => {
     event.preventDefault();
     console.log("handleNextStep");
-    try {
-      // Validate current step fields
-      const fieldsToValidate = steps[currentStep - 1];
-      const isValid = await methods.trigger(fieldsToValidate);
-
-      // On final step, validate entire form
-      const isFinalStep = currentStep === steps.length;
-      if (isFinalStep) {
-        const fullIsValid = await methods.trigger();
-        if (!fullIsValid) return;
-      }
-      if (!isValid) {
-        // Handle Zod validation errors
-        const errorKeys = Object.keys(methods.formState.errors);
-        if (errorKeys.length > 0) {
-          toast.error("Please check the form for errors");
-        }
-        return;
-      }
-
-      console.log("Next step");
-      // Mark current step as completed
-      setCompletedSteps((prev) => [
-        ...prev.filter((s) => s !== currentStep),
-        currentStep,
-      ]);
-      setCurrentStep((prev) => prev + 1);
-    } catch (error) {
-      console.error("Error in handleNextStep:", error);
-      toast.error("An unexpected error occurred. Please try again.");
-    }
+    
+    // Mark current step as completed
+    setCompletedSteps((prev) => [
+      ...prev.filter((s) => s !== currentStep),
+      currentStep,
+    ]);
+    
+    // Move to next step without validation
+    setCurrentStep((prev) => prev + 1);
   };
 
   const goToPreviousStep = () => {
@@ -472,9 +450,8 @@ const MultiStepFormUpdate = ({
   };
 
   const handleStepNavigation = (step: number) => {
-    if (step <= currentStep || completedSteps.includes(step)) {
-      setCurrentStep(step);
-    }
+    // Allow navigation to any step
+    setCurrentStep(step);
   };
 
   const handleAddLink = (link: {

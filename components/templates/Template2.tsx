@@ -190,7 +190,7 @@ const Template2 = ({
               target="_blank"
               rel="noopener noreferrer"
             >
-              <FaWhatsapp size={24} />
+              <FaWhatsapp size={20} />
             </Link>
           )}
           {skypeInviteUrl && (
@@ -199,12 +199,12 @@ const Template2 = ({
               target="_blank"
               rel="noopener noreferrer"
             >
-              <FaSkype size={24} />
+              <FaSkype size={20} />
             </Link>
           )}
           {websiteUrl && (
             <Link href={websiteUrl} target="_blank" rel="noopener noreferrer">
-              <FaGlobe size={24} />
+              <FaGlobe size={20} />
             </Link>
           )}
         </div>
