@@ -483,9 +483,9 @@ const MultiStepFormUpdate = ({
           className="space-y-6 h-full"
           onSubmit={methods.handleSubmit(formSubmit)}
         >
-          <div className="flex flex-col py-8 px-4 sm:px-0 bg-background h-full">
-            <div className="aspect-[130/48] w-80 mx-auto mb-10">
-              <TapupLogo />
+          <div className="flex flex-col py-4 px-2 sm:px-0 bg-background h-full">
+            <div className="mx-auto w-60">
+              <TapupLogo width={130} height={100} />
             </div>
             <div
               className={`w-full mx-auto transition-all duration-300 ${previewMinimized ? "lg:max-w-4xl" : "lg:max-w-2xl"} max-w-4xl`}
@@ -527,7 +527,7 @@ const MultiStepFormUpdate = ({
                   {/* Cover Photo Section */}
                   <div>
                     <h2 className="text-lg font-semibold mb-4">Cover Photo</h2>
-                    <div className="w-full max-w-lg mx-auto">
+                    <div className="w-full max-w-sm mx-auto">
                       <Cropper
                         imageUrl={coverPhotoUrl}
                         setImageUrl={setCoverPhotoUrl}
@@ -580,7 +580,7 @@ const MultiStepFormUpdate = ({
                         aspect={1}
                         photos={servicePhotos}
                         setPhotos={setServicePhotos}
-                        className="w-full aspect-[16/9] rounded-2xl overflow-hidden border-dashed border-2"
+                        className="w-full max-w-sm mx-auto aspect-[16/9] rounded-2xl overflow-hidden border-dashed border-2"
                         imageClassName="rounded-2xl"
                         disableUpload={serviceImageUrls.length >= 5}
                         fallback={
@@ -638,100 +638,9 @@ const MultiStepFormUpdate = ({
                 </div>
               )}
 
-              {/* Step 2 - Company Info and Personal Info */}
+              {/* Step 2 - Company Info and Service Photos */}
               {currentStep === 2 && (
-                <div className="">
-                  <h2>Profile Photo</h2>
-                  <div className="w-full flex justify-center items-center flex-col my-4">
-                    <Cropper
-                      imageUrl={imageUrl}
-                      setImageUrl={setImageUrl}
-                      photo={photo}
-                      aspect={1}
-                      setPhoto={setPhoto}
-                      circularCrop
-                      className="w-[120px] h-[120px] lg:w-[150px] lg:h-[150px] rounded-full"
-                      fallback={
-                        <div className="relative w-full h-full rounded-full flex items-center justify-center border-2  border-dashed">
-                          <Image
-                            src={"/assets/image-plus.svg"}
-                            width={50}
-                            height={50}
-                            className="size-8 lg:size-auto p-2 border rounded-md border-gray-500"
-                            alt="gallery"
-                          />
-                        </div>
-                      }
-                    />
-
-                    <div className="flex flex-col items-center justify-center mt-2">
-                      <p className="text-[#767676] text-base">
-                        Drop your image here or{" "}
-                        <span className="text-green-500">browse</span>
-                      </p>
-                      <p className="text-[#767676] text-xs">
-                        We support PNG, JPEG, and GIF files under 25MB
-                      </p>
-                    </div>
-
-                    <span className="text-sm text-red-500 pt-4">
-                      {methods.formState.errors.profilePictureUrl?.message ??
-                        ""}
-                    </span>
-                  </div>
-
-                  <h2>Cover Photo</h2>
-                  <div className="w-full flex justify-center items-center flex-col my-4">
-                    <div className="flex flex-col items-center relative w-full">
-                      <div className="w-full relative">
-                        <Cropper
-                          imageUrl={coverPhotoUrl}
-                          setImageUrl={setCoverPhotoUrl}
-                          photo={coverPhoto}
-                          aspect={16 / 9}
-                          setPhoto={setCoverPhoto}
-                          className="w-full aspect-[16/9] rounded-2xl overflow-hidden border-input border-2"
-                          fallback={
-                            <div className="w-full aspect-[16/9] flex flex-col items-center gap-y-2 rounded-2xl border-dashed border-2 border-gray-500">
-                              <Image
-                                src={"/assets/image-plus.svg"}
-                                width={50}
-                                height={50}
-                                alt="plus"
-                                className="size-10 lg:size-auto mt-8 border p-2 rounded-md cursor-pointer"
-                              />
-                              <p className="text-[#767676] text-xl">
-                                Drop your image here or{" "}
-                                <span className="text-green-500">browse</span>
-                              </p>
-                              <p className="text-[#767676] text-xs">
-                                We support PNG, JPEG, and GIF files under 25MB
-                              </p>
-                            </div>
-                          }
-                        />
-                        <div className="flex flex-col items-center justify-center mt-2">
-                          <p className="text-[#767676] text-base">
-                            Drop your image here or{" "}
-                            <span className="text-green-500">browse</span>
-                          </p>
-                          <p className="text-[#767676] text-xs">
-                            We support PNG, JPEG, and GIF files under 25MB
-                          </p>
-                        </div>
-
-                        <span className="text-sm text-red-500 pt-4">
-                          {methods.formState.errors.profilePictureUrl
-                            ?.message ?? ""}
-                        </span>
-                      </div>
-                    </div>
-                  </div>
-                  <PersonalInfoForm control={methods.control} isCard />
-                  <SocialLinksSelector
-                    onAddLink={handleAddLink}
-                    existingValues={methods.watch()}
-                  />
+                <div className="space-y-6">
                   <div className="mt-2">
                     {selectedLinks.map((link) => (
                       <div key={link.key} className="flex flex-col gap-3">
@@ -856,7 +765,7 @@ const MultiStepFormUpdate = ({
                               return updated;
                             });
                           }}
-                          className="w-full aspect-[16/9] rounded-2xl overflow-hidden border-dashed border-2"
+                          className="w-full max-w-sm mx-auto aspect-[16/9] rounded-2xl overflow-hidden border-dashed border-2"
                           imageClassName="rounded-2xl"
                           disableUpload={
                             (company.servicePhotos?.length ?? 0) >= 5
@@ -886,7 +795,7 @@ const MultiStepFormUpdate = ({
                           {(company.servicePhotos ?? []).map((url, index) => (
                             <div
                               key={`service-image-${idx}-${index}`}
-                              className="relative flex items-center justify-center h-[77px] w-[77px] overflow-hidden rounded-md bg-[#222224] border border-[#2c2c2c]"
+                              className="relative flex items-center justify-center h-[50px] w-[50px] overflow-hidden rounded-md bg-[#222224] border border-[#2c2c2c]"
                             >
                               {/* Delete Button */}
                               <button

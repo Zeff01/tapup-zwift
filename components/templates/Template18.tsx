@@ -1,23 +1,14 @@
-import { downloadVCard, getCopyrightYear } from "@/lib/utils";
+import { getCopyrightYear } from "@/lib/utils";
 import { Card } from "@/types/types";
 import Image from "next/image";
+
+// Components
 import {
-  FaFacebookF,
-  FaGlobe,
-  FaInstagram,
-  FaLinkedinIn,
-  FaSkype,
-  FaTwitter,
-  FaViber,
-  FaWhatsapp,
-  FaYoutube,
-} from "react-icons/fa";
-import {
-  MdOutlineBookmarkBorder,
-  MdOutlineMailOutline,
-  MdOutlinePhone,
-} from "react-icons/md";
-import { SiTiktok } from "react-icons/si";
+  CTAButtons,
+  SocialLinks,
+  TemplateContainer,
+  TemplateFooter,
+} from "./templatesComponents";
 
 const Template18 = ({
   id,
@@ -60,8 +51,17 @@ const Template18 = ({
   };
 
   return (
-    <div className="min-h-screen bg-[#001e36] flex items-center justify-center relative overflow-hidden py-2 px-1 text-white">
-      <div className="max-w-[480px] mx-auto flex flex-col">
+    <TemplateContainer
+      backgroundColor="bg-[#001e36]"
+      padding="xs"
+      maxWidth="480px"
+      flex={true}
+      flexDirection="col"
+      alignItems="center"
+      justifyContent="center"
+      className="relative overflow-hidden py-2 text-white"
+    >
+      <div className="max-w-[480px] mx-auto flex flex-col  ">
         {/* === Decorative Background === */}
         <div
           className="absolute top-10 left-10 w-48 h-48 rounded-full"
@@ -94,14 +94,17 @@ const Template18 = ({
           className="relative px-2 sm:px-3 pb-6"
         >
           {/* Cover Image */}
-          <div
-            className="relative h-64 bg-cover bg-center rounded-t-[30px]"
-            style={{ backgroundImage: `url(${coverPhotoUrl})` }}
-          />
+          <div className="relative w-full h-64 rounded-t-[30px] overflow-hidden">
+            <img
+              src={coverPhotoUrl}
+              alt="Cover"
+              className="w-full h-full object-cover"
+            />
+          </div>
 
-          {/* Profile Content */}
-          <div className="-mt-20 px-4 sm:px-6">
-            <div className="bg-[#123B57] rounded-xl px-4 sm:px-5 py-5 sm:py-6 shadow-lg relative text-center">
+          {/* Profile Card */}
+          <div className="relative px-4 sm:px-6 -mt-14">
+            <div className="bg-[#123B57] rounded-xl px-4 sm:px-5 pt-14 pb-6 shadow-lg text-center">
               {/* Profile Picture */}
               <div className="absolute -top-12 left-1/2 transform -translate-x-1/2">
                 <div className="w-24 h-24 rounded-full border-4 border-white shadow-md overflow-hidden">
@@ -113,135 +116,58 @@ const Template18 = ({
                 </div>
               </div>
 
-              {/* Info */}
-              <div className="mt-9">
-                <h2 className="text-lg font-bold">
-                  {prefix && `${prefix}. `}
-                  {firstName} {middleName && `${middleName} `}
-                  {lastName}
-                  {suffix && `, ${suffix}`}
-                </h2>
-                <div className="text-sm mt-1">
-                  {company} {position && `| ${position}`}
-                </div>
-                <div className="text-xs mt-1 break-words text-gray-300">
-                  {email && (
-                    <>
-                      {email}
-                      {number && ` | ${number}`}
-                    </>
-                  )}
-                  {!email && number && number}
-                </div>
+              {/* Name & Info */}
+              <h2 className="text-lg font-bold mt-2">
+                {prefix && `${prefix}. `}
+                {firstName} {middleName && `${middleName} `}
+                {lastName}
+                {suffix && `, ${suffix}`}
+              </h2>
+              <div className="text-sm mt-1">
+                {company} {position && `| ${position}`}
+              </div>
+              <div className="text-xs mt-1 break-words text-gray-300">
+                {email && (
+                  <>
+                    {email}
+                    {number && ` | ${number}`}
+                  </>
+                )}
+                {!email && number && number}
+              </div>
 
-                {/* Buttons */}
-                <div className="flex flex-col sm:flex-row gap-2 sm:gap-3 w-full mt-3 sm:mt-4">
-                  <div className="flex gap-3 w-full justify-center">
-                    <a
-                      href={`tel:${number}`}
-                      className="w-10 h-10 flex items-center justify-center rounded-full border-2 border-[#00d4ff] text-[#00d4ff] hover:bg-[#00d4ff] hover:text-white transition-all duration-300"
-                      title="Call"
-                    >
-                      <MdOutlinePhone size={20} />
-                    </a>
-                    <a
-                      href={`mailto:${email}`}
-                      className="w-10 h-10 flex items-center justify-center rounded-full border-2 border-[#00d4ff] text-[#00d4ff] hover:bg-[#00d4ff] hover:text-white transition-all duration-300"
-                      title="Email"
-                    >
-                      <MdOutlineMailOutline size={20} />
-                    </a>
-                    <button
-                      type="button"
-                      onClick={() => downloadVCard(userProfile)}
-                      className="w-10 h-10 flex items-center justify-center rounded-full border-2 border-[#00d4ff] text-[#00d4ff] hover:bg-[#00d4ff] hover:text-white transition-all duration-300"
-                      title="Save Contact"
-                    >
-                      <MdOutlineBookmarkBorder size={20} />
-                    </button>
-                  </div>
+              {/* CTA Buttons */}
+              <div className="flex flex-col sm:flex-row gap-2 sm:gap-3 w-full mt-4">
+                <div className="flex gap-3 w-full justify-center">
+                  <CTAButtons
+                    number={number}
+                    email={email}
+                    userProfile={userProfile}
+                    variant="floating"
+                    size="md"
+                    icons="outline"
+                    buttonClassName="border-2 border-[#00d4ff] text-[#00d4ff] hover:bg-[#00d4ff] hover:text-white bg-transparent transition-all duration-300"
+                  />
                 </div>
+              </div>
 
-                {/* Social Icons */}
-                <div className="flex flex-wrap justify-center gap-2 sm:gap-3 mt-3 sm:mt-5 text-white max-w-xs mx-auto">
-                  {[
-                    {
-                      url: facebookUrl,
-                      icon: FaFacebookF,
-                      href: facebookUrl,
-                      bgColor: "bg-blue-600 hover:bg-blue-700",
-                    },
-                    {
-                      url: linkedinUrl,
-                      icon: FaLinkedinIn,
-                      href: linkedinUrl,
-                      bgColor: "bg-blue-500 hover:bg-blue-600",
-                    },
-                    {
-                      url: instagramUrl,
-                      icon: FaInstagram,
-                      href: instagramUrl,
-                      bgColor: "bg-pink-500 hover:bg-pink-600",
-                    },
-                    {
-                      url: twitterUrl,
-                      icon: FaTwitter,
-                      href: twitterUrl,
-                      bgColor: "bg-sky-500 hover:bg-sky-600",
-                    },
-                    {
-                      url: youtubeUrl,
-                      icon: FaYoutube,
-                      href: youtubeUrl,
-                      bgColor: "bg-red-600 hover:bg-red-700",
-                    },
-                    {
-                      url: whatsappNumber,
-                      icon: FaWhatsapp,
-                      href: `https://wa.me/${whatsappNumber}`,
-                      bgColor: "bg-green-500 hover:bg-green-600",
-                    },
-                    {
-                      url: skypeInviteUrl,
-                      icon: FaSkype,
-                      href: skypeInviteUrl,
-                      bgColor: "bg-blue-400 hover:bg-blue-500",
-                    },
-                    {
-                      url: viberUrl,
-                      icon: FaViber,
-                      href: viberUrl,
-                      bgColor: "bg-purple-500 hover:bg-purple-600",
-                    },
-                    {
-                      url: tiktokUrl,
-                      icon: SiTiktok,
-                      href: tiktokUrl,
-                      bgColor: "bg-black hover:bg-gray-800",
-                    },
-                    {
-                      url: websiteUrl,
-                      icon: FaGlobe,
-                      href: websiteUrl,
-                      bgColor: "bg-gray-600 hover:bg-gray-700",
-                    },
-                  ]
-                    .filter((social) => social.url)
-                    .map((social, index) => {
-                      const IconComponent = social.icon;
-                      return (
-                        <a
-                          key={index}
-                          href={social.href}
-                          target="_blank"
-                          rel="noopener noreferrer"
-                          className={`p-2 ${social.bgColor} rounded-full transition`}
-                        >
-                          <IconComponent className="text-sm sm:text-base" />
-                        </a>
-                      );
-                    })}
-                </div>
+              {/* Social Links */}
+              <div className="flex flex-wrap justify-center  mt-5 text-white max-w-xs mx-auto">
+                <SocialLinks
+                  facebookUrl={facebookUrl}
+                  instagramUrl={instagramUrl}
+                  linkedinUrl={linkedinUrl}
+                  twitterUrl={twitterUrl}
+                  youtubeUrl={youtubeUrl}
+                  tiktokUrl={tiktokUrl}
+                  whatsappNumber={whatsappNumber}
+                  skypeInviteUrl={skypeInviteUrl}
+                  viberUrl={viberUrl}
+                  websiteUrl={websiteUrl}
+                  variant="colorful"
+                  size="sm"
+                  iconClassName="p-2 rounded-full w-full h-full text-white text-sm sm:text-base"
+                />
               </div>
             </div>
           </div>
@@ -306,7 +232,7 @@ const Template18 = ({
         )}
 
         {/* === Footer Section === */}
-        <footer className="bg-[#001d34] text-white text-center  text-xs rounded-b-[30px] px-2 sm:px-3">
+        <TemplateFooter className="bg-[#001d34] text-white text-center  text-xs rounded-b-[30px] px-2 sm:px-3">
           <div className="font-semibold text-sm sm:text-base">{company}</div>
           <div className="flex flex-col mt-8 items-center  gap-1 text-center text-xs">
             <a
@@ -328,9 +254,9 @@ const Template18 = ({
               © {getCopyrightYear()} Zwiftech. All Rights Reserved.
             </span>
           </div>{" "}
-        </footer>
+        </TemplateFooter>
       </div>
-    </div>
+    </TemplateContainer>
   );
 };
 

@@ -30,7 +30,7 @@ const UserPage = ({ userData }: { userData: cardType }) => {
     template3: <Template3 {...userData} />,
     template4: <Template4 {...userData} />,
     template5: <Template5 {...userData} />,
-    template6: <Template6 userData={userData} />,
+    template6: <Template6 {...userData} />,
     template7: <Template7 {...userData} />,
     template8: <Template8 {...userData} />,
     template9: <Template9 {...userData} />,

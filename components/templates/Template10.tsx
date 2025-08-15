@@ -1,10 +1,9 @@
-import { downloadVCard, getCopyrightYear } from "@/lib/utils";
+import { getCopyrightYear, cn } from "@/lib/utils";
 import wavy from "@/public/assets/wavy.png";
 import { Card } from "@/types/types";
 import Image from "next/image";
 
 // fonts
-import { cn } from "@/lib/utils";
 import { Michroma, Poppins } from "next/font/google";
 
 const poppins = Poppins({
@@ -17,23 +16,14 @@ const michroma = Michroma({
   subsets: ["latin"],
 });
 
-// icons
+// Components
 import {
-  FaInstagram,
-  FaLinkedin,
-  FaWhatsapp,
-  FaXTwitter,
-} from "react-icons/fa6";
-import { FiYoutube } from "react-icons/fi";
-import { GoGlobe } from "react-icons/go";
-import { SiSkypeforbusiness } from "react-icons/si";
-import { SlSocialFacebook } from "react-icons/sl";
-
-import {
-  MdOutlineBookmarkBorder,
-  MdOutlineMailOutline,
-  MdOutlinePhone,
-} from "react-icons/md";
+  TemplateContainer,
+  CTAButtons,
+  SocialLinks,
+  ProfileHeader,
+  TemplateFooter,
+} from "./templatesComponents";
 
 const Template10 = ({
   id,
@@ -71,8 +61,16 @@ const Template10 = ({
   };
 
   return (
-    <div className=" p-4 flex flex-col bg-black items-center justify-between  min-h-screen">
-      <div className=" w-full mx-auto  max-w-[480px]">
+    <TemplateContainer
+      backgroundColor="bg-black"
+      padding="md"
+      maxWidth="480px"
+      flex={true}
+      flexDirection="col"
+      alignItems="center"
+      justifyContent="between"
+    >
+      <div className="w-full mx-auto max-w-[480px]">
         {/* COVERPHOTO AND PROFILE PIC */}
         <div className="mt-2  flex flex-col relative rounded-4xl mx-4  ">
           <div className="w-full h-48">
@@ -101,27 +99,14 @@ const Template10 = ({
               height={100}
             />
             <div className="flex gap-x-2 absolute right-0 top-0 text-[#FFFBD8] bg-black pl-4 pb-2 rounded-bl-3xl">
-              {/** Phone */}
-              <span className="text-lg font-semibold border border-[#FFFBD8] rounded-full p-1 hover:bg-[#FFFBD8] hover:text-black transition-colors duration-200">
-                <a href={`mailto:${email}`}>
-                  <MdOutlinePhone className="cursor-pointer" />
-                </a>
-              </span>
-
-              {/** Email */}
-              <span className="text-lg font-semibold border border-[#FFFBD8] rounded-full p-1 hover:bg-[#FFFBD8] hover:text-black transition-colors duration-200">
-                <a href={`tel:${number}`}>
-                  <MdOutlineMailOutline className="cursor-pointer" />
-                </a>
-              </span>
-
-              {/** Bookmark / vCard */}
-              <span className="text-lg font-semibold border border-[#FFFBD8] rounded-full p-1 hover:bg-[#FFFBD8] hover:text-black transition-colors duration-200">
-                <MdOutlineBookmarkBorder
-                  className="cursor-pointer"
-                  onClick={() => downloadVCard(userProfile)}
-                />
-              </span>
+              <CTAButtons
+                number={number}
+                email={email}
+                userProfile={userProfile}
+                variant="floating"
+                size="sm"
+                buttonClassName="border-[#FFFBD8] text-[#FFFBD8] hover:bg-[#FFFBD8] hover:text-black bg-transparent"
+              />
             </div>
           </div>
           <div className="absolute -bottom-12 left-1/2 transform -translate-x-1/2">
@@ -185,55 +170,20 @@ const Template10 = ({
         </div>
 
         {/* SOCIAL MEDIA ICONS */}
-        <div className=" flex items-center gap-x-4 py-10 text-2xl text-[#B6BCD2] h-16 justify-center">
-          {facebookUrl && (
-            <a href={facebookUrl} target="_blank" rel="noopener noreferrer">
-              <SlSocialFacebook size={24} />
-            </a>
-          )}
-          {twitterUrl && (
-            <a href={twitterUrl} target="_blank" rel="noopener noreferrer">
-              <FaXTwitter size={24} />
-            </a>
-          )}
-          {youtubeUrl && (
-            <a href={youtubeUrl} target="_blank" rel="noopener noreferrer">
-              <FiYoutube size={24} />
-            </a>
-          )}
-          {instagramUrl && (
-            <a href={instagramUrl} target="_blank" rel="noopener noreferrer">
-              <FaInstagram size={24} />
-            </a>
-          )}
-          {linkedinUrl && (
-            <a href={linkedinUrl} target="_blank" rel="noopener noreferrer">
-              <FaLinkedin size={24} />
-            </a>
-          )}
-          {whatsappNumber && (
-            <a
-              href={`https://wa.me/${whatsappNumber}`}
-              target="_blank"
-              rel="noopener noreferrer"
-            >
-              <FaWhatsapp size={24} />
-            </a>
-          )}
-          {skypeInviteUrl && (
-            <a
-              href={`skype:${skypeInviteUrl}?chat`}
-              target="_blank"
-              rel="noopener noreferrer"
-            >
-              <SiSkypeforbusiness size={24} />
-            </a>
-          )}
-          {websiteUrl && (
-            <a href={websiteUrl} target="_blank" rel="noopener noreferrer">
-              <GoGlobe size={24} />
-            </a>
-          )}
+        <div className="flex items-center gap-x-4 py-10 text-2xl text-[#B6BCD2] h-16 justify-center">
+          <SocialLinks
+            facebookUrl={facebookUrl}
+            instagramUrl={instagramUrl}
+            linkedinUrl={linkedinUrl}
+            twitterUrl={twitterUrl}
+            youtubeUrl={youtubeUrl}
+            whatsappNumber={whatsappNumber}
+            skypeInviteUrl={skypeInviteUrl}
+            websiteUrl={websiteUrl}
+            size="lg"
+            iconClassName="text-[#B6BCD2]"
+            iconSet="outline"
+          />
         </div>
 
         <hr className="border-[#B6BCD2]" />
@@ -318,7 +268,7 @@ const Template10 = ({
           </span>
         )) ?? "Company"}
       </h2>
-      <div className="flex flex-col items-center mt-8 gap-1 text-center text-xs">
+      <TemplateFooter className="flex flex-col items-center mt-8 gap-1 text-center text-xs">
         <a
           href={userProfile?.customUrl ?? userProfile?.websiteUrl ?? "#"}
           target="_blank"
@@ -337,8 +287,8 @@ const Template10 = ({
         <span className="tracking-wide text-gray-400 text-[10px] ">
           © {getCopyrightYear()} Zwiftech. All Rights Reserved.
         </span>
-      </div>
-    </div>
+      </TemplateFooter>
+    </TemplateContainer>
   );
 };
 

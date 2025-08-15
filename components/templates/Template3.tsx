@@ -1,22 +1,13 @@
-import { downloadVCard, getCopyrightYear } from "@/lib/utils";
+import { getCopyrightYear } from "@/lib/utils";
 import { Card } from "@/types/types";
 import Image from "next/image";
 import {
-  FaFacebook,
-  FaGlobe,
-  FaInstagram,
-  FaLinkedin,
-  FaSkype,
-  FaViber,
-  FaWhatsapp,
-  FaXTwitter,
-  FaYoutube,
-} from "react-icons/fa6";
-import {
-  MdOutlineBookmarkBorder,
-  MdOutlineMailOutline,
-  MdOutlinePhone,
-} from "react-icons/md";
+  CTAButtons,
+  ProfileHeader,
+  SocialLinks,
+  Template3Container,
+  TemplateFooter,
+} from "./templatesComponents";
 
 const Template3 = ({
   id,
@@ -55,234 +46,126 @@ const Template3 = ({
     customUrl,
   };
   return (
-    <div className="bg-black text-white  flex flex-col items-center justify-between  min-h-screen  ">
-      <div className=" w-full mx-auto  max-w-[480px]">
-        {/* COVERPHOTO AND PROFILE PIC */}
-        <div className=" flex flex-col relative w-full  ">
-          <div className="w-full  h-48 overflow-hidden ">
-            {coverPhotoUrl && (
-              <Image
-                src={coverPhotoUrl}
-                alt="Cover Image"
-                width={400}
-                height={200}
-                className="mx-auto w-full h-48 object-cover overflow-hidden rounded-md"
-              />
-            )}
-          </div>
-          <div className="absolute -bottom-16 left-1/2 transform -translate-x-1/2  ">
-            {profilePictureUrl && (
-              <div className="w-32 h-32  rounded-full mx-auto overflow-hidden ">
-                <Image
-                  src={profilePictureUrl}
-                  alt="Profile Image"
-                  fill
-                  className="rounded-full"
-                />
-              </div>
-            )}
-          </div>
-        </div>
+    <Template3Container>
+      {/* COVERPHOTO AND PROFILE PIC */}
+      <ProfileHeader
+        profilePictureUrl={profilePictureUrl}
+        coverPhotoUrl={coverPhotoUrl}
+        firstName={firstName}
+        lastName={lastName}
+        variant="overlay"
+        profileSize="xl"
+        coverHeight="md"
+        profilePosition="center"
+        defaultProfileImage="/assets/template4samplepic.png"
+        defaultCoverImage="/assets/template2coverphoto.png"
+      />
 
-        {/* PERSONAL INFORMATION */}
-        <div className="text-center mt-20 space-y-1 ">
-          {firstName ? (
-            <h1 className="text-xl font-bold mt-4 text-greenTitle">
-              {firstName + " " + lastName}
-            </h1>
-          ) : (
-            ""
-          )}
+      {/* PERSONAL INFORMATION */}
+      <div className="text-center mt-20 space-y-1 ">
+        {firstName ? (
+          <h1 className="text-xl font-bold mt-4 text-greenTitle">
+            {firstName + " " + lastName}
+          </h1>
+        ) : (
+          <h1 className="text-xl font-bold mt-2 text-greenTitle">
+            Hussain Watkins
+          </h1>
+        )}
 
-          <p className=" text-grayDescription text-sm">{email}</p>
+        <p className="font-semibold text-white text-xl">
+          {position ?? "Chief Technology Officer"}
+        </p>
 
-          <p className=" text-grayDescription text-sm"> {number}</p>
-        </div>
+        <p className=" text-grayDescription text-sm">
+          {email ?? "H.Watkins@gmail.com"}
+        </p>
 
-        {/* CTA BUTTONS */}
-        <div className="flex justify-center gap-6 mt-6 font-bold">
-          {/* Icon buttons */}
+        <p className=" text-grayDescription text-sm">
+          {" "}
+          {number ?? +639123456789}
+        </p>
+      </div>
 
-          <div className="flex flex-col justify-center items-center bg-white p-2 rounded-full">
-            <a href={`tel:${number}`} className="text-decoration-none">
-              <MdOutlinePhone size={24} className="cursor-pointer text-black" />
-            </a>
-          </div>
-          <div className="flex flex-col justify-center items-center bg-white p-2 rounded-full">
-            <a href={`mailto:${email}`} className="text-decoration-none">
-              <MdOutlineMailOutline
-                size={24}
-                className="cursor-pointer text-black"
-              />
-            </a>
-          </div>
-          <div className="flex flex-col justify-center items-center bg-white p-2 rounded-full">
-            <MdOutlineBookmarkBorder
-              size={24}
-              className="cursor-pointer text-black"
-              onClick={() => downloadVCard(userProfile)}
-            />
-          </div>
-        </div>
+      {/* CTA BUTTONS */}
+      <CTAButtons
+        number={number}
+        email={email}
+        userProfile={userProfile}
+        variant="pills"
+        size="lg"
+        className="flex justify-center  mt-6 font-bold"
+        buttonClassName="bg-white text-black hover:bg-gray-200"
+      />
 
-        {/* SOCIAL MEDIA ICONS */}
-        <div className="flex items-center justify-center gap-2 mt-6 my-4  w-40 mx-auto">
-          {facebookUrl && (
-            <a href={facebookUrl} target="_blank" rel="noopener noreferrer">
-              <FaFacebook size={24} />
-            </a>
-          )}
-          {twitterUrl && (
-            <a href={twitterUrl} target="_blank" rel="noopener noreferrer">
-              <FaXTwitter size={24} />
-            </a>
-          )}
-          {youtubeUrl && (
-            <a href={youtubeUrl} target="_blank" rel="noopener noreferrer">
-              <FaYoutube size={24} />
-            </a>
-          )}
-          {instagramUrl && (
-            <a href={instagramUrl} target="_blank" rel="noopener noreferrer">
-              <FaInstagram size={24} />
-            </a>
-          )}
-          {linkedinUrl && (
-            <a href={linkedinUrl} target="_blank" rel="noopener noreferrer">
-              <FaLinkedin size={24} />
-            </a>
-          )}
-          {viberUrl && (
-            <a href={viberUrl} target="_blank" rel="noopener noreferrer">
-              <FaViber size={24} />
-            </a>
-          )}
-          {whatsappNumber && (
-            <a
-              href={`https://wa.me/${whatsappNumber}`}
-              target="_blank"
-              rel="noopener noreferrer"
-            >
-              <FaWhatsapp size={24} />
-            </a>
-          )}
-          {skypeInviteUrl && (
-            <a
-              href={`skype:${skypeInviteUrl}?chat`}
-              target="_blank"
-              rel="noopener noreferrer"
-            >
-              <FaSkype size={24} />
-            </a>
-          )}
-          {websiteUrl && (
-            <a href={websiteUrl} target="_blank" rel="noopener noreferrer">
-              <FaGlobe size={24} />
-            </a>
-          )}
-        </div>
+      {/* SOCIAL MEDIA ICONS */}
+      <SocialLinks
+        facebookUrl={facebookUrl}
+        instagramUrl={instagramUrl}
+        linkedinUrl={linkedinUrl}
+        twitterUrl={twitterUrl}
+        youtubeUrl={youtubeUrl}
+        whatsappNumber={whatsappNumber}
+        viberUrl={viberUrl}
+        skypeInviteUrl={skypeInviteUrl}
+        websiteUrl={websiteUrl}
+        size="md"
+        className="flex items-center justify-center gap-2 mt-6 my-4 w-40 mx-auto"
+        iconClassName="text-white hover:text-gray-300"
+      />
 
-        {/* COMPANY INFORMATION */}
-        {companies?.map((c, i) => (
-          <div key={i} className="mb-10 mt-6 px-2">
-            {/* Company Name */}
-            <div className="flex flex-col items-center text-center space-y-1">
-              <h2 className="text-2xl font-bold text-gray-300">{c.company}</h2>
-              <h3 className="text-sm font-medium text-gray-300">
-                {c.position}
-              </h3>
-            </div>
+      {/* COMPANY INFORMATION */}
 
-            {/* Background & Services */}
-            <div className="mt-6">
-              {c.companyBackground?.trim() && (
-                <>
-                  <h2 className="text-md font-bold">Company Background</h2>
-                  <p className="text-xs mt-4 text-gray-300">
-                    {c.companyBackground}
-                  </p>
-                </>
-              )}
+      <h2 className="text-4xl font-extrabold mx-auto w-full text-center mt-6 text-greenTitle px-4">
+        {company ?? "COMPANY"}
+      </h2>
+      <div className="mt-6 px-4">
+        {companyBackground && (
+          <>
+            <h2 className="text-md font-bold text-greenTitle">
+              Company Background
+            </h2>
+            <p className="text-xs text-grayDescription mt-4">
+              {companyBackground}
+            </p>
+          </>
+        )}
 
-              {c.serviceDescription?.trim() && (
-                <>
-                  <h3 className="text-md font-bold mt-6">Our Services</h3>
-                  <p className="text-xs mt-4 text-gray-300">
-                    {c.serviceDescription}
-                  </p>
-                </>
-              )}
-            </div>
-
-            {/* Service Photos */}
-            {Array.isArray(c.servicePhotos) && c.servicePhotos.length > 0 && (
-              <div className="grid grid-cols-2 gap-4 mt-6">
-                {c.servicePhotos.map((photo, index) => (
-                  <div key={index} className="col-span-1">
-                    <Image
-                      src={photo}
-                      alt={`Service Photo ${index + 1}`}
-                      width={300}
-                      height={300}
-                      layout="responsive"
-                      className="rounded-md object-cover w-full shadow shadow-white overflow-hidden"
-                    />
-                  </div>
-                ))}
-              </div>
-            )}
-          </div>
-        ))}
-        <h2 className="text-4xl font-extrabold mx-auto w-full text-center mt-6 text-greenTitle px-4">
-          {company ?? "COMPANY"}
-        </h2>
-        <div className="mt-6 px-4">
-          {companyBackground && (
-            <>
-              <h2 className="text-md font-bold text-greenTitle">
-                Company Background
-              </h2>
+        {/* SERVICE INFORMATION */}
+        {(serviceDescription ||
+          (servicePhotos && servicePhotos.length > 0)) && (
+          <>
+            <h3 className="text-md font-bold mt-6 text-greenTitle">
+              Our Services
+            </h3>
+            {serviceDescription && (
               <p className="text-xs text-grayDescription mt-4">
-                {companyBackground}
+                {serviceDescription}
               </p>
-            </>
-          )}
-
-          {/* SERVICE INFORMATION */}
-          {(serviceDescription ||
-            (servicePhotos && servicePhotos.length > 0)) && (
-            <>
-              <h3 className="text-md font-bold mt-6 text-greenTitle">
-                Our Services
-              </h3>
-              {serviceDescription && (
-                <p className="text-xs text-grayDescription mt-4">
-                  {serviceDescription}
-                </p>
-              )}
-            </>
-          )}
-        </div>
-
-        {servicePhotos && servicePhotos.length > 0 && (
-          <div className="grid grid-cols-2 gap-2 mt-6  p-2">
-            {servicePhotos.map((photo, index) => (
-              <div key={index} className="col-span-1">
-                <Image
-                  src={photo}
-                  alt={`Service Photo ${index + 1}`}
-                  width={300}
-                  height={300}
-                  layout="responsive"
-                  className="rounded-md object-cover w-full"
-                />
-              </div>
-            ))}
-          </div>
+            )}
+          </>
         )}
       </div>
+
+      {servicePhotos && servicePhotos.length > 0 && (
+        <div className="grid grid-cols-2 gap-2 mt-6  p-2">
+          {servicePhotos.map((photo, index) => (
+            <div key={index} className="col-span-1">
+              <Image
+                src={photo}
+                alt={`Service Photo ${index + 1}`}
+                width={300}
+                height={300}
+                layout="responsive"
+                className="rounded-md object-cover w-full"
+              />
+            </div>
+          ))}
+        </div>
+      )}
+
       {/* FOOTER */}
-      <div className="flex flex-col items-center gap-1 text-center mt-8">
+      <TemplateFooter className="flex flex-col items-center gap-1 text-center mt-8">
         <a
           href={userProfile?.customUrl ?? userProfile?.websiteUrl ?? "#"}
           target="_blank"
@@ -301,8 +184,8 @@ const Template3 = ({
         <span className="tracking-wide text-gray-400 text-[10px] ">
           © {getCopyrightYear()} Zwiftech. All Rights Reserved.
         </span>
-      </div>
-    </div>
+      </TemplateFooter>
+    </Template3Container>
   );
 };
 

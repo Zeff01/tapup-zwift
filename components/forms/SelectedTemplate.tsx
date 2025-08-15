@@ -32,7 +32,7 @@ const SelectedTemplate = ({
     template3: <Template3 {...(formData as Card)} />,
     template4: <Template4 {...(formData as Card)} />,
     template5: <Template5 {...(formData as Card)} />,
-    template6: <Template6 userData={formData as Card} />,
+    template6: <Template6 {...(formData as Card)} />,
     template7: <Template7 {...(formData as Card)} />,
     template8: <Template8 {...(formData as Card)} />,
     template9: <Template9 {...(formData as Card)} />,

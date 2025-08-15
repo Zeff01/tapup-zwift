@@ -2,12 +2,14 @@ import { cn } from "@/lib/utils";
 
 type Props = {
   className?: string;
+  width?: number;
+  height?: number;
 };
 
-const TapupLogo = ({ className }: Props) => (
+const TapupLogo = ({ className, width = 130, height = 48 }: Props) => (
   <svg
-    width="130"
-    height="48"
+    width={width}
+    height={height}
     viewBox="0 0 130 48"
     fill="none"
     xmlns="http://www.w3.org/2000/svg"

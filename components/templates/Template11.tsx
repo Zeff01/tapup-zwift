@@ -2,7 +2,7 @@ import { Card } from "@/types/types";
 import Image from "next/image";
 
 // fonts
-import { cn, downloadVCard, getCopyrightYear } from "@/lib/utils";
+import { cn, getCopyrightYear } from "@/lib/utils";
 import { Mulish, Roboto_Condensed } from "next/font/google";
 
 const roboto_c = Roboto_Condensed({
@@ -15,21 +15,15 @@ const mulish = Mulish({
   subsets: ["latin"],
 });
 
-// icons
-import {
-  FaInstagram,
-  FaLinkedin,
-  FaWhatsapp,
-  FaXTwitter,
-} from "react-icons/fa6";
-import { FiYoutube } from "react-icons/fi";
-import { GoGlobe } from "react-icons/go";
-import { HiOutlineBookmark } from "react-icons/hi2";
-import { SiSkypeforbusiness } from "react-icons/si";
-import { SlSocialFacebook } from "react-icons/sl";
 import { Separator } from "../ui/separator";
 
-import { MdOutlineMailOutline, MdOutlinePhone } from "react-icons/md";
+// Components
+import {
+  CTAButtons,
+  SocialLinks,
+  TemplateContainer,
+  TemplateFooter,
+} from "./templatesComponents";
 
 const Template11 = ({
   id,
@@ -67,32 +61,25 @@ const Template11 = ({
   };
 
   return (
-    <div className=" flex flex-col bg-white items-center justify-between  min-h-screen">
-      <div className=" w-full mx-auto  relative">
+    <TemplateContainer
+      backgroundColor="bg-white"
+      padding="none"
+      maxWidth="none"
+      flex={true}
+      flexDirection="col"
+      alignItems="center"
+      justifyContent="between"
+    >
+      <div className="w-full mx-auto relative">
         <div className="flex gap-2 z-20 absolute right-0 top-0 p-1">
-          {/* Phone */}
-          <a
-            href={`tel:${number}`}
-            className="flex items-center justify-center w-8 h-8 bg-[#A0E9FF] text-[#00A9FF] rounded-full shadow hover:bg-[#00A9FF] hover:text-white transform hover:scale-110 transition-all duration-200"
-          >
-            <MdOutlinePhone size={18} />
-          </a>
-
-          {/* Email */}
-          <a
-            href={`mailto:${email}`}
-            className="flex items-center justify-center w-8 h-8 bg-[#A0E9FF] text-[#00A9FF] rounded-full shadow hover:bg-[#00A9FF] hover:text-white transform hover:scale-110 transition-all duration-200"
-          >
-            <MdOutlineMailOutline size={18} />
-          </a>
-
-          {/* Bookmark / vCard */}
-          <button
-            onClick={() => downloadVCard(userProfile)}
-            className="flex items-center justify-center w-8 h-8 bg-[#A0E9FF] text-[#00A9FF] rounded-full shadow hover:bg-[#00A9FF] hover:text-white transform hover:scale-110 transition-all duration-200"
-          >
-            <HiOutlineBookmark size={18} />
-          </button>
+          <CTAButtons
+            number={number}
+            email={email}
+            userProfile={userProfile}
+            variant="floating"
+            size="sm"
+            buttonClassName="bg-[#A0E9FF] text-[#00A9FF] border-0 shadow hover:bg-[#00A9FF] hover:text-white transform hover:scale-110"
+          />
         </div>
 
         {/* COVERPHOTO AND PROFILE PIC */}
@@ -183,93 +170,26 @@ const Template11 = ({
             <p>{number ?? +639123456789}</p>
           </div>
           {/* SOCIAL MEDIA ICONS */}
-          <div className=" flex items-center gap-1 pb-10 pt-5 text-black text-2xl  h-16 justify-center">
-            {facebookUrl && (
-              <a
-                className="rounded-full p-2 bg-white  opacity-50"
-                href={facebookUrl}
-                target="_blank"
-                rel="noopener noreferrer"
-              >
-                <SlSocialFacebook size={13} />
-              </a>
-            )}
-            {twitterUrl && (
-              <a
-                className="rounded-full p-2 bg-white  opacity-50"
-                href={twitterUrl}
-                target="_blank"
-                rel="noopener noreferrer"
-              >
-                <FaXTwitter size={13} />
-              </a>
-            )}
-            {youtubeUrl && (
-              <a
-                className="rounded-full p-2 bg-white  opacity-50"
-                href={youtubeUrl}
-                target="_blank"
-                rel="noopener noreferrer"
-              >
-                <FiYoutube size={13} />
-              </a>
-            )}
-            {instagramUrl && (
-              <a
-                className="rounded-full p-2 bg-white  opacity-50"
-                href={instagramUrl}
-                target="_blank"
-                rel="noopener noreferrer"
-              >
-                <FaInstagram size={13} />
-              </a>
-            )}
-            {linkedinUrl && (
-              <a
-                className="rounded-full p-2 bg-white  opacity-50"
-                href={linkedinUrl}
-                target="_blank"
-                rel="noopener noreferrer"
-              >
-                <FaLinkedin size={13} />
-              </a>
-            )}
-            {whatsappNumber && (
-              <a
-                className="rounded-full p-2 bg-white  opacity-50"
-                href={`https://wa.me/${whatsappNumber}`}
-                target="_blank"
-                rel="noopener noreferrer"
-              >
-                <FaWhatsapp size={13} />
-              </a>
-            )}
-            {skypeInviteUrl && (
-              <a
-                className="rounded-full p-2 bg-white  opacity-50"
-                href={`skype:${skypeInviteUrl}?chat`}
-                target="_blank"
-                rel="noopener noreferrer"
-              >
-                <SiSkypeforbusiness size={13} />
-              </a>
-            )}
-            {websiteUrl && (
-              <a
-                className="rounded-full p-2 bg-white  opacity-50"
-                href={websiteUrl}
-                target="_blank"
-                rel="noopener noreferrer"
-              >
-                <GoGlobe size={13} />
-              </a>
-            )}
+          <div className="flex items-center gap-1 mt-6 pb-10 pt-10 text-black text-2xl h-16 justify-center">
+            <SocialLinks
+              facebookUrl={facebookUrl}
+              instagramUrl={instagramUrl}
+              linkedinUrl={linkedinUrl}
+              twitterUrl={twitterUrl}
+              youtubeUrl={youtubeUrl}
+              whatsappNumber={whatsappNumber}
+              skypeInviteUrl={skypeInviteUrl}
+              websiteUrl={websiteUrl}
+              size="sm"
+              iconClassName="rounded-full p-2 bg-white opacity-50 size-full "
+              iconSet="outline"
+            />
           </div>
         </div>
 
         {/* COMPANY INFORMATION */}
 
-        <div className="mt-[110px] px-10 ">
+        <div className="mt-[120px] px-10 ">
           {companyBackground && (
             <>
               <h2
@@ -328,7 +248,7 @@ const Template11 = ({
       </div>
       {/* FOOTER */}
 
-      <div className="flex flex-col items-center  justify-center gap-x-1 text-xs  pb-2 ">
+      <TemplateFooter className="flex flex-col items-center  justify-center gap-x-1 text-xs  pb-2 ">
         <h2
           className={cn(
             "text-md font-normal tracking-wider  capitalize text-center ",
@@ -366,8 +286,8 @@ const Template11 = ({
             © {getCopyrightYear()} Zwiftech. All Rights Reserved.
           </span>
         </div>
-      </div>
-    </div>
+      </TemplateFooter>
+    </TemplateContainer>
   );
 };
 

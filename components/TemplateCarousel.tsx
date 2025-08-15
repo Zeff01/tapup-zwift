@@ -54,6 +54,18 @@ const templates: Template[] = [
     route: "/create/template/6",
   },
   {
+    id: "template7",
+    name: "Blue Professional",
+    imageUrl: "/assets/template7.png",
+    route: "/create/template/7",
+  },
+  {
+    id: "template8",
+    name: "Modern Wave",
+    imageUrl: "/assets/template8.png",
+    route: "/create/template/8",
+  },
+  {
     id: "template9",
     name: "Business",
     imageUrl: "/assets/template9.png",
