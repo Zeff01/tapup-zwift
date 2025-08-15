@@ -134,7 +134,7 @@ const Template17 = ({
           </div>
 
           {/* Social Icons */}
-          <div className="flex   justify-center mt-3 sm:mt-5 ">
+          <div className="flex   justify-center mt-3 sm:mt-5">
             <SocialLinks
               facebookUrl={facebookUrl}
               instagramUrl={instagramUrl}
@@ -147,8 +147,61 @@ const Template17 = ({
               viberUrl={viberUrl}
               websiteUrl={websiteUrl}
               variant="colorful"
-              size="md"
+              size="lg"
+              iconSet="solid"
               iconClassName=" p-2 rounded-full  w-full h-full"
+              colorfulColors={{
+                facebook: {
+                  icon: "#1877f3",
+                  background: "#f3f4f6",
+                  hover: { background: "#e5e7eb" },
+                },
+                instagram: {
+                  icon: "#e4405f",
+                  background: "#f3f4f6",
+                  hover: { background: "#e5e7eb" },
+                },
+                linkedin: {
+                  icon: "#0a66c2",
+                  background: "#f3f4f6",
+                  hover: { background: "#e5e7eb" },
+                },
+                twitter: {
+                  icon: "#000000",
+                  background: "#f3f4f6",
+                  hover: { background: "#e5e7eb" },
+                },
+                youtube: {
+                  icon: "#ff0000",
+                  background: "#f3f4f6",
+                  hover: { background: "#e5e7eb" },
+                },
+                tiktok: {
+                  icon: "#000000",
+                  background: "#f3f4f6",
+                  hover: { background: "#e5e7eb" },
+                },
+                whatsapp: {
+                  icon: "#25d366",
+                  background: "#f3f4f6",
+                  hover: { background: "#e5e7eb" },
+                },
+                viber: {
+                  icon: "#665cac",
+                  background: "#f3f4f6",
+                  hover: { background: "#e5e7eb" },
+                },
+                skype: {
+                  icon: "#00aff0",
+                  background: "#f3f4f6",
+                  hover: { background: "#e5e7eb" },
+                },
+                website: {
+                  icon: "#6b7280",
+                  background: "#f3f4f6",
+                  hover: { background: "#e5e7eb" },
+                },
+              }}
             />
           </div>
         </section>

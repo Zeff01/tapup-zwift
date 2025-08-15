@@ -88,7 +88,7 @@ const Template5 = ({
             websiteUrl={websiteUrl}
             variant="minimal"
             size="sm"
-            className="flex flex-col gap-1 "
+            className="flex flex-col gap-[6px]"
             iconClassName="text-gray-600 hover:text-pink-500"
           />
         </div>
