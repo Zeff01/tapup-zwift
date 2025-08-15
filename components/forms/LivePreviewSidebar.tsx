@@ -56,6 +56,7 @@ export default function LivePreviewSidebar({
   onTemplateChange,
 }: LivePreviewSidebarProps) {
   const [showTemplateSelector, setShowTemplateSelector] = useState(false);
+  const [showMobileModal, setShowMobileModal] = useState(false);
 
   const currentTemplate = availableTemplates.find(
     (t) => t.id === selectedTemplateId
@@ -63,13 +64,85 @@ export default function LivePreviewSidebar({
 
   return (
     <>
-      {/* Sidebar */}
+      {/* Mobile Preview Button - visible on mobile only */}
+      <Button
+        onClick={() => setShowMobileModal(true)}
+        className="fixed bottom-4 right-4 z-40 lg:hidden rounded-full h-12 w-12 p-0 shadow-lg"
+        variant="default"
+      >
+        <Eye className="h-5 w-5" />
+      </Button>
+
+      {/* Mobile Preview Modal */}
+      {showMobileModal && (
+        <div className="fixed inset-0 z-50 lg:hidden">
+          {/* Backdrop */}
+          <div
+            className="absolute inset-0 bg-black/50"
+            onClick={() => setShowMobileModal(false)}
+          />
+
+          {/* Modal Content */}
+          <div className="absolute inset-0 flex items-center justify-center p-4">
+            <div className="relative bg-white dark:bg-gray-800 rounded-lg shadow-xl max-w-sm w-full max-h-[90vh] overflow-y-auto">
+              {/* Header */}
+              <div className="sticky top-0 bg-white dark:bg-gray-800 border-b p-4 flex items-center justify-between">
+                <h3 className="font-semibold text-lg flex items-center gap-2">
+                  <Smartphone className="h-5 w-5 text-gray-500" />
+                  Mobile Preview
+                </h3>
+                <Button
+                  onClick={() => setShowMobileModal(false)}
+                  variant="ghost"
+                  size="sm"
+                  className="h-8 w-8 p-0"
+                >
+                  ✕
+                </Button>
+              </div>
+
+              {/* Preview */}
+              <div className="p-4">
+                <div
+                  className="max-w-[280px] mx-auto border-2 border-gray-200 rounded-xl overflow-hidden bg-black flex flex-col"
+                  style={{ aspectRatio: "9/16" }}
+                >
+                  <div className="flex-grow max-h-[450px] overflow-y-auto no-scrollbar">
+                    <SelectedTemplate
+                      templateId={selectedTemplateId}
+                      formData={formData}
+                    />
+                  </div>
+                  <div className="flex-grow w-full flex justify-center items-center">
+                    <div className="h-10 w-10 border-gray-300 border-2 rounded-full"></div>
+                  </div>
+                </div>
+              </div>
+
+              {/* Template Info */}
+              <div className="p-4 border-t">
+                <div className="flex items-center justify-between">
+                  <div>
+                    <p className="text-sm text-gray-500">Current Template</p>
+                    <p className="font-medium">{currentTemplate?.name}</p>
+                  </div>
+                  <Badge variant="secondary" className="text-xs">
+                    {currentTemplate?.category}
+                  </Badge>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      )}
+
+      {/* Sidebar - hidden on mobile */}
       <motion.div
         animate={{
           width: isMinimized ? "4rem" : "24rem",
         }}
         transition={{ type: "spring", damping: 25, stiffness: 200 }}
-        className="fixed right-0 top-0 h-full bg-white dark:bg-gray-800 border-l border-gray-200 dark:border-gray-700 shadow-2xl z-30"
+        className="fixed right-0 top-0 h-full bg-white dark:bg-gray-800 border-l border-gray-200 dark:border-gray-700 shadow-2xl z-30 hidden lg:block"
       >
         {/* Minimize/Maximize Toggle */}
         <div className="relative">

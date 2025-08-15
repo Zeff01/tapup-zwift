@@ -177,6 +177,47 @@ const Template4 = ({
             )}
           </div>
         ))}
+        <h2 className="text-4xl font-extrabold mx-auto w-full mt-6 px-4">
+          {company ?? "COMPANY"}
+        </h2>
+        <div className="mt-6 px-4">
+          {companyBackground && (
+            <>
+              <h2 className="text-md font-bold">Company Background</h2>
+              <p className="text-xs text-gray-600 mt-4">{companyBackground}</p>
+            </>
+          )}
+
+          {/* SERVICE INFORMATION */}
+          {(serviceDescription ||
+            (servicePhotos && servicePhotos.length > 0)) && (
+            <>
+              <h3 className="text-md font-bold mt-6">Our Services</h3>
+              {serviceDescription && (
+                <p className="text-xs text-gray-600 mt-4">
+                  {serviceDescription}
+                </p>
+              )}
+            </>
+          )}
+        </div>
+
+        {servicePhotos && servicePhotos.length > 0 && (
+          <div className="flex flex-col gap-4 mt-6 px-4">
+            {servicePhotos.map((photo, index) => (
+              <div key={index} className="col-span-1">
+                <Image
+                  src={photo}
+                  alt={`Service Photo ${index + 1}`}
+                  width={500}
+                  height={500}
+                  layout="responsive"
+                  className="rounded-md object-cover w-full"
+                />
+              </div>
+            ))}
+          </div>
+        )}
       </div>
       {/* SOCIAL MEDIA ICONS */}
       <div className="flex flex-col justify-center items-center mt-3 mb-4">

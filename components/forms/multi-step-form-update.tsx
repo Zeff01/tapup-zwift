@@ -434,37 +434,15 @@ const MultiStepFormUpdate = ({
   const handleNextStep = async (event: React.FormEvent) => {
     event.preventDefault();
     console.log("handleNextStep");
-    try {
-      // Validate current step fields
-      const fieldsToValidate = steps[currentStep - 1];
-      const isValid = await methods.trigger(fieldsToValidate);
 
-      // On final step, validate entire form
-      const isFinalStep = currentStep === steps.length;
-      if (isFinalStep) {
-        const fullIsValid = await methods.trigger();
-        if (!fullIsValid) return;
-      }
-      if (!isValid) {
-        // Handle Zod validation errors
-        const errorKeys = Object.keys(methods.formState.errors);
-        if (errorKeys.length > 0) {
-          toast.error("Please check the form for errors");
-        }
-        return;
-      }
+    // Mark current step as completed
+    setCompletedSteps((prev) => [
+      ...prev.filter((s) => s !== currentStep),
+      currentStep,
+    ]);
 
-      console.log("Next step");
-      // Mark current step as completed
-      setCompletedSteps((prev) => [
-        ...prev.filter((s) => s !== currentStep),
-        currentStep,
-      ]);
-      setCurrentStep((prev) => prev + 1);
-    } catch (error) {
-      console.error("Error in handleNextStep:", error);
-      toast.error("An unexpected error occurred. Please try again.");
-    }
+    // Move to next step without validation
+    setCurrentStep((prev) => prev + 1);
   };
 
   const goToPreviousStep = () => {
@@ -472,9 +450,8 @@ const MultiStepFormUpdate = ({
   };
 
   const handleStepNavigation = (step: number) => {
-    if (step <= currentStep || completedSteps.includes(step)) {
-      setCurrentStep(step);
-    }
+    // Allow navigation to any step
+    setCurrentStep(step);
   };
 
   const handleAddLink = (link: {
@@ -499,7 +476,7 @@ const MultiStepFormUpdate = ({
   };
   return (
     <main
-      className={`h-full transition-all duration-300 ease-in-out ${previewMinimized ? "pr-16" : "pr-96"}`}
+      className={`h-full transition-all duration-300 ease-in-out ${previewMinimized ? "lg:pr-16" : "lg:pr-96"}`}
     >
       <Form {...methods}>
         <form
@@ -511,7 +488,7 @@ const MultiStepFormUpdate = ({
               <TapupLogo />
             </div>
             <div
-              className={`w-full mx-auto transition-all duration-300 ${previewMinimized ? "max-w-4xl" : "max-w-2xl"}`}
+              className={`w-full mx-auto transition-all duration-300 ${previewMinimized ? "lg:max-w-4xl" : "lg:max-w-2xl"} max-w-4xl`}
             >
               {formHeaderItems.map((item) => (
                 <div key={item.id} className="mb-6">
@@ -762,7 +739,12 @@ const MultiStepFormUpdate = ({
                           {link.label}
                         </span>
                         <Input
-                          placeholder={`Enter ${link.label} URL`}
+                          placeholder={
+                            link.key === "viberUrl" ||
+                            link.key === "whatsappNumber"
+                              ? `Enter ${link.label} phone number`
+                              : `Enter ${link.label} URL`
+                          }
                           value={link.value}
                           onChange={(e) =>
                             handleInputChange(link.key, e.target.value)

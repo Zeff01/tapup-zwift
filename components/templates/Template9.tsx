@@ -198,47 +198,41 @@ const Template9 = ({
         <h2 className="font-semibold text-3xl mx-auto w-full  tracking-wider  text-center">
           {company ?? "COMPANY"}
         </h2>
-        <div>
-          <h1 className="font-semibold tracking-wider">Company Overview</h1>
-          <p className="font-light text-sm text-neutral-500 pt-2">
-            {companyBackground ??
-              "Lorem Ipsum is simply dummy text of the printing and typesetting industry."}
-          </p>
-        </div>
-        <div>
-          <h1 className="font-semibold tracking-wider">Our Services</h1>
-          <p className="font-light text-sm text-neutral-500 pt-2">
-            {serviceDescription ??
-              "Lorem Ipsum is simply dummy text of the printing and typesetting industry."}
-          </p>
-        </div>
-        <div className="grid grid-cols-2 gap-4 mt-6  ">
-          {servicePhotos
-            ? servicePhotos.map((photo, index) => (
-                <div key={index} className="col-span-1">
-                  <Image
-                    src={photo}
-                    alt={`Service Photo ${index + 1}`}
-                    width={300}
-                    height={300}
-                    layout="responsive"
-                    className="rounded-2xl object-contain w-full  "
-                  />
-                </div>
-              ))
-            : Array.from({ length: 4 }).map((_, index) => (
-                <div key={index} className="col-span-1">
-                  <Image
-                    src="/assets/sampleService.png"
-                    alt="Service Photo"
-                    width={300}
-                    height={300}
-                    layout="responsive"
-                    className="rounded-2xl object-contain w-full"
-                  />
-                </div>
-              ))}
-        </div>
+        {companyBackground && (
+          <div>
+            <h1 className="font-semibold tracking-wider">Company Overview</h1>
+            <p className="font-light text-sm text-neutral-500 pt-2">
+              {companyBackground}
+            </p>
+          </div>
+        )}
+        {(serviceDescription ||
+          (servicePhotos && servicePhotos.length > 0)) && (
+          <div>
+            <h1 className="font-semibold tracking-wider">Our Services</h1>
+            {serviceDescription && (
+              <p className="font-light text-sm text-neutral-500 pt-2">
+                {serviceDescription}
+              </p>
+            )}
+          </div>
+        )}
+        {servicePhotos && servicePhotos.length > 0 && (
+          <div className="grid grid-cols-2 gap-4 mt-6  ">
+            {servicePhotos.map((photo, index) => (
+              <div key={index} className="col-span-1">
+                <Image
+                  src={photo}
+                  alt={`Service Photo ${index + 1}`}
+                  width={300}
+                  height={300}
+                  layout="responsive"
+                  className="rounded-2xl object-contain w-full  "
+                />
+              </div>
+            ))}
+          </div>
+        )}
 
         {/* footer */}
         <h2 className="font-semibold text-xl mx-auto w-full  tracking-wider  text-center">

@@ -75,7 +75,7 @@ const socialLinks: SocialLink[] = [
     label: "Viber",
     icon: <SiViber />,
     key: "viberUrl",
-    value: "https://www.viber.com/",
+    value: "",
   },
   {
     label: "LinkedIn",

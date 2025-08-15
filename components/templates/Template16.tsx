@@ -42,6 +42,7 @@ const Template16 = ({
   viberUrl,
   tiktokUrl,
   customUrl,
+  companies,
 }: Card) => {
   const userProfile = {
     id,
@@ -183,54 +184,62 @@ const Template16 = ({
           </section>
         </section>
 
-        {/* === Company Overview Section === */}
-        {companyBackground && (
-          <section
-            aria-label="Company Overview"
-            className="w-full max-w-md px-6 mb-6"
-          >
-            <h2 className="text-base font-bold mb-2">Company Overview</h2>
-            <p className="text-sm text-gray-700 leading-relaxed">
-              {companyBackground}
-            </p>
-          </section>
-        )}
+        {companies?.length > 0 &&
+          companies.map((company, idx) => (
+            <div key={idx} className="w-full pb-4">
+              <h2 className="font-bold text-lg text-black mb-4 mt-2 text-center">
+                {company.company}
+              </h2>
 
-        {/* === Services Section === */}
-        {(serviceDescription ||
-          (servicePhotos && servicePhotos.length > 0)) && (
-          <section
-            aria-label="Our Services"
-            className="w-full max-w-md px-6 mb-8"
-          >
-            <h2 className="text-base font-bold mb-2">Our Services</h2>
-            {serviceDescription && (
-              <p className="text-sm text-gray-700 leading-relaxed mb-4">
-                {serviceDescription}
-              </p>
-            )}
-            {servicePhotos && servicePhotos.length > 0 && (
-              <div className="flex flex-col gap-4">
-                {servicePhotos.map((photo, index) => (
-                  <div
-                    key={index}
-                    className="w-full overflow-hidden rounded-2xl"
-                  >
-                    <img
-                      src={photo}
-                      alt={`Service ${index + 1}`}
-                      className="w-full h-40 object-cover"
-                    />
-                  </div>
-                ))}
-              </div>
-            )}
-          </section>
-        )}
+              {/* === Company Overview Section === */}
+              {company.companyBackground && (
+                <section
+                  aria-label="Company Overview"
+                  className="w-full max-w-md px-6 mb-6"
+                >
+                  <h2 className="text-base font-semibold mb-2">
+                    Company Overview
+                  </h2>
+                  <p className="text-sm text-gray-700 leading-relaxed">
+                    {company.companyBackground}
+                  </p>
+                </section>
+              )}
+
+              {/* === Services Section === */}
+              {(company.serviceDescription ||
+                (company.servicePhotos &&
+                  company.servicePhotos.length > 0)) && (
+                <section
+                  aria-label="Our Services"
+                  className="w-full max-w-md px-6 mb-8"
+                >
+                  <h2 className="text-base font-semibold mb-2">Our Services</h2>
+                  {company.serviceDescription && (
+                    <p className="text-sm text-gray-700 leading-relaxed mb-4">
+                      {company.serviceDescription}
+                    </p>
+                  )}
+                  {company.servicePhotos &&
+                    company.servicePhotos.length > 0 && (
+                      <div className="grid grid-cols-2 gap-4 mt-4">
+                        {company.servicePhotos.map((photo, index) => (
+                          <img
+                            key={index}
+                            src={photo}
+                            alt={`Service ${index + 1}`}
+                            className="rounded-md object-cover w-full"
+                          />
+                        ))}
+                      </div>
+                    )}
+                </section>
+              )}
+            </div>
+          ))}
 
         {/* === Footer Section === */}
         <footer className="w-full max-w-md px-6 text-center text-gray-500 text-sm ">
-          <div className="font-semibold text-black mb-1">{company}</div>
           <div className="flex flex-col mt-8 mb-1 items-center  gap-1 text-center text-xs">
             <a
               href={userProfile?.customUrl ?? userProfile?.websiteUrl ?? "#"}

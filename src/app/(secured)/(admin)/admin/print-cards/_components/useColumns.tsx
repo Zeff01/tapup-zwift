@@ -174,7 +174,7 @@ export const useCreateColumns = ({
                     <span>Edit</span>
                     <PencilLine size={15} />
                   </DropdownMenuItem>
-                  
+
                   <DropdownMenuItem
                     className="focus:bg-gray-200 dark:focus:bg-accent"
                     onSelect={(e) => e.preventDefault()}
