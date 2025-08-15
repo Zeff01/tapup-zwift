@@ -161,20 +161,17 @@ const Template5 = ({
           {companyBackground && (
             <>
               <h2 className="text-md font-bold">Company Background</h2>
-              <p className="text-xs mt-4">
-                {companyBackground}
-              </p>
+              <p className="text-xs mt-4">{companyBackground}</p>
             </>
           )}
 
           {/* SERVICE INFORMATION */}
-          {(serviceDescription || (servicePhotos && servicePhotos.length > 0)) && (
+          {(serviceDescription ||
+            (servicePhotos && servicePhotos.length > 0)) && (
             <>
               <h3 className="text-md font-bold mt-6">Our Services</h3>
               {serviceDescription && (
-                <p className="text-xs mt-4">
-                  {serviceDescription}
-                </p>
+                <p className="text-xs mt-4">{serviceDescription}</p>
               )}
             </>
           )}

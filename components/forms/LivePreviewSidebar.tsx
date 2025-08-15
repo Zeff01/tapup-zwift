@@ -77,11 +77,11 @@ export default function LivePreviewSidebar({
       {showMobileModal && (
         <div className="fixed inset-0 z-50 lg:hidden">
           {/* Backdrop */}
-          <div 
-            className="absolute inset-0 bg-black/50" 
+          <div
+            className="absolute inset-0 bg-black/50"
             onClick={() => setShowMobileModal(false)}
           />
-          
+
           {/* Modal Content */}
           <div className="absolute inset-0 flex items-center justify-center p-4">
             <div className="relative bg-white dark:bg-gray-800 rounded-lg shadow-xl max-w-sm w-full max-h-[90vh] overflow-y-auto">
@@ -100,7 +100,7 @@ export default function LivePreviewSidebar({
                   ✕
                 </Button>
               </div>
-              
+
               {/* Preview */}
               <div className="p-4">
                 <div
@@ -118,7 +118,7 @@ export default function LivePreviewSidebar({
                   </div>
                 </div>
               </div>
-              
+
               {/* Template Info */}
               <div className="p-4 border-t">
                 <div className="flex items-center justify-between">

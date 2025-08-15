@@ -228,7 +228,8 @@ const Template3 = ({
           )}
 
           {/* SERVICE INFORMATION */}
-          {(serviceDescription || (servicePhotos && servicePhotos.length > 0)) && (
+          {(serviceDescription ||
+            (servicePhotos && servicePhotos.length > 0)) && (
             <>
               <h3 className="text-md font-bold mt-6 text-greenTitle">
                 Our Services

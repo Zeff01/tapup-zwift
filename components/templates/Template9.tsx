@@ -206,7 +206,8 @@ const Template9 = ({
             </p>
           </div>
         )}
-        {(serviceDescription || (servicePhotos && servicePhotos.length > 0)) && (
+        {(serviceDescription ||
+          (servicePhotos && servicePhotos.length > 0)) && (
           <div>
             <h1 className="font-semibold tracking-wider">Our Services</h1>
             {serviceDescription && (

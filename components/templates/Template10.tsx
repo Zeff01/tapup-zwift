@@ -261,14 +261,13 @@ const Template10 = ({
               >
                 Company Overview
               </h2>
-              <p className="text-xs mt-1 text-[#B6BCD2]">
-                {companyBackground}
-              </p>
+              <p className="text-xs mt-1 text-[#B6BCD2]">{companyBackground}</p>
             </>
           )}
 
           {/* SERVICE INFORMATION */}
-          {(serviceDescription || (servicePhotos && servicePhotos.length > 0)) && (
+          {(serviceDescription ||
+            (servicePhotos && servicePhotos.length > 0)) && (
             <>
               <h3
                 className={cn(

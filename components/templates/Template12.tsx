@@ -304,7 +304,8 @@ const Template12 = ({
                 </p>
               </div>
             )}
-            {(serviceDescription || (servicePhotos && servicePhotos.length > 0)) && (
+            {(serviceDescription ||
+              (servicePhotos && servicePhotos.length > 0)) && (
               <div>
                 <h1
                   className={cn(

@@ -288,7 +288,8 @@ const Template11 = ({
           )}
 
           {/* SERVICE INFORMATION */}
-          {(serviceDescription || (servicePhotos && servicePhotos.length > 0)) && (
+          {(serviceDescription ||
+            (servicePhotos && servicePhotos.length > 0)) && (
             <>
               <h3
                 className={cn(

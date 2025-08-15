@@ -434,13 +434,13 @@ const MultiStepFormUpdate = ({
   const handleNextStep = async (event: React.FormEvent) => {
     event.preventDefault();
     console.log("handleNextStep");
-    
+
     // Mark current step as completed
     setCompletedSteps((prev) => [
       ...prev.filter((s) => s !== currentStep),
       currentStep,
     ]);
-    
+
     // Move to next step without validation
     setCurrentStep((prev) => prev + 1);
   };
@@ -740,7 +740,8 @@ const MultiStepFormUpdate = ({
                         </span>
                         <Input
                           placeholder={
-                            link.key === "viberUrl" || link.key === "whatsappNumber"
+                            link.key === "viberUrl" ||
+                            link.key === "whatsappNumber"
                               ? `Enter ${link.label} phone number`
                               : `Enter ${link.label} URL`
                           }
