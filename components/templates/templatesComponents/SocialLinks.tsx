@@ -1,23 +1,22 @@
-import React from "react";
-import Link from "next/link";
+import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
+import React from "react";
 import {
   FaFacebook,
+  FaGlobe,
   FaInstagram,
   FaLinkedin,
+  FaSkype,
+  FaTiktok,
+  FaViber,
   FaWhatsapp,
   FaXTwitter,
   FaYoutube,
-  FaTiktok,
-  FaViber,
-  FaSkype,
-  FaGlobe,
 } from "react-icons/fa6";
-import { SlSocialFacebook } from "react-icons/sl";
 import { FiYoutube } from "react-icons/fi";
-import { SiSkypeforbusiness, SiTiktok, SiViber } from "react-icons/si";
 import { GoGlobe } from "react-icons/go";
-import { Button } from "@/components/ui/button";
+import { SiSkypeforbusiness, SiTiktok, SiViber } from "react-icons/si";
+import { SlSocialFacebook } from "react-icons/sl";
 
 interface SocialLinksProps {
   facebookUrl?: string;
@@ -116,7 +115,7 @@ export const SocialLinks: React.FC<SocialLinksProps> = ({
   const iconSize = sizeMap[size];
 
   const layoutClasses = {
-    horizontal: "flex items-center gap-4",
+    horizontal: "flex items-center gap-2  flex-wrap justify-center",
     vertical: "flex flex-col gap-3",
     grid: "grid grid-cols-3 gap-3",
   };
@@ -126,13 +125,17 @@ export const SocialLinks: React.FC<SocialLinksProps> = ({
   };
 
   const getIconClasses = () => {
-    const baseClasses = "transition-all duration-200";
-    
+    const baseClasses = "transition-all duration-200 ";
+
     switch (variant) {
       case "buttons":
         return cn(baseClasses, "rounded-full p-2", iconClassName);
       case "minimal":
-        return cn(baseClasses, "text-gray-600 hover:text-gray-900", iconClassName);
+        return cn(
+          baseClasses,
+          "text-gray-600 hover:text-gray-900",
+          iconClassName
+        );
       case "colorful":
         return cn(baseClasses, iconClassName);
       default:
@@ -153,12 +156,13 @@ export const SocialLinks: React.FC<SocialLinksProps> = ({
 
     if (variant === "buttons") {
       return (
-        <Button
-          key={label}
-          className="rounded-full w-auto h-auto p-2"
-          asChild
-        >
-          <a href={linkHref} target="_blank" rel="noopener noreferrer" title={label}>
+        <Button key={label} className="rounded-full w-auto h-auto p-2" asChild>
+          <a
+            href={linkHref}
+            target="_blank"
+            rel="noopener noreferrer"
+            title={label}
+          >
             <Icon size={iconSize} />
           </a>
         </Button>
@@ -171,7 +175,10 @@ export const SocialLinks: React.FC<SocialLinksProps> = ({
         href={linkHref}
         target="_blank"
         rel="noopener noreferrer"
-        className={cn("flex items-center gap-2", showLabels && "hover:underline")}
+        className={cn(
+          "flex items-center gap-2",
+          showLabels && "hover:underline"
+        )}
         title={label}
       >
         <Icon size={iconSize} className={iconClass} />
@@ -194,12 +201,7 @@ export const SocialLinks: React.FC<SocialLinksProps> = ({
         "WhatsApp",
         `https://wa.me/${whatsappNumber}`
       )}
-      {renderSocialLink(
-        viberUrl,
-        icons.viber,
-        "Viber",
-        viberUrl
-      )}
+      {renderSocialLink(viberUrl, icons.viber, "Viber", viberUrl)}
       {renderSocialLink(
         skypeInviteUrl,
         icons.skype,
@@ -212,19 +214,29 @@ export const SocialLinks: React.FC<SocialLinksProps> = ({
 };
 
 // Pre-configured variants for templates
-export const Template1Socials: React.FC<Omit<SocialLinksProps, "variant">> = (props) => (
-  <SocialLinks {...props} variant="default" iconClassName="text-gray-600 hover:text-gray-900" />
+export const Template1Socials: React.FC<Omit<SocialLinksProps, "variant">> = (
+  props
+) => (
+  <SocialLinks
+    {...props}
+    variant="default"
+    iconClassName="text-gray-600 hover:text-gray-900"
+  />
 );
 
-export const Template7Socials: React.FC<Omit<SocialLinksProps, "variant">> = (props) => (
-  <SocialLinks {...props} variant="buttons" />
-);
+export const Template7Socials: React.FC<Omit<SocialLinksProps, "variant">> = (
+  props
+) => <SocialLinks {...props} variant="buttons" />;
 
-export const Template9Socials: React.FC<Omit<SocialLinksProps, "variant">> = (props) => (
+export const Template9Socials: React.FC<Omit<SocialLinksProps, "variant">> = (
+  props
+) => (
   <SocialLinks {...props} variant="default" iconClassName="text-neutral-700" />
 );
 
-export const Template13Socials: React.FC<Omit<SocialLinksProps, "variant">> = (props) => (
+export const Template13Socials: React.FC<Omit<SocialLinksProps, "variant">> = (
+  props
+) => (
   <SocialLinks
     {...props}
     variant="default"

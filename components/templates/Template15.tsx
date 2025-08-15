@@ -1,25 +1,13 @@
 import { getCopyrightYear } from "@/lib/utils";
 import { Card } from "@/types/types";
 import Image from "next/image";
-import { FaSkype, FaTiktok, FaViber, FaWhatsapp } from "react-icons/fa6";
-import {
-  LuFacebook,
-  LuGlobe,
-  LuInstagram,
-  LuLinkedin,
-  LuTwitter,
-  LuYoutube,
-} from "react-icons/lu";
-import {
-  MdOutlineMailOutline,
-  MdOutlinePhone,
-} from "react-icons/md";
+import { MdOutlineMailOutline, MdOutlinePhone } from "react-icons/md";
 
 // Components
 import {
-  TemplateContainer,
-  Template15CTA,
   SocialLinks,
+  Template15CTA,
+  TemplateContainer,
   TemplateFooter,
 } from "./templatesComponents";
 const Template15 = ({
@@ -117,7 +105,7 @@ const Template15 = ({
         {/* === Card Section === */}
         <section
           aria-label="Card Section"
-          className="w-full max-w-md mt-8 relative flex flex-col items-center px-2 sm:px-6"
+          className="w-full max-w-md mt-8 relative flex flex-col items-center "
         >
           {/* Blue circle - left side of Contacts */}
           <div
@@ -158,7 +146,7 @@ const Template15 = ({
           </div>
 
           {/* Social Icons */}
-          <div className="flex flex-wrap gap-2 justify-center mb-6 max-w-xs">
+          <div className=" mb-6 ">
             <SocialLinks
               facebookUrl={facebookUrl}
               instagramUrl={instagramUrl}
@@ -171,8 +159,8 @@ const Template15 = ({
               viberUrl={viberUrl}
               websiteUrl={websiteUrl}
               variant="buttons"
-              size="md"
-              iconClassName="bg-[#1a425b] text-[#7eabc2] hover:bg-[#245573] rounded-full p-2"
+              size="sm"
+              iconClassName="bg-[#1a425b]   text-[#7eabc2] hover:bg-[#245573] rounded-full "
             />
           </div>
 
@@ -193,9 +181,7 @@ const Template15 = ({
               </div>
               <div className="flex items-center gap-2">
                 <MdOutlinePhone className="text-[#7dd3fc] flex-shrink-0" />
-                <a href={`tel:${number}`}>
-                  {number}
-                </a>
+                <a href={`tel:${number}`}>{number}</a>
               </div>
             </div>
           </section>

@@ -1,20 +1,19 @@
-import React from "react";
-import Link from "next/link";
-import { cn } from "@/lib/utils";
-import { downloadVCard } from "@/lib/utils";
-import {
-  MdOutlinePhone,
-  MdOutlineMailOutline,
-  MdOutlineBookmarkBorder,
-} from "react-icons/md";
-import { LuPhone, LuMail, LuBookmark } from "react-icons/lu";
 import { Button } from "@/components/ui/button";
+import { cn, downloadVCard } from "@/lib/utils";
+import Link from "next/link";
+import React from "react";
+import { LuBookmark, LuMail, LuPhone } from "react-icons/lu";
+import {
+  MdOutlineBookmarkBorder,
+  MdOutlineMailOutline,
+  MdOutlinePhone,
+} from "react-icons/md";
 
 interface CTAButtonsProps {
   number?: string;
   email?: string;
   userProfile: {
-    id: string;
+    id?: string;
     firstName?: string;
     lastName?: string;
     email?: string;
@@ -79,7 +78,11 @@ export const CTAButtons: React.FC<CTAButtonsProps> = ({
   const PhoneIcon = iconSets[icons].phone;
   const MailIcon = iconSets[icons].mail;
   const BookmarkIcon = iconSets[icons].bookmark;
-  const { button: buttonSize, icon: iconSize, text: textSize } = sizeClasses[size];
+  const {
+    button: buttonSize,
+    icon: iconSize,
+    text: textSize,
+  } = sizeClasses[size];
 
   const layoutClasses = {
     horizontal: "flex gap-2",
@@ -96,9 +99,15 @@ export const CTAButtons: React.FC<CTAButtonsProps> = ({
 
     switch (variant) {
       case "rounded":
-        return cn(baseClasses, "rounded-full border-2 border-black bg-white hover:bg-gray-100");
+        return cn(
+          baseClasses,
+          "rounded-full border-2 border-black bg-white hover:bg-gray-100"
+        );
       case "pills":
-        return cn(baseClasses, "rounded-full bg-black text-white hover:bg-gray-800");
+        return cn(
+          baseClasses,
+          "rounded-full bg-black text-white hover:bg-gray-800"
+        );
       case "floating":
         return cn(
           baseClasses,
@@ -107,7 +116,10 @@ export const CTAButtons: React.FC<CTAButtonsProps> = ({
       case "inline":
         return cn(baseClasses, "rounded-lg bg-transparent hover:bg-gray-100");
       default:
-        return cn(baseClasses, "rounded-md border border-gray-300 hover:bg-gray-50");
+        return cn(
+          baseClasses,
+          "rounded-md border border-gray-300 hover:bg-gray-50"
+        );
     }
   };
 
@@ -141,15 +153,17 @@ export const CTAButtons: React.FC<CTAButtonsProps> = ({
 };
 
 // Pre-configured variants for common use cases
-export const Template1CTA: React.FC<Omit<CTAButtonsProps, "variant">> = (props) => (
-  <CTAButtons {...props} variant="rounded" />
-);
+export const Template1CTA: React.FC<Omit<CTAButtonsProps, "variant">> = (
+  props
+) => <CTAButtons {...props} variant="rounded" />;
 
-export const Template9CTA: React.FC<Omit<CTAButtonsProps, "variant" | "size">> = (props) => (
-  <CTAButtons {...props} variant="floating" size="sm" />
-);
+export const Template9CTA: React.FC<
+  Omit<CTAButtonsProps, "variant" | "size">
+> = (props) => <CTAButtons {...props} variant="floating" size="sm" />;
 
-export const Template13CTA: React.FC<Omit<CTAButtonsProps, "variant">> = (props) => (
+export const Template13CTA: React.FC<Omit<CTAButtonsProps, "variant">> = (
+  props
+) => (
   <CTAButtons
     {...props}
     variant="pills"
@@ -157,7 +171,9 @@ export const Template13CTA: React.FC<Omit<CTAButtonsProps, "variant">> = (props)
   />
 );
 
-export const Template15CTA: React.FC<Omit<CTAButtonsProps, "variant">> = (props) => (
+export const Template15CTA: React.FC<Omit<CTAButtonsProps, "variant">> = (
+  props
+) => (
   <CTAButtons
     {...props}
     variant="rounded"

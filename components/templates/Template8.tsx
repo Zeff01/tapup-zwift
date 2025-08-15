@@ -1,13 +1,12 @@
-import { Card } from "@/types/types";
-import Image from "next/image";
 import { Button } from "@/components/ui/button";
-import { Bookmark } from "lucide-react";
 import { downloadVCard } from "@/lib/utils";
+import { Card } from "@/types/types";
+import { Bookmark } from "lucide-react";
+import Image from "next/image";
 import {
-  Template8Container,
-  CTAButtons,
-  SocialLinks,
   EmailButton,
+  SocialLinks,
+  Template8Container,
   TemplateFooter,
 } from "./templatesComponents";
 
@@ -71,10 +70,7 @@ const Template8 = ({
         {/* Profile picture and bookmark icon */}
         <div className="absolute rounded-full bg-offWhiteTemplate transform left-40 -bottom-1 w-custom-29 h-custom-29 border-offWhiteTemplate border-2xs">
           <Image
-            src={
-              profilePictureUrl ||
-              "/assets/template-8-profile-picture.jpeg"
-            }
+            src={profilePictureUrl || "/assets/template-8-profile-picture.jpeg"}
             fill
             alt="profile picture"
             className="rounded-full"
@@ -99,7 +95,7 @@ const Template8 = ({
           {email ?? "email@example.com"}
         </p>
       </div>
-      
+
       {/* SOCIAL MEDIA ICONS */}
       <SocialLinks
         facebookUrl={facebookUrl}
@@ -208,7 +204,7 @@ const Template8 = ({
             variant="buttons"
             size="sm"
             className="flex justify-center gap-2.5"
-            buttonClassName="rounded-full h-2xs w-2xs"
+            iconClassName="rounded-full h-2xs w-2xs"
           />
           <div className="flex justify-center">
             <p className="text-2xs text-gray-500 font-light">

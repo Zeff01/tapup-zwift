@@ -1,24 +1,12 @@
 import { getCopyrightYear } from "@/lib/utils";
 import { Card } from "@/types/types";
 import Image from "next/image";
-import {
-  FaFacebookF,
-  FaGlobe,
-  FaInstagram,
-  FaLinkedinIn,
-  FaSkype,
-  FaTwitter,
-  FaViber,
-  FaWhatsapp,
-  FaYoutube,
-} from "react-icons/fa";
-import { SiTiktok } from "react-icons/si";
 
 // Components
 import {
-  TemplateContainer,
   CTAButtons,
   SocialLinks,
+  TemplateContainer,
   TemplateFooter,
 } from "./templatesComponents";
 
@@ -73,7 +61,7 @@ const Template18 = ({
       justifyContent="center"
       className="relative overflow-hidden py-2 text-white"
     >
-      <div className="max-w-[480px] mx-auto flex flex-col">
+      <div className="max-w-[480px] mx-auto flex flex-col  ">
         {/* === Decorative Background === */}
         <div
           className="absolute top-10 left-10 w-48 h-48 rounded-full"
@@ -106,14 +94,17 @@ const Template18 = ({
           className="relative px-2 sm:px-3 pb-6"
         >
           {/* Cover Image */}
-          <div
-            className="relative h-64 bg-cover bg-center rounded-t-[30px]"
-            style={{ backgroundImage: `url(${coverPhotoUrl})` }}
-          />
+          <div className="relative w-full h-64 rounded-t-[30px] overflow-hidden">
+            <img
+              src={coverPhotoUrl}
+              alt="Cover"
+              className="w-full h-full object-cover"
+            />
+          </div>
 
-          {/* Profile Content */}
-          <div className="-mt-20 px-4 sm:px-6">
-            <div className="bg-[#123B57] rounded-xl px-4 sm:px-5 py-5 sm:py-6 shadow-lg relative text-center">
+          {/* Profile Card */}
+          <div className="relative px-4 sm:px-6 -mt-14">
+            <div className="bg-[#123B57] rounded-xl px-4 sm:px-5 pt-14 pb-6 shadow-lg text-center">
               {/* Profile Picture */}
               <div className="absolute -top-12 left-1/2 transform -translate-x-1/2">
                 <div className="w-24 h-24 rounded-full border-4 border-white shadow-md overflow-hidden">
@@ -125,60 +116,58 @@ const Template18 = ({
                 </div>
               </div>
 
-              {/* Info */}
-              <div className="mt-9">
-                <h2 className="text-lg font-bold">
-                  {prefix && `${prefix}. `}
-                  {firstName} {middleName && `${middleName} `}
-                  {lastName}
-                  {suffix && `, ${suffix}`}
-                </h2>
-                <div className="text-sm mt-1">
-                  {company} {position && `| ${position}`}
-                </div>
-                <div className="text-xs mt-1 break-words text-gray-300">
-                  {email && (
-                    <>
-                      {email}
-                      {number && ` | ${number}`}
-                    </>
-                  )}
-                  {!email && number && number}
-                </div>
+              {/* Name & Info */}
+              <h2 className="text-lg font-bold mt-2">
+                {prefix && `${prefix}. `}
+                {firstName} {middleName && `${middleName} `}
+                {lastName}
+                {suffix && `, ${suffix}`}
+              </h2>
+              <div className="text-sm mt-1">
+                {company} {position && `| ${position}`}
+              </div>
+              <div className="text-xs mt-1 break-words text-gray-300">
+                {email && (
+                  <>
+                    {email}
+                    {number && ` | ${number}`}
+                  </>
+                )}
+                {!email && number && number}
+              </div>
 
-                {/* Buttons */}
-                <div className="flex flex-col sm:flex-row gap-2 sm:gap-3 w-full mt-3 sm:mt-4">
-                  <div className="flex gap-3 w-full justify-center">
-                    <CTAButtons
-                      number={number}
-                      email={email}
-                      userProfile={userProfile}
-                      variant="floating"
-                      size="md"
-                      icons="outline"
-                      buttonClassName="border-2 border-[#00d4ff] text-[#00d4ff] hover:bg-[#00d4ff] hover:text-white bg-transparent transition-all duration-300"
-                    />
-                  </div>
-                </div>
-
-                {/* Social Icons */}
-                <div className="flex flex-wrap justify-center gap-2 sm:gap-3 mt-3 sm:mt-5 text-white max-w-xs mx-auto">
-                  <SocialLinks
-                    facebookUrl={facebookUrl}
-                    instagramUrl={instagramUrl}
-                    linkedinUrl={linkedinUrl}
-                    twitterUrl={twitterUrl}
-                    youtubeUrl={youtubeUrl}
-                    tiktokUrl={tiktokUrl}
-                    whatsappNumber={whatsappNumber}
-                    skypeInviteUrl={skypeInviteUrl}
-                    viberUrl={viberUrl}
-                    websiteUrl={websiteUrl}
-                    variant="colorful"
-                    size="sm"
-                    iconClassName="p-2 rounded-full text-white text-sm sm:text-base"
+              {/* CTA Buttons */}
+              <div className="flex flex-col sm:flex-row gap-2 sm:gap-3 w-full mt-4">
+                <div className="flex gap-3 w-full justify-center">
+                  <CTAButtons
+                    number={number}
+                    email={email}
+                    userProfile={userProfile}
+                    variant="floating"
+                    size="md"
+                    icons="outline"
+                    buttonClassName="border-2 border-[#00d4ff] text-[#00d4ff] hover:bg-[#00d4ff] hover:text-white bg-transparent transition-all duration-300"
                   />
                 </div>
+              </div>
+
+              {/* Social Links */}
+              <div className="flex flex-wrap justify-center  mt-5 text-white max-w-xs mx-auto">
+                <SocialLinks
+                  facebookUrl={facebookUrl}
+                  instagramUrl={instagramUrl}
+                  linkedinUrl={linkedinUrl}
+                  twitterUrl={twitterUrl}
+                  youtubeUrl={youtubeUrl}
+                  tiktokUrl={tiktokUrl}
+                  whatsappNumber={whatsappNumber}
+                  skypeInviteUrl={skypeInviteUrl}
+                  viberUrl={viberUrl}
+                  websiteUrl={websiteUrl}
+                  variant="colorful"
+                  size="sm"
+                  iconClassName="p-2 rounded-full w-full h-full text-white text-sm sm:text-base"
+                />
               </div>
             </div>
           </div>

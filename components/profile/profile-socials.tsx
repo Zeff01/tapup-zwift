@@ -31,7 +31,7 @@ const ProfileSocials = ({
   viberUrl,
 }: Partial<Card>) => {
   return (
-    <section className="flex gap-1 w-[15rem] pt-5 pl-2">
+    <section className="flex gap-3 w-[15rem] pt-5 pl-2">
       {facebookUrl && (
         <Link href={facebookUrl} target="_blank" rel="noopener noreferrer">
           <FaFacebook style={style} />

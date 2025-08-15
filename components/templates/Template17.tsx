@@ -1,24 +1,12 @@
 import { getCopyrightYear } from "@/lib/utils";
 import { Card } from "@/types/types";
 import Image from "next/image";
-import {
-  FaFacebookF,
-  FaGlobe,
-  FaInstagram,
-  FaLinkedinIn,
-  FaSkype,
-  FaTiktok,
-  FaTwitter,
-  FaViber,
-  FaWhatsapp,
-  FaYoutube,
-} from "react-icons/fa";
 
 // Components
 import {
-  TemplateContainer,
   CTAButtons,
   SocialLinks,
+  TemplateContainer,
   TemplateFooter,
 } from "./templatesComponents";
 
@@ -133,7 +121,7 @@ const Template17 = ({
           </div>
 
           {/* Buttons */}
-          <div className="flex gap-3 w-full justify-center mt-3 sm:mt-4">
+          <div className="flex gap-3 w-full  justify-center mt-3 sm:mt-4">
             <CTAButtons
               number={number}
               email={email}
@@ -146,7 +134,7 @@ const Template17 = ({
           </div>
 
           {/* Social Icons */}
-          <div className="flex gap-2 sm:gap-3 justify-center mt-3 sm:mt-5 flex-wrap">
+          <div className="flex   justify-center mt-3 sm:mt-5 ">
             <SocialLinks
               facebookUrl={facebookUrl}
               instagramUrl={instagramUrl}
@@ -159,8 +147,8 @@ const Template17 = ({
               viberUrl={viberUrl}
               websiteUrl={websiteUrl}
               variant="colorful"
-              size="sm"
-              iconClassName="bg-gray-100 hover:bg-gray-200 p-2 rounded-full text-sm sm:text-lg"
+              size="md"
+              iconClassName=" p-2 rounded-full  w-full h-full"
             />
           </div>
         </section>

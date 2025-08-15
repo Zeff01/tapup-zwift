@@ -1,5 +1,4 @@
 import { Card } from "@/types/types";
-import React from "react";
 import CarouselService from "../profile/carousel-service";
 import ProfileInfo from "../profile/profile-info";
 import ProfileSocials from "../profile/profile-socials";
@@ -12,9 +11,10 @@ const Template6 = (cardData: Card) => {
   if (!cardData) {
     return <Template6Container>Loading...</Template6Container>;
   }
-  
-  const { servicePhotos = [], serviceDescription = "No Description" } = cardData;
-  
+
+  const { servicePhotos = [], serviceDescription = "No Description" } =
+    cardData;
+
   return (
     <Template6Container>
       <div className="px-4">

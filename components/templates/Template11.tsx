@@ -19,10 +19,9 @@ import { Separator } from "../ui/separator";
 
 // Components
 import {
-  TemplateContainer,
   CTAButtons,
   SocialLinks,
-  ProfileHeader,
+  TemplateContainer,
   TemplateFooter,
 } from "./templatesComponents";
 
@@ -171,7 +170,7 @@ const Template11 = ({
             <p>{number ?? +639123456789}</p>
           </div>
           {/* SOCIAL MEDIA ICONS */}
-          <div className="flex items-center gap-1 pb-10 pt-5 text-black text-2xl h-16 justify-center">
+          <div className="flex items-center gap-1 mt-6 pb-10 pt-10 text-black text-2xl h-16 justify-center">
             <SocialLinks
               facebookUrl={facebookUrl}
               instagramUrl={instagramUrl}
@@ -182,7 +181,7 @@ const Template11 = ({
               skypeInviteUrl={skypeInviteUrl}
               websiteUrl={websiteUrl}
               size="sm"
-              iconClassName="rounded-full p-2 bg-white opacity-50"
+              iconClassName="rounded-full p-2 bg-white opacity-50 size-full "
               iconSet="outline"
             />
           </div>
@@ -190,7 +189,7 @@ const Template11 = ({
 
         {/* COMPANY INFORMATION */}
 
-        <div className="mt-[110px] px-10 ">
+        <div className="mt-[120px] px-10 ">
           {companyBackground && (
             <>
               <h2
@@ -209,7 +208,8 @@ const Template11 = ({
           )}
 
           {/* SERVICE INFORMATION */}
-          {(serviceDescription || (servicePhotos && servicePhotos.length > 0)) && (
+          {(serviceDescription ||
+            (servicePhotos && servicePhotos.length > 0)) && (
             <>
               <h3
                 className={cn(

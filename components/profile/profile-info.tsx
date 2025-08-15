@@ -2,13 +2,13 @@
 import { downloadVCard } from "@/lib/utils";
 import { Card } from "@/types/types";
 
+import profileBgImage from "@/public/assets/profileImage.png";
 import profilePic from "@/public/assets/template4samplepic.png";
 import Image from "next/image";
-import profileBgImage from "@/public/assets/profileImage.png";
 import {
-  MdOutlinePhone,
-  MdOutlineMailOutline,
   MdOutlineBookmarkBorder,
+  MdOutlineMailOutline,
+  MdOutlinePhone,
 } from "react-icons/md";
 
 import Link from "next/link";
@@ -41,12 +41,12 @@ const ProfileInfo = ({
 
   return (
     <section className="flex flex-col items-center relative justify-center mx-auto shadow-xl">
-      <div className="relative w-full h-48">
+      <div className="relative w-full mt-6 h-48">
         <Image
           src={coverPhotoUrl || profileBgImage}
           alt="Profile image"
           fill
-          className="object-cover"
+          className="object-cover w-full rounded-lg"
         />
       </div>
       <div className="flex w-full justify-between">
@@ -69,7 +69,7 @@ const ProfileInfo = ({
             </p>
           </div>
         </div>
-        <div className="flex flex-col gap-[4rem] pt-3 pr-5">
+        <div className="flex flex-col gap-1 pt-3">
           {/* <Button className="bg-transparent border-2 border-black rounded-full text-black px-[8px] py-[6px] hover:bg-green-600 text-base">
             Edit Profile
           </Button> */}
