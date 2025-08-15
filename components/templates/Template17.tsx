@@ -1,4 +1,4 @@
-import { downloadVCard, getCopyrightYear } from "@/lib/utils";
+import { getCopyrightYear } from "@/lib/utils";
 import { Card } from "@/types/types";
 import Image from "next/image";
 import {
@@ -13,11 +13,14 @@ import {
   FaWhatsapp,
   FaYoutube,
 } from "react-icons/fa";
+
+// Components
 import {
-  MdOutlineBookmarkBorder,
-  MdOutlineMailOutline,
-  MdOutlinePhone,
-} from "react-icons/md";
+  TemplateContainer,
+  CTAButtons,
+  SocialLinks,
+  TemplateFooter,
+} from "./templatesComponents";
 
 const Template17 = ({
   id,
@@ -59,7 +62,14 @@ const Template17 = ({
     customUrl,
   };
   return (
-    <div className="bg-white rounded-2xl sm:rounded-3xl shadow-xl w-full max-w-full sm:max-w-md mx-auto overflow-hidden font-sans text-black py-2 px-1">
+    <TemplateContainer
+      backgroundColor="bg-white"
+      padding="xs"
+      maxWidth="480px"
+      flex={true}
+      flexDirection="col"
+      className="rounded-2xl sm:rounded-3xl shadow-xl overflow-hidden font-sans py-2"
+    >
       <div className="max-w-[480px] mx-auto flex flex-col">
         {/* === Profile and Cover Section === */}
         <section
@@ -68,9 +78,11 @@ const Template17 = ({
         >
           <div className="relative w-full h-48 sm:h-60 overflow-hidden">
             {/* Image with clip-path */}
-            <img
-              src={coverPhotoUrl}
+            <Image
+              src={coverPhotoUrl || "/assets/sampleCoverPhoto.png"}
               alt="Cover"
+              width={480}
+              height={240}
               className="w-full h-full object-cover rounded-t-xl sm:rounded-t-[2rem]"
               style={{
                 clipPath:
@@ -82,9 +94,11 @@ const Template17 = ({
           {/* Profile Image */}
           <div className="absolute left-1/2 -bottom-10 sm:-bottom-12 transform -translate-x-1/2 z-10">
             <div className="w-20 h-20 sm:w-24 sm:h-24 rounded-full border-3 sm:border-4 border-white bg-white overflow-hidden shadow-lg">
-              <img
-                src={profilePictureUrl}
+              <Image
+                src={profilePictureUrl || "/assets/sampleProfilePhoto.png"}
                 alt="Profile"
+                width={96}
+                height={96}
                 className="w-full h-full object-cover"
               />
             </div>
@@ -120,112 +134,34 @@ const Template17 = ({
 
           {/* Buttons */}
           <div className="flex gap-3 w-full justify-center mt-3 sm:mt-4">
-            <a
-              href={`tel:${number}`}
-              className="w-10 h-10 flex items-center justify-center rounded-full bg-[#FF4B5C] hover:bg-[#e43c4a] transition"
-              title="Call"
-            >
-              <MdOutlinePhone size={20} className="text-white" />
-            </a>
-            <a
-              href={`mailto:${email}`}
-              className="w-10 h-10 flex items-center justify-center rounded-full bg-[#FF4B5C] hover:bg-[#e43c4a] transition"
-              title="Email"
-            >
-              <MdOutlineMailOutline size={20} className="text-white" />
-            </a>
-            <button
-              type="button"
-              onClick={() => downloadVCard(userProfile)}
-              className="w-10 h-10 flex items-center justify-center rounded-full bg-[#FF4B5C] hover:bg-[#e43c4a] transition"
-              title="Save Contact"
-            >
-              <MdOutlineBookmarkBorder size={20} className="text-white" />
-            </button>
+            <CTAButtons
+              number={number}
+              email={email}
+              userProfile={userProfile}
+              variant="pills"
+              size="md"
+              icons="outline"
+              buttonClassName="bg-[#FF4B5C] text-white hover:bg-[#e43c4a]"
+            />
           </div>
 
           {/* Social Icons */}
           <div className="flex gap-2 sm:gap-3 justify-center mt-3 sm:mt-5 flex-wrap">
-            {[
-              {
-                url: facebookUrl,
-                icon: FaFacebookF,
-                href: facebookUrl,
-                color: "#1877F3",
-              },
-              {
-                url: linkedinUrl,
-                icon: FaLinkedinIn,
-                href: linkedinUrl,
-                color: "#0A66C2",
-              },
-              {
-                url: instagramUrl,
-                icon: FaInstagram,
-                href: instagramUrl,
-                color: "#E4405F",
-              },
-              {
-                url: websiteUrl,
-                icon: FaGlobe,
-                href: websiteUrl,
-                color: "#6B7280",
-              },
-              {
-                url: twitterUrl,
-                icon: FaTwitter,
-                href: twitterUrl,
-                color: "#1DA1F2",
-              },
-              {
-                url: youtubeUrl,
-                icon: FaYoutube,
-                href: youtubeUrl,
-                color: "#FF0000",
-              },
-              {
-                url: whatsappNumber,
-                icon: FaWhatsapp,
-                href: `https://wa.me/${whatsappNumber}`,
-                color: "#25D366",
-              },
-              {
-                url: skypeInviteUrl,
-                icon: FaSkype,
-                href: skypeInviteUrl,
-                color: "#00AFF0",
-              },
-              {
-                url: viberUrl,
-                icon: FaViber,
-                href: viberUrl,
-                color: "#665CAC",
-              },
-              {
-                url: tiktokUrl,
-                icon: FaTiktok,
-                href: tiktokUrl,
-                color: "#000000",
-              },
-            ]
-              .filter((social) => social.url)
-              .map((social, index) => {
-                const IconComponent = social.icon;
-                return (
-                  <a
-                    key={index}
-                    href={social.href}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className="bg-gray-100 hover:bg-gray-200 p-2 rounded-full"
-                  >
-                    <IconComponent
-                      className="text-sm sm:text-lg"
-                      style={{ color: social.color }}
-                    />
-                  </a>
-                );
-              })}
+            <SocialLinks
+              facebookUrl={facebookUrl}
+              instagramUrl={instagramUrl}
+              linkedinUrl={linkedinUrl}
+              twitterUrl={twitterUrl}
+              youtubeUrl={youtubeUrl}
+              tiktokUrl={tiktokUrl}
+              whatsappNumber={whatsappNumber}
+              skypeInviteUrl={skypeInviteUrl}
+              viberUrl={viberUrl}
+              websiteUrl={websiteUrl}
+              variant="colorful"
+              size="sm"
+              iconClassName="bg-gray-100 hover:bg-gray-200 p-2 rounded-full text-sm sm:text-lg"
+            />
           </div>
         </section>
 
@@ -260,9 +196,11 @@ const Template17 = ({
                     key={idx}
                     className="w-full overflow-hidden rounded-xl sm:rounded-2xl"
                   >
-                    <img
+                    <Image
                       src={photo}
                       alt={`Service ${idx + 1}`}
+                      width={400}
+                      height={160}
                       className="w-full h-32 sm:h-40 object-cover"
                     />
                   </div>
@@ -273,7 +211,7 @@ const Template17 = ({
         )}
 
         {/* === Footer Section === */}
-        <footer className="bg-[#FF4B5C] text-white text-center   rounded-b-2xl sm:rounded-b-3xl px-2 sm:px-3">
+        <TemplateFooter className="bg-[#FF4B5C] text-white text-center   rounded-b-2xl sm:rounded-b-3xl px-2 sm:px-3">
           <div className="font-semibold mt-3 text-sm sm:text-base">
             {company}
           </div>
@@ -293,13 +231,13 @@ const Template17 = ({
               />
             </a>
 
-            <span className="tracking-wide text-gray-800 text-[10px] ">
+            <span className="tracking-wide text-white text-[10px] ">
               © {getCopyrightYear()} Zwiftech. All Rights Reserved.
             </span>
           </div>
-        </footer>
+        </TemplateFooter>
       </div>
-    </div>
+    </TemplateContainer>
   );
 };
 

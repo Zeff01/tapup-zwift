@@ -5,26 +5,31 @@ import ProfileInfo from "../profile/profile-info";
 import ProfileSocials from "../profile/profile-socials";
 // import Testimonials from "../profile/testimonials";
 import Footer from "../profile/footer";
+import { Template6Container } from "./templatesComponents";
 
-interface ProfilePageProps {
-  userData: Card;
-}
-
-const Template6: React.FC<ProfilePageProps> = ({ userData }) => {
-  const { servicePhotos = [], serviceDescription } = userData;
+const Template6 = (cardData: Card) => {
+  // Handle undefined or null cardData
+  if (!cardData) {
+    return <Template6Container>Loading...</Template6Container>;
+  }
+  
+  const { servicePhotos = [], serviceDescription = "No Description" } = cardData;
+  
   return (
-    <div className="overflow-y-auto overflow-x-hidden mx-auto max-w-[480px] bg-white">
-      <ProfileInfo {...userData} />
-      <div className="shadow-xl  w-full mx-auto ">
-        <ProfileSocials {...userData} />
-        <CarouselService
-          servicePhotos={servicePhotos}
-          serviceDescription={serviceDescription || "No Description"}
-        />
+    <Template6Container>
+      <div className="px-4">
+        <ProfileInfo {...cardData} />
+        <div className="shadow-xl w-full mx-auto">
+          <ProfileSocials {...cardData} />
+          <CarouselService
+            servicePhotos={servicePhotos}
+            serviceDescription={serviceDescription}
+          />
+        </div>
+        {/* <Testimonials /> */}
+        <Footer {...cardData} />
       </div>
-      {/* <Testimonials /> */}
-      <Footer {...userData} />
-    </div>
+    </Template6Container>
   );
 };
 

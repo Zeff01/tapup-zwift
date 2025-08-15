@@ -116,13 +116,43 @@ export default function Cropper({
 
   function onSelectFile(e: React.ChangeEvent<HTMLInputElement>) {
     if (e.target.files && e.target.files.length > 0) {
+      const file = e.target.files[0];
+      
+      // Check file size (25MB limit)
+      const MAX_SIZE = 25 * 1024 * 1024; // 25MB in bytes
+      if (file.size > MAX_SIZE) {
+        toast.error("Image size must be less than 25MB");
+        e.target.value = "";
+        return;
+      }
+
+      // Check file type
+      const validTypes = ['image/jpeg', 'image/jpg', 'image/png', 'image/gif', 'image/webp'];
+      // Handle HEIC/HEIF for iPhone
+      const fileType = file.type || '';
+      const fileName = file.name.toLowerCase();
+      const isHEIC = fileName.endsWith('.heic') || fileName.endsWith('.heif');
+      
+      if (!validTypes.includes(fileType) && !isHEIC) {
+        toast.error("Please upload a valid image file (JPEG, PNG, GIF, or HEIC)");
+        e.target.value = "";
+        return;
+      }
+
       setCrop(undefined); // Makes crop preview update between images.
-      //   toggleModal()
+      setLoading(true); // Show loading state while processing
+      
       const reader = new FileReader();
       reader.addEventListener("load", () => {
         setImgSrc(reader.result?.toString() || "");
+        setLoading(false);
       });
-      reader.readAsDataURL(e.target.files[0]);
+      reader.addEventListener("error", () => {
+        toast.error("Failed to read image file");
+        setLoading(false);
+        e.target.value = "";
+      });
+      reader.readAsDataURL(file);
       e.target.value = "";
     }
   }
@@ -154,11 +184,27 @@ export default function Cropper({
               imgElement.src = event.target?.result as string;
               imgElement.onload = async function (e: any) {
                 const canvas = document.createElement("canvas");
-                const MAX_WIDTH = 400;
-
-                const scaleSize = MAX_WIDTH / e.target.width;
-                canvas.width = MAX_WIDTH;
-                canvas.height = e.target.height * scaleSize;
+                const MAX_WIDTH = 800; // Increased for better quality
+                const MAX_HEIGHT = 800;
+                
+                let width = e.target.width;
+                let height = e.target.height;
+                
+                // Calculate scaling to fit within max dimensions
+                if (width > height) {
+                  if (width > MAX_WIDTH) {
+                    height = (height * MAX_WIDTH) / width;
+                    width = MAX_WIDTH;
+                  }
+                } else {
+                  if (height > MAX_HEIGHT) {
+                    width = (width * MAX_HEIGHT) / height;
+                    height = MAX_HEIGHT;
+                  }
+                }
+                
+                canvas.width = width;
+                canvas.height = height;
 
                 const ctx = canvas.getContext("2d");
 
@@ -171,8 +217,8 @@ export default function Cropper({
                     newreader.onload = async (newevent) => {
                       const fileAsDataURL = newevent.target?.result;
                       if (typeof fileAsDataURL === "string") {
-                        const file = new File([newBlob], "cropped-image.png", {
-                          type: "image/png",
+                        const file = new File([newBlob], "cropped-image.jpg", {
+                          type: "image/jpeg",
                         });
                         try {
                           const dl_url = await uploadImage({
@@ -194,7 +240,7 @@ export default function Cropper({
                       }
                     };
                   }
-                }, "image/png");
+                }, "image/jpeg", 0.85); // Use JPEG with 85% quality for smaller file sizes
               };
             };
             if (blobUrlRef.current) {
@@ -257,7 +303,7 @@ export default function Cropper({
       >
         <Input
           type="file"
-          accept="image/*"
+          accept="image/*,.heic,.heif"
           onChange={onSelectFile}
           className="w-full h-full absolute top-0 left-0 opacity-0 z-10"
           onClick={(e) => {
@@ -301,7 +347,15 @@ export default function Cropper({
                   {/* <input type="file" accept="image/*" onChange={onSelectFile} /> */}
                   <div className="w-[350px] sm:w-[400px] flex flex-col items-center gap-y-2 ">
                     <TapupLogo className="w-[6rem] mb-3" />
-                    <p className="pb-4 font-bold text-2xl">Select the Image</p>
+                    <p className="pb-4 font-bold text-2xl">
+                      {loading && !imgSrc ? "Processing Image..." : "Select the Image"}
+                    </p>
+                    {loading && !imgSrc && (
+                      <div className="flex items-center gap-2 text-sm text-gray-600 mb-4">
+                        <Loader2 className="animate-spin h-4 w-4" />
+                        <span>This may take a moment for large images...</span>
+                      </div>
+                    )}
                     <label htmlFor="scale" className="text-xl font-semibold">
                       Zoom
                     </label>

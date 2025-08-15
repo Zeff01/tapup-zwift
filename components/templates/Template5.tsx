@@ -1,13 +1,13 @@
-import { downloadVCard, getCopyrightYear } from "@/lib/utils";
+import { getCopyrightYear } from "@/lib/utils";
 import { Card } from "@/types/types";
 import Image from "next/image";
-import Link from "next/link";
 import {
-  MdOutlineBookmarkBorder,
-  MdOutlineMailOutline,
-  MdOutlinePhone,
-} from "react-icons/md";
-import SocialIconsPopup from "../SocialIconsPopup";
+  Template5Container,
+  CTAButtons,
+  ProfileHeader,
+  SocialLinks,
+  TemplateFooter,
+} from "./templatesComponents";
 
 const Template5 = ({
   id,
@@ -47,89 +47,50 @@ const Template5 = ({
   };
 
   return (
-    <div className="relative bg-white text-black flex flex-col items-center justify-between  min-h-screen">
-      <div
-        className="relative w-full mx-auto  max-w-[480px]"
-        style={{
-          backgroundImage: 'url("/assets/template5bg.png")',
-          backgroundSize: "cover",
-          backgroundPosition: "top",
-        }}
-      >
+    <Template5Container>
         {/* COVERPHOTO AND PROFILE PIC */}
-        <div className="flex flex-col relative   ">
-          <div className="w-full h-48">
-            {coverPhotoUrl ? (
-              <Image
-                src={coverPhotoUrl}
-                alt="Cover Image"
-                fill
-                className="mx-auto w-full h-48 object-cover overflow-hidden"
-              />
-            ) : (
-              <Image
-                src={"/assets/template1coverphoto.png"}
-                alt="Cover Image"
-                fill
-                className="mx-auto"
-              />
-            )}
-          </div>
-          <div className="absolute -bottom-12 left-1/2 transform -translate-x-1/2">
-            {profilePictureUrl ? (
-              <div className="w-28 h-28 rounded-full mx-auto overflow-hidden">
-                <Image
-                  src={profilePictureUrl}
-                  alt="Profile Image"
-                  width={80}
-                  height={80}
-                  className="rounded-full w-28 h-28"
-                />
-              </div>
-            ) : (
-              <div className="bg-purple-500 w-28 h-28 rounded-full mx-auto flex items-center justify-center">
-                <span className="text-white font-bold text-xl">HW</span>
-              </div>
-            )}
-          </div>
-        </div>
+        <ProfileHeader
+          profilePictureUrl={profilePictureUrl}
+          coverPhotoUrl={coverPhotoUrl}
+          firstName={firstName}
+          lastName={lastName}
+          variant="overlay"
+          profileSize="lg"
+          coverHeight="md"
+          profilePosition="center"
+          defaultCoverImage="/assets/template1coverphoto.png"
+        />
 
         {/* CTA BUTTONS */}
-        <div className="flex justify-end gap-1 pt-3 text-pink-400 ">
-          <Link
-            href={`tel:${number}`}
-            className="p-1.5 grid place-content-center rounded-full border border-pink-400 "
-          >
-            <MdOutlinePhone className="cursor-pointer" size={18} />
-          </Link>
-          <Link
-            href={`mailto:${email}`}
-            className="p-1.5 grid place-content-center rounded-full border border-pink-400 "
-          >
-            <MdOutlineMailOutline className="cursor-pointer" size={18} />
-          </Link>
-          <div className="p-1.5 grid place-content-center rounded-full border border-pink-400 ">
-            <MdOutlineBookmarkBorder
-              className="cursor-pointer font-bold"
-              onClick={() => downloadVCard(userProfile)}
-              size={18}
-            />
-          </div>
-        </div>
+        <CTAButtons
+          number={number}
+          email={email}
+          userProfile={userProfile}
+          variant="rounded"
+          size="sm"
+          className="flex justify-end gap-1 pt-3"
+          buttonClassName="border border-pink-400 text-pink-400 bg-white hover:bg-pink-50"
+        />
 
         {/* SOCIAL MEDIA ICONS */}
-        <SocialIconsPopup
-          facebookUrl={facebookUrl}
-          twitterUrl={twitterUrl}
-          tiktokUrl={tiktokUrl}
-          youtubeUrl={youtubeUrl}
-          instagramUrl={instagramUrl}
-          linkedinUrl={linkedinUrl}
-          viberUrl={viberUrl}
-          whatsappNumber={whatsappNumber}
-          skypeInviteUrl={skypeInviteUrl}
-          websiteUrl={websiteUrl}
-        />
+        <div className="absolute top-4 left-4">
+          <SocialLinks
+            facebookUrl={facebookUrl}
+            twitterUrl={twitterUrl}
+            tiktokUrl={tiktokUrl}
+            youtubeUrl={youtubeUrl}
+            instagramUrl={instagramUrl}
+            linkedinUrl={linkedinUrl}
+            viberUrl={viberUrl}
+            whatsappNumber={whatsappNumber}
+            skypeInviteUrl={skypeInviteUrl}
+            websiteUrl={websiteUrl}
+            variant="minimal"
+            size="sm"
+            className="flex flex-col gap-2"
+            iconClassName="text-gray-600 hover:text-pink-500"
+          />
+        </div>
 
         {/* PERSONAL INFORMATION */}
         <div className="text-center mt-4 space-y-1 ">
@@ -202,7 +163,7 @@ const Template5 = ({
           {company ?? "COMPANY"}
         </h2>
 
-        <div className="flex flex-col mt-8 mb-1 items-center gap-1 text-center text-xs">
+        <TemplateFooter className="flex flex-col mt-8 mb-1 items-center gap-1 text-center text-xs">
           <a
             href={userProfile?.customUrl ?? userProfile?.websiteUrl ?? "#"}
             target="_blank"
@@ -221,9 +182,8 @@ const Template5 = ({
           <span className="tracking-wide text-gray-800 text-[10px] ">
             © {getCopyrightYear()} Zwiftech. All Rights Reserved.
           </span>
-        </div>
-      </div>
-    </div>
+        </TemplateFooter>
+    </Template5Container>
   );
 };
 

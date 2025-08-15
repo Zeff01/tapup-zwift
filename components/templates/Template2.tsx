@@ -1,24 +1,13 @@
-import { downloadVCard, getCopyrightYear } from "@/lib/utils";
+import { getCopyrightYear } from "@/lib/utils";
 import { Card } from "@/types/types";
 import Image from "next/image";
-import Link from "next/link";
 import {
-  FaFacebook,
-  FaGlobe,
-  FaInstagram,
-  FaLinkedin,
-  FaSkype,
-  FaTiktok,
-  FaViber,
-  FaWhatsapp,
-  FaXTwitter,
-  FaYoutube,
-} from "react-icons/fa6";
-import {
-  MdOutlineBookmarkBorder,
-  MdOutlineMailOutline,
-  MdOutlinePhone,
-} from "react-icons/md";
+  Template2Container,
+  Template1CTA,
+  Template1Socials,
+  ProfileHeader,
+  TemplateFooter,
+} from "./templatesComponents";
 
 const Template2 = ({
   id,
@@ -58,46 +47,20 @@ const Template2 = ({
   };
 
   return (
-    <div className="bg-neutral-800 text-white p-2  flex flex-col items-center justify-between  min-h-screen">
-      <div className=" w-full mx-auto max-w-[480px] ">
+    <Template2Container>
         {/* COVERPHOTO AND PROFILE PIC */}
-        <div className="mt-2  flex flex-col relative rounded-4xl mx-4 ">
-          <div className="w-full h-48">
-            {coverPhotoUrl ? (
-              <Image
-                src={coverPhotoUrl}
-                alt="Cover Image"
-                width={400}
-                height={200}
-                className="mx-auto w-full h-48 object-cover rounded-[2rem] overflow-hidden"
-              />
-            ) : (
-              <Image
-                src={"/assets/template1coverphoto.png"}
-                alt="Cover Image"
-                width={400}
-                height={200}
-                className="mx-auto"
-              />
-            )}
-          </div>
-          <div className="absolute -bottom-12 left-1/2 transform -translate-x-1/2">
-            {profilePictureUrl ? (
-              <div className="grid place-content-center w-28 h-28 rounded-full mx-auto overflow-hidden">
-                <Image
-                  src={profilePictureUrl}
-                  alt="Profile Image"
-                  width={80}
-                  height={80}
-                  className="rounded-full w-24 h-24"
-                />
-              </div>
-            ) : (
-              <div className="bg-purple-500 w-28 h-28 rounded-full mx-auto flex items-center justify-center">
-                <span className="text-white font-bold text-xl">HW</span>
-              </div>
-            )}
-          </div>
+        <div className="mt-2 mx-4">
+          <ProfileHeader
+            profilePictureUrl={profilePictureUrl}
+            coverPhotoUrl={coverPhotoUrl}
+            firstName={firstName}
+            lastName={lastName}
+            variant="overlay"
+            profileSize="lg"
+            coverHeight="md"
+            profilePosition="center"
+            coverClassName="rounded-[2rem] overflow-hidden"
+          />
         </div>
 
         {/* PERSONAL INFORMATION */}
@@ -122,91 +85,32 @@ const Template2 = ({
         </div>
 
         {/* CTA BUTTONS */}
-        <div className="flex justify-center gap-2.5 mt-5">
-          <Link
-            href={`tel:${number}`}
-            className="p-1 grid place-content-center bg-white rounded-full border-2 border-black "
-          >
-            <MdOutlinePhone className="cursor-pointer text-black" size={20} />
-          </Link>
-          <Link
-            href={`mailto:${email}`}
-            className="p-1 grid place-content-center bg-white rounded-full border-2 border-black "
-          >
-            <MdOutlineMailOutline
-              className="cursor-pointer text-black"
-              size={20}
-            />
-          </Link>
-          <div className="p-1 grid place-content-center bg-white rounded-full border-2 border-black ">
-            <MdOutlineBookmarkBorder
-              className="cursor-pointer text-black font-bold"
-              onClick={() => downloadVCard(userProfile)}
-              size={20}
-            />
-          </div>
+        <div className="flex justify-center mt-5">
+          <Template1CTA
+            number={number}
+            email={email}
+            userProfile={userProfile}
+            size="md"
+            buttonClassName="text-black"
+          />
         </div>
 
         {/* SOCIAL MEDIA ICONS */}
-        <div className="flex justify-center gap-2  mt-5 mb-6">
-          {facebookUrl && (
-            <Link href={facebookUrl} target="_blank" rel="noopener noreferrer">
-              <FaFacebook size={20} />
-            </Link>
-          )}
-          {twitterUrl && (
-            <Link href={twitterUrl} target="_blank" rel="noopener noreferrer">
-              <FaXTwitter size={20} />
-            </Link>
-          )}
-          {tiktokUrl && (
-            <Link href={tiktokUrl} target="_blank" rel="noopener noreferrer">
-              <FaTiktok size={20} />
-            </Link>
-          )}
-          {youtubeUrl && (
-            <Link href={youtubeUrl} target="_blank" rel="noopener noreferrer">
-              <FaYoutube size={20} />
-            </Link>
-          )}
-          {instagramUrl && (
-            <Link href={instagramUrl} target="_blank" rel="noopener noreferrer">
-              <FaInstagram size={20} />
-            </Link>
-          )}
-          {linkedinUrl && (
-            <Link href={linkedinUrl} target="_blank" rel="noopener noreferrer">
-              <FaLinkedin size={20} />
-            </Link>
-          )}
-          {viberUrl && (
-            <Link href={viberUrl} target="_blank" rel="noopener noreferrer">
-              <FaViber size={20} />
-            </Link>
-          )}
-          {whatsappNumber && (
-            <Link
-              href={`https://wa.me/${whatsappNumber}`}
-              target="_blank"
-              rel="noopener noreferrer"
-            >
-              <FaWhatsapp size={20} />
-            </Link>
-          )}
-          {skypeInviteUrl && (
-            <Link
-              href={`skype:${skypeInviteUrl}?chat`}
-              target="_blank"
-              rel="noopener noreferrer"
-            >
-              <FaSkype size={20} />
-            </Link>
-          )}
-          {websiteUrl && (
-            <Link href={websiteUrl} target="_blank" rel="noopener noreferrer">
-              <FaGlobe size={20} />
-            </Link>
-          )}
+        <div className="flex justify-center mt-5 mb-6">
+          <Template1Socials
+            facebookUrl={facebookUrl}
+            instagramUrl={instagramUrl}
+            linkedinUrl={linkedinUrl}
+            twitterUrl={twitterUrl}
+            youtubeUrl={youtubeUrl}
+            tiktokUrl={tiktokUrl}
+            whatsappNumber={whatsappNumber}
+            viberUrl={viberUrl}
+            skypeInviteUrl={skypeInviteUrl}
+            websiteUrl={websiteUrl}
+            size="md"
+            className="gap-2 text-white"
+          />
         </div>
         <hr />
 
@@ -253,33 +157,33 @@ const Template2 = ({
             ))}
           </div>
         )}
-      </div>
-      {/* FOOTER */}
-      <h2 className="text-xs font-extrabold mx-auto w-full text-center mt-6 mb-8">
-        {company ?? "COMPANY"}
-      </h2>
 
-      <div className="flex flex-col items-center gap-1 text-center text-xs">
-        <a
-          href={userProfile?.customUrl ?? userProfile?.websiteUrl ?? "#"}
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <Image
-            src="/assets/light-ZwiftechLogo.png"
-            alt="Zwiftech Logo"
-            width={40}
-            height={15}
-            priority
-            className="opacity-90"
-          />
-        </a>
+        {/* FOOTER */}
+        <h2 className="text-xs font-extrabold mx-auto w-full text-center mt-6 mb-8">
+          {company ?? "COMPANY"}
+        </h2>
 
-        <span className="tracking-wide text-gray-400 text-[10px] ">
-          © {getCopyrightYear()} Zwiftech. All Rights Reserved.
-        </span>
-      </div>
-    </div>
+        <TemplateFooter className="flex flex-col items-center gap-1 text-center text-xs">
+          <a
+            href={userProfile?.customUrl ?? userProfile?.websiteUrl ?? "#"}
+            target="_blank"
+            rel="noopener noreferrer"
+          >
+            <Image
+              src="/assets/light-ZwiftechLogo.png"
+              alt="Zwiftech Logo"
+              width={40}
+              height={15}
+              priority
+              className="opacity-90"
+            />
+          </a>
+
+          <span className="tracking-wide text-gray-400 text-[10px] ">
+            © {getCopyrightYear()} Zwiftech. All Rights Reserved.
+          </span>
+        </TemplateFooter>
+    </Template2Container>
   );
 };
 

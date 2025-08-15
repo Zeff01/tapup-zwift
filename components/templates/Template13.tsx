@@ -1,25 +1,14 @@
-import { downloadVCard, getCopyrightYear } from "@/lib/utils";
+import { getCopyrightYear } from "@/lib/utils";
 import { Card } from "@/types/types";
 import Image from "next/image";
-import Link from "next/link";
+
+// Components
 import {
-  FaFacebook,
-  FaGlobe,
-  FaInstagram,
-  FaLinkedin,
-  FaSkype,
-  FaTiktok,
-  FaViber,
-  FaWhatsapp,
-  FaXTwitter,
-  FaYoutube,
-} from "react-icons/fa6";
-import {
-  MdOutlineBookmarkBorder,
-  MdOutlineMailOutline,
-  MdOutlinePhone,
-} from "react-icons/md";
-// import { LuBookmark, LuMail } from "react-icons/lu";
+  TemplateContainer,
+  Template13CTA,
+  Template13Socials,
+  TemplateFooter,
+} from "./templatesComponents";
 
 const Template13 = ({
   id,
@@ -62,7 +51,14 @@ const Template13 = ({
   };
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-[#1a1a1a] via-[#232323] to-[#553838] text-white py-2 px-1">
+    <TemplateContainer
+      backgroundColor="bg-gradient-to-br from-[#1a1a1a] via-[#232323] to-[#553838]"
+      padding="xs"
+      maxWidth="480px"
+      flex={true}
+      flexDirection="col"
+      className="text-white py-2"
+    >
       <div className="max-w-[480px] mx-auto flex flex-col">
         {/* === Profile and Cover Section === */}
         <section
@@ -70,18 +66,35 @@ const Template13 = ({
           className="w-full mb-8 relative flex flex-col items-center"
         >
           <div className="w-full h-40 rounded-2xl overflow-hidden bg-neutral-800 relative">
-            <img
-              src={coverPhotoUrl || "/assets/sampleCoverPhoto.png"}
-              alt="Cover Photo"
-              className="object-cover w-full h-full"
-            />
+            {coverPhotoUrl ? (
+              <Image
+                src={coverPhotoUrl}
+                alt="Cover Photo"
+                width={480}
+                height={160}
+                className="object-cover w-full h-full"
+                onError={(e) => {
+                  e.currentTarget.src = "/assets/sampleCoverPhoto.png";
+                }}
+              />
+            ) : (
+              <Image
+                src="/assets/sampleCoverPhoto.png"
+                alt="Default Cover Photo"
+                width={480}
+                height={160}
+                className="object-cover w-full h-full"
+              />
+            )}
           </div>
 
           <div className="flex flex-col items-start w-full px-4 -mt-12 z-10">
             <div className="w-24 h-24 flex items-center justify-center mb-4 shadow-lg relative">
-              <img
-                src={profilePictureUrl}
+              <Image
+                src={profilePictureUrl || "/assets/sampleProfilePhoto.png"}
                 alt="avatar"
+                width={96}
+                height={96}
                 className="w-24 h-24 object-cover"
                 style={{
                   WebkitMaskImage: "url(/assets/template13profileshape.svg)",
@@ -109,33 +122,13 @@ const Template13 = ({
               {position} {company && <>· {company}</>}
             </div>
             <div className="flex gap-2 mb-2">
-              <Link
-                href={`tel:${number}`}
-                className="bg-white text-black px-3 py-3 rounded-full font-medium hover:bg-gray-200 transition"
-              >
-                <MdOutlinePhone size={20} className="cursor-pointer" />
-              </Link>
-              <Link
-                href={`mailto:${email}`}
-                className="bg-white text-black px-3 py-3 rounded-full font-medium hover:bg-gray-200 transition"
-              >
-                {/* <Button className="bg-[#eab8b9] text-black px-4 py-2 rounded-full font-medium flex items-center gap-2 hover:bg-[#d99ca0] transition">
-                  <img
-                    src="/assets/template13rockhand.svg"
-                    alt="Rock hand"
-                    className="w-5 h-5"
-                  />
-                  Let’s Talk
-                </Button> */}
-                <MdOutlineMailOutline size={20} className="cursor-pointer" />
-              </Link>
-              <div className="bg-white text-black px-3 py-3 rounded-full font-medium hover:bg-gray-200 transition">
-                <MdOutlineBookmarkBorder
-                  size={20}
-                  className="cursor-pointer"
-                  onClick={() => downloadVCard(userProfile)}
-                />
-              </div>
+              <Template13CTA
+                number={number}
+                email={email}
+                userProfile={userProfile}
+                size="md"
+                icons="outline"
+              />
             </div>
           </div>
         </section>
@@ -156,64 +149,19 @@ const Template13 = ({
             </span>
             <span className="text-left">Links</span>
             <span className="flex flex-wrap gap-3 text-xl text-left">
-              {facebookUrl && (
-                <a href={facebookUrl} target="_blank" rel="noopener noreferrer">
-                  <FaFacebook />
-                </a>
-              )}
-              {linkedinUrl && (
-                <a href={linkedinUrl} target="_blank" rel="noopener noreferrer">
-                  <FaLinkedin />
-                </a>
-              )}
-              {instagramUrl && (
-                <a
-                  href={instagramUrl}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                >
-                  <FaInstagram />
-                </a>
-              )}
-              {youtubeUrl && (
-                <a href={youtubeUrl} target="_blank" rel="noopener noreferrer">
-                  <FaYoutube />
-                </a>
-              )}
-              {twitterUrl && (
-                <a href={twitterUrl} target="_blank" rel="noopener noreferrer">
-                  <FaXTwitter />
-                </a>
-              )}
-              {whatsappNumber && (
-                <a
-                  href={`https://wa.me/${whatsappNumber}`}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                >
-                  <FaWhatsapp />
-                </a>
-              )}
-              {skypeInviteUrl && (
-                <a href={`skype:${skypeInviteUrl}?chat`}>
-                  <FaSkype />
-                </a>
-              )}
-              {websiteUrl && (
-                <a href={websiteUrl} target="_blank" rel="noopener noreferrer">
-                  <FaGlobe />
-                </a>
-              )}
-              {viberUrl && (
-                <a href={viberUrl} target="_blank" rel="noopener noreferrer">
-                  <FaViber />
-                </a>
-              )}
-              {tiktokUrl && (
-                <a href={tiktokUrl} target="_blank" rel="noopener noreferrer">
-                  <FaTiktok />
-                </a>
-              )}
+              <Template13Socials
+                facebookUrl={facebookUrl}
+                instagramUrl={instagramUrl}
+                linkedinUrl={linkedinUrl}
+                twitterUrl={twitterUrl}
+                youtubeUrl={youtubeUrl}
+                tiktokUrl={tiktokUrl}
+                whatsappNumber={whatsappNumber}
+                skypeInviteUrl={skypeInviteUrl}
+                viberUrl={viberUrl}
+                websiteUrl={websiteUrl}
+                size="md"
+              />
             </span>
           </div>
         </section>
@@ -263,7 +211,7 @@ const Template13 = ({
         )}
 
         {/* === Footer Section === */}
-        <footer className="w-full mx-auto mt-8  text-center text-gray-400 text-sm border-t border-neutral-800">
+        <TemplateFooter className="w-full mx-auto mt-8  text-center text-gray-400 text-sm border-t border-neutral-800">
           <div className="font-semibold text-base text-white mb-1">
             {company}
           </div>
@@ -287,9 +235,9 @@ const Template13 = ({
               © {getCopyrightYear()} Zwiftech. All Rights Reserved.
             </span>
           </div>
-        </footer>
+        </TemplateFooter>
       </div>
-    </div>
+    </TemplateContainer>
   );
 };
 
