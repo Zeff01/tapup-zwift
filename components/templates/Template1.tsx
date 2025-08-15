@@ -58,7 +58,7 @@ const Template1 = ({
         <div className="mt-2 flex flex-col relative rounded-4xl mx-4">
           <div className="w-full h-48">
             <Image
-              src={coverPhotoUrl || "/assets/template1coverphoto.png"}
+              src={coverPhotoUrl ?? ""}
               alt="Cover"
               width={400}
               height={200}
@@ -75,9 +75,7 @@ const Template1 = ({
                 className="rounded-full w-24 h-24"
               />
             ) : (
-              <div className="bg-purple-500 w-28 h-28 rounded-full flex items-center justify-center">
-                <span className="text-white font-bold text-xl">HW</span>
-              </div>
+              ""
             )}
           </div>
         </div>
@@ -85,13 +83,11 @@ const Template1 = ({
         {/* PERSONAL INFO */}
         <div className="text-center mt-14 space-y-1">
           <h1 className="text-xl font-bold">
-            {firstName ? `${firstName} ${lastName}` : "Hussain Watkins"}
+            {firstName ? `${firstName} ${lastName}` : ""}
           </h1>
 
-          <p className="text-gray-500 text-xs">
-            {email ?? "H.Watkins@gmail.com"}
-          </p>
-          <p className="text-gray-500 text-xs">{number ?? "+639123456789"}</p>
+          <p className="text-gray-500 text-xs">{email}</p>
+          <p className="text-gray-500 text-xs">{number}</p>
         </div>
 
         {/* CTA */}
@@ -194,6 +190,18 @@ const Template1 = ({
                   </h3>
                   <p className="text-xs text-gray-600 mt-2 leading-relaxed break-words whitespace-pre-line max-w-full">
                     {c.companyBackground}
+                  </p>
+                </div>
+              )}
+
+
+              {c.serviceDescription && (
+                <div className="mt-4">
+                  <h3 className="text-sm font-semibold text-gray-700">
+                    Our Services
+                  </h3>
+                  <p className="text-xs text-gray-600 mt-2 leading-relaxed break-words whitespace-pre-line max-w-full">
+                    {c.serviceDescription}
                   </p>
                 </div>
               )}

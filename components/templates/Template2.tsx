@@ -44,6 +44,7 @@ const Template2 = ({
   websiteUrl,
   viberUrl,
   customUrl,
+  companies,
 }: Card) => {
   const userProfile = {
     id,
@@ -63,7 +64,7 @@ const Template2 = ({
         {/* COVERPHOTO AND PROFILE PIC */}
         <div className="mt-2  flex flex-col relative rounded-4xl mx-4 ">
           <div className="w-full h-48">
-            {coverPhotoUrl ? (
+            {coverPhotoUrl && (
               <Image
                 src={coverPhotoUrl}
                 alt="Cover Image"
@@ -71,18 +72,10 @@ const Template2 = ({
                 height={200}
                 className="mx-auto w-full h-48 object-cover rounded-[2rem] overflow-hidden"
               />
-            ) : (
-              <Image
-                src={"/assets/template1coverphoto.png"}
-                alt="Cover Image"
-                width={400}
-                height={200}
-                className="mx-auto"
-              />
             )}
           </div>
           <div className="absolute -bottom-12 left-1/2 transform -translate-x-1/2">
-            {profilePictureUrl ? (
+            {profilePictureUrl && (
               <div className="grid place-content-center w-28 h-28 rounded-full mx-auto overflow-hidden">
                 <Image
                   src={profilePictureUrl}
@@ -91,10 +84,6 @@ const Template2 = ({
                   height={80}
                   className="rounded-full w-24 h-24"
                 />
-              </div>
-            ) : (
-              <div className="bg-purple-500 w-28 h-28 rounded-full mx-auto flex items-center justify-center">
-                <span className="text-white font-bold text-xl">HW</span>
               </div>
             )}
           </div>
@@ -107,18 +96,12 @@ const Template2 = ({
               {firstName + " " + lastName}
             </h1>
           ) : (
-            <h1 className="text-xl font-bold mt-2 ">Hussain Watkins</h1>
+            ""
           )}
 
-          <p className="font-semibold text-white text-xs">
-            {position ?? "Chief Technology Officer"}
-          </p>
+          <p className=" text-gray-300 text-xs">{email}</p>
 
-          <p className=" text-gray-500 text-xs">
-            {email ?? "H.Watkins@gmail.com"}
-          </p>
-
-          <p className=" text-gray-500 text-xs"> {number ?? +639123456789}</p>
+          <p className=" text-gray-300 text-xs"> {number}</p>
         </div>
 
         {/* CTA BUTTONS */}
@@ -211,6 +194,56 @@ const Template2 = ({
         <hr />
 
         {/* COMPANY INFORMATION */}
+        {companies?.map((c, i) => (
+          <div key={i} className="mb-10">
+            {/* Company Name */}
+            <div className="flex flex-col items-center text-center space-y-1">
+              <h2 className="text-2xl font-bold text-gray-300">{c.company}</h2>
+              <h3 className="text-sm font-medium text-gray-300">
+                {c.position}
+              </h3>
+            </div>
+
+            {/* Background & Services */}
+            <div className="mt-6">
+              {c.companyBackground?.trim() && (
+                <>
+                  <h2 className="text-md font-bold">Company Background</h2>
+                  <p className="text-xs mt-4 text-gray-300">
+                    {c.companyBackground}
+                  </p>
+                </>
+              )}
+
+              {c.serviceDescription?.trim() && (
+                <>
+                  <h3 className="text-md font-bold mt-6">Our Services</h3>
+                  <p className="text-xs mt-4 text-gray-300">
+                    {c.serviceDescription}
+                  </p>
+                </>
+              )}
+            </div>
+
+            {/* Service Photos */}
+            {Array.isArray(c.servicePhotos) && c.servicePhotos.length > 0 && (
+              <div className="grid grid-cols-2 gap-4 mt-6">
+                {c.servicePhotos.map((photo, index) => (
+                  <div key={index} className="col-span-1">
+                    <Image
+                      src={photo}
+                      alt={`Service Photo ${index + 1}`}
+                      width={300}
+                      height={300}
+                      layout="responsive"
+                      className="rounded-md object-cover w-full shadow shadow-white overflow-hidden"
+                    />
+                  </div>
+                ))}
+              </div>
+            )}
+          </div>
+        ))}
         <h2 className="text-4xl font-extrabold mx-auto w-full text-center mt-6">
           {company ?? "COMPANY"}
         </h2>
@@ -254,9 +287,6 @@ const Template2 = ({
         )}
       </div>
       {/* FOOTER */}
-      <h2 className="text-xs font-extrabold mx-auto w-full text-center mt-6 mb-8">
-        {company ?? "COMPANY"}
-      </h2>
 
       <div className="flex flex-col items-center gap-1 text-center text-xs">
         <a
