@@ -1,28 +1,28 @@
+import { USER_ROLE_ENUMS } from "@/constants";
+import { firebaseAuth, firebaseDb } from "@/lib/firebase/firebase";
+import { FirebaseError } from "firebase/app";
 import {
   type User,
-  GoogleAuthProvider,
-  signInWithPopup,
   onAuthStateChanged as _onAuthStateChanged,
-  createUserWithEmailAndPassword,
-  signInWithEmailAndPassword,
-  signOut,
-  FacebookAuthProvider,
-  sendPasswordResetEmail,
   confirmPasswordReset,
+  createUserWithEmailAndPassword,
+  FacebookAuthProvider,
+  GoogleAuthProvider,
+  sendPasswordResetEmail,
+  signInWithEmailAndPassword,
+  signInWithPopup,
+  signOut,
 } from "firebase/auth";
-import { firebaseAuth, firebaseDb } from "@/lib/firebase/firebase";
+import { doc, getDoc, serverTimestamp, setDoc } from "firebase/firestore";
+import { toast } from "react-toastify";
+import { z } from "zod";
 import {
   createSession,
   deleteSession,
   getSession,
   verifySignUserId,
 } from "../session";
-import { setDoc, doc, serverTimestamp, getDoc } from "firebase/firestore";
-import { toast } from "react-toastify";
-import { FirebaseError } from "firebase/app";
-import { z } from "zod";
 import { signupSchema } from "../zod-schema";
-import { USER_ROLE_ENUMS } from "@/constants";
 export const onAuthStateChanged = (callback: (user: User | null) => void) => {
   return _onAuthStateChanged(firebaseAuth, callback);
 };
@@ -32,9 +32,8 @@ import {
   SignedUserIdJwtPayload,
   Users,
 } from "@/types/types";
-import { AppRouterInstance } from "next/dist/shared/lib/app-router-context.shared-runtime";
-import { addCardForUser, updateUserById } from "./actions/user.action";
 import { redirect } from "next/navigation";
+import { addCardForUser, updateUserById } from "./actions/user.action";
 
 export const authCurrentUser = async () => {
   try {

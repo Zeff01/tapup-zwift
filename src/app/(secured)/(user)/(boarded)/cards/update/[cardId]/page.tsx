@@ -1,5 +1,5 @@
 import Loading from "@/src/app/loading";
-import React, { Suspense } from "react";
+import { Suspense } from "react";
 import CardUpdateFom from "./_components/card-update-form";
 
 const CardEditPage = ({ params }: { params: { cardId: string } }) => {

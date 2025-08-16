@@ -1,5 +1,6 @@
 // "use server";
 
+import { USER_ROLE_ENUMS } from "@/constants";
 import { getUserName } from "@/lib/utils";
 import { CardRequest } from "@/src/app/(secured)/(admin)/admin/print-cards/_components/GenerateCardsDialog";
 import { Card, TransactionBoard, Users } from "@/types/types";
@@ -142,6 +143,7 @@ export const getCardById = async (
 ): Promise<Card | undefined> => {
   try {
     console.log("Card ID or Custom URL:", input);
+
     if (!input) throw new Error("Parameters Missing");
 
     let cardId = input;
@@ -198,7 +200,15 @@ export const getCardById = async (
 
     // If not public, verify user authentication
     const userId = await authCurrentUser();
-    if (userId !== card.owner) throw new Error("Auth user ID doesn't match");
+
+    //allow admin and card owner to access the card
+    const userDoc = await getDoc(doc(firebaseDb, "user-account", userId));
+    const isAdmin =
+      userDoc.exists() && userDoc.data().role === USER_ROLE_ENUMS.ADMIN;
+
+    if (userId !== card.owner && !isAdmin) {
+      throw new Error("Auth user ID doesn't match");
+    }
 
     return card;
   } catch (error) {
@@ -245,14 +255,22 @@ export const updateCardById = async ({
 
     const { cardName } = data;
 
+    //allow admin and card owner to update the card
     const userId = await authCurrentUser();
+
+    const userDoc = await getDoc(doc(firebaseDb, "user-account", userId));
+    const isAdmin =
+      userDoc.exists() && userDoc.data().role === USER_ROLE_ENUMS.ADMIN;
+
     const cardRef = doc(firebaseDb, "cards", cardId);
     const docSnap = await getDoc(cardRef);
+
     if (!docSnap.exists()) {
       throw new Error("Document does not exist");
     }
     const card = { ...docSnap.data() } as Card;
-    if (userId !== card.owner) {
+
+    if (userId !== card.owner && !isAdmin) {
       throw new Error("Auth user ID doesn't match");
     }
 
