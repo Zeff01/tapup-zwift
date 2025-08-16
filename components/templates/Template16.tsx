@@ -56,7 +56,7 @@ const Template16 = ({
     customUrl,
   };
   return (
-    <div className="bg-white min-h-screen w-full flex flex-col items-center font-sans text-black">
+    <div className="bg-white min-h-screen w-full flex flex-col items-center justify-between font-sans text-black">
       <div className="max-w-[480px] mx-auto flex flex-col">
         {/* === Cover Section === */}
         <section
@@ -64,7 +64,7 @@ const Template16 = ({
           className="w-full max-w-md h-40 overflow-hidden relative"
         >
           <img
-            src={coverPhotoUrl}
+            src={coverPhotoUrl || "/assets/template-7-cover-photo.jpeg"}
             alt="Cover"
             className="w-full h-full object-cover"
           />
@@ -75,11 +75,17 @@ const Template16 = ({
           <div className="flex items-start gap-4">
             {/* Avatar */}
             <div className="w-24 h-24 rounded-full border-[5px] border-white overflow-hidden shadow-md flex-shrink-0 -mt-12 relative z-20">
-              <img
-                src={profilePictureUrl}
-                alt="Profile"
-                className="w-full h-full object-cover"
-              />
+              {profilePictureUrl ? (
+                <img
+                  src={profilePictureUrl}
+                  alt="Profile"
+                  className="w-full h-full object-cover"
+                />
+              ) : (
+                <div className="bg-purple-500 w-full h-full rounded-full flex items-center justify-center">
+                  <span className="text-white font-bold text-xl">HW</span>
+                </div>
+              )}
             </div>
 
             {/* Info to the right of avatar */}
@@ -237,31 +243,31 @@ const Template16 = ({
               )}
             </div>
           ))}
-
-        {/* === Footer Section === */}
-        <footer className="w-full max-w-md px-6 text-center text-gray-500 text-sm ">
-          <div className="flex flex-col mt-8 mb-1 items-center  gap-1 text-center text-xs">
-            <a
-              href={userProfile?.customUrl ?? userProfile?.websiteUrl ?? "#"}
-              target="_blank"
-              rel="noopener noreferrer"
-            >
-              <Image
-                src="/assets/dark-ZwiftechLogo.png"
-                alt="Zwiftech Logo"
-                width={40}
-                height={15}
-                priority
-                className="opacity-90"
-              />
-            </a>
-
-            <span className="tracking-wide text-gray-400 text-[10px] ">
-              © {getCopyrightYear()} Zwiftech. All Rights Reserved.
-            </span>
-          </div>{" "}
-        </footer>
       </div>
+
+      {/* === Footer Section === */}
+      <footer className="w-full max-w-md px-6 text-center text-gray-500 text-sm ">
+        <div className="flex flex-col mt-8 mb-1 items-center  gap-1 text-center text-xs">
+          <a
+            href={userProfile?.customUrl ?? userProfile?.websiteUrl ?? "#"}
+            target="_blank"
+            rel="noopener noreferrer"
+          >
+            <Image
+              src="/assets/dark-ZwiftechLogo.png"
+              alt="Zwiftech Logo"
+              width={40}
+              height={15}
+              priority
+              className="opacity-90"
+            />
+          </a>
+
+          <span className="tracking-wide text-gray-400 text-[10px] ">
+            © {getCopyrightYear()} Zwiftech. All Rights Reserved.
+          </span>
+        </div>{" "}
+      </footer>
     </div>
   );
 };

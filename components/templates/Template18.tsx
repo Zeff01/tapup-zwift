@@ -96,7 +96,9 @@ const Template18 = ({
           {/* Cover Image */}
           <div
             className="relative h-64 bg-cover bg-center rounded-t-[30px]"
-            style={{ backgroundImage: `url(${coverPhotoUrl})` }}
+            style={{
+              backgroundImage: `url(${coverPhotoUrl})`,
+            }}
           />
 
           {/* Profile Content */}
@@ -105,11 +107,17 @@ const Template18 = ({
               {/* Profile Picture */}
               <div className="absolute -top-12 left-1/2 transform -translate-x-1/2">
                 <div className="w-24 h-24 rounded-full border-4 border-white shadow-md overflow-hidden">
-                  <img
-                    src={profilePictureUrl}
-                    alt="Profile"
-                    className="w-full h-full object-cover"
-                  />
+                  {profilePictureUrl ? (
+                    <img
+                      src={profilePictureUrl}
+                      alt="Profile"
+                      className="w-full h-full object-cover"
+                    />
+                  ) : (
+                    <div className="bg-purple-500 w-full h-full rounded-full flex items-center justify-center">
+                      <span className="text-white font-bold text-xl">HW</span>
+                    </div>
+                  )}
                 </div>
               </div>
 
