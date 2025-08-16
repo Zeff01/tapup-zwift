@@ -17,7 +17,7 @@ You agree to indemnify and hold TapUp harmless from any claims, damages, or expe
 
 We reserve the right to terminate or suspend your access to the Site at any time, without notice, for any reason, including violation of these Terms. Upon termination, your right to use the Site will immediately cease, and you must discontinue all use of the Site and its content.
 
-These Terms are governed by the laws of [Insert Jurisdiction]. Any disputes arising out of or related to these Terms or your use of the Site will be resolved in the courts of [Insert Jurisdiction]. By using the Site, you consent to the exclusive jurisdiction of these courts.
+These Terms are governed by the laws of the Republic of the Philippines. Any disputes arising out of or related to these Terms or your use of the Site will be resolved in the courts of the Philippines. By using the Site, you consent to the exclusive jurisdiction of these courts.
 
 We may update these Terms from time to time to reflect changes in our practices or legal requirements. Any updates will be posted on this page with a revised effective date. Your continued use of the Site after such changes constitutes your acceptance of the updated Terms.
 
