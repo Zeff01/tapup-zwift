@@ -64,20 +64,38 @@ const Template4 = ({
         {/* COVERPHOTO AND PROFILE PIC */}
         <div className=" flex flex-col relative w-full  ">
           <div className="w-full  h-48 overflow-hidden">
-            {coverPhotoUrl && (
+            {coverPhotoUrl ? (
               <Image
                 src={coverPhotoUrl}
                 alt="Cover Image"
                 fill
                 className="mx-auto w-full h-48 object-cover   overflow-hidden"
               />
+            ) : (
+              <Image
+                src={"/assets/template1coverphoto.png"}
+                alt="Cover Image"
+                width={400}
+                height={200}
+                className="mx-auto"
+              />
             )}
           </div>
           <div className="absolute -bottom-14 left-4 ">
-            {profilePictureUrl && (
+            {profilePictureUrl ? (
               <div className=" rounded-full border-2 border-white mx-auto overflow-hidden">
                 <Image
                   src={profilePictureUrl}
+                  alt="Profile Image"
+                  width={500}
+                  height={500}
+                  className="rounded-full w-32 h-32"
+                />
+              </div>
+            ) : (
+              <div className=" rounded-full mx-auto flex items-center justify-center">
+                <Image
+                  src={"/assets/template4samplepic.png"}
                   alt="Profile Image"
                   width={500}
                   height={500}
@@ -118,7 +136,7 @@ const Template4 = ({
               {firstName + " " + lastName}
             </h1>
           ) : (
-            ""
+            <h1 className="text-2xl font-bold mt-2 ">Jane Doe</h1>
           )}
           <p className=" text-gray-600 text-md">{email}</p>
           <p className=" text-gray-600 text-md"> {number}</p>

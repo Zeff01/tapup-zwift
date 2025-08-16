@@ -64,7 +64,7 @@ const Template2 = ({
         {/* COVERPHOTO AND PROFILE PIC */}
         <div className="mt-2  flex flex-col relative rounded-4xl mx-4 ">
           <div className="w-full h-48">
-            {coverPhotoUrl && (
+            {coverPhotoUrl ? (
               <Image
                 src={coverPhotoUrl}
                 alt="Cover Image"
@@ -72,10 +72,18 @@ const Template2 = ({
                 height={200}
                 className="mx-auto w-full h-48 object-cover rounded-[2rem] overflow-hidden"
               />
+            ) : (
+              <Image
+                src={"/assets/template1coverphoto.png"}
+                alt="Cover Image"
+                width={400}
+                height={200}
+                className="mx-auto"
+              />
             )}
           </div>
           <div className="absolute -bottom-12 left-1/2 transform -translate-x-1/2">
-            {profilePictureUrl && (
+            {profilePictureUrl ? (
               <div className="grid place-content-center w-28 h-28 rounded-full mx-auto overflow-hidden">
                 <Image
                   src={profilePictureUrl}
@@ -84,6 +92,10 @@ const Template2 = ({
                   height={80}
                   className="rounded-full w-24 h-24"
                 />
+              </div>
+            ) : (
+              <div className="bg-purple-500 w-28 h-28 rounded-full mx-auto flex items-center justify-center">
+                <span className="text-white font-bold text-xl">HW</span>
               </div>
             )}
           </div>
@@ -96,7 +108,7 @@ const Template2 = ({
               {firstName + " " + lastName}
             </h1>
           ) : (
-            ""
+            <h1 className="text-xl font-bold mt-2 ">Hussain Watkins</h1>
           )}
 
           <p className=" text-gray-300 text-xs">{email}</p>

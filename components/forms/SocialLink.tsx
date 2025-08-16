@@ -43,6 +43,7 @@ interface FormValues {
 interface SocialLinksSelectorProps {
   onAddLink: (link: SocialLink) => void; // Callback to parent when a link is selected
   existingValues?: FormValues;
+  selectedLinkKeys?: string[];
 }
 
 const socialLinks: SocialLink[] = [
@@ -81,7 +82,7 @@ const socialLinks: SocialLink[] = [
     label: "LinkedIn",
     icon: <FaLinkedin />,
     key: "linkedinUrl",
-    value: "https://www.linkedin.com/",
+    value: "https://www.linkedin.com/in/",
   },
   {
     label: "YouTube",
@@ -106,34 +107,31 @@ const socialLinks: SocialLink[] = [
 const SocialLinksSelector: React.FC<SocialLinksSelectorProps> = ({
   onAddLink,
   existingValues = {},
+  selectedLinkKeys = [],
 }) => {
   const [search, setSearch] = useState<string>("");
-  const [addedLinks, setAddedLinks] = useState<Set<string>>(new Set());
 
-  const getInitialAvailableLinks = () => {
+  const getAvailableLinks = () => {
     return socialLinks.filter((link) => {
-      const hasValue =
-        existingValues[link.key as keyof FormValues] &&
-        existingValues[link.key as keyof FormValues] !== "";
-      const isAlreadyAdded = addedLinks.has(link.key);
-      return !hasValue && !isAlreadyAdded; // Only show links that don't have values yet and haven't been added
+      // Only exclude links that are currently in the selectedLinkKeys array
+      return !selectedLinkKeys.includes(link.key);
     });
   };
 
-  const [availableLinks, setAvailableLinks] = useState<SocialLink[]>(
-    getInitialAvailableLinks()
-  );
-  React.useEffect(() => {
-    setAvailableLinks(getInitialAvailableLinks());
-  }, [existingValues, addedLinks]);
+  const [availableLinks, setAvailableLinks] =
+    useState<SocialLink[]>(getAvailableLinks());
 
+  // Update available links when selectedLinkKeys changes
+  React.useEffect(() => {
+    setAvailableLinks(getAvailableLinks());
+  }, [selectedLinkKeys]);
   const filteredLinks = availableLinks.filter((link) =>
     link.label.toLowerCase().includes(search.toLowerCase())
   );
 
   const handleSelect = (link: SocialLink) => {
     onAddLink(link);
-    setAddedLinks((prev) => new Set([...Array.from(prev), link.key]));
+
     setAvailableLinks((prev) => prev.filter((item) => item.key !== link.key));
   };
 
