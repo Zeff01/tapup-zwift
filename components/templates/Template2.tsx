@@ -26,9 +26,6 @@ const Template2 = ({
   coverPhotoUrl,
   position,
   company,
-  companyBackground,
-  serviceDescription,
-  servicePhotos,
   firstName,
   lastName,
   email,
@@ -205,98 +202,139 @@ const Template2 = ({
         </div>
         <hr />
 
-        {/* COMPANY INFORMATION */}
-        {companies?.map((c, i) => (
-          <div key={i} className="mb-10">
-            {/* Company Name */}
-            <div className="flex flex-col items-center text-center space-y-1">
-              <h2 className="text-2xl font-bold text-gray-300">{c.company}</h2>
-              <h3 className="text-sm font-medium text-gray-300">
-                {c.position}
-              </h3>
-            </div>
-
-            {/* Background & Services */}
-            <div className="mt-6">
-              {c.companyBackground?.trim() && (
-                <>
-                  <h2 className="text-md font-bold">Company Background</h2>
-                  <p className="text-xs mt-4 text-gray-300">
-                    {c.companyBackground}
-                  </p>
-                </>
-              )}
-
-              {c.serviceDescription?.trim() && (
-                <>
-                  <h3 className="text-md font-bold mt-6">Our Services</h3>
-                  <p className="text-xs mt-4 text-gray-300">
-                    {c.serviceDescription}
-                  </p>
-                </>
-              )}
-            </div>
-
-            {/* Service Photos */}
-            {Array.isArray(c.servicePhotos) && c.servicePhotos.length > 0 && (
-              <div className="grid grid-cols-2 gap-4 mt-6">
-                {c.servicePhotos.map((photo, index) => (
-                  <div key={index} className="col-span-1">
-                    <Image
-                      src={photo}
-                      alt={`Service Photo ${index + 1}`}
-                      width={300}
-                      height={300}
-                      layout="responsive"
-                      className="rounded-md object-cover w-full shadow shadow-white overflow-hidden"
-                    />
-                  </div>
-                ))}
-              </div>
-            )}
-          </div>
-        ))}
-        <h2 className="text-4xl font-extrabold mx-auto w-full text-center mt-6">
-          {company ?? "COMPANY"}
-        </h2>
-        <div className="mt-6">
-          {companyBackground && (
-            <>
-              <h2 className="text-md font-bold">Company Background</h2>
-              <p className="text-xs mt-4 text-gray-300">{companyBackground}</p>
-            </>
-          )}
-
-          {/* SERVICE INFORMATION */}
-          {(serviceDescription ||
-            (servicePhotos && servicePhotos.length > 0)) && (
-            <>
-              <h3 className="text-md font-bold mt-6">Our Services</h3>
-              {serviceDescription && (
-                <p className="text-xs mt-4 text-gray-300">
-                  {serviceDescription}
-                </p>
-              )}
-            </>
-          )}
+        {/* COMPANY INTRODUCTION */}
+        <div className="mt-8 mb-6 px-4">
+          <h2 className="text-lg font-bold text-white mb-1">
+            Professional Portfolio
+          </h2>
+          <p className="text-sm text-gray-300">
+            Below you&#39;ll find details about my professional experience and
+            the companies I&#39;ve worked with. Each entry highlights my role,
+            responsibilities, and the services offered.
+          </p>
         </div>
 
-        {servicePhotos && servicePhotos.length > 0 && (
-          <div className="grid grid-cols-2 gap-4 mt-6  ">
-            {servicePhotos.map((photo, index) => (
-              <div key={index} className="col-span-1">
-                <Image
-                  src={photo}
-                  alt={`Service Photo ${index + 1}`}
-                  width={300}
-                  height={300}
-                  layout="responsive"
-                  className="rounded-md object-cover w-full shadow shadow-white overflow-hidden"
-                />
-              </div>
-            ))}
+        <div className="relative mb-6">
+          <div className="absolute left-0 right-0 h-px bg-gradient-to-r from-blue-500 via-purple-500 to-transparent"></div>
+          <div className="flex items-center justify-center">
+            <div className="bg-neutral-800 px-4 py-1">
+              <span className="text-xs uppercase tracking-wider text-blue-300 font-medium">
+                Company Experience
+              </span>
+            </div>
           </div>
-        )}
+        </div>
+
+        {/* COMPANY INFORMATION */}
+        <div className="px-2">
+          {companies?.map((c, i) => (
+            <div
+              key={i}
+              className="mb-4 relative bg-neutral-900 rounded-xl shadow-xl overflow-hidden border border-neutral-700"
+            >
+              {/* Company Post Header - Facebook Style */}
+              <div className="flex items-center px-4 py-2 border-b border-neutral-700">
+                <div className="w-8 h-8 rounded-full overflow-hidden bg-neutral-700 flex-shrink-0 border border-neutral-600">
+                  {profilePictureUrl ? (
+                    <Image
+                      src={profilePictureUrl}
+                      alt="Profile"
+                      width={32}
+                      height={32}
+                      className="w-full h-full object-cover"
+                    />
+                  ) : (
+                    <div className="w-full h-full flex items-center justify-center bg-blue-600">
+                      <span className="text-white font-bold text-xs">
+                        {firstName?.charAt(0) || "U"}
+                      </span>
+                    </div>
+                  )}
+                </div>
+                <div className="ml-2 flex-1">
+                  <div className="flex flex-col">
+                    <span className="font-semibold text-sm text-white">
+                      {firstName} {lastName}
+                    </span>
+                    <div className="flex items-center">
+                      <span className="text-xs text-gray-400">
+                        {c.position} at{" "}
+                      </span>
+                      <span className="text-xs font-medium text-blue-400 ml-1">
+                        {c.company}
+                      </span>
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              {/* About & Services Content - Above Images */}
+              <div className="px-4 pt-3">
+                {/* Background & Services */}
+                <div className="space-y-3 mb-3">
+                  {c.companyBackground?.trim() && (
+                    <div>
+                      <h2 className="text-sm font-bold text-blue-300 mb-1">
+                        About
+                      </h2>
+                      <p className="text-sm leading-relaxed text-gray-300">
+                        {c.companyBackground}
+                      </p>
+                    </div>
+                  )}
+
+                  {c.serviceDescription?.trim() && (
+                    <div className="mt-3">
+                      <h3 className="text-sm font-bold text-blue-300 mb-1">
+                        Services
+                      </h3>
+                      <p className="text-sm leading-relaxed text-gray-300">
+                        {c.serviceDescription}
+                      </p>
+                    </div>
+                  )}
+                </div>
+
+                {/* Service Photos - Below About & Services */}
+                {Array.isArray(c.servicePhotos) &&
+                  c.servicePhotos.length > 0 && (
+                    <div className="mt-2 mb-3">
+                      {c.servicePhotos.length === 1 ? (
+                        <div className="relative overflow-hidden rounded-lg border border-neutral-700">
+                          <Image
+                            src={c.servicePhotos[0]}
+                            alt={`${c.company} Featured Image`}
+                            width={600}
+                            height={400}
+                            layout="responsive"
+                            className="object-cover w-full"
+                          />
+                        </div>
+                      ) : (
+                        <div className="grid grid-cols-2 gap-1">
+                          {c.servicePhotos.map((photo, index) => (
+                            <div
+                              key={index}
+                              className="relative overflow-hidden rounded-md border border-neutral-700"
+                            >
+                              <Image
+                                src={photo}
+                                alt={`${c.company} Portfolio Image ${index + 1}`}
+                                width={300}
+                                height={300}
+                                layout="responsive"
+                                className="object-cover w-full"
+                              />
+                            </div>
+                          ))}
+                        </div>
+                      )}
+                    </div>
+                  )}
+              </div>
+            </div>
+          ))}
+        </div>
       </div>
       {/* FOOTER */}
 

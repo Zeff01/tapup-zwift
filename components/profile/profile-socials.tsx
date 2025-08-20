@@ -6,18 +6,38 @@ import {
   FaInstagram,
   FaLinkedin,
   FaSkype,
+  FaTiktok,
   FaViber,
   FaWhatsapp,
   FaXTwitter,
   FaYoutube,
 } from "react-icons/fa6";
 
-const style = {
-  width: "24px",
-  height: "24px",
-  cursor: "pointer",
-  color: "black",
+const SocialIcon = ({
+  url,
+  icon: Icon,
+  label,
+}: {
+  url: string;
+  icon: React.ElementType;
+  label: string;
+}) => {
+  return (
+    <Link
+      href={url}
+      target="_blank"
+      rel="noopener noreferrer"
+      className="flex items-center justify-center w-10 h-10 rounded-full bg-gradient-to-br from-gray-50 to-gray-100 shadow-sm border border-gray-100 transition-transform hover:scale-110 hover:shadow-md group"
+      aria-label={label}
+    >
+      <Icon
+        className="text-gray-700 group-hover:text-blue-600 transition-colors"
+        size={18}
+      />
+    </Link>
+  );
 };
+
 const ProfileSocials = ({
   facebookUrl,
   linkedinUrl,
@@ -30,61 +50,41 @@ const ProfileSocials = ({
   websiteUrl,
   viberUrl,
 }: Partial<Card>) => {
+  const socialLinks = [
+    { url: facebookUrl, icon: FaFacebook, label: "Facebook" },
+    { url: linkedinUrl, icon: FaLinkedin, label: "LinkedIn" },
+    { url: instagramUrl, icon: FaInstagram, label: "Instagram" },
+    { url: twitterUrl, icon: FaXTwitter, label: "Twitter" },
+    { url: tiktokUrl, icon: FaTiktok, label: "TikTok" },
+    { url: youtubeUrl, icon: FaYoutube, label: "YouTube" },
+    { url: viberUrl, icon: FaViber, label: "Viber" },
+    {
+      url: whatsappNumber ? `https://wa.me/${whatsappNumber}` : null,
+      icon: FaWhatsapp,
+      label: "WhatsApp",
+    },
+    {
+      url: skypeInviteUrl ? `skype:${skypeInviteUrl}?chat` : null,
+      icon: FaSkype,
+      label: "Skype",
+    },
+    { url: websiteUrl, icon: FaGlobe, label: "Website" },
+  ].filter((link) => link.url);
+
+  if (socialLinks.length === 0) return null;
+
   return (
-    <section className="flex gap-1 w-[15rem] pt-5 pl-2">
-      {facebookUrl && (
-        <Link href={facebookUrl} target="_blank" rel="noopener noreferrer">
-          <FaFacebook style={style} />
-        </Link>
-      )}
-      {twitterUrl && (
-        <Link href={twitterUrl} target="_blank" rel="noopener noreferrer">
-          <FaXTwitter style={style} />
-        </Link>
-      )}
-      {youtubeUrl && (
-        <Link href={youtubeUrl} target="_blank" rel="noopener noreferrer">
-          <FaYoutube style={style} />
-        </Link>
-      )}
-      {instagramUrl && (
-        <Link href={instagramUrl} target="_blank" rel="noopener noreferrer">
-          <FaInstagram style={style} />
-        </Link>
-      )}
-      {linkedinUrl && (
-        <Link href={linkedinUrl} target="_blank" rel="noopener noreferrer">
-          <FaLinkedin style={style} />
-        </Link>
-      )}
-      {viberUrl && (
-        <Link href={viberUrl} target="_blank" rel="noopener noreferrer">
-          <FaViber style={style} />
-        </Link>
-      )}
-      {whatsappNumber && (
-        <Link
-          href={`https://wa.me/${whatsappNumber}`}
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <FaWhatsapp style={style} />
-        </Link>
-      )}
-      {skypeInviteUrl && (
-        <Link
-          href={`skype:${skypeInviteUrl}?chat`}
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <FaSkype style={style} />
-        </Link>
-      )}
-      {websiteUrl && (
-        <Link href={websiteUrl} target="_blank" rel="noopener noreferrer">
-          <FaGlobe style={style} />
-        </Link>
-      )}
+    <section className="px-1 py-1 mt-2">
+      <div className="flex flex-wrap gap-1">
+        {socialLinks.map((link, index) => (
+          <SocialIcon
+            key={index}
+            url={link.url as string}
+            icon={link.icon}
+            label={link.label}
+          />
+        ))}
+      </div>
     </section>
   );
 };

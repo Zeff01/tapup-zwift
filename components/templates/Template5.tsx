@@ -15,9 +15,8 @@ const Template5 = ({
   coverPhotoUrl,
   position,
   company,
-  companyBackground,
-  serviceDescription,
-  servicePhotos,
+
+  companies,
   firstName,
   lastName,
   email,
@@ -47,15 +46,15 @@ const Template5 = ({
   };
 
   return (
-    <div className="relative bg-white text-black flex flex-col items-center justify-between  min-h-screen">
-      <div
-        className="relative w-full mx-auto  max-w-[480px]"
-        style={{
-          backgroundImage: 'url("/assets/template5bg.png")',
-          backgroundSize: "cover",
-          backgroundPosition: "top",
-        }}
-      >
+    <div
+      className="relative bg-white text-black flex flex-col items-center justify-between  min-h-screen"
+      style={{
+        backgroundImage: 'url("/assets/template5bg.png")',
+        backgroundSize: "cover",
+        backgroundPosition: "top",
+      }}
+    >
+      <div className="relative w-full mx-auto  max-w-[480px]">
         {/* COVERPHOTO AND PROFILE PIC */}
         <div className="flex flex-col relative   ">
           <div className="w-full h-48">
@@ -152,47 +151,137 @@ const Template5 = ({
           <p className=" text-gray-500 text-xs"> {number ?? +639123456789}</p>
         </div>
 
-        {/* COMPANY INFORMATION */}
-        <h2 className="text-4xl font-extrabold mx-auto w-full text-center mt-6 px-4">
-          {company ?? "COMPANY"}
-        </h2>
-
-        <div className="mt-6 px-4">
-          {companyBackground && (
-            <>
-              <h2 className="text-md font-bold">Company Background</h2>
-              <p className="text-xs mt-4">{companyBackground}</p>
-            </>
-          )}
-
-          {/* SERVICE INFORMATION */}
-          {(serviceDescription ||
-            (servicePhotos && servicePhotos.length > 0)) && (
-            <>
-              <h3 className="text-md font-bold mt-6">Our Services</h3>
-              {serviceDescription && (
-                <p className="text-xs mt-4">{serviceDescription}</p>
-              )}
-            </>
-          )}
+        <div className="mt-8 mb-6 px-4">
+          <h2 className="text-lg font-bold mb-1">Professional Portfolio</h2>
+          <p className="text-sm">
+            Below you&#39;ll find details about my professional experience and
+            the companies I&#39;ve worked with. Each entry highlights my role,
+            responsibilities, and the services offered.
+          </p>
+        </div>
+        <div className="px-4">
+          <div className="relative mb-6">
+            <div className="absolute left-0 right-0 h-px bg-gradient-to-r from-pink-500 via-purple-400 to-transparent" />
+            <div className="flex items-center justify-center">
+              <div className="bg-transparent px-4 py-1">
+                <span className="text-xs uppercase tracking-wider text-pink-600 font-medium">
+                  Company Experience
+                </span>
+              </div>
+            </div>
+          </div>
         </div>
 
-        {servicePhotos && servicePhotos.length > 0 && (
-          <div className="grid grid-cols-2 gap-2 p-2 mt-6">
-            {servicePhotos.map((photo, index) => (
-              <div key={index} className="col-span-1">
-                <Image
-                  src={photo}
-                  alt={`Service Photo ${index + 1}`}
-                  width={300}
-                  height={300}
-                  layout="responsive"
-                  className="rounded-md object-cover w-full  "
-                />
+        {/* COMPANY INFORMATION */}
+        <div className="px-4">
+          {companies?.map((c, i) => (
+            <div
+              key={i}
+              className="mb-4 relative bg-white/70 backdrop-blur-sm rounded-xl shadow-xl overflow-hidden border border-pink-100"
+            >
+              {/* Company Post Header - Facebook Style */}
+              <div className="flex items-center px-4 py-2 border-b border-pink-200">
+                <div className="w-8 h-8 rounded-full overflow-hidden bg-pink-50 flex-shrink-0 border border-pink-200">
+                  {profilePictureUrl ? (
+                    <Image
+                      src={profilePictureUrl}
+                      alt="Profile"
+                      width={32}
+                      height={32}
+                      className="w-full h-full object-cover"
+                    />
+                  ) : (
+                    <div className="w-full h-full flex items-center justify-center bg-pink-400">
+                      <span className="text-white font-bold text-xs">
+                        {firstName?.charAt(0) || "U"}
+                      </span>
+                    </div>
+                  )}
+                </div>
+                <div className="ml-2 flex-1">
+                  <div className="flex flex-col">
+                    <span className="font-semibold text-sm text-gray-800">
+                      {firstName} {lastName}
+                    </span>
+                    <div className="flex items-center">
+                      <span className="text-xs text-gray-600">
+                        {c.position} at{" "}
+                      </span>
+                      <span className="text-xs font-medium text-pink-600 ml-1">
+                        {c.company}
+                      </span>
+                    </div>
+                  </div>
+                </div>
               </div>
-            ))}
-          </div>
-        )}
+
+              {/* About & Services Content - Above Images */}
+              <div className="px-4 pt-3">
+                {/* Background & Services */}
+                <div className="space-y-3 mb-3">
+                  {c.companyBackground?.trim() && (
+                    <div>
+                      <h2 className="text-sm font-bold text-pink-600 mb-1">
+                        About
+                      </h2>
+                      <p className="text-sm leading-relaxed text-gray-700">
+                        {c.companyBackground}
+                      </p>
+                    </div>
+                  )}
+
+                  {c.serviceDescription?.trim() && (
+                    <div className="mt-3">
+                      <h3 className="text-sm font-bold text-pink-600 mb-1">
+                        Services
+                      </h3>
+                      <p className="text-sm leading-relaxed text-gray-700">
+                        {c.serviceDescription}
+                      </p>
+                    </div>
+                  )}
+                </div>
+
+                {/* Service Photos - Below About & Services */}
+                {Array.isArray(c.servicePhotos) &&
+                  c.servicePhotos.length > 0 && (
+                    <div className="mt-2 mb-3">
+                      {c.servicePhotos.length === 1 ? (
+                        <div className="relative overflow-hidden rounded-lg border border-pink-200 shadow-md">
+                          <Image
+                            src={c.servicePhotos[0]}
+                            alt={`${c.company} Featured Image`}
+                            width={600}
+                            height={400}
+                            layout="responsive"
+                            className="object-cover w-full"
+                          />
+                        </div>
+                      ) : (
+                        <div className="grid grid-cols-2 gap-1">
+                          {c.servicePhotos.map((photo, index) => (
+                            <div
+                              key={index}
+                              className="relative overflow-hidden rounded-md border border-pink-200 shadow-md"
+                            >
+                              <Image
+                                src={photo}
+                                alt={`${c.company} Portfolio Image ${index + 1}`}
+                                width={300}
+                                height={300}
+                                layout="responsive"
+                                className="object-cover w-full"
+                              />
+                            </div>
+                          ))}
+                        </div>
+                      )}
+                    </div>
+                  )}
+              </div>
+            </div>
+          ))}
+        </div>
 
         {/* FOOTER */}
         <h2 className="text-xs font-extrabold mx-auto w-full text-center mt-3 mb-2">
@@ -211,11 +300,11 @@ const Template5 = ({
               width={40}
               height={15}
               priority
-              className="opacity-90"
+              className="opacity-80"
             />
           </a>
 
-          <span className="tracking-wide text-gray-800 text-[10px] ">
+          <span className="tracking-wide text-pink-800 text-[10px] font-medium">
             © {getCopyrightYear()} Zwiftech. All Rights Reserved.
           </span>
         </div>

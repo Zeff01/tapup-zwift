@@ -33,11 +33,7 @@ export const useCreateColumns = ({
   setIsPrintModalOpen,
   user,
 }: CreateColumnsProps) => {
-
-
   const router = useRouter();
-
-
 
   const columns = useMemo<ColumnDef<PrintCardsInfo>[]>(
     () => [
@@ -169,8 +165,10 @@ export const useCreateColumns = ({
                     <Printer size={15} />
                   </DropdownMenuItem>
 
-                  <DropdownMenuItem onClick={() => router.push(`/cards/update/${card.id}`)
-}  className="flex items-center gap-2 justify-between focus:bg-gray-200 dark:focus:bg-accent">
+                  <DropdownMenuItem
+                    onClick={() => router.push(`/cards/update/${card.id}`)}
+                    className="flex items-center gap-2 justify-between focus:bg-gray-200 dark:focus:bg-accent"
+                  >
                     <span>Edit</span>
                     <PencilLine size={15} />
                   </DropdownMenuItem>
