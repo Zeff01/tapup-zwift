@@ -58,7 +58,7 @@ const Template15 = ({
   };
 
   return (
-    <div className="min-h-screen bg-[#011923] flex flex-col items-center py-2 px-1 relative overflow-hidden">
+    <div className="min-h-screen bg-[#011923] flex flex-col items-center justify-between py-2 px-1 relative overflow-hidden">
       <div className="max-w-[480px] mx-auto flex flex-col w-full">
         {/* === Profile and Cover Section === */}
         <section
@@ -73,7 +73,7 @@ const Template15 = ({
             <div className="w-32 h-32 rounded-full bg-[#9A3A1975] opacity-80 blur-2xl" />
           </div>
           <img
-            src={coverPhotoUrl}
+            src={coverPhotoUrl || "/assets/template1coverphoto.png"}
             alt="Cover"
             className="object-cover w-full h-32 md:h-36 rounded-t-2xl shadow-lg"
           />
@@ -88,11 +88,17 @@ const Template15 = ({
           {/* Profile Image - centered and overlapping */}
           <div className="absolute left-1/2 -bottom-14 transform -translate-x-1/2 z-20">
             <div className="w-28 h-28 rounded-full border-4 border-[#7dd3fc] overflow-hidden bg-[#222]">
-              <img
-                src={profilePictureUrl}
-                alt="Profile"
-                className="object-cover w-full h-full"
-              />
+              {profilePictureUrl ? (
+                <img
+                  src={profilePictureUrl}
+                  alt="Profile"
+                  className="object-cover w-full h-full"
+                />
+              ) : (
+                <div className="bg-neutral-700 w-full h-full rounded-full flex items-center justify-center">
+                  <span className="text-white font-bold text-xl">HW</span>
+                </div>
+              )}
             </div>
           </div>
         </section>
@@ -196,29 +202,35 @@ const Template15 = ({
           </div>
 
           {/* === Contact Info Section === */}
-          <section
-            aria-label="Contact Information"
-            className="w-full mb-6 relative px-2 sm:px-6"
-          >
-            <h2 className="text-lg font-bold text-white mb-2">
-              Contact Information
-            </h2>
-            <div className="flex flex-col gap-2 text-gray-300">
-              <div className="flex items-center gap-2">
-                <a href={`mailto:${email}`}>
-                  {" "}
-                  <MdOutlineMailOutline className="text-[#7dd3fc]" />{" "}
-                </a>{" "}
-                <span>{email}</span>
+          {(email || number) && (
+            <section
+              aria-label="Contact Information"
+              className="w-full mb-6 relative px-2 sm:px-6"
+            >
+              <h2 className="text-lg font-bold text-white mb-2">
+                Contact Information
+              </h2>
+              <div className="flex flex-col gap-2 text-gray-300">
+                {email && (
+                  <div className="flex items-center gap-2">
+                    <a href={`mailto:${email}`}>
+                      {" "}
+                      <MdOutlineMailOutline className="text-[#7dd3fc]" />{" "}
+                    </a>{" "}
+                    <span>{email}</span>
+                  </div>
+                )}
+                {number && (
+                  <div className="flex items-center gap-2">
+                    <a href={`tel:${number}`}>
+                      <MdOutlinePhone className="text-[#7dd3fc]" />{" "}
+                    </a>{" "}
+                    <span>{number}</span>
+                  </div>
+                )}
               </div>
-              <div className="flex items-center gap-2">
-                <a href={`tel:${number}`}>
-                  <MdOutlinePhone className="text-[#7dd3fc]" />{" "}
-                </a>{" "}
-                <span>{number}</span>
-              </div>
-            </div>
-          </section>
+            </section>
+          )}
 
           {companies?.length > 0 &&
             companies.map((company, idx) => (
@@ -284,32 +296,32 @@ const Template15 = ({
                 )}
               </div>
             ))}
-
-          {/* === Footer Section === */}
-          <footer className="w-full max-w-md mx-auto mt-3  text-center text-gray-400 text-sm relative px-2 sm:px-6">
-            <div className="flex flex-col mt-8 items-center  gap-1 text-center text-xs">
-              <a
-                href={userProfile?.customUrl ?? userProfile?.websiteUrl ?? "#"}
-                target="_blank"
-                rel="noopener noreferrer"
-              >
-                <Image
-                  src="/assets/light-ZwiftechLogo.png"
-                  alt="Zwiftech Logo"
-                  width={40}
-                  height={15}
-                  priority
-                  className="opacity-90"
-                />
-              </a>
-
-              <span className="tracking-wide text-gray-400 text-[10px] ">
-                © {getCopyrightYear()} Zwiftech. All Rights Reserved.
-              </span>
-            </div>
-          </footer>
         </section>
       </div>
+
+      {/* === Footer Section === */}
+      <footer className="w-full max-w-md mx-auto mt-3  text-center text-gray-400 text-sm relative px-2 sm:px-6">
+        <div className="flex flex-col mt-8 items-center  gap-1 text-center text-xs">
+          <a
+            href={userProfile?.customUrl ?? userProfile?.websiteUrl ?? "#"}
+            target="_blank"
+            rel="noopener noreferrer"
+          >
+            <Image
+              src="/assets/light-ZwiftechLogo.png"
+              alt="Zwiftech Logo"
+              width={40}
+              height={15}
+              priority
+              className="opacity-90"
+            />
+          </a>
+
+          <span className="tracking-wide text-gray-400 text-[10px] ">
+            © {getCopyrightYear()} Zwiftech. All Rights Reserved.
+          </span>
+        </div>
+      </footer>
     </div>
   );
 };

@@ -59,7 +59,7 @@ const Template17 = ({
     customUrl,
   };
   return (
-    <div className="bg-white rounded-2xl sm:rounded-3xl shadow-xl w-full max-w-full sm:max-w-md mx-auto overflow-hidden font-sans text-black py-2 px-1">
+    <div className="min-h-screen bg-white rounded-2xl sm:rounded-3xl shadow-xl w-full max-w-full sm:max-w-md mx-auto overflow-hidden font-sans text-black py-2 px-1 flex flex-col justify-between">
       <div className="max-w-[480px] mx-auto flex flex-col">
         {/* === Profile and Cover Section === */}
         <section
@@ -69,7 +69,7 @@ const Template17 = ({
           <div className="relative w-full h-48 sm:h-60 overflow-hidden">
             {/* Image with clip-path */}
             <img
-              src={coverPhotoUrl}
+              src={coverPhotoUrl || "/assets/template-7-cover-photo.jpeg"}
               alt="Cover"
               className="w-full h-full object-cover rounded-t-xl sm:rounded-t-[2rem]"
               style={{
@@ -82,11 +82,17 @@ const Template17 = ({
           {/* Profile Image */}
           <div className="absolute left-1/2 -bottom-10 sm:-bottom-12 transform -translate-x-1/2 z-10">
             <div className="w-20 h-20 sm:w-24 sm:h-24 rounded-full border-3 sm:border-4 border-white bg-white overflow-hidden shadow-lg">
-              <img
-                src={profilePictureUrl}
-                alt="Profile"
-                className="w-full h-full object-cover"
-              />
+              {profilePictureUrl ? (
+                <img
+                  src={profilePictureUrl}
+                  alt="Profile"
+                  className="w-full h-full object-cover"
+                />
+              ) : (
+                <div className="bg-[#FF4B5C] w-full h-full rounded-full flex items-center justify-center">
+                  <span className="text-white font-bold text-xl">HW</span>
+                </div>
+              )}
             </div>
           </div>
         </section>
@@ -271,34 +277,32 @@ const Template17 = ({
             )}
           </section>
         )}
-
-        {/* === Footer Section === */}
-        <footer className="bg-[#FF4B5C] text-white text-center   rounded-b-2xl sm:rounded-b-3xl px-2 sm:px-3">
-          <div className="font-semibold mt-3 text-sm sm:text-base">
-            {company}
-          </div>
-          <div className="flex flex-col mt-8 items-center mb-2 gap-1 text-center text-xs">
-            <a
-              href={userProfile?.customUrl ?? userProfile?.websiteUrl ?? "#"}
-              target="_blank"
-              rel="noopener noreferrer"
-            >
-              <Image
-                src="/assets/light-ZwiftechLogo.png"
-                alt="Zwiftech Logo"
-                width={40}
-                height={15}
-                priority
-                className="opacity-90"
-              />
-            </a>
-
-            <span className="tracking-wide text-gray-800 text-[10px] ">
-              © {getCopyrightYear()} Zwiftech. All Rights Reserved.
-            </span>
-          </div>
-        </footer>
       </div>
+
+      {/* === Footer Section === */}
+      <footer className="bg-[#FF4B5C] text-white text-center   rounded-b-2xl sm:rounded-b-3xl px-2 sm:px-3">
+        <div className="font-semibold mt-3 text-sm sm:text-base">{company}</div>
+        <div className="flex flex-col mt-8 items-center mb-2 gap-1 text-center text-xs">
+          <a
+            href={userProfile?.customUrl ?? userProfile?.websiteUrl ?? "#"}
+            target="_blank"
+            rel="noopener noreferrer"
+          >
+            <Image
+              src="/assets/light-ZwiftechLogo.png"
+              alt="Zwiftech Logo"
+              width={40}
+              height={15}
+              priority
+              className="opacity-90"
+            />
+          </a>
+
+          <span className="tracking-wide text-gray-800 text-[10px] ">
+            © {getCopyrightYear()} Zwiftech. All Rights Reserved.
+          </span>
+        </div>
+      </footer>
     </div>
   );
 };
