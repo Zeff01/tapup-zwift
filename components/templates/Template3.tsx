@@ -199,8 +199,8 @@ const Template3 = ({
             Professional Portfolio
           </h2>
           <p className="text-sm text-gray-300">
-            Below you'll find details about my professional experience and the
-            companies I've worked with. Each entry highlights my role,
+            Below you&#39;ll find details about my professional experience and
+            the companies I&#39;ve worked with. Each entry highlights my role,
             responsibilities, and the services offered.
           </p>
         </div>

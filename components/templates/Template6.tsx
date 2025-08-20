@@ -50,8 +50,8 @@ const Template6: React.FC<ProfilePageProps> = ({ userData }) => {
         <div className="mt-8 mb-6 px-4">
           <h2 className="text-lg font-bold mb-1">Professional Portfolio</h2>
           <p className="text-sm">
-            Below you'll find details about my professional experience and the
-            companies I've worked with. Each entry highlights my role,
+            Below you&#39;ll find details about my professional experience and
+            the companies I&#39;ve worked with. Each entry highlights my role,
             responsibilities, and the services offered.
           </p>
         </div>
