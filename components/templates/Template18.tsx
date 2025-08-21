@@ -32,9 +32,6 @@ const Template18 = ({
   email,
   number,
   company,
-  companyBackground,
-  serviceDescription,
-  servicePhotos,
   facebookUrl,
   linkedinUrl,
   instagramUrl,
@@ -46,6 +43,7 @@ const Template18 = ({
   viberUrl,
   tiktokUrl,
   customUrl,
+  companies,
 }: Card) => {
   const userProfile = {
     id,
@@ -60,8 +58,8 @@ const Template18 = ({
   };
 
   return (
-    <div className="min-h-screen bg-[#001e36] flex items-center justify-center relative overflow-hidden py-2 px-1 text-white">
-      <div className="max-w-[480px] mx-auto flex flex-col">
+    <div className="min-h-screen bg-[#001e36] flex items-center justify-center relative overflow-hidden text-white">
+      <div className="max-w-[480px] mx-auto flex flex-col min-h-screen">
         {/* === Decorative Background === */}
         <div
           className="absolute top-10 left-10 w-48 h-48 rounded-full"
@@ -255,68 +253,111 @@ const Template18 = ({
           </div>
         </section>
 
-        {/* === Company Overview Section === */}
-        {companyBackground && (
+        {/* === Companies Section === */}
+        {companies?.length > 0 && (
           <section
-            aria-label="Company Overview"
-            className="text-white px-3 sm:px-4 pb-2 text-xs sm:text-sm"
+            aria-label="Companies"
+            className="px-3 sm:px-4 pb-3 text-xs sm:text-sm flex-1"
           >
-            <h3 className="text-[#00d4ff] font-semibold text-sm sm:text-base mb-1">
-              Company Overview
+            <h3 className="text-[#00d4ff] font-semibold text-sm sm:text-base text-center mb-2">
+              Professional Portfolio
             </h3>
-            <p className="text-gray-300 mb-3 sm:mb-4">{companyBackground}</p>
-          </section>
-        )}
+            <p className="text-gray-300 text-center mb-3 sm:mb-4">
+              A snapshot of my experience and the companies I’ve worked with.
+            </p>
 
-        {/* === Services Section === */}
-        {(serviceDescription ||
-          (servicePhotos && servicePhotos.length > 0)) && (
-          <section
-            aria-label="Our Services"
-            className="text-white px-3 sm:px-4 pb-2 text-xs sm:text-sm"
-          >
-            {serviceDescription && (
-              <>
-                <h3 className="text-[#00d4ff] font-semibold text-sm sm:text-base mb-1">
-                  Our Services
-                </h3>
-                <p className="text-gray-300 mb-3 sm:mb-4">
-                  {serviceDescription}
-                </p>
-              </>
-            )}
+            <div className="space-y-4">
+              {companies.map((c, idx) => (
+                <div
+                  key={idx}
+                  className="relative group bg-[#0b2b45] rounded-xl border border-[#00d4ff]/20 shadow-[0_0_0_1px_rgba(0,212,255,0.08)] hover:shadow-[0_0_0_1px_rgba(0,212,255,0.18),0_10px_30px_-10px_rgba(0,212,255,0.25)] transition-all duration-300 overflow-hidden"
+                >
+                  <div className="h-0.5 bg-gradient-to-r from-transparent via-[#00d4ff] to-transparent opacity-60" />
 
-            {servicePhotos && servicePhotos.length > 0 && (
-              <div className="grid grid-cols-2 gap-3 sm:gap-4 auto-rows-auto mb-3 sm:mb-4">
-                {servicePhotos.map((photo, idx) => {
-                  const isLarge = idx % 2 === 0; // alternate tall and short
-
-                  return (
-                    <div
-                      key={idx}
-                      className={`overflow-hidden rounded-xl sm:rounded-2xl ${
-                        isLarge
-                          ? "row-span-2 h-32 sm:h-40"
-                          : "row-span-1 h-32 sm:h-40"
-                      }`}
-                    >
-                      <img
-                        src={photo}
-                        alt={`Service ${idx + 1}`}
-                        className="w-full h-full object-cover"
-                      />
+                  <div className="px-4 py-3 border-b border-white/5 bg-gradient-to-r from-[#0b2b45] to-[#0f395a]">
+                    <div className="flex items-center justify-between">
+                      <div className="flex items-center gap-3">
+                        <div className="w-10 h-10 rounded-lg bg-gradient-to-br from-[#00d4ff] to-[#4dd9ff] text-[#001e36] flex items-center justify-center font-bold shadow-sm">
+                          <span className="text-sm">
+                            {c.company?.charAt(0) || "C"}
+                          </span>
+                        </div>
+                        <div>
+                          <h4 className="text-white text-sm sm:text-base font-semibold capitalize">
+                            {c.company}
+                          </h4>
+                          <div className="text-[11px] sm:text-xs text-[#7cecff] font-medium">
+                            {c.position}
+                          </div>
+                        </div>
+                      </div>
                     </div>
-                  );
-                })}
-              </div>
-            )}
+                  </div>
+
+                  <div className="p-4 space-y-3">
+                    {c.companyBackground && (
+                      <div className="rounded-lg p-3 border border-white/5 bg-white/5 backdrop-blur-[1px]">
+                        <h5 className="font-semibold text-white text-xs sm:text-sm mb-1">
+                          Company Overview
+                        </h5>
+                        <p className="text-gray-200 text-xs sm:text-sm leading-relaxed">
+                          {c.companyBackground}
+                        </p>
+                      </div>
+                    )}
+
+                    {c.serviceDescription && (
+                      <div className="rounded-lg p-3 border border-white/5 bg-white/5 backdrop-blur-[1px]">
+                        <h5 className="font-semibold text-white text-xs sm:text-sm mb-1">
+                          Services & Expertise
+                        </h5>
+                        <p className="text-gray-200 text-xs sm:text-sm leading-relaxed">
+                          {c.serviceDescription}
+                        </p>
+                      </div>
+                    )}
+
+                    {c.servicePhotos && c.servicePhotos.length > 0 && (
+                      <div className="rounded-lg p-3 border border-white/5 bg-white/5 backdrop-blur-[1px]">
+                        <h5 className="font-semibold text-white text-xs sm:text-sm mb-2">
+                          Portfolio Gallery
+                        </h5>
+                        {c.servicePhotos.length === 1 ? (
+                          <div className="rounded-lg overflow-hidden border border-[#00d4ff]/20">
+                            <img
+                              src={c.servicePhotos[0]}
+                              alt={`${c.company} portfolio`}
+                              className="w-full h-auto object-cover"
+                            />
+                          </div>
+                        ) : (
+                          <div className="grid grid-cols-2 gap-2">
+                            {c.servicePhotos.map((photo, pIdx) => (
+                              <div
+                                key={pIdx}
+                                className="rounded-lg overflow-hidden border border-[#00d4ff]/20"
+                              >
+                                <img
+                                  src={photo}
+                                  alt={`${c.company} portfolio ${pIdx + 1}`}
+                                  className="w-full h-auto object-cover"
+                                />
+                              </div>
+                            ))}
+                          </div>
+                        )}
+                      </div>
+                    )}
+                  </div>
+                </div>
+              ))}
+            </div>
           </section>
         )}
 
         {/* === Footer Section === */}
-        <footer className="bg-[#001d34] text-white text-center  text-xs rounded-b-[30px] px-2 sm:px-3">
-          <div className="font-semibold text-sm sm:text-base">{company}</div>
-          <div className="flex flex-col mt-8 items-center  gap-1 text-center text-xs">
+        <footer className="bg-[#001d34] text-white text-center text-xs py-4">
+          <div className="flex flex-col items-center gap-1 text-center text-xs">
             <a
               href={userProfile?.customUrl ?? userProfile?.websiteUrl ?? "#"}
               target="_blank"
