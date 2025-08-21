@@ -391,14 +391,13 @@ const Template9 = ({
           </div>
         </div>
         <div className=" flex flex-col gap-y-6 pt-6 bg-white px-3 flex-grow border-t border-t-neutral-300 text-neutral-900">
-          <div className="">
-            <h2 className="text-lg font-bold mb-1">Professional Portfolio</h2>
-            <p className="text-sm">
-              Below you&#39;ll find details about my professional experience and
-              the companies I&#39;ve worked with. Each entry highlights my role,
-              responsibilities, and the services offered.
-            </p>
-          </div>
+          <h2 className="text-lg font-bold mb-1">Professional Portfolio</h2>
+          <p className="text-sm">
+            Below you&#39;ll find details about my professional experience and
+            the companies I&#39;ve worked with. Each entry highlights my role,
+            responsibilities, and the services offered.
+          </p>
+
           <div className="w-full mx-auto">
             {/* Company Experience Section */}
             {companies && companies.length > 0 && (
