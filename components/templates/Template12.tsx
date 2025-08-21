@@ -26,6 +26,7 @@ import {
   TooltipProvider,
   TooltipTrigger,
 } from "../ui/tooltip";
+import { CiMail, CiSaveDown2 } from "react-icons/ci";
 
 const poppins = Advent_Pro({
   weight: "400",
@@ -37,15 +38,236 @@ const michroma = Akatab({
   subsets: ["latin"],
 });
 
+// Company Showcase Component for Template12 - Dark Green Theme
+const CompanyShowcase = ({
+  companies,
+  profilePictureUrl,
+  firstName,
+  lastName,
+}: {
+  companies?: Card["companies"];
+  profilePictureUrl?: string;
+  firstName?: string;
+  lastName?: string;
+}) => {
+  if (!companies || companies.length === 0) {
+    return null;
+  }
+
+  return (
+    <div className="space-y-4">
+      {companies.map((company, index) => (
+        <div key={index} className="relative group">
+          {/* Main Container */}
+          <div className="bg-white/95 backdrop-blur-sm rounded-2xl border border-[#D3F1DF]/30 shadow-lg hover:shadow-xl transition-all duration-300 overflow-hidden">
+            {/* Header Section */}
+            <div className="relative p-4 bg-gradient-to-r from-[#34463b] via-[#466b55] to-[#34463b]">
+              {/* Decorative Background Pattern */}
+              <div className="absolute inset-0 opacity-5">
+                <div className="absolute top-2 right-2 w-12 h-12 border-2 border-[#D3F1DF] rounded-full"></div>
+                <div className="absolute bottom-2 left-2 w-6 h-6 border border-[#D3F1DF] rounded-full"></div>
+              </div>
+
+              <div className="relative z-10 flex justify-between">
+                <div className="text-start">
+                  <h3
+                    className={cn(
+                      "text-lg font-bold text-white capitalize",
+                      michroma.className
+                    )}
+                  >
+                    {company.company}
+                  </h3>
+                  <p className="text-white/90 text-sm font-medium">
+                    {company.position}
+                  </p>
+                  <p className="text-white/70 text-xs">
+                    {firstName} {lastName}
+                  </p>
+                </div>
+
+                {/* Status Badge */}
+                <div className="flex flex-col items-end space-y-2">
+                  <div className="w-6 h-6 bg-white/20 rounded-full flex items-center justify-center">
+                    <svg
+                      className="w-3 h-3 text-white"
+                      fill="none"
+                      stroke="currentColor"
+                      viewBox="0 0 24 24"
+                    >
+                      <path
+                        strokeLinecap="round"
+                        strokeLinejoin="round"
+                        strokeWidth={2}
+                        d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4"
+                      />
+                    </svg>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            {/* Content Section */}
+            <div className="p-4 space-y-4">
+              {/* Company Background */}
+              {company.companyBackground && (
+                <div className="bg-gray-50 rounded-xl p-4 border border-gray-200">
+                  <div className="flex items-center justify-between mb-3">
+                    <h4
+                      className={cn(
+                        "font-semibold text-[#34463b] text-base",
+                        michroma.className
+                      )}
+                    >
+                      Company Overview
+                    </h4>
+                    <div className="w-6 h-6 bg-[#D3F1DF] rounded-full flex items-center justify-center">
+                      <svg
+                        className="w-3 h-3 text-[#34463b]"
+                        fill="none"
+                        stroke="currentColor"
+                        viewBox="0 0 24 24"
+                      >
+                        <path
+                          strokeLinecap="round"
+                          strokeLinejoin="round"
+                          strokeWidth={2}
+                          d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"
+                        />
+                      </svg>
+                    </div>
+                  </div>
+                  <p className="text-gray-700 leading-relaxed text-sm">
+                    {company.companyBackground}
+                  </p>
+                </div>
+              )}
+
+              {/* Service Description */}
+              {company.serviceDescription && (
+                <div className="bg-gray-50 rounded-xl p-4 border border-gray-200">
+                  <div className="flex items-center justify-between mb-3">
+                    <h4
+                      className={cn(
+                        "font-semibold text-[#34463b] text-base",
+                        michroma.className
+                      )}
+                    >
+                      Services & Expertise
+                    </h4>
+                    <div className="w-6 h-6 bg-[#D3F1DF] rounded-full flex items-center justify-center">
+                      <svg
+                        className="w-3 h-3 text-[#34463b]"
+                        fill="none"
+                        stroke="currentColor"
+                        viewBox="0 0 24 24"
+                      >
+                        <path
+                          strokeLinecap="round"
+                          strokeLinejoin="round"
+                          strokeWidth={2}
+                          d="M21 13.255A23.931 23.931 0 0112 15c-3.183 0-6.22-.62-9-1.745M16 6V4a2 2 0 00-2-2h-4a2 2 0 00-2 2v2m4 6h.01M5 20h14a2 2 0 002-2V8a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"
+                        />
+                      </svg>
+                    </div>
+                  </div>
+                  <p className="text-gray-700 leading-relaxed text-sm">
+                    {company.serviceDescription}
+                  </p>
+                </div>
+              )}
+
+              {/* Service Photos */}
+              {Array.isArray(company.servicePhotos) &&
+                company.servicePhotos.length > 0 && (
+                  <div className="bg-gray-50 rounded-xl p-4 border border-gray-200">
+                    <div className="flex items-center justify-between mb-3">
+                      <h4
+                        className={cn(
+                          "font-semibold text-[#34463b] text-base",
+                          michroma.className
+                        )}
+                      >
+                        Portfolio Gallery
+                      </h4>
+                      <div className="w-6 h-6 bg-[#D3F1DF] rounded-full flex items-center justify-center">
+                        <svg
+                          className="w-3 h-3 text-[#34463b]"
+                          fill="none"
+                          stroke="currentColor"
+                          viewBox="0 0 24 24"
+                        >
+                          <path
+                            strokeLinecap="round"
+                            strokeLinejoin="round"
+                            strokeWidth={2}
+                            d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z"
+                          />
+                        </svg>
+                      </div>
+                    </div>
+
+                    <div>
+                      {company.servicePhotos.length === 1 ? (
+                        <div className="relative group/photo">
+                          <div className="rounded-xl overflow-hidden border border-gray-300 shadow-md">
+                            <Image
+                              src={company.servicePhotos[0]}
+                              alt={`${company.company} portfolio`}
+                              width={600}
+                              height={400}
+                              className="w-full h-auto object-cover transition-transform duration-300 group-hover/photo:scale-105"
+                            />
+                          </div>
+                          <div className="absolute inset-0 bg-gradient-to-t from-[#34463b]/30 via-transparent to-transparent opacity-0 group-hover/photo:opacity-100 transition-opacity duration-300 rounded-xl"></div>
+                          <div className="absolute bottom-3 left-3 opacity-0 group-hover/photo:opacity-100 transition-opacity duration-300">
+                            <span className="text-white text-sm font-medium bg-[#34463b]/80 backdrop-blur-sm px-3 py-1 rounded-full shadow-md">
+                              View Portfolio
+                            </span>
+                          </div>
+                        </div>
+                      ) : (
+                        <div className="grid grid-cols-2 gap-3">
+                          {company.servicePhotos.map((photo, photoIndex) => (
+                            <div
+                              key={photoIndex}
+                              className="relative group/photo rounded-xl overflow-hidden border border-gray-300 shadow-md"
+                            >
+                              <Image
+                                src={photo}
+                                alt={`${company.company} portfolio ${photoIndex + 1}`}
+                                width={300}
+                                height={200}
+                                className="w-full h-auto object-cover transition-all duration-300 group-hover/photo:scale-110"
+                              />
+                              <div className="absolute inset-0 bg-gradient-to-t from-[#34463b]/40 via-transparent to-transparent opacity-0 group-hover/photo:opacity-100 transition-opacity duration-300"></div>
+                              <div className="absolute bottom-2 left-2 opacity-0 group-hover/photo:opacity-100 transition-opacity duration-300">
+                                <span className="text-white text-xs font-medium bg-[#34463b]/80 backdrop-blur-sm px-2 py-1 rounded-full shadow-md">
+                                  View {photoIndex + 1}
+                                </span>
+                              </div>
+                            </div>
+                          ))}
+                        </div>
+                      )}
+                    </div>
+                  </div>
+                )}
+            </div>
+          </div>
+        </div>
+      ))}
+    </div>
+  );
+};
+
 const Template12 = ({
   id,
   profilePictureUrl,
   coverPhotoUrl,
   position,
   company,
-  companyBackground,
-  serviceDescription,
-  servicePhotos,
+  companies,
   firstName,
   lastName,
   email,
@@ -73,12 +295,10 @@ const Template12 = ({
     customUrl,
   };
 
-  console.log(websiteUrl);
-
   return (
-    <div className="min-h-screen bg-[#34463b] flex flex-col ">
-      <div className=" h-[350px] relative   ">
-        {/* <div className="absolute flex gap-x-2 m-4 top-0 right-0">
+    <div className="bg-[#34463b] flex flex-col">
+      <div className="max-w-[480px] mx-auto min-h-screen relative  flex flex-col">
+        <div className="absolute flex gap-x-2 m-4 top-0 right-0">
           <span className=" bg-white text-2xl p-2 text-neutral-800 rounded-full">
             <a href={`mailto:${email}`}>
               <CiMail className="cursor-pointer" />
@@ -90,9 +310,8 @@ const Template12 = ({
               onClick={() => downloadVCard(userProfile)}
             />
           </span>
-        </div> */}
-
-        <div className="relative">
+        </div>
+        <div className="relative -z-1 h-[240px]">
           <div className="absolute w-full  flex flex-col items-center justify-center z-20 top-0 left-1/2 transform -translate-x-1/2  ">
             <div className="flex flex-col w-full items-center justify-center pt-2 ">
               {firstName ? (
@@ -174,7 +393,7 @@ const Template12 = ({
                   </TooltipContent>
                 </Tooltip>
               </TooltipProvider>
-              {/* <Separator className="mx-8 h-6" orientation="vertical" /> */}
+
               <TooltipProvider>
                 <Tooltip>
                   <TooltipTrigger asChild>
@@ -212,26 +431,15 @@ const Template12 = ({
               </TooltipProvider>
             </div>
           </div>
-          {coverPhotoUrl ? (
-            <Image
-              src={coverPhotoUrl}
-              alt="Cover Image"
-              width={400}
-              height={200}
-              className="mx-auto w-full object-cover  overflow-hidden"
-            />
-          ) : (
-            <Image
-              src={"/assets/template9coverphoto.png"}
-              alt="Cover Image"
-              width={400}
-              height={200}
-              className="mx-auto"
-            />
-          )}
+          <Image
+            src={coverPhotoUrl || "/assets/template9coverphoto.png"}
+            alt="Cover Image"
+            width={400}
+            height={200}
+            className="size-full object-cover"
+          />
         </div>
-
-        <div className="text-center flex flex-col absolute top-[205px] w-full space-y-1 bg-[#D3F1DF] bg-gradient-to-t from-[#85A98F] overflow-hidden to-[#D3F1DF] rounded-t-3xl">
+        <div className="text-center flex flex-col w-full pb-4 space-y-1 bg-[#D3F1DF] bg-gradient-to-t from-[#85A98F] overflow-hidden to-[#D3F1DF] rounded-t-3xl  z-20 relative -mt-8 flex-1">
           <div className=" flex  items-center w-full gap-3 py-4 text-2xl bg-gradient-to-t from-[#D3F1DF]  to-[#f4fcf7] text-neutral-700 h-16 justify-center">
             {facebookUrl && (
               <a href={facebookUrl} target="_blank" rel="noopener noreferrer">
@@ -287,94 +495,46 @@ const Template12 = ({
               </a>
             )}
           </div>
-          <div className=" flex flex-col gap-y-6 pt-4  px-5 flex-grow border-t border-t-neutral-300 text-[#5A6C57]">
-            {companyBackground && (
-              <div>
-                <h1
-                  className={cn(
-                    "font-normal text-xl tracking-wider text-start",
+          <div className=" flex flex-col gap-y-2 flex-grow text-black mt-28 px-4">
+            <h2 className="text-lg font-bold mt-3">Professional Portfolio</h2>
+            <p className="text-sm">
+              Below you&#39;ll find details about my professional experience and
+              the companies I&#39;ve worked with. Each entry highlights my role,
+              responsibilities, and the services offered.
+            </p>
 
-                    poppins.className
-                  )}
-                >
-                  Company Overview
-                </h1>
-                <p className="font-light text-sm text-start text-black pt-2">
-                  {companyBackground}
-                </p>
-              </div>
-            )}
-            {(serviceDescription ||
-              (servicePhotos && servicePhotos.length > 0)) && (
-              <div>
-                <h1
-                  className={cn(
-                    "font-normal text-xl tracking-wider text-start",
-
-                    poppins.className
-                  )}
-                >
-                  Our Services
-                </h1>
-                {serviceDescription && (
-                  <p className="font-light text-sm text-start text-black pt-2">
-                    {serviceDescription}
-                  </p>
-                )}
-              </div>
-            )}
-            {servicePhotos && servicePhotos.length > 0 && (
-              <div className="flex gap-4 mt-6 overflow-x-auto scrollbar-hide pb-4">
-                {servicePhotos.map((photo, index) => (
-                  <div key={index} className="shrink-0">
-                    <Image
-                      src={photo}
-                      alt={`Service Photo ${index + 1}`}
-                      width={150}
-                      height={150}
-                      className="rounded-2xl object-contain"
-                    />
-                  </div>
-                ))}
-              </div>
-            )}
-
-            <div className="flex flex-col items-center  justify-center gap-x-2 text-sm text-neutral-600 pb-4">
-              <h2
-                className={cn(
-                  "font-normal text-2xl tracking-wider text-start",
-
-                  poppins.className
-                )}
-              >
-                {company ?? "COMPANY"}
-              </h2>
-            </div>
-
-            {/* footer */}
-            <div className="flex flex-col items-center mb-1 gap-1 text-center text-xs">
-              <a
-                href={userProfile?.customUrl ?? userProfile?.websiteUrl ?? "#"}
-                target="_blank"
-                rel="noopener noreferrer"
-              >
-                <Image
-                  src="/assets/dark-ZwiftechLogo.png"
-                  alt="Zwiftech Logo"
-                  width={40}
-                  height={15}
-                  priority
-                  className="opacity-90"
+            <div className="w-full mx-auto mt-4">
+              {companies && companies.length > 0 && (
+                <CompanyShowcase
+                  companies={companies}
+                  profilePictureUrl={profilePictureUrl}
+                  firstName={firstName}
+                  lastName={lastName}
                 />
-              </a>
-
-              <span className="tracking-wide text-gray-800 text-[10px] ">
-                © {getCopyrightYear()} Zwiftech. All Rights Reserved.
-              </span>
+              )}
             </div>
           </div>
         </div>
       </div>
+      <footer className="flex flex-col items-center py-6 gap-1 text-center text-xs max-w-[480px] mx-auto">
+        <a
+          href={userProfile?.customUrl ?? userProfile?.websiteUrl ?? "#"}
+          target="_blank"
+          rel="noopener noreferrer"
+        >
+          <Image
+            src="/assets/light-ZwiftechLogo.png"
+            alt="Zwiftech Logo"
+            width={40}
+            height={15}
+            priority
+            className="opacity-90"
+          />
+        </a>
+        <span className="tracking-wide text-gray-300 text-[10px]">
+          © {getCopyrightYear()} Zwiftech. All Rights Reserved.
+        </span>
+      </footer>
     </div>
   );
 };

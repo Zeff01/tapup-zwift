@@ -1,7 +1,6 @@
 "use client";
 import { Card } from "@/types/types";
 import Image from "next/image";
-import { useState } from "react";
 import { motion } from "framer-motion";
 
 interface CompanyShowcaseProps {
