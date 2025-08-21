@@ -30,7 +30,7 @@ const Contact = () => {
     <section className="max-w-4xl w-full mx-auto p-6 text-center">
       <h2 className="text-4xl font-bold ">Contact Us</h2>
       <p className="text-placeholder-input text-justify md:text-center text-sm md:text-lg dark:text-offWhiteTemplate mt-4">
-        We value your interest nd involvement in TapUp Community. Whether you
+        We value your interest and involvement in TapUp Community. Whether you
         have a questions, need support, or want to get more involved, we are
         here to help. Below are the ways you can reach out to us directly or
         stay connected through our updates.

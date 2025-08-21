@@ -1,7 +1,7 @@
 const policy = {
   title: "Privacy Policy",
   description: `
-Welcome to TapUp (we," "our," "us"). At TapUp, we are committed to protecting your privacy and ensuring the security of your personal information. This Privacy Policy outlines how we collect, use, disclose, and safeguard your information when you visit our website, https://www.tapup.tech/ (the "Site"), or use our services. By accessing or using our Site, you agree to the terms of this Privacy Policy. If you do not agree with these terms, please refrain from using the Site.
+Welcome to TapUp ("we," "our," "us"). At TapUp, we are committed to protecting your privacy and ensuring the security of your personal information. This Privacy Policy outlines how we collect, use, disclose, and safeguard your information when you visit our website, https://www.tapup.tech/ (the "Site"), or use our services. By accessing or using our Site, you agree to the terms of this Privacy Policy. If you do not agree with these terms, please refrain from using the Site.
 
 We collect various types of information to provide and improve our services. This includes personal information such as your name, email address, phone number, and payment details, which you provide when using our services. Additionally, we collect usage data, such as your IP address, browser type, pages visited, and device information, to better understand how you interact with the Site. We also use cookies and similar tracking technologies to enhance your experience and analyze Site traffic. These technologies help us personalize content, remember your preferences, and improve the overall functionality of the Site.
 

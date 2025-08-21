@@ -43,6 +43,7 @@ const Template15 = ({
   viberUrl,
   tiktokUrl,
   customUrl,
+  companies,
 }: Card) => {
   const userProfile = {
     id,
@@ -57,7 +58,7 @@ const Template15 = ({
   };
 
   return (
-    <div className="min-h-screen bg-[#011923] flex flex-col items-center py-2 px-1 relative overflow-hidden">
+    <div className="min-h-screen bg-[#011923] flex flex-col items-center justify-between py-2 px-1 relative overflow-hidden">
       <div className="max-w-[480px] mx-auto flex flex-col w-full">
         {/* === Profile and Cover Section === */}
         <section
@@ -72,7 +73,7 @@ const Template15 = ({
             <div className="w-32 h-32 rounded-full bg-[#9A3A1975] opacity-80 blur-2xl" />
           </div>
           <img
-            src={coverPhotoUrl}
+            src={coverPhotoUrl || "/assets/template1coverphoto.png"}
             alt="Cover"
             className="object-cover w-full h-32 md:h-36 rounded-t-2xl shadow-lg"
           />
@@ -87,11 +88,17 @@ const Template15 = ({
           {/* Profile Image - centered and overlapping */}
           <div className="absolute left-1/2 -bottom-14 transform -translate-x-1/2 z-20">
             <div className="w-28 h-28 rounded-full border-4 border-[#7dd3fc] overflow-hidden bg-[#222]">
-              <img
-                src={profilePictureUrl}
-                alt="Profile"
-                className="object-cover w-full h-full"
-              />
+              {profilePictureUrl ? (
+                <img
+                  src={profilePictureUrl}
+                  alt="Profile"
+                  className="object-cover w-full h-full"
+                />
+              ) : (
+                <div className="bg-neutral-700 w-full h-full rounded-full flex items-center justify-center">
+                  <span className="text-white font-bold text-xl">HW</span>
+                </div>
+              )}
             </div>
           </div>
         </section>
@@ -99,7 +106,7 @@ const Template15 = ({
         {/* === Card Section === */}
         <section
           aria-label="Card Section"
-          className="w-full max-w-md mt-8 relative flex flex-col items-center px-2 sm:px-6"
+          className="w-full max-w-md mt-8 relative flex flex-col items-center "
         >
           {/* Blue circle - left side of Contacts */}
           <div
@@ -117,178 +124,204 @@ const Template15 = ({
             <div className="w-24 h-24 rounded-full bg-indigo-500 opacity-40 blur-2xl" />
           </div>
 
-          <h1 className="text-2xl font-bold text-white text-center">
-            {prefix && `${prefix}. `}
-            {firstName}
-            {middleName && ` ${middleName}`}
-            {lastName && ` ${lastName}`}
-            {suffix && `, ${suffix}`}
-          </h1>
+          <div className="w-full flex flex-col items-center px-2 sm:px-6">
+            <h1 className="text-2xl font-bold text-white text-center">
+              {prefix && `${prefix}. `}
+              {firstName}
+              {middleName && ` ${middleName}`}
+              {lastName && ` ${lastName}`}
+              {suffix && `, ${suffix}`}
+            </h1>
 
-          <p className="text-base text-white font-medium mt-1 mb-5 text-center">
-            {position} {company && `@ ${company}`}
-          </p>
+            <p className="text-base text-white font-medium mt-1 mb-5 text-center">
+              {position} {company && `@ ${company}`}
+            </p>
 
-          <div className="flex gap-2 mb-5">
-            <Link
-              href={`tel:${number}`}
-              className="w-11 h-11 flex items-center justify-center rounded-full bg-[#122b3a] border border-[#38bdf8] hover:bg-[#19384a] hover:border-[#7dd3fc] transition duration-200"
-              title="Call"
-            >
-              <MdOutlinePhone size={20} className="text-[#7dd3fc]" />
-            </Link>
-            <Link
-              href={`mailto:${email}`}
-              className="w-11 h-11 flex items-center justify-center rounded-full bg-[#122b3a] border border-[#38bdf8] hover:bg-[#19384a] hover:border-[#7dd3fc] transition duration-200"
-              title="Email"
-            >
-              <MdOutlineMailOutline size={20} className="text-[#7dd3fc]" />
-            </Link>
-            <button
-              type="button"
-              onClick={() => downloadVCard(userProfile)}
-              className="w-11 h-11 flex items-center justify-center rounded-full bg-[#122b3a] border border-[#38bdf8] hover:bg-[#19384a] hover:border-[#7dd3fc] transition duration-200"
-              title="Save Contact"
-            >
-              <MdOutlineBookmarkBorder size={20} className="text-[#7dd3fc]" />
-            </button>
-          </div>
+            <div className="flex gap-2 mb-5">
+              <Link
+                href={`tel:${number}`}
+                className="w-11 h-11 flex items-center justify-center rounded-full bg-[#122b3a] border border-[#38bdf8] hover:bg-[#19384a] hover:border-[#7dd3fc] transition duration-200"
+                title="Call"
+              >
+                <MdOutlinePhone size={20} className="text-[#7dd3fc]" />
+              </Link>
+              <Link
+                href={`mailto:${email}`}
+                className="w-11 h-11 flex items-center justify-center rounded-full bg-[#122b3a] border border-[#38bdf8] hover:bg-[#19384a] hover:border-[#7dd3fc] transition duration-200"
+                title="Email"
+              >
+                <MdOutlineMailOutline size={20} className="text-[#7dd3fc]" />
+              </Link>
+              <button
+                type="button"
+                onClick={() => downloadVCard(userProfile)}
+                className="w-11 h-11 flex items-center justify-center rounded-full bg-[#122b3a] border border-[#38bdf8] hover:bg-[#19384a] hover:border-[#7dd3fc] transition duration-200"
+                title="Save Contact"
+              >
+                <MdOutlineBookmarkBorder size={20} className="text-[#7dd3fc]" />
+              </button>
+            </div>
 
-          {/* Social Icons */}
-          <div className="flex flex-wrap gap-2 justify-center mb-6 max-w-xs">
-            {[
-              { url: facebookUrl, icon: LuFacebook, href: facebookUrl },
-              { url: instagramUrl, icon: LuInstagram, href: instagramUrl },
-              { url: linkedinUrl, icon: LuLinkedin, href: linkedinUrl },
-              { url: websiteUrl, icon: LuGlobe, href: websiteUrl },
-              { url: twitterUrl, icon: LuTwitter, href: twitterUrl },
-              { url: youtubeUrl, icon: LuYoutube, href: youtubeUrl },
-              {
-                url: whatsappNumber,
-                icon: FaWhatsapp,
-                href: `https://wa.me/${whatsappNumber}`,
-              },
-              { url: skypeInviteUrl, icon: FaSkype, href: skypeInviteUrl },
-              { url: viberUrl, icon: FaViber, href: viberUrl },
-              { url: tiktokUrl, icon: FaTiktok, href: tiktokUrl },
-            ]
-              .filter((social) => social.url)
-              .map((social, index) => {
-                const IconComponent = social.icon;
-                return (
-                  <a
-                    key={index}
-                    href={social.href}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className="bg-[#1a425b] p-2 rounded-full transition"
-                  >
-                    <IconComponent
-                      className="text-lg"
-                      style={{ color: "#7eabc2" }}
-                    />
-                  </a>
-                );
-              })}
+            {/* Social Icons */}
+            <div className="flex flex-wrap gap-2 justify-center mb-6 max-w-xs">
+              {[
+                { url: facebookUrl, icon: LuFacebook, href: facebookUrl },
+                { url: instagramUrl, icon: LuInstagram, href: instagramUrl },
+                { url: linkedinUrl, icon: LuLinkedin, href: linkedinUrl },
+                { url: websiteUrl, icon: LuGlobe, href: websiteUrl },
+                { url: twitterUrl, icon: LuTwitter, href: twitterUrl },
+                { url: youtubeUrl, icon: LuYoutube, href: youtubeUrl },
+                {
+                  url: whatsappNumber,
+                  icon: FaWhatsapp,
+                  href: `https://wa.me/${whatsappNumber}`,
+                },
+                { url: skypeInviteUrl, icon: FaSkype, href: skypeInviteUrl },
+                { url: viberUrl, icon: FaViber, href: viberUrl },
+                { url: tiktokUrl, icon: FaTiktok, href: tiktokUrl },
+              ]
+                .filter((social) => social.url)
+                .map((social, index) => {
+                  const IconComponent = social.icon;
+                  return (
+                    <a
+                      key={index}
+                      href={social.href}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="bg-[#1a425b] p-2 rounded-full transition"
+                    >
+                      <IconComponent
+                        className="text-lg"
+                        style={{ color: "#7eabc2" }}
+                      />
+                    </a>
+                  );
+                })}
+            </div>
           </div>
 
           {/* === Contact Info Section === */}
-          <section
-            aria-label="Contact Information"
-            className="w-full mb-6 relative px-2 sm:px-6"
-          >
-            <h2 className="text-lg font-bold text-white mb-2">
-              Contact Information
-            </h2>
-            <div className="flex flex-col gap-2 text-gray-300">
-              <div className="flex items-center gap-2">
-                <a href={`mailto:${email}`}>
-                  {" "}
-                  <MdOutlineMailOutline className="text-[#7dd3fc]" />{" "}
-                </a>{" "}
-                <span>{email}</span>
-              </div>
-              <div className="flex items-center gap-2">
-                <a href={`tel:${number}`}>
-                  <MdOutlinePhone className="text-[#7dd3fc]" />{" "}
-                </a>{" "}
-                <span>{number}</span>
-              </div>
-            </div>
-          </section>
-
-          {/* === Company Overview Section === */}
-          {companyBackground && (
+          {(email || number) && (
             <section
-              aria-label="Company Overview"
-              className="w-full mb-6 px-2 sm:px-6"
+              aria-label="Contact Information"
+              className="w-full mb-6 relative px-2 sm:px-6"
             >
               <h2 className="text-lg font-bold text-white mb-2">
-                Company Overview
+                Contact Information
               </h2>
-              <p className="text-gray-300 text-base">{companyBackground}</p>
+              <div className="flex flex-col gap-2 text-gray-300">
+                {email && (
+                  <div className="flex items-center gap-2">
+                    <a href={`mailto:${email}`}>
+                      {" "}
+                      <MdOutlineMailOutline className="text-[#7dd3fc]" />{" "}
+                    </a>{" "}
+                    <span>{email}</span>
+                  </div>
+                )}
+                {number && (
+                  <div className="flex items-center gap-2">
+                    <a href={`tel:${number}`}>
+                      <MdOutlinePhone className="text-[#7dd3fc]" />{" "}
+                    </a>{" "}
+                    <span>{number}</span>
+                  </div>
+                )}
+              </div>
             </section>
           )}
 
-          {/* === Services Section === */}
-          {(serviceDescription ||
-            (servicePhotos && servicePhotos.length > 0)) && (
-            <section aria-label="Our Services" className="w-full px-2 sm:px-6">
-              <h2 className="text-lg font-bold text-white mb-4">
-                Our Services
-              </h2>
-              {serviceDescription && (
-                <p className="text-gray-300 mb-4">{serviceDescription}</p>
-              )}
-              {servicePhotos && servicePhotos.length > 0 && (
-                <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-                  {servicePhotos.map((photo, idx) => (
-                    <div key={idx} className="w-full flex justify-center">
-                      <img
-                        src={photo}
-                        alt={`Service Photo ${idx + 1}`}
-                        className="rounded-2xl object-cover w-full h-44 bg-white"
-                        style={{
-                          minWidth: 0,
-                          minHeight: 176,
-                          maxWidth: "100%",
-                        }}
-                      />
-                    </div>
-                  ))}
-                </div>
-              )}
-            </section>
-          )}
+          {companies?.length > 0 &&
+            companies.map((company, idx) => (
+              <div key={idx} className="w-full pb-4">
+                <h2 className="font-bold text-lg text-white mb-4 mt-2 text-center">
+                  {company.company}
+                </h2>
 
-          {/* === Footer Section === */}
-          <footer className="w-full max-w-md mx-auto mt-3  text-center text-gray-400 text-sm relative px-2 sm:px-6">
-            <div className="font-semibold text-base text-white mb-1 relative z-10">
-              {company}
-            </div>
-            <div className="flex flex-col mt-8 items-center  gap-1 text-center text-xs">
-              <a
-                href={userProfile?.customUrl ?? userProfile?.websiteUrl ?? "#"}
-                target="_blank"
-                rel="noopener noreferrer"
-              >
-                <Image
-                  src="/assets/light-ZwiftechLogo.png"
-                  alt="Zwiftech Logo"
-                  width={40}
-                  height={15}
-                  priority
-                  className="opacity-90"
-                />
-              </a>
+                {/* === Company Overview Section === */}
+                {company.companyBackground && (
+                  <div
+                    aria-label="Company Overview"
+                    className="mb-6 px-2 sm:px-6"
+                  >
+                    <h2 className="text-base font-semibold text-white mb-2">
+                      Company Overview
+                    </h2>
+                    <p className="text-gray-300 text-base leading-relaxed break-words whitespace-pre-line">
+                      {company.companyBackground}
+                    </p>
+                  </div>
+                )}
 
-              <span className="tracking-wide text-gray-400 text-[10px] ">
-                © {getCopyrightYear()} Zwiftech. All Rights Reserved.
-              </span>
-            </div>
-          </footer>
+                {/* === Services Section === */}
+                {(company.serviceDescription ||
+                  (company.servicePhotos &&
+                    company.servicePhotos.length > 0)) && (
+                  <section
+                    aria-label="Our Services"
+                    className="w-full px-2 sm:px-6"
+                  >
+                    <h2 className="text-base font-semibold text-white mb-4">
+                      Our Services
+                    </h2>
+                    {company.serviceDescription && (
+                      <p className="text-gray-300 mb-4 leading-relaxed break-words whitespace-pre-line">
+                        {company.serviceDescription}
+                      </p>
+                    )}
+                    {company.servicePhotos &&
+                      company.servicePhotos.length > 0 && (
+                        <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                          {company.servicePhotos.map((photo, idx) => (
+                            <div
+                              key={idx}
+                              className="w-full flex justify-center"
+                            >
+                              <img
+                                src={photo}
+                                alt={`Service Photo ${idx + 1}`}
+                                className="rounded-2xl object-cover w-full h-44 bg-white"
+                                style={{
+                                  minWidth: 0,
+                                  minHeight: 176,
+                                  maxWidth: "100%",
+                                }}
+                              />
+                            </div>
+                          ))}
+                        </div>
+                      )}
+                  </section>
+                )}
+              </div>
+            ))}
         </section>
       </div>
+
+      {/* === Footer Section === */}
+      <footer className="w-full max-w-md mx-auto mt-3  text-center text-gray-400 text-sm relative px-2 sm:px-6">
+        <div className="flex flex-col mt-8 items-center  gap-1 text-center text-xs">
+          <a
+            href={userProfile?.customUrl ?? userProfile?.websiteUrl ?? "#"}
+            target="_blank"
+            rel="noopener noreferrer"
+          >
+            <Image
+              src="/assets/light-ZwiftechLogo.png"
+              alt="Zwiftech Logo"
+              width={40}
+              height={15}
+              priority
+              className="opacity-90"
+            />
+          </a>
+
+          <span className="tracking-wide text-gray-400 text-[10px] ">
+            © {getCopyrightYear()} Zwiftech. All Rights Reserved.
+          </span>
+        </div>
+      </footer>
     </div>
   );
 };

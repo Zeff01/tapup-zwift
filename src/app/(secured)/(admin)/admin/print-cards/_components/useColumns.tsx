@@ -1,21 +1,22 @@
-import { ColumnDef } from "@tanstack/react-table";
-import { PrintCardsInfo } from "./PrintCardsTable";
-import { Checkbox } from "@/components/ui/checkbox";
-import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
-import { useMemo } from "react";
-import { MoreHorizontal, Printer, PencilLine } from "lucide-react";
-import { FaRegAddressCard } from "react-icons/fa6";
+import { Button } from "@/components/ui/button";
+import { Checkbox } from "@/components/ui/checkbox";
 import {
   DropdownMenu,
-  DropdownMenuTrigger,
   DropdownMenuContent,
+  DropdownMenuItem,
   DropdownMenuLabel,
   DropdownMenuSeparator,
-  DropdownMenuItem,
+  DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
-import DeleteDialog from "./DeleteDialog";
 import { UserState } from "@/types/types";
+import { ColumnDef } from "@tanstack/react-table";
+import { MoreHorizontal, PencilLine, Printer } from "lucide-react";
+import { useRouter } from "next/navigation";
+import { useMemo } from "react";
+import { FaRegAddressCard } from "react-icons/fa6";
+import DeleteDialog from "./DeleteDialog";
+import { PrintCardsInfo } from "./PrintCardsTable";
 
 interface CreateColumnsProps {
   setSelectedCard: (card: PrintCardsInfo | null) => void;
@@ -32,6 +33,8 @@ export const useCreateColumns = ({
   setIsPrintModalOpen,
   user,
 }: CreateColumnsProps) => {
+  const router = useRouter();
+
   const columns = useMemo<ColumnDef<PrintCardsInfo>[]>(
     () => [
       {
@@ -162,11 +165,14 @@ export const useCreateColumns = ({
                     <Printer size={15} />
                   </DropdownMenuItem>
 
-                  <DropdownMenuItem className="flex items-center gap-2 justify-between focus:bg-gray-200 dark:focus:bg-accent">
+                  <DropdownMenuItem
+                    onClick={() => router.push(`/cards/update/${card.id}`)}
+                    className="flex items-center gap-2 justify-between focus:bg-gray-200 dark:focus:bg-accent"
+                  >
                     <span>Edit</span>
                     <PencilLine size={15} />
                   </DropdownMenuItem>
-                  
+
                   <DropdownMenuItem
                     className="focus:bg-gray-200 dark:focus:bg-accent"
                     onSelect={(e) => e.preventDefault()}

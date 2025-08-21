@@ -45,6 +45,7 @@ import MultiStepProgress from "./MultiStepProgress";
 import SelectedTemplate from "./SelectedTemplate";
 import SocialLinksSelector from "./SocialLink";
 import LivePreviewSidebar from "./LivePreviewSidebar";
+import { PhoneInput } from "../ui/phone-input";
 
 interface SelectedLink {
   label: string;
@@ -434,13 +435,13 @@ const MultiStepFormUpdate = ({
   const handleNextStep = async (event: React.FormEvent) => {
     event.preventDefault();
     console.log("handleNextStep");
-    
+
     // Mark current step as completed
     setCompletedSteps((prev) => [
       ...prev.filter((s) => s !== currentStep),
       currentStep,
     ]);
-    
+
     // Move to next step without validation
     setCurrentStep((prev) => prev + 1);
   };
@@ -467,6 +468,13 @@ const MultiStepFormUpdate = ({
     methods.setValue(link.key, link.value);
   };
 
+  const handleRemoveLink = (linkKey: keyof z.infer<typeof editCardSchema>) => {
+    setSelectedLinks((prev) => prev.filter((link) => link.key !== linkKey));
+    methods.setValue(linkKey, "");
+
+    methods.clearErrors(linkKey);
+  };
+
   const handleInputChange = (key: string, value: string) => {
     setSelectedLinks((prev) =>
       prev.map((link) => (link.key === key ? { ...link, value } : link))
@@ -474,6 +482,9 @@ const MultiStepFormUpdate = ({
     // Update corresponding form field
     methods.setValue(key as keyof z.infer<typeof editCardSchema>, value);
   };
+
+  const selectedLinkKeys = selectedLinks.map((link) => link.key);
+
   return (
     <main
       className={`h-full transition-all duration-300 ease-in-out ${previewMinimized ? "lg:pr-16" : "lg:pr-96"}`}
@@ -731,6 +742,7 @@ const MultiStepFormUpdate = ({
                   <SocialLinksSelector
                     onAddLink={handleAddLink}
                     existingValues={methods.watch()}
+                    selectedLinkKeys={selectedLinkKeys}
                   />
                   <div className="mt-2">
                     {selectedLinks.map((link) => (
@@ -738,18 +750,38 @@ const MultiStepFormUpdate = ({
                         <span className="font-medium text-primary">
                           {link.label}
                         </span>
-                        <Input
-                          placeholder={
-                            link.key === "viberUrl" || link.key === "whatsappNumber"
-                              ? `Enter ${link.label} phone number`
-                              : `Enter ${link.label} URL`
-                          }
-                          value={link.value}
-                          onChange={(e) =>
-                            handleInputChange(link.key, e.target.value)
-                          }
-                          className="flex-1 text-primary bg-secondary"
-                        />
+                        <div className="flex gap-1">
+                          {link.key === "whatsappNumber" ||
+                          link.key === "viberUrl" ? (
+                            <PhoneInput
+                              defaultCountry="PH"
+                              placeholder={`Enter ${link.label} phone number`}
+                              value={link.value}
+                              onChange={(value) =>
+                                handleInputChange(link.key, value)
+                              }
+                              className="flex-1"
+                            />
+                          ) : (
+                            <Input
+                              value={link.value}
+                              onChange={(e) =>
+                                handleInputChange(link.key, e.target.value)
+                              }
+                              className="flex-1 text-primary bg-secondary"
+                            />
+                          )}
+
+                          <Button
+                            type="button"
+                            variant="destructive"
+                            onClick={() => handleRemoveLink(link.key)}
+                            className="hover:bg-red-800"
+                          >
+                            <IoMdClose />
+                          </Button>
+                        </div>
+
                         <span className="text-xs text-red-500">
                           {methods.formState.errors?.[
                             link.key as keyof typeof methods.formState.errors

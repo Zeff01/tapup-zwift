@@ -16,6 +16,183 @@ import {
 } from "react-icons/md";
 import { SiSkypeforbusiness } from "react-icons/si";
 import { SlSocialFacebook } from "react-icons/sl";
+import { useState } from "react";
+
+// Company Showcase Component for Template9
+const CompanyShowcase = ({
+  companies,
+  profilePictureUrl,
+  firstName,
+  lastName,
+}: {
+  companies?: Card["companies"];
+  profilePictureUrl?: string;
+  firstName?: string;
+  lastName?: string;
+}) => {
+  if (!companies || companies.length === 0) {
+    return null;
+  }
+
+  return (
+    <div className="space-y-6">
+      {companies.map((company, index) => (
+        <div
+          key={index}
+          className="bg-white rounded-2xl shadow-lg border border-gray-100 overflow-hidden hover:shadow-xl transition-all duration-300"
+        >
+          {/* Company Header */}
+          <div className="p-6 bg-gradient-to-r from-blue-50 via-indigo-50 to-purple-50 border-b border-gray-100">
+            <div className="flex items-center justify-between">
+              <div className="flex items-center space-x-4">
+                <div className="w-16 h-16 rounded-xl bg-gradient-to-br from-blue-500 to-indigo-600 flex items-center justify-center shadow-lg">
+                  <span className="text-white font-bold text-xl">
+                    {company.company?.charAt(0) || "C"}
+                  </span>
+                </div>
+                <div>
+                  <h3 className="text-xl font-bold text-gray-900 mb-1">
+                    {company.company}
+                  </h3>
+                  <p className="text-blue-600 font-medium">
+                    {company.position}
+                  </p>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          {/* Content */}
+          <div className="p-6 space-y-6">
+            {/* Company Background */}
+            {company.companyBackground && (
+              <div className="space-y-3">
+                <div className="flex items-center space-x-2">
+                  <div className="w-2 h-2 bg-blue-500 rounded-full"></div>
+                  <h4 className="text-lg font-semibold text-gray-900">
+                    Company Overview
+                  </h4>
+                </div>
+                <div className="pl-4 border-l-2 border-blue-100">
+                  <p className="text-gray-700 leading-relaxed">
+                    {company.companyBackground}
+                  </p>
+                </div>
+              </div>
+            )}
+
+            {/* Service Description */}
+            {company.serviceDescription && (
+              <div className="space-y-3">
+                <div className="flex items-center space-x-2">
+                  <div className="w-2 h-2 bg-indigo-500 rounded-full"></div>
+                  <h4 className="text-lg font-semibold text-gray-900">
+                    Services & Expertise
+                  </h4>
+                </div>
+                <div className="pl-4 border-l-2 border-indigo-100">
+                  <p className="text-gray-700 leading-relaxed">
+                    {company.serviceDescription}
+                  </p>
+                </div>
+              </div>
+            )}
+
+            {/* Service Photos */}
+            {Array.isArray(company.servicePhotos) &&
+              company.servicePhotos.length > 0 && (
+                <div className="space-y-3">
+                  <div className="flex items-center space-x-2">
+                    <div className="w-2 h-2 bg-purple-500 rounded-full"></div>
+                    <h4 className="text-lg font-semibold text-gray-900">
+                      Portfolio Gallery
+                    </h4>
+                  </div>
+                  <div className="pl-4">
+                    {company.servicePhotos.length === 1 ? (
+                      <div className="rounded-xl overflow-hidden shadow-lg">
+                        <Image
+                          src={company.servicePhotos[0]}
+                          alt={`${company.company} portfolio`}
+                          width={600}
+                          height={400}
+                          className="w-full h-auto object-cover hover:scale-105 transition-transform duration-300"
+                        />
+                      </div>
+                    ) : (
+                      <div className="grid grid-cols-2 gap-4">
+                        {company.servicePhotos.map((photo, photoIndex) => (
+                          <div
+                            key={photoIndex}
+                            className="rounded-xl overflow-hidden shadow-lg group relative"
+                          >
+                            <Image
+                              src={photo}
+                              alt={`${company.company} portfolio ${photoIndex + 1}`}
+                              width={300}
+                              height={200}
+                              className="w-full h-auto object-cover transition-all duration-300 group-hover:scale-110"
+                            />
+                            <div className="absolute inset-0 bg-gradient-to-t from-black/40 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
+                            <div className="absolute bottom-2 left-2 opacity-0 group-hover:opacity-100 transition-opacity duration-300">
+                              <span className="text-white text-xs font-medium bg-black/50 px-2 py-1 rounded-full">
+                                View {photoIndex + 1}
+                              </span>
+                            </div>
+                          </div>
+                        ))}
+                      </div>
+                    )}
+                  </div>
+                </div>
+              )}
+
+            {/* Contact Info */}
+            <div className="pt-4 border-t border-gray-100">
+              <div className="flex items-center justify-center space-x-4 text-sm text-gray-600">
+                <span className="flex items-center space-x-1">
+                  <svg
+                    className="w-4 h-4 text-blue-500"
+                    fill="none"
+                    stroke="currentColor"
+                    viewBox="0 0 24 24"
+                  >
+                    <path
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                      strokeWidth={2}
+                      d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"
+                    />
+                  </svg>
+                  <span>
+                    {firstName} {lastName}
+                  </span>
+                </span>
+                <span className="w-1 h-1 bg-gray-300 rounded-full"></span>
+                <span className="flex items-center space-x-1">
+                  <svg
+                    className="w-4 h-4 text-indigo-500"
+                    fill="none"
+                    stroke="currentColor"
+                    viewBox="0 0 24 24"
+                  >
+                    <path
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                      strokeWidth={2}
+                      d="M21 13.255A23.931 23.931 0 0112 15c-3.183 0-6.22-.62-9-1.745M16 6V4a2 2 0 00-2-2h-4a2 2 0 00-2 2v2m4 6h.01M5 20h14a2 2 0 002-2V8a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"
+                    />
+                  </svg>
+                  <span>{company.position}</span>
+                </span>
+              </div>
+            </div>
+          </div>
+        </div>
+      ))}
+    </div>
+  );
+};
 
 const Template9 = ({
   id,
@@ -23,9 +200,7 @@ const Template9 = ({
   coverPhotoUrl,
   position,
   company,
-  companyBackground,
-  serviceDescription,
-  servicePhotos,
+  companies,
   firstName,
   lastName,
   email,
@@ -52,212 +227,210 @@ const Template9 = ({
     customUrl,
   };
 
-  console.log(websiteUrl);
-
   return (
-    <div className="min-h-screen bg-white dark:bg-black flex flex-col ">
-      <div className=" h-96 relative   ">
-        <div className="absolute flex m-1  top-0 right-0 ">
-          <div className="flex gap-2">
-            <a
-              href={`tel:${number}`}
-              className="p-1 rounded-full bg-white text-black border border-neutral-300 shadow hover:bg-black hover:text-white transition-colors duration-200"
-            >
-              <MdOutlinePhone size={18} />
-            </a>
-
-            <a
-              href={`mailto:${email}`}
-              className="p-1 rounded-full bg-white text-black border border-neutral-300 shadow hover:bg-black hover:text-white transition-colors duration-200"
-            >
-              <MdOutlineMailOutline size={18} />
-            </a>
-
-            <button
-              onClick={() => downloadVCard(userProfile)}
-              className="p-1 rounded-full bg-white text-black border border-neutral-300 shadow hover:bg-black hover:text-white transition-colors duration-200"
-            >
-              <MdOutlineBookmarkBorder size={18} />
-            </button>
-          </div>
-        </div>
-
-        <div className="">
-          {coverPhotoUrl ? (
-            <Image
-              src={coverPhotoUrl}
-              alt="Cover Image"
-              width={400}
-              height={200}
-              className="mx-auto w-full object-cover overflow-hidden"
-            />
-          ) : (
-            <Image
-              src={"/assets/template9coverphoto.png"}
-              alt="Cover Image"
-              width={400}
-              height={200}
-              className="mx-auto"
-            />
-          )}
-        </div>
-        <div className="absolute  z-20 top-[118px] left-1/2 transform -translate-x-1/2 ">
-          {profilePictureUrl ? (
-            <div className=" rounded-full mx-auto overflow-hidden">
-              <Image
-                src={profilePictureUrl}
-                alt="Profile Image"
-                width={80}
-                height={80}
-                className="rounded-full w-24 h-24"
-              />
-            </div>
-          ) : (
-            <div className=" w-28 h-28 rounded-full mx-auto flex items-center justify-center">
-              <Image
-                src={"/assets/template10samplepic.png"}
-                alt="Profile Image"
-                width={80}
-                height={80}
-                className="rounded-full w-24 h-24"
-              />
-            </div>
-          )}
-        </div>
-        <div className="text-center pt-16  absolute bottom-0 w-full space-y-1 bg-white rounded-t-3xl">
-          {firstName ? (
-            <h1 className="font-semibold text-2xl text-neutral-900 tracking-wider  capitalize">
-              {firstName + " " + lastName}
-            </h1>
-          ) : (
-            <h1 className="text-xl font-bold  ">Hussain Watkins</h1>
-          )}
-
-          <p className="text-lg  font-normal text-neutral-700">
-            {position ?? "Chief Technology Officer"}
-          </p>
-
-          <div className="flex items-center font-light text-sm text-neutral-600 justify-center gap-x-2">
-            <p>{email ?? "H.Watkins@gmail.com"}</p>
-            <span> |</span>
-            <p>{number ?? +639123456789}</p>
-          </div>
-          <div className=" flex items-center gap-x-4 py-4 text-2xl text-neutral-700 h-16 justify-center">
-            {facebookUrl && (
-              <a href={facebookUrl} target="_blank" rel="noopener noreferrer">
-                <SlSocialFacebook size={24} />
-              </a>
-            )}
-            {twitterUrl && (
-              <a href={twitterUrl} target="_blank" rel="noopener noreferrer">
-                <FaXTwitter size={24} />
-              </a>
-            )}
-            {youtubeUrl && (
-              <a href={youtubeUrl} target="_blank" rel="noopener noreferrer">
-                <FiYoutube size={24} />
-              </a>
-            )}
-            {instagramUrl && (
-              <a href={instagramUrl} target="_blank" rel="noopener noreferrer">
-                <FaInstagram size={24} />
-              </a>
-            )}
-            {linkedinUrl && (
-              <a href={linkedinUrl} target="_blank" rel="noopener noreferrer">
-                <FaLinkedin size={24} />
-              </a>
-            )}
-            {whatsappNumber && (
+    <div className=" bg-white flex flex-col ">
+      <div className="min-h-screen max-w-[480px] mx-auto">
+        <div className="h-96 relative">
+          <div className="absolute flex m-1 top-1 right-1 ">
+            <div className="flex gap-2">
               <a
-                href={`https://wa.me/${whatsappNumber}`}
-                target="_blank"
-                rel="noopener noreferrer"
+                href={`tel:${number}`}
+                className="p-1 rounded-full bg-white text-black border border-neutral-300 shadow hover:bg-black hover:text-white transition-colors duration-200"
               >
-                <FaWhatsapp size={24} />
+                <MdOutlinePhone size={18} />
               </a>
-            )}
-            {skypeInviteUrl && (
+
               <a
-                href={`skype:${skypeInviteUrl}?chat`}
-                target="_blank"
-                rel="noopener noreferrer"
+                href={`mailto:${email}`}
+                className="p-1 rounded-full bg-white text-black border border-neutral-300 shadow hover:bg-black hover:text-white transition-colors duration-200"
               >
-                <SiSkypeforbusiness size={24} />
+                <MdOutlineMailOutline size={18} />
               </a>
-            )}
-            {websiteUrl && (
-              <a href={websiteUrl} target="_blank" rel="noopener noreferrer">
-                <GoGlobe size={24} />
-              </a>
+
+              <button
+                onClick={() => downloadVCard(userProfile)}
+                className="p-1 rounded-full bg-white text-black border border-neutral-300 shadow hover:bg-black hover:text-white transition-colors duration-200"
+              >
+                <MdOutlineBookmarkBorder size={18} />
+              </button>
+            </div>
+          </div>
+
+          <div className="">
+            {coverPhotoUrl ? (
+              <Image
+                src={coverPhotoUrl}
+                alt="Cover Image"
+                width={400}
+                height={200}
+                className="mx-auto w-full object-cover overflow-hidden"
+              />
+            ) : (
+              <Image
+                src={"/assets/template9coverphoto.png"}
+                alt="Cover Image"
+                width={400}
+                height={200}
+                className="mx-auto"
+              />
             )}
           </div>
-        </div>
-      </div>
-      <div className=" flex flex-col gap-y-6 pt-6 bg-white px-5 flex-grow border-t border-t-neutral-300 text-neutral-900">
-        <h2 className="font-semibold text-3xl mx-auto w-full  tracking-wider  text-center">
-          {company ?? "COMPANY"}
-        </h2>
-        {companyBackground && (
-          <div>
-            <h1 className="font-semibold tracking-wider">Company Overview</h1>
-            <p className="font-light text-sm text-neutral-500 pt-2">
-              {companyBackground}
-            </p>
-          </div>
-        )}
-        {(serviceDescription || (servicePhotos && servicePhotos.length > 0)) && (
-          <div>
-            <h1 className="font-semibold tracking-wider">Our Services</h1>
-            {serviceDescription && (
-              <p className="font-light text-sm text-neutral-500 pt-2">
-                {serviceDescription}
-              </p>
-            )}
-          </div>
-        )}
-        {servicePhotos && servicePhotos.length > 0 && (
-          <div className="grid grid-cols-2 gap-4 mt-6  ">
-            {servicePhotos.map((photo, index) => (
-              <div key={index} className="col-span-1">
+          <div className="absolute  z-20 top-[118px] left-1/2 transform -translate-x-1/2 ">
+            {profilePictureUrl ? (
+              <div className=" rounded-full mx-auto overflow-hidden">
                 <Image
-                  src={photo}
-                  alt={`Service Photo ${index + 1}`}
-                  width={300}
-                  height={300}
-                  layout="responsive"
-                  className="rounded-2xl object-contain w-full  "
+                  src={profilePictureUrl}
+                  alt="Profile Image"
+                  width={80}
+                  height={80}
+                  className="rounded-full w-24 h-24"
                 />
               </div>
-            ))}
+            ) : (
+              <div className=" w-28 h-28 rounded-full mx-auto flex items-center justify-center">
+                <Image
+                  src={"/assets/template10samplepic.png"}
+                  alt="Profile Image"
+                  width={80}
+                  height={80}
+                  className="rounded-full w-24 h-24"
+                />
+              </div>
+            )}
           </div>
-        )}
+          <div className="text-center pt-16  absolute bottom-0 w-full space-y-1 bg-white rounded-t-3xl">
+            {firstName ? (
+              <h1 className="font-semibold text-2xl text-neutral-900 tracking-wider  capitalize">
+                {firstName + " " + lastName}
+              </h1>
+            ) : (
+              <h1 className="text-xl font-bold  ">Hussain Watkins</h1>
+            )}
 
-        {/* footer */}
-        <h2 className="font-semibold text-xl mx-auto w-full  tracking-wider  text-center">
-          {company ?? "COMPANY"}
-        </h2>
-        <div className="flex flex-col mt-3 mb-1 items-center gap-1 text-center text-xs">
-          <a
-            href={userProfile?.customUrl ?? userProfile?.websiteUrl ?? "#"}
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            <Image
-              src="/assets/dark-ZwiftechLogo.png"
-              alt="Zwiftech Logo"
-              width={40}
-              height={15}
-              priority
-              className="opacity-90"
-            />
-          </a>
+            <p className="text-lg  font-normal text-neutral-700">
+              {position ?? "Chief Technology Officer"}
+            </p>
 
-          <span className="tracking-wide text-gray-800 text-[10px] ">
-            © {getCopyrightYear()} Zwiftech. All Rights Reserved.
-          </span>
+            <div className="flex items-center font-light text-sm text-neutral-600 justify-center gap-x-2">
+              <input
+                type="text"
+                value={email ?? "H.Watkins@gmail.com"}
+                readOnly
+                className="max-w-[120px] truncate bg-transparent border-none outline-none cursor-pointer text-center font-light text-sm text-neutral-600"
+                onClick={(e) => {
+                  e.currentTarget.select();
+                  navigator.clipboard.writeText(e.currentTarget.value);
+                }}
+              />
+              <span>|</span>
+              <input
+                type="text"
+                value={String(number ?? +639123456789)}
+                readOnly
+                className="max-w-[120px] truncate bg-transparent border-none outline-none cursor-pointer text-center font-light text-sm text-neutral-600"
+                onClick={(e) => {
+                  e.currentTarget.select();
+                  navigator.clipboard.writeText(e.currentTarget.value);
+                }}
+              />
+            </div>
+            <div className=" flex items-center gap-x-4 py-4 text-2xl text-neutral-700 h-16 justify-center">
+              {facebookUrl && (
+                <a href={facebookUrl} target="_blank" rel="noopener noreferrer">
+                  <SlSocialFacebook size={24} />
+                </a>
+              )}
+              {twitterUrl && (
+                <a href={twitterUrl} target="_blank" rel="noopener noreferrer">
+                  <FaXTwitter size={24} />
+                </a>
+              )}
+              {youtubeUrl && (
+                <a href={youtubeUrl} target="_blank" rel="noopener noreferrer">
+                  <FiYoutube size={24} />
+                </a>
+              )}
+              {instagramUrl && (
+                <a
+                  href={instagramUrl}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                >
+                  <FaInstagram size={24} />
+                </a>
+              )}
+              {linkedinUrl && (
+                <a href={linkedinUrl} target="_blank" rel="noopener noreferrer">
+                  <FaLinkedin size={24} />
+                </a>
+              )}
+              {whatsappNumber && (
+                <a
+                  href={`https://wa.me/${whatsappNumber}`}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                >
+                  <FaWhatsapp size={24} />
+                </a>
+              )}
+              {skypeInviteUrl && (
+                <a
+                  href={`skype:${skypeInviteUrl}?chat`}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                >
+                  <SiSkypeforbusiness size={24} />
+                </a>
+              )}
+              {websiteUrl && (
+                <a href={websiteUrl} target="_blank" rel="noopener noreferrer">
+                  <GoGlobe size={24} />
+                </a>
+              )}
+            </div>
+          </div>
+        </div>
+        <div className=" flex flex-col gap-y-6 pt-6 bg-white px-3 flex-grow border-t border-t-neutral-300 text-neutral-900">
+          <h2 className="text-lg font-bold mb-1">Professional Portfolio</h2>
+          <p className="text-sm">
+            Below you&#39;ll find details about my professional experience and
+            the companies I&#39;ve worked with. Each entry highlights my role,
+            responsibilities, and the services offered.
+          </p>
+
+          <div className="w-full mx-auto">
+            {/* Company Experience Section */}
+            {companies && companies.length > 0 && (
+              <CompanyShowcase
+                companies={companies}
+                profilePictureUrl={profilePictureUrl}
+                firstName={firstName}
+                lastName={lastName}
+              />
+            )}
+          </div>
         </div>
       </div>
+      <footer className="flex flex-col mt-3 mb-1 items-center gap-1 text-center text-xs py-4 w-full ">
+        <a
+          href={userProfile?.customUrl ?? userProfile?.websiteUrl ?? "#"}
+          target="_blank"
+          rel="noopener noreferrer"
+        >
+          <Image
+            src="/assets/dark-ZwiftechLogo.png"
+            alt="Zwiftech Logo"
+            width={40}
+            height={15}
+            priority
+            className="opacity-90"
+          />
+        </a>
+
+        <span className="tracking-wide text-gray-800 text-[10px] ">
+          © {getCopyrightYear()} Zwiftech. All Rights Reserved.
+        </span>
+      </footer>
     </div>
   );
 };

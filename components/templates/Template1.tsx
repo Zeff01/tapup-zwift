@@ -88,10 +88,8 @@ const Template1 = ({
             {firstName ? `${firstName} ${lastName}` : "Hussain Watkins"}
           </h1>
 
-          <p className="text-gray-500 text-xs">
-            {email ?? "H.Watkins@gmail.com"}
-          </p>
-          <p className="text-gray-500 text-xs">{number ?? "+639123456789"}</p>
+          <p className="text-gray-500 text-xs">{email}</p>
+          <p className="text-gray-500 text-xs">{number}</p>
         </div>
 
         {/* CTA */}
@@ -198,7 +196,20 @@ const Template1 = ({
                 </div>
               )}
 
-              {(c.serviceDescription || (Array.isArray(c.servicePhotos) && c.servicePhotos.length > 0)) && (
+              {c.serviceDescription && (
+                <div className="mt-4">
+                  <h3 className="text-sm font-semibold text-gray-700">
+                    Our Services
+                  </h3>
+                  <p className="text-xs text-gray-600 mt-2 leading-relaxed break-words whitespace-pre-line max-w-full">
+                    {c.serviceDescription}
+                  </p>
+                </div>
+              )}
+
+              {(c.serviceDescription ||
+                (Array.isArray(c.servicePhotos) &&
+                  c.servicePhotos.length > 0)) && (
                 <div className="mt-4">
                   <h3 className="text-sm font-semibold text-gray-700">
                     Our Services
@@ -208,21 +219,22 @@ const Template1 = ({
                       {c.serviceDescription}
                     </p>
                   )}
-                  {Array.isArray(c.servicePhotos) && c.servicePhotos.length > 0 && (
-                    <div className="grid grid-cols-2 gap-4 mt-4">
-                      {c.servicePhotos.map((photo, i) => (
-                        <Image
-                          key={i}
-                          src={photo}
-                          alt={`Service Photo ${i + 1}`}
-                          width={300}
-                          height={300}
-                          layout="responsive"
-                          className="rounded-md object-cover w-full "
-                        />
-                      ))}
-                    </div>
-                  )}
+                  {Array.isArray(c.servicePhotos) &&
+                    c.servicePhotos.length > 0 && (
+                      <div className="grid grid-cols-2 gap-4 mt-4">
+                        {c.servicePhotos.map((photo, i) => (
+                          <Image
+                            key={i}
+                            src={photo}
+                            alt={`Service Photo ${i + 1}`}
+                            width={300}
+                            height={300}
+                            layout="responsive"
+                            className="rounded-md object-cover w-full "
+                          />
+                        ))}
+                      </div>
+                    )}
                 </div>
               )}
             </div>
