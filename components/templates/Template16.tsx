@@ -1,19 +1,13 @@
-import { downloadVCard, getCopyrightYear } from "@/lib/utils";
+import { getCopyrightYear } from "@/lib/utils";
 import { Card } from "@/types/types";
 import Image from "next/image";
-import Link from "next/link";
-import { FaSkype, FaTiktok, FaViber, FaWhatsapp } from "react-icons/fa6";
+import { LuMail, LuPhone } from "react-icons/lu";
 import {
-  LuBookmark,
-  LuFacebook,
-  LuGlobe,
-  LuInstagram,
-  LuLinkedin,
-  LuMail,
-  LuPhone,
-  LuTwitter,
-  LuYoutube,
-} from "react-icons/lu";
+  CTAButtons,
+  SocialLinks,
+  TemplateContainer,
+  TemplateFooter,
+} from "./templatesComponents";
 
 const Template16 = ({
   id,
@@ -53,32 +47,36 @@ const Template16 = ({
     customUrl,
   };
   return (
-    <div className="bg-white min-h-screen w-full flex flex-col items-center justify-between font-sans text-black">
+    <TemplateContainer
+      backgroundColor="bg-white"
+      padding="none"
+      maxWidth="480px"
+      flex={true}
+      flexDirection="col"
+      alignItems="center"
+      className="font-sans"
+    >
       <div className="max-w-[480px] mx-auto flex flex-col">
         {/* === Cover Section === */}
         <section
           aria-label="Cover Section"
           className="w-full max-w-md h-40 relative"
         >
-          <img
-            src={coverPhotoUrl || "/assets/template-7-cover-photo.jpeg"}
+          <Image
+            src={coverPhotoUrl || "/assets/template2coverphoto.png"}
             alt="Cover"
-            className="w-full h-full object-cover"
+            fill
+            className="object-cover"
+            priority
           />
           <div className="w-20 h-20 rounded-full border-[5px] border-white overflow-hidden shadow-md flex-shrink-0 absolute z-20 -bottom-10 left-4">
-            {profilePictureUrl ? (
-              <img
-                src={profilePictureUrl}
-                alt="Profile"
-                className="w-full h-full object-cover"
-              />
-            ) : (
-              <div className="bg-purple-500 w-full h-full rounded-full flex items-center justify-center">
-                <span className="text-white font-bold text-lg sm:text-xl">
-                  HW
-                </span>
-              </div>
-            )}
+            <Image
+              src={profilePictureUrl || "/assets/template4samplepic.png"}
+              alt="Profile"
+              width={96}
+              height={96}
+              className="w-full h-full object-cover"
+            />
           </div>
         </section>
 
@@ -125,38 +123,23 @@ const Template16 = ({
               </div>
 
               {/* Social Icons */}
-              <div className="flex items-center justify-center sm:justify-start gap-2 sm:gap-3 mt-3 mb-4 sm:mb-5 flex-wrap">
-                {[
-                  { url: facebookUrl, icon: LuFacebook, href: facebookUrl },
-                  { url: linkedinUrl, icon: LuLinkedin, href: linkedinUrl },
-                  { url: instagramUrl, icon: LuInstagram, href: instagramUrl },
-                  { url: twitterUrl, icon: LuTwitter, href: twitterUrl },
-                  { url: youtubeUrl, icon: LuYoutube, href: youtubeUrl },
-                  {
-                    url: whatsappNumber,
-                    icon: FaWhatsapp,
-                    href: `https://wa.me/${whatsappNumber}`,
-                  },
-                  { url: skypeInviteUrl, icon: FaSkype, href: skypeInviteUrl },
-                  { url: websiteUrl, icon: LuGlobe, href: websiteUrl },
-                  { url: viberUrl, icon: FaViber, href: viberUrl },
-                  { url: tiktokUrl, icon: FaTiktok, href: tiktokUrl },
-                ]
-                  .filter((social) => social.url)
-                  .map((social, index) => {
-                    const IconComponent = social.icon;
-                    return (
-                      <a
-                        key={index}
-                        href={social.href}
-                        target="_blank"
-                        rel="noopener noreferrer"
-                        className="bg-black p-1.5 rounded-full hover:bg-gray-800 transition"
-                      >
-                        <IconComponent className="text-white text-sm sm:text-base" />
-                      </a>
-                    );
-                  })}
+              <div className="flex flex-wrap justify-center gap-3 mt-4">
+                <SocialLinks
+                  facebookUrl={facebookUrl}
+                  instagramUrl={instagramUrl}
+                  linkedinUrl={linkedinUrl}
+                  twitterUrl={twitterUrl}
+                  youtubeUrl={youtubeUrl}
+                  tiktokUrl={tiktokUrl}
+                  whatsappNumber={whatsappNumber}
+                  skypeInviteUrl={skypeInviteUrl}
+                  viberUrl={viberUrl}
+                  websiteUrl={websiteUrl}
+                  size="sm"
+                  iconClassName="rounded-full p-2 bg-black text-white hover:bg-gray-800 size-full "
+                  iconSet="outline"
+                  className="justify-start"
+                />
               </div>
             </div>
           </div>
@@ -164,31 +147,18 @@ const Template16 = ({
           {/* === Buttons Section === */}
           <section
             aria-label="Action Buttons"
-            className="flex items-center gap-3 mt-2 w-full mb-6 px-6"
+            className="flex items-center gap-3 mt-6 w-full mb-6 px-6"
           >
             <div className="flex gap-3 w-full justify-center">
-              <Link
-                href={`tel:${number}`}
-                className="w-10 h-10 flex items-center justify-center rounded-full bg-black hover:bg-gray-800 transition"
-                title="Call"
-              >
-                <LuPhone size={20} className="text-white" />
-              </Link>
-              <Link
-                href={`mailto:${email}`}
-                className="w-10 h-10 flex items-center justify-center rounded-full bg-black hover:bg-gray-800 transition"
-                title="Email"
-              >
-                <LuMail size={20} className="text-white" />
-              </Link>
-              <button
-                type="button"
-                onClick={() => downloadVCard(userProfile)}
-                className="w-10 h-10 flex items-center justify-center rounded-full bg-black hover:bg-gray-800 transition"
-                title="Save Contact"
-              >
-                <LuBookmark size={20} className="text-white" />
-              </button>
+              <CTAButtons
+                number={number}
+                email={email}
+                userProfile={userProfile}
+                variant="pills"
+                size="md"
+                icons="lucide"
+                buttonClassName="bg-black text-white hover:bg-gray-800"
+              />
             </div>
           </section>
         </section>
@@ -375,9 +345,10 @@ const Template16 = ({
           </div>
         )}
       </div>
+
       {/* === Footer Section === */}
-      <footer className="w-full text-center text-gray-500 text-sm py-4 ">
-        <div className="flex flex-col items-center  gap-1 text-center text-xs">
+      <TemplateFooter className="w-full max-w-md px-6 text-center text-gray-500 text-sm mt-2">
+        <div className="flex flex-col pb-4 items-center gap-1 text-center text-xs">
           <a
             href={userProfile?.customUrl ?? userProfile?.websiteUrl ?? "#"}
             target="_blank"
@@ -392,13 +363,12 @@ const Template16 = ({
               className="opacity-90"
             />
           </a>
-
           <span className="tracking-wide text-gray-400 text-[10px] ">
             © {getCopyrightYear()} Zwiftech. All Rights Reserved.
           </span>
-        </div>{" "}
-      </footer>
-    </div>
+        </div>
+      </TemplateFooter>
+    </TemplateContainer>
   );
 };
 

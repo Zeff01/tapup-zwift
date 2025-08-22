@@ -1,22 +1,12 @@
-import { downloadVCard, getCopyrightYear } from "@/lib/utils";
+import { getCopyrightYear } from "@/lib/utils";
 import { Card } from "@/types/types";
 import Image from "next/image";
 import {
-  FaInstagram,
-  FaLinkedin,
-  FaWhatsapp,
-  FaXTwitter,
-} from "react-icons/fa6";
-import { FiYoutube } from "react-icons/fi";
-import { GoGlobe } from "react-icons/go";
-import {
-  MdOutlineBookmarkBorder,
-  MdOutlineMailOutline,
-  MdOutlinePhone,
-} from "react-icons/md";
-import { SiSkypeforbusiness } from "react-icons/si";
-import { SlSocialFacebook } from "react-icons/sl";
-import { useState } from "react";
+  Template9Container,
+  Template9CTA,
+  Template9Socials,
+  TemplateFooter,
+} from "./templatesComponents";
 
 // Company Showcase Component for Template9
 const CompanyShowcase = ({
@@ -210,6 +200,8 @@ const Template9 = ({
   instagramUrl,
   twitterUrl,
   linkedinUrl,
+  tiktokUrl,
+  viberUrl,
   whatsappNumber,
   skypeInviteUrl,
   websiteUrl,
@@ -228,32 +220,16 @@ const Template9 = ({
   };
 
   return (
-    <div className=" bg-white flex flex-col ">
-      <div className="min-h-screen max-w-[480px] mx-auto">
+    <Template9Container>
+      <div className="flex flex-col min-h-full max-w-[480px] mx-auto">
         <div className="h-96 relative">
           <div className="absolute flex m-1 top-1 right-1 ">
-            <div className="flex gap-2">
-              <a
-                href={`tel:${number}`}
-                className="p-1 rounded-full bg-white text-black border border-neutral-300 shadow hover:bg-black hover:text-white transition-colors duration-200"
-              >
-                <MdOutlinePhone size={18} />
-              </a>
-
-              <a
-                href={`mailto:${email}`}
-                className="p-1 rounded-full bg-white text-black border border-neutral-300 shadow hover:bg-black hover:text-white transition-colors duration-200"
-              >
-                <MdOutlineMailOutline size={18} />
-              </a>
-
-              <button
-                onClick={() => downloadVCard(userProfile)}
-                className="p-1 rounded-full bg-white text-black border border-neutral-300 shadow hover:bg-black hover:text-white transition-colors duration-200"
-              >
-                <MdOutlineBookmarkBorder size={18} />
-              </button>
-            </div>
+            <Template9CTA
+              number={number}
+              email={email}
+              userProfile={userProfile}
+              icons="outline"
+            />
           </div>
 
           <div className="">
@@ -275,6 +251,7 @@ const Template9 = ({
               />
             )}
           </div>
+
           <div className="absolute  z-20 top-[118px] left-1/2 transform -translate-x-1/2 ">
             {profilePictureUrl ? (
               <div className=" rounded-full mx-auto overflow-hidden">
@@ -298,6 +275,7 @@ const Template9 = ({
               </div>
             )}
           </div>
+
           <div className="text-center pt-16  absolute bottom-0 w-full space-y-1 bg-white rounded-t-3xl">
             {firstName ? (
               <h1 className="font-semibold text-2xl text-neutral-900 tracking-wider  capitalize">
@@ -334,59 +312,21 @@ const Template9 = ({
                 }}
               />
             </div>
-            <div className=" flex items-center gap-x-4 py-4 text-2xl text-neutral-700 h-16 justify-center">
-              {facebookUrl && (
-                <a href={facebookUrl} target="_blank" rel="noopener noreferrer">
-                  <SlSocialFacebook size={24} />
-                </a>
-              )}
-              {twitterUrl && (
-                <a href={twitterUrl} target="_blank" rel="noopener noreferrer">
-                  <FaXTwitter size={24} />
-                </a>
-              )}
-              {youtubeUrl && (
-                <a href={youtubeUrl} target="_blank" rel="noopener noreferrer">
-                  <FiYoutube size={24} />
-                </a>
-              )}
-              {instagramUrl && (
-                <a
-                  href={instagramUrl}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                >
-                  <FaInstagram size={24} />
-                </a>
-              )}
-              {linkedinUrl && (
-                <a href={linkedinUrl} target="_blank" rel="noopener noreferrer">
-                  <FaLinkedin size={24} />
-                </a>
-              )}
-              {whatsappNumber && (
-                <a
-                  href={`https://wa.me/${whatsappNumber}`}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                >
-                  <FaWhatsapp size={24} />
-                </a>
-              )}
-              {skypeInviteUrl && (
-                <a
-                  href={`skype:${skypeInviteUrl}?chat`}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                >
-                  <SiSkypeforbusiness size={24} />
-                </a>
-              )}
-              {websiteUrl && (
-                <a href={websiteUrl} target="_blank" rel="noopener noreferrer">
-                  <GoGlobe size={24} />
-                </a>
-              )}
+            <div className="flex items-center gap-x-4 py-4 text-2xl text-neutral-700 h-16 justify-center">
+              <Template9Socials
+                facebookUrl={facebookUrl}
+                twitterUrl={twitterUrl}
+                tiktokUrl={tiktokUrl}
+                youtubeUrl={youtubeUrl}
+                instagramUrl={instagramUrl}
+                linkedinUrl={linkedinUrl}
+                viberUrl={viberUrl}
+                whatsappNumber={whatsappNumber}
+                skypeInviteUrl={skypeInviteUrl}
+                websiteUrl={websiteUrl}
+                size="lg"
+                iconSet="outline"
+              />
             </div>
           </div>
         </div>
@@ -410,28 +350,35 @@ const Template9 = ({
             )}
           </div>
         </div>
-      </div>
-      <footer className="flex flex-col mt-3 mb-1 items-center gap-1 text-center text-xs py-4 w-full ">
-        <a
-          href={userProfile?.customUrl ?? userProfile?.websiteUrl ?? "#"}
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <Image
-            src="/assets/dark-ZwiftechLogo.png"
-            alt="Zwiftech Logo"
-            width={40}
-            height={15}
-            priority
-            className="opacity-90"
-          />
-        </a>
 
-        <span className="tracking-wide text-gray-800 text-[10px] ">
-          © {getCopyrightYear()} Zwiftech. All Rights Reserved.
-        </span>
-      </footer>
-    </div>
+        {/* footer */}
+        <TemplateFooter className="mt-auto bg-white px-5 pb-4">
+          <h2 className="font-semibold text-xl mx-auto w-full tracking-wider text-center">
+            {company ?? "COMPANY"}
+          </h2>
+          <div className="flex flex-col mt-3 mb-1 items-center gap-1 text-center text-xs">
+            <a
+              href={userProfile?.customUrl ?? userProfile?.websiteUrl ?? "#"}
+              target="_blank"
+              rel="noopener noreferrer"
+            >
+              <Image
+                src="/assets/dark-ZwiftechLogo.png"
+                alt="Zwiftech Logo"
+                width={40}
+                height={15}
+                priority
+                className="opacity-90"
+              />
+            </a>
+
+            <span className="tracking-wide text-gray-800 text-[10px] ">
+              © {getCopyrightYear()} Zwiftech. All Rights Reserved.
+            </span>
+          </div>
+        </TemplateFooter>
+      </div>
+    </Template9Container>
   );
 };
 

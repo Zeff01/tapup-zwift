@@ -1,10 +1,16 @@
 import { Card } from "@/types/types";
 import Image from "next/image";
-import { useState } from "react";
 
 // fonts
-import { cn, downloadVCard, getCopyrightYear } from "@/lib/utils";
+import { cn, getCopyrightYear } from "@/lib/utils";
 import { Mulish, Roboto_Condensed } from "next/font/google";
+
+import {
+  CTAButtons,
+  SocialLinks,
+  TemplateContainer,
+  TemplateFooter,
+} from "./templatesComponents";
 
 const roboto_c = Roboto_Condensed({
   weight: "500",
@@ -15,22 +21,6 @@ const mulish = Mulish({
   weight: ["300", "800"],
   subsets: ["latin"],
 });
-
-// icons
-import {
-  FaInstagram,
-  FaLinkedin,
-  FaWhatsapp,
-  FaXTwitter,
-} from "react-icons/fa6";
-import { FiYoutube } from "react-icons/fi";
-import { GoGlobe } from "react-icons/go";
-import { HiOutlineBookmark } from "react-icons/hi2";
-import { SiSkypeforbusiness } from "react-icons/si";
-import { SlSocialFacebook } from "react-icons/sl";
-import { Separator } from "../ui/separator";
-
-import { MdOutlineMailOutline, MdOutlinePhone } from "react-icons/md";
 
 // Company Showcase Component for Template11 - Light Blue Theme
 const CompanyShowcase = ({
@@ -242,6 +232,8 @@ const Template11 = ({
   instagramUrl,
   twitterUrl,
   linkedinUrl,
+  tiktokUrl,
+  viberUrl,
   whatsappNumber,
   skypeInviteUrl,
   websiteUrl,
@@ -260,192 +252,121 @@ const Template11 = ({
   };
 
   return (
-    <div className="bg-white">
-      <div className=" flex flex-col max-w-[480px] mx-auto bg-white items-center justify-between  min-h-screen">
-        <div className="relative w-full">
-          <div className="flex gap-2 z-20 absolute right-2 top-2">
-            {/* Phone */}
-            <a
-              href={`tel:${number}`}
-              className="flex items-center justify-center w-8 h-8 bg-[#A0E9FF] text-[#00A9FF] rounded-full shadow hover:bg-[#00A9FF] hover:text-white transform hover:scale-110 transition-all duration-200"
-            >
-              <MdOutlinePhone size={18} />
-            </a>
+    <TemplateContainer
+      backgroundColor="bg-white"
+      padding="none"
+      maxWidth="none"
+      flex={true}
+      flexDirection="col"
+      alignItems="center"
+      justifyContent="between"
+    >
+      <div className="w-full mx-auto relative max-w-[480px]">
+        <div className="flex gap-2 z-20 absolute right-0 top-0 p-1">
+          <CTAButtons
+            number={number}
+            email={email}
+            userProfile={userProfile}
+            variant="floating"
+            size="sm"
+            buttonClassName="bg-[#A0E9FF] text-[#00A9FF] border-0 shadow hover:bg-[#00A9FF] hover:text-white transform hover:scale-110"
+          />
+        </div>
 
-            {/* Email */}
-            <a
-              href={`mailto:${email}`}
-              className="flex items-center justify-center w-8 h-8 bg-[#A0E9FF] text-[#00A9FF] rounded-full shadow hover:bg-[#00A9FF] hover:text-white transform hover:scale-110 transition-all duration-200"
-            >
-              <MdOutlineMailOutline size={18} />
-            </a>
+        {/* COVERPHOTO AND PROFILE PIC */}
+        <div className="  flex flex-col relative ">
+          {coverPhotoUrl ? (
+            <Image
+              src={coverPhotoUrl}
+              alt="Cover Image"
+              width={400}
+              height={200}
+              className="mx-auto w-full h-56 object-cover  overflow-hidden"
+            />
+          ) : (
+            <Image
+              src={"/assets/template10coverphoto.png"}
+              alt="Cover Image"
+              width={400}
+              height={200}
+              className="mx-auto"
+            />
+          )}
+        </div>
 
-            {/* Bookmark / vCard */}
-            <button
-              onClick={() => downloadVCard(userProfile)}
-              className="flex items-center justify-center w-8 h-8 bg-[#A0E9FF] text-[#00A9FF] rounded-full shadow hover:bg-[#00A9FF] hover:text-white transform hover:scale-110 transition-all duration-200"
-            >
-              <HiOutlineBookmark size={18} />
-            </button>
-          </div>
-          {/* COVERPHOTO AND PROFILE PIC */}
-          <div className="  flex flex-col relative">
-            {coverPhotoUrl ? (
-              <Image
-                src={coverPhotoUrl}
-                alt="Cover Image"
-                width={400}
-                height={200}
-                className="mx-auto w-full h-56 object-cover  overflow-hidden"
-              />
-            ) : (
-              <Image
-                src={"/assets/template10coverphoto.png"}
-                alt="Cover Image"
-                width={400}
-                height={200}
-                className="mx-auto"
-              />
-            )}
-          </div>
-          {/* PERSONAL INFORMATION */}
-          <div className="text-center mt-24 top-0 w-[calc(100%-32px)] rounded-3xl  space-y-1 absolute left-1/2 transform -translate-x-1/2 bg-[#A0E9FF] shadow-md">
-            {profilePictureUrl ? (
-              <div className="flex justify-center w-full -mt-14">
-                <div className=" bg-[#A0E9FF] w-fit  rounded-full mx-auto overflow-hidden p-[5px]">
-                  <Image
-                    src={profilePictureUrl}
-                    alt="Profile Image"
-                    width={80}
-                    height={80}
-                    className="rounded-full w-24 h-24"
-                  />
-                </div>
-              </div>
-            ) : (
-              <div className="bg-black w-28 h-28 rounded-full mx-auto flex items-center justify-center">
+        {/* PERSONAL INFORMATION */}
+        <div className="text-center mt-24 top-0 w-[calc(100%-32px)] rounded-3xl  space-y-1 absolute left-1/2 transform -translate-x-1/2 bg-[#A0E9FF] shadow-md">
+          {profilePictureUrl ? (
+            <div className="flex justify-center w-full -mt-14">
+              <div className=" bg-[#A0E9FF] w-fit  rounded-full mx-auto overflow-hidden p-[5px]">
                 <Image
-                  src={"/assets/template10samplepic.png"}
+                  src={profilePictureUrl}
                   alt="Profile Image"
                   width={80}
                   height={80}
                   className="rounded-full w-24 h-24"
                 />
               </div>
-            )}
-            {firstName ? (
-              <h1
-                className={cn(
-                  "text-xl font-extrabold tracking-wider text-[#00A9FF] capitalize",
-                  firstName ? "mt-4" : "mt-2",
-                  mulish.className
-                )}
-              >
-                {firstName + " " + lastName}
-              </h1>
-            ) : (
-              <h1 className="text-xl font-bold mt-2 ">Hussain Watkins</h1>
-            )}
-            <div className="flex text-sm text-gray-600 items-center justify-center gap-x-1">
-              <h2 className={cn("capitalize text-end", roboto_c.className)}>
-                {company ?? "COMPANY"}
-              </h2>
-              <p>|</p>
-              <h2 className={cn("capitalize text-start", roboto_c.className)}>
-                {position ?? "Chief Technology Officer"}
-              </h2>
             </div>
+          ) : (
+            <div className="bg-black w-28 h-28 rounded-full mx-auto flex items-center justify-center">
+              <Image
+                src={"/assets/template10samplepic.png"}
+                alt="Profile Image"
+                width={80}
+                height={80}
+                className="rounded-full w-24 h-24"
+              />
+            </div>
+          )}
+          {firstName ? (
+            <h1
+              className={cn(
+                "text-xl font-extrabold tracking-wider text-[#00A9FF] capitalize",
+                firstName ? "mt-4" : "mt-2",
+                mulish.className
+              )}
+            >
+              {firstName + " " + lastName}
+            </h1>
+          ) : (
+            <h1 className="text-xl font-bold mt-2 ">Hussain Watkins</h1>
+          )}
+          <div className="flex text-sm text-gray-600 items-center justify-center gap-x-1">
+            <h2 className={cn("capitalize text-end", roboto_c.className)}>
+              {company ?? "COMPANY"}
+            </h2>
+            <p>|</p>
+            <h2 className={cn("capitalize text-start", roboto_c.className)}>
+              {position ?? "Chief Technology Officer"}
+            </h2>
+          </div>
 
-            <div className="gap-x-2 w-full text-xs font-thin gap-y-1  flex flex-col text-black opacity-50 justify-center items-center">
-              <p>{email ?? "H.Watkins@gmail.com"}</p>
+          <div className="gap-x-2 w-full text-xs font-thin gap-y-1  flex flex-col text-black opacity-50 justify-center items-center">
+            <p>{email ?? "H.Watkins@gmail.com"}</p>
 
-              <p>{number ?? +639123456789}</p>
-            </div>
-            {/* SOCIAL MEDIA ICONS */}
-            <div className=" flex items-center gap-1 pb-10 pt-5 text-black text-2xl  h-16 justify-center">
-              {facebookUrl && (
-                <a
-                  className="rounded-full p-2 bg-white  opacity-50"
-                  href={facebookUrl}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                >
-                  <SlSocialFacebook size={13} />
-                </a>
-              )}
-              {twitterUrl && (
-                <a
-                  className="rounded-full p-2 bg-white  opacity-50"
-                  href={twitterUrl}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                >
-                  <FaXTwitter size={13} />
-                </a>
-              )}
-              {youtubeUrl && (
-                <a
-                  className="rounded-full p-2 bg-white  opacity-50"
-                  href={youtubeUrl}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                >
-                  <FiYoutube size={13} />
-                </a>
-              )}
-              {instagramUrl && (
-                <a
-                  className="rounded-full p-2 bg-white  opacity-50"
-                  href={instagramUrl}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                >
-                  <FaInstagram size={13} />
-                </a>
-              )}
-              {linkedinUrl && (
-                <a
-                  className="rounded-full p-2 bg-white  opacity-50"
-                  href={linkedinUrl}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                >
-                  <FaLinkedin size={13} />
-                </a>
-              )}
-              {whatsappNumber && (
-                <a
-                  className="rounded-full p-2 bg-white  opacity-50"
-                  href={`https://wa.me/${whatsappNumber}`}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                >
-                  <FaWhatsapp size={13} />
-                </a>
-              )}
-              {skypeInviteUrl && (
-                <a
-                  className="rounded-full p-2 bg-white  opacity-50"
-                  href={`skype:${skypeInviteUrl}?chat`}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                >
-                  <SiSkypeforbusiness size={13} />
-                </a>
-              )}
-              {websiteUrl && (
-                <a
-                  className="rounded-full p-2 bg-white  opacity-50"
-                  href={websiteUrl}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                >
-                  <GoGlobe size={13} />
-                </a>
-              )}
-            </div>
+            <p>{number ?? +639123456789}</p>
+          </div>
+          {/* SOCIAL MEDIA ICONS */}
+          <div className="flex items-center gap-1 mt-6 pb-10 pt-10 text-black text-2xl h-16 justify-center">
+            <SocialLinks
+              facebookUrl={facebookUrl}
+              twitterUrl={twitterUrl}
+              tiktokUrl={tiktokUrl}
+              youtubeUrl={youtubeUrl}
+              instagramUrl={instagramUrl}
+              linkedinUrl={linkedinUrl}
+              viberUrl={viberUrl}
+              whatsappNumber={whatsappNumber}
+              skypeInviteUrl={skypeInviteUrl}
+              websiteUrl={websiteUrl}
+              size="sm"
+              iconClassName="rounded-full p-2 bg-white opacity-50 size-full "
+              iconSet="outline"
+            />
           </div>
         </div>
+
         <div className=" flex flex-col gap-y-3 flex-grow text-black mt-28 px-4">
           <h2 className="text-lg font-bold">Professional Portfolio</h2>
           <p className="text-sm">
@@ -465,28 +386,31 @@ const Template11 = ({
             )}
           </div>
         </div>
-        {/* FOOTER */}
-        <footer className="flex flex-col items-center py-6 gap-1 text-center text-xs max-w-[480px] mx-auto">
-          <a
-            href={userProfile?.customUrl ?? userProfile?.websiteUrl ?? "#"}
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            <Image
-              src="/assets/dark-ZwiftechLogo.png"
-              alt="Zwiftech Logo"
-              width={40}
-              height={15}
-              priority
-              className="opacity-90"
-            />
-          </a>
-          <span className="tracking-wide text-gray-500 text-[10px]">
-            © {getCopyrightYear()} Zwiftech. All Rights Reserved.
-          </span>
-        </footer>
+
+        <TemplateFooter className="flex flex-col items-center  justify-center gap-x-1 text-xs  pb-4 ">
+          <div className="flex flex-col items-center mt-8 gap-1 text-center text-xs">
+            <a
+              href={userProfile?.customUrl ?? userProfile?.websiteUrl ?? "#"}
+              target="_blank"
+              rel="noopener noreferrer"
+            >
+              <Image
+                src="/assets/dark-ZwiftechLogo.png"
+                alt="Zwiftech Logo"
+                width={40}
+                height={15}
+                priority
+                className="opacity-90"
+              />
+            </a>
+
+            <span className="tracking-wide text-gray-800 text-[10px] ">
+              © {getCopyrightYear()} Zwiftech. All Rights Reserved.
+            </span>
+          </div>
+        </TemplateFooter>
       </div>
-    </div>
+    </TemplateContainer>
   );
 };
 
