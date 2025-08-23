@@ -142,7 +142,7 @@ const Template15 = ({
                 email={email}
                 userProfile={userProfile}
                 size="md"
-                icons="outline"
+                icons="lucide"
               />
             </div>
 

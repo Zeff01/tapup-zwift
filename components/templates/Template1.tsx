@@ -74,12 +74,13 @@ const Template1 = ({
       </div>
 
       {/* CTA */}
-      <div className="flex justify-center mt-5">
+      <div className="flex  justify-center mt-5">
         <Template1CTA
           number={number}
           email={email}
           userProfile={userProfile}
-          size="sm"
+          size="md"
+          icons="lucide"
         />
       </div>
 

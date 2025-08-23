@@ -374,6 +374,7 @@ const Template12 = ({
                 userProfile={userProfile}
                 variant="floating"
                 size="sm"
+                icons="lucide"
                 buttonClassName="bg-[#D3F1DF] w-12 text-xs hover:bg-[#466b55] transition-colors duration-300 border-none rounded-full h-7 text-black shadow-md"
                 layout="horizontal"
               />
