@@ -87,6 +87,7 @@ const Template2 = ({
           userProfile={userProfile}
           size="md"
           buttonClassName="text-black"
+          icons="lucide"
         />
       </div>
 

@@ -66,6 +66,7 @@ const Template5 = ({
         userProfile={userProfile}
         variant="rounded"
         size="sm"
+        icons="lucide"
         className="flex justify-end gap-1 pt-3 "
         buttonClassName="border border-pink-600 text-pink-400 bg-white hover:bg-pink-50"
       />

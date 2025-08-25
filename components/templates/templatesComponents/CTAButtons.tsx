@@ -2,9 +2,9 @@ import { Button } from "@/components/ui/button";
 import { cn, downloadVCard } from "@/lib/utils";
 import Link from "next/link";
 import React from "react";
-import { LuBookmark, LuMail, LuPhone } from "react-icons/lu";
+import { LuDownload, LuMail, LuPhone } from "react-icons/lu";
 import {
-  MdOutlineBookmarkBorder,
+  MdOutlineFileDownload,
   MdOutlineMailOutline,
   MdOutlinePhone,
 } from "react-icons/md";
@@ -36,12 +36,12 @@ const iconSets = {
   outline: {
     phone: MdOutlinePhone,
     mail: MdOutlineMailOutline,
-    bookmark: MdOutlineBookmarkBorder,
+    download: MdOutlineFileDownload,
   },
   lucide: {
     phone: LuPhone,
     mail: LuMail,
-    bookmark: LuBookmark,
+    download: LuDownload,
   },
 };
 
@@ -77,7 +77,7 @@ export const CTAButtons: React.FC<CTAButtonsProps> = ({
 }) => {
   const PhoneIcon = iconSets[icons].phone;
   const MailIcon = iconSets[icons].mail;
-  const BookmarkIcon = iconSets[icons].bookmark;
+  const DownloadIcon = iconSets[icons].download;
   const {
     button: buttonSize,
     icon: iconSize,
@@ -146,7 +146,7 @@ export const CTAButtons: React.FC<CTAButtonsProps> = ({
           title="Save Contact"
           type="button"
         >
-          <BookmarkIcon size={iconSize} />
+          <DownloadIcon size={iconSize} />
           {showLabels && <span className={cn("ml-2", textSize)}>Save</span>}
         </button>
       )}

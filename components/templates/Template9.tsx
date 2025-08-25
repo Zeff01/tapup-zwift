@@ -228,7 +228,7 @@ const Template9 = ({
               number={number}
               email={email}
               userProfile={userProfile}
-              icons="outline"
+              icons="lucide"
             />
           </div>
 
