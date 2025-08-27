@@ -357,6 +357,7 @@ const Template13 = ({
                 userProfile={userProfile}
                 variant="floating"
                 size="md"
+                icons="lucide"
                 buttonClassName="bg-white text-black "
               />
             </div>

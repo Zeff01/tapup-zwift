@@ -151,7 +151,7 @@ const Template17 = ({
               userProfile={userProfile}
               variant="pills"
               size="md"
-              icons="outline"
+              icons="lucide"
               buttonClassName="bg-[#FF4B5C] text-white hover:bg-[#e43c4a]"
             />
           </div>

@@ -247,7 +247,7 @@ const Template9 = ({
               number={number || samplePersonalInfo.number}
               email={email || samplePersonalInfo.email}
               userProfile={userProfile}
-              icons="outline"
+              icons="lucide"
             />
           </div>
 

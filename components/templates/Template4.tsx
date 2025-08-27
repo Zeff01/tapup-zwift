@@ -90,6 +90,7 @@ const Template4 = ({
         userProfile={userProfile}
         variant="rounded"
         size="sm"
+        icons="lucide"
         className="flex justify-end gap-2.5 pr-4 pt-4"
         buttonClassName="border-2 border-black bg-white hover:bg-gray-100"
       />

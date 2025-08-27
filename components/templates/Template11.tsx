@@ -288,6 +288,7 @@ const Template11 = ({
             userProfile={userProfile}
             variant="floating"
             size="sm"
+            icons="outline"
             buttonClassName="bg-[#A0E9FF] text-[#00A9FF] border-0 shadow hover:bg-[#00A9FF] hover:text-white transform hover:scale-110"
           />
         </div>

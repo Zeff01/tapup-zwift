@@ -8,10 +8,11 @@ import profileBgImage from "@/public/assets/profileImage.png";
 import {
   MdOutlinePhone,
   MdOutlineMailOutline,
-  MdOutlineBookmarkBorder,
+  MdOutlineDownload,
 } from "react-icons/md";
 
 import Link from "next/link";
+import { LuDownload } from "react-icons/lu";
 
 const ProfileInfo = ({
   id,
@@ -73,24 +74,24 @@ const ProfileInfo = ({
         </div>
 
         <div className="flex flex-col gap-[4rem] pt-3 pr-5">
-          <div className="flex gap-3 justify-center items-end">
+          <div className="flex gap-1 justify-center items-end">
             <Link
               href={`tel:${number}`}
-              className="p-1 bg-neutral-800 rounded-full"
+              className="p-2 bg-neutral-800 rounded-full"
             >
               <MdOutlinePhone size={20} className="text-white cursor-pointer" />
             </Link>
             <Link
               href={`mailto:${email}`}
-              className="p-1 bg-neutral-800 rounded-full"
+              className="p-2 bg-neutral-800 rounded-full"
             >
               <MdOutlineMailOutline
                 size={20}
                 className="text-white cursor-pointer"
               />
             </Link>
-            <div className="p-1 bg-neutral-800 rounded-full">
-              <MdOutlineBookmarkBorder
+            <div className="p-2 bg-neutral-800 rounded-full">
+              <LuDownload
                 size={20}
                 className="text-white cursor-pointer font-bold"
                 onClick={() => downloadVCard(userProfile)}

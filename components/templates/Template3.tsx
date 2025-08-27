@@ -112,6 +112,7 @@ const Template3 = ({
           email={email || samplePersonalInfo.email}
           userProfile={userProfile}
           size="md"
+          icons="lucide"
           buttonClassName="text-black"
         />
       </div>
