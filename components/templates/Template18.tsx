@@ -6,6 +6,9 @@ import {
   SocialLinks,
   TemplateContainer,
   TemplateFooter,
+  sampleCompanies,
+  getSampleSocialUrls,
+  samplePersonalInfo,
 } from "./templatesComponents";
 
 const Template18 = ({
@@ -45,6 +48,22 @@ const Template18 = ({
     websiteUrl,
     customUrl,
   };
+
+  const sampleSocials = getSampleSocialUrls({
+    facebookUrl,
+    linkedinUrl,
+    instagramUrl,
+    twitterUrl,
+    tiktokUrl,
+    youtubeUrl,
+    whatsappNumber,
+    skypeInviteUrl,
+    websiteUrl,
+    viberUrl,
+  });
+
+  const displayCompanies =
+    companies && companies.length > 0 ? companies : sampleCompanies;
 
   return (
     <TemplateContainer
@@ -93,7 +112,7 @@ const Template18 = ({
           <div
             className="relative h-64 bg-cover bg-center rounded-t-[30px]"
             style={{
-              backgroundImage: `url(${coverPhotoUrl})`,
+              backgroundImage: `url(${coverPhotoUrl || "/assets/template-7-cover-photo.jpeg"})`,
             }}
           />
 
@@ -115,14 +134,20 @@ const Template18 = ({
 
               {/* Info */}
               <div className="mt-9">
-                <h2 className="text-lg font-bold">
-                  {prefix && `${prefix}. `}
-                  {firstName} {middleName && `${middleName} `}
-                  {lastName}
-                  {suffix && `, ${suffix}`}
-                </h2>
+                {firstName || lastName ? (
+                  <h2 className="text-lg font-bold">
+                    {prefix && `${prefix}. `}
+                    {firstName} {middleName && `${middleName} `}
+                    {lastName}
+                    {suffix && `, ${suffix}`}
+                  </h2>
+                ) : (
+                  <h2 className="text-lg font-bold">Hussain Watkins</h2>
+                )}
+
                 <div className="text-sm mt-1">
-                  {company} {position && `| ${position}`}
+                  {company || "Zwiftech"}{" "}
+                  {`| ${position || "Chief Technology Officer"}`}
                 </div>
                 <div className="text-xs mt-1 break-words text-gray-300">
                   {email && (
@@ -138,8 +163,8 @@ const Template18 = ({
                 <div className="flex flex-col sm:flex-row gap-2 sm:gap-3 w-full mt-3 sm:mt-4">
                   <div className="flex gap-3 w-full justify-center">
                     <CTAButtons
-                      number={number}
-                      email={email}
+                      number={number || samplePersonalInfo.number}
+                      email={email || samplePersonalInfo.email}
                       userProfile={userProfile}
                       variant="floating"
                       size="md"
@@ -152,16 +177,20 @@ const Template18 = ({
                 {/* Social Icons */}
                 <div className="flex flex-wrap justify-center  mt-5 text-white max-w-xs mx-auto">
                   <SocialLinks
-                    facebookUrl={facebookUrl}
-                    instagramUrl={instagramUrl}
-                    linkedinUrl={linkedinUrl}
-                    twitterUrl={twitterUrl}
-                    youtubeUrl={youtubeUrl}
-                    tiktokUrl={tiktokUrl}
-                    whatsappNumber={whatsappNumber}
-                    skypeInviteUrl={skypeInviteUrl}
-                    viberUrl={viberUrl}
-                    websiteUrl={websiteUrl}
+                    facebookUrl={facebookUrl || sampleSocials.facebookUrl}
+                    twitterUrl={twitterUrl || sampleSocials.twitterUrl}
+                    tiktokUrl={tiktokUrl || sampleSocials.tiktokUrl}
+                    youtubeUrl={youtubeUrl || sampleSocials.youtubeUrl}
+                    instagramUrl={instagramUrl || sampleSocials.instagramUrl}
+                    linkedinUrl={linkedinUrl || sampleSocials.linkedinUrl}
+                    viberUrl={viberUrl || sampleSocials.viberUrl}
+                    whatsappNumber={
+                      whatsappNumber || sampleSocials.whatsappNumber
+                    }
+                    skypeInviteUrl={
+                      skypeInviteUrl || sampleSocials.skypeInviteUrl
+                    }
+                    websiteUrl={websiteUrl || sampleSocials.websiteUrl}
                     variant="colorful"
                     size="sm"
                     iconClassName="p-2 rounded-full w-full h-full text-white text-sm sm:text-base"
@@ -173,7 +202,7 @@ const Template18 = ({
         </section>
 
         {/* === Companies Section === */}
-        {companies?.length > 0 && (
+        {displayCompanies.length > 0 && (
           <section
             aria-label="Companies"
             className="px-3 sm:px-4 pb-3 text-xs sm:text-sm flex-1"
@@ -186,7 +215,7 @@ const Template18 = ({
             </p>
 
             <div className="space-y-4">
-              {companies.map((c, idx) => (
+              {displayCompanies.map((c, idx) => (
                 <div
                   key={idx}
                   className="relative group bg-[#0b2b45] rounded-xl border border-[#00d4ff]/20 shadow-[0_0_0_1px_rgba(0,212,255,0.08)] hover:shadow-[0_0_0_1px_rgba(0,212,255,0.18),0_10px_30px_-10px_rgba(0,212,255,0.25)] transition-all duration-300 overflow-hidden"
