@@ -10,8 +10,8 @@ import {
 } from "react-icons/md";
 
 interface CTAButtonsProps {
-  number?: string;
-  email?: string;
+  number: string;
+  email: string;
   userProfile: {
     id?: string;
     firstName?: string;
@@ -139,17 +139,15 @@ export const CTAButtons: React.FC<CTAButtonsProps> = ({
           {showLabels && <span className={cn("ml-2", textSize)}>Email</span>}
         </Link>
       )}
-      {(userProfile.company || userProfile.position || userProfile.email) && (
-        <button
-          onClick={() => downloadVCard(userProfile)}
-          className={buttonClass}
-          title="Save Contact"
-          type="button"
-        >
-          <BookmarkIcon size={iconSize} />
-          {showLabels && <span className={cn("ml-2", textSize)}>Save</span>}
-        </button>
-      )}
+      <button
+        onClick={() => downloadVCard(userProfile)}
+        className={buttonClass}
+        title="Save Contact"
+        type="button"
+      >
+        <BookmarkIcon size={iconSize} />
+        {showLabels && <span className={cn("ml-2", textSize)}>Save</span>}
+      </button>
     </div>
   );
 };

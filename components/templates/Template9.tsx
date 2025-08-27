@@ -6,6 +6,9 @@ import {
   Template9CTA,
   Template9Socials,
   TemplateFooter,
+  sampleCompanies,
+  getSampleSocialUrls,
+  samplePersonalInfo,
 } from "./templatesComponents";
 
 // Company Showcase Component for Template9
@@ -219,14 +222,30 @@ const Template9 = ({
     customUrl,
   };
 
+  const sampleSocials = getSampleSocialUrls({
+    facebookUrl,
+    linkedinUrl,
+    instagramUrl,
+    twitterUrl,
+    tiktokUrl,
+    youtubeUrl,
+    whatsappNumber,
+    skypeInviteUrl,
+    websiteUrl,
+    viberUrl,
+  });
+
+  const displayCompanies =
+    companies && companies.length > 0 ? companies : sampleCompanies;
+
   return (
     <Template9Container>
       <div className="flex flex-col min-h-full max-w-[480px] mx-auto">
         <div className="h-96 relative">
           <div className="absolute flex m-1 top-1 right-1 ">
             <Template9CTA
-              number={number}
-              email={email}
+              number={number || samplePersonalInfo.number}
+              email={email || samplePersonalInfo.email}
               userProfile={userProfile}
               icons="outline"
             />
@@ -286,13 +305,13 @@ const Template9 = ({
             )}
 
             <p className="text-lg  font-normal text-neutral-700">
-              {position ?? "Chief Technology Officer"}
+              {position || "Chief Technology Officer"}
             </p>
 
             <div className="flex items-center font-light text-sm text-neutral-600 justify-center gap-x-2">
               <input
                 type="text"
-                value={email ?? "H.Watkins@gmail.com"}
+                value={email || samplePersonalInfo.email}
                 readOnly
                 className="max-w-[120px] truncate bg-transparent border-none outline-none cursor-pointer text-center font-light text-sm text-neutral-600"
                 onClick={(e) => {
@@ -303,7 +322,7 @@ const Template9 = ({
               <span>|</span>
               <input
                 type="text"
-                value={String(number ?? +639123456789)}
+                value={String(number || samplePersonalInfo.number)}
                 readOnly
                 className="max-w-[120px] truncate bg-transparent border-none outline-none cursor-pointer text-center font-light text-sm text-neutral-600"
                 onClick={(e) => {
@@ -314,16 +333,16 @@ const Template9 = ({
             </div>
             <div className="flex items-center gap-x-4 py-4 text-2xl text-neutral-700 h-16 justify-center">
               <Template9Socials
-                facebookUrl={facebookUrl}
-                twitterUrl={twitterUrl}
-                tiktokUrl={tiktokUrl}
-                youtubeUrl={youtubeUrl}
-                instagramUrl={instagramUrl}
-                linkedinUrl={linkedinUrl}
-                viberUrl={viberUrl}
-                whatsappNumber={whatsappNumber}
-                skypeInviteUrl={skypeInviteUrl}
-                websiteUrl={websiteUrl}
+                facebookUrl={facebookUrl || sampleSocials.facebookUrl}
+                twitterUrl={twitterUrl || sampleSocials.twitterUrl}
+                tiktokUrl={tiktokUrl || sampleSocials.tiktokUrl}
+                youtubeUrl={youtubeUrl || sampleSocials.youtubeUrl}
+                instagramUrl={instagramUrl || sampleSocials.instagramUrl}
+                linkedinUrl={linkedinUrl || sampleSocials.linkedinUrl}
+                viberUrl={viberUrl || sampleSocials.viberUrl}
+                whatsappNumber={whatsappNumber || sampleSocials.whatsappNumber}
+                skypeInviteUrl={skypeInviteUrl || sampleSocials.skypeInviteUrl}
+                websiteUrl={websiteUrl || sampleSocials.websiteUrl}
                 size="lg"
                 iconSet="outline"
               />
@@ -340,9 +359,9 @@ const Template9 = ({
 
           <div className="w-full mx-auto">
             {/* Company Experience Section */}
-            {companies && companies.length > 0 && (
+            {displayCompanies && displayCompanies.length > 0 && (
               <CompanyShowcase
-                companies={companies}
+                companies={displayCompanies}
                 profilePictureUrl={profilePictureUrl}
                 firstName={firstName}
                 lastName={lastName}

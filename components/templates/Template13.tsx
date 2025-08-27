@@ -6,6 +6,9 @@ import {
   Template13Socials,
   TemplateFooter,
   CTAButtons,
+  sampleCompanies,
+  getSampleSocialUrls,
+  samplePersonalInfo,
 } from "./templatesComponents";
 
 // Company Showcase Component for Template13 - Modern Card Design
@@ -253,6 +256,22 @@ const Template13 = ({
     customUrl,
   };
 
+  const sampleSocials = getSampleSocialUrls({
+    facebookUrl,
+    linkedinUrl,
+    instagramUrl,
+    twitterUrl,
+    tiktokUrl,
+    youtubeUrl,
+    whatsappNumber,
+    skypeInviteUrl,
+    websiteUrl,
+    viberUrl,
+  });
+
+  const displayCompanies =
+    companies && companies.length > 0 ? companies : sampleCompanies;
+
   return (
     <TemplateContainer
       backgroundColor="bg-gradient-to-br from-[#1a1a1a] via-[#232323] to-[#553838]"
@@ -313,21 +332,28 @@ const Template13 = ({
               />
             </div>
             <div className="flex items-center gap-2 mb-1">
-              <h1 className="font-semibold tracking-tight text-white leading-snug">
-                {prefix && <span>{prefix}. </span>}
-                {firstName}
-                {middleName && <span> {middleName}</span>}
-                {lastName && <span> {lastName}</span>}
-                {suffix && <span>, {suffix}</span>}
-              </h1>
+              {firstName ? (
+                <h1 className="font-semibold tracking-tight text-white leading-snug">
+                  {prefix && <span>{prefix}. </span>}
+                  {firstName}
+                  {middleName && <span> {middleName}</span>}
+                  {lastName && <span> {lastName}</span>}
+                  {suffix && <span>, {suffix}</span>}
+                </h1>
+              ) : (
+                <h1 className="font-semibold tracking-tight text-white leading-snug">
+                  Hussain Watkins
+                </h1>
+              )}
             </div>
             <div className="text-sm text-gray-300 mb-4 font-medium">
-              {position} {company && <>· {company}</>}
+              {position || "Chief Technology Officer"}{" "}
+              {`@ ${company || "Zwiftech"}`}
             </div>
             <div className="flex gap-2 mb-2">
               <CTAButtons
-                number={number}
-                email={email}
+                number={number || samplePersonalInfo.number}
+                email={email || samplePersonalInfo.email}
                 userProfile={userProfile}
                 variant="floating"
                 size="md"
@@ -354,16 +380,16 @@ const Template13 = ({
             <span className="text-left font-medium text-sm">Links</span>
             <span className="flex flex-wrap gap-3 text-xl text-left">
               <Template13Socials
-                facebookUrl={facebookUrl}
-                twitterUrl={twitterUrl}
-                tiktokUrl={tiktokUrl}
-                youtubeUrl={youtubeUrl}
-                instagramUrl={instagramUrl}
-                linkedinUrl={linkedinUrl}
-                viberUrl={viberUrl}
-                whatsappNumber={whatsappNumber}
-                skypeInviteUrl={skypeInviteUrl}
-                websiteUrl={websiteUrl}
+                facebookUrl={facebookUrl || sampleSocials.facebookUrl}
+                twitterUrl={twitterUrl || sampleSocials.twitterUrl}
+                tiktokUrl={tiktokUrl || sampleSocials.tiktokUrl}
+                youtubeUrl={youtubeUrl || sampleSocials.youtubeUrl}
+                instagramUrl={instagramUrl || sampleSocials.instagramUrl}
+                linkedinUrl={linkedinUrl || sampleSocials.linkedinUrl}
+                viberUrl={viberUrl || sampleSocials.viberUrl}
+                whatsappNumber={whatsappNumber || sampleSocials.whatsappNumber}
+                skypeInviteUrl={skypeInviteUrl || sampleSocials.skypeInviteUrl}
+                websiteUrl={websiteUrl || sampleSocials.websiteUrl}
                 size="md"
               />
             </span>
@@ -382,9 +408,9 @@ const Template13 = ({
           </p>
 
           <div className="w-full mx-auto mt-4">
-            {companies && companies.length > 0 && (
+            {displayCompanies && displayCompanies.length > 0 && (
               <CompanyShowcase
-                companies={companies}
+                companies={displayCompanies}
                 profilePictureUrl={profilePictureUrl}
                 firstName={firstName}
                 lastName={lastName}

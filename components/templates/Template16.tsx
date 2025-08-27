@@ -7,6 +7,9 @@ import {
   SocialLinks,
   TemplateContainer,
   TemplateFooter,
+  sampleCompanies,
+  getSampleSocialUrls,
+  samplePersonalInfo,
 } from "./templatesComponents";
 
 const Template16 = ({
@@ -46,6 +49,23 @@ const Template16 = ({
     websiteUrl,
     customUrl,
   };
+
+  const sampleSocials = getSampleSocialUrls({
+    facebookUrl,
+    linkedinUrl,
+    instagramUrl,
+    twitterUrl,
+    tiktokUrl,
+    youtubeUrl,
+    whatsappNumber,
+    skypeInviteUrl,
+    websiteUrl,
+    viberUrl,
+  });
+
+  const displayCompanies =
+    companies && companies.length > 0 ? companies : sampleCompanies;
+
   return (
     <TemplateContainer
       backgroundColor="bg-white"
@@ -89,14 +109,22 @@ const Template16 = ({
             {/* Info below/right of avatar */}
             <div className="flex-1 mt-2 sm:mt-3 text-center sm:text-left">
               {/* Name & Title */}
-              <h1 className="text-base sm:text-lg font-semibold">
-                {prefix && `${prefix}. `}
-                {firstName} {middleName && `${middleName} `}
-                {lastName}
-                {suffix && `, ${suffix}`}
-              </h1>
+              {firstName || lastName ? (
+                <h1 className="text-base sm:text-lg font-semibold">
+                  {prefix && `${prefix}. `}
+                  {firstName} {middleName && `${middleName} `}
+                  {lastName}
+                  {suffix && `, ${suffix}`}
+                </h1>
+              ) : (
+                <h1 className="text-base sm:text-lg font-semibold">
+                  Hussain Watkins
+                </h1>
+              )}
+
               <p className="text-sm text-gray-600 font-medium mt-1">
-                {position} {company && `@ ${company}`}
+                {position || "Chief Technology Officer"}{" "}
+                {`@ ${company || "Zwiftech"}`}
               </p>
 
               {/* Contact Info */}
@@ -125,16 +153,20 @@ const Template16 = ({
               {/* Social Icons */}
               <div className="flex flex-wrap justify-center gap-3 mt-4">
                 <SocialLinks
-                  facebookUrl={facebookUrl}
-                  instagramUrl={instagramUrl}
-                  linkedinUrl={linkedinUrl}
-                  twitterUrl={twitterUrl}
-                  youtubeUrl={youtubeUrl}
-                  tiktokUrl={tiktokUrl}
-                  whatsappNumber={whatsappNumber}
-                  skypeInviteUrl={skypeInviteUrl}
-                  viberUrl={viberUrl}
-                  websiteUrl={websiteUrl}
+                  facebookUrl={facebookUrl || sampleSocials.facebookUrl}
+                  twitterUrl={twitterUrl || sampleSocials.twitterUrl}
+                  tiktokUrl={tiktokUrl || sampleSocials.tiktokUrl}
+                  youtubeUrl={youtubeUrl || sampleSocials.youtubeUrl}
+                  instagramUrl={instagramUrl || sampleSocials.instagramUrl}
+                  linkedinUrl={linkedinUrl || sampleSocials.linkedinUrl}
+                  viberUrl={viberUrl || sampleSocials.viberUrl}
+                  whatsappNumber={
+                    whatsappNumber || sampleSocials.whatsappNumber
+                  }
+                  skypeInviteUrl={
+                    skypeInviteUrl || sampleSocials.skypeInviteUrl
+                  }
+                  websiteUrl={websiteUrl || sampleSocials.websiteUrl}
                   size="sm"
                   iconClassName="rounded-full p-2 bg-black text-white hover:bg-gray-800 size-full "
                   iconSet="outline"
@@ -151,8 +183,8 @@ const Template16 = ({
           >
             <div className="flex gap-3 w-full justify-center">
               <CTAButtons
-                number={number}
-                email={email}
+                number={number || samplePersonalInfo.number}
+                email={email || samplePersonalInfo.email}
                 userProfile={userProfile}
                 variant="pills"
                 size="md"
@@ -164,7 +196,7 @@ const Template16 = ({
         </section>
 
         {/* === Companies Section === */}
-        {companies?.length > 0 && (
+        {displayCompanies.length > 0 && (
           <div className="w-full px-6 mb-6">
             <h2 className="text-base font-bold text-black mb-4 text-center">
               Professional Portfolio
@@ -175,7 +207,7 @@ const Template16 = ({
             </p>
 
             <div className="space-y-5">
-              {companies.map((company, idx) => (
+              {displayCompanies.map((company, idx) => (
                 <div key={idx} className="relative group">
                   {/* Modern Company Card - Minimalist Design */}
                   <div className="bg-white rounded-2xl border border-gray-200 shadow-lg hover:shadow-xl transition-all duration-300 overflow-hidden">

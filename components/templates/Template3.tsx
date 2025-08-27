@@ -7,6 +7,9 @@ import {
   Template1CTA,
   Template3Container,
   TemplateFooter,
+  sampleCompanies,
+  getSampleSocialUrls,
+  samplePersonalInfo,
 } from "./templatesComponents";
 
 const Template3 = ({
@@ -43,6 +46,23 @@ const Template3 = ({
     websiteUrl,
     customUrl,
   };
+
+  const sampleSocials = getSampleSocialUrls({
+    facebookUrl,
+    linkedinUrl,
+    instagramUrl,
+    twitterUrl,
+    tiktokUrl,
+    youtubeUrl,
+    whatsappNumber,
+    skypeInviteUrl,
+    websiteUrl,
+    viberUrl,
+  });
+
+  const displayCompanies =
+    companies && companies.length > 0 ? companies : sampleCompanies;
+
   return (
     <Template3Container>
       {/* COVERPHOTO AND PROFILE PIC */}
@@ -66,21 +86,30 @@ const Template3 = ({
             {firstName + " " + lastName}
           </h1>
         ) : (
-          <h1 className="text-xl font-bold mt-2 text-greenTitle">Jane Doe</h1>
+          <h1 className="text-xl font-bold mt-2 text-greenTitle">
+            Hussain Watkins
+          </h1>
         )}
 
-        <p className="font-semibold text-white text-xl">{position}</p>
+        <p className="font-semibold text-white text-xl">
+          {position || "Chief Technology Officer"}
+        </p>
 
-        <p className=" text-grayDescription text-sm">{email}</p>
+        <p className=" text-grayDescription text-sm">
+          {email || samplePersonalInfo.email}
+        </p>
 
-        <p className=" text-grayDescription text-sm"> {number}</p>
+        <p className=" text-grayDescription text-sm">
+          {" "}
+          {number || samplePersonalInfo.number}
+        </p>
       </div>
 
       {/* CTA BUTTONS */}
       <div className="flex justify-center mt-5">
         <Template1CTA
-          number={number}
-          email={email}
+          number={number || samplePersonalInfo.number}
+          email={email || samplePersonalInfo.email}
           userProfile={userProfile}
           size="md"
           buttonClassName="text-black"
@@ -89,16 +118,16 @@ const Template3 = ({
 
       <div className="flex justify-center mt-5 mb-6">
         <SocialLinks
-          facebookUrl={facebookUrl}
-          instagramUrl={instagramUrl}
-          linkedinUrl={linkedinUrl}
-          twitterUrl={twitterUrl}
-          youtubeUrl={youtubeUrl}
-          whatsappNumber={whatsappNumber}
-          viberUrl={viberUrl}
-          tiktokUrl={tiktokUrl}
-          skypeInviteUrl={skypeInviteUrl}
-          websiteUrl={websiteUrl}
+          facebookUrl={facebookUrl || sampleSocials.facebookUrl}
+          twitterUrl={twitterUrl || sampleSocials.twitterUrl}
+          tiktokUrl={tiktokUrl || sampleSocials.tiktokUrl}
+          youtubeUrl={youtubeUrl || sampleSocials.youtubeUrl}
+          instagramUrl={instagramUrl || sampleSocials.instagramUrl}
+          linkedinUrl={linkedinUrl || sampleSocials.linkedinUrl}
+          viberUrl={viberUrl || sampleSocials.viberUrl}
+          whatsappNumber={whatsappNumber || sampleSocials.whatsappNumber}
+          skypeInviteUrl={skypeInviteUrl || sampleSocials.skypeInviteUrl}
+          websiteUrl={websiteUrl || sampleSocials.websiteUrl}
           size="md"
           className="flex items-center justify-center gap-2 mt-6 my-4 mx-auto w-full"
           iconClassName="text-white hover:text-gray-300"
@@ -131,7 +160,7 @@ const Template3 = ({
 
       {/* COMPANY INFORMATION */}
       <div className="px-4">
-        {companies?.map((c, i) => (
+        {displayCompanies.map((c, i) => (
           <div
             key={i}
             className="mb-4 relative bg-neutral-900 rounded-xl shadow-xl overflow-hidden border border-neutral-700"

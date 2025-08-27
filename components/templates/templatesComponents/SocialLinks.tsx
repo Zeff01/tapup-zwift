@@ -72,16 +72,16 @@ interface ColorfulColors {
 }
 
 interface SocialLinksProps {
-  facebookUrl?: string;
-  instagramUrl?: string;
-  linkedinUrl?: string;
-  twitterUrl?: string;
-  youtubeUrl?: string;
-  tiktokUrl?: string;
-  whatsappNumber?: string;
-  viberUrl?: string;
-  skypeInviteUrl?: string;
-  websiteUrl?: string;
+  facebookUrl: string;
+  instagramUrl: string;
+  linkedinUrl: string;
+  twitterUrl: string;
+  youtubeUrl: string;
+  tiktokUrl: string;
+  whatsappNumber: string;
+  viberUrl: string;
+  skypeInviteUrl: string;
+  websiteUrl: string;
   variant?: "default" | "buttons" | "minimal" | "colorful";
   size?: "sm" | "md" | "lg";
   className?: string;

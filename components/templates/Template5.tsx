@@ -7,6 +7,9 @@ import {
   SocialLinks,
   Template5Container,
   TemplateFooter,
+  sampleCompanies,
+  getSampleSocialUrls,
+  samplePersonalInfo,
 } from "./templatesComponents";
 
 const Template5 = ({
@@ -44,6 +47,22 @@ const Template5 = ({
     customUrl,
   };
 
+  const sampleSocials = getSampleSocialUrls({
+    facebookUrl,
+    linkedinUrl,
+    instagramUrl,
+    twitterUrl,
+    tiktokUrl,
+    youtubeUrl,
+    whatsappNumber,
+    skypeInviteUrl,
+    websiteUrl,
+    viberUrl,
+  });
+
+  const displayCompanies =
+    companies && companies.length > 0 ? companies : sampleCompanies;
+
   return (
     <Template5Container>
       {/* COVERPHOTO AND PROFILE PIC */}
@@ -61,8 +80,8 @@ const Template5 = ({
 
       {/* CTA BUTTONS */}
       <CTAButtons
-        number={number}
-        email={email}
+        number={number || samplePersonalInfo.number}
+        email={email || samplePersonalInfo.email}
         userProfile={userProfile}
         variant="rounded"
         size="sm"
@@ -74,16 +93,16 @@ const Template5 = ({
       <div className="relative ">
         <div className="absolute -top-8  left-4  ">
           <SocialLinks
-            facebookUrl={facebookUrl}
-            twitterUrl={twitterUrl}
-            tiktokUrl={tiktokUrl}
-            youtubeUrl={youtubeUrl}
-            instagramUrl={instagramUrl}
-            linkedinUrl={linkedinUrl}
-            viberUrl={viberUrl}
-            whatsappNumber={whatsappNumber}
-            skypeInviteUrl={skypeInviteUrl}
-            websiteUrl={websiteUrl}
+            facebookUrl={facebookUrl || sampleSocials.facebookUrl}
+            twitterUrl={twitterUrl || sampleSocials.twitterUrl}
+            tiktokUrl={tiktokUrl || sampleSocials.tiktokUrl}
+            youtubeUrl={youtubeUrl || sampleSocials.youtubeUrl}
+            instagramUrl={instagramUrl || sampleSocials.instagramUrl}
+            linkedinUrl={linkedinUrl || sampleSocials.linkedinUrl}
+            viberUrl={viberUrl || sampleSocials.viberUrl}
+            whatsappNumber={whatsappNumber || sampleSocials.whatsappNumber}
+            skypeInviteUrl={skypeInviteUrl || sampleSocials.skypeInviteUrl}
+            websiteUrl={websiteUrl || sampleSocials.websiteUrl}
             variant="minimal"
             size="sm"
             className="flex flex-col gap-[6px]"
@@ -103,14 +122,17 @@ const Template5 = ({
         )}
 
         <p className="font-semibold text-gray-900 text-xs">
-          {position ?? "Chief Technology Officer"}
+          {position || "Chief Technology Officer"}
         </p>
 
         <p className=" text-gray-500 text-xs">
-          {email ?? "H.Watkins@gmail.com"}
+          {email || samplePersonalInfo.email}
         </p>
 
-        <p className=" text-gray-500 text-xs"> {number ?? +639123456789}</p>
+        <p className=" text-gray-500 text-xs">
+          {" "}
+          {number || samplePersonalInfo.number}
+        </p>
       </div>
 
       <div className="mt-[70px] mb-6 px-4">
@@ -136,7 +158,7 @@ const Template5 = ({
 
       {/* COMPANY INFORMATION */}
       <div className="px-4">
-        {companies?.map((c, i) => (
+        {displayCompanies.map((c, i) => (
           <div
             key={i}
             className="mb-4 relative bg-white/70 backdrop-blur-sm rounded-xl shadow-xl overflow-hidden border border-pink-100"

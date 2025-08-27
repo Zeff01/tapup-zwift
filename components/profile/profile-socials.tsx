@@ -12,6 +12,7 @@ import {
   FaXTwitter,
   FaYoutube,
 } from "react-icons/fa6";
+import { getSampleSocialUrls } from "../templates/templatesComponents";
 
 const SocialIcon = ({
   url,
@@ -50,25 +51,66 @@ const ProfileSocials = ({
   websiteUrl,
   viberUrl,
 }: Partial<Card>) => {
+  const sampleSocials = getSampleSocialUrls({
+    facebookUrl,
+    linkedinUrl,
+    instagramUrl,
+    twitterUrl,
+    tiktokUrl,
+    youtubeUrl,
+    whatsappNumber,
+    skypeInviteUrl,
+    websiteUrl,
+    viberUrl,
+  });
+
   const socialLinks = [
-    { url: facebookUrl, icon: FaFacebook, label: "Facebook" },
-    { url: linkedinUrl, icon: FaLinkedin, label: "LinkedIn" },
-    { url: instagramUrl, icon: FaInstagram, label: "Instagram" },
-    { url: twitterUrl, icon: FaXTwitter, label: "Twitter" },
-    { url: tiktokUrl, icon: FaTiktok, label: "TikTok" },
-    { url: youtubeUrl, icon: FaYoutube, label: "YouTube" },
-    { url: viberUrl, icon: FaViber, label: "Viber" },
     {
-      url: whatsappNumber ? `https://wa.me/${whatsappNumber}` : null,
+      url: facebookUrl || sampleSocials.facebookUrl,
+      icon: FaFacebook,
+      label: "Facebook",
+    },
+    {
+      url: linkedinUrl || sampleSocials.linkedinUrl,
+      icon: FaLinkedin,
+      label: "LinkedIn",
+    },
+    {
+      url: instagramUrl || sampleSocials.instagramUrl,
+      icon: FaInstagram,
+      label: "Instagram",
+    },
+    {
+      url: twitterUrl || sampleSocials.twitterUrl,
+      icon: FaXTwitter,
+      label: "Twitter",
+    },
+    {
+      url: tiktokUrl || sampleSocials.tiktokUrl,
+      icon: FaTiktok,
+      label: "TikTok",
+    },
+    {
+      url: youtubeUrl || sampleSocials.youtubeUrl,
+      icon: FaYoutube,
+      label: "YouTube",
+    },
+    { url: viberUrl || sampleSocials.viberUrl, icon: FaViber, label: "Viber" },
+    {
+      url: whatsappNumber || sampleSocials.whatsappNumber,
       icon: FaWhatsapp,
       label: "WhatsApp",
     },
     {
-      url: skypeInviteUrl ? `skype:${skypeInviteUrl}?chat` : null,
+      url: skypeInviteUrl || sampleSocials.skypeInviteUrl,
       icon: FaSkype,
       label: "Skype",
     },
-    { url: websiteUrl, icon: FaGlobe, label: "Website" },
+    {
+      url: websiteUrl || sampleSocials.websiteUrl,
+      icon: FaGlobe,
+      label: "Website",
+    },
   ].filter((link) => link.url);
 
   if (socialLinks.length === 0) return null;

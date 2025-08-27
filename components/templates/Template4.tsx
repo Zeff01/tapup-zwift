@@ -7,6 +7,9 @@ import {
   SocialLinks,
   Template4Container,
   TemplateFooter,
+  sampleCompanies,
+  getSampleSocialUrls,
+  samplePersonalInfo,
 } from "./templatesComponents";
 
 const Template4 = ({
@@ -47,6 +50,22 @@ const Template4 = ({
     customUrl,
   };
 
+  const sampleSocials = getSampleSocialUrls({
+    facebookUrl,
+    linkedinUrl,
+    instagramUrl,
+    twitterUrl,
+    tiktokUrl,
+    youtubeUrl,
+    whatsappNumber,
+    skypeInviteUrl,
+    websiteUrl,
+    viberUrl,
+  });
+
+  const displayCompanies =
+    companies && companies.length > 0 ? companies : sampleCompanies;
+
   return (
     <Template4Container>
       {/* COVERPHOTO AND PROFILE PIC */}
@@ -66,8 +85,8 @@ const Template4 = ({
 
       {/* CTA BUTTONS */}
       <CTAButtons
-        number={number}
-        email={email}
+        number={number || samplePersonalInfo.number}
+        email={email || samplePersonalInfo.email}
         userProfile={userProfile}
         variant="rounded"
         size="sm"
@@ -85,10 +104,15 @@ const Template4 = ({
           <h1 className="text-xl font-bold mt-4 ">Hussain Watkins</h1>
         )}
         <p className="font-semibold text-gray-600 text-xl">
-          {position ?? "Chief Technology Officer"}
+          {position || "Chief Technology Officer"}
         </p>
-        <p className=" text-gray-600 text-sm">{email}</p>
-        <p className=" text-gray-600 text-sm"> {number}</p>
+        <p className=" text-gray-600 text-sm">
+          {email || samplePersonalInfo.email}
+        </p>
+        <p className=" text-gray-600 text-sm">
+          {" "}
+          {number || samplePersonalInfo.number}
+        </p>
       </div>
 
       <hr />
@@ -115,7 +139,7 @@ const Template4 = ({
 
       {/* COMPANY INFORMATION */}
       <div className="px-4">
-        {companies?.map((c, i) => (
+        {displayCompanies.map((c, i) => (
           <div
             key={i}
             className="mb-4 relative bg-neutral-100 rounded-xl shadow-xl overflow-hidden border border-neutral-200"
@@ -227,16 +251,16 @@ const Template4 = ({
       <div className="flex flex-col justify-center items-center mt-3 mb-4">
         <h1 className="font-bold mb-2">Socials</h1>
         <SocialLinks
-          facebookUrl={facebookUrl}
-          instagramUrl={instagramUrl}
-          linkedinUrl={linkedinUrl}
-          twitterUrl={twitterUrl}
-          youtubeUrl={youtubeUrl}
-          tiktokUrl={tiktokUrl}
-          whatsappNumber={whatsappNumber}
-          viberUrl={viberUrl}
-          skypeInviteUrl={skypeInviteUrl}
-          websiteUrl={websiteUrl}
+          facebookUrl={facebookUrl || sampleSocials.facebookUrl}
+          twitterUrl={twitterUrl || sampleSocials.twitterUrl}
+          tiktokUrl={tiktokUrl || sampleSocials.tiktokUrl}
+          youtubeUrl={youtubeUrl || sampleSocials.youtubeUrl}
+          instagramUrl={instagramUrl || sampleSocials.instagramUrl}
+          linkedinUrl={linkedinUrl || sampleSocials.linkedinUrl}
+          viberUrl={viberUrl || sampleSocials.viberUrl}
+          whatsappNumber={whatsappNumber || sampleSocials.whatsappNumber}
+          skypeInviteUrl={skypeInviteUrl || sampleSocials.skypeInviteUrl}
+          websiteUrl={websiteUrl || sampleSocials.websiteUrl}
           className="flex justify-center gap-4 mb-2"
         />
       </div>

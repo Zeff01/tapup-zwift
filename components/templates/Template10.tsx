@@ -8,6 +8,9 @@ import {
   CTAButtons,
   SocialLinks,
   TemplateFooter,
+  sampleCompanies,
+  getSampleSocialUrls,
+  samplePersonalInfo,
 } from "./templatesComponents";
 
 // fonts
@@ -281,6 +284,22 @@ const Template10 = ({
     customUrl,
   };
 
+  const sampleSocials = getSampleSocialUrls({
+    facebookUrl,
+    linkedinUrl,
+    instagramUrl,
+    twitterUrl,
+    tiktokUrl,
+    youtubeUrl,
+    whatsappNumber,
+    skypeInviteUrl,
+    websiteUrl,
+    viberUrl,
+  });
+
+  const displayCompanies =
+    companies && companies.length > 0 ? companies : sampleCompanies;
+
   return (
     <TemplateContainer
       backgroundColor="bg-black"
@@ -320,8 +339,8 @@ const Template10 = ({
             />
             <div className="flex gap-x-2 absolute right-0 top-0 text-[#FFFBD8] bg-black pl-4 pb-2 rounded-bl-3xl">
               <CTAButtons
-                number={number}
-                email={email}
+                number={number || samplePersonalInfo.number}
+                email={email || samplePersonalInfo.email}
                 userProfile={userProfile}
                 variant="floating"
                 size="sm"
@@ -377,13 +396,13 @@ const Template10 = ({
               poppins.className
             )}
           >
-            {position ?? "Chief Technology Officer"}
+            {position || "Chief Technology Officer"}
           </p>
 
           <div className="gap-x-2 w-full text-[#B6BCD2] flex justify-center items-center">
             <input
               type="text"
-              value={email ?? "H.Watkins@gmail.com"}
+              value={email || samplePersonalInfo.email}
               readOnly
               className="max-w-[120px] truncate bg-transparent border-none outline-none cursor-pointer text-center font-light text-sm text-[#B6BCD2]"
               onClick={(e) => {
@@ -394,7 +413,7 @@ const Template10 = ({
             <span>|</span>
             <input
               type="text"
-              value={String(number ?? +639123456789)}
+              value={String(number || samplePersonalInfo.number)}
               readOnly
               className="max-w-[120px] truncate bg-transparent border-none outline-none cursor-pointer text-center font-light text-sm text-[#B6BCD2]"
               onClick={(e) => {
@@ -408,16 +427,16 @@ const Template10 = ({
         {/* SOCIAL MEDIA ICONS */}
         <div className="flex items-center gap-x-4 py-10 text-2xl text-[#B6BCD2] h-16 justify-center">
           <SocialLinks
-            facebookUrl={facebookUrl}
-            twitterUrl={twitterUrl}
-            tiktokUrl={tiktokUrl}
-            youtubeUrl={youtubeUrl}
-            instagramUrl={instagramUrl}
-            linkedinUrl={linkedinUrl}
-            viberUrl={viberUrl}
-            whatsappNumber={whatsappNumber}
-            skypeInviteUrl={skypeInviteUrl}
-            websiteUrl={websiteUrl}
+            facebookUrl={facebookUrl || sampleSocials.facebookUrl}
+            twitterUrl={twitterUrl || sampleSocials.twitterUrl}
+            tiktokUrl={tiktokUrl || sampleSocials.tiktokUrl}
+            youtubeUrl={youtubeUrl || sampleSocials.youtubeUrl}
+            instagramUrl={instagramUrl || sampleSocials.instagramUrl}
+            linkedinUrl={linkedinUrl || sampleSocials.linkedinUrl}
+            viberUrl={viberUrl || sampleSocials.viberUrl}
+            whatsappNumber={whatsappNumber || sampleSocials.whatsappNumber}
+            skypeInviteUrl={skypeInviteUrl || sampleSocials.skypeInviteUrl}
+            websiteUrl={websiteUrl || sampleSocials.websiteUrl}
             size="md"
             iconClassName="text-[#B6BCD2]"
             iconSet="outline"
@@ -434,9 +453,9 @@ const Template10 = ({
           </p>
 
           <div className="w-full mx-auto mt-4">
-            {companies && companies.length > 0 && (
+            {displayCompanies && displayCompanies.length > 0 && (
               <CompanyShowcase
-                companies={companies}
+                companies={displayCompanies}
                 profilePictureUrl={profilePictureUrl}
                 firstName={firstName}
                 lastName={lastName}

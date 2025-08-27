@@ -6,6 +6,9 @@ import {
   SocialLinks,
   TemplateContainer,
   TemplateFooter,
+  sampleCompanies,
+  getSampleSocialUrls,
+  samplePersonalInfo,
 } from "./templatesComponents";
 
 const Template17 = ({
@@ -45,6 +48,23 @@ const Template17 = ({
     websiteUrl,
     customUrl,
   };
+
+  const sampleSocials = getSampleSocialUrls({
+    facebookUrl,
+    linkedinUrl,
+    instagramUrl,
+    twitterUrl,
+    tiktokUrl,
+    youtubeUrl,
+    whatsappNumber,
+    skypeInviteUrl,
+    websiteUrl,
+    viberUrl,
+  });
+
+  const displayCompanies =
+    companies && companies.length > 0 ? companies : sampleCompanies;
+
   return (
     <TemplateContainer
       backgroundColor="bg-white"
@@ -94,14 +114,22 @@ const Template17 = ({
           className="pt-12 sm:pt-16 pb-4 sm:pb-6 px-3 sm:px-4 flex flex-col items-center"
         >
           {/* Name & Position */}
-          <h2 className="text-lg sm:text-xl font-bold text-center leading-tight">
-            {prefix && `${prefix}. `}
-            {firstName} {middleName && `${middleName} `}
-            {lastName}
-            {suffix && `, ${suffix}`}
-          </h2>
+          {firstName || lastName ? (
+            <h2 className="text-lg sm:text-xl font-bold text-center leading-tight">
+              {prefix && `${prefix}. `}
+              {firstName} {middleName && `${middleName} `}
+              {lastName}
+              {suffix && `, ${suffix}`}
+            </h2>
+          ) : (
+            <h2 className="text-lg sm:text-xl font-bold text-center leading-tight">
+              Hussain Watkins
+            </h2>
+          )}
+
           <div className="text-xs sm:text-sm text-gray-700 text-center mt-1">
-            {company} {position && `| ${position}`}
+            {company || "Zwiftech"}{" "}
+            {`| ${position || "Chief Technology Officer"}`}
           </div>
 
           {/* Contact Info */}
@@ -118,8 +146,8 @@ const Template17 = ({
           {/* Buttons */}
           <div className="flex gap-3 w-full justify-center mt-3 sm:mt-4">
             <CTAButtons
-              number={number}
-              email={email}
+              number={number || samplePersonalInfo.number}
+              email={email || samplePersonalInfo.email}
               userProfile={userProfile}
               variant="pills"
               size="md"
@@ -131,16 +159,16 @@ const Template17 = ({
           {/* Social Icons */}
           <div className="flex justify-center mt-3 sm:mt-5">
             <SocialLinks
-              facebookUrl={facebookUrl}
-              instagramUrl={instagramUrl}
-              linkedinUrl={linkedinUrl}
-              twitterUrl={twitterUrl}
-              youtubeUrl={youtubeUrl}
-              tiktokUrl={tiktokUrl}
-              whatsappNumber={whatsappNumber}
-              skypeInviteUrl={skypeInviteUrl}
-              viberUrl={viberUrl}
-              websiteUrl={websiteUrl}
+              facebookUrl={facebookUrl || sampleSocials.facebookUrl}
+              twitterUrl={twitterUrl || sampleSocials.twitterUrl}
+              tiktokUrl={tiktokUrl || sampleSocials.tiktokUrl}
+              youtubeUrl={youtubeUrl || sampleSocials.youtubeUrl}
+              instagramUrl={instagramUrl || sampleSocials.instagramUrl}
+              linkedinUrl={linkedinUrl || sampleSocials.linkedinUrl}
+              viberUrl={viberUrl || sampleSocials.viberUrl}
+              whatsappNumber={whatsappNumber || sampleSocials.whatsappNumber}
+              skypeInviteUrl={skypeInviteUrl || sampleSocials.skypeInviteUrl}
+              websiteUrl={websiteUrl || sampleSocials.websiteUrl}
               variant="colorful"
               size="lg"
               iconSet="solid"
@@ -201,7 +229,7 @@ const Template17 = ({
           </div>
         </section>
         {/* === Companies Section === */}
-        {companies?.length > 0 && (
+        {displayCompanies.length > 0 && (
           <section aria-label="Companies" className="px-3 sm:px-4 pb-3">
             <h3 className="font-bold text-sm sm:text-base mb-2 text-center">
               Professional Portfolio
@@ -211,7 +239,7 @@ const Template17 = ({
             </p>
 
             <div className="space-y-4">
-              {companies.map((c, idx) => (
+              {displayCompanies.map((c, idx) => (
                 <div
                   key={idx}
                   className="bg-white rounded-xl border border-gray-200 shadow-md hover:shadow-lg transition-shadow duration-300 overflow-hidden"

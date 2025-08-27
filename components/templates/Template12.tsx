@@ -11,6 +11,9 @@ import {
   SocialLinks,
   TemplateContainer,
   TemplateFooter,
+  sampleCompanies,
+  getSampleSocialUrls,
+  samplePersonalInfo,
 } from "./templatesComponents";
 
 const poppins = Advent_Pro({
@@ -281,6 +284,22 @@ const Template12 = ({
     customUrl,
   };
 
+  const sampleSocials = getSampleSocialUrls({
+    facebookUrl,
+    linkedinUrl,
+    instagramUrl,
+    twitterUrl,
+    tiktokUrl,
+    youtubeUrl,
+    whatsappNumber,
+    skypeInviteUrl,
+    websiteUrl,
+    viberUrl,
+  });
+
+  const displayCompanies =
+    companies && companies.length > 0 ? companies : sampleCompanies;
+
   return (
     <TemplateContainer
       backgroundColor="bg-[#34463b]"
@@ -329,7 +348,7 @@ const Template12 = ({
                     michroma.className
                   )}
                 >
-                  {company ?? "COMPANY"}
+                  {company || "COMPANY"}
                 </h2>
                 <Separator
                   orientation="vertical"
@@ -342,7 +361,7 @@ const Template12 = ({
                     michroma.className
                   )}
                 >
-                  {position ?? "Chief Technology Officer"}
+                  {position || "Chief Technology Officer"}
                 </h2>
               </div>
               {profilePictureUrl ? (
@@ -369,8 +388,8 @@ const Template12 = ({
             </div>
             <div className="">
               <CTAButtons
-                number={number}
-                email={email}
+                number={number || samplePersonalInfo.number}
+                email={email || samplePersonalInfo.email}
                 userProfile={userProfile}
                 variant="floating"
                 size="sm"
@@ -390,16 +409,16 @@ const Template12 = ({
         <div className="text-center flex flex-col w-full pb-4 space-y-1 bg-[#D3F1DF] bg-gradient-to-t from-[#85A98F] overflow-hidden to-[#D3F1DF] rounded-t-3xl  z-20 relative -mt-8 flex-1">
           <div className=" flex  items-center w-full gap-3 py-4 text-2xl bg-gradient-to-t from-[#D3F1DF]  to-[#f4fcf7] text-neutral-700 h-16 justify-center">
             <SocialLinks
-              facebookUrl={facebookUrl}
-              twitterUrl={twitterUrl}
-              tiktokUrl={tiktokUrl}
-              youtubeUrl={youtubeUrl}
-              instagramUrl={instagramUrl}
-              linkedinUrl={linkedinUrl}
-              viberUrl={viberUrl}
-              whatsappNumber={whatsappNumber}
-              skypeInviteUrl={skypeInviteUrl}
-              websiteUrl={websiteUrl}
+              facebookUrl={facebookUrl || sampleSocials.facebookUrl}
+              twitterUrl={twitterUrl || sampleSocials.twitterUrl}
+              tiktokUrl={tiktokUrl || sampleSocials.tiktokUrl}
+              youtubeUrl={youtubeUrl || sampleSocials.youtubeUrl}
+              instagramUrl={instagramUrl || sampleSocials.instagramUrl}
+              linkedinUrl={linkedinUrl || sampleSocials.linkedinUrl}
+              viberUrl={viberUrl || sampleSocials.viberUrl}
+              whatsappNumber={whatsappNumber || sampleSocials.whatsappNumber}
+              skypeInviteUrl={skypeInviteUrl || sampleSocials.skypeInviteUrl}
+              websiteUrl={websiteUrl || sampleSocials.websiteUrl}
               size="md"
               iconClassName="text-neutral-700"
             />
@@ -413,9 +432,9 @@ const Template12 = ({
             </p>
 
             <div className="w-full mx-auto mt-4">
-              {companies && companies.length > 0 && (
+              {displayCompanies && displayCompanies.length > 0 && (
                 <CompanyShowcase
-                  companies={companies}
+                  companies={displayCompanies}
                   profilePictureUrl={profilePictureUrl}
                   firstName={firstName}
                   lastName={lastName}

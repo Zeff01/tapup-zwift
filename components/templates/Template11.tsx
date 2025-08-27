@@ -10,6 +10,9 @@ import {
   SocialLinks,
   TemplateContainer,
   TemplateFooter,
+  sampleCompanies,
+  getSampleSocialUrls,
+  samplePersonalInfo,
 } from "./templatesComponents";
 
 const roboto_c = Roboto_Condensed({
@@ -251,6 +254,22 @@ const Template11 = ({
     customUrl,
   };
 
+  const sampleSocials = getSampleSocialUrls({
+    facebookUrl,
+    linkedinUrl,
+    instagramUrl,
+    twitterUrl,
+    tiktokUrl,
+    youtubeUrl,
+    whatsappNumber,
+    skypeInviteUrl,
+    websiteUrl,
+    viberUrl,
+  });
+
+  const displayCompanies =
+    companies && companies.length > 0 ? companies : sampleCompanies;
+
   return (
     <TemplateContainer
       backgroundColor="bg-white"
@@ -264,8 +283,8 @@ const Template11 = ({
       <div className="w-full mx-auto relative max-w-[480px]">
         <div className="flex gap-2 z-20 absolute right-0 top-0 p-1">
           <CTAButtons
-            number={number}
-            email={email}
+            number={number || samplePersonalInfo.number}
+            email={email || samplePersonalInfo.email}
             userProfile={userProfile}
             variant="floating"
             size="sm"
@@ -334,32 +353,32 @@ const Template11 = ({
           )}
           <div className="flex text-sm text-gray-600 items-center justify-center gap-x-1">
             <h2 className={cn("capitalize text-end", roboto_c.className)}>
-              {company ?? "COMPANY"}
+              {company || "COMPANY"}
             </h2>
             <p>|</p>
             <h2 className={cn("capitalize text-start", roboto_c.className)}>
-              {position ?? "Chief Technology Officer"}
+              {position || "Chief Technology Officer"}
             </h2>
           </div>
 
           <div className="gap-x-2 w-full text-xs font-thin gap-y-1  flex flex-col text-black opacity-50 justify-center items-center">
-            <p>{email ?? "H.Watkins@gmail.com"}</p>
+            <p>{email || samplePersonalInfo.email}</p>
 
-            <p>{number ?? +639123456789}</p>
+            <p>{number || samplePersonalInfo.number}</p>
           </div>
           {/* SOCIAL MEDIA ICONS */}
           <div className="flex items-center gap-1 mt-6 pb-10 pt-10 text-black text-2xl h-16 justify-center">
             <SocialLinks
-              facebookUrl={facebookUrl}
-              twitterUrl={twitterUrl}
-              tiktokUrl={tiktokUrl}
-              youtubeUrl={youtubeUrl}
-              instagramUrl={instagramUrl}
-              linkedinUrl={linkedinUrl}
-              viberUrl={viberUrl}
-              whatsappNumber={whatsappNumber}
-              skypeInviteUrl={skypeInviteUrl}
-              websiteUrl={websiteUrl}
+              facebookUrl={facebookUrl || sampleSocials.facebookUrl}
+              twitterUrl={twitterUrl || sampleSocials.twitterUrl}
+              tiktokUrl={tiktokUrl || sampleSocials.tiktokUrl}
+              youtubeUrl={youtubeUrl || sampleSocials.youtubeUrl}
+              instagramUrl={instagramUrl || sampleSocials.instagramUrl}
+              linkedinUrl={linkedinUrl || sampleSocials.linkedinUrl}
+              viberUrl={viberUrl || sampleSocials.viberUrl}
+              whatsappNumber={whatsappNumber || sampleSocials.whatsappNumber}
+              skypeInviteUrl={skypeInviteUrl || sampleSocials.skypeInviteUrl}
+              websiteUrl={websiteUrl || sampleSocials.websiteUrl}
               size="sm"
               iconClassName="rounded-full p-2 bg-white opacity-50 size-full "
               iconSet="outline"
@@ -376,9 +395,9 @@ const Template11 = ({
           </p>
 
           <div className="w-full mx-auto mt-4">
-            {companies && companies.length > 0 && (
+            {displayCompanies && displayCompanies.length > 0 && (
               <CompanyShowcase
-                companies={companies}
+                companies={displayCompanies}
                 profilePictureUrl={profilePictureUrl}
                 firstName={firstName}
                 lastName={lastName}

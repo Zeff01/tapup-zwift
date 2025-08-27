@@ -4,7 +4,7 @@ import ProfileInfo from "../profile/profile-info";
 import ProfileSocials from "../profile/profile-socials";
 import CompanyShowcase from "../profile/company-showcase";
 import Footer from "../profile/footer";
-import { Template6Container } from "./templatesComponents";
+import { Template6Container, sampleCompanies } from "./templatesComponents";
 
 interface ProfilePageProps {
   userData: Card;
@@ -12,7 +12,8 @@ interface ProfilePageProps {
 
 const Template6: React.FC<ProfilePageProps> = ({ userData }) => {
   const { companies = [], profilePictureUrl, firstName, lastName } = userData;
-
+  const displayCompanies =
+    companies && companies.length > 0 ? companies : sampleCompanies;
   return (
     <Template6Container>
       <div className="mx-auto max-w-[480px]">
@@ -32,7 +33,7 @@ const Template6: React.FC<ProfilePageProps> = ({ userData }) => {
 
       <div className="w-full mx-auto">
         {/* Company Experience Section */}
-        {companies && companies.length > 0 && (
+        {displayCompanies && displayCompanies.length > 0 && (
           <div className="mt-4 mb-4">
             <div className="px-4">
               <div className="relative mb-6">
@@ -47,7 +48,7 @@ const Template6: React.FC<ProfilePageProps> = ({ userData }) => {
               </div>
             </div>
             <CompanyShowcase
-              companies={companies}
+              companies={displayCompanies}
               profilePictureUrl={profilePictureUrl}
               firstName={firstName}
               lastName={lastName}

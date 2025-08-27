@@ -68,7 +68,7 @@ const ProfileInfo = ({
           )}
 
           <p className="font-semibold text-gray-900 text-xs">
-            {position ?? "Chief Technology Officer"}
+            {position || "Chief Technology Officer"}
           </p>
         </div>
 
