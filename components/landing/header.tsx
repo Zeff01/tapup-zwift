@@ -30,16 +30,19 @@ const Header = () => {
   useEffect(() => {
     const update = () => {
       const newPath = pathname + window.location.hash;
-      console.log("DEBUG activePath update:", newPath);
       setActivePath(newPath);
     };
 
-    update(); // run on mount
+    update();
+
     window.addEventListener("hashchange", update);
+    window.addEventListener("popstate", update);
 
-    return () => window.removeEventListener("hashchange", update);
+    return () => {
+      window.removeEventListener("hashchange", update);
+      window.removeEventListener("popstate", update);
+    };
   }, [pathname]);
-
 
   const handleMobileMenu = () => {
     const newMenuState = !isMenuOpen;
