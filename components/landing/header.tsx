@@ -27,6 +27,20 @@ const Header = () => {
   const [activePath, setActivePath] = useState(pathname + hash);
   const [isMenuOpen, setIsMenuOpen] = useState(false);
 
+  useEffect(() => {
+    const update = () => {
+      const newPath = pathname + window.location.hash;
+      console.log("DEBUG activePath update:", newPath);
+      setActivePath(newPath);
+    };
+
+    update(); // run on mount
+    window.addEventListener("hashchange", update);
+
+    return () => window.removeEventListener("hashchange", update);
+  }, [pathname]);
+
+
   const handleMobileMenu = () => {
     const newMenuState = !isMenuOpen;
     setIsMenuOpen(newMenuState);
