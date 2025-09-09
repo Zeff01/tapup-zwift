@@ -46,7 +46,7 @@ const Header = () => {
 
   return (
     <header className="flex sticky top-0 z-50 bg-background justify-between items-center md:px-10 shadow-xl  p-4">
-      <Link href="/" rel="preload">
+      <Link href="/" rel="preload" onClick={() => setActivePath("/")}>
         <div className="aspect-[130/48] w-20 lg:w-28">
           <TapupLogo />
         </div>
@@ -127,7 +127,13 @@ const Header = () => {
         <div className="flex flex-col h-full">
           {/* Menu Header */}
           <div className="flex justify-between items-center p-4 border-b">
-            <Link href={"/"} onClick={handleMobileMenu}>
+            <Link
+              href={"/"}
+              onClick={() => {
+                setActivePath("/")
+                handleMobileMenu();
+              }}
+            >
               <div className="aspect-[130/48] w-20 lg:w-28">
                 <TapupLogo />
               </div>
