@@ -23,6 +23,8 @@ const Cart = dynamic(() => import("../cart/Cart"), {
 const Header = () => {
   const { user, isLoading: isLoadingUserContext } = useUserContext();
   const pathname = usePathname();
+  const hash = typeof window !== "undefined" ? window.location.hash : "";
+  const [activePath, setActivePath] = useState(pathname + hash);
   const [isMenuOpen, setIsMenuOpen] = useState(false);
 
   const handleMobileMenu = () => {
@@ -57,11 +59,11 @@ const Header = () => {
             <Link
               key={index}
               href={item.href}
-              className={`${
-                item.href === pathname
-                  ? "text-greenText border-b-2 border-greenTitle"
-                  : ""
-              } hover:text-hoverColor`}
+              onClick={() => setActivePath(item.href)}
+              className={`${item.href === activePath
+                ? "text-greenText border-b-2 border-greenTitle"
+                : ""
+                } hover:text-hoverColor`}
             >
               {item.label}
             </Link>
@@ -142,15 +144,17 @@ const Header = () => {
                 key={index}
                 href={item.href}
                 className={`
-                  ${
-                    item.href === pathname
-                      ? "text-greenText border-b-2 border-greenTitle"
-                      : ""
+                  ${item.href === activePath
+                    ? "text-greenText border-b-2 border-greenTitle"
+                    : ""
                   } 
                   hover:text-hoverColor 
                   py-2
                 `}
-                onClick={handleMobileMenu}
+                onClick={() => {
+                  setActivePath(item.href);
+                  handleMobileMenu();
+                }}
               >
                 {item.label}
               </Link>
