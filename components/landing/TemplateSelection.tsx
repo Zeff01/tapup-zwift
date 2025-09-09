@@ -3,7 +3,7 @@
 import Image from "next/image";
 import React, { useState, useRef } from "react";
 import Link from "next/link";
-import { ArrowRight, Check } from "lucide-react";
+import { Smartphone, Check } from "lucide-react";
 import { Button } from "../ui/button";
 import { motion, AnimatePresence } from "framer-motion";
 import { useInView } from "framer-motion";
@@ -77,54 +77,64 @@ const TemplateSelection = () => {
           className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 xl:grid-cols-6 gap-4 mb-12"
         >
           {Object.values(carouselCards).map((card, index) => (
-            <motion.div
+            <Link
+              href={`/templates/${index}`}
               key={index}
-              variants={cardVariants}
-              whileHover={{
-                y: -5,
-                scale: 1.05,
-                transition: { type: "spring", stiffness: 300 },
-              }}
-              onClick={() => setSelectedCard(index)}
-              className={`relative cursor-pointer group ${
-                selectedCard === index
-                  ? "ring-2 ring-green-500 ring-offset-2 rounded-md"
-                  : ""
-              }`}
+              passHref
+              legacyBehavior
             >
-              <div className="relative overflow-hidden rounded-xl shadow-md hover:shadow-xl transition-all duration-300">
-                <div className="relative aspect-[4/3] p-2">
-                  <Image
-                    src={card.image}
-                    alt={card.title}
-                    fill
-                    className="object-contain"
-                    sizes="(max-width: 640px) 50vw, (max-width: 768px) 33vw, (max-width: 1024px) 25vw, 16vw"
-                  />
+              <motion.a
+                variants={cardVariants}
+                whileHover={{
+                  y: -5,
+                  scale: 1.05,
+                  transition: { type: "spring", stiffness: 300 },
+                }}
+                onClick={(e) => {
+                  e.preventDefault();
+                  setSelectedCard(index);
+                }}
+                className={`relative cursor-pointer group ${
+                  selectedCard === index
+                    ? "ring-2 ring-green-500 ring-offset-2 rounded-md"
+                    : ""
+                }`}
+                tabIndex={0}
+              >
+                <div className="relative overflow-hidden rounded-xl shadow-md hover:shadow-xl transition-all duration-300">
+                  <div className="relative aspect-[4/3] p-2">
+                    <Image
+                      src={card.image}
+                      alt={card.title}
+                      fill
+                      className="object-contain"
+                      sizes="(max-width: 640px) 50vw, (max-width: 768px) 33vw, (max-width: 1024px) 25vw, 16vw"
+                    />
 
-                  {/* Selection indicator */}
-                  <AnimatePresence>
-                    {selectedCard === index && (
-                      <motion.div
-                        initial={{ scale: 0 }}
-                        animate={{ scale: 1 }}
-                        exit={{ scale: 0 }}
-                        className="absolute top-2 right-2 w-6 h-6 bg-green-500 rounded-full flex items-center justify-center"
-                      >
-                        <Check className="w-4 h-4 text-white" />
-                      </motion.div>
-                    )}
-                  </AnimatePresence>
-                </div>
+                    {/* Selection indicator */}
+                    <AnimatePresence>
+                      {selectedCard === index && (
+                        <motion.div
+                          initial={{ scale: 0 }}
+                          animate={{ scale: 1 }}
+                          exit={{ scale: 0 }}
+                          className="absolute top-2 right-2 w-6 h-6 bg-green-500 rounded-full flex items-center justify-center"
+                        >
+                          <Check className="w-4 h-4 text-white" />
+                        </motion.div>
+                      )}
+                    </AnimatePresence>
+                  </div>
 
-                {/* Card title on hover */}
-                <div className="absolute bottom-0 left-0 right-0 bg-gradient-to-t from-black/70 to-transparent p-3 opacity-0 group-hover:opacity-100 transition-opacity">
-                  <p className="text-white text-sm font-medium truncate">
-                    {card.title}
-                  </p>
+                  {/* Card title on hover */}
+                  <div className="absolute bottom-0 left-0 right-0 bg-gradient-to-t from-black/70 to-transparent p-3 opacity-0 group-hover:opacity-100 transition-opacity">
+                    <p className="text-white text-sm font-medium truncate">
+                      {card.title}
+                    </p>
+                  </div>
                 </div>
-              </div>
-            </motion.div>
+              </motion.a>
+            </Link>
           ))}
         </motion.div>
 
@@ -138,6 +148,21 @@ const TemplateSelection = () => {
             transition={{ duration: 0.3 }}
             className="max-w-6xl mx-auto"
           >
+            {/* Button above preview and card info */}
+            <div className="mb-8 flex justify-center">
+              <Link href={`/templates/${selectedCard}`} passHref legacyBehavior>
+                <Button
+                  asChild
+                  size="lg"
+                  className="bg-gradient-to-r from-green-600 to-emerald-500 hover:from-green-700 hover:to-emerald-600 text-white font-semibold px-8 py-6 rounded-full shadow-lg hover:shadow-xl transition-all duration-300 group flex items-center gap-2"
+                >
+                  <a>
+                    View Full Template on screen
+                    <Smartphone className="ml-2 h-5 w-5 group-hover:translate-x-1 transition-transform" />
+                  </a>
+                </Button>
+              </Link>
+            </div>
             <div className="flex flex-col lg:flex-row gap-8 items-center">
               {/* Card Preview */}
               <motion.div
