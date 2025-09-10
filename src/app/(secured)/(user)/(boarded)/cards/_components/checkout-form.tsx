@@ -4,7 +4,6 @@ import { useEffect, useState } from "react";
 import { useUserContext } from "@/providers/user-provider";
 import { CustomerType, DeliveryAddress, TransactionType } from "@/types/types";
 import {
-  createCustomerAndRecurringPlanBundleV2,
   updateUserInfo,
   createTransaction,
 } from "@/lib/firebase/actions/user.action";
@@ -83,7 +82,7 @@ export default function CheckoutForm() {
       const orderedCards = [];
       console.log("[Checkout] Checking inventory for", newCards.length, "cards");
       
-      const { decrementInventory } = await import("@/lib/firebase/actions/inventory.action");
+      // Remove the direct import of decrementInventory as it's a server action
       
       // Group cards by type to handle multiple quantities
       const cardsByType = newCards.reduce((acc, card) => {
@@ -99,7 +98,15 @@ export default function CheckoutForm() {
         for (let i = 0; i < cardType.count; i++) {
           try {
             console.log(`[Checkout] Decreasing inventory for ${cardType.name} (${i + 1}/${cardType.count})`);
-            const result = await decrementInventory(cardType.id);
+            const response = await fetch('/api/inventory/decrement', {
+              method: 'POST',
+              headers: {
+                'Content-Type': 'application/json',
+              },
+              body: JSON.stringify({ cardType: cardType.id }),
+            });
+            
+            const result = await response.json();
             
             if (!result.success) {
               console.error(`[Checkout] Failed to reserve ${cardType.name}:`, result.message);
@@ -121,14 +128,28 @@ export default function CheckoutForm() {
       
       console.log("[Checkout] Inventory updated successfully for all cards");
 
-      const recurringPlan = await createCustomerAndRecurringPlanBundleV2({
-        customerData: customerData,
-        subscriptionPlan: items[0].subscriptionPlan!,
-        cardItems: newCards,
-        totalPrice: cardTotal,
-        userId: user?.uid,
-        selectedAddress: selectedAddress,
+      // Use API route instead of direct client call
+      const response = await fetch('/api/xendit/create-recurring-plan', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          customerData: customerData,
+          subscriptionPlan: items[0].subscriptionPlan!,
+          cardItems: newCards,
+          totalPrice: cardTotal,
+          userId: user?.uid,
+          selectedAddress: selectedAddress,
+        }),
       });
+
+      if (!response.ok) {
+        const error = await response.json();
+        throw new Error(error.error || 'Failed to create payment plan');
+      }
+
+      const recurringPlan = await response.json();
 
       // Create transaction record - in test mode, payment is instant
       const transactionData: TransactionType = {
