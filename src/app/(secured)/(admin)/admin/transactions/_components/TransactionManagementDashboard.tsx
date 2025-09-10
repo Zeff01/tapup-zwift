@@ -14,7 +14,7 @@ import {
   Phone,
   Mail,
   MapPin,
-  Calendar,
+  Calendar as CalendarIcon2,
   DollarSign,
   User,
   Hash,

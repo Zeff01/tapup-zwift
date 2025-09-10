@@ -13,7 +13,6 @@ import {
   signInWithPopup,
   signOut,
 } from "firebase/auth";
-import { doc, getDoc, serverTimestamp, setDoc } from "firebase/firestore";
 import { toast } from "react-toastify";
 import { z } from "zod";
 import {
@@ -22,13 +21,7 @@ import {
   getSession,
   verifySignUserId,
 } from "../session";
-<<<<<<< HEAD
-=======
 import { setDoc, doc, serverTimestamp, getDoc } from "./firestore-monitored";
-import { toast } from "react-toastify";
-import { FirebaseError } from "firebase/app";
-import { z } from "zod";
->>>>>>> 72d04b3 (feat: Major system improvements and bug fixes)
 import { signupSchema } from "../zod-schema";
 export const onAuthStateChanged = (callback: (user: User | null) => void) => {
   return _onAuthStateChanged(firebaseAuth, callback);
@@ -40,7 +33,7 @@ import {
   Users,
 } from "@/types/types";
 import { redirect } from "next/navigation";
-import { addCardForUser, updateUserById } from "./actions/user.action";
+import { updateUserById } from "./actions/user.action";
 
 export const authCurrentUser = async () => {
   try {
