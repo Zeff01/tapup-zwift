@@ -114,7 +114,7 @@ export default function CheckoutForm() {
           customerPhone: selectedAddress?.phone || user?.number || "",
           customerAddress: `${selectedAddress?.street}, ${selectedAddress?.city}, ${selectedAddress?.state}, ${selectedAddress?.zipCode}`,
         },
-        cards: orderedCards.map(card => ({
+        cards: newCards.map(card => ({
           id: card.id,
           name: card.name,
         })),
