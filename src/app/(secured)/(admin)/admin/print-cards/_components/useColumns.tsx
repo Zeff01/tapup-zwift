@@ -15,7 +15,20 @@ import { MoreHorizontal, PencilLine, Printer } from "lucide-react";
 import { useRouter } from "next/navigation";
 import { useMemo } from "react";
 import { FaRegAddressCard } from "react-icons/fa6";
-import { PrintCardsInfo } from "./PrintCardsTable";
+
+// Define PrintCardsInfo type locally since PrintCardsTable was removed
+interface PrintCardsInfo {
+  id?: string;
+  cardOwner?: string;
+  transactionId?: string | null;
+  subscription_id?: string | null;
+  transferCode?: string;
+  createdAt?: {
+    seconds: number;
+    nanoseconds: number;
+  };
+  printStatus?: boolean;
+}
 
 interface CreateColumnsProps {
   setSelectedCard: (card: PrintCardsInfo | null) => void;
