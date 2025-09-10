@@ -17,7 +17,6 @@ import {
   Users,
   Home,
   Receipt,
-  Wrench,
 } from "lucide-react";
 
 import { RxDashboard } from "react-icons/rx";
@@ -300,7 +299,6 @@ export const adminMenuItems = [
   { icon: Receipt, title: "Transactions", href: "/admin/transactions" },
   { icon: FiShoppingBag, title: "Orders", href: "/admin/users-orders" },
   { icon: Package, title: "Card Bank", href: "/admin/card-bank" },
-  { icon: Wrench, title: "Fix Data", href: "/admin/fix-data" },
 ];
 
 export const publicDomain =
