@@ -92,8 +92,8 @@ export default function TestCardsPage() {
       });
 
       // Check if user has more cards than they should
-      const activatedCount = testResults.userCards.filter(c => c.activated).length;
-      const notActivatedCount = testResults.userCards.filter(c => !c.activated).length;
+      const activatedCount = testResults.userCards.filter((c: any) => c.activated).length;
+      const notActivatedCount = testResults.userCards.filter((c: any) => !c.activated).length;
       
       if (notActivatedCount > 0) {
         testResults.issues.push({
