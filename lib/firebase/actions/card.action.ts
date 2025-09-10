@@ -990,7 +990,7 @@ export const generateMultipleCards = async ({
     const cardResults = await Promise.all(reserveCardPromises);
     
     // Filter out null values and ensure we have valid card IDs
-    const validCardIds = cardResults.filter((id): id is string => id !== null);
+    const validCardIds = cardResults.filter((id: string | null): id is string => id !== null);
 
     if (validCardIds.length > 0) {
       await addSubscription({
