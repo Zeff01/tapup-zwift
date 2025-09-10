@@ -2,7 +2,6 @@
 
 import { USER_ROLE_ENUMS } from "@/constants";
 import { getUserName } from "@/lib/utils";
-import { CardRequest } from "@/src/app/(secured)/(admin)/admin/print-cards/_components/GenerateCardsDialog";
 import { Card, TransactionBoard, Users } from "@/types/types";
 import { differenceInDays } from "date-fns";
 import {
@@ -956,6 +955,11 @@ export const updateSingleCardPrintStatus = async ({
     console.error("Error Updating Card Print Status", error);
     return { success: false, message: "Error updating card print status" };
   }
+};
+
+// Define CardRequest type locally
+type CardRequest = {
+  quantity: number;
 };
 
 export const generateMultipleCards = async ({
