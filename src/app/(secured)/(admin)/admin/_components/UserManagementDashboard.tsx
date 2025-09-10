@@ -249,7 +249,7 @@ export default function UserManagementDashboard({
 
   const handleSelectAll = (checked: boolean) => {
     if (checked) {
-      setSelectedUsers(new Set(filteredUsers.map(user => user.id)));
+      setSelectedUsers(new Set(filteredUsers.map(user => user.id).filter((id): id is string => id !== undefined)));
     } else {
       setSelectedUsers(new Set());
     }
@@ -591,12 +591,12 @@ export default function UserManagementDashboard({
                     </TableCell>
                   </TableRow>
                 ) : (
-                  filteredUsers.map((user) => (
-                    <TableRow key={user.id} className="group">
+                  filteredUsers.filter(user => user.id).map((user) => (
+                    <TableRow key={user.id!} className="group">
                       <TableCell>
                         <Checkbox
-                          checked={selectedUsers.has(user.id)}
-                          onCheckedChange={(checked) => handleSelectUser(user.id, checked as boolean)}
+                          checked={selectedUsers.has(user.id!)}
+                          onCheckedChange={(checked) => handleSelectUser(user.id!, checked as boolean)}
                         />
                       </TableCell>
                       <TableCell>
@@ -616,7 +616,7 @@ export default function UserManagementDashboard({
                             </div>
                             <div className="text-xs text-muted-foreground flex items-center gap-1">
                               <Hash className="w-3 h-3" />
-                              {user.id}
+                              {user.id!}
                             </div>
                           </div>
                         </div>
@@ -662,7 +662,7 @@ export default function UserManagementDashboard({
                               variant="ghost" 
                               size="sm" 
                               className="opacity-0 group-hover:opacity-100 transition-opacity"
-                              disabled={isUpdating === user.id}
+                              disabled={isUpdating === user.id!}
                             >
                               <MoreVertical className="w-4 h-4" />
                             </Button>
@@ -676,7 +676,7 @@ export default function UserManagementDashboard({
                               Send Email
                             </DropdownMenuItem>
                             <DropdownMenuSeparator />
-                            <DropdownMenuItem onClick={() => handleRoleUpdate(user.id, "admin")}>
+                            <DropdownMenuItem onClick={() => handleRoleUpdate(user.id!, "admin")}>
                               <ShieldCheck className="w-4 h-4 mr-2" />
                               Make Admin
                             </DropdownMenuItem>
@@ -727,13 +727,13 @@ export default function UserManagementDashboard({
                     </TableCell>
                   </TableRow>
                 ) : (
-                  filteredUsers.map((user) => (
-                    <TableRow key={user.id} className="group">
+                  filteredUsers.filter(user => user.id).map((user) => (
+                    <TableRow key={user.id!} className="group">
                       <TableCell>
                         <Checkbox
-                          checked={selectedUsers.has(user.id)}
-                          onCheckedChange={(checked) => handleSelectUser(user.id, checked as boolean)}
-                          disabled={user.id === currentUser.id}
+                          checked={selectedUsers.has(user.id!)}
+                          onCheckedChange={(checked) => handleSelectUser(user.id!, checked as boolean)}
+                          disabled={user.id === currentUser?.id}
                         />
                       </TableCell>
                       <TableCell>
@@ -747,7 +747,7 @@ export default function UserManagementDashboard({
                           <div className="space-y-1">
                             <div className="font-medium flex items-center gap-2">
                               {user.firstName} {user.lastName}
-                              {user.id === currentUser.id && (
+                              {user.id === currentUser?.id && (
                                 <Badge variant="secondary" className="text-xs">You</Badge>
                               )}
                             </div>
@@ -777,14 +777,14 @@ export default function UserManagementDashboard({
                         </div>
                       </TableCell>
                       <TableCell className="text-right">
-                        {user.id !== currentUser.id && (
+                        {user.id !== currentUser?.id && (
                           <DropdownMenu>
                             <DropdownMenuTrigger asChild>
                               <Button 
                                 variant="ghost" 
                                 size="sm" 
                                 className="opacity-0 group-hover:opacity-100 transition-opacity"
-                                disabled={isUpdating === user.id}
+                                disabled={isUpdating === user.id!}
                               >
                                 <MoreVertical className="w-4 h-4" />
                               </Button>
@@ -799,7 +799,7 @@ export default function UserManagementDashboard({
                               </DropdownMenuItem>
                               <DropdownMenuSeparator />
                               <DropdownMenuItem 
-                                onClick={() => handleRoleUpdate(user.id, "user")}
+                                onClick={() => handleRoleUpdate(user.id!, "user")}
                                 className="text-orange-600"
                               >
                                 <ShieldOff className="w-4 h-4 mr-2" />
