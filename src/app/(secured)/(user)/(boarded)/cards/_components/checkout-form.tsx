@@ -105,8 +105,9 @@ export default function CheckoutForm() {
       const recurringPlan = await response.json();
 
       // Create transaction record - in test mode, payment is instant
-      const transactionData: TransactionType = {
+      const transactionData: any = {
         user_id: user?.uid,
+        userId: user?.uid, // Add this for backward compatibility with Orders query
         receiver: {
           customerId: user?.uid || "",
           customerName: `${selectedAddress?.firstName} ${selectedAddress?.lastName}`,
@@ -118,8 +119,14 @@ export default function CheckoutForm() {
           id: card.id,
           name: card.name,
         })),
+        items: newCards.map(card => ({
+          id: card.id,
+          name: card.name,
+          quantity: 1,
+          price: items.find(item => item.id === card.id)?.subscriptionPlan?.price || 0,
+        })),
         amount: cardTotal,
-        status: "completed", // In test mode, we assume payment succeeds
+        status: "pending", // Transaction is pending until Xendit confirms payment
       };
 
       await createTransaction(transactionData);
