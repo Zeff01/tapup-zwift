@@ -154,16 +154,16 @@ export async function generateBulkCards(
     
     for (let i = 0; i < count; i++) {
       const transferCode = generateTransferCode();
+      const newCardRef = doc(cardsCollection);
+      
       const cardData = {
+        id: newCardRef.id,
         cardType: cardType,
         transferCode: transferCode,
         status: "available" as const,
         createdAt: Date.now(),
       };
-
-      // Use setDoc with auto-generated ID
-      const newCardRef = doc(cardsCollection);
-      cardData.id = newCardRef.id;
+      
       generatedCards.push(cardData);
       
       console.log(`[generateBulkCards] Creating card ${i + 1}/${count} with ID: ${newCardRef.id}`);
