@@ -15,7 +15,6 @@ import { MoreHorizontal, PencilLine, Printer } from "lucide-react";
 import { useRouter } from "next/navigation";
 import { useMemo } from "react";
 import { FaRegAddressCard } from "react-icons/fa6";
-import DeleteDialog from "./DeleteDialog";
 import { PrintCardsInfo } from "./PrintCardsTable";
 
 interface CreateColumnsProps {
@@ -173,12 +172,6 @@ export const useCreateColumns = ({
                     <PencilLine size={15} />
                   </DropdownMenuItem>
 
-                  <DropdownMenuItem
-                    className="focus:bg-gray-200 dark:focus:bg-accent"
-                    onSelect={(e) => e.preventDefault()}
-                  >
-                    <DeleteDialog cardId={card.id} user={user} />
-                  </DropdownMenuItem>
                 </DropdownMenuContent>
               </DropdownMenu>
             </div>
