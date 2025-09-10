@@ -102,10 +102,14 @@ const Orders = () => {
           );
           
           const querySnapshot = await getDocs(q);
-          const userOrders = querySnapshot.docs.map(doc => ({
-            id: doc.id,
-            ...doc.data()
-          }));
+          const userOrders = querySnapshot.docs.map(doc => {
+            const data = doc.data();
+            return {
+              id: doc.id,
+              ...data,
+              createdAt: data.createdAt
+            };
+          });
           
           // Sort in memory
           userOrders.sort((a, b) => {

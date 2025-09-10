@@ -67,7 +67,7 @@ export async function POST(req: NextRequest) {
   } catch (error) {
     console.error("Error fixing card expiry:", error);
     return NextResponse.json(
-      { error: "Failed to fix card expiry", details: error.message },
+      { error: "Failed to fix card expiry", details: error instanceof Error ? error.message : "Unknown error" },
       { status: 500 }
     );
   }

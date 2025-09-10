@@ -21,7 +21,7 @@ export async function POST(req: NextRequest) {
     console.log("[SECURE CHECKOUT] Card items:", cardItems);
     
     // Reserve pregenerated cards ONLY - no card creation
-    const reservedCards = [];
+    const reservedCards: any[] = [];
     for (const item of cardItems) {
       console.log("[SECURE CHECKOUT] Reserving card type:", item.id);
       const reserved = await reservePregeneratedCard(item.id, user.uid);

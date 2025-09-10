@@ -98,19 +98,25 @@ export const addUser = async (
   }
 };
 // get all users from the database
-export const getAllUsers = async (): Promise<Users[]> => {
+export const getAllUsers = async (): Promise<ExtendedUserInterface[]> => {
   try {
     const userCollection = collection(firebaseDb, "user-account");
     const snapshot = await getDocs(userCollection);
 
-    const users: Users[] = snapshot.docs.map((doc) => ({
-      ...(doc.data() as Users),
-      id: doc.id,
-    }));
-    // change link to user_link
-    users.forEach(async (user) => {
-      user.user_link = await createUserLink(user.userCode ?? "");
+    const users: ExtendedUserInterface[] = snapshot.docs.map((doc) => {
+      const data = doc.data();
+      return {
+        ...data,
+        id: doc.id,
+        uid: data.uid || doc.id,
+        role: data.role || "user",
+        onboarding: data.onboarding ?? false,
+        deliveryAddresses: data.deliveryAddresses || [],
+        cardOrdering: data.cardOrdering || [],
+        user_link: createUserLink(data.userCode ?? "")
+      } as ExtendedUserInterface;
     });
+    
     return users;
   } catch (error) {
     console.error("Error getting documents: ", error);
@@ -296,82 +302,82 @@ export const addInvoice = async (
   }
 };
 
-// export const addCardForUser = async (
-//   userId: string,
-//   chosenPhysicalCard: string
-// ): Promise<string> => {
-//   try {
-//     console.log("Processing card purchase for user:", userId);
-//     console.log("Chosen Physical Card ID:", chosenPhysicalCard);
+export const addCardForUser = async (
+  userId: string,
+  chosenPhysicalCard: string
+): Promise<string> => {
+  try {
+    console.log("Processing card purchase for user:", userId);
+    console.log("Chosen Physical Card ID:", chosenPhysicalCard);
     
-//     // Import the function to reserve a pregenerated card
-//     const { getAvailableCards } = await import("./card-bank.action");
+    // Import the function to reserve a pregenerated card
+    const { getAvailableCards } = await import("./card-bank.action");
     
-//     // Get the first available pregenerated card
-//     const availableCards = await getAvailableCards(chosenPhysicalCard);
+    // Get the first available pregenerated card
+    const availableCards = await getAvailableCards(chosenPhysicalCard);
     
-//     if (availableCards.length === 0) {
-//       throw new Error(`No available ${chosenPhysicalCard} cards in stock`);
-//     }
+    if (availableCards.length === 0) {
+      throw new Error(`No available ${chosenPhysicalCard} cards in stock`);
+    }
     
-//     const cardToReserve = availableCards[0];
-//     console.log("Reserving pregenerated card:", cardToReserve.id);
+    const cardToReserve = availableCards[0];
+    console.log("Reserving pregenerated card:", cardToReserve.id);
 
-//     // Reserve the card (mark as "reserved" not "assigned")
-//     // This card will be shipped to the user but not activated yet
-//     const pregeneratedCardRef = doc(firebaseDb, "pregenerated-cards", cardToReserve.id);
-//     await updateDoc(pregeneratedCardRef, {
-//       status: "reserved",
-//       reservedFor: userId,
-//       reservedAt: Date.now(),
-//     });
+    // Reserve the card (mark as "reserved" not "assigned")
+    // This card will be shipped to the user but not activated yet
+    const pregeneratedCardRef = doc(firebaseDb, "pregenerated-cards", cardToReserve.id);
+    await updateDoc(pregeneratedCardRef, {
+      status: "reserved",
+      reservedFor: userId,
+      reservedAt: Date.now(),
+    });
     
-//     // DO NOT create a card in the cards collection yet!
-//     // The card should only be created when the user enters the transfer code
-//     // This prevents virtual cards from appearing before physical cards are received
+    // DO NOT create a card in the cards collection yet!
+    // The card should only be created when the user enters the transfer code
+    // This prevents virtual cards from appearing before physical cards are received
 
-//     console.log(
-//       "Card reserved successfully. User ID:",
-//       userId,
-//       "Card ID:",
-//       cardToReserve.id
-//     );
+    console.log(
+      "Card reserved successfully. User ID:",
+      userId,
+      "Card ID:",
+      cardToReserve.id
+    );
 
-//     // Return the card ID for subscription tracking
-//     return cardToReserve.id;
-//   } catch (error) {
-//     console.error("Error reserving card:", error);
-//     throw error;
-//   }
-// };
+    // Return the card ID for subscription tracking
+    return cardToReserve.id;
+  } catch (error) {
+    console.error("Error reserving card:", error);
+    throw error;
+  }
+};
 
-// export const addCard = async (genericCard: GenericCardType) => {
-//   console.error("\n\n[CRITICAL] addCard FUNCTION CALLED!");
-//   console.error("[CRITICAL] This function creates virtual cards and should NOT be called during purchase!");
-//   console.error("[CRITICAL] Stack trace:", new Error().stack);
-//   console.error("[CRITICAL] Card type:", genericCard);
-//   throw new Error("addCard should not be called - virtual cards should only be created via transfer code activation!");
+export const addCard = async (genericCard: GenericCardType) => {
+  console.error("\n\n[CRITICAL] addCard FUNCTION CALLED!");
+  console.error("[CRITICAL] This function creates virtual cards and should NOT be called during purchase!");
+  console.error("[CRITICAL] Stack trace:", new Error().stack);
+  console.error("[CRITICAL] Card type:", genericCard);
+  throw new Error("addCard should not be called - virtual cards should only be created via transfer code activation!");
   
-//   try {
-//     const transferCode = crypto.randomUUID().split("-").slice(0, 2).join("-");
-//     console.log("Generated Transfer Code:", transferCode);
+  try {
+    const transferCode = crypto.randomUUID().split("-").slice(0, 2).join("-");
+    console.log("Generated Transfer Code:", transferCode);
 
-//     const cardCollection = collection(firebaseDb, "cards");
-//     const card: GenericCard = {
-//       transferCode: transferCode,
-//       chosenPhysicalCard: genericCard,
-//       printStatus: false,
-//       createdAt: serverTimestamp(),
-//     };
+    const cardCollection = collection(firebaseDb, "cards");
+    const card: GenericCard = {
+      transferCode: transferCode,
+      chosenPhysicalCard: genericCard,
+      printStatus: false,
+      createdAt: serverTimestamp(),
+    };
 
-//     const docRef = await addDoc(cardCollection, card);
+    const docRef = await addDoc(cardCollection, card);
 
-//     return docRef.id;
-//   } catch (error) {
-//     console.error("Error adding card:", error);
-//     throw error;
-//   }
-// };
+    return docRef.id;
+  } catch (error) {
+    console.error("Error adding card:", error);
+    throw error;
+  }
+};
 
 export const addSubscription = async ({
   cardIds,
@@ -408,39 +414,52 @@ export const addSubscription = async ({
       );
 
     const batch = writeBatch(firebaseDb);
-    let cardsUpdatedCount = 0;
 
     for (let i = 0; i < cardIds.length; i++) {
       const cardId = cardIds[i];
       const specificSubscriptionId = subscriptionDocs[i].id;
       const cardRef = doc(firebaseDb, "cards", cardId);
       
+      console.log("[addSubscription] Attempting to update card:", cardId);
+      console.log("[addSubscription] With subscription ID:", specificSubscriptionId);
+      console.log("[addSubscription] User ID:", userId);
+      
       // Check if card exists before updating
       const cardDoc = await getDoc(cardRef);
       if (!cardDoc.exists()) {
-        // Skip pregenerated cards that haven't been activated yet
+        console.error("[addSubscription] ERROR: Card does not exist:", cardId);
+        console.error("[addSubscription] This should not happen - cards should be created before subscriptions");
+        console.error("[addSubscription] This might be a pregenerated card ID that hasn't been activated yet");
+        // Skip this card instead of creating it
         continue;
       }
       
+      // IMPORTANT: Only add owner if the card doesn't already have one
+      // Pregenerated cards should NOT get owners until they're activated via transfer code
       const cardData = cardDoc.data();
       const updateData: any = {
         subscription_id: specificSubscriptionId,
       };
       
-      // Only add owner if card doesn't already have one (for virtual cards)
+      // Only add owner if:
+      // 1. userId is provided AND
+      // 2. Card doesn't already have an owner (virtual cards already have owners)
       if (userId && !cardData.owner) {
-        updateData.owner = userId;
+        console.log("[addSubscription] WARNING: Card", cardId, "has no owner. This might be a pregenerated card.");
+        console.log("[addSubscription] NOT adding owner to prevent creating phantom virtual cards");
+        // Don't add owner to pregenerated cards
+        // updateData.owner = userId;
       }
       
       batch.update(cardRef, updateData);
-      cardsUpdatedCount++;
     }
 
-    if (cardsUpdatedCount > 0) {
-      await batch.commit();
-    }
+    await batch.commit();
+    console.log(
+      `Successfully updated ${cardIds.length} card(s) with their respective subscription_id.`
+    );
 
-    // Return all created subscription IDs
+    // The function is expected to return an array of all created subscription IDs.
     const allCreatedSubscriptionIds = subscriptionDocs.map((sub) => sub.id);
     return allCreatedSubscriptionIds;
   } catch (error) {
@@ -538,14 +557,10 @@ export const createCustomerAndRecurringPlan = async (
     console.log("Customer:", customer);
 
     const now = new Date();
-    // Format: YYYYMMDDHHMMSS
-    const year = now.getFullYear();
-    const month = String(now.getMonth() + 1).padStart(2, '0');
-    const day = String(now.getDate()).padStart(2, '0');
-    const hours = String(now.getHours()).padStart(2, '0');
-    const minutes = String(now.getMinutes()).padStart(2, '0');
-    const seconds = String(now.getSeconds()).padStart(2, '0');
-    const formattedDateTime = `${year}${month}${day}${hours}${minutes}${seconds}`;
+    const formattedDateTime = now
+      .toISOString()
+      .replace(/[-:T.Z]/g, "")
+      .slice(0, 14);
 
     const referenceId = `recurring-${customer.id}-${subscriptionPlan.id}-${cardId}-${formattedDateTime}`;
 
@@ -622,32 +637,105 @@ export const createCustomerAndRecurringPlanBundleV2 = async ({
   selectedAddress?: DeliveryAddress | z.infer<typeof deliveryFormSchema>;
 }) => {
   try {
-    // Call our API route instead of directly calling Xendit
-    const response = await fetch("/api/xendit/create-recurring-plan", {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify({
-        customerData,
-        subscriptionPlan,
-        cardItems,
-        totalPrice,
-        userId,
-        selectedAddress,
-      }),
-    });
+    const { data: customer } = await xenditClient.post(
+      "/customers",
+      customerData
+    );
 
-    if (!response.ok) {
-      const errorData = await response.json();
-      throw new Error(errorData.error || "Failed to create recurring plan");
+    const now = new Date();
+    const formattedDateTime = now
+      .toISOString()
+      .replace(/[-:T.Z]/g, "")
+      .slice(0, 14);
+
+    const bundleId = crypto.randomUUID().split("-").slice(0, 2).join("-");
+    const referenceId = `recurring-${customer.id}-${subscriptionPlan.id}-bundle${bundleId}-${formattedDateTime}`;
+
+    let interval: "DAY" | "WEEK" | "MONTH" = "DAY";
+    let intervalCount = subscriptionPlan.durationDays;
+
+    if (subscriptionPlan.durationDays > 365) {
+      console.log(
+        "Subscription duration exceeds 365 days, converting to months"
+      );
+
+      interval = "MONTH";
+      intervalCount = Math.floor(subscriptionPlan.durationDays / 30);
+    } else if (
+      subscriptionPlan.durationDays >= 7 &&
+      subscriptionPlan.durationDays % 7 === 0
+    ) {
+      console.log(
+        "Subscription duration is a multiple of 7, converting to weeks"
+      );
+
+      interval = "WEEK";
+      intervalCount = subscriptionPlan.durationDays / 7;
     }
 
-    const { customer, recurringPlan } = await response.json();
+    const recurringPlanData: RecurringPlanType = {
+      reference_id: referenceId,
+      customer_id: customer.id,
+      recurring_action: "PAYMENT",
+      currency: "PHP",
+      amount: totalPrice ?? subscriptionPlan.price,
+      schedule: {
+        reference_id: `schedule-${customer.id}-${subscriptionPlan.id}-bundle${bundleId}`,
+        interval: interval,
+        interval_count: intervalCount,
+      },
+      description: `Subscription for ${cardItems.length} Cards. ${subscriptionPlan.name}`,
+      success_return_url: process.env.NEXT_PUBLIC_SUCCESS_REDIRECT_URL,
+      failure_return_url: process.env.NEXT_PUBLIC_FAILURE_REDIRECT_URL,
+      metadata: {
+        ...(userId && { userId }),
+        cardItems: cardItems,
+        per_card_price: subscriptionPlan.price,
+        customerEmail: customerData.email,
+        customerName: `${customerData.individual_detail?.given_names || ""} ${customerData.individual_detail?.surname || ""}`,
+        customerPhone: customerData.mobile_number,
+        customerAddress:
+          selectedAddress?.street +
+          ", " +
+          selectedAddress?.city +
+          ", " +
+          selectedAddress?.state +
+          ", " +
+          selectedAddress?.zipCode +
+          ", " +
+          "Philippines",
+        totalAmount: totalPrice,
+      },
+    };
+
+    console.log("Recurring Plan Data:", recurringPlanData);
+
+    // Create recurring plan in Xendit
+    const { data: recurringPlan } = await xenditClient.post(
+      "/recurring/plans",
+      recurringPlanData
+    );
+    console.log("Xendit Recurring Plan Response:", recurringPlan);
 
     return { customer, recurringPlan };
   } catch (error: any) {
     console.error("Error creating customer or recurring plan:", error);
+    console.error("Xendit Error Details:", {
+      message: error.message,
+      response: error.response?.data,
+      status: error.response?.status,
+      headers: error.response?.headers,
+    });
+    
+    // Provide more specific error message
+    if (error.response?.status === 503) {
+      throw new Error("Xendit service is temporarily unavailable. Please try again later.");
+    } else if (error.response?.status === 401) {
+      throw new Error("Xendit authentication failed. Please check API keys.");
+    } else if (error.response?.status === 400) {
+      throw new Error(`Xendit request failed: ${error.response?.data?.message || 'Invalid request'}`);
+    }
+    
     throw error;
   }
 };
@@ -668,14 +756,10 @@ export const createCustomerAndRecurringPlanBundle = async (
     console.log("Customer:", customer);
 
     const now = new Date();
-    // Format: YYYYMMDDHHMMSS
-    const year = now.getFullYear();
-    const month = String(now.getMonth() + 1).padStart(2, '0');
-    const day = String(now.getDate()).padStart(2, '0');
-    const hours = String(now.getHours()).padStart(2, '0');
-    const minutes = String(now.getMinutes()).padStart(2, '0');
-    const seconds = String(now.getSeconds()).padStart(2, '0');
-    const formattedDateTime = `${year}${month}${day}${hours}${minutes}${seconds}`;
+    const formattedDateTime = now
+      .toISOString()
+      .replace(/[-:T.Z]/g, "")
+      .slice(0, 14);
 
     const bundleId = crypto.randomUUID().split("-").slice(0, 2).join("-");
     const referenceId = `recurring-${customer.id}-${subscriptionPlan.id}-bundle${bundleId}-${formattedDateTime}`;
@@ -776,7 +860,7 @@ export const createTransaction = async (transactionData: TransactionType) => {
   }
 };
 
-export const getAllTransactions = async ({ role }: { role: string }) => {
+export const getAllTransactions = async ({ role }: { role: string }): Promise<TransactionBoard[] | false> => {
   try {
     if (!role || role !== "admin")
       throw new Error("This is an Admin Only Request");
@@ -785,14 +869,23 @@ export const getAllTransactions = async ({ role }: { role: string }) => {
 
     const snapshot = await getDocs(transactionCollection);
 
-    const transactions = snapshot.docs.map((doc) => {
+    const transactions: TransactionBoard[] = snapshot.docs.map((doc) => {
       const data = doc.data();
       return {
         id: doc.id,
-        ...data,
+        amount: data.amount || 0,
+        cards: data.cards || [],
+        receiver: data.receiver || {
+          customerAddress: "",
+          customerEmail: "",
+          customerId: "",
+          customerName: "",
+          customerPhone: ""
+        },
+        status: data.status || "pending",
         // Convert Firestore Timestamp to a serializable format
-        createdAt: data.createdAt?.toDate ? data.createdAt.toDate().toISOString() : data.createdAt,
-      };
+        createdAt: data.createdAt?.toDate ? data.createdAt.toDate().toISOString() : data.createdAt || new Date().toISOString(),
+      } as TransactionBoard;
     });
 
     return transactions;

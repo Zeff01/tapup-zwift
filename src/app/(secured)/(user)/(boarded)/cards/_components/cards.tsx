@@ -73,7 +73,7 @@ const Cards = () => {
       
       // Check if any cards look suspicious
       cards.forEach((card) => {
-        if (card.chosenPhysicalCard && !card.activated) {
+        if (card.chosenPhysicalCard && !('activated' in card && card.activated)) {
           console.error("[CARDS PAGE] 🚨 Found physical card with owner but not activated:", card);
         }
       });

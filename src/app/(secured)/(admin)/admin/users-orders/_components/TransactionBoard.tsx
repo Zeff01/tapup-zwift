@@ -136,7 +136,7 @@ export default function TransactionDashboard({
     if (searchTerm) {
       filtered = filtered.filter(
         (transaction) => {
-          const cards = transaction.cards || transaction.items || [];
+          const cards = transaction.cards || [];
           return (
             transaction.receiver.customerName.toLowerCase().includes(searchTerm.toLowerCase()) ||
             transaction.id.toLowerCase().includes(searchTerm.toLowerCase()) ||
@@ -344,7 +344,7 @@ export default function TransactionDashboard({
             ) : (
               filteredTransactions.map((transaction) => {
                 const isExpanded = expandedTransactions.has(transaction.id);
-                const firstItemName = transaction.items?.[0]?.name || transaction.cards?.[0]?.name || '';
+                const firstItemName = transaction.cards?.[0]?.name || '';
                 const matchingCard = Object.values(carouselCards).find(
                   (item) => item.title === firstItemName
                 );

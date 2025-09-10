@@ -57,7 +57,7 @@ export async function POST(req: NextRequest) {
   } catch (error) {
     console.error("Error fixing subscription fields:", error);
     return NextResponse.json(
-      { error: "Failed to fix subscription fields", details: error.message },
+      { error: "Failed to fix subscription fields", details: error instanceof Error ? error.message : "Unknown error" },
       { status: 500 }
     );
   }

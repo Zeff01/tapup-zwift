@@ -2,7 +2,7 @@
 
 import { useEffect, useState } from "react";
 import { useUserContext } from "@/providers/user-provider";
-import { CustomerType, DeliveryAddress } from "@/types/types";
+import { CustomerType, DeliveryAddress, TransactionType } from "@/types/types";
 import {
   createCustomerAndRecurringPlanBundleV2,
   updateUserInfo,
@@ -131,30 +131,21 @@ export default function CheckoutForm() {
       });
 
       // Create transaction record - in test mode, payment is instant
-      const transactionData = {
-        userId: user?.uid,
-        orderId: recurringPlan.recurringPlan.id,
-        status: "to-ship", // In test mode, we assume payment succeeds
-        items: orderedCards.map(card => ({
+      const transactionData: TransactionType = {
+        user_id: user?.uid,
+        receiver: {
+          customerId: user?.uid || "",
+          customerName: `${selectedAddress?.firstName} ${selectedAddress?.lastName}`,
+          customerEmail: user?.email || "",
+          customerPhone: selectedAddress?.phone || user?.number || "",
+          customerAddress: `${selectedAddress?.street}, ${selectedAddress?.city}, ${selectedAddress?.state}, ${selectedAddress?.zipCode}`,
+        },
+        cards: orderedCards.map(card => ({
           id: card.id,
           name: card.name,
-          quantity: 1,
-          price: items[0].subscriptionPlan?.price,
-          subscriptionPlan: items[0].subscriptionPlan,
-          // No reservedCardId or transferCode - we don't know which specific card will be shipped
         })),
-        shippingInfo: {
-          email: selectedAddress?.email || user?.email || "",
-          phone: selectedAddress?.phone || user?.number || "",
-          address: `${selectedAddress?.street}, ${selectedAddress?.city}, ${selectedAddress?.state}, ${selectedAddress?.zipCode}, ${selectedAddress?.country}`,
-        },
         amount: cardTotal,
-        customerName: `${selectedAddress?.firstName} ${selectedAddress?.lastName}`,
-        xenditPlanId: recurringPlan.recurringPlan.id,
-        paymentUrl: recurringPlan.recurringPlan.actions?.[0]?.url || null, // Store payment URL
-        createdAt: new Date(),
-        paymentStatus: "paid",
-        paidAt: new Date(),
+        status: "completed", // In test mode, we assume payment succeeds
       };
 
       await createTransaction(transactionData);

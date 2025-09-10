@@ -12,10 +12,13 @@ export async function GET(req: NextRequest) {
     );
     
     const transactionSnap = await getDocs(q);
-    const transactions = transactionSnap.docs.map(doc => ({
-      id: doc.id,
-      ...doc.data()
-    }));
+    const transactions = transactionSnap.docs.map(doc => {
+      const data = doc.data();
+      return {
+        id: doc.id,
+        ...data
+      };
+    });
     
     // Get all reserved cards from pregenerated-cards
     const pregeneratedRef = collection(firebaseDb, "pregenerated-cards");
@@ -25,29 +28,32 @@ export async function GET(req: NextRequest) {
     );
     
     const reservedSnap = await getDocs(reservedQuery);
-    const reservedCards = reservedSnap.docs.map(doc => ({
-      id: doc.id,
-      ...doc.data()
-    }));
+    const reservedCards = reservedSnap.docs.map(doc => {
+      const data = doc.data();
+      return {
+        id: doc.id,
+        ...data
+      };
+    });
     
     // Analyze discrepancies
-    const analysis = {
+    const analysis: any = {
       totalPendingOrders: transactions.length,
       totalItemsInOrders: 0,
       totalReservedCards: reservedCards.length,
       orderDetails: [] as any[],
-      reservedCardDetails: reservedCards.map(card => ({
+      reservedCardDetails: reservedCards.map((card: any) => ({
         id: card.id,
-        cardType: card.cardType,
-        reservedFor: card.reservedFor,
-        transferCode: card.transferCode,
-        reservedAt: new Date(card.reservedAt).toISOString()
+        cardType: card.cardType || 'unknown',
+        reservedFor: card.reservedFor || '',
+        transferCode: card.transferCode || '',
+        reservedAt: card.reservedAt ? new Date(card.reservedAt).toISOString() : ''
       })),
       missingReservations: [] as any[]
     };
     
     // Check each transaction
-    for (const transaction of transactions) {
+    for (const transaction of transactions as any[]) {
       const orderInfo = {
         orderId: transaction.id,
         userId: transaction.userId,
