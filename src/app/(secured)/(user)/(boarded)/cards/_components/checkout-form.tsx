@@ -127,6 +127,8 @@ export default function CheckoutForm() {
         })),
         amount: cardTotal,
         status: "pending", // Transaction is pending until Xendit confirms payment
+        paymentUrl: recurringPlan.recurringPlan.actions?.[0]?.url || null, // Store payment URL for re-payment
+        xenditPlanId: recurringPlan.recurringPlan.id,
       };
 
       await createTransaction(transactionData);

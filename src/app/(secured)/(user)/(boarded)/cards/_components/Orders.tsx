@@ -40,6 +40,18 @@ const statusConfig = {
     icon: Clock,
     description: "Waiting for payment confirmation"
   },
+  "processing": {
+    label: "Processing",
+    color: "text-blue-600 bg-blue-100 dark:text-blue-400 dark:bg-blue-900/30",
+    icon: Package,
+    description: "Payment received, processing your order"
+  },
+  "completed": {
+    label: "Completed",
+    color: "text-green-600 bg-green-100 dark:text-green-400 dark:bg-green-900/30",
+    icon: CheckCircle2,
+    description: "Order has been completed"
+  },
   "to-ship": {
     label: "To Ship",
     color: "text-blue-600 bg-blue-100 dark:text-blue-400 dark:bg-blue-900/30",
@@ -202,7 +214,7 @@ const Orders = () => {
                                   <p className="text-sm text-muted-foreground">
                                     Qty: {item.quantity} • ₱{item.price}
                                   </p>
-                                  {order.status === "to-ship" || order.status === "shipped" ? (
+                                  {(order.status === "processing" || order.status === "completed" || order.status === "to-ship" || order.status === "shipping") ? (
                                     <p className="text-xs text-muted-foreground mt-1">
                                       Transfer code will be on the card package
                                     </p>
@@ -259,43 +271,87 @@ const Orders = () => {
                               </p>
                             </div>
                           </div>
-                          {order.xenditPlanId && (
-                            <Button 
-                              className="w-full"
-                              size="sm"
-                              onClick={async () => {
-                                try {
-                                  // Call API to get payment URL from Xendit
-                                  const response = await fetch('/api/xendit/get-payment-url', {
-                                    method: 'POST',
-                                    headers: {
-                                      'Content-Type': 'application/json',
-                                    },
-                                    body: JSON.stringify({
-                                      planId: order.xenditPlanId,
-                                      orderId: order.id,
-                                    }),
-                                  });
-                                  
-                                  if (response.ok) {
-                                    const { paymentUrl } = await response.json();
-                                    if (paymentUrl) {
-                                      window.location.href = paymentUrl;
-                                    } else {
-                                      toast.error("Payment link not available. Please contact support.");
+                          <div className="space-y-2">
+                            {(order.paymentUrl || order.xenditPlanId) && (
+                              <Button 
+                                className="w-full"
+                                size="sm"
+                                onClick={async () => {
+                                  try {
+                                    // First try to use stored payment URL
+                                    if (order.paymentUrl) {
+                                      window.location.href = order.paymentUrl;
+                                      return;
                                     }
-                                  } else {
+                                    
+                                    // Fallback to API call if no stored URL
+                                    const response = await fetch('/api/xendit/get-payment-url', {
+                                      method: 'POST',
+                                      headers: {
+                                        'Content-Type': 'application/json',
+                                      },
+                                      body: JSON.stringify({
+                                        planId: order.xenditPlanId,
+                                        orderId: order.id,
+                                      }),
+                                    });
+                                    
+                                    if (response.ok) {
+                                      const { paymentUrl } = await response.json();
+                                      if (paymentUrl) {
+                                        window.location.href = paymentUrl;
+                                      } else {
+                                        toast.error("Payment link not available. Please contact support.");
+                                      }
+                                    } else {
+                                      toast.error("Failed to get payment link. Please try again.");
+                                    }
+                                  } catch (error) {
+                                    console.error("Error getting payment link:", error);
                                     toast.error("Failed to get payment link. Please try again.");
                                   }
-                                } catch (error) {
-                                  console.error("Error getting payment link:", error);
-                                  toast.error("Failed to get payment link. Please try again.");
-                                }
-                              }}
-                            >
-                              Complete Payment
-                            </Button>
-                          )}
+                                }}
+                              >
+                                Pay Now
+                              </Button>
+                            )}
+                            
+                            {/* Temporary button for testing - remove when webhooks are enabled */}
+                            {process.env.NODE_ENV === 'development' && order.status === "pending" && (
+                              <Button 
+                                className="w-full"
+                                size="sm"
+                                variant="outline"
+                                onClick={async () => {
+                                  try {
+                                    const response = await fetch('/api/xendit/update-payment-status', {
+                                      method: 'POST',
+                                      headers: {
+                                        'Content-Type': 'application/json',
+                                      },
+                                      body: JSON.stringify({
+                                        transactionId: order.id,
+                                        newStatus: 'completed',
+                                      }),
+                                    });
+                                    
+                                    if (response.ok) {
+                                      toast.success("Order marked as completed. Please refresh to see updates.");
+                                      // Refresh the page to see the updated status
+                                      setTimeout(() => window.location.reload(), 1500);
+                                    } else {
+                                      toast.error("Failed to update order status.");
+                                    }
+                                  } catch (error) {
+                                    console.error("Error updating order status:", error);
+                                    toast.error("Failed to update order status.");
+                                  }
+                                }}
+                              >
+                                Mark as Paid (Test)
+                              </Button>
+                            )}
+                          </div>
                         </div>
                       </div>
                     )}
