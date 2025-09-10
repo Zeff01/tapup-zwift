@@ -31,6 +31,7 @@ export const RESET_PASSWORD_ROUTE = "/resetPassword";
 export const FORGOT_PASSWORD_ROUTE = "/forgotPassword";
 export const SESSION_COOKIE_NAME = "user_session";
 export const ONBOARDING_ROUTE = "/onboarding";
+export const HOME_ROUTE = "/home";
 export const DASHBOARD_ROUTE = "/dashboard";
 export const ADMIN_ONLY_ROUTE = "/users";
 export const CARD_ROUTE = "/cards";
