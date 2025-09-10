@@ -22,6 +22,13 @@ import {
   getSession,
   verifySignUserId,
 } from "../session";
+<<<<<<< HEAD
+=======
+import { setDoc, doc, serverTimestamp, getDoc } from "./firestore-monitored";
+import { toast } from "react-toastify";
+import { FirebaseError } from "firebase/app";
+import { z } from "zod";
+>>>>>>> 72d04b3 (feat: Major system improvements and bug fixes)
 import { signupSchema } from "../zod-schema";
 export const onAuthStateChanged = (callback: (user: User | null) => void) => {
   return _onAuthStateChanged(firebaseAuth, callback);
@@ -120,13 +127,13 @@ export const signUpHandler = async (data: z.infer<typeof signupSchema>) => {
 
         if (cleanOnboardingData.chosenPhysicalCard) {
           console.log(
-            "Adding physical card:",
+            "Physical card selected during onboarding:",
             cleanOnboardingData.chosenPhysicalCard
           );
-          await addCardForUser(userID, cleanOnboardingData.chosenPhysicalCard);
+          // Don't create virtual card here - user needs to purchase and receive physical card first
+          // Virtual card will be created when they enter the transfer code
         } else {
           console.warn("No physical card selected in onboarding data");
-          toast.error("Missing card selection in onboarding data");
         }
       } catch (error) {
         console.error("Error processing onboarding data:", error);

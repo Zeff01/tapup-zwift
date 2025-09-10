@@ -16,6 +16,7 @@ import {
   X,
   Users,
   Home,
+  Receipt,
 } from "lucide-react";
 
 import { RxDashboard } from "react-icons/rx";
@@ -229,90 +230,45 @@ export const courierList = [
   },
 ];
 export const carouselCards = {
-  card1: {
-    id: "card-1",
-    title: "Midnight Flow",
+  eclipse: {
+    id: "eclipse",
+    title: "Eclipse",
     price: 600,
-    image: "/assets/cards/back/card1.png",
-    description: `A sleek and modern design with deep purple and black gradients, perfect for professionals who want to leave a bold impression. The fluid background adds a touch of elegance, making it ideal for tech and innovation-driven individuals.`,
+    image: "/assets/cards/Eclipse-front.png",
+    backImage: "/assets/cards/Eclipse-back.png",
+    description: `A bold, minimalist design featuring striking contrasts and celestial elements. Perfect for executives and leaders who want to make a powerful, memorable impression.`,
   },
-  card2: {
-    id: "card-2",
-    title: "Golden Vision",
+  aurora: {
+    id: "aurora",
+    title: "Aurora",
     price: 600,
-    image: "/assets/cards/back/card2.png",
-    description: `A bright and confident design with a yellow backdrop that radiates energy and optimism. This card is perfect for go-getters who want to stand out with a vibrant yet professional look.`,
+    image: "/assets/cards/Aurora-front.png",
+    backImage: "/assets/cards/Aurora-back.png",
+    description: `A mesmerizing gradient design inspired by the northern lights, featuring vibrant blues and greens. Perfect for creative professionals who want to showcase their innovative spirit and artistic flair.`,
   },
-  card3: {
-    id: "card-3",
-    title: "Green Edge",
+  viper: {
+    id: "viper",
+    title: "Viper",
     price: 600,
-    image: "/assets/cards/back/card3.png",
-    description: `A refreshing design that blends green and white for a clean and energetic feel. The curved accent brings movement, symbolizing growth and innovation—great for those in sustainability, wellness, or entrepreneurship.`,
+    image: "/assets/cards/Viper-Front.png",
+    backImage: "/assets/cards/Viper-back.png",
+    description: `A sleek, aggressive design with sharp angles and dynamic patterns. Designed for entrepreneurs and innovators who want to project confidence and cutting-edge style.`,
   },
-  card4: {
-    id: "card-4",
-    title: "Blue Horizon",
+  vortex: {
+    id: "vortex",
+    title: "Vortex",
     price: 600,
-    image: "/assets/cards/back/card4.png",
-    description: `A soft yet professional blue gradient gives this card a calm and collected feel. Ideal for corporate professionals and creatives who want a subtle but impactful presence.`,
+    image: "/assets/cards/Vortex-front.png",
+    backImage: "/assets/cards/Vortex-back.png",
+    description: `A hypnotic swirl design that draws the eye inward with its circular patterns. Great for consultants and strategists who want to symbolize depth, focus, and transformative thinking.`,
   },
-  card5: {
-    id: "card-5",
-    title: "Serene Blend",
+  bloom: {
+    id: "bloom",
+    title: "Bloom",
     price: 600,
-    image: "/assets/cards/back/card5.png",
-    description: `A soothing mix of soft blue and pink gradients, creating a professional yet inviting look. This design is perfect for individuals who want a refined and balanced aesthetic that conveys trust and warmth.`,
-  },
-  // hide web builder image
-  // card6: {
-  //   title: "Custom Card",
-  //   image: "/assets/cards/gridImg.png",
-  //   description: `Using our card builder, you can personalize your cards by adding text, images, and various design elements, allowing you to create something truly unique and special.`,
-  // },
-
-  card6: {
-    id: "card-6",
-    title: "Arctic Clarity",
-    price: 600,
-    image: "/assets/cards/back/card6.png",
-    description: `A crisp and professional layout featuring icy blue tones and a minimalist structure. Best for those who prefer a polished and straightforward approach to networking.`,
-  },
-  card7: {
-    id: "card-7",
-    title: "Sunrise Spark",
-    price: 600,
-    image: "/assets/cards/back/card7.png",
-    description: `A lively mix of warm orange and cool blue, evoking a balance of creativity and trust. This design is great for those who want a friendly yet professional aesthetic that welcomes conversation.
-`,
-  },
-  card8: {
-    id: "card-8",
-    title: "Verdant Flow",
-    price: 600,
-    image: "/assets/cards/back/card8.png",
-    description: `A dynamic green and white layout with a sleek curve, symbolizing growth and innovation. This card is a great fit for professionals in tech, sustainability, or business, offering a fresh and energetic look while maintaining a professional feel.`,
-  },
-  card9: {
-    id: "card-9",
-    title: "Rose Radiance",
-    price: 600,
-    image: "/assets/cards/back/card9.png",
-    description: `A soft yet confident mix of pink and red hues, adding a touch of charm and elegance. Ideal for creative professionals, designers, or anyone who wants a stylish, memorable introduction.`,
-  },
-  card10: {
-    id: "card-10",
-    title: "Global Vision",
-    price: 600,
-    image: "/assets/cards/back/card10.png",
-    description: `A global-themed design with a purple gradient, representing ambition and international reach. This card suits professionals aiming to expand their network across borders.`,
-  },
-  card11: {
-    id: "card-11",
-    title: "Cosmic Grid",
-    price: 600,
-    image: "/assets/cards/back/card11.png",
-    description: `A deep-space-inspired design with digital lines, symbolizing connection and innovation. Great for tech enthusiasts, developers, and engineers who want a sophisticated and modern card.`,
+    image: "/assets/cards/Bloom-front.png",
+    backImage: "/assets/cards/Bloom-back.png",
+    description: `An elegant floral-inspired design with soft, organic patterns. Ideal for professionals in wellness, beauty, or lifestyle industries who want to convey growth and natural sophistication.`,
   },
 };
 
@@ -332,15 +288,16 @@ export const businessList = [
 ];
 
 export const menuItems = [
+  { icon: TbCards, title: "Cards", href: "/cards" },
   { icon: Home, title: "Home", href: "/home" },
   { icon: RxDashboard, title: "Dashboard", href: "/dashboard" },
-  { icon: TbCards, title: "Cards", href: "/cards" },
 ];
 
 export const adminMenuItems = [
-  { icon: Users, title: "Admin Dashboard", href: "/admin" },
+  { icon: Users, title: "User Management", href: "/admin" },
+  { icon: Receipt, title: "Transactions", href: "/admin/transactions" },
   { icon: FiShoppingBag, title: "Orders", href: "/admin/users-orders" },
-  { icon: IoCardOutline, title: "Print Cards", href: "/admin/print-cards" },
+  { icon: Package, title: "Card Bank", href: "/admin/card-bank" },
 ];
 
 export const publicDomain =

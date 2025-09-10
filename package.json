@@ -8,7 +8,8 @@
     "build": "next build",
     "start": "next start",
     "lint": "next lint",
-    "prettier": "prettier"
+    "prettier": "prettier",
+    "cleanup:cards": "node scripts/cleanup-cards.js"
   },
   "dependencies": {
     "@dnd-kit/core": "^6.3.1",

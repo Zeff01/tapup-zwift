@@ -1,7 +1,6 @@
-// app/cards/page.tsx
 import { authCurrentUserv2 } from "@/lib/firebase/auth";
 import { notFound, redirect } from "next/navigation";
-import Cards from "./_components/cards";
+import CardsWithOrders from "./_components/CardsWithOrders";
 
 export default async function CardPage() {
   const auth = await authCurrentUserv2();
@@ -11,7 +10,7 @@ export default async function CardPage() {
 
   return (
     <div className={`flex-1`}>
-      <Cards />
+      <CardsWithOrders />
     </div>
   );
 }

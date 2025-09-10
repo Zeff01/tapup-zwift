@@ -57,7 +57,27 @@ const Cards = () => {
     queryFn: async () => {
       if (!user?.uid) throw new Error("User UID is undefined");
 
+      console.log("[CARDS PAGE] Fetching cards for user:", user.uid);
+      console.log("[CARDS PAGE] Current URL:", window.location.href);
+      console.log("[CARDS PAGE] URL params:", window.location.search);
+      
+      // Check if we're returning from Xendit
+      const urlParams = new URLSearchParams(window.location.search);
+      if (urlParams.has('status') || urlParams.has('external_id') || urlParams.has('payment_status')) {
+        console.error("[CARDS PAGE] 🚨 RETURNING FROM XENDIT!");
+        console.error("[CARDS PAGE] 🚨 URL Parameters:", Object.fromEntries(urlParams));
+      }
+      
       const cards = await getCardsByOwner(user.uid);
+      console.log("[CARDS PAGE] Received cards:", cards);
+      
+      // Check if any cards look suspicious
+      cards.forEach((card) => {
+        if (card.chosenPhysicalCard && !card.activated) {
+          console.error("[CARDS PAGE] 🚨 Found physical card with owner but not activated:", card);
+        }
+      });
+      
       const sortedCards = await sortCards(cards, user.uid);
       return sortedCards;
     },
@@ -65,8 +85,25 @@ const Cards = () => {
   });
 
   useEffect(() => {
+    console.log("[CARDS PAGE] useEffect - cards updated:", cards?.length);
     if (cards) setOrderedCards(cards);
   }, [cards]);
+  
+  // Check if something happens on mount
+  useEffect(() => {
+    console.log("[CARDS PAGE] Component mounted");
+    console.log("[CARDS PAGE] Initial URL:", window.location.href);
+    
+    // Check localStorage or sessionStorage for any pending operations
+    const pendingOrder = localStorage.getItem('pending_order');
+    const pendingCard = sessionStorage.getItem('pending_card');
+    
+    if (pendingOrder || pendingCard) {
+      console.error("[CARDS PAGE] 🚨 Found pending data in storage!");
+      console.error("[CARDS PAGE] Pending order:", pendingOrder);
+      console.error("[CARDS PAGE] Pending card:", pendingCard);
+    }
+  }, []);
 
   const sensors = useSensors(
     useSensor(PointerSensor),
@@ -116,13 +153,15 @@ const Cards = () => {
       cleanTranferCode,
       currentUser.uid
     );
+    setLoadTransferCode(false);
     if (success) {
       setIsDialogOpen(false);
-      setTransferCode("");
+      setTransferCode(""); // Clear the input
       queryClient.invalidateQueries({ queryKey: ["cards", currentUser.uid] });
+    } else {
+      // Also clear on failure to allow retry with new code
+      setTransferCode("");
     }
-    if (ctxTimeout) clearTimeout(ctxTimeout);
-    ctxTimeout = setTimeout(() => setLoadTransferCode(false), 1500);
   };
 
   if (status === "pending") return <Loading />;
@@ -137,8 +176,7 @@ const Cards = () => {
       >
         <ConfirmDialog />
         <div className="grid grid-cols-1 grid-rows-[auto_1fr] min-h-screen py-4 md:py-8 gap-4">
-          <div className="flex items-center justify-between px-4 md:px-16">
-            <h1 className="text-xl md:text-2xl font-semibold">My Cards</h1>
+          <div className="flex items-center justify-end px-4 md:px-16">
             <div className="flex gap-x-2">
               <Button variant="outline" onClick={() => setIsDialogOpen(true)}>
                 Add Card

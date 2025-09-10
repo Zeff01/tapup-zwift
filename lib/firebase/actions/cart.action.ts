@@ -8,7 +8,7 @@ import {
   getDocs,
   setDoc,
   updateDoc,
-} from "firebase/firestore";
+} from "../firestore-monitored";
 import { firebaseDb } from "../firebase";
 import { CartItem } from "@/providers/cart-provider-v2";
 

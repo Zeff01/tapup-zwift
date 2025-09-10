@@ -9,6 +9,7 @@ import { motion, AnimatePresence } from "framer-motion";
 import { useInView } from "framer-motion";
 import { carouselCards } from "@/constants";
 import CardDetails from "./card-details";
+import { FlippableCard } from "@/components/FlippableCard";
 
 const TemplateSelection = () => {
   const ref = useRef(null);
@@ -81,14 +82,13 @@ const TemplateSelection = () => {
               key={index}
               variants={cardVariants}
               whileHover={{
-                y: -5,
                 scale: 1.05,
                 transition: { type: "spring", stiffness: 300 },
               }}
               onClick={() => setSelectedCard(index)}
               className={`relative cursor-pointer group ${
                 selectedCard === index
-                  ? "ring-2 ring-green-500 ring-offset-2 rounded-md"
+                  ? "ring-2 ring-green-500 ring-offset-2 rounded-xl"
                   : ""
               }`}
             >
@@ -109,19 +109,12 @@ const TemplateSelection = () => {
                         initial={{ scale: 0 }}
                         animate={{ scale: 1 }}
                         exit={{ scale: 0 }}
-                        className="absolute top-2 right-2 w-6 h-6 bg-green-500 rounded-full flex items-center justify-center"
+                        className="absolute top-2 right-2 w-6 h-6 bg-green-500 rounded-full flex items-center justify-center z-10"
                       >
                         <Check className="w-4 h-4 text-white" />
                       </motion.div>
                     )}
                   </AnimatePresence>
-                </div>
-
-                {/* Card title on hover */}
-                <div className="absolute bottom-0 left-0 right-0 bg-gradient-to-t from-black/70 to-transparent p-3 opacity-0 group-hover:opacity-100 transition-opacity">
-                  <p className="text-white text-sm font-medium truncate">
-                    {card.title}
-                  </p>
                 </div>
               </div>
             </motion.div>
@@ -142,17 +135,15 @@ const TemplateSelection = () => {
               {/* Card Preview */}
               <motion.div
                 className="flex-1"
-                whileHover={{ scale: 1.02 }}
-                transition={{ type: "spring", stiffness: 300 }}
               >
                 <div className="relative aspect-[4/3] max-w-lg mx-auto">
-                  <Image
-                    src={Object.values(carouselCards)[selectedCard].image}
-                    alt={Object.values(carouselCards)[selectedCard].title}
-                    fill
-                    className="object-contain drop-shadow-xl"
-                    sizes="(max-width: 768px) 100vw, 50vw"
-                    priority
+                  <FlippableCard
+                    frontImage={Object.values(carouselCards)[selectedCard].image}
+                    backImage={Object.values(carouselCards)[selectedCard].backImage || Object.values(carouselCards)[selectedCard].image}
+                    title={Object.values(carouselCards)[selectedCard].title}
+                    isSelected={false}
+                    autoFlip={false}
+                    className="w-full h-full"
                   />
                 </div>
               </motion.div>

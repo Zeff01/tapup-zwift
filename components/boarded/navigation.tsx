@@ -38,7 +38,7 @@ const NavigationBoarded = () => {
 
   const isAdmin = user?.role === "admin";
 
-  const navItems = [...menuItems, ...(isAdmin ? adminMenuItems : [])];
+  // Don't combine the arrays - we'll render them separately to add a separator
 
   return (
     <nav
@@ -120,16 +120,11 @@ const NavigationBoarded = () => {
                   </p>
                 </div>
 
-                <input
-                  readOnly
-                  value={user?.email || "anonymous@mail.com"}
-                  className="text-xs text-foreground/30 border-0 truncate w-full bg-transparent outline-none"
-                />
+                <p className="text-xs text-foreground/60 break-all pr-2">
+                  {user?.email || "anonymous@mail.com"}
+                </p>
               </div>
               <EditAccountModal />
-              <span className="ml-auto flex mr-2">
-                <ThemeToggle variant="boarded" showLabel />
-              </span>
             </div>
           ) : (
             <div className="flex flex-col items-center gap-4">
@@ -152,7 +147,8 @@ const NavigationBoarded = () => {
             </div>
           )}
           <div className="flex-1 pb-12 flex flex-col mt-12 gap-2">
-            {navItems.map((item, index) => {
+            {/* Regular menu items */}
+            {menuItems.map((item, index) => {
               const Icon = item.icon;
               return (
                 <Link
@@ -172,9 +168,58 @@ const NavigationBoarded = () => {
                 </Link>
               );
             })}
+
+            {/* Admin separator and items */}
+            {isAdmin && (
+              <>
+                <div className={cn(
+                  "my-4 border-t border-gray-300 dark:border-gray-600 relative",
+                  isMinimized ? "mx-2" : "mx-4"
+                )}>
+                  {!isMinimized && (
+                    <span className="absolute -top-2 left-2 bg-background px-2 text-xs text-muted-foreground font-semibold">
+                      ADMIN
+                    </span>
+                  )}
+                </div>
+                {adminMenuItems.map((item, index) => {
+                  const Icon = item.icon;
+                  return (
+                    <Link
+                      key={`admin-${index}`}
+                      href={item.href}
+                      className={cn(
+                        "flex items-center transition-colors duration-200 bg-secondary/20 border rounded-sm",
+                        isMinimized ? "justify-center p-2" : "pl-4 p-3",
+                        item.href === pathname
+                          ? "bg-green-500 text-background font-black"
+                          : "hover:bg-accent"
+                      )}
+                      title={isMinimized ? item.title : undefined}
+                    >
+                      <Icon className={`size-6 ${isMinimized ? "" : "mr-4"}`} />
+                      {!isMinimized && item.title}
+                    </Link>
+                  );
+                })}
+              </>
+            )}
+            {/* Theme Toggle */}
+            <div className={cn(
+              "mt-auto mb-2 flex items-center",
+              isMinimized ? "justify-center px-2" : "px-4"
+            )}>
+              {isMinimized ? (
+                <ThemeToggle variant="boarded" />
+              ) : (
+                <ThemeToggle variant="boarded" showLabel className="w-full" />
+              )}
+            </div>
+            
+            {/* Sign Out Button */}
             <Button
               className={cn(
-                "mt-auto flex gap-0 py-6 bg-secondary/20 border text-foreground text-base",
+                "flex gap-0 py-6 bg-secondary/20 border text-foreground text-base",
                 isMinimized ? "justify-center px-2" : "justify-start"
               )}
               variant="destructive"
