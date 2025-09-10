@@ -232,8 +232,8 @@ export default function UserManagementDashboard({
     // Verification filter
     if (verificationFilter !== "all") {
       filtered = filtered.filter(user => {
-        if (verificationFilter === "verified") return user.emailVerified;
-        if (verificationFilter === "unverified") return !user.emailVerified;
+        if (verificationFilter === "verified") return !!user.email;
+        if (verificationFilter === "unverified") return !user.email;
         return true;
       });
     }
@@ -311,7 +311,7 @@ export default function UserManagementDashboard({
   };
 
   const getVerificationBadge = (user: ExtendedUserInterface) => {
-    if (user.emailVerified) {
+    if (user.email) {
       return (
         <Badge variant="outline" className="gap-1 text-xs border-green-500 text-green-700 dark:text-green-400">
           <CheckCircle2 className="w-3 h-3" />
@@ -331,7 +331,7 @@ export default function UserManagementDashboard({
     // Check multiple factors for activity status
     const hasCompletedOnboarding = user.onboarding;
     const hasCards = user.printStatus;
-    const isVerified = user.emailVerified;
+    const isVerified = !!user.email;
     const hasProfile = user.firstName && user.lastName && user.company;
     
     // If user has lastActiveAt timestamp (would need to add this field)
@@ -908,7 +908,7 @@ export default function UserManagementDashboard({
                   </div>
                   <div className="flex items-center gap-2">
                     <Mail className="w-4 h-4 text-muted-foreground" />
-                    <span>Email: {selectedUser.emailVerified ? "Verified" : "Unverified"}</span>
+                    <span>Email: {selectedUser.email ? "Verified" : "Unverified"}</span>
                   </div>
                 </div>
               </div>
