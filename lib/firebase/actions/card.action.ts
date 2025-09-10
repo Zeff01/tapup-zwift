@@ -988,11 +988,16 @@ export const generateMultipleCards = async ({
     });
 
     const cardResults = await Promise.all(reserveCardPromises);
+    
+    // Filter out null values and ensure we have valid card IDs
+    const validCardIds = cardResults.filter((id): id is string => id !== null);
 
-    await addSubscription({
-      cardIds: [...(cardResults || [])],
-      subscriptionDays,
-    });
+    if (validCardIds.length > 0) {
+      await addSubscription({
+        cardIds: validCardIds,
+        subscriptionDays,
+      });
+    }
 
     revalidatePath("/admin/print-cards");
     return { success: true, message: "Created multiple cards!" };
