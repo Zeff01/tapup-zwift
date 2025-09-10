@@ -2,31 +2,16 @@ import { cn, downloadVCard, getCopyrightYear } from "@/lib/utils";
 import { Card } from "@/types/types";
 import { Advent_Pro, Akatab } from "next/font/google";
 import Image from "next/image";
-import {
-  FaFacebook,
-  FaGlobe,
-  FaInstagram,
-  FaLinkedin,
-  FaSkype,
-  FaViber,
-  FaWhatsapp,
-  FaXTwitter,
-  FaYoutube,
-} from "react-icons/fa6";
-import {
-  MdOutlineBookmarkBorder,
-  MdOutlineMailOutline,
-  MdOutlinePhone,
-} from "react-icons/md";
-import { Button } from "../ui/button";
 import { Separator } from "../ui/separator";
-import {
-  Tooltip,
-  TooltipContent,
-  TooltipProvider,
-  TooltipTrigger,
-} from "../ui/tooltip";
 import { CiMail, CiSaveDown2 } from "react-icons/ci";
+
+// Components
+import {
+  CTAButtons,
+  SocialLinks,
+  TemplateContainer,
+  TemplateFooter,
+} from "./templatesComponents";
 
 const poppins = Advent_Pro({
   weight: "400",
@@ -277,6 +262,7 @@ const Template12 = ({
   instagramUrl,
   twitterUrl,
   linkedinUrl,
+  tiktokUrl,
   whatsappNumber,
   skypeInviteUrl,
   viberUrl,
@@ -296,7 +282,13 @@ const Template12 = ({
   };
 
   return (
-    <div className="bg-[#34463b] flex flex-col">
+    <TemplateContainer
+      backgroundColor="bg-[#34463b]"
+      padding="none"
+      maxWidth="none"
+      flex
+      flexDirection="col"
+    >
       <div className="max-w-[480px] mx-auto min-h-screen relative  flex flex-col">
         <div className="absolute flex gap-x-2 m-4 top-0 right-0">
           <span className=" bg-white text-2xl p-2 text-neutral-800 rounded-full">
@@ -325,7 +317,9 @@ const Template12 = ({
                   {firstName + " " + lastName}
                 </h1>
               ) : (
-                <h1 className="text-xl font-bold mt-2 ">Hussain Watkins</h1>
+                <h1 className="text-xl font-bold mt-2 text-[#D3F1DF]">
+                  Hussain Watkins
+                </h1>
               )}
               <div className="flex">
                 <h2
@@ -373,62 +367,17 @@ const Template12 = ({
                 </div>
               )}
             </div>
-            <div className="flex items-end justify-center w-full gap-2">
-              <TooltipProvider>
-                <Tooltip>
-                  <TooltipTrigger asChild>
-                    <Button
-                      variant="outline"
-                      className="bg-[#D3F1DF] text-xs hover:bg-[#466b55] transition-colors duration-300 border-none rounded-full h-7 text-black shadow-md"
-                    >
-                      <a className="flex items-center" href={`tel:${number}`}>
-                        <MdOutlinePhone />
-                      </a>
-                    </Button>
-                  </TooltipTrigger>
-                  <TooltipContent>
-                    <span className="text-xs">
-                      {number ?? "H.Watkins@gmail.com"}
-                    </span>
-                  </TooltipContent>
-                </Tooltip>
-              </TooltipProvider>
-
-              <TooltipProvider>
-                <Tooltip>
-                  <TooltipTrigger asChild>
-                    <Button
-                      variant="outline"
-                      className="bg-[#D3F1DF] text-xs hover:bg-[#466b55] transition-colors duration-300 border-none rounded-full h-7 text-black   shadow-md"
-                    >
-                      <a href={`mailto:${email}`}>
-                        <MdOutlineMailOutline className="cursor-pointer" />
-                      </a>
-                    </Button>
-                  </TooltipTrigger>
-                  <TooltipContent>
-                    <span className="text-xs">
-                      {email ?? "H.Watkins@gmail.com"}
-                    </span>
-                  </TooltipContent>
-                </Tooltip>
-              </TooltipProvider>
-              <TooltipProvider>
-                <Tooltip>
-                  <TooltipTrigger asChild>
-                    <Button
-                      variant="outline"
-                      onClick={() => downloadVCard(userProfile)}
-                      className="bg-[#D3F1DF] text-xs hover:bg-[#466b55] transition-colors duration-300 border-none rounded-full h-7 text-black   shadow-md"
-                    >
-                      <MdOutlineBookmarkBorder className="cursor-pointer" />
-                    </Button>
-                  </TooltipTrigger>
-                  <TooltipContent>
-                    <span className="text-xs">Download VCF</span>
-                  </TooltipContent>
-                </Tooltip>
-              </TooltipProvider>
+            <div className="">
+              <CTAButtons
+                number={number}
+                email={email}
+                userProfile={userProfile}
+                variant="floating"
+                size="sm"
+                icons="lucide"
+                buttonClassName="bg-[#D3F1DF] w-12 text-xs hover:bg-[#466b55] transition-colors duration-300 border-none rounded-full h-7 text-black shadow-md"
+                layout="horizontal"
+              />
             </div>
           </div>
           <Image
@@ -441,59 +390,20 @@ const Template12 = ({
         </div>
         <div className="text-center flex flex-col w-full pb-4 space-y-1 bg-[#D3F1DF] bg-gradient-to-t from-[#85A98F] overflow-hidden to-[#D3F1DF] rounded-t-3xl  z-20 relative -mt-8 flex-1">
           <div className=" flex  items-center w-full gap-3 py-4 text-2xl bg-gradient-to-t from-[#D3F1DF]  to-[#f4fcf7] text-neutral-700 h-16 justify-center">
-            {facebookUrl && (
-              <a href={facebookUrl} target="_blank" rel="noopener noreferrer">
-                <FaFacebook size={20} />
-              </a>
-            )}
-            {twitterUrl && (
-              <a href={twitterUrl} target="_blank" rel="noopener noreferrer">
-                <FaXTwitter size={20} />
-              </a>
-            )}
-            {youtubeUrl && (
-              <a href={youtubeUrl} target="_blank" rel="noopener noreferrer">
-                <FaYoutube size={20} />
-              </a>
-            )}
-            {instagramUrl && (
-              <a href={instagramUrl} target="_blank" rel="noopener noreferrer">
-                <FaInstagram size={20} />
-              </a>
-            )}
-            {linkedinUrl && (
-              <a href={linkedinUrl} target="_blank" rel="noopener noreferrer">
-                <FaLinkedin size={20} />
-              </a>
-            )}
-            {viberUrl && (
-              <a href={viberUrl} target="_blank" rel="noopener noreferrer">
-                <FaViber size={20} />
-              </a>
-            )}
-            {whatsappNumber && (
-              <a
-                href={`https://wa.me/${whatsappNumber}`}
-                target="_blank"
-                rel="noopener noreferrer"
-              >
-                <FaWhatsapp size={20} />
-              </a>
-            )}
-            {skypeInviteUrl && (
-              <a
-                href={`skype:${skypeInviteUrl}?chat`}
-                target="_blank"
-                rel="noopener noreferrer"
-              >
-                <FaSkype size={20} />
-              </a>
-            )}
-            {websiteUrl && (
-              <a href={websiteUrl} target="_blank" rel="noopener noreferrer">
-                <FaGlobe size={20} />
-              </a>
-            )}
+            <SocialLinks
+              facebookUrl={facebookUrl}
+              twitterUrl={twitterUrl}
+              tiktokUrl={tiktokUrl}
+              youtubeUrl={youtubeUrl}
+              instagramUrl={instagramUrl}
+              linkedinUrl={linkedinUrl}
+              viberUrl={viberUrl}
+              whatsappNumber={whatsappNumber}
+              skypeInviteUrl={skypeInviteUrl}
+              websiteUrl={websiteUrl}
+              size="md"
+              iconClassName="text-neutral-700"
+            />
           </div>
           <div className=" flex flex-col gap-y-2 flex-grow text-black mt-28 px-4">
             <h2 className="text-lg font-bold mt-3">Professional Portfolio</h2>
@@ -516,7 +426,8 @@ const Template12 = ({
           </div>
         </div>
       </div>
-      <footer className="flex flex-col items-center py-6 gap-1 text-center text-xs max-w-[480px] mx-auto">
+
+      <TemplateFooter className="flex flex-col items-center mb-1 gap-1 text-center text-xs py-4">
         <a
           href={userProfile?.customUrl ?? userProfile?.websiteUrl ?? "#"}
           target="_blank"
@@ -528,14 +439,14 @@ const Template12 = ({
             width={40}
             height={15}
             priority
-            className="opacity-90"
+            className="opacity-90 text-white"
           />
         </a>
-        <span className="tracking-wide text-gray-300 text-[10px]">
+        <span className="tracking-wide text-white text-[10px]">
           © {getCopyrightYear()} Zwiftech. All Rights Reserved.
         </span>
-      </footer>
-    </div>
+      </TemplateFooter>
+    </TemplateContainer>
   );
 };
 
