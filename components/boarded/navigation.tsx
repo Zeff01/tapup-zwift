@@ -212,7 +212,7 @@ const NavigationBoarded = () => {
               {isMinimized ? (
                 <ThemeToggle variant="boarded" />
               ) : (
-                <ThemeToggle variant="boarded" showLabel className="w-full" />
+                <ThemeToggle variant="boarded" showLabel />
               )}
             </div>
             

@@ -6,13 +6,13 @@ import {
   serverTimestamp 
 } from "@/lib/firebase/firestore-monitored";
 import { firebaseDb } from "@/lib/firebase/firebase";
-import { authOptions } from "@/lib/firebase/auth";
+import { authCurrentUser } from "@/lib/firebase/auth";
 import { restoreInventory } from "@/lib/firebase/actions/inventory.action";
 
 export async function POST(req: NextRequest) {
   try {
     // Verify admin authentication
-    const currentUser = await authOptions();
+    const currentUser = await authCurrentUser();
     if (!currentUser) {
       return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
     }

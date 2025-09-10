@@ -18,6 +18,7 @@ export {
   arrayRemove,
   increment,
   documentId,
+  runTransaction,
   type DocumentSnapshot,
   type QuerySnapshot,
   type DocumentChange,
