@@ -78,55 +78,8 @@ export default function CheckoutForm() {
         }));
       });
 
-      // First, check and update inventory for each card type
-      const orderedCards = [];
-      console.log("[Checkout] Checking inventory for", newCards.length, "cards");
-      
-      // Remove the direct import of decrementInventory as it's a server action
-      
-      // Group cards by type to handle multiple quantities
-      const cardsByType = newCards.reduce((acc, card) => {
-        if (!acc[card.id]) {
-          acc[card.id] = { ...card, count: 0 };
-        }
-        acc[card.id].count++;
-        return acc;
-      }, {} as Record<string, { id: string; name: string; count: number }>);
-      
-      // Decrement inventory for each card type
-      for (const cardType of Object.values(cardsByType)) {
-        for (let i = 0; i < cardType.count; i++) {
-          try {
-            console.log(`[Checkout] Decreasing inventory for ${cardType.name} (${i + 1}/${cardType.count})`);
-            const response = await fetch('/api/inventory/decrement', {
-              method: 'POST',
-              headers: {
-                'Content-Type': 'application/json',
-              },
-              body: JSON.stringify({ cardType: cardType.id }),
-            });
-            
-            const result = await response.json();
-            
-            if (!result.success) {
-              console.error(`[Checkout] Failed to reserve ${cardType.name}:`, result.message);
-              // TODO: Rollback any previously decremented inventory
-              throw new Error(result.message || `No available ${cardType.name} cards in stock`);
-            }
-            
-            orderedCards.push({
-              id: cardType.id,
-              name: cardType.name,
-              // No specific card ID or transfer code - we don't know which one will be shipped
-            });
-          } catch (error) {
-            console.error(`[Checkout] Error with inventory for ${cardType.name}:`, error);
-            throw error;
-          }
-        }
-      }
-      
-      console.log("[Checkout] Inventory updated successfully for all cards");
+      // Using card bank instead of inventory system
+      console.log("[Checkout] Processing order for", newCards.length, "cards");
 
       // Use API route instead of direct client call
       const response = await fetch('/api/xendit/create-recurring-plan', {

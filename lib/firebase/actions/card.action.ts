@@ -573,9 +573,7 @@ export const transferCardOwnershipUsingCode = async (
           transferCode: `USED-${Date.now()}`, // Mark as used with timestamp
         });
         
-        // Update inventory: move from pending to assigned
-        const { markCardAsAssigned } = await import("./inventory.action");
-        await markCardAsAssigned(pregeneratedCard.cardType);
+        // Card bank handles assignment automatically
         
         // Update the card with full user data (activate it)
         const cardRef = doc(firebaseDb, "cards", pregeneratedCard.id);

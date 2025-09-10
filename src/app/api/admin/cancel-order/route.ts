@@ -7,7 +7,6 @@ import {
 } from "@/lib/firebase/firestore-monitored";
 import { firebaseDb } from "@/lib/firebase/firebase";
 import { authCurrentUser } from "@/lib/firebase/auth";
-import { restoreInventory } from "@/lib/firebase/actions/inventory.action";
 
 export async function POST(req: NextRequest) {
   try {
@@ -49,22 +48,7 @@ export async function POST(req: NextRequest) {
       );
     }
     
-    // Restore inventory for each item
-    const restorePromises = [];
-    if (transaction.items && Array.isArray(transaction.items)) {
-      for (const item of transaction.items) {
-        if (item.id) {
-          restorePromises.push(restoreInventory(item.id));
-        }
-      }
-    }
-    
-    const restoreResults = await Promise.all(restorePromises);
-    const failedRestores = restoreResults.filter(r => !r.success);
-    
-    if (failedRestores.length > 0) {
-      console.error("[Cancel Order] Failed to restore some inventory items:", failedRestores);
-    }
+    // Card bank handles card availability automatically
     
     // Update transaction status
     await updateDoc(transactionRef, {
@@ -76,8 +60,7 @@ export async function POST(req: NextRequest) {
     
     return NextResponse.json({ 
       success: true,
-      message: "Order cancelled successfully",
-      inventoryRestored: restoreResults.filter(r => r.success).length
+      message: "Order cancelled successfully"
     });
     
   } catch (error) {
