@@ -26,7 +26,9 @@ export async function POST(req: NextRequest) {
     const collectionsToReset = [
       "transactions",
       "orders", // if you have a separate orders collection
-      "pregenerated-cards" // to clean up reserved cards
+      "pregenerated-cards", // to clean up reserved cards
+      "order-items", // if items are stored separately
+      "order-history" // if there's order history
     ];
 
     const results = {
