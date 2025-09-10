@@ -81,7 +81,7 @@ export default function TestCardsPage() {
       }));
 
       // 4. Check for anomalies
-      testResults.userCards.forEach(card => {
+      testResults.userCards.forEach((card: any) => {
         if (card.owner && !card.activated) {
           testResults.issues.push({
             type: "NOT_ACTIVATED",
