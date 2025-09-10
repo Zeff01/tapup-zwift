@@ -102,7 +102,8 @@ export const getCardById = async (
     if (!subscriptionSnapshot.empty) {
       const subscriptionData = subscriptionSnapshot.docs[0].data();
       cardData.expiryDate = subscriptionData.expiryDate;
-      cardData.subscriptionPlan = subscriptionData.subscriptionPlan;
+      // subscriptionPlan is not a property of Card type
+      // cardData.subscriptionPlan = subscriptionData.subscriptionPlan;
     }
 
     return cardData;

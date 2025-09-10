@@ -978,26 +978,20 @@ export const generateMultipleCards = async ({
 
     // Admin function should not create virtual cards directly
     // This should reserve cards from the card bank instead
-    const reserveCardPromises = cardRequests.flatMap((item) => {
-      return Array.from({ length: item.quantity }, async () => {
-        // For admin bulk creation, we should use the card bank system
-        console.warn("Admin bulk card creation needs to be updated to use card bank system");
-        // TODO: Implement proper card reservation from card bank
-        return null;
-      });
-    });
-
-    const cardResults = await Promise.all(reserveCardPromises);
+    console.warn("Admin bulk card creation needs to be updated to use card bank system");
     
-    // Filter out null values and ensure we have valid card IDs
-    const validCardIds = cardResults.filter((id: string | null): id is string => id !== null);
-
-    if (validCardIds.length > 0) {
-      await addSubscription({
-        cardIds: validCardIds,
-        subscriptionDays,
-      });
-    }
+    // TODO: Implement proper card reservation from card bank
+    // For now, this function does nothing as it needs to be refactored to use the card bank system
+    
+    // Since we're not actually creating cards, we can't add subscriptions
+    // const validCardIds: string[] = [];
+    
+    // if (validCardIds.length > 0) {
+    //   await addSubscription({
+    //     cardIds: validCardIds,
+    //     subscriptionDays,
+    //   });
+    // }
 
     revalidatePath("/admin/print-cards");
     return { success: true, message: "Created multiple cards!" };

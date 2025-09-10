@@ -166,7 +166,7 @@ export default function UserManagementDashboard({
     const totalAdmins = admins.length;
     const totalUsers = regularUsers.length;
     const activeUsers = users.filter(u => u.onboarding).length;
-    const verifiedUsers = users.filter(u => u.emailVerified).length;
+    const verifiedUsers = users.filter(u => u.email).length; // Count users with email as verified
     const withCards = users.filter(u => u.printStatus).length;
     
     // Calculate trends (mock data - replace with actual historical data)

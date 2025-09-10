@@ -16,9 +16,13 @@ export const getUserById = async (id: string): Promise<Users | null> => {
     const userDoc = await getDoc(userRef);
 
     if (userDoc.exists()) {
+      const userData = userDoc.data();
       return {
-        ...userDoc.data(),
+        ...userData,
         uid: userDoc.id,
+        // Provide default values for required fields if missing
+        companies: userData.companies || [],
+        email: userData.email || '',
       } as Users;
     }
     return null;

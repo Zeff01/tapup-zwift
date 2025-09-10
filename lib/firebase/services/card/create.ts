@@ -7,7 +7,6 @@ import {
 } from "@/lib/firebase/firestore-monitored";
 import { firebaseDb } from "@/lib/firebase/firebase";
 import { Card } from "@/types/types";
-import { uploadImage } from "../../actions/user.action"; // Will be moved to user service later
 import { nanoid } from "nanoid";
 
 /**
@@ -27,19 +26,12 @@ export const createCard = async ({
   try {
     const cardObj = { ...cardFormValues, owner: user_id } as Card;
 
-    let profileUrlUploaded = "";
-
     if (profilePictureUrl) {
-      profileUrlUploaded = await uploadImage(
-        profilePictureUrl,
-        `/cards/${user_id}/profile`
-      );
-      cardObj.profilePictureUrl = profileUrlUploaded;
+      cardObj.profilePictureUrl = profilePictureUrl;
     }
 
-    cardObj.template = selectedTemplateId as Card["template"];
+    cardObj.chosenTemplate = selectedTemplateId;
     cardObj.createdAt = serverTimestamp();
-    cardObj.lastModified = Date.now();
 
     const newDoc = doc(collection(firebaseDb, "cards"));
     const response = await setDoc(newDoc, cardObj);
@@ -71,14 +63,13 @@ export const duplicateCard = async ({
     }
 
     // Remove fields that shouldn't be duplicated
-    const { id, createdAt, lastModified, ...cardData } = originalCard;
+    const { id, createdAt, ...cardData } = originalCard;
 
     // Create new card with duplicated data
     const newCardData = {
       ...cardData,
       owner: userId,
       createdAt: serverTimestamp(),
-      lastModified: Date.now(),
       // Add "Copy" to the card name
       firstName: `${cardData.firstName} (Copy)`,
     };
@@ -115,8 +106,7 @@ export const generateMultipleCards = async ({
         ...cardData,
         owner: userId,
         createdAt: serverTimestamp(),
-        lastModified: Date.now(),
-        template: cardData.template || "Template1",
+        chosenTemplate: cardData.chosenTemplate || "Template1",
       };
 
       batch.set(newDoc, cardObj);
