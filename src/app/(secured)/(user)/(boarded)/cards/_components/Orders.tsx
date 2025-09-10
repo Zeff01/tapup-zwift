@@ -52,24 +52,6 @@ const statusConfig = {
     icon: CheckCircle2,
     description: "Order has been completed"
   },
-  "to-ship": {
-    label: "To Ship",
-    color: "text-blue-600 bg-blue-100 dark:text-blue-400 dark:bg-blue-900/30",
-    icon: Package,
-    description: "Payment received, preparing for shipment"
-  },
-  "shipping": {
-    label: "Shipping",
-    color: "text-purple-600 bg-purple-100 dark:text-purple-400 dark:bg-purple-900/30",
-    icon: Truck,
-    description: "Your order is on the way"
-  },
-  "delivered": {
-    label: "Delivered",
-    color: "text-green-600 bg-green-100 dark:text-green-400 dark:bg-green-900/30",
-    icon: CheckCircle2,
-    description: "Order has been delivered"
-  },
   "cancelled": {
     label: "Cancelled",
     color: "text-red-600 bg-red-100 dark:text-red-400 dark:bg-red-900/30",
@@ -214,7 +196,7 @@ const Orders = () => {
                                   <p className="text-sm text-muted-foreground">
                                     Qty: {item.quantity} • ₱{item.price}
                                   </p>
-                                  {(order.status === "processing" || order.status === "completed" || order.status === "to-ship" || order.status === "shipping") ? (
+                                  {(order.status === "processing" || order.status === "completed") ? (
                                     <p className="text-xs text-muted-foreground mt-1">
                                       Transfer code will be on the card package
                                     </p>

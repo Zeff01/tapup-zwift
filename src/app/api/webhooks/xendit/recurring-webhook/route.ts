@@ -75,9 +75,8 @@ export async function POST(req: NextRequest) {
         // For now, we'll search for the transaction
         console.log("Looking for transaction with plan ID:", planId);
         
-        // Update transaction status to "to-ship" (ready to ship after payment)
-        // This matches the e-commerce flow in the Orders component
-        // You would typically implement a more robust search here
+        // Update transaction status to "completed" (payment confirmed)
+        // You would typically implement a more robust search here to find and update the transaction
         // For now, returning success to acknowledge the webhook
         
         console.log("Payment successful for plan:", planId);

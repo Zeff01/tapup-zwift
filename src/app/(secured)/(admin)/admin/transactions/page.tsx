@@ -17,11 +17,15 @@ export default async function TransactionsPage() {
     );
   }
 
+  // Serialize data to remove Firestore timestamp objects
+  const serializedTransactions = JSON.parse(JSON.stringify(transactions));
+  const serializedUsers = JSON.parse(JSON.stringify(users || []));
+
   return (
     <div className="container mx-auto py-6 px-4 max-w-7xl">
       <TransactionManagementDashboard 
-        transactions={transactions} 
-        users={users || []}
+        transactions={serializedTransactions} 
+        users={serializedUsers}
       />
     </div>
   );

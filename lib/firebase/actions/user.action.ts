@@ -113,7 +113,10 @@ export const getAllUsers = async (): Promise<ExtendedUserInterface[]> => {
         onboarding: data.onboarding ?? false,
         deliveryAddresses: data.deliveryAddresses || [],
         cardOrdering: data.cardOrdering || [],
-        user_link: createUserLink(data.userCode ?? "")
+        user_link: createUserLink(data.userCode ?? ""),
+        // Convert Firestore timestamps to ISO strings
+        timestamp: data.timestamp?.toDate ? data.timestamp.toDate().toISOString() : data.timestamp,
+        updatedAt: data.updatedAt?.toDate ? data.updatedAt.toDate().toISOString() : data.updatedAt,
       } as ExtendedUserInterface;
     });
     

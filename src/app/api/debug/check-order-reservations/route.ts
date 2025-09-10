@@ -4,11 +4,11 @@ import { firebaseDb } from "@/lib/firebase/firebase";
 
 export async function GET(req: NextRequest) {
   try {
-    // Get all transactions with "to-ship" or "pending" status
+    // Get all transactions with "pending" or "processing" status
     const transactionsRef = collection(firebaseDb, "transactions");
     const q = query(
       transactionsRef,
-      where("status", "in", ["to-ship", "pending"])
+      where("status", "in", ["pending", "processing"])
     );
     
     const transactionSnap = await getDocs(q);
