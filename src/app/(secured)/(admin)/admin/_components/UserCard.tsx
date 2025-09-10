@@ -20,10 +20,10 @@ interface UserCardProps extends React.HTMLAttributes<HTMLDivElement> {
 }
 
 export function UserCard({ user, className, ...props }: UserCardProps) {
-  const fallbackInitials = `${user.firstName?.charAt(0) ?? ""}${
-    user.lastName?.charAt(0) ?? ""
+  const fallbackInitials = `${user?.firstName?.charAt(0) ?? ""}${
+    user?.lastName?.charAt(0) ?? ""
   }`.toUpperCase();
-  const fullName = `${user.firstName || ""} ${user.lastName || ""}`.trim();
+  const fullName = `${user?.firstName || ""} ${user?.lastName || ""}`.trim();
 
   return (
     <Card className={cn("w-full max-w-full", className)} {...props}>
