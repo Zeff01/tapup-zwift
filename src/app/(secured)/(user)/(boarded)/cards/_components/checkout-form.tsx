@@ -79,40 +79,47 @@ export default function CheckoutForm() {
         }));
       });
 
-      // First, reserve pregenerated cards for each item
-      const reservedCards = [];
-      console.log("[Checkout] Attempting to reserve", newCards.length, "cards");
+      // First, check and update inventory for each card type
+      const orderedCards = [];
+      console.log("[Checkout] Checking inventory for", newCards.length, "cards");
       
-      for (let i = 0; i < newCards.length; i++) {
-        const card = newCards[i];
-        try {
-          console.log(`[Checkout] Reserving card ${i + 1}/${newCards.length}: ${card.name} (${card.id})`);
-          const { reservePregeneratedCard } = await import("@/lib/firebase/actions/card-bank.action");
-          const reserved = await reservePregeneratedCard(card.id, user?.uid || "");
-          
-          if (!reserved) {
-            console.error(`[Checkout] Failed to reserve ${card.name} - no stock available`);
-            // Rollback any previously reserved cards
-            for (const prevReserved of reservedCards) {
-              console.log(`[Checkout] Rolling back reservation for ${prevReserved.reservedCardId}`);
-              // TODO: Implement rollback function
+      const { decrementInventory } = await import("@/lib/firebase/actions/inventory.action");
+      
+      // Group cards by type to handle multiple quantities
+      const cardsByType = newCards.reduce((acc, card) => {
+        if (!acc[card.id]) {
+          acc[card.id] = { ...card, count: 0 };
+        }
+        acc[card.id].count++;
+        return acc;
+      }, {} as Record<string, { id: string; name: string; count: number }>);
+      
+      // Decrement inventory for each card type
+      for (const cardType of Object.values(cardsByType)) {
+        for (let i = 0; i < cardType.count; i++) {
+          try {
+            console.log(`[Checkout] Decreasing inventory for ${cardType.name} (${i + 1}/${cardType.count})`);
+            const result = await decrementInventory(cardType.id);
+            
+            if (!result.success) {
+              console.error(`[Checkout] Failed to reserve ${cardType.name}:`, result.message);
+              // TODO: Rollback any previously decremented inventory
+              throw new Error(result.message || `No available ${cardType.name} cards in stock`);
             }
-            throw new Error(`No available ${card.name} cards in stock`);
+            
+            orderedCards.push({
+              id: cardType.id,
+              name: cardType.name,
+              // No specific card ID or transfer code - we don't know which one will be shipped
+            });
+          } catch (error) {
+            console.error(`[Checkout] Error with inventory for ${cardType.name}:`, error);
+            throw error;
           }
-          
-          console.log(`[Checkout] Successfully reserved ${card.name} with ID: ${reserved.id}, Code: ${reserved.transferCode}`);
-          reservedCards.push({
-            ...card,
-            reservedCardId: reserved.id,
-            transferCode: reserved.transferCode,
-          });
-        } catch (error) {
-          console.error(`[Checkout] Error reserving card ${card.name}:`, error);
-          throw error;
         }
       }
       
-      console.log("[Checkout] All cards reserved successfully:", reservedCards);
+      console.log("[Checkout] Inventory updated successfully for all cards");
 
       const recurringPlan = await createCustomerAndRecurringPlanBundleV2({
         customerData: customerData,
@@ -128,14 +135,13 @@ export default function CheckoutForm() {
         userId: user?.uid,
         orderId: recurringPlan.recurringPlan.id,
         status: "to-ship", // In test mode, we assume payment succeeds
-        items: reservedCards.map(card => ({
+        items: orderedCards.map(card => ({
           id: card.id,
           name: card.name,
           quantity: 1,
           price: items[0].subscriptionPlan?.price,
           subscriptionPlan: items[0].subscriptionPlan,
-          reservedCardId: card.reservedCardId,
-          transferCode: card.transferCode,
+          // No reservedCardId or transferCode - we don't know which specific card will be shipped
         })),
         shippingInfo: {
           email: selectedAddress?.email || user?.email || "",

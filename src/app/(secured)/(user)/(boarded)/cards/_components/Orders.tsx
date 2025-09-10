@@ -198,21 +198,11 @@ const Orders = () => {
                                   <p className="text-sm text-muted-foreground">
                                     Qty: {item.quantity} • ₱{item.price}
                                   </p>
-                                  {item.transferCode && (
-                                    <div className="flex items-center gap-2 mt-1">
-                                      <code className="text-xs bg-background px-2 py-0.5 rounded">
-                                        {item.transferCode}
-                                      </code>
-                                      <Button
-                                        variant="ghost"
-                                        size="sm"
-                                        className="h-6 w-6 p-0"
-                                        onClick={() => copyToClipboard(item.transferCode, "Transfer code")}
-                                      >
-                                        <Copy className="w-3 h-3" />
-                                      </Button>
-                                    </div>
-                                  )}
+                                  {order.status === "to-ship" || order.status === "shipped" ? (
+                                    <p className="text-xs text-muted-foreground mt-1">
+                                      Transfer code will be on the card package
+                                    </p>
+                                  ) : null}
                                 </div>
                               </div>
                             </div>

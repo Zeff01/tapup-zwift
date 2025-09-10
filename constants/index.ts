@@ -7,6 +7,7 @@ import {
   Image,
   LayoutDashboard,
   Package,
+  Package2,
   PackageCheck,
   RectangleHorizontal,
   Text,
@@ -299,6 +300,7 @@ export const adminMenuItems = [
   { icon: Receipt, title: "Transactions", href: "/admin/transactions" },
   { icon: FiShoppingBag, title: "Orders", href: "/admin/users-orders" },
   { icon: Package, title: "Card Bank", href: "/admin/card-bank" },
+  { icon: Package2, title: "Inventory", href: "/admin/inventory" },
 ];
 
 export const publicDomain =

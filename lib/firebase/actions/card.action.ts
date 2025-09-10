@@ -574,6 +574,10 @@ export const transferCardOwnershipUsingCode = async (
           transferCode: `USED-${Date.now()}`, // Mark as used with timestamp
         });
         
+        // Update inventory: move from pending to assigned
+        const { markCardAsAssigned } = await import("./inventory.action");
+        await markCardAsAssigned(pregeneratedCard.cardType);
+        
         // Update the card with full user data (activate it)
         const cardRef = doc(firebaseDb, "cards", pregeneratedCard.id);
         const existingCard = await getDoc(cardRef);
@@ -603,64 +607,46 @@ export const transferCardOwnershipUsingCode = async (
           });
         }
         
-        // Find the transaction that contains this card to get subscription info
+        // Find the user's transaction to get subscription info
+        // Since we don't track specific cards in orders, we need to find
+        // the most recent order for this card type by the user
         const transactionsRef = collection(firebaseDb, "transactions");
-        const transactionQuery = query(transactionsRef, where("items", "array-contains-any", [
-          { transferCode: transferCode }
-        ]));
+        const userTransactionsQuery = query(
+          transactionsRef, 
+          where("userId", "==", newOwnerId),
+          where("status", "in", ["to-ship", "shipped", "completed"])
+        );
         
-        const transactionSnapshot = await getDocs(transactionQuery);
+        const transactionSnapshot = await getDocs(userTransactionsQuery);
         
-        // If query doesn't work, try manual search
-        if (transactionSnapshot.empty) {
-          const allTransactions = await getDocs(transactionsRef);
-          
-          for (const transDoc of allTransactions.docs) {
+        let subscriptionDays = 730; // Default 2 years
+        
+        if (!transactionSnapshot.empty) {
+          // Look for a transaction with this card type
+          for (const transDoc of transactionSnapshot.docs) {
             const transData = transDoc.data();
             if (transData.items && Array.isArray(transData.items)) {
               const matchingItem = transData.items.find((item: any) => 
-                item.transferCode === transferCode || 
-                item.reservedCardId === pregeneratedCard.id
+                item.id === pregeneratedCard.cardType
               );
               
-              if (matchingItem) {
-                // Create subscription from transaction data
-                if (matchingItem.subscriptionPlan) {
-                  const subscriptionDays = matchingItem.subscriptionPlan.durationDays || 30;
-                  
-                  const subscriptionIds = await addSubscription({
-                    cardIds: [pregeneratedCard.id],
-                    subscriptionDays: subscriptionDays,
-                    userId: newOwnerId
-                  });
-                  
-                } else {
-                  console.warn("[TRANSFER CODE] No subscription plan found in transaction item");
-                }
+              if (matchingItem && matchingItem.subscriptionPlan) {
+                subscriptionDays = matchingItem.subscriptionPlan.durationDays || 730;
+                console.log("[TRANSFER CODE] Found matching order with subscription:", subscriptionDays, "days");
                 break;
               }
             }
           }
-        } else {
-          // Found transaction with array-contains query
-          const transDoc = transactionSnapshot.docs[0];
-          const transData = transDoc.data();
-          const matchingItem = transData.items.find((item: any) => 
-            item.transferCode === transferCode || 
-            item.reservedCardId === pregeneratedCard.id
-          );
-          
-          if (matchingItem && matchingItem.subscriptionPlan) {
-            const subscriptionDays = matchingItem.subscriptionPlan.durationDays || 30;
-            const subscriptionIds = await addSubscription({
-              cardIds: [pregeneratedCard.id],
-              subscriptionDays: subscriptionDays,
-              userId: newOwnerId
-            });
-            
-            console.log("[TRANSFER CODE] Subscription created:", subscriptionIds);
-          }
         }
+        
+        // Create subscription
+        const subscriptionIds = await addSubscription({
+          cardIds: [pregeneratedCard.id],
+          subscriptionDays: subscriptionDays,
+          userId: newOwnerId
+        });
+        
+        console.log("[TRANSFER CODE] Subscription created:", subscriptionIds);
         
         toast.success("Card successfully activated!");
         revalidatePath("/cards");
