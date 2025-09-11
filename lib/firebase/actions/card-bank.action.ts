@@ -94,7 +94,8 @@ export async function getPregeneratedCards(): Promise<PregeneratedCard[]> {
     if (error instanceof Error) {
       console.error("[getPregeneratedCards] Error details:", error.message, error.stack);
     }
-    throw new Error("Failed to fetch pregenerated cards");
+    // Return empty array instead of throwing to prevent page crash
+    return [];
   }
 }
 
