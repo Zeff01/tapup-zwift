@@ -204,8 +204,7 @@ export const signInWithGoogle = async () => {
     if (docSnap.exists()) {
       await createSession(userID);
       toast.success("Login successful!");
-
-      return userID;
+      redirect("/dashboard");
     }
     await setDoc(doc(firebaseDb, "user-account", userID), {
       role: USER_ROLE_ENUMS.USER,
@@ -215,7 +214,7 @@ export const signInWithGoogle = async () => {
     await createSession(userID);
 
     toast.success("Login successful!");
-    return userID;
+    redirect("/dashboard");
   } catch (error) {
     if (error instanceof FirebaseError) {
       console.log(error.code);
