@@ -347,6 +347,8 @@ export default function CardBankDashboard({ userRole, currentUser }: CardBankDas
                   src={variant.image}
                   alt={variant.title}
                   fill
+                  sizes="(max-width: 768px) 100vw, (max-width: 1024px) 50vw, (max-width: 1280px) 33vw, 20vw"
+                  priority={variant.image.includes('Eclipse-front.png')}
                   className="object-cover"
                 />
               </div>
