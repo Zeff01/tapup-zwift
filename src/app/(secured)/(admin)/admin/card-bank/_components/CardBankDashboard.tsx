@@ -1,4 +1,5 @@
 "use client";
+import { useUserContext } from "@/providers/user-provider";
 
 import { useState, useEffect } from "react";
 import { carouselCards, USER_ROLE_ENUMS } from "@/constants";
@@ -79,6 +80,7 @@ interface CardBankDashboardProps {
 
 export default function CardBankDashboard({ userRole, currentUser }: CardBankDashboardProps) {
   console.log("[CardBankDashboard] Current user:", currentUser);
+  const { user } = useUserContext(); // Get fresh user data from context
   const [selectedVariant, setSelectedVariant] = useState<string | null>(null);
   const [generateCount, setGenerateCount] = useState<number>(5);
   const [showGenerateDialog, setShowGenerateDialog] = useState(false);
@@ -110,9 +112,14 @@ export default function CardBankDashboard({ userRole, currentUser }: CardBankDas
   });
 
   const { mutate: generateCards, isPending: isGenerating } = useMutation({
-    mutationFn: ({ cardType, count }: { cardType: string; count: number }) => {
-      console.log("[CardBankDashboard] Calling generateBulkCards with user:", currentUser);
-      return generateBulkCards(cardType, count, currentUser.uid, currentUser.email, currentUser.name);
+    mutationFn: async ({ cardType, count }: { cardType: string; count: number }) => {
+      const userData = {
+        uid: user?.uid || currentUser.uid,
+        email: user?.email || currentUser.email,
+        name: `${user?.firstName || ''} ${user?.lastName || ''}`.trim() || currentUser.name
+      };
+      console.log("[CardBankDashboard] Calling generateBulkCards with user:", userData);
+      return generateBulkCards(cardType, count, userData);
     },
     onSuccess: async (_, variables) => {
       toast.success(`Successfully generated ${variables.count} ${variables.cardType} cards!`);
@@ -122,6 +129,7 @@ export default function CardBankDashboard({ userRole, currentUser }: CardBankDas
       setTimeout(async () => {
         await queryClient.invalidateQueries({ queryKey: ["pregeneratedCards"] });
         await queryClient.invalidateQueries({ queryKey: ["all-cards-stock"] });
+        await queryClient.invalidateQueries({ queryKey: ["card-generation-logs"] });
         refetch();
       }, 1000);
     },
