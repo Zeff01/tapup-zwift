@@ -78,6 +78,7 @@ interface CardBankDashboardProps {
 }
 
 export default function CardBankDashboard({ userRole, currentUser }: CardBankDashboardProps) {
+  console.log("[CardBankDashboard] Current user:", currentUser);
   const [selectedVariant, setSelectedVariant] = useState<string | null>(null);
   const [generateCount, setGenerateCount] = useState<number>(5);
   const [showGenerateDialog, setShowGenerateDialog] = useState(false);
@@ -109,8 +110,10 @@ export default function CardBankDashboard({ userRole, currentUser }: CardBankDas
   });
 
   const { mutate: generateCards, isPending: isGenerating } = useMutation({
-    mutationFn: ({ cardType, count }: { cardType: string; count: number }) => 
-      generateBulkCards(cardType, count, currentUser),
+    mutationFn: ({ cardType, count }: { cardType: string; count: number }) => {
+      console.log("[CardBankDashboard] Calling generateBulkCards with user:", currentUser);
+      return generateBulkCards(cardType, count, currentUser.uid, currentUser.email, currentUser.name);
+    },
     onSuccess: async (_, variables) => {
       toast.success(`Successfully generated ${variables.count} ${variables.cardType} cards!`);
       setShowGenerateDialog(false);

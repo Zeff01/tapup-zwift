@@ -1,5 +1,5 @@
 import { NextRequest, NextResponse } from "next/server";
-import { doc, updateDoc, getDoc } from "firebase/firestore";
+import { doc, updateDoc, getDoc, collection, query, where, getDocs } from "firebase/firestore";
 import { firebaseDb } from "@/lib/firebase/firebase";
 import crypto from "crypto";
 
@@ -71,20 +71,51 @@ export async function POST(req: NextRequest) {
         }
 
         // Find the transaction with this plan ID
-        // Note: In production, you might want to store a mapping of plan IDs to transaction IDs
-        // For now, we'll search for the transaction
         console.log("Looking for transaction with plan ID:", planId);
         
-        // Update transaction status to "completed" (payment confirmed)
-        // You would typically implement a more robust search here to find and update the transaction
-        // For now, returning success to acknowledge the webhook
-        
-        console.log("Payment successful for plan:", planId);
-        return NextResponse.json({ 
-          success: true, 
-          message: "Payment processed",
-          planId: planId 
-        });
+        try {
+          // Find transaction by xenditPlanId
+          const transactionsRef = collection(firebaseDb, "transactions");
+          const q = query(transactionsRef, where("xenditPlanId", "==", planId));
+          const querySnapshot = await getDocs(q);
+          
+          if (!querySnapshot.empty) {
+            const transactionDoc = querySnapshot.docs[0];
+            const transactionRef = doc(firebaseDb, "transactions", transactionDoc.id);
+            
+            // Update status to completed
+            await updateDoc(transactionRef, {
+              status: "completed",
+              paymentCompletedAt: new Date().toISOString(),
+              xenditPaymentId: paymentId,
+              updatedAt: new Date().toISOString()
+            });
+            
+            console.log("Transaction updated successfully:", transactionDoc.id);
+            return NextResponse.json({ 
+              success: true, 
+              message: "Payment processed and transaction updated",
+              transactionId: transactionDoc.id,
+              planId: planId 
+            });
+          } else {
+            console.error("No transaction found with plan ID:", planId);
+            // Still return success to acknowledge webhook
+            return NextResponse.json({ 
+              success: true, 
+              message: "Payment processed but transaction not found",
+              planId: planId 
+            });
+          }
+        } catch (error) {
+          console.error("Error updating transaction:", error);
+          // Still return success to acknowledge webhook
+          return NextResponse.json({ 
+            success: true, 
+            message: "Payment processed but error updating transaction",
+            error: error instanceof Error ? error.message : "Unknown error"
+          });
+        }
 
       case "recurring_plan.payment.failed":
       case "recurring.charge.failed":
