@@ -9,6 +9,7 @@ import { motion, AnimatePresence } from "framer-motion";
 import { useInView } from "framer-motion";
 import { carouselCards } from "@/constants";
 import CardDetails from "./card-details";
+import { FlippableCard } from "@/components/FlippableCard";
 
 const TemplateSelection = () => {
   const ref = useRef(null);
@@ -165,19 +166,20 @@ const TemplateSelection = () => {
             </div>
             <div className="flex flex-col lg:flex-row gap-8 items-center">
               {/* Card Preview */}
-              <motion.div
-                className="flex-1"
-                whileHover={{ scale: 1.02 }}
-                transition={{ type: "spring", stiffness: 300 }}
-              >
+              <motion.div className="flex-1">
                 <div className="relative aspect-[4/3] max-w-lg mx-auto">
-                  <Image
-                    src={Object.values(carouselCards)[selectedCard].image}
-                    alt={Object.values(carouselCards)[selectedCard].title}
-                    fill
-                    className="object-contain drop-shadow-xl"
-                    sizes="(max-width: 768px) 100vw, 50vw"
-                    priority
+                  <FlippableCard
+                    frontImage={
+                      Object.values(carouselCards)[selectedCard].image
+                    }
+                    backImage={
+                      Object.values(carouselCards)[selectedCard].backImage ||
+                      Object.values(carouselCards)[selectedCard].image
+                    }
+                    title={Object.values(carouselCards)[selectedCard].title}
+                    isSelected={false}
+                    autoFlip={false}
+                    className="w-full h-full"
                   />
                 </div>
               </motion.div>
