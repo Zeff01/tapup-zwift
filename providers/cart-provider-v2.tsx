@@ -78,7 +78,8 @@ export function CartProvider({ children }: { children: React.ReactNode }) {
       isInitialMount.current = false;
       return;
     }
-    if (isAuthenticated && user?.uid) {
+    // Only save if we have items and user is authenticated
+    if (isAuthenticated && user?.uid && items.length > 0) {
       clearTimeout(saveTimeout.current);
       saveTimeout.current = setTimeout(() => {
         saveCart({ userUid: user.uid, items });

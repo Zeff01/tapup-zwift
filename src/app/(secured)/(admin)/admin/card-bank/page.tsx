@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useEffect } from "react";
 import { useRouter } from "next/navigation";
 import { useUserContext } from "@/providers/user-provider";
 import CardBankDashboard from "./_components/CardBankDashboard";
@@ -10,21 +10,16 @@ import { Loader2 } from "lucide-react";
 export default function CardBankPage() {
   const router = useRouter();
   const { user, isLoading } = useUserContext();
-  const [mounted, setMounted] = useState(false);
 
   useEffect(() => {
-    setMounted(true);
-  }, []);
-
-  useEffect(() => {
-    if (!isLoading && mounted) {
-      if (!user || (user.role !== USER_ROLE_ENUMS.ADMIN && user.role !== USER_ROLE_ENUMS.SUPER_ADMIN)) {
+    if (!isLoading && user) {
+      if (user.role !== USER_ROLE_ENUMS.ADMIN && user.role !== USER_ROLE_ENUMS.SUPER_ADMIN) {
         router.push("/dashboard");
       }
     }
-  }, [user, isLoading, mounted, router]);
+  }, [user, isLoading, router]);
 
-  if (!mounted || isLoading) {
+  if (isLoading || !user) {
     return (
       <div className="flex items-center justify-center min-h-screen">
         <Loader2 className="w-8 h-8 animate-spin" />
@@ -32,7 +27,7 @@ export default function CardBankPage() {
     );
   }
 
-  if (!user || (user.role !== USER_ROLE_ENUMS.ADMIN && user.role !== USER_ROLE_ENUMS.SUPER_ADMIN)) {
+  if (user.role !== USER_ROLE_ENUMS.ADMIN && user.role !== USER_ROLE_ENUMS.SUPER_ADMIN) {
     return null;
   }
 
