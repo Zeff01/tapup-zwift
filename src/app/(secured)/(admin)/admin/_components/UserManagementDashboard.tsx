@@ -54,15 +54,6 @@ import {
   DialogTitle,
 } from "@/components/ui/dialog";
 import {
-  Pagination,
-  PaginationContent,
-  PaginationItem,
-  PaginationLink,
-  PaginationNext,
-  PaginationPrevious,
-  PaginationEllipsis,
-} from "@/components/ui/pagination";
-import {
   Popover,
   PopoverContent,
   PopoverTrigger,
