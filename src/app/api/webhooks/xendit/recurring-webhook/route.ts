@@ -1,151 +1,139 @@
 import { NextRequest, NextResponse } from "next/server";
-import {
-  addSubscription,
-  addCard,
-  createTransaction,
-} from "@/lib/firebase/actions/user.action";
-import { clearCartByUserId } from "@/lib/firebase/actions/cart.action";
-import { TransactionType } from "@/types/types";
+import { doc, updateDoc, getDoc, collection, query, where, getDocs } from "firebase/firestore";
+import { firebaseDb } from "@/lib/firebase/firebase";
+import crypto from "crypto";
+
+/**
+ * Xendit Webhook Handler for Payment Events
+ * 
+ * To enable this webhook:
+ * 1. Go to Xendit Dashboard > Settings > Webhooks
+ * 2. Add this URL: https://yourdomain.com/api/webhooks/xendit/recurring-webhook
+ * 3. Select events: recurring_plan.payment.succeeded, recurring.charge.succeeded
+ * 4. Copy the webhook secret and add to .env as XENDIT_WEBHOOK_SECRET
+ * 
+ * When enabled, this will automatically update transaction status from "pending" to "completed"
+ * after successful payment.
+ */
+
+// Verify webhook signature from Xendit
+function verifyWebhookSignature(payload: string, signature: string, secret: string): boolean {
+  const expectedSignature = crypto
+    .createHmac('sha256', secret)
+    .update(payload)
+    .digest('hex');
+  return expectedSignature === signature;
+}
 
 export async function POST(req: NextRequest) {
   try {
-    const event = await req.json();
-
-    if (
-      event.event === "recurring.plan.activated" ||
-      event.event === "recurring.cycle.succeeded"
-    ) {
-      const userId = event.data.metadata?.userId;
-      const cardItems = event.data.metadata?.cardItems;
-      const customerEmail = event.data.metadata?.customerEmail;
-      const customerName = event.data.metadata?.customerName;
-      const customerPhone = event.data.metadata?.customerPhone;
-      const customerAddress = event.data.metadata?.customerAddress;
-      const totalAmount = event.data.metadata?.totalAmount;
-      const interval = event.data.schedule.interval;
-      const intervalCount = event.data.schedule.interval_count;
-      const customerId = event.data.customer_id;
-
-      console.log({
-        userId,
-        cardItems,
-        customerEmail,
-        customerName,
-        customerPhone,
-        customerAddress,
-        totalAmount,
-        interval,
-        intervalCount,
-        customerId,
-      });
-
-      if (!cardItems || cardItems.length === 0 || !interval || !intervalCount) {
-        return NextResponse.json(
-          { error: "Missing required subscription data" },
-          { status: 400 }
-        );
-      }
-
-      const intervalMapping: Record<string, number> = {
-        DAY: 1,
-        MONTH: 30,
-        YEAR: 365,
-      };
-
-      const subscriptionDays = intervalMapping[interval] * intervalCount;
-
-      const addCardPromises = cardItems.map(
-        (item: { id: string; name: string }) => {
-          return addCard({ id: item.id, name: item.name });
-        }
-      );
-
-      const cardIds: string[] = await Promise.all(addCardPromises);
-
-      const transactionData: TransactionType = {
-        amount: totalAmount,
-        cards: cardIds.map((cardIds, i) => ({
-          id: cardIds,
-          name: cardItems[i].name,
-        })),
-        receiver: {
-          customerId: customerId,
-          customerName: customerName,
-          customerEmail: customerEmail,
-          customerPhone: customerPhone,
-          customerAddress: customerAddress,
-        },
-        status: "pending",
-      };
-
-      await createTransaction(transactionData);
-
-      await addSubscription({
-        cardIds: cardIds,
-        subscriptionDays,
-        ...(userId && { userId: userId }),
-      });
-
-      if (userId) {
-        await clearCartByUserId(userId);
-      }
-
-      return NextResponse.json({ success: true }, { status: 200 });
-
-      // const cardIds = event.data.metadata?.cardIds;
-      // const userId = event.data.metadata?.userId;
-      // const cardId = event.data.metadata?.cardId;
-      // const interval = event.data.schedule.interval;
-      // const intervalCount = event.data.schedule.interval_count;
-
-      // console.log({
-      //   cardIds,
-      //   cardId,
-      //   interval,
-      //   intervalCount,
-      //   userId,
-      // });
-
-      // if (
-      //   ((!cardIds || cardIds.length === 0) &&
-      //     (!cardId || cardId.length === 0)) ||
-      //   !interval ||
-      //   !intervalCount
-      // ) {
-      //   return NextResponse.json(
-      //     { error: "Missing required subscription data" },
-      //     { status: 400 }
-      //   );
-      // }
-
-      // const intervalMapping: Record<string, number> = {
-      //   DAY: 1,
-      //   MONTH: 30,
-      //   YEAR: 365,
-      // };
-
-      // const subscriptionDays = intervalMapping[interval] * intervalCount;
-
-      // if (cardIds) {
-      //   await addSubscription({
-      //     cardIds: [...(cardIds || []), ...(cardId || [])],
-      //     subscriptionDays,
-      //     ...(userId && { userId: userId }),
-      //   });
-
-      //   return NextResponse.json({ success: true }, { status: 200 });
-      // }
+    const webhookSecret = process.env.XENDIT_WEBHOOK_SECRET;
+    if (!webhookSecret) {
+      console.error("Xendit webhook secret not configured");
+      return NextResponse.json({ error: "Webhook not configured" }, { status: 500 });
     }
 
-    return NextResponse.json(
-      { message: "Unhandled event type" },
-      { status: 200 }
-    );
+    // Get the raw body for signature verification
+    const rawBody = await req.text();
+    const signature = req.headers.get('x-callback-token');
+    
+    if (!signature) {
+      console.error("Missing webhook signature");
+      return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+    }
+
+    // Verify webhook signature
+    const isValid = verifyWebhookSignature(rawBody, signature, webhookSecret);
+    if (!isValid) {
+      console.error("Invalid webhook signature");
+      return NextResponse.json({ error: "Invalid signature" }, { status: 401 });
+    }
+
+    // Parse the webhook payload
+    const payload = JSON.parse(rawBody);
+    console.log("Xendit webhook received:", {
+      event: payload.event,
+      business_id: payload.business_id,
+      data: payload.data
+    });
+
+    // Handle different webhook events
+    switch (payload.event) {
+      case "recurring_plan.payment.succeeded":
+      case "recurring.charge.succeeded":
+        // Payment successful - update transaction to completed
+        const planId = payload.data?.plan_id || payload.data?.recurring_plan_id;
+        const paymentId = payload.data?.id;
+        
+        if (!planId) {
+          console.error("No plan ID in webhook payload");
+          return NextResponse.json({ error: "No plan ID" }, { status: 400 });
+        }
+
+        // Find the transaction with this plan ID
+        console.log("Looking for transaction with plan ID:", planId);
+        
+        try {
+          // Find transaction by xenditPlanId
+          const transactionsRef = collection(firebaseDb, "transactions");
+          const q = query(transactionsRef, where("xenditPlanId", "==", planId));
+          const querySnapshot = await getDocs(q);
+          
+          if (!querySnapshot.empty) {
+            const transactionDoc = querySnapshot.docs[0];
+            const transactionRef = doc(firebaseDb, "transactions", transactionDoc.id);
+            
+            // Update status to completed
+            await updateDoc(transactionRef, {
+              status: "completed",
+              paymentCompletedAt: new Date().toISOString(),
+              xenditPaymentId: paymentId,
+              updatedAt: new Date().toISOString()
+            });
+            
+            console.log("Transaction updated successfully:", transactionDoc.id);
+            return NextResponse.json({ 
+              success: true, 
+              message: "Payment processed and transaction updated",
+              transactionId: transactionDoc.id,
+              planId: planId 
+            });
+          } else {
+            console.error("No transaction found with plan ID:", planId);
+            // Still return success to acknowledge webhook
+            return NextResponse.json({ 
+              success: true, 
+              message: "Payment processed but transaction not found",
+              planId: planId 
+            });
+          }
+        } catch (error) {
+          console.error("Error updating transaction:", error);
+          // Still return success to acknowledge webhook
+          return NextResponse.json({ 
+            success: true, 
+            message: "Payment processed but error updating transaction",
+            error: error instanceof Error ? error.message : "Unknown error"
+          });
+        }
+
+      case "recurring_plan.payment.failed":
+      case "recurring.charge.failed":
+        // Payment failed - you might want to notify the user
+        console.log("Payment failed for plan:", payload.data?.plan_id);
+        return NextResponse.json({ success: true, message: "Payment failure noted" });
+
+      case "recurring_plan.deactivated":
+        // Plan was cancelled
+        console.log("Plan deactivated:", payload.data?.id);
+        return NextResponse.json({ success: true, message: "Plan deactivation noted" });
+
+      default:
+        console.log("Unhandled webhook event:", payload.event);
+        return NextResponse.json({ success: true, message: "Event received" });
+    }
   } catch (error) {
-    console.error("Error processing webhook:", error);
-    return NextResponse.json(
-      { error: "Internal Server Error" },
-      { status: 500 }
-    );
+    console.error("Webhook processing error:", error);
+    return NextResponse.json({ error: "Internal server error" }, { status: 500 });
   }
 }

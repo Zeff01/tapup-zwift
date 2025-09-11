@@ -1,7 +1,17 @@
+"use client";
+
 import BackGround from "../_components/auth-background";
 import { LogInForm } from "../_components/login-form";
+import LoadingLogo from "@/components/LoadingLogo";
+import { useUserContext } from "@/providers/user-provider";
 
 export default function LogInPage() {
+
+  const { user, isLoading: isLoadingUserContext } = useUserContext();
+
+
+  if (user || isLoadingUserContext) return <LoadingLogo />
+
   return (
     <main className="flex justify-center items-center min-h-screen p-4 relative overflow-hidden">
       {/* Animated background */}

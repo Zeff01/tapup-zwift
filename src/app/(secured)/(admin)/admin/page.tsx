@@ -1,9 +1,9 @@
 import React from "react";
 import { getAllUsers } from "@/lib/firebase/actions/user.action";
-import TableComponent from "./_components/UsersTable/TableComponent";
 import { authCurrentUserv2 } from "@/lib/firebase/auth";
 import { USER_ROLE_ENUMS } from "@/constants";
 import { notFound, redirect } from "next/navigation";
+import UserManagementDashboard from "./_components/UserManagementDashboard";
 
 export default async function UsersPage() {
   const auth = await authCurrentUserv2();
@@ -12,26 +12,16 @@ export default async function UsersPage() {
     redirect("/login");
   }
 
-  if (auth?.role !== USER_ROLE_ENUMS.ADMIN) {
+  if (auth?.role !== USER_ROLE_ENUMS.ADMIN && auth?.role !== USER_ROLE_ENUMS.SUPER_ADMIN) {
     notFound();
   }
-
-  // if (!auth?.onboarding) {
-  //   redirect("/onboarding");
-  // }
 
   const users = await getAllUsers();
   const allUsers = JSON.parse(JSON.stringify(users));
 
   return (
-    <main className="flex h-full py-4 px-4 flex-col">
-      <h1 className="text-xl sm:text-3xl font-bold">User Accounts</h1>
-      <p className="text-sm text-muted-foreground sm:text-base">
-        Manage user roles, permissions, and account details.
-      </p>
-      <div className="mt-6">
-        <TableComponent users={allUsers} />
-      </div>
+    <main className="flex h-full flex-col">
+      <UserManagementDashboard users={allUsers} currentUser={auth} />
     </main>
   );
 }

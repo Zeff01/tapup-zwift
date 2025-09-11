@@ -2,7 +2,6 @@
 
 import { USER_ROLE_ENUMS } from "@/constants";
 import { getUserName } from "@/lib/utils";
-import { CardRequest } from "@/src/app/(secured)/(admin)/admin/print-cards/_components/GenerateCardsDialog";
 import { Card, TransactionBoard, Users } from "@/types/types";
 import { differenceInDays } from "date-fns";
 import {
@@ -21,12 +20,14 @@ import {
   updateDoc,
   where,
   writeBatch,
-} from "firebase/firestore";
+} from "../firestore-monitored";
 import { toast } from "react-toastify";
 import { revalidatePath } from "../../revalidate";
 import { authCurrentUser } from "../auth";
 import { firebaseDb } from "../firebase";
-import { addCard, addSubscription } from "./user.action";
+// Import from shared modules to avoid circular dependency
+import { getUserById } from "../services/shared/user-operations";
+import { addSubscription } from "../services/shared/subscription-operations";
 
 export const createCard = async ({
   user_id,
@@ -35,6 +36,18 @@ export const createCard = async ({
   user_id: string;
   data: Partial<Card>;
 }) => {
+  console.log("\n[CARD CREATION] ===== createCard called =====");
+  console.log("[CARD CREATION] Stack trace:", new Error().stack);
+  console.log("[CARD CREATION] User ID:", user_id);
+  console.log("[CARD CREATION] Data:", data);
+  
+  // STRICT VALIDATION - Prevent unauthorized card creation
+  if (data.chosenPhysicalCard && (data.chosenPhysicalCard as any).id) {
+    console.error("[CARD CREATION] 🚨 BLOCKED: Attempting to create physical card!");
+    console.error("[CARD CREATION] 🚨 Physical cards should only be created via transfer code activation!");
+    throw new Error("Physical cards cannot be created directly. Use transfer code activation.");
+  }
+  
   try {
     if (!user_id || !data) throw new Error("Parameters Missing");
 
@@ -55,6 +68,8 @@ export const createCard = async ({
       { merge: true }
     );
 
+    console.log("[CARD CREATION] Card created with ID:", userRef.id);
+    console.log("[CARD CREATION] ===== End createCard =====");
     toast.success("Card created successfully");
   } catch (error: any) {
     toast.error("Something went wrong");
@@ -100,13 +115,45 @@ export const getCardsByOwner = async (owner_id: string) => {
     const user = await authCurrentUser();
     if (!user) throw new Error("No Auth User");
 
+    console.log("\n[getCardsByOwner] ===== STARTING QUERY =====");
+    console.log("[getCardsByOwner] Owner ID:", owner_id);
+    console.log("[getCardsByOwner] Time:", new Date().toISOString());
+    
     const cardsCol = collection(firebaseDb, "cards");
     const queryFn = query(cardsCol, where("owner", "==", owner_id), limit(10));
     const cards = await getDocs(queryFn);
 
     if (cards.empty) {
+      console.log("[getCardsByOwner] No cards found for owner:", owner_id);
       return [];
     }
+    
+    console.log("[getCardsByOwner] Found", cards.size, "cards for owner:", owner_id);
+    
+    // Log all card details
+    cards.docs.forEach((doc, index) => {
+      const data = doc.data();
+      console.log(`[getCardsByOwner] Card ${index + 1}:`, {
+        id: doc.id,
+        owner: data.owner,
+        status: data.status,
+        activated: data.activated,
+        chosenPhysicalCard: data.chosenPhysicalCard,
+        createdAt: data.createdAt?.toDate?.() || data.timestamp?.toDate?.(),
+        transferCode: data.transferCode,
+        subscription_id: data.subscription_id,
+        templateId: data.templateId,
+      });
+      
+      // Check if this looks like a physical card that shouldn't have an owner yet
+      if (data.chosenPhysicalCard && !data.activated && data.owner) {
+        console.error(`[getCardsByOwner] ⚠️ WARNING: Found physical card ${doc.id} with owner but NOT activated!`);
+        console.error(`[getCardsByOwner] ⚠️ This indicates a virtual card was created for a physical card purchase`);
+        console.error(`[getCardsByOwner] ⚠️ Physical card type: ${data.chosenPhysicalCard?.id || 'unknown'}`);
+        console.error(`[getCardsByOwner] ⚠️ Card status: ${data.status}, Transfer code: ${data.transferCode}`);
+        console.error(`[getCardsByOwner] ⚠️ This should NOT happen - physical cards should only get owners when activated`);
+      }
+    });
 
     const result: Partial<Card>[] = [];
 
@@ -204,7 +251,7 @@ export const getCardById = async (
     //allow admin and card owner to access the card
     const userDoc = await getDoc(doc(firebaseDb, "user-account", userId));
     const isAdmin =
-      userDoc.exists() && userDoc.data().role === USER_ROLE_ENUMS.ADMIN;
+      userDoc.exists() && (userDoc.data().role === USER_ROLE_ENUMS.ADMIN || userDoc.data().role === USER_ROLE_ENUMS.SUPER_ADMIN);
 
     if (userId !== card.owner && !isAdmin) {
       throw new Error("Auth user ID doesn't match");
@@ -260,7 +307,7 @@ export const updateCardById = async ({
 
     const userDoc = await getDoc(doc(firebaseDb, "user-account", userId));
     const isAdmin =
-      userDoc.exists() && userDoc.data().role === USER_ROLE_ENUMS.ADMIN;
+      userDoc.exists() && (userDoc.data().role === USER_ROLE_ENUMS.ADMIN || userDoc.data().role === USER_ROLE_ENUMS.SUPER_ADMIN);
 
     const cardRef = doc(firebaseDb, "cards", cardId);
     const docSnap = await getDoc(cardRef);
@@ -501,6 +548,116 @@ export const transferCardOwnershipUsingCode = async (
   newOwnerId: string
 ): Promise<boolean> => {
   try {
+    // First check if it's a pregenerated card
+    const { getCardByTransferCode } = await import("./card-bank.action");
+    const pregeneratedCard = await getCardByTransferCode(transferCode);
+    
+    if (pregeneratedCard) {
+      // Handle pregenerated card
+      if (pregeneratedCard.status === "available" || 
+          (pregeneratedCard.status === "reserved" && pregeneratedCard.reservedFor === newOwnerId)) {
+        // Get user data to populate the card
+        // getUserById is already imported from shared module
+        const user = await getUserById(newOwnerId);
+        if (!user) {
+          toast.error("User not found.");
+          return false;
+        }
+        
+        // Update the pregenerated card status and invalidate the transfer code
+        const pregeneratedCardRef = doc(firebaseDb, "pregenerated-cards", pregeneratedCard.id);
+        await updateDoc(pregeneratedCardRef, {
+          status: "assigned",
+          assignedTo: newOwnerId,
+          assignedAt: Date.now(),
+          transferCode: `USED-${Date.now()}`, // Mark as used with timestamp
+        });
+        
+        // Card bank handles assignment automatically
+        
+        // Update the card with full user data (activate it)
+        const cardRef = doc(firebaseDb, "cards", pregeneratedCard.id);
+        const existingCard = await getDoc(cardRef);
+        
+        if (existingCard.exists()) {
+          // Card was reserved during purchase - now activate it
+          await updateDoc(cardRef, {
+            ...user,
+            status: "active",
+            activated: true,
+            activatedAt: serverTimestamp(),
+            onboarding: true,
+            transferCode: crypto.randomUUID().split("-").slice(0, 2).join("-"), // New transfer code
+          });
+        } else {
+          // Card doesn't exist yet - create it
+          await setDoc(cardRef, {
+            ...user,
+            owner: newOwnerId,
+            transferCode: crypto.randomUUID().split("-").slice(0, 2).join("-"), // New transfer code, not the used one
+            chosenPhysicalCard: { id: pregeneratedCard.cardType },
+            createdAt: serverTimestamp(),
+            status: "active",
+            activated: true,
+            activatedAt: serverTimestamp(),
+            onboarding: true,
+          });
+        }
+        
+        // Find the user's transaction to get subscription info
+        // Since we don't track specific cards in orders, we need to find
+        // the most recent order for this card type by the user
+        const transactionsRef = collection(firebaseDb, "transactions");
+        const userTransactionsQuery = query(
+          transactionsRef, 
+          where("userId", "==", newOwnerId),
+          where("status", "in", ["to-ship", "shipped", "completed"])
+        );
+        
+        const transactionSnapshot = await getDocs(userTransactionsQuery);
+        
+        let subscriptionDays = 730; // Default 2 years
+        
+        if (!transactionSnapshot.empty) {
+          // Look for a transaction with this card type
+          for (const transDoc of transactionSnapshot.docs) {
+            const transData = transDoc.data();
+            if (transData.items && Array.isArray(transData.items)) {
+              const matchingItem = transData.items.find((item: any) => 
+                item.id === pregeneratedCard.cardType
+              );
+              
+              if (matchingItem && matchingItem.subscriptionPlan) {
+                subscriptionDays = matchingItem.subscriptionPlan.durationDays || 730;
+                console.log("[TRANSFER CODE] Found matching order with subscription:", subscriptionDays, "days");
+                break;
+              }
+            }
+          }
+        }
+        
+        // Create subscription
+        const subscriptionIds = await addSubscription({
+          cardIds: [pregeneratedCard.id],
+          subscriptionDays: subscriptionDays,
+          userId: newOwnerId
+        });
+        
+        console.log("[TRANSFER CODE] Subscription created:", subscriptionIds);
+        
+        toast.success("Card successfully activated!");
+        revalidatePath("/cards");
+        return true;
+      } else if (pregeneratedCard.status === "reserved" && pregeneratedCard.reservedFor !== newOwnerId) {
+        toast.error("This card is reserved for another user.");
+        return false;
+      } else if (pregeneratedCard.status === "assigned") {
+        toast.error("This card has already been activated.");
+        return false;
+      }
+    }
+    
+    // Original logic for existing cards
     const cardCollection = collection(firebaseDb, "cards");
 
     const q = query(
@@ -611,7 +768,7 @@ export const toggleCardDisabled = async (cardId: string) => {
 
 export const getAllCards = async ({ role }: { role: string }) => {
   try {
-    if (!role || role !== "admin") {
+    if (!role || (role !== "admin" && role !== "super_admin")) {
       throw new Error("This is an Admin Only Request");
     }
 
@@ -689,7 +846,7 @@ export const deletePrintCard = async ({
   cardId: string;
 }) => {
   try {
-    if (!role || role !== "admin") {
+    if (!role || (role !== "admin" && role !== "super_admin")) {
       throw new Error("This is an Admin Only Request");
     }
     if (!cardId) throw new Error("cardId is missing");
@@ -729,7 +886,7 @@ export const deleteMultipleCards = async ({
   cardIds: string[];
 }) => {
   try {
-    if (!role || role !== "admin") {
+    if (!role || (role !== "admin" && role !== "super_admin")) {
       throw new Error("This is an Admin Only Request");
     }
     if (!cardIds || cardIds.length === 0)
@@ -771,7 +928,7 @@ export const updateSingleCardPrintStatus = async ({
   cardId: string;
 }) => {
   try {
-    if (!role || role !== "admin") {
+    if (!role || (role !== "admin" && role !== "super_admin")) {
       throw new Error("This is an Admin Only Request");
     }
 
@@ -798,6 +955,11 @@ export const updateSingleCardPrintStatus = async ({
   }
 };
 
+// Define CardRequest type locally
+type CardRequest = {
+  quantity: number;
+};
+
 export const generateMultipleCards = async ({
   cardRequests,
   subscriptionDays,
@@ -808,22 +970,26 @@ export const generateMultipleCards = async ({
   role: string;
 }) => {
   try {
-    if (!role || role !== "admin") {
+    if (!role || (role !== "admin" && role !== "super_admin")) {
       throw new Error("This is an Admin Only Request");
     }
 
-    const addCardPromises = cardRequests.flatMap((item) => {
-      return Array.from({ length: item.quantity }, () =>
-        addCard({ id: item.id, name: item.cardType })
-      );
-    });
-
-    const cardResults = await Promise.all(addCardPromises);
-
-    await addSubscription({
-      cardIds: [...(cardResults || [])],
-      subscriptionDays,
-    });
+    // Admin function should not create virtual cards directly
+    // This should reserve cards from the card bank instead
+    console.warn("Admin bulk card creation needs to be updated to use card bank system");
+    
+    // TODO: Implement proper card reservation from card bank
+    // For now, this function does nothing as it needs to be refactored to use the card bank system
+    
+    // Since we're not actually creating cards, we can't add subscriptions
+    // const validCardIds: string[] = [];
+    
+    // if (validCardIds.length > 0) {
+    //   await addSubscription({
+    //     cardIds: validCardIds,
+    //     subscriptionDays,
+    //   });
+    // }
 
     revalidatePath("/admin/print-cards");
     return { success: true, message: "Created multiple cards!" };

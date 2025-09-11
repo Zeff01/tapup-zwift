@@ -5,7 +5,7 @@ import { Minus, Plus, X } from "lucide-react";
 import {
   useCart,
   type CartItem as CartItemType,
-} from "@/providers/cart-provider-v2";
+} from "@/providers/cart-provider";
 import { Button } from "@/components/ui/button";
 import { formatCurrency } from "@/lib/utils";
 
