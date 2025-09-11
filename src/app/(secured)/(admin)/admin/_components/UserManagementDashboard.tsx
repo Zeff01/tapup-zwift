@@ -1,15 +1,13 @@
 "use client";
 
-import { useState, useMemo, useEffect } from "react";
+import { useState, useMemo } from "react";
 import { ExtendedUserInterface } from "@/types/types";
-import { 
-  Users, 
+import {
+  Users,
   UserCog,
   Search,
-  Filter,
   Download,
   UserPlus,
-  MoreVertical,
   Mail,
   Calendar,
   CreditCard,
@@ -22,28 +20,17 @@ import {
   TrendingUp,
   TrendingDown,
   ChevronDown,
-  Phone,
-  MapPin,
-  Building,
-  Hash,
   SlidersHorizontal,
-  X,
-  UserCheck,
-  UserX,
-  ShieldCheck,
-  ShieldOff
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
-import {
-  Card,
-  CardContent,
-  CardDescription,
-  CardHeader,
-  CardTitle,
-} from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Badge } from "@/components/ui/badge";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import { Label } from "@/components/ui/label";
+import { Checkbox } from "@/components/ui/checkbox";
+import { Separator } from "@/components/ui/separator";
+import { Card, CardContent } from "@/components/ui/card";
+import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import {
   Select,
   SelectContent,
@@ -57,8 +44,6 @@ import {
   DropdownMenuItem,
   DropdownMenuSeparator,
   DropdownMenuTrigger,
-  DropdownMenuCheckboxItem,
-  DropdownMenuLabel,
 } from "@/components/ui/dropdown-menu";
 import {
   Dialog,
@@ -73,22 +58,12 @@ import {
   PopoverContent,
   PopoverTrigger,
 } from "@/components/ui/popover";
-import { Label } from "@/components/ui/label";
-import { Checkbox } from "@/components/ui/checkbox";
-import { Separator } from "@/components/ui/separator";
+import { format } from "date-fns";
 import { cn } from "@/lib/utils";
 import { toast } from "react-toastify";
-import {
-  Table,
-  TableBody,
-  TableCell,
-  TableHead,
-  TableHeader,
-  TableRow,
-} from "@/components/ui/table";
-import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
-import { format } from "date-fns";
 import { updateUserRole } from "@/lib/firebase/actions/user.action";
+import UserTable from "./UserTable";
+import AdminTable from "./AdminTable";
 
 interface UserManagementDashboardProps {
   users: ExtendedUserInterface[];
@@ -107,7 +82,14 @@ interface StatCardProps {
   color: string;
 }
 
-function StatCard({ title, value, icon, trend, description, color }: StatCardProps) {
+function StatCard({
+  title,
+  value,
+  icon,
+  trend,
+  description,
+  color,
+}: StatCardProps) {
   return (
     <Card className="relative overflow-hidden">
       <CardContent className="p-4">
@@ -125,25 +107,27 @@ function StatCard({ title, value, icon, trend, description, color }: StatCardPro
                 ) : (
                   <TrendingDown className="w-3 h-3 text-red-500" />
                 )}
-                <span className={trend.isPositive ? "text-green-500" : "text-red-500"}>
+                <span
+                  className={
+                    trend.isPositive ? "text-green-500" : "text-red-500"
+                  }
+                >
                   {trend.value}%
                 </span>
                 <span className="text-muted-foreground">vs last month</span>
               </div>
             )}
           </div>
-          <div className={cn("p-3 rounded-full", color)}>
-            {icon}
-          </div>
+          <div className={cn("p-3 rounded-full", color)}>{icon}</div>
         </div>
       </CardContent>
     </Card>
   );
 }
 
-export default function UserManagementDashboard({ 
-  users, 
-  currentUser 
+export default function UserManagementDashboard({
+  users,
+  currentUser,
 }: UserManagementDashboardProps) {
   const [searchTerm, setSearchTerm] = useState("");
   const [roleFilter, setRoleFilter] = useState<string>("all");
@@ -153,26 +137,31 @@ export default function UserManagementDashboard({
   const [selectedTab, setSelectedTab] = useState<"users" | "admins">("users");
   const [selectedUsers, setSelectedUsers] = useState<Set<string>>(new Set());
   const [showFilters, setShowFilters] = useState(false);
-  const [selectedUser, setSelectedUser] = useState<ExtendedUserInterface | null>(null);
+  const [selectedUser, setSelectedUser] =
+    useState<ExtendedUserInterface | null>(null);
   const [isUpdating, setIsUpdating] = useState<string | null>(null);
 
   // Separate users and admins
-  const admins = users.filter(user => user.role === "admin" || user.role === "super_admin");
-  const regularUsers = users.filter(user => user.role !== "admin" && user.role !== "super_admin");
+  const admins = users.filter(
+    (user) => user.role === "admin" || user.role === "super_admin"
+  );
+  const regularUsers = users.filter(
+    (user) => user.role !== "admin" && user.role !== "super_admin"
+  );
 
   // Calculate statistics
   const statistics = useMemo(() => {
     const total = users.length;
     const totalAdmins = admins.length;
     const totalUsers = regularUsers.length;
-    const activeUsers = users.filter(u => u.onboarding).length;
-    const verifiedUsers = users.filter(u => u.email).length; // Count users with email as verified
-    const withCards = users.filter(u => u.printStatus).length;
-    
+    const activeUsers = users.filter((u) => u.onboarding).length;
+    const verifiedUsers = users.filter((u) => u.email).length; // Count users with email as verified
+    const withCards = users.filter((u) => u.printStatus).length;
+
     // Calculate trends (mock data - replace with actual historical data)
     const userGrowth = 12.5; // percentage
     const activeGrowth = 8.3;
-    
+
     return {
       total,
       totalAdmins,
@@ -191,18 +180,19 @@ export default function UserManagementDashboard({
 
     // Search filter
     if (searchTerm) {
-      filtered = filtered.filter(user =>
-        user.firstName?.toLowerCase().includes(searchTerm.toLowerCase()) ||
-        user.lastName?.toLowerCase().includes(searchTerm.toLowerCase()) ||
-        user.email?.toLowerCase().includes(searchTerm.toLowerCase()) ||
-        user.company?.toLowerCase().includes(searchTerm.toLowerCase()) ||
-        user.id?.toLowerCase().includes(searchTerm.toLowerCase())
+      filtered = filtered.filter(
+        (user) =>
+          user.firstName?.toLowerCase().includes(searchTerm.toLowerCase()) ||
+          user.lastName?.toLowerCase().includes(searchTerm.toLowerCase()) ||
+          user.email?.toLowerCase().includes(searchTerm.toLowerCase()) ||
+          user.company?.toLowerCase().includes(searchTerm.toLowerCase()) ||
+          user.id?.toLowerCase().includes(searchTerm.toLowerCase())
       );
     }
 
     // Role filter (for users tab)
     if (roleFilter !== "all" && selectedTab === "users") {
-      filtered = filtered.filter(user => {
+      filtered = filtered.filter((user) => {
         if (roleFilter === "premium") return user.printStatus;
         if (roleFilter === "basic") return !user.printStatus;
         return true;
@@ -211,11 +201,11 @@ export default function UserManagementDashboard({
 
     // Status filter
     if (statusFilter !== "all") {
-      filtered = filtered.filter(user => {
+      filtered = filtered.filter((user) => {
         const hasCompletedOnboarding = user.onboarding;
         const hasCards = user.printStatus;
         const hasProfile = user.firstName && user.lastName && user.company;
-        
+
         if (statusFilter === "active") {
           return hasCompletedOnboarding && (hasCards || hasProfile);
         }
@@ -231,7 +221,7 @@ export default function UserManagementDashboard({
 
     // Verification filter
     if (verificationFilter !== "all") {
-      filtered = filtered.filter(user => {
+      filtered = filtered.filter((user) => {
         if (verificationFilter === "verified") return !!user.email;
         if (verificationFilter === "unverified") return !user.email;
         return true;
@@ -245,11 +235,25 @@ export default function UserManagementDashboard({
     });
 
     return filtered;
-  }, [selectedTab, regularUsers, admins, searchTerm, roleFilter, statusFilter, verificationFilter]);
+  }, [
+    selectedTab,
+    regularUsers,
+    admins,
+    searchTerm,
+    roleFilter,
+    statusFilter,
+    verificationFilter,
+  ]);
 
   const handleSelectAll = (checked: boolean) => {
     if (checked) {
-      setSelectedUsers(new Set(filteredUsers.map(user => user.id).filter((id): id is string => id !== undefined)));
+      setSelectedUsers(
+        new Set(
+          filteredUsers
+            .map((user) => user.id)
+            .filter((id): id is string => id !== undefined)
+        )
+      );
     } else {
       setSelectedUsers(new Set());
     }
@@ -308,28 +312,50 @@ export default function UserManagementDashboard({
 
   const getUserStatusBadge = (user: ExtendedUserInterface) => {
     if (user.role === "super_admin") {
-      return <Badge className="bg-gradient-to-r from-purple-600 to-pink-600 text-white">Super Admin</Badge>;
+      return (
+        <Badge className="bg-gradient-to-r from-purple-600 to-pink-600 text-white">
+          Super Admin
+        </Badge>
+      );
     }
     if (user.role === "admin") {
-      return <Badge className="bg-purple-100 text-purple-800 dark:bg-purple-900/20 dark:text-purple-400">Admin</Badge>;
+      return (
+        <Badge className="bg-purple-100 text-purple-800 dark:bg-purple-900/20 dark:text-purple-400">
+          Admin
+        </Badge>
+      );
     }
     if (user.printStatus) {
-      return <Badge className="bg-blue-100 text-blue-800 dark:bg-blue-900/20 dark:text-blue-400">Premium</Badge>;
+      return (
+        <Badge className="bg-blue-100 text-blue-800 dark:bg-blue-900/20 dark:text-blue-400">
+          Premium
+        </Badge>
+      );
     }
-    return <Badge className="bg-gray-100 text-gray-800 dark:bg-gray-900/20 dark:text-gray-400">Basic</Badge>;
+    return (
+      <Badge className="bg-gray-100 text-gray-800 dark:bg-gray-900/20 dark:text-gray-400">
+        Basic
+      </Badge>
+    );
   };
 
   const getVerificationBadge = (user: ExtendedUserInterface) => {
     if (user.email) {
       return (
-        <Badge variant="outline" className="gap-1 text-xs border-green-500 text-green-700 dark:text-green-400">
+        <Badge
+          variant="outline"
+          className="gap-1 text-xs border-green-500 text-green-700 dark:text-green-400"
+        >
           <CheckCircle2 className="w-3 h-3" />
           Verified
         </Badge>
       );
     }
     return (
-      <Badge variant="outline" className="gap-1 text-xs border-yellow-500 text-yellow-700 dark:text-yellow-400">
+      <Badge
+        variant="outline"
+        className="gap-1 text-xs border-yellow-500 text-yellow-700 dark:text-yellow-400"
+      >
         <AlertCircle className="w-3 h-3" />
         Unverified
       </Badge>
@@ -342,12 +368,12 @@ export default function UserManagementDashboard({
     const hasCards = user.printStatus;
     const isVerified = !!user.email;
     const hasProfile = user.firstName && user.lastName && user.company;
-    
+
     // If user has lastActiveAt timestamp (would need to add this field)
     // const lastActive = user.lastActiveAt;
-    // const daysSinceActive = lastActive ? 
+    // const daysSinceActive = lastActive ?
     //   Math.floor((Date.now() - lastActive.toDate().getTime()) / (1000 * 60 * 60 * 24)) : null;
-    
+
     // Determine activity based on multiple factors
     if (hasCompletedOnboarding && (hasCards || hasProfile)) {
       return (
@@ -428,7 +454,10 @@ export default function UserManagementDashboard({
       </div>
 
       {/* Tabs */}
-      <Tabs value={selectedTab} onValueChange={(value) => setSelectedTab(value as any)}>
+      <Tabs
+        value={selectedTab}
+        onValueChange={(value) => setSelectedTab(value as any)}
+      >
         <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 mb-4">
           <TabsList>
             <TabsTrigger value="users" className="gap-2">
@@ -452,15 +481,21 @@ export default function UserManagementDashboard({
                 className="pl-10 w-full sm:w-[300px]"
               />
             </div>
-            
+
             <Popover open={showFilters} onOpenChange={setShowFilters}>
               <PopoverTrigger asChild>
                 <Button variant="outline" className="gap-2">
                   <SlidersHorizontal className="w-4 h-4" />
                   Filters
-                  {(roleFilter !== "all" || statusFilter !== "all" || verificationFilter !== "all") && (
+                  {(roleFilter !== "all" ||
+                    statusFilter !== "all" ||
+                    verificationFilter !== "all") && (
                     <Badge variant="secondary" className="ml-1 px-1">
-                      {[roleFilter, statusFilter, verificationFilter].filter(f => f !== "all").length}
+                      {
+                        [roleFilter, statusFilter, verificationFilter].filter(
+                          (f) => f !== "all"
+                        ).length
+                      }
                     </Badge>
                   )}
                 </Button>
@@ -471,7 +506,7 @@ export default function UserManagementDashboard({
                     <h4 className="font-medium text-sm mb-2">Filters</h4>
                     <Separator />
                   </div>
-                  
+
                   {selectedTab === "users" && (
                     <div className="space-y-2">
                       <Label className="text-xs">User Type</Label>
@@ -490,14 +525,19 @@ export default function UserManagementDashboard({
 
                   <div className="space-y-2">
                     <Label className="text-xs">Status</Label>
-                    <Select value={statusFilter} onValueChange={setStatusFilter}>
+                    <Select
+                      value={statusFilter}
+                      onValueChange={setStatusFilter}
+                    >
                       <SelectTrigger className="h-8">
                         <SelectValue />
                       </SelectTrigger>
                       <SelectContent>
                         <SelectItem value="all">All Status</SelectItem>
                         <SelectItem value="active">Active</SelectItem>
-                        <SelectItem value="partial">Partially Active</SelectItem>
+                        <SelectItem value="partial">
+                          Partially Active
+                        </SelectItem>
                         <SelectItem value="inactive">Inactive</SelectItem>
                       </SelectContent>
                     </Select>
@@ -505,7 +545,10 @@ export default function UserManagementDashboard({
 
                   <div className="space-y-2">
                     <Label className="text-xs">Verification</Label>
-                    <Select value={verificationFilter} onValueChange={setVerificationFilter}>
+                    <Select
+                      value={verificationFilter}
+                      onValueChange={setVerificationFilter}
+                    >
                       <SelectTrigger className="h-8">
                         <SelectValue />
                       </SelectTrigger>
@@ -555,7 +598,7 @@ export default function UserManagementDashboard({
                     Export Selected
                   </DropdownMenuItem>
                   <DropdownMenuSeparator />
-                  <DropdownMenuItem 
+                  <DropdownMenuItem
                     onClick={() => handleBulkAction("deactivate")}
                     className="text-red-600"
                   >
@@ -570,288 +613,43 @@ export default function UserManagementDashboard({
 
         {/* Users Table */}
         <TabsContent value="users" className="mt-0">
-          <Card>
-            <Table>
-              <TableHeader>
-                <TableRow>
-                  <TableHead className="w-12">
-                    <Checkbox
-                      checked={selectedUsers.size === filteredUsers.length && filteredUsers.length > 0}
-                      onCheckedChange={handleSelectAll}
-                    />
-                  </TableHead>
-                  <TableHead>User</TableHead>
-                  <TableHead>Status</TableHead>
-                  <TableHead>Type</TableHead>
-                  <TableHead>Verification</TableHead>
-                  <TableHead>Cards</TableHead>
-                  <TableHead>Activity</TableHead>
-                  <TableHead className="text-right">Actions</TableHead>
-                </TableRow>
-              </TableHeader>
-              <TableBody>
-                {filteredUsers.length === 0 ? (
-                  <TableRow>
-                    <TableCell colSpan={8} className="text-center py-8">
-                      <div className="space-y-2">
-                        <Users className="w-12 h-12 mx-auto text-muted-foreground" />
-                        <p className="text-muted-foreground">No users found</p>
-                      </div>
-                    </TableCell>
-                  </TableRow>
-                ) : (
-                  filteredUsers.filter(user => user.id).map((user) => (
-                    <TableRow key={user.id!} className="group">
-                      <TableCell>
-                        <Checkbox
-                          checked={selectedUsers.has(user.id!)}
-                          onCheckedChange={(checked) => handleSelectUser(user.id!, checked as boolean)}
-                        />
-                      </TableCell>
-                      <TableCell>
-                        <div className="flex items-center gap-3">
-                          <Avatar className="w-10 h-10">
-                            <AvatarImage src={user.profilePictureUrl} />
-                            <AvatarFallback>
-                              {user.firstName?.[0]}{user.lastName?.[0]}
-                            </AvatarFallback>
-                          </Avatar>
-                          <div className="space-y-1">
-                            <div className="font-medium">
-                              {user.firstName} {user.lastName}
-                            </div>
-                            <div className="text-sm text-muted-foreground">
-                              {user.email}
-                            </div>
-                            <div className="text-xs text-muted-foreground flex items-center gap-1">
-                              <Hash className="w-3 h-3" />
-                              {user.id!}
-                            </div>
-                          </div>
-                        </div>
-                      </TableCell>
-                      <TableCell>
-                        {getActivityStatus(user)}
-                      </TableCell>
-                      <TableCell>
-                        {getUserStatusBadge(user)}
-                      </TableCell>
-                      <TableCell>
-                        {getVerificationBadge(user)}
-                      </TableCell>
-                      <TableCell>
-                        {user.printStatus ? (
-                          <div className="flex items-center gap-1">
-                            <CreditCard className="w-4 h-4 text-muted-foreground" />
-                            <span className="text-sm">Has cards</span>
-                          </div>
-                        ) : (
-                          <span className="text-sm text-muted-foreground">No cards</span>
-                        )}
-                      </TableCell>
-                      <TableCell>
-                        <div className="space-y-1">
-                          {user.company && (
-                            <div className="flex items-center gap-1 text-xs text-muted-foreground">
-                              <Building className="w-3 h-3" />
-                              {user.company}
-                            </div>
-                          )}
-                          {user.position && (
-                            <div className="text-xs text-muted-foreground">
-                              {user.position}
-                            </div>
-                          )}
-                        </div>
-                      </TableCell>
-                      <TableCell className="text-right">
-                        <DropdownMenu>
-                          <DropdownMenuTrigger asChild>
-                            <Button 
-                              variant="ghost" 
-                              size="sm" 
-                              className="opacity-0 group-hover:opacity-100 transition-opacity"
-                              disabled={isUpdating === user.id!}
-                            >
-                              <MoreVertical className="w-4 h-4" />
-                            </Button>
-                          </DropdownMenuTrigger>
-                          <DropdownMenuContent align="end">
-                            <DropdownMenuItem onClick={() => setSelectedUser(user)}>
-                              View Details
-                            </DropdownMenuItem>
-                            <DropdownMenuItem>
-                              <Mail className="w-4 h-4 mr-2" />
-                              Send Email
-                            </DropdownMenuItem>
-                            {currentUser.role === "super_admin" && (
-                              <>
-                                <DropdownMenuSeparator />
-                                <DropdownMenuItem onClick={() => handleRoleUpdate(user.id!, "admin")}>
-                                  <ShieldCheck className="w-4 h-4 mr-2" />
-                                  Make Admin
-                                </DropdownMenuItem>
-                              </>
-                            )}
-                            <DropdownMenuSeparator />
-                            <DropdownMenuItem className="text-red-600">
-                              <UserX className="w-4 h-4 mr-2" />
-                              Deactivate User
-                            </DropdownMenuItem>
-                          </DropdownMenuContent>
-                        </DropdownMenu>
-                      </TableCell>
-                    </TableRow>
-                  ))
-                )}
-              </TableBody>
-            </Table>
-          </Card>
+          <UserTable
+            selectedUsers={selectedUsers}
+            filteredUsers={filteredUsers}
+            isUpdating={isUpdating}
+            currentUser={currentUser}
+            handleSelectAll={handleSelectAll}
+            handleSelectUser={handleSelectUser}
+            getActivityStatus={getActivityStatus}
+            getUserStatusBadge={getUserStatusBadge}
+            getVerificationBadge={getVerificationBadge}
+            setSelectedUser={setSelectedUser}
+            handleRoleUpdate={handleRoleUpdate}
+          />
         </TabsContent>
 
         {/* Admins Table */}
         <TabsContent value="admins" className="mt-0">
-          <Card>
-            <Table>
-              <TableHeader>
-                <TableRow>
-                  <TableHead className="w-12">
-                    <Checkbox
-                      checked={selectedUsers.size === filteredUsers.length && filteredUsers.length > 0}
-                      onCheckedChange={handleSelectAll}
-                    />
-                  </TableHead>
-                  <TableHead>Admin</TableHead>
-                  <TableHead>Role</TableHead>
-                  <TableHead>Status</TableHead>
-                  <TableHead>Permissions</TableHead>
-                  <TableHead>Last Active</TableHead>
-                  <TableHead className="text-right">Actions</TableHead>
-                </TableRow>
-              </TableHeader>
-              <TableBody>
-                {filteredUsers.length === 0 ? (
-                  <TableRow>
-                    <TableCell colSpan={7} className="text-center py-8">
-                      <div className="space-y-2">
-                        <Shield className="w-12 h-12 mx-auto text-muted-foreground" />
-                        <p className="text-muted-foreground">No admins found</p>
-                      </div>
-                    </TableCell>
-                  </TableRow>
-                ) : (
-                  filteredUsers.filter(user => user.id).map((user) => (
-                    <TableRow key={user.id!} className="group">
-                      <TableCell>
-                        <Checkbox
-                          checked={selectedUsers.has(user.id!)}
-                          onCheckedChange={(checked) => handleSelectUser(user.id!, checked as boolean)}
-                          disabled={user.id === currentUser?.id}
-                        />
-                      </TableCell>
-                      <TableCell>
-                        <div className="flex items-center gap-3">
-                          <Avatar className="w-10 h-10 ring-2 ring-purple-500/20">
-                            <AvatarImage src={user.profilePictureUrl} />
-                            <AvatarFallback className="bg-purple-100 text-purple-700">
-                              {user.firstName?.[0]}{user.lastName?.[0]}
-                            </AvatarFallback>
-                          </Avatar>
-                          <div className="space-y-1">
-                            <div className="font-medium flex items-center gap-2">
-                              {user.firstName} {user.lastName}
-                              {user.id === currentUser?.id && (
-                                <Badge variant="secondary" className="text-xs">You</Badge>
-                              )}
-                            </div>
-                            <div className="text-sm text-muted-foreground">
-                              {user.email}
-                            </div>
-                          </div>
-                        </div>
-                      </TableCell>
-                      <TableCell>
-                        {user.role === "super_admin" ? (
-                          <Badge className="bg-gradient-to-r from-purple-600 to-pink-600 text-white">
-                            <Shield className="w-3 h-3 mr-1" />
-                            Super Admin
-                          </Badge>
-                        ) : (
-                          <Badge className="bg-purple-100 text-purple-800 dark:bg-purple-900/20 dark:text-purple-400">
-                            <Shield className="w-3 h-3 mr-1" />
-                            Admin
-                          </Badge>
-                        )}
-                      </TableCell>
-                      <TableCell>
-                        {getActivityStatus(user)}
-                      </TableCell>
-                      <TableCell>
-                        <div className="flex items-center gap-2">
-                          <Badge variant="outline" className="text-xs">All Access</Badge>
-                        </div>
-                      </TableCell>
-                      <TableCell>
-                        <div className="text-sm text-muted-foreground">
-                          Recently active
-                        </div>
-                      </TableCell>
-                      <TableCell className="text-right">
-                        {user.id !== currentUser?.id && (
-                          <DropdownMenu>
-                            <DropdownMenuTrigger asChild>
-                              <Button 
-                                variant="ghost" 
-                                size="sm" 
-                                className="opacity-0 group-hover:opacity-100 transition-opacity"
-                                disabled={isUpdating === user.id!}
-                              >
-                                <MoreVertical className="w-4 h-4" />
-                              </Button>
-                            </DropdownMenuTrigger>
-                            <DropdownMenuContent align="end">
-                              <DropdownMenuItem onClick={() => setSelectedUser(user)}>
-                                View Details
-                              </DropdownMenuItem>
-                              <DropdownMenuItem>
-                                <Mail className="w-4 h-4 mr-2" />
-                                Send Email
-                              </DropdownMenuItem>
-                              {currentUser.role === "super_admin" && user.role !== "super_admin" && (
-                                <>
-                                  <DropdownMenuSeparator />
-                                  <DropdownMenuItem 
-                                    onClick={() => handleRoleUpdate(user.id!, "super_admin")}
-                                    className="text-purple-600"
-                                  >
-                                    <ShieldCheck className="w-4 h-4 mr-2" />
-                                    Make Super Admin
-                                  </DropdownMenuItem>
-                                  <DropdownMenuItem 
-                                    onClick={() => handleRoleUpdate(user.id!, "user")}
-                                    className="text-orange-600"
-                                  >
-                                    <ShieldOff className="w-4 h-4 mr-2" />
-                                    Remove Admin
-                                  </DropdownMenuItem>
-                                </>
-                              )}
-                            </DropdownMenuContent>
-                          </DropdownMenu>
-                        )}
-                      </TableCell>
-                    </TableRow>
-                  ))
-                )}
-              </TableBody>
-            </Table>
-          </Card>
+          <AdminTable
+            selectedUsers={selectedUsers}
+            filteredUsers={filteredUsers}
+            currentUser={currentUser}
+            isUpdating={isUpdating}
+            handleSelectUser={handleSelectUser}
+            handleSelectAll={handleSelectAll}
+            getActivityStatus={getActivityStatus}
+            setSelectedUser={setSelectedUser}
+            handleRoleUpdate={handleRoleUpdate}
+          />
         </TabsContent>
       </Tabs>
 
       {/* User Details Modal */}
       {selectedUser && (
-        <Dialog open={!!selectedUser} onOpenChange={(open) => !open && setSelectedUser(null)}>
+        <Dialog
+          open={!!selectedUser}
+          onOpenChange={(open) => !open && setSelectedUser(null)}
+        >
           <DialogContent className="max-w-2xl">
             <DialogHeader>
               <DialogTitle>User Details</DialogTitle>
@@ -866,14 +664,17 @@ export default function UserManagementDashboard({
                 <Avatar className="w-20 h-20">
                   <AvatarImage src={selectedUser.profilePictureUrl} />
                   <AvatarFallback className="text-lg">
-                    {selectedUser.firstName?.[0]}{selectedUser.lastName?.[0]}
+                    {selectedUser.firstName?.[0]}
+                    {selectedUser.lastName?.[0]}
                   </AvatarFallback>
                 </Avatar>
                 <div className="flex-1 space-y-1">
                   <h3 className="text-lg font-semibold">
                     {selectedUser.firstName} {selectedUser.lastName}
                   </h3>
-                  <p className="text-sm text-muted-foreground">{selectedUser.email}</p>
+                  <p className="text-sm text-muted-foreground">
+                    {selectedUser.email}
+                  </p>
                   <div className="flex items-center gap-2 pt-2">
                     {getUserStatusBadge(selectedUser)}
                     {getVerificationBadge(selectedUser)}
@@ -887,28 +688,42 @@ export default function UserManagementDashboard({
               {/* User Information Grid */}
               <div className="grid grid-cols-2 gap-4">
                 <div className="space-y-2">
-                  <Label className="text-muted-foreground text-xs">User ID</Label>
+                  <Label className="text-muted-foreground text-xs">
+                    User ID
+                  </Label>
                   <p className="text-sm font-medium">{selectedUser.id}</p>
                 </div>
                 <div className="space-y-2">
                   <Label className="text-muted-foreground text-xs">Phone</Label>
-                  <p className="text-sm">{selectedUser.number || "Not provided"}</p>
+                  <p className="text-sm">
+                    {selectedUser.number || "Not provided"}
+                  </p>
                 </div>
                 <div className="space-y-2">
-                  <Label className="text-muted-foreground text-xs">Company</Label>
-                  <p className="text-sm">{selectedUser.company || "Not provided"}</p>
+                  <Label className="text-muted-foreground text-xs">
+                    Company
+                  </Label>
+                  <p className="text-sm">
+                    {selectedUser.company || "Not provided"}
+                  </p>
                 </div>
                 <div className="space-y-2">
-                  <Label className="text-muted-foreground text-xs">Position</Label>
-                  <p className="text-sm">{selectedUser.position || "Not provided"}</p>
+                  <Label className="text-muted-foreground text-xs">
+                    Position
+                  </Label>
+                  <p className="text-sm">
+                    {selectedUser.position || "Not provided"}
+                  </p>
                 </div>
                 {selectedUser.user_link && (
                   <div className="space-y-2 col-span-2">
-                    <Label className="text-muted-foreground text-xs">Profile Link</Label>
+                    <Label className="text-muted-foreground text-xs">
+                      Profile Link
+                    </Label>
                     <p className="text-sm">
-                      <a 
-                        href={selectedUser.user_link} 
-                        target="_blank" 
+                      <a
+                        href={selectedUser.user_link}
+                        target="_blank"
                         rel="noopener noreferrer"
                         className="text-primary hover:underline"
                       >
@@ -931,15 +746,22 @@ export default function UserManagementDashboard({
                   </div>
                   <div className="flex items-center gap-2">
                     <CreditCard className="w-4 h-4 text-muted-foreground" />
-                    <span>Cards: {selectedUser.printStatus ? "Yes" : "No"}</span>
+                    <span>
+                      Cards: {selectedUser.printStatus ? "Yes" : "No"}
+                    </span>
                   </div>
                   <div className="flex items-center gap-2">
                     <CheckCircle2 className="w-4 h-4 text-muted-foreground" />
-                    <span>Onboarding: {selectedUser.onboarding ? "Complete" : "Pending"}</span>
+                    <span>
+                      Onboarding:{" "}
+                      {selectedUser.onboarding ? "Complete" : "Pending"}
+                    </span>
                   </div>
                   <div className="flex items-center gap-2">
                     <Mail className="w-4 h-4 text-muted-foreground" />
-                    <span>Email: {selectedUser.email ? "Verified" : "Unverified"}</span>
+                    <span>
+                      Email: {selectedUser.email ? "Verified" : "Unverified"}
+                    </span>
                   </div>
                 </div>
               </div>
@@ -949,10 +771,12 @@ export default function UserManagementDashboard({
               <Button variant="outline" onClick={() => setSelectedUser(null)}>
                 Close
               </Button>
-              <Button onClick={() => {
-                setSelectedUser(null);
-                toast.info("Opening user profile...");
-              }}>
+              <Button
+                onClick={() => {
+                  setSelectedUser(null);
+                  toast.info("Opening user profile...");
+                }}
+              >
                 View Full Profile
               </Button>
             </DialogFooter>
