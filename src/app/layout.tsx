@@ -6,7 +6,7 @@ import { ToastContainer } from "react-toastify";
 import Head from "next/head";
 import { ThemeProvider } from "@/providers/theme-provider";
 import { QueryProvider } from "@/providers/query-provider";
-import { CartProvider } from "@/providers/cart-provider-v3";
+import { CartProvider } from "@/providers/cart-provider";
 import { UserContextProvider } from "@/providers/user-provider";
 
 const lato = Lato({ weight: "400", subsets: ["latin"] });

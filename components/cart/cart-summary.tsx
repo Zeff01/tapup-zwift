@@ -1,6 +1,6 @@
 "use client";
 
-import { useCart } from "@/providers/cart-provider-v3";
+import { useCart } from "@/providers/cart-provider";
 import { formatCurrency } from "@/lib/utils";
 
 export function CartSummary() {

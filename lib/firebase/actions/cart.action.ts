@@ -10,7 +10,7 @@ import {
   updateDoc,
 } from "../firestore-monitored";
 import { firebaseDb } from "../firebase";
-import { CartItem } from "@/providers/cart-provider-v3";
+import { CartItem } from "@/providers/cart-provider";
 
 interface cartData {
   id: string;
