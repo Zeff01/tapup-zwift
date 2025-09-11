@@ -35,7 +35,7 @@ import { cn } from "@/lib/utils";
 import { toast } from "@/hooks/use-toast";
 import { useQuery } from "@tanstack/react-query";
 import { deliveryFormSchema } from "@/lib/zod-schema";
-import { useCart } from "@/providers/cart-provider-v2";
+import { useCart } from "@/providers/cart-provider";
 import {
   CustomerType,
   SubscriptionPlan,
@@ -43,9 +43,6 @@ import {
   DeliveryAddress,
 } from "@/types/types";
 import {
-  addCard,
-  createCustomerAndRecurringPlanBundle,
-  createCustomerAndRecurringPlanBundleV2,
   createTransaction,
 } from "@/lib/firebase/actions/user.action";
 
@@ -149,13 +146,27 @@ export default function DeliveryForm({
       }));
     });
 
-    const recurringPlan = await createCustomerAndRecurringPlanBundleV2({
-      customerData,
-      subscriptionPlan,
-      cardItems: newCards,
-      totalPrice: cardTotal(),
-      selectedAddress: values,
+    // Use API route instead of direct client call
+    const response = await fetch('/api/xendit/create-recurring-plan', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({
+        customerData,
+        subscriptionPlan,
+        cardItems: newCards,
+        totalPrice: cardTotal(),
+        selectedAddress: values,
+      }),
     });
+
+    if (!response.ok) {
+      const error = await response.json();
+      throw new Error(error.error || 'Failed to create payment plan');
+    }
+
+    const recurringPlan = await response.json();
 
     // COMMENTED LINES BELOW IS THE OLD CHECKOUT FLOW
     // const addCardPromises = cardItems.flatMap((item) => {

@@ -55,9 +55,9 @@ export default function SortableCards({
         data-scroll-container
         className="
                     grid justify-center justify-items-center
-                    grid-cols-[repeat(auto-fill,minmax(17rem,24rem))]
+                    grid-cols-2 sm:grid-cols-[repeat(auto-fill,minmax(17rem,24rem))]
                     xl:justify-start xl:grid-cols-[repeat(auto-fill,minmax(22rem,1fr))]
-                    gap-4 md:px-2 overflow-y-auto"
+                    gap-2 sm:gap-4 md:px-2 overflow-y-auto"
       >
         {cards.map((card) => (
           <DigitalCard

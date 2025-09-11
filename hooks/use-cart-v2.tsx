@@ -1,4 +1,4 @@
-import { useCart as useCartContext } from "@/providers/cart-provider-v2";
+import { useCart as useCartContext } from "@/providers/cart-provider";
 export const useCart = () => {
   return useCartContext();
 };

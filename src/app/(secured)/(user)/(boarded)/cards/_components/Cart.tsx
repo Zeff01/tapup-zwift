@@ -1,6 +1,5 @@
 import React, { useEffect } from "react";
 import { useCart } from "@/providers/cart-provider";
-import { CartItem } from "@/types/types";
 import ProductCard from "./ProductCard";
 
 interface CartProps {
@@ -8,17 +7,27 @@ interface CartProps {
 }
 
 const Cart: React.FC<CartProps> = ({ showTrash }) => {
-  const { state } = useCart();
+  const { items } = useCart();
 
   return (
     <div>
-      {state.items.length === 0 ? (
+      {items.length === 0 ? (
         <p>No items in the cart.</p>
       ) : (
-        state.items.map((item: CartItem) => (
+        items.map((item) => (
           <ProductCard
-            key={item.product.id}
-            item={item}
+            key={item.id}
+            item={{
+              physicalCardId: item.id,
+              product: {
+                id: item.id,
+                title: item.name,
+                image: item.image,
+                price: item.price,
+              },
+              quantity: item.quantity,
+              subscriptionPlan: item.subscriptionPlan || null,
+            }}
             showTrash={showTrash}
           />
         ))

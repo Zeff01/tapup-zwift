@@ -40,7 +40,7 @@ const PhysicalCard = ({
 
   const renderFrontCard = () => {
     switch (chosenPhysicalCard?.id) {
-      case "card1":
+      case "eclipse":
         return (
           <FrontCard1
             data={userProfile}
@@ -54,7 +54,7 @@ const PhysicalCard = ({
           />
         );
 
-      case "card2":
+      case "aurora":
         return (
           <FrontCard1
             data={userProfile}
@@ -67,7 +67,7 @@ const PhysicalCard = ({
             detailsColor="text-black"
           />
         );
-      case "card3":
+      case "viper":
         return (
           <FrontCard1
             data={userProfile}
@@ -80,7 +80,20 @@ const PhysicalCard = ({
             detailsColor="text-black"
           />
         );
-      case "card4":
+      case "vortex":
+        return (
+          <FrontCard1
+            data={userProfile}
+            backgroundImage={frontBackgroundImage}
+            tapColor="text-white"
+            upColor="text-greenTitle"
+            nameColor="text-white"
+            positionColor="text-white"
+            iconColor="text-greenTitle"
+            detailsColor="text-white"
+          />
+        );
+      case "bloom":
         return (
           <FrontCard1
             data={userProfile}
@@ -95,7 +108,18 @@ const PhysicalCard = ({
         );
 
       default:
-        return null;
+        return (
+          <FrontCard1
+            data={userProfile}
+            backgroundImage={frontBackgroundImage}
+            tapColor="text-white"
+            upColor="text-greenTitle"
+            nameColor="text-white"
+            positionColor="text-white"
+            iconColor="text-greenTitle"
+            detailsColor="text-white"
+          />
+        );
     }
   };
 

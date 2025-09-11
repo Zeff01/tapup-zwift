@@ -18,10 +18,8 @@ export default function Social({ label }: { label: string }) {
   const handleGoogleSignIn = async () => {
     try {
       setIsGoogleLoading(true);
-      const response = await signInWithGoogle();
-      if (response) {
-        router.push(`${CARD_ROUTE}`);
-      }
+      await signInWithGoogle();
+
     } catch (error) {
       console.error("Google sign-in error:", error);
     } finally {
@@ -42,6 +40,8 @@ export default function Social({ label }: { label: string }) {
       setIsFacebookLoading(false);
     }
   };
+
+
 
   return (
     <div className="w-full space-y-2">

@@ -21,28 +21,34 @@ interface PhysicalCard {
 
 const physicalCards: PhysicalCard[] = [
   {
-    id: "card1",
-    name: "Classic White",
-    imageUrl: "/assets/card1-front.png",
-    route: "/create/card/1",
+    id: "eclipse" as ChosenPhysicalCardType,
+    name: "Eclipse",
+    imageUrl: "/assets/cards/Eclipse-front.png",
+    route: "/create/card/eclipse",
   },
   {
-    id: "card2",
-    name: "Classic Black",
-    imageUrl: "/assets/card2-front.png",
-    route: "/create/card/2",
+    id: "aurora" as ChosenPhysicalCardType,
+    name: "Aurora",
+    imageUrl: "/assets/cards/Aurora-front.png",
+    route: "/create/card/aurora",
   },
   {
-    id: "card3",
-    name: "Modern Viper",
-    imageUrl: "/assets/card3-front.png",
-    route: "/create/card/3",
+    id: "viper" as ChosenPhysicalCardType,
+    name: "Viper",
+    imageUrl: "/assets/cards/Viper-Front.png",
+    route: "/create/card/viper",
   },
   {
-    id: "card4",
-    name: "Minimalist",
-    imageUrl: "/assets/card4-front.png",
-    route: "/create/card/4",
+    id: "vortex" as ChosenPhysicalCardType,
+    name: "Vortex",
+    imageUrl: "/assets/cards/Vortex-front.png",
+    route: "/create/card/vortex",
+  },
+  {
+    id: "bloom" as ChosenPhysicalCardType,
+    name: "Bloom",
+    imageUrl: "/assets/cards/Bloom-front.png",
+    route: "/create/card/bloom",
   },
 ];
 
