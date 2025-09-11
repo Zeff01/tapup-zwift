@@ -23,7 +23,26 @@ const Cart = dynamic(() => import("../cart/Cart"), {
 const Header = () => {
   const { user, isLoading: isLoadingUserContext } = useUserContext();
   const pathname = usePathname();
+  const hash = typeof window !== "undefined" ? window.location.hash : "";
+  const [activePath, setActivePath] = useState(pathname + hash);
   const [isMenuOpen, setIsMenuOpen] = useState(false);
+
+  useEffect(() => {
+    const update = () => {
+      const newPath = pathname + window.location.hash;
+      setActivePath(newPath);
+    };
+
+    update();
+
+    window.addEventListener("hashchange", update);
+    window.addEventListener("popstate", update);
+
+    return () => {
+      window.removeEventListener("hashchange", update);
+      window.removeEventListener("popstate", update);
+    };
+  }, [pathname]);
 
   const handleMobileMenu = () => {
     const newMenuState = !isMenuOpen;
@@ -44,7 +63,7 @@ const Header = () => {
 
   return (
     <header className="flex sticky top-0 z-50 bg-background justify-between items-center md:px-10 shadow-xl  p-4">
-      <Link href="/" rel="preload">
+      <Link href="/" rel="preload" onClick={() => setActivePath("/")}>
         <div className="aspect-[130/48] w-20 lg:w-28">
           <TapupLogo />
         </div>
@@ -57,11 +76,11 @@ const Header = () => {
             <Link
               key={index}
               href={item.href}
-              className={`${
-                item.href === pathname
-                  ? "text-greenText border-b-2 border-greenTitle"
-                  : ""
-              } hover:text-hoverColor`}
+              onClick={() => setActivePath(item.href)}
+              className={`${item.href === activePath
+                ? "text-greenText border-b-2 border-greenTitle"
+                : ""
+                } hover:text-hoverColor`}
             >
               {item.label}
             </Link>
@@ -125,7 +144,13 @@ const Header = () => {
         <div className="flex flex-col h-full">
           {/* Menu Header */}
           <div className="flex justify-between items-center p-4 border-b">
-            <Link href={"/"} onClick={handleMobileMenu}>
+            <Link
+              href={"/"}
+              onClick={() => {
+                setActivePath("/")
+                handleMobileMenu();
+              }}
+            >
               <div className="aspect-[130/48] w-20 lg:w-28">
                 <TapupLogo />
               </div>
@@ -142,15 +167,17 @@ const Header = () => {
                 key={index}
                 href={item.href}
                 className={`
-                  ${
-                    item.href === pathname
-                      ? "text-greenText border-b-2 border-greenTitle"
-                      : ""
+                  ${item.href === activePath
+                    ? "text-greenText border-b-2 border-greenTitle"
+                    : ""
                   } 
                   hover:text-hoverColor 
                   py-2
                 `}
-                onClick={handleMobileMenu}
+                onClick={() => {
+                  setActivePath(item.href);
+                  handleMobileMenu();
+                }}
               >
                 {item.label}
               </Link>

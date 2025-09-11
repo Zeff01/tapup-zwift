@@ -66,7 +66,7 @@ export default function CardsAndUsersCreateFields({
   const [selectedTemplateId, setSelectedTemplateId] =
     useState<ChosenTemplateType>("template1");
   const [selectedPhysicalCard, setSelectedPhysicalCard] =
-    useState<ChosenPhysicalCardType>("card1");
+    useState<ChosenPhysicalCardType>("eclipse");
 
   const addServicePhoto = (photo: Photo) => {
     setServicePhotos([...servicePhotos, photo]);
@@ -100,7 +100,7 @@ export default function CardsAndUsersCreateFields({
       skypeInviteUrl: "",
       websiteUrl: "",
       chosenTemplate: "template1",
-      chosenPhysicalCard: "card1",
+      chosenPhysicalCard: "eclipse",
     },
   });
 

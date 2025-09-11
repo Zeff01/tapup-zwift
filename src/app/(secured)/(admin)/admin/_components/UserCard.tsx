@@ -20,23 +20,34 @@ interface UserCardProps extends React.HTMLAttributes<HTMLDivElement> {
 }
 
 export function UserCard({ user, className, ...props }: UserCardProps) {
-  const fallbackInitials = `${user.firstName?.charAt(0) ?? ""}${
-    user.lastName?.charAt(0) ?? ""
+  // Handle null or undefined user
+  if (!user) {
+    return (
+      <Card className={cn("w-full max-w-full", className)} {...props}>
+        <CardContent>
+          <p className="text-muted-foreground">No user data available</p>
+        </CardContent>
+      </Card>
+    );
+  }
+
+  const fallbackInitials = `${user?.firstName?.charAt(0) ?? ""}${
+    user?.lastName?.charAt(0) ?? ""
   }`.toUpperCase();
-  const fullName = `${user.firstName || ""} ${user.lastName || ""}`.trim();
+  const fullName = `${user?.firstName || ""} ${user?.lastName || ""}`.trim();
 
   return (
     <Card className={cn("w-full max-w-full", className)} {...props}>
       <CardHeader className="flex flex-row items-center space-x-4 pb-4">
         <Avatar>
-          <AvatarImage src={user.profilePictureUrl} alt={fullName} />
+          <AvatarImage src={user?.profilePictureUrl} alt={fullName} />
           <AvatarFallback>{fallbackInitials || "U"}</AvatarFallback>
         </Avatar>
         <div className="flex-1">
           <CardTitle className="text-lg">
             {fullName || "Unnamed User"}
           </CardTitle>
-          <CardDescription>{user.email || "No Email Provided"}</CardDescription>
+          <CardDescription>{user?.email || "No Email Provided"}</CardDescription>
         </div>
       </CardHeader>
       <CardContent className="pb-4">
@@ -44,7 +55,7 @@ export function UserCard({ user, className, ...props }: UserCardProps) {
           <span className="text-sm font-medium text-muted-foreground">
             Role:
           </span>
-          <Badge variant="outline">{user.role || "N/A"}</Badge>
+          <Badge variant="outline">{user?.role || "N/A"}</Badge>
         </div>
       </CardContent>
       <CardFooter className="flex flex-col items-start">

@@ -80,7 +80,7 @@ export const createPortfolioSchema = z.object({
     "template17",
     "template18",
   ]),
-  chosenPhysicalCard: z.enum(["card1", "card2", "card3", "card4"]),
+  chosenPhysicalCard: z.enum(["eclipse", "aurora", "viper", "vortex", "bloom"]),
   firstName: z.string().min(3, "First name must be at least 3 characters"),
   lastName: z.string().min(2, "Last name must be at least 2 characters"),
   prefix: z.string().optional(),
@@ -228,19 +228,7 @@ export const editCardSchema = z.object({
     ])
     .optional(),
   chosenPhysicalCard: z
-    .enum([
-      "card1",
-      "card2",
-      "card3",
-      "card4",
-      "card5",
-      "card6",
-      "card7",
-      "card8",
-      "card9",
-      "card10",
-      "card11",
-    ])
+    .enum(["eclipse", "aurora", "viper", "vortex", "bloom"])
     .optional(),
   customUrl: z
     .string()

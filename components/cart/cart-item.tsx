@@ -5,7 +5,7 @@ import { Minus, Plus, X } from "lucide-react";
 import {
   useCart,
   type CartItem as CartItemType,
-} from "@/providers/cart-provider-v2";
+} from "@/providers/cart-provider";
 import { Button } from "@/components/ui/button";
 import { formatCurrency } from "@/lib/utils";
 
@@ -18,12 +18,12 @@ export function CartItem({ item }: CartItemProps) {
 
   return (
     <div className="flex items-start gap-4 w-full">
-      <div className="relative h-16 w-16 overflow-hidden rounded-md border">
+      <div className="relative aspect-[16/10] w-full max-w-28 overflow-hidden rounded shadow-md">
         <Image
           src={item.image || "/placeholder.svg"}
           alt={item.name}
           fill
-          className="object-cover"
+          className="object-contain size-full"
         />
       </div>
       <div className="flex flex-1 flex-col">

@@ -12,7 +12,7 @@ import { ExtendedUserInterface } from "@/types/types";
 
 export default function CardPreviewEditor() {
   const [selectedPhysicalCard, setSelectedPhysicalCard] =
-    useState<ChosenPhysicalCardType>("card1");
+    useState<ChosenPhysicalCardType>("eclipse");
 
   const selectedCard = cardItems.find(
     (card) => card.id === selectedPhysicalCard
@@ -39,7 +39,7 @@ export default function CardPreviewEditor() {
     serviceDescription: "We build modern web and mobile applications.",
     servicePhotos: ["/images/service1.jpg", "/images/service2.jpg"],
     chosenTemplate: "template1",
-    chosenPhysicalCard: "card1",
+    chosenPhysicalCard: "eclipse",
     firstName: "John",
     lastName: "Doe",
     email: "johndoe@example.com",

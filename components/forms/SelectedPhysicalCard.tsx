@@ -1,14 +1,16 @@
 import PhysicalCard from "../physicalCard/PhysicalCard";
 
-import frontImageCard1 from "@/public/assets/cards/front/card1.png";
-import frontImageCard2 from "@/public/assets/cards/front/card2.png";
-import frontImageCard3 from "@/public/assets/cards/front/card3.png";
-import frontImageCard4 from "@/public/assets/cards/front/card4.png";
+import frontImageEclipse from "@/public/assets/cards/Eclipse-front.png";
+import frontImageAurora from "@/public/assets/cards/Aurora-front.png";
+import frontImageViper from "@/public/assets/cards/Viper-Front.png";
+import frontImageVortex from "@/public/assets/cards/Vortex-front.png";
+import frontImageBloom from "@/public/assets/cards/Bloom-front.png";
 
-import backImageCard1 from "@/public/assets/cards/back/card1.png";
-import backImageCard2 from "@/public/assets/cards/back/card2.png";
-import backImageCard3 from "@/public/assets/cards/back/card3.png";
-import backImageCard4 from "@/public/assets/cards/back/card4.png";
+import backImageEclipse from "@/public/assets/cards/Eclipse-back.png";
+import backImageAurora from "@/public/assets/cards/Aurora-back.png";
+import backImageViper from "@/public/assets/cards/Viper-back.png";
+import backImageVortex from "@/public/assets/cards/Vortex-back.png";
+import backImageBloom from "@/public/assets/cards/Bloom-back.png";
 
 import { PhysicalCardProps } from "@/types/types";
 
@@ -21,10 +23,11 @@ const SelectedPhysicalCard = ({
   formData: Partial<PhysicalCardProps>;
 }) => {
   const renderPhysicalCard = {
-    card1: { front: frontImageCard1, back: backImageCard1 },
-    card2: { front: frontImageCard2, back: backImageCard2 },
-    card3: { front: frontImageCard3, back: backImageCard3 },
-    card4: { front: frontImageCard4, back: backImageCard4 },
+    eclipse: { front: frontImageEclipse, back: backImageEclipse },
+    aurora: { front: frontImageAurora, back: backImageAurora },
+    viper: { front: frontImageViper, back: backImageViper },
+    vortex: { front: frontImageVortex, back: backImageVortex },
+    bloom: { front: frontImageBloom, back: backImageBloom },
   };
 
   // Check if cardId is valid

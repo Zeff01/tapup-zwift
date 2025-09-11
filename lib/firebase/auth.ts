@@ -13,7 +13,6 @@ import {
   signInWithPopup,
   signOut,
 } from "firebase/auth";
-import { doc, getDoc, serverTimestamp, setDoc } from "firebase/firestore";
 import { toast } from "react-toastify";
 import { z } from "zod";
 import {
@@ -22,6 +21,7 @@ import {
   getSession,
   verifySignUserId,
 } from "../session";
+import { setDoc, doc, serverTimestamp, getDoc } from "./firestore-monitored";
 import { signupSchema } from "../zod-schema";
 export const onAuthStateChanged = (callback: (user: User | null) => void) => {
   return _onAuthStateChanged(firebaseAuth, callback);
@@ -33,7 +33,7 @@ import {
   Users,
 } from "@/types/types";
 import { redirect } from "next/navigation";
-import { addCardForUser, updateUserById } from "./actions/user.action";
+import { updateUserById } from "./actions/user.action";
 
 export const authCurrentUser = async () => {
   try {
@@ -120,13 +120,13 @@ export const signUpHandler = async (data: z.infer<typeof signupSchema>) => {
 
         if (cleanOnboardingData.chosenPhysicalCard) {
           console.log(
-            "Adding physical card:",
+            "Physical card selected during onboarding:",
             cleanOnboardingData.chosenPhysicalCard
           );
-          await addCardForUser(userID, cleanOnboardingData.chosenPhysicalCard);
+          // Don't create virtual card here - user needs to purchase and receive physical card first
+          // Virtual card will be created when they enter the transfer code
         } else {
           console.warn("No physical card selected in onboarding data");
-          toast.error("Missing card selection in onboarding data");
         }
       } catch (error) {
         console.error("Error processing onboarding data:", error);
@@ -204,8 +204,7 @@ export const signInWithGoogle = async () => {
     if (docSnap.exists()) {
       await createSession(userID);
       toast.success("Login successful!");
-
-      return userID;
+      redirect("/dashboard");
     }
     await setDoc(doc(firebaseDb, "user-account", userID), {
       role: USER_ROLE_ENUMS.USER,
@@ -215,7 +214,7 @@ export const signInWithGoogle = async () => {
     await createSession(userID);
 
     toast.success("Login successful!");
-    return userID;
+    redirect("/dashboard");
   } catch (error) {
     if (error instanceof FirebaseError) {
       console.log(error.code);
@@ -277,7 +276,7 @@ export const currentAuthUserDetails = async ({ id }: { id: string }) => {
     return docSnap.data();
   } catch (error) {
     if (error instanceof FirebaseError) {
-      toast.error(error.message);
+      console.error("Firebase error:", error.message);
       return;
     }
     console.error(error);
