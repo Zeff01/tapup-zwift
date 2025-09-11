@@ -83,7 +83,7 @@ export const USER_ROLE_ENUMS = Object.freeze({
 });
 
 export const headerItems = [
-  { href: "/#about", label: "About" },
+  { href: "/", label: "Home" },
   { href: "/#features", label: "Features" },
   { href: "/#quickguide", label: "Quick Guide" },
   { href: "/#templates", label: "Products" },
