@@ -130,7 +130,8 @@ export async function getAvailableCards(cardType: string): Promise<PregeneratedC
 // Generate bulk cards for a specific card type
 export async function generateBulkCards(
   cardType: string,
-  count: number
+  count: number,
+  generatedBy?: { uid: string; email: string; name: string }
 ): Promise<void> {
   try {
     console.log(`[generateBulkCards] Starting generation of ${count} cards for ${cardType}`);
@@ -162,6 +163,11 @@ export async function generateBulkCards(
         transferCode: transferCode,
         status: "available" as const,
         createdAt: Date.now(),
+        generatedBy: generatedBy ? {
+          uid: generatedBy.uid,
+          email: generatedBy.email,
+          name: generatedBy.name
+        } : null,
       };
       
       generatedCards.push(cardData);
@@ -173,6 +179,25 @@ export async function generateBulkCards(
     // Execute all writes
     const results = await Promise.all(promises);
     console.log(`[generateBulkCards] All write promises resolved. Results:`, results);
+    
+    // Create a generation log entry
+    if (generatedBy) {
+      const logsCollection = collection(firebaseDb, "card-generation-logs");
+      const logRef = doc(logsCollection);
+      await setDoc(logRef, {
+        id: logRef.id,
+        cardType: cardType,
+        count: count,
+        generatedBy: {
+          uid: generatedBy.uid,
+          email: generatedBy.email,
+          name: generatedBy.name
+        },
+        generatedAt: Date.now(),
+        transferCodes: generatedCards.map(card => card.transferCode)
+      });
+      console.log(`[generateBulkCards] Created generation log entry`);
+    }
     
     // Verify cards were created
     const verificationQuery = query(
@@ -339,5 +364,25 @@ export async function getCardByTransferCode(transferCode: string): Promise<Prege
   } catch (error) {
     console.error("Error fetching card by transfer code:", error);
     throw new Error("Failed to fetch card by transfer code");
+  }
+}
+
+// Get card generation logs
+export async function getCardGenerationLogs(): Promise<any[]> {
+  try {
+    const logsRef = collection(firebaseDb, "card-generation-logs");
+    const q = query(logsRef, orderBy("generatedAt", "desc"), limit(100));
+    const snapshot = await getDocs(q);
+    
+    const logs = snapshot.docs.map((doc) => ({
+      id: doc.id,
+      ...doc.data(),
+    }));
+    
+    console.log(`[getCardGenerationLogs] Fetched ${logs.length} log entries`);
+    return logs;
+  } catch (error) {
+    console.error("[getCardGenerationLogs] Error fetching logs:", error);
+    return [];
   }
 }

@@ -37,6 +37,7 @@ const NavigationBoarded = () => {
   } = useUserContext();
 
   const isAdmin = user?.role === "admin";
+  const isSuperAdmin = user?.role === "super_admin";
 
   // Don't combine the arrays - we'll render them separately to add a separator
 
@@ -97,32 +98,32 @@ const NavigationBoarded = () => {
                 height={50}
                 className="object-cover rounded-full h-[50px] w-[50px]"
               />
-              <div className="flex flex-col w-full">
-                <div className="flex items-center gap-2">
-                  <input
-                    readOnly
-                    value={
-                      user?.firstName
-                        ? `${user?.firstName} ${user?.lastName}`
-                        : "Anonymous"
-                    }
-                    className="text-sm font-bold border-0 truncate w-full bg-transparent outline-none"
-                  />
+              <div className="flex flex-col w-full overflow-hidden">
+                <input
+                  readOnly
+                  value={
+                    user?.firstName
+                      ? `${user?.firstName} ${user?.lastName}`
+                      : "Anonymous"
+                  }
+                  className="text-sm font-bold border-0 truncate w-full bg-transparent outline-none pr-2"
+                />
+                <div className="flex items-center gap-2 mt-1">
+                  <p className="text-xs text-foreground/60 truncate flex-1">
+                    {user?.email || "anonymous@mail.com"}
+                  </p>
                   <p
                     className={cn(
-                      "text-xs rounded-full px-1 text-center capitalize flex-1 text-white bg-greenColor",
+                      "text-xs rounded-full px-2 py-0.5 text-center capitalize text-white bg-greenColor whitespace-nowrap",
                       {
                         "bg-red-700": isAdmin,
+                        "bg-gradient-to-r from-purple-600 to-pink-600": isSuperAdmin,
                       }
                     )}
                   >
-                    {user?.role}
+                    {isSuperAdmin ? "super admin" : user?.role}
                   </p>
                 </div>
-
-                <p className="text-xs text-foreground/60 break-all pr-2">
-                  {user?.email || "anonymous@mail.com"}
-                </p>
               </div>
               <EditAccountModal />
             </div>
@@ -170,7 +171,7 @@ const NavigationBoarded = () => {
             })}
 
             {/* Admin separator and items */}
-            {isAdmin && (
+            {(isAdmin || isSuperAdmin) && (
               <>
                 <div className={cn(
                   "my-4 border-t border-gray-300 dark:border-gray-600 relative",
@@ -178,24 +179,24 @@ const NavigationBoarded = () => {
                 )}>
                   {!isMinimized && (
                     <span className="absolute -top-2 left-2 bg-background px-2 text-xs text-muted-foreground font-semibold">
-                      ADMIN
+                      {isSuperAdmin ? "SUPER ADMIN" : "ADMIN"}
                     </span>
                   )}
                 </div>
                 {adminMenuItems.map((item, index) => {
-                  const Icon = item.icon;
-                  return (
-                    <Link
-                      key={`admin-${index}`}
-                      href={item.href}
-                      className={cn(
-                        "flex items-center transition-colors duration-200 bg-secondary/20 border rounded-sm",
-                        isMinimized ? "justify-center p-2" : "pl-4 p-3",
-                        item.href === pathname
-                          ? "bg-green-500 text-background font-black"
-                          : "hover:bg-accent"
-                      )}
-                      title={isMinimized ? item.title : undefined}
+                    const Icon = item.icon;
+                    return (
+                      <Link
+                        key={`admin-${index}`}
+                        href={item.href}
+                        className={cn(
+                          "flex items-center transition-colors duration-200 bg-secondary/20 border rounded-sm",
+                          isMinimized ? "justify-center p-2" : "pl-4 p-3",
+                          item.href === pathname
+                            ? "bg-green-500 text-background font-black"
+                            : "hover:bg-accent"
+                        )}
+                        title={isMinimized ? item.title : undefined}
                     >
                       <Icon className={`size-6 ${isMinimized ? "" : "mr-4"}`} />
                       {!isMinimized && item.title}

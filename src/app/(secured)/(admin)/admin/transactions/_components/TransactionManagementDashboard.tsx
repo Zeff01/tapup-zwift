@@ -204,9 +204,43 @@ export default function TransactionManagementDashboard({
     
     const avgOrderValue = completed > 0 ? totalRevenue / completed : 0;
     
-    // Calculate trends (mock data - replace with actual historical data)
-    const revenueTrend = 15.3; // percentage
-    const orderTrend = 8.7;
+    // Calculate real trends based on date comparison
+    const now = new Date();
+    const thirtyDaysAgo = new Date(now.getTime() - 30 * 24 * 60 * 60 * 1000);
+    const sixtyDaysAgo = new Date(now.getTime() - 60 * 24 * 60 * 60 * 1000);
+    
+    // Current period (last 30 days)
+    const currentPeriodTransactions = transactions.filter(t => {
+      const date = new Date(t.createdAt);
+      return date >= thirtyDaysAgo && date <= now;
+    });
+    
+    // Previous period (30-60 days ago)
+    const previousPeriodTransactions = transactions.filter(t => {
+      const date = new Date(t.createdAt);
+      return date >= sixtyDaysAgo && date < thirtyDaysAgo;
+    });
+    
+    // Calculate current period metrics
+    const currentOrders = currentPeriodTransactions.length;
+    const currentRevenue = currentPeriodTransactions
+      .filter(t => t.status === "completed")
+      .reduce((sum, t) => sum + t.amount, 0);
+    
+    // Calculate previous period metrics
+    const previousOrders = previousPeriodTransactions.length;
+    const previousRevenue = previousPeriodTransactions
+      .filter(t => t.status === "completed")
+      .reduce((sum, t) => sum + t.amount, 0);
+    
+    // Calculate percentage changes
+    const orderTrend = previousOrders > 0 
+      ? ((currentOrders - previousOrders) / previousOrders * 100).toFixed(1)
+      : currentOrders > 0 ? 100 : 0;
+    
+    const revenueTrend = previousRevenue > 0
+      ? ((currentRevenue - previousRevenue) / previousRevenue * 100).toFixed(1)
+      : currentRevenue > 0 ? 100 : 0;
     
     // Top customers
     const customerStats = new Map<string, { count: number; total: number }>();
@@ -236,9 +270,13 @@ export default function TransactionManagementDashboard({
       cancelled, 
       totalRevenue, 
       avgOrderValue,
-      revenueTrend,
-      orderTrend,
-      topCustomers
+      revenueTrend: parseFloat(revenueTrend),
+      orderTrend: parseFloat(orderTrend),
+      topCustomers,
+      currentOrders,
+      previousOrders,
+      currentRevenue,
+      previousRevenue
     };
   }, [transactions, userMap]);
 
@@ -472,14 +510,14 @@ export default function TransactionManagementDashboard({
             value={statistics.total}
             icon={<ShoppingCart className="w-4 h-4 text-white" />}
             color="bg-primary"
-            trend={{ value: statistics.orderTrend, isPositive: true }}
+            trend={statistics.total > 0 ? { value: Math.abs(statistics.orderTrend), isPositive: statistics.orderTrend >= 0 } : undefined}
           />
           <StatCard
             title="Total Revenue"
             value={`₱${statistics.totalRevenue.toLocaleString()}`}
             icon={<DollarSign className="w-4 h-4 text-white" />}
             color="bg-green-500"
-            trend={{ value: statistics.revenueTrend, isPositive: true }}
+            trend={statistics.total > 0 ? { value: Math.abs(statistics.revenueTrend), isPositive: statistics.revenueTrend >= 0 } : undefined}
           />
           <StatCard
             title="Average Order"
@@ -490,7 +528,7 @@ export default function TransactionManagementDashboard({
           />
           <StatCard
             title="Success Rate"
-            value={`${Math.round((statistics.completed / statistics.total) * 100)}%`}
+            value={statistics.total > 0 ? `${Math.round((statistics.completed / statistics.total) * 100)}%` : "0%"}
             icon={<CheckCircle2 className="w-4 h-4 text-white" />}
             color="bg-purple-500"
             description={`${statistics.completed} completed`}

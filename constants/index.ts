@@ -80,6 +80,7 @@ export const cardEditorUtils = {
  * @readonly
  */
 export const USER_ROLE_ENUMS = Object.freeze({
+  SUPER_ADMIN: "super_admin",
   ADMIN: "admin",
   USER: "user",
 });
@@ -292,6 +293,7 @@ export const menuItems = [
   { icon: TbCards, title: "Cards", href: "/cards" },
   { icon: Home, title: "Home", href: "/home" },
   { icon: RxDashboard, title: "Dashboard", href: "/dashboard" },
+  { icon: FiShoppingBag, title: "My Orders", href: "/cards?tab=orders" },
 ];
 
 export const adminMenuItems = [

@@ -1,8 +1,8 @@
 "use client";
 
 import { useState, useEffect } from "react";
-import { carouselCards } from "@/constants";
-import { Card } from "@/types/types";
+import { carouselCards, USER_ROLE_ENUMS } from "@/constants";
+import { Card, UserRole } from "@/types/types";
 import { 
   CreditCard, 
   Plus, 
@@ -52,8 +52,10 @@ import {
   generateBulkCards,
   deletePregeneratedCard,
   exportPregeneratedCards,
-  testFirebaseConnection
+  getCardGenerationLogs
 } from "@/lib/firebase/actions/card-bank.action";
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import { History, Calendar, User } from "lucide-react";
 
 interface CardVariantStock {
   id: string;
@@ -66,12 +68,27 @@ interface CardVariantStock {
   assignedCards: number;
 }
 
-export default function CardBankDashboard() {
+interface CardBankDashboardProps {
+  userRole: UserRole;
+  currentUser: {
+    uid: string;
+    email: string;
+    name: string;
+  };
+}
+
+export default function CardBankDashboard({ userRole, currentUser }: CardBankDashboardProps) {
   const [selectedVariant, setSelectedVariant] = useState<string | null>(null);
   const [generateCount, setGenerateCount] = useState<number>(5);
   const [showGenerateDialog, setShowGenerateDialog] = useState(false);
   const [selectedCardDetails, setSelectedCardDetails] = useState<any>(null);
   const queryClient = useQueryClient();
+  
+  // Check if user is super admin (can only generate cards)
+  const isSuperAdmin = userRole === USER_ROLE_ENUMS.SUPER_ADMIN;
+  const canViewDetails = true; // All admins can view details
+  const canDeleteCards = true; // All admins can delete
+  const canExportCards = true; // All admins can export
 
   const { data: pregeneratedCards = [], isLoading, refetch } = useQuery({
     queryKey: ["pregeneratedCards"],
@@ -85,9 +102,15 @@ export default function CardBankDashboard() {
     refetchOnWindowFocus: true,
   });
 
+  const { data: logs = [], isLoading: isLoadingLogs } = useQuery({
+    queryKey: ["card-generation-logs"],
+    queryFn: getCardGenerationLogs,
+    refetchInterval: 30000,
+  });
+
   const { mutate: generateCards, isPending: isGenerating } = useMutation({
     mutationFn: ({ cardType, count }: { cardType: string; count: number }) => 
-      generateBulkCards(cardType, count),
+      generateBulkCards(cardType, count, currentUser),
     onSuccess: async (_, variables) => {
       toast.success(`Successfully generated ${variables.count} ${variables.cardType} cards!`);
       setShowGenerateDialog(false);
@@ -207,8 +230,22 @@ export default function CardBankDashboard() {
 
   return (
     <div className="py-4 px-4 space-y-6">
-      {/* Header */}
-      <div className="flex items-start justify-between">
+      <Tabs defaultValue="inventory" className="w-full">
+        <div className="flex items-start justify-between mb-6">
+          <TabsList>
+            <TabsTrigger value="inventory">Card Inventory</TabsTrigger>
+            {isSuperAdmin && (
+              <TabsTrigger value="logs">
+                <History className="w-4 h-4 mr-2" />
+                Generation Logs
+              </TabsTrigger>
+            )}
+          </TabsList>
+        </div>
+        
+        <TabsContent value="inventory" className="mt-0 space-y-6">
+          {/* Header */}
+          <div className="flex items-start justify-between">
         <div>
           <div className="flex items-center gap-2">
             <div className="p-2 bg-primary/10 rounded-lg">
@@ -223,19 +260,6 @@ export default function CardBankDashboard() {
           </div>
         </div>
         <div className="flex gap-2">
-          <Button
-            variant="outline"
-            onClick={async () => {
-              const isConnected = await testFirebaseConnection();
-              if (isConnected) {
-                toast.success("Firebase connection successful!");
-              } else {
-                toast.error("Firebase connection failed - check console");
-              }
-            }}
-          >
-            Test Connection
-          </Button>
           <Button
             variant="outline"
             onClick={async () => {
@@ -362,18 +386,20 @@ export default function CardBankDashboard() {
                 </div>
 
                 <div className="flex gap-2">
-                  <Button
-                    variant="outline"
-                    size="sm"
-                    className="flex-1"
-                    onClick={() => setSelectedCardDetails(variant)}
-                  >
-                    View
-                  </Button>
+                  {canViewDetails && (
+                    <Button
+                      variant="outline"
+                      size="sm"
+                      className="flex-1"
+                      onClick={() => setSelectedCardDetails(variant)}
+                    >
+                      View
+                    </Button>
+                  )}
 
                   <Button
                     size="sm"
-                    className="flex-1"
+                    className={canViewDetails ? "flex-1" : "w-full"}
                     onClick={() => {
                       setSelectedVariant(variant.id);
                       setShowGenerateDialog(true);
@@ -427,14 +453,16 @@ export default function CardBankDashboard() {
                     <RefreshCw className="w-4 h-4 mr-2" />
                     Refresh
                   </Button>
-                  <Button
-                    variant="outline"
-                    size="sm"
-                    onClick={() => handleExportCards(selectedCardDetails.id)}
-                  >
-                    <Download className="w-4 h-4 mr-2" />
-                    Export CSV
-                  </Button>
+                  {canExportCards && (
+                    <Button
+                      variant="outline"
+                      size="sm"
+                      onClick={() => handleExportCards(selectedCardDetails.id)}
+                    >
+                      <Download className="w-4 h-4 mr-2" />
+                      Export CSV
+                    </Button>
+                  )}
                 </div>
               </div>
 
@@ -517,7 +545,7 @@ export default function CardBankDashboard() {
                                 >
                                   <QrCode className="w-4 h-4" />
                                 </Button>
-                                {card.status === "available" && (
+                                {card.status === "available" && canDeleteCards && (
                                   <Button
                                     variant="ghost"
                                     size="sm"
@@ -560,15 +588,21 @@ export default function CardBankDashboard() {
           </DialogHeader>
 
           <div className="space-y-4">
-            {selectedVariant && (
+            {selectedVariant && carouselCards[selectedVariant as keyof typeof carouselCards] && (
               <div className="flex items-center gap-3 p-3 bg-gray-50 dark:bg-gray-800 rounded-lg">
-                <Image
-                  src={carouselCards[selectedVariant as keyof typeof carouselCards]?.image || ""}
-                  alt={carouselCards[selectedVariant as keyof typeof carouselCards]?.title || ""}
-                  width={60}
-                  height={40}
-                  className="object-cover rounded"
-                />
+                {carouselCards[selectedVariant as keyof typeof carouselCards]?.image ? (
+                  <Image
+                    src={carouselCards[selectedVariant as keyof typeof carouselCards].image}
+                    alt={carouselCards[selectedVariant as keyof typeof carouselCards].title}
+                    width={60}
+                    height={40}
+                    className="object-cover rounded"
+                  />
+                ) : (
+                  <div className="w-[60px] h-[40px] bg-gray-200 dark:bg-gray-700 rounded flex items-center justify-center">
+                    <CreditCard className="w-6 h-6 text-gray-400" />
+                  </div>
+                )}
                 <div>
                   <p className="font-medium">{carouselCards[selectedVariant as keyof typeof carouselCards]?.title}</p>
                   <p className="text-sm text-muted-foreground">
@@ -651,6 +685,95 @@ export default function CardBankDashboard() {
           </DialogFooter>
         </DialogContent>
       </Dialog>
+    </TabsContent>
+    
+    {/* Logs Tab - Only for Super Admins */}
+    {isSuperAdmin && (
+      <TabsContent value="logs" className="mt-0 space-y-6">
+        <div>
+          <h2 className="text-xl font-bold mb-4">Card Generation History</h2>
+          <UICard>
+            <Table>
+              <TableHeader>
+                <TableRow>
+                  <TableHead>Date & Time</TableHead>
+                  <TableHead>Generated By</TableHead>
+                  <TableHead>Card Type</TableHead>
+                  <TableHead>Quantity</TableHead>
+                  <TableHead>Transfer Codes</TableHead>
+                </TableRow>
+              </TableHeader>
+              <TableBody>
+                {isLoadingLogs ? (
+                  <TableRow>
+                    <TableCell colSpan={5} className="text-center py-8">
+                      <Loader2 className="w-6 h-6 animate-spin mx-auto" />
+                    </TableCell>
+                  </TableRow>
+                ) : logs.length === 0 ? (
+                  <TableRow>
+                    <TableCell colSpan={5} className="text-center py-8 text-muted-foreground">
+                      No generation logs found
+                    </TableCell>
+                  </TableRow>
+                ) : (
+                  logs.map((log: any) => (
+                    <TableRow key={log.id}>
+                      <TableCell>
+                        <div className="flex items-center gap-2">
+                          <Calendar className="w-4 h-4 text-muted-foreground" />
+                          {new Date(log.generatedAt).toLocaleString()}
+                        </div>
+                      </TableCell>
+                      <TableCell>
+                        <div className="flex items-center gap-2">
+                          <User className="w-4 h-4 text-muted-foreground" />
+                          <div>
+                            <p className="font-medium">{log.generatedBy?.name}</p>
+                            <p className="text-xs text-muted-foreground">{log.generatedBy?.email}</p>
+                          </div>
+                        </div>
+                      </TableCell>
+                      <TableCell>
+                        <Badge variant="outline">{log.cardType}</Badge>
+                      </TableCell>
+                      <TableCell>
+                        <Badge>{log.count} cards</Badge>
+                      </TableCell>
+                      <TableCell>
+                        <Dialog>
+                          <DialogTrigger asChild>
+                            <Button variant="outline" size="sm">
+                              View Codes
+                            </Button>
+                          </DialogTrigger>
+                          <DialogContent className="max-w-2xl">
+                            <DialogHeader>
+                              <DialogTitle>Transfer Codes</DialogTitle>
+                              <DialogDescription>
+                                Generated on {new Date(log.generatedAt).toLocaleString()}
+                              </DialogDescription>
+                            </DialogHeader>
+                            <div className="grid grid-cols-2 sm:grid-cols-3 gap-2 max-h-96 overflow-y-auto">
+                              {log.transferCodes?.map((code: string, index: number) => (
+                                <div key={index} className="font-mono text-sm p-2 bg-muted rounded">
+                                  {code}
+                                </div>
+                              ))}
+                            </div>
+                          </DialogContent>
+                        </Dialog>
+                      </TableCell>
+                    </TableRow>
+                  ))
+                )}
+              </TableBody>
+            </Table>
+          </UICard>
+        </div>
+      </TabsContent>
+    )}
+    </Tabs>
     </div>
   );
 }

@@ -1,9 +1,21 @@
 import { getAllTransactions } from "@/lib/firebase/actions/user.action";
 import { getAllUsers } from "@/lib/firebase/actions/user.action";
 import TransactionManagementDashboard from "./_components/TransactionManagementDashboard";
+import { authCurrentUserv2 } from "@/lib/firebase/auth";
+import { USER_ROLE_ENUMS } from "@/constants";
+import { notFound, redirect } from "next/navigation";
 
 export default async function TransactionsPage() {
-  const transactions = await getAllTransactions({ role: "admin" });
+  const auth = await authCurrentUserv2();
+
+  if (!auth) {
+    redirect("/login");
+  }
+  if (auth?.role !== USER_ROLE_ENUMS.ADMIN && auth?.role !== USER_ROLE_ENUMS.SUPER_ADMIN) {
+    notFound();
+  }
+
+  const transactions = await getAllTransactions({ role: auth.role });
   const users = await getAllUsers();
 
   if (!transactions || !Array.isArray(transactions)) {

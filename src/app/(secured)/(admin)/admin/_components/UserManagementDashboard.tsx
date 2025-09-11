@@ -157,8 +157,8 @@ export default function UserManagementDashboard({
   const [isUpdating, setIsUpdating] = useState<string | null>(null);
 
   // Separate users and admins
-  const admins = users.filter(user => user.role === "admin");
-  const regularUsers = users.filter(user => user.role !== "admin");
+  const admins = users.filter(user => user.role === "admin" || user.role === "super_admin");
+  const regularUsers = users.filter(user => user.role !== "admin" && user.role !== "super_admin");
 
   // Calculate statistics
   const statistics = useMemo(() => {
@@ -266,6 +266,12 @@ export default function UserManagementDashboard({
   };
 
   const handleRoleUpdate = async (userId: string, newRole: "user" | "admin") => {
+    // Only super admins can change roles
+    if (currentUser.role !== "super_admin") {
+      toast.error("Only super admins can change user roles");
+      return;
+    }
+
     setIsUpdating(userId);
     try {
       await updateUserRole(userId, newRole);
@@ -301,6 +307,9 @@ export default function UserManagementDashboard({
   };
 
   const getUserStatusBadge = (user: ExtendedUserInterface) => {
+    if (user.role === "super_admin") {
+      return <Badge className="bg-gradient-to-r from-purple-600 to-pink-600 text-white">Super Admin</Badge>;
+    }
     if (user.role === "admin") {
       return <Badge className="bg-purple-100 text-purple-800 dark:bg-purple-900/20 dark:text-purple-400">Admin</Badge>;
     }
@@ -675,11 +684,15 @@ export default function UserManagementDashboard({
                               <Mail className="w-4 h-4 mr-2" />
                               Send Email
                             </DropdownMenuItem>
-                            <DropdownMenuSeparator />
-                            <DropdownMenuItem onClick={() => handleRoleUpdate(user.id!, "admin")}>
-                              <ShieldCheck className="w-4 h-4 mr-2" />
-                              Make Admin
-                            </DropdownMenuItem>
+                            {currentUser.role === "super_admin" && (
+                              <>
+                                <DropdownMenuSeparator />
+                                <DropdownMenuItem onClick={() => handleRoleUpdate(user.id!, "admin")}>
+                                  <ShieldCheck className="w-4 h-4 mr-2" />
+                                  Make Admin
+                                </DropdownMenuItem>
+                              </>
+                            )}
                             <DropdownMenuSeparator />
                             <DropdownMenuItem className="text-red-600">
                               <UserX className="w-4 h-4 mr-2" />
@@ -758,10 +771,17 @@ export default function UserManagementDashboard({
                         </div>
                       </TableCell>
                       <TableCell>
-                        <Badge className="bg-purple-100 text-purple-800 dark:bg-purple-900/20 dark:text-purple-400">
-                          <Shield className="w-3 h-3 mr-1" />
-                          Super Admin
-                        </Badge>
+                        {user.role === "super_admin" ? (
+                          <Badge className="bg-gradient-to-r from-purple-600 to-pink-600 text-white">
+                            <Shield className="w-3 h-3 mr-1" />
+                            Super Admin
+                          </Badge>
+                        ) : (
+                          <Badge className="bg-purple-100 text-purple-800 dark:bg-purple-900/20 dark:text-purple-400">
+                            <Shield className="w-3 h-3 mr-1" />
+                            Admin
+                          </Badge>
+                        )}
                       </TableCell>
                       <TableCell>
                         {getActivityStatus(user)}
@@ -797,14 +817,18 @@ export default function UserManagementDashboard({
                                 <Mail className="w-4 h-4 mr-2" />
                                 Send Email
                               </DropdownMenuItem>
-                              <DropdownMenuSeparator />
-                              <DropdownMenuItem 
-                                onClick={() => handleRoleUpdate(user.id!, "user")}
-                                className="text-orange-600"
-                              >
-                                <ShieldOff className="w-4 h-4 mr-2" />
-                                Remove Admin
-                              </DropdownMenuItem>
+                              {currentUser.role === "super_admin" && user.role !== "super_admin" && (
+                                <>
+                                  <DropdownMenuSeparator />
+                                  <DropdownMenuItem 
+                                    onClick={() => handleRoleUpdate(user.id!, "user")}
+                                    className="text-orange-600"
+                                  >
+                                    <ShieldOff className="w-4 h-4 mr-2" />
+                                    Remove Admin
+                                  </DropdownMenuItem>
+                                </>
+                              )}
                             </DropdownMenuContent>
                           </DropdownMenu>
                         )}

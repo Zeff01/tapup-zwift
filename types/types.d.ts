@@ -131,9 +131,11 @@ export type Transaction = {
   status: "pending" | "completed" | "failed";
 };
 
+export type UserRole = "super_admin" | "admin" | "user";
+
 export interface ExtendedUserInterface extends Users {
   uid: string;
-  role: string;
+  role: UserRole;
   onboarding: boolean;
   deliveryAddresses?: DeliveryAddress[];
   cardOrdering?: string[];

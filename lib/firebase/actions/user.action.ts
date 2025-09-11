@@ -113,6 +113,8 @@ export const getAllUsers = async (): Promise<ExtendedUserInterface[]> => {
         onboarding: data.onboarding ?? false,
         deliveryAddresses: data.deliveryAddresses || [],
         cardOrdering: data.cardOrdering || [],
+        email: data.email || "", // Add required email field
+        companies: data.companies || [], // Add required companies field
         user_link: createUserLink(data.userCode ?? ""),
         // Convert Firestore timestamps to ISO strings
         timestamp: data.timestamp?.toDate ? data.timestamp.toDate().toISOString() : data.timestamp,
@@ -1009,7 +1011,7 @@ export const updateUserCardOrdering = async (
 
 export const updateUserRole = async (
   userId: string,
-  newRole: "user" | "admin"
+  newRole: "user" | "admin" | "super_admin"
 ): Promise<{ success: boolean; message: string }> => {
   try {
     if (!userId) throw new Error("User ID is required");
