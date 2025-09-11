@@ -132,6 +132,11 @@ export default function CheckoutForm() {
       };
 
       await createTransaction(transactionData);
+      
+      // Store user ID in localStorage for payment success page
+      if (user?.uid) {
+        localStorage.setItem("userId", user.uid);
+      }
 
       if (!user?.firstName || !user?.lastName || !user?.number) {
         await updateUserInfo({
