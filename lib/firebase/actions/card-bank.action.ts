@@ -199,8 +199,22 @@ export async function generateBulkCards(
         transferCodes: generatedCards.map(card => card.transferCode)
       };
       console.log(`[generateBulkCards] Log data:`, logData);
-      await setDoc(logRef, logData);
-      console.log(`[generateBulkCards] Created generation log entry with ID:`, logRef.id);
+      
+      try {
+        await setDoc(logRef, logData);
+        console.log(`[generateBulkCards] Created generation log entry with ID:`, logRef.id);
+        
+        // Verify the log was created
+        const verifyDoc = await getDoc(logRef);
+        if (verifyDoc.exists()) {
+          console.log(`[generateBulkCards] Verified log exists in database:`, verifyDoc.data());
+        } else {
+          console.error(`[generateBulkCards] ERROR: Log document not found after creation!`);
+        }
+      } catch (logError) {
+        console.error(`[generateBulkCards] ERROR creating log:`, logError);
+        // Don't throw - we still want card generation to succeed even if logging fails
+      }
     } else {
       console.log(`[generateBulkCards] No user info provided, skipping log creation`);
     }
@@ -370,6 +384,33 @@ export async function getCardByTransferCode(transferCode: string): Promise<Prege
   } catch (error) {
     console.error("Error fetching card by transfer code:", error);
     throw new Error("Failed to fetch card by transfer code");
+  }
+}
+
+// Test function to verify log collection access
+export async function testLogCreation(): Promise<boolean> {
+  try {
+    const logsRef = collection(firebaseDb, "card-generation-logs");
+    const testDoc = doc(logsRef);
+    await setDoc(testDoc, {
+      test: true,
+      createdAt: Date.now(),
+      message: "Test log entry"
+    });
+    console.log("[testLogCreation] Test document created:", testDoc.id);
+    
+    // Try to read it back
+    const readBack = await getDoc(testDoc);
+    if (readBack.exists()) {
+      console.log("[testLogCreation] Successfully read back test doc:", readBack.data());
+      // Clean up
+      await deleteDoc(testDoc);
+      return true;
+    }
+    return false;
+  } catch (error) {
+    console.error("[testLogCreation] Error:", error);
+    return false;
   }
 }
 

@@ -53,7 +53,8 @@ import {
   generateBulkCards,
   deletePregeneratedCard,
   exportPregeneratedCards,
-  getCardGenerationLogs
+  getCardGenerationLogs,
+  testLogCreation
 } from "@/lib/firebase/actions/card-bank.action";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { History, Calendar, User } from "lucide-react";
