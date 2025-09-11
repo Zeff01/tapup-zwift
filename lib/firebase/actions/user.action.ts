@@ -867,7 +867,7 @@ export const createTransaction = async (transactionData: TransactionType) => {
 
 export const getAllTransactions = async ({ role }: { role: string }): Promise<TransactionBoard[] | false> => {
   try {
-    if (!role || role !== "admin")
+    if (!role || (role !== "admin" && role !== "super_admin"))
       throw new Error("This is an Admin Only Request");
 
     const transactionCollection = collection(firebaseDb, "transactions");
@@ -910,7 +910,7 @@ export const updateTransactionPerId = async ({
   data: string;
 }) => {
   try {
-    if (!role || role !== "admin")
+    if (!role || (role !== "admin" && role !== "super_admin"))
       throw new Error("This is an Admin Only Request");
 
     const transactionRef = doc(firebaseDb, "transactions", transaction_id);
