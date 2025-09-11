@@ -108,8 +108,14 @@ export default function CardBankDashboard({ userRole, currentUser }: CardBankDas
 
   const { data: logs = [], isLoading: isLoadingLogs } = useQuery({
     queryKey: ["card-generation-logs"],
-    queryFn: getCardGenerationLogs,
+    queryFn: async () => {
+      console.log("[CardBankDashboard] Fetching generation logs...");
+      const result = await getCardGenerationLogs();
+      console.log("[CardBankDashboard] Generation logs result:", result);
+      return result || [];
+    },
     refetchInterval: 30000,
+    enabled: isSuperAdmin, // Only fetch logs if user is super admin
   });
 
   const { mutate: generateCards, isPending: isGenerating } = useMutation({

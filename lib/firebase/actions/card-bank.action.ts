@@ -426,8 +426,17 @@ export async function getCardGenerationLogs(): Promise<any[]> {
     // Group cards by generation batch (by timestamp and user)
     const generationBatches = new Map<string, any>();
     
+    console.log(`[getCardGenerationLogs] Processing ${snapshot.docs.length} cards`);
+    
     snapshot.docs.forEach((doc) => {
       const card = doc.data();
+      console.log(`[getCardGenerationLogs] Card ${doc.id}:`, { 
+        hasGeneratedBy: !!card.generatedBy, 
+        hasCreatedAt: !!card.createdAt,
+        generatedBy: card.generatedBy,
+        createdAt: card.createdAt 
+      });
+      
       if (card.generatedBy && card.createdAt) {
         // Create a key based on timestamp (within 5 seconds) and user
         const batchKey = `${Math.floor(card.createdAt / 5000)}_${card.generatedBy.uid}`;
