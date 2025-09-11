@@ -132,6 +132,14 @@ service cloud.firestore {
       allow write: if isAuthenticated();
     }
     
+    // Cart collection - users can manage their own cart
+    match /cart/{cartId} {
+      allow read: if true; // Temporary for SSR
+      allow create: if isAuthenticated();
+      allow update, delete: if isAuthenticated() && 
+        (resource.data.userUid == request.auth.uid || resource.data.userId == request.auth.uid);
+    }
+    
     // Default deny all other access
     match /{document=**} {
       allow read, write: if false;

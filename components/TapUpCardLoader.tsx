@@ -32,15 +32,15 @@ export default function TapUpCardLoader() {
   useEffect(() => {
     setMounted(true);
     
-    // Change card every 2 seconds
+    // Change card every 4 seconds (doubled from 2)
     const cardInterval = setInterval(() => {
       setCurrentCard((prev) => (prev + 1) % cardDesigns.length);
-    }, 2000);
+    }, 4000);
 
-    // Flip card every second
+    // Flip card every 2 seconds (doubled from 1)
     const flipInterval = setInterval(() => {
       setIsFlipped((prev) => !prev);
-    }, 1000);
+    }, 2000);
 
     return () => {
       clearInterval(cardInterval);
@@ -97,8 +97,8 @@ export default function TapUpCardLoader() {
             rotateZ: [0, 5, -5, 0],
           }}
           transition={{
-            rotateY: { duration: 0.6, ease: "easeInOut" },
-            rotateZ: { duration: 2, ease: "easeInOut", repeat: Infinity },
+            rotateY: { duration: 1.2, ease: "easeInOut" }, // Doubled from 0.6
+            rotateZ: { duration: 3, ease: "easeInOut", repeat: Infinity }, // Increased from 2
           }}
           style={{ transformStyle: "preserve-3d" }}
         >
