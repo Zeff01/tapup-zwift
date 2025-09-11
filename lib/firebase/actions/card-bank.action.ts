@@ -414,45 +414,50 @@ export async function testLogCreation(): Promise<boolean> {
   }
 }
 
-// Get card generation logs
+// Get card generation logs by extracting from pregenerated cards
 export async function getCardGenerationLogs(): Promise<any[]> {
   try {
-    console.log("[getCardGenerationLogs] Fetching card generation logs...");
-    const logsRef = collection(firebaseDb, "card-generation-logs");
+    console.log("[getCardGenerationLogs] Fetching generation history from cards...");
     
-    // Try without orderBy first to see if there are any documents
-    const simpleSnapshot = await getDocs(logsRef);
-    console.log(`[getCardGenerationLogs] Simple query found ${simpleSnapshot.size} documents`);
+    // Get all pregenerated cards that have generatedBy info
+    const cardsRef = collection(firebaseDb, "pregenerated-cards");
+    const snapshot = await getDocs(cardsRef);
     
-    if (simpleSnapshot.size > 0) {
-      // If documents exist, try with orderBy
-      try {
-        const q = query(logsRef, orderBy("generatedAt", "desc"), limit(100));
-        const snapshot = await getDocs(q);
+    // Group cards by generation batch (by timestamp and user)
+    const generationBatches = new Map<string, any>();
+    
+    snapshot.docs.forEach((doc) => {
+      const card = doc.data();
+      if (card.generatedBy && card.createdAt) {
+        // Create a key based on timestamp (within 5 seconds) and user
+        const batchKey = `${Math.floor(card.createdAt / 5000)}_${card.generatedBy.uid}`;
         
-        const logs = snapshot.docs.map((doc) => ({
-          id: doc.id,
-          ...doc.data(),
-        }));
+        if (!generationBatches.has(batchKey)) {
+          generationBatches.set(batchKey, {
+            id: batchKey,
+            generatedBy: card.generatedBy,
+            generatedAt: card.createdAt,
+            cardType: card.cardType,
+            count: 0,
+            transferCodes: []
+          });
+        }
         
-        console.log(`[getCardGenerationLogs] Fetched ${logs.length} log entries with orderBy`);
-        return logs;
-      } catch (orderError) {
-        console.error("[getCardGenerationLogs] Error with orderBy query:", orderError);
-        // Fall back to simple query
-        const logs = simpleSnapshot.docs.map((doc) => ({
-          id: doc.id,
-          ...doc.data(),
-        }));
-        console.log(`[getCardGenerationLogs] Returning ${logs.length} log entries from simple query`);
-        return logs;
+        const batch = generationBatches.get(batchKey);
+        batch.count += 1;
+        batch.transferCodes.push(card.transferCode);
       }
-    } else {
-      console.log("[getCardGenerationLogs] No log entries found");
-      return [];
-    }
+    });
+    
+    // Convert to array and sort by date
+    const logs = Array.from(generationBatches.values())
+      .sort((a, b) => b.generatedAt - a.generatedAt)
+      .slice(0, 100); // Limit to 100 most recent
+    
+    console.log(`[getCardGenerationLogs] Found ${logs.length} generation batches`);
+    return logs;
   } catch (error) {
-    console.error("[getCardGenerationLogs] Error fetching logs:", error);
+    console.error("[getCardGenerationLogs] Error extracting generation history:", error);
     return [];
   }
 }
