@@ -34,7 +34,11 @@ const OverlayMenu = () => {
   const pathname = usePathname();
 
   const isAdmin = user?.role === "admin";
-  const navItems = [...menuItems, ...(isAdmin ? adminMenuItems : [])];
+  const isSuperAdmin = user?.role === "super_admin";
+  const navItems = [
+    ...menuItems, 
+    ...((isAdmin || isSuperAdmin) ? adminMenuItems : [])
+  ];
 
   const handleOpenMenu = () => {
     setOpenMenu(!openMenu);

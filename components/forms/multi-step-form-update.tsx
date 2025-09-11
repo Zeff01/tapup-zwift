@@ -74,17 +74,11 @@ export type ChosenTemplateType =
   | "template18";
 
 export type ChosenPhysicalCardType =
-  | "card1"
-  | "card2"
-  | "card3"
-  | "card4"
-  | "card5"
-  | "card6"
-  | "card7"
-  | "card8"
-  | "card9"
-  | "card10"
-  | "card11";
+  | "eclipse"
+  | "aurora"
+  | "viper"
+  | "vortex"
+  | "bloom";
 
 type CardSpecificFields = {
   owner: string;
@@ -249,7 +243,7 @@ const MultiStepFormUpdate = ({
 
   const [selectedPhysicalCardId, setSelectedPhysicalCardId] =
     useState<ChosenPhysicalCardType>(
-      (userData.chosenPhysicalCard as ChosenPhysicalCardType) ?? "card1"
+      (userData.chosenPhysicalCard as ChosenPhysicalCardType) ?? "eclipse"
     );
 
   // NO LONGER NEEDED FOR MULTIPLE FILE UPLOAD
@@ -278,9 +272,9 @@ const MultiStepFormUpdate = ({
       chosenPhysicalCard:
         typeof userData.chosenPhysicalCard === "object"
           ? ((userData.chosenPhysicalCard?.id as ChosenPhysicalCardType) ??
-            "card1")
+            "eclipse")
           : ((userData.chosenPhysicalCard as ChosenPhysicalCardType) ??
-            "card1"),
+            "eclipse"),
       customUrl: userData.customUrl || "",
       cardName: userData.cardName || "",
       firstName: userData.firstName || "",
