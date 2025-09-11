@@ -77,6 +77,7 @@ export async function getPregeneratedCards(): Promise<PregeneratedCard[]> {
     const cardsRef = collection(firebaseDb, "pregenerated-cards");
     
     const snapshot = await getDocs(cardsRef);
+    console.log("[getPregeneratedCards] Fetched", snapshot.size, "cards from Firebase");
 
     const cards = snapshot.docs.map((doc) => {
       const data = doc.data();
@@ -85,6 +86,8 @@ export async function getPregeneratedCards(): Promise<PregeneratedCard[]> {
         ...data,
       };
     }) as PregeneratedCard[];
+    
+    console.log("[getPregeneratedCards] Sample card:", cards[0]);
 
     
     // Sort by createdAt in memory

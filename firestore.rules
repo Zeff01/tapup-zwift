@@ -48,8 +48,8 @@ service cloud.firestore {
       // TEMPORARY: Allow all reads
       allow read: if true;
       
-      // Only admins can create, update, or delete cards
-      allow create, update, delete: if isAuthenticated() && getUserData().role in ['admin', 'super_admin'];
+      // Allow authenticated writes temporarily for debugging
+      allow create, update, delete: if isAuthenticated();
     }
     
     // Card generation logs
