@@ -57,6 +57,7 @@ import {
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { History, Calendar, User } from "lucide-react";
 import { useUserContext } from "@/providers/user-provider";
+import { getUserById } from "@/lib/firebase/actions/user.action";
 
 interface CardVariantStock {
   id: string;
@@ -92,6 +93,7 @@ export default function CardBankDashboardV2({ userRole, currentUser, initialCard
   const [generateCount, setGenerateCount] = useState<number>(5);
   const [showGenerateDialog, setShowGenerateDialog] = useState(false);
   const [selectedCardDetails, setSelectedCardDetails] = useState<any>(null);
+  const [userDetails, setUserDetails] = useState<Record<string, any>>({});
   
   // Check if user is super admin (can only generate cards)
   const isSuperAdmin = userRole === USER_ROLE_ENUMS.SUPER_ADMIN;
@@ -105,6 +107,31 @@ export default function CardBankDashboardV2({ userRole, currentUser, initialCard
       setIsLoading(true);
       const cards = await getPregeneratedCards();
       setPregeneratedCards(cards);
+      
+      // Fetch user details for reserved/assigned cards
+      const userIds = new Set<string>();
+      cards.forEach(card => {
+        if (card.reservedFor) userIds.add(card.reservedFor);
+        if (card.assignedTo) userIds.add(card.assignedTo);
+      });
+      
+      const userDetailsMap: Record<string, any> = {};
+      for (const userId of userIds) {
+        if (!userDetails[userId]) {
+          try {
+            const user = await getUserById(userId);
+            if (user) {
+              userDetailsMap[userId] = user;
+            }
+          } catch (error) {
+            console.error(`Error fetching user ${userId}:`, error);
+          }
+        }
+      }
+      
+      if (Object.keys(userDetailsMap).length > 0) {
+        setUserDetails(prev => ({ ...prev, ...userDetailsMap }));
+      }
     } catch (error) {
       console.error("Error fetching cards:", error);
       toast.error("Failed to fetch cards");
@@ -434,7 +461,7 @@ export default function CardBankDashboardV2({ userRole, currentUser, initialCard
 
           {/* View Cards Dialog */}
           <Dialog open={!!selectedCardDetails} onOpenChange={(open) => !open && setSelectedCardDetails(null)}>
-            <DialogContent className="max-w-4xl max-h-[80vh] overflow-y-auto">
+            <DialogContent className="max-w-6xl max-h-[80vh] overflow-y-auto">
               <DialogHeader>
                 <DialogTitle>{selectedCardDetails?.title} Cards</DialogTitle>
                 <DialogDescription>
@@ -491,6 +518,7 @@ export default function CardBankDashboardV2({ userRole, currentUser, initialCard
                             <TableHead>Card ID</TableHead>
                             <TableHead>Transfer Code</TableHead>
                             <TableHead>Status</TableHead>
+                            <TableHead>User</TableHead>
                             <TableHead>Created</TableHead>
                             <TableHead>Actions</TableHead>
                           </TableRow>
@@ -531,15 +559,40 @@ export default function CardBankDashboardV2({ userRole, currentUser, initialCard
                                   >
                                     {card.status}
                                   </Badge>
-                                  {card.status === "reserved" && card.reservedFor && (
-                                    <p className="text-xs text-muted-foreground mt-1">
-                                      User: {card.reservedFor.slice(0, 8)}...
-                                    </p>
+                                </TableCell>
+                                <TableCell className="max-w-xs">
+                                  {(card.status === "reserved" || card.status === "assigned") && (
+                                    <div className="space-y-1">
+                                      {(() => {
+                                        const userId = card.status === "reserved" ? card.reservedFor : card.assignedTo;
+                                        const user = userDetails[userId || ''];
+                                        
+                                        if (user) {
+                                          return (
+                                            <>
+                                              <p className="font-medium text-sm">
+                                                {user.firstName} {user.lastName}
+                                              </p>
+                                              <p className="text-xs text-muted-foreground">
+                                                {user.email}
+                                              </p>
+                                              <p className="text-xs text-muted-foreground font-mono">
+                                                ID: {userId}
+                                              </p>
+                                            </>
+                                          );
+                                        }
+                                        
+                                        return (
+                                          <p className="text-xs text-muted-foreground font-mono">
+                                            ID: {userId}
+                                          </p>
+                                        );
+                                      })()}
+                                    </div>
                                   )}
-                                  {card.status === "assigned" && card.assignedTo && (
-                                    <p className="text-xs text-muted-foreground mt-1">
-                                      User: {card.assignedTo.slice(0, 8)}...
-                                    </p>
+                                  {card.status === "available" && (
+                                    <span className="text-sm text-muted-foreground">—</span>
                                   )}
                                 </TableCell>
                                 <TableCell className="text-sm text-muted-foreground">
