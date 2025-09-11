@@ -151,9 +151,15 @@ export default function CheckoutForm() {
       
       // Redirect to Xendit payment page
       window.location.href = recurringPlan.recurringPlan.actions?.[0]?.url;
-    } catch (error) {
+    } catch (error: any) {
       console.error("Error placing order:", error);
-      toast.error("Failed to place order. Please try again.");
+      
+      // Show specific error message
+      if (error.message?.includes("Not enough") || error.message?.includes("available")) {
+        toast.error(error.message || "Some items are no longer available. Please update your cart.");
+      } else {
+        toast.error(error.message || "Failed to place order. Please try again.");
+      }
     } finally {
       setIsLoadingTransaction(false);
     }

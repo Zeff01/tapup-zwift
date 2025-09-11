@@ -6,11 +6,13 @@ import { CreditCard, Package } from "lucide-react";
 import { useSearchParams } from "next/navigation";
 import Cards from "./cards";
 import Orders from "./Orders";
+import PaymentSuccessModal from "@/components/PaymentSuccessModal";
 
 const CardsWithOrders = () => {
   const searchParams = useSearchParams();
   const tabParam = searchParams.get("tab");
   const [activeTab, setActiveTab] = useState(tabParam === "orders" ? "orders" : "cards");
+  const [showPaymentModal, setShowPaymentModal] = useState(false);
 
   useEffect(() => {
     // Update tab if URL parameter changes
@@ -18,6 +20,17 @@ const CardsWithOrders = () => {
       setActiveTab(tabParam);
     }
   }, [tabParam]);
+
+  useEffect(() => {
+    // Check if we're coming from a payment redirect
+    const status = searchParams.get("status");
+    const planId = searchParams.get("plan_id") || searchParams.get("recurring_plan_id");
+    
+    if (status || planId) {
+      // Show payment success modal if we have payment-related params
+      setShowPaymentModal(true);
+    }
+  }, [searchParams]);
 
   return (
     <div className="flex-1">
@@ -43,6 +56,22 @@ const CardsWithOrders = () => {
           <Orders />
         </TabsContent>
       </Tabs>
+      
+      <PaymentSuccessModal
+        isOpen={showPaymentModal}
+        onClose={() => {
+          setShowPaymentModal(false);
+          // Remove payment params from URL
+          const newUrl = new URL(window.location.href);
+          newUrl.searchParams.delete("status");
+          newUrl.searchParams.delete("plan_id");
+          newUrl.searchParams.delete("recurring_plan_id");
+          newUrl.searchParams.delete("external_id");
+          newUrl.searchParams.delete("reference_id");
+          window.history.replaceState({}, "", newUrl.toString());
+        }}
+        searchParams={searchParams}
+      />
     </div>
   );
 };

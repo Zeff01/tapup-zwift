@@ -3,6 +3,7 @@ import { xenditClient } from "@/lib/axios";
 import { CustomerType, RecurringPlanType, SubscriptionPlan, DeliveryAddress } from "@/types/types";
 import { deliveryFormSchema } from "@/lib/zod-schema";
 import * as z from "zod";
+import { reserveCardsAtomically } from "@/lib/firebase/actions/card-reservation.action";
 
 export async function POST(req: NextRequest) {
   try {
@@ -22,6 +23,27 @@ export async function POST(req: NextRequest) {
       userId?: string;
       selectedAddress?: DeliveryAddress | z.infer<typeof deliveryFormSchema>;
     } = body;
+
+    // First, try to reserve the cards atomically
+    // Group cards by type
+    const cardTypeCount = cardItems.reduce((acc: Record<string, number>, card) => {
+      acc[card.id] = (acc[card.id] || 0) + 1;
+      return acc;
+    }, {});
+
+    const cardTypes = Object.entries(cardTypeCount).map(([cardType, quantity]) => ({
+      cardType,
+      quantity
+    }));
+
+    const reservationResult = await reserveCardsAtomically(cardTypes, userId || customerData.reference_id);
+    
+    if (!reservationResult.success) {
+      return NextResponse.json(
+        { error: reservationResult.error || "Failed to reserve cards. Please try again." },
+        { status: 400 }
+      );
+    }
 
     // Create customer in Xendit
     const { data: customer } = await xenditClient.post(
