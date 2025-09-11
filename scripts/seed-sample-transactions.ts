@@ -99,7 +99,7 @@ async function createSampleTransaction(userIndex: number) {
   const cities = ["Manila", "Quezon City", "Makati", "Pasig", "Taguig", "Cebu City", "Davao City"];
   const city = cities[Math.floor(Math.random() * cities.length)];
   
-  const transaction = {
+  const transaction: any = {
     // User info
     user_id: user.id,
     userId: user.id, // For backward compatibility
@@ -135,7 +135,7 @@ async function createSampleTransaction(userIndex: number) {
   
   // Add shipping info for some transactions
   if (Math.random() > 0.3) {
-    transaction['shippingInfo'] = {
+    transaction.shippingInfo = {
       email: user.email,
       phone: user.phone,
       address: randomAddress(city),

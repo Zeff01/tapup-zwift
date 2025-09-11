@@ -236,11 +236,11 @@ export default function TransactionManagementDashboard({
     // Calculate percentage changes
     const orderTrend = previousOrders > 0 
       ? ((currentOrders - previousOrders) / previousOrders * 100).toFixed(1)
-      : currentOrders > 0 ? 100 : 0;
+      : currentOrders > 0 ? "100" : "0";
     
     const revenueTrend = previousRevenue > 0
       ? ((currentRevenue - previousRevenue) / previousRevenue * 100).toFixed(1)
-      : currentRevenue > 0 ? 100 : 0;
+      : currentRevenue > 0 ? "100" : "0";
     
     // Top customers
     const customerStats = new Map<string, { count: number; total: number }>();

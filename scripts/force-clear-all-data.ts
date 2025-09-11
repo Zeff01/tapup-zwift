@@ -7,8 +7,7 @@ import {
   collection, 
   getDocs, 
   deleteDoc,
-  writeBatch,
-  listCollections
+  writeBatch
 } from 'firebase/firestore';
 
 // Firebase config

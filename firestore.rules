@@ -2,8 +2,125 @@ rules_version = '2';
 
 service cloud.firestore {
   match /databases/{database}/documents {
+    // Helper functions
+    function isAuthenticated() {
+      return request.auth != null;
+    }
+    
+    function isOwner(userId) {
+      return isAuthenticated() && request.auth.uid == userId;
+    }
+    
+    function getUserData() {
+      return get(/databases/$(database)/documents/user-account/$(request.auth.uid)).data;
+    }
+    
+    function isAdmin() {
+      return isAuthenticated() && getUserData().role == 'admin';
+    }
+    
+    function isSuperAdmin() {
+      return isAuthenticated() && getUserData().role == 'super_admin';
+    }
+    
+    function isAdminOrSuperAdmin() {
+      return isAuthenticated() && getUserData().role in ['admin', 'super_admin'];
+    }
+    
+    // User accounts - TEMPORARY: Allow read access to verify user roles
+    match /user-account/{userId} {
+      // Allow anyone to read user data for authentication purposes
+      // This is temporary until proper server-side auth is implemented
+      allow read: if true;
+      
+      // Users can update their own data (except role), super admins can update all
+      allow update: if isOwner(userId) && !request.resource.data.diff(resource.data).affectedKeys().hasAny(['role']) 
+                    || isSuperAdmin();
+                    
+      // Allow authenticated users to create their own account
+      allow create: if isAuthenticated() && request.auth.uid == userId;
+      
+      // Only super admins can delete users
+      allow delete: if isSuperAdmin();
+    }
+    
+    // Pregenerated cards
+    match /pregenerated-cards/{cardId} {
+      // All authenticated users can read cards
+      allow read: if isAuthenticated();
+      
+      // Only admins can create, update, or delete cards
+      allow create, update, delete: if isAdminOrSuperAdmin();
+    }
+    
+    // Card generation logs
+    match /card-generation-logs/{logId} {
+      // Only super admins can read logs
+      allow read: if isSuperAdmin();
+      
+      // Only admins can create logs (when generating cards)
+      allow create: if isAdminOrSuperAdmin();
+      
+      // No one can update or delete logs
+      allow update, delete: if false;
+    }
+    
+    // Transactions
+    match /transactions/{transactionId} {
+      // Users can read their own transactions, admins can read all
+      allow read: if isAuthenticated() && 
+                    (resource.data.user_id == request.auth.uid || 
+                     resource.data.userId == request.auth.uid ||
+                     isAdminOrSuperAdmin());
+      
+      // Users can create their own transactions
+      allow create: if isAuthenticated() && 
+                      (request.resource.data.user_id == request.auth.uid ||
+                       request.resource.data.userId == request.auth.uid);
+      
+      // Allow updates from any source (for webhooks and server-side)
+      allow update: if true;
+      
+      // Only admins can delete transactions
+      allow delete: if isAdminOrSuperAdmin();
+    }
+    
+    // Cart items
+    match /cart/{cartId} {
+      // Users can read/write their own cart
+      allow read, write: if isOwner(resource.data.userId) || isAdminOrSuperAdmin();
+      allow create: if isAuthenticated() && request.resource.data.userId == request.auth.uid;
+    }
+    
+    // Subscriptions
+    match /subscriptions/{subscriptionId} {
+      // Users can read their own subscriptions, admins can read all
+      allow read: if isAuthenticated() && 
+                    (resource.data.userId == request.auth.uid || isAdminOrSuperAdmin());
+      
+      // Only admins can modify subscriptions
+      allow create, update, delete: if isAdminOrSuperAdmin();
+    }
+    
+    // Static collections (read-only for all authenticated users)
+    match /subscription-plans/{planId} {
+      allow read: if isAuthenticated();
+      allow write: if isAdminOrSuperAdmin();
+    }
+    
+    match /carousel-cards/{cardId} {
+      allow read: if isAuthenticated();
+      allow write: if isAdminOrSuperAdmin();
+    }
+    
+    // Admin-only collections
+    match /settings/{settingId} {
+      allow read, write: if isAdminOrSuperAdmin();
+    }
+    
+    // Default deny all other access
     match /{document=**} {
-      allow read, write;
+      allow read, write: if false;
     }
   }
 }

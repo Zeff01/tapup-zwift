@@ -265,7 +265,7 @@ export default function UserManagementDashboard({
     setSelectedUsers(newSelected);
   };
 
-  const handleRoleUpdate = async (userId: string, newRole: "user" | "admin") => {
+  const handleRoleUpdate = async (userId: string, newRole: "user" | "admin" | "super_admin") => {
     // Only super admins can change roles
     if (currentUser.role !== "super_admin") {
       toast.error("Only super admins can change user roles");
@@ -820,6 +820,13 @@ export default function UserManagementDashboard({
                               {currentUser.role === "super_admin" && user.role !== "super_admin" && (
                                 <>
                                   <DropdownMenuSeparator />
+                                  <DropdownMenuItem 
+                                    onClick={() => handleRoleUpdate(user.id!, "super_admin")}
+                                    className="text-purple-600"
+                                  >
+                                    <ShieldCheck className="w-4 h-4 mr-2" />
+                                    Make Super Admin
+                                  </DropdownMenuItem>
                                   <DropdownMenuItem 
                                     onClick={() => handleRoleUpdate(user.id!, "user")}
                                     className="text-orange-600"

@@ -80,7 +80,6 @@ interface CardBankDashboardProps {
 }
 
 export default function CardBankDashboard({ userRole, currentUser }: CardBankDashboardProps) {
-  console.log("[CardBankDashboard] Current user:", currentUser);
   const { user } = useUserContext(); // Get fresh user data from context
   const [selectedVariant, setSelectedVariant] = useState<string | null>(null);
   const [generateCount, setGenerateCount] = useState<number>(5);
@@ -96,24 +95,14 @@ export default function CardBankDashboard({ userRole, currentUser }: CardBankDas
 
   const { data: pregeneratedCards = [], isLoading, refetch } = useQuery({
     queryKey: ["pregeneratedCards"],
-    queryFn: async () => {
-      console.log("[CardBankDashboard] Fetching pregenerated cards...");
-      const cards = await getPregeneratedCards();
-      console.log("[CardBankDashboard] Received cards:", cards);
-      return cards;
-    },
+    queryFn: getPregeneratedCards,
     refetchInterval: 30000, // Auto-refresh every 30 seconds
     refetchOnWindowFocus: true,
   });
 
   const { data: logs = [], isLoading: isLoadingLogs } = useQuery({
     queryKey: ["card-generation-logs"],
-    queryFn: async () => {
-      console.log("[CardBankDashboard] Fetching generation logs...");
-      const result = await getCardGenerationLogs();
-      console.log("[CardBankDashboard] Generation logs result:", result);
-      return result || [];
-    },
+    queryFn: getCardGenerationLogs,
     refetchInterval: 30000,
     enabled: isSuperAdmin, // Only fetch logs if user is super admin
   });
@@ -125,7 +114,6 @@ export default function CardBankDashboard({ userRole, currentUser }: CardBankDas
         email: user?.email || currentUser.email,
         name: `${user?.firstName || ''} ${user?.lastName || ''}`.trim() || currentUser.name
       };
-      console.log("[CardBankDashboard] Calling generateBulkCards with user:", userData);
       return generateBulkCards(cardType, count, userData);
     },
     onSuccess: async (_, variables) => {
@@ -143,7 +131,6 @@ export default function CardBankDashboard({ userRole, currentUser }: CardBankDas
     onError: (error: any) => {
       const errorMessage = error?.message || "Failed to generate cards";
       toast.error(errorMessage);
-      console.error("Error generating cards:", error);
     },
   });
 
@@ -157,7 +144,6 @@ export default function CardBankDashboard({ userRole, currentUser }: CardBankDas
     },
     onError: (error) => {
       toast.error("Failed to delete card");
-      console.error("Error deleting card:", error);
     },
   });
 
@@ -169,15 +155,6 @@ export default function CardBankDashboard({ userRole, currentUser }: CardBankDas
     const availableCards = variantCards.filter((pc) => pc.status === "available");
     const reservedCards = variantCards.filter((pc) => pc.status === "reserved");
     const assignedCards = variantCards.filter((pc) => pc.status === "assigned");
-
-    console.log(`[CardBankDashboard] Stock for ${card.id}:`, {
-      total: variantCards.length,
-      available: availableCards.length,
-      reserved: reservedCards.length,
-      assigned: assignedCards.length,
-      sampleCard: variantCards[0],
-      allCards: pregeneratedCards.length
-    });
 
     return {
       id: card.id,
@@ -192,12 +169,7 @@ export default function CardBankDashboard({ userRole, currentUser }: CardBankDas
   });
 
   const handleGenerateCards = () => {
-    console.log("[CardBankDashboard] Generate cards clicked:", {
-      selectedVariant,
-      generateCount
-    });
     if (!selectedVariant || generateCount < 1) {
-      console.log("[CardBankDashboard] Invalid params, aborting");
       return;
     }
     generateCards({ cardType: selectedVariant, count: generateCount });
