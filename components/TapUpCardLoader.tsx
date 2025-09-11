@@ -1,7 +1,6 @@
 "use client";
 import { motion } from "framer-motion";
 import Image from "next/image";
-import { useTheme } from "next-themes";
 import { useEffect, useState } from "react";
 
 const cardDesigns = [
@@ -26,16 +25,13 @@ const cardDesigns = [
 ];
 
 export default function TapUpCardLoader() {
-  const { theme, resolvedTheme } = useTheme();
-  const [mounted, setMounted] = useState(false);
   const [currentCard, setCurrentCard] = useState(0);
   const [isFlipped, setIsFlipped] = useState(false);
+  const [mounted, setMounted] = useState(false);
 
   useEffect(() => {
     setMounted(true);
-  }, []);
-
-  useEffect(() => {
+    
     // Change card every 2 seconds
     const cardInterval = setInterval(() => {
       setCurrentCard((prev) => (prev + 1) % cardDesigns.length);
@@ -52,9 +48,17 @@ export default function TapUpCardLoader() {
     };
   }, []);
 
-  if (!mounted) return null;
+  if (!mounted) {
+    // Simple fallback while mounting
+    return (
+      <div className="bg-background flex items-center justify-center h-[100dvh]">
+        <div className="animate-pulse">
+          <div className="w-72 h-44 bg-gray-200 dark:bg-gray-800 rounded-2xl" />
+        </div>
+      </div>
+    );
+  }
 
-  const isDarkMode = mounted && (theme === "dark" || resolvedTheme === "dark");
   const card = cardDesigns[currentCard];
 
   return (
@@ -245,7 +249,7 @@ export default function TapUpCardLoader() {
         </motion.div>
       </motion.div>
 
-      {/* Bottom brand */}
+      {/* Bottom brand - using both logos for simplicity */}
       <motion.div
         className="absolute bottom-8 flex items-center space-x-2"
         initial={{ opacity: 0 }}
@@ -253,11 +257,20 @@ export default function TapUpCardLoader() {
         transition={{ delay: 0.5 }}
       >
         <Image
-          src={isDarkMode ? "/assets/tap-up-logo-white.png" : "/assets/tap-up-header-logo.png"}
+          src="/assets/tap-up-logo-white.png"
           alt="TapUp"
           width={80}
           height={30}
           priority
+          className="hidden dark:block"
+        />
+        <Image
+          src="/assets/tap-up-header-logo.png"
+          alt="TapUp"
+          width={80}
+          height={30}
+          priority
+          className="block dark:hidden"
         />
       </motion.div>
     </div>
