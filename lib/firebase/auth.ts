@@ -276,7 +276,7 @@ export const currentAuthUserDetails = async ({ id }: { id: string }) => {
     return docSnap.data();
   } catch (error) {
     if (error instanceof FirebaseError) {
-      toast.error(error.message);
+      console.error("Firebase error:", error.message);
       return;
     }
     console.error(error);

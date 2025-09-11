@@ -35,7 +35,7 @@ import { cn } from "@/lib/utils";
 import { toast } from "@/hooks/use-toast";
 import { useQuery } from "@tanstack/react-query";
 import { deliveryFormSchema } from "@/lib/zod-schema";
-import { useCart } from "@/providers/cart-provider-v2";
+import { useCart } from "@/providers/cart-provider";
 import {
   CustomerType,
   SubscriptionPlan,

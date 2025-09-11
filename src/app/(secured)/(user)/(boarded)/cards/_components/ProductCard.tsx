@@ -11,31 +11,25 @@ interface ProductCardProps {
 }
 
 const ProductCard: React.FC<ProductCardProps> = ({ item, showTrash }) => {
-  const { dispatch } = useCart();
+  const { updateQuantity, removeItem } = useCart();
   const [quantity, setQuantity] = useState(item.quantity);
 
   const incrementQuantity = () => {
     const newQuantity = quantity + 1;
     setQuantity(newQuantity);
-    dispatch({
-      type: "UPDATE_CART_ITEM_QUANTITY",
-      payload: { id: item.product.id, quantity: newQuantity },
-    });
+    updateQuantity(item.product.id, newQuantity);
   };
 
   const decrementQuantity = () => {
     if (quantity > 1) {
       const newQuantity = quantity - 1;
       setQuantity(newQuantity);
-      dispatch({
-        type: "UPDATE_CART_ITEM_QUANTITY",
-        payload: { id: item.product.id, quantity: newQuantity },
-      });
+      updateQuantity(item.product.id, newQuantity);
     }
   };
 
   const handleRemoveFromCart = () => {
-    dispatch({ type: "REMOVE_FROM_CART", payload: { id: item.product.id } });
+    removeItem(item.product.id);
   };
 
   return (

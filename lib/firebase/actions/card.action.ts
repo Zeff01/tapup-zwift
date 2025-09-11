@@ -251,7 +251,7 @@ export const getCardById = async (
     //allow admin and card owner to access the card
     const userDoc = await getDoc(doc(firebaseDb, "user-account", userId));
     const isAdmin =
-      userDoc.exists() && userDoc.data().role === USER_ROLE_ENUMS.ADMIN;
+      userDoc.exists() && (userDoc.data().role === USER_ROLE_ENUMS.ADMIN || userDoc.data().role === USER_ROLE_ENUMS.SUPER_ADMIN);
 
     if (userId !== card.owner && !isAdmin) {
       throw new Error("Auth user ID doesn't match");
@@ -307,7 +307,7 @@ export const updateCardById = async ({
 
     const userDoc = await getDoc(doc(firebaseDb, "user-account", userId));
     const isAdmin =
-      userDoc.exists() && userDoc.data().role === USER_ROLE_ENUMS.ADMIN;
+      userDoc.exists() && (userDoc.data().role === USER_ROLE_ENUMS.ADMIN || userDoc.data().role === USER_ROLE_ENUMS.SUPER_ADMIN);
 
     const cardRef = doc(firebaseDb, "cards", cardId);
     const docSnap = await getDoc(cardRef);
@@ -768,7 +768,7 @@ export const toggleCardDisabled = async (cardId: string) => {
 
 export const getAllCards = async ({ role }: { role: string }) => {
   try {
-    if (!role || role !== "admin") {
+    if (!role || (role !== "admin" && role !== "super_admin")) {
       throw new Error("This is an Admin Only Request");
     }
 
@@ -846,7 +846,7 @@ export const deletePrintCard = async ({
   cardId: string;
 }) => {
   try {
-    if (!role || role !== "admin") {
+    if (!role || (role !== "admin" && role !== "super_admin")) {
       throw new Error("This is an Admin Only Request");
     }
     if (!cardId) throw new Error("cardId is missing");
@@ -886,7 +886,7 @@ export const deleteMultipleCards = async ({
   cardIds: string[];
 }) => {
   try {
-    if (!role || role !== "admin") {
+    if (!role || (role !== "admin" && role !== "super_admin")) {
       throw new Error("This is an Admin Only Request");
     }
     if (!cardIds || cardIds.length === 0)
@@ -928,7 +928,7 @@ export const updateSingleCardPrintStatus = async ({
   cardId: string;
 }) => {
   try {
-    if (!role || role !== "admin") {
+    if (!role || (role !== "admin" && role !== "super_admin")) {
       throw new Error("This is an Admin Only Request");
     }
 
@@ -970,7 +970,7 @@ export const generateMultipleCards = async ({
   role: string;
 }) => {
   try {
-    if (!role || role !== "admin") {
+    if (!role || (role !== "admin" && role !== "super_admin")) {
       throw new Error("This is an Admin Only Request");
     }
 

@@ -7,8 +7,8 @@ import {
   collection,
   getDocs,
   deleteDoc,
-  writeBatch,
-} from "firebase/firestore";
+  writeBatch
+} from 'firebase/firestore';
 
 // Firebase config
 const firebaseConfig = {
