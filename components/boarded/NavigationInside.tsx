@@ -34,7 +34,7 @@ const OverlayMenu = () => {
   const pathname = usePathname();
 
   const isAdmin = user?.role === "admin";
-  const navItems = [...menuItems, ...(isAdmin ? adminMenuItems : [])];
+  const isSuperAdmin = user?.role === "super_admin";
 
   const handleOpenMenu = () => {
     setOpenMenu(!openMenu);
@@ -91,10 +91,11 @@ const OverlayMenu = () => {
                       "text-xs rounded-full px-1 text-center capitalize flex-1 text-white bg-greenColor",
                       {
                         "bg-red-700": isAdmin,
+                        "bg-gradient-to-r from-purple-600 to-pink-600": isSuperAdmin,
                       }
                     )}
                   >
-                    {user?.role}
+                    {isSuperAdmin ? "super admin" : user?.role}
                   </p>
                 </div>
 
@@ -111,7 +112,8 @@ const OverlayMenu = () => {
             </div>
 
             <div className="flex-1 pb-12 flex flex-col mt-4 gap-2">
-              {navItems.map((item, index) => {
+              {/* Regular menu items */}
+              {menuItems.map((item, index) => {
                 const Icon = item.icon;
                 return (
                   <Link
@@ -130,6 +132,37 @@ const OverlayMenu = () => {
                   </Link>
                 );
               })}
+              
+              {/* Admin separator and items */}
+              {(isAdmin || isSuperAdmin) && (
+                <>
+                  <div className="my-2 mx-4 border-t border-gray-300 dark:border-gray-600 relative">
+                    <span className="absolute -top-2 left-2 bg-background px-2 text-xs text-muted-foreground font-semibold">
+                      {isSuperAdmin ? "SUPER ADMIN" : "ADMIN"}
+                    </span>
+                  </div>
+                  {adminMenuItems.map((item, index) => {
+                    const Icon = item.icon;
+                    return (
+                      <Link
+                        key={`admin-${index}`}
+                        href={item.href}
+                        onClick={() => setOpenMenu(false)}
+                        className={cn(
+                          "flex items-center transition-colors text-sm duration-200 pl-4 bg-secondary/20 border p-2 rounded-sm",
+                          item.href === pathname
+                            ? "bg-green-500 text-background font-black"
+                            : "hover:bg-accent"
+                        )}
+                      >
+                        <Icon className="size-6 mr-4" />
+                        {item.title}
+                      </Link>
+                    );
+                  })}
+                </>
+              )}
+              
               <Button
                 className="mt-auto flex justify-start gap-0 p-2 text-sm bg-secondary/20 border text-foreground "
                 variant="destructive"

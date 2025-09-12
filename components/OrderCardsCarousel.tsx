@@ -6,9 +6,9 @@ import {
   CarouselPrevious,
   CarouselNext,
 } from "@/components/ui/carousel";
-import { Card, CardContent } from "@/components/ui/card";
-import Image from "next/image";
+import { Card } from "@/components/ui/card";
 import { carouselCards } from "@/constants";
+import { FlippableCard } from "./FlippableCard";
 
 interface OrderCardsCarouselProps {
   selectedCardId: string;
@@ -35,25 +35,21 @@ export function OrderCardsCarousel({
                 className="flex-none rounded-xl md:mx-1 md:mt-7"
               >
                 <div
-                  className={`block transform   transition-transform duration-300 cursor-pointer ${
+                  className={`block transform transition-transform duration-300 cursor-pointer ${
                     selectedCardId === key
                       ? "scale-110 ring-1 ring-green-800 rounded-lg "
                       : ""
                   }`}
                   onClick={() => setSelectedCardId(key)}
                 >
-                  <Card className="rounded-lg   aspect-[16/10] w-28 md:w-48 lg:w-72">
-                    <CardContent className="relative flex flex-col items-center justify-center p-1 text-white">
-                      <Image
-                        src={card.image}
-                        alt={card.title}
-                        width={120}
-                        height={48}
-                        className="rounded-md object-cover"
-                        layout="responsive"
-                        onClick={() => setSelectedCardId(key)}
-                      />
-                    </CardContent>
+                  <Card className="rounded-lg aspect-[16/10] w-28 md:w-48 lg:w-72 overflow-hidden">
+                    <FlippableCard
+                      frontImage={card.image}
+                      backImage={card.backImage || card.image}
+                      title={card.title}
+                      isSelected={selectedCardId === key}
+                      className="w-full h-full"
+                    />
                   </Card>
                 </div>
               </CarouselItem>

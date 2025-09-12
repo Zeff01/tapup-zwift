@@ -21,6 +21,7 @@ const protectedRoutes = [
   CARD_ROUTE,
   HOME_ROUTE,
   DASHBOARD_ROUTE,
+  HOME_ROUTE,
   USER_ROUTE,
   UPDATE_ROUTE,
   ACTION_ROUTE,

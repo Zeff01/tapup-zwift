@@ -11,7 +11,7 @@ export default async function UserOrdersPage() {
   if (!auth) {
     redirect("/login");
   }
-  if (auth?.role !== USER_ROLE_ENUMS.ADMIN) {
+  if (auth?.role !== USER_ROLE_ENUMS.ADMIN && auth?.role !== USER_ROLE_ENUMS.SUPER_ADMIN) {
     notFound();
   }
 

@@ -51,7 +51,7 @@ export default function CardsAndUsersCreateFields({
     useState<ChosenTemplateType>("template1");
 
   const [selectedPhysicalCardId, setSelectedPhysicalCardId] =
-    useState<ChosenPhysicalCardType>("card1");
+    useState<ChosenPhysicalCardType>("eclipse");
 
   const addServicePhoto = (photo: Photo) => {
     setServicePhotos([...servicePhotos, photo]);
@@ -73,7 +73,7 @@ export default function CardsAndUsersCreateFields({
       serviceDescription: "",
       servicePhotos: [],
       chosenTemplate: "template1",
-      chosenPhysicalCard: "card1",
+      chosenPhysicalCard: "eclipse",
       firstName: "",
       lastName: "",
       email: "",

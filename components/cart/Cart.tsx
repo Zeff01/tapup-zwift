@@ -6,7 +6,7 @@ import { Label } from "../ui/label";
 import {
   type CartItem as CartItemType,
   useCart,
-} from "@/providers/cart-provider-v2";
+} from "@/providers/cart-provider";
 import { Button } from "@/components/ui/button";
 import {
   Sheet,

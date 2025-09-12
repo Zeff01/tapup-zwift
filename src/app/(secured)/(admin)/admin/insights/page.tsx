@@ -7,7 +7,7 @@ import { notFound, redirect } from "next/navigation";
 export default async function UsersOrdersPage() {
   const auth = await authCurrentUserv2();
 
-  if (auth?.role !== USER_ROLE_ENUMS.ADMIN) {
+  if (auth?.role !== USER_ROLE_ENUMS.ADMIN && auth?.role !== USER_ROLE_ENUMS.SUPER_ADMIN) {
     notFound();
   }
 
