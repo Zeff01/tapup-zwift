@@ -57,6 +57,7 @@ const Template8 = ({
 
   return (
     <div className="bg-white text-black p-4 flex flex-col justify-between min-h-screen">
+      <div className="flex-grow">
       <div className="w-full mx-auto  max-w-[480px]">
         <div className="flex flex-col relative">
           {/*Cover Color Gradient */}
@@ -199,6 +200,7 @@ const Template8 = ({
                 </div>
               </div>
             )}
+          </div>
           </div>
           {/*Footer */}
           <div className="flex flex-col items-center my-3 gap-y-3">

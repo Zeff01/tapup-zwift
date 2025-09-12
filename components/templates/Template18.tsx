@@ -56,6 +56,7 @@ const Template18 = ({
       justifyContent="center"
       className="relative overflow-hidden p-0 py-2 text-white"
     >
+      <div className="flex-grow">
       <div className="max-w-[480px] mx-auto flex flex-col ">
         {/* === Decorative Background === */}
         <div
@@ -271,6 +272,7 @@ const Template18 = ({
             </div>
           </section>
         )}
+        </div>
 
         {/* === Footer Section === */}
         <TemplateFooter className="bg-[#001d34] text-white text-center  text-xs rounded-b-[30px] px-2 sm:px-3">

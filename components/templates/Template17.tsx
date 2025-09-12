@@ -53,6 +53,7 @@ const Template17 = ({
       flexDirection="col"
       className="shadow-xl p-0 overflow-hidden font-sans pt-2"
     >
+      <div className="flex-grow">
       <div className="max-w-[480px] mx-auto flex flex-col">
         {/* === Profile and Cover Section === */}
         <section
@@ -294,6 +295,7 @@ const Template17 = ({
             </div>
           </section>
         )}
+      </div>
       </div>
 
       {/* === Footer Section === */}

@@ -172,7 +172,9 @@ export const Template3Container: React.FC<{ children: React.ReactNode }> = ({
   children,
 }) => (
   <TemplateContainer backgroundColor="bg-black" padding="none" maxWidth="480px" minHeight="screen">
-    {children}
+    <div className="min-h-screen flex flex-col">
+      {children}
+    </div>
   </TemplateContainer>
 );
 
@@ -180,7 +182,9 @@ export const Template4Container: React.FC<{ children: React.ReactNode }> = ({
   children,
 }) => (
   <TemplateContainer backgroundColor="bg-white" padding="none" maxWidth="480px" minHeight="screen">
-    {children}
+    <div className="min-h-screen flex flex-col">
+      {children}
+    </div>
   </TemplateContainer>
 );
 
@@ -194,7 +198,9 @@ export const Template5Container: React.FC<{ children: React.ReactNode }> = ({
     maxWidth="480px"
     minHeight="screen"
   >
-    {children}
+    <div className="min-h-screen flex flex-col">
+      {children}
+    </div>
   </TemplateContainer>
 );
 
@@ -209,7 +215,9 @@ export const Template6Container: React.FC<{ children: React.ReactNode }> = ({
     overflowX="hidden"
     minHeight="screen"
   >
-    {children}
+    <div className="min-h-screen flex flex-col">
+      {children}
+    </div>
   </TemplateContainer>
 );
 
@@ -217,7 +225,9 @@ export const Template7Container: React.FC<{ children: React.ReactNode }> = ({
   children,
 }) => (
   <TemplateContainer backgroundColor="bg-white" padding="md" maxWidth="480px" minHeight="screen">
-    {children}
+    <div className="min-h-screen flex flex-col">
+      {children}
+    </div>
   </TemplateContainer>
 );
 
@@ -225,7 +235,9 @@ export const Template8Container: React.FC<{ children: React.ReactNode }> = ({
   children,
 }) => (
   <TemplateContainer backgroundColor="bg-white" padding="md" maxWidth="480px" minHeight="screen">
-    {children}
+    <div className="min-h-screen flex flex-col">
+      {children}
+    </div>
   </TemplateContainer>
 );
 
@@ -242,6 +254,8 @@ export const Template9Container: React.FC<{ children: React.ReactNode }> = ({
     justifyContent="start"
     minHeight="screen"
   >
-    {children}
+    <div className="min-h-screen flex flex-col">
+      {children}
+    </div>
   </TemplateContainer>
 );

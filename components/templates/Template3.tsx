@@ -44,6 +44,7 @@ const Template3 = ({
   };
   return (
     <Template3Container>
+      <div className="flex-grow">
       {/* COVERPHOTO AND PROFILE PIC */}
       <ProfileHeader
         profilePictureUrl={profilePictureUrl}
@@ -236,6 +237,7 @@ const Template3 = ({
             </div>
           </div>
         ))}
+      </div>
       </div>
 
       {/* FOOTER */}
