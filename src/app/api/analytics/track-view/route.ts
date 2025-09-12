@@ -3,11 +3,15 @@ import { logCardView } from "@/lib/firebase/actions/analytics.action";
 
 export async function POST(request: NextRequest) {
   try {
-    const { cardId, ownerId } = await request.json();
+    const body = await request.json();
+    const { cardId, ownerId } = body;
+    
+    console.log("Track view request received:", { cardId, ownerId });
 
     if (!cardId || !ownerId) {
+      console.error("Missing required fields:", { cardId, ownerId });
       return NextResponse.json(
-        { error: "Missing required fields" },
+        { error: "Missing required fields", received: { cardId, ownerId } },
         { status: 400 }
       );
     }
@@ -24,17 +28,28 @@ export async function POST(request: NextRequest) {
     // For now, we'll consider all views as potentially unique
     const isUnique = true; // TODO: Implement proper unique visitor tracking
 
-    await logCardView(cardId, ownerId, {
+    console.log("Logging view with data:", {
+      cardId,
+      ownerId,
+      referrer,
+      userAgent,
+      ip,
+      isUnique
+    });
+
+    const result = await logCardView(cardId, ownerId, {
       referrer,
       userAgent,
       isUnique
     });
+    
+    console.log("View logged result:", result);
 
-    return NextResponse.json({ success: true });
+    return NextResponse.json({ success: true, result });
   } catch (error) {
     console.error("Error tracking view:", error);
     return NextResponse.json(
-      { error: "Failed to track view" },
+      { error: "Failed to track view", details: error instanceof Error ? error.message : "Unknown error" },
       { status: 500 }
     );
   }

@@ -88,6 +88,8 @@ export async function logCardView(
   }
 ) {
   try {
+    console.log("logCardView called with:", { cardId, ownerId, data });
+    
     await getOrCreateAnalytics(cardId, ownerId);
     const analyticsRef = doc(firebaseDb, "card-analytics", cardId);
 

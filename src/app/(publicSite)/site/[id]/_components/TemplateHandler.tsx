@@ -29,7 +29,8 @@ const UserPage = ({ userData }: { userData: cardType }) => {
   useEffect(() => {
     const trackView = async () => {
       try {
-        await fetch('/api/analytics/track-view', {
+        console.log('Tracking view for card:', userData.id, 'owner:', userData.owner);
+        const response = await fetch('/api/analytics/track-view', {
           method: 'POST',
           headers: {
             'Content-Type': 'application/json',
@@ -39,12 +40,22 @@ const UserPage = ({ userData }: { userData: cardType }) => {
             ownerId: userData.owner
           }),
         });
+        
+        if (!response.ok) {
+          const error = await response.json();
+          console.error('Track view API error:', error);
+        } else {
+          const result = await response.json();
+          console.log('View tracked successfully:', result);
+        }
       } catch (error) {
         console.error('Failed to track view:', error);
       }
     };
 
-    trackView();
+    if (userData.id && userData.owner) {
+      trackView();
+    }
   }, [userData.id, userData.owner]);
 
   const renderTemplate = {
