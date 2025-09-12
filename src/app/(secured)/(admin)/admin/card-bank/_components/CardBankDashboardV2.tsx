@@ -116,7 +116,8 @@ export default function CardBankDashboardV2({ userRole, currentUser, initialCard
       });
       
       const userDetailsMap: Record<string, any> = {};
-      for (const userId of userIds) {
+      const userIdArray = Array.from(userIds);
+      for (const userId of userIdArray) {
         if (!userDetails[userId]) {
           try {
             const user = await getUserById(userId);
