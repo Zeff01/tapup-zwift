@@ -90,6 +90,7 @@ export async function POST(req: NextRequest) {
       recurring_action: "PAYMENT",
       currency: "PHP",
       amount: totalPrice ?? subscriptionPlan.price,
+      immediate_action_type: "FULL_AMOUNT", // Charge immediately when plan is created
       schedule: {
         reference_id: `schedule-${customer.id}-${subscriptionPlan.id}-bundle${bundleId}`,
         interval: interval,
