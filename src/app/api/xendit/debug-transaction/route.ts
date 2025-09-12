@@ -14,7 +14,7 @@ export async function POST(req: NextRequest) {
       );
     }
 
-    let transaction;
+    let transaction: any = null;
     
     if (transactionId) {
       // Get specific transaction
