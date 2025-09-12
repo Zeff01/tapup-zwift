@@ -19,11 +19,24 @@ import crypto from "crypto";
 
 // Verify webhook signature from Xendit
 function verifyWebhookSignature(payload: string, signature: string, secret: string): boolean {
+  // First try direct token comparison (Xendit might use this for test environment)
+  if (signature === secret) {
+    console.log("[Webhook] Direct token match successful");
+    return true;
+  }
+  
+  // Then try HMAC verification
   const expectedSignature = crypto
     .createHmac('sha256', secret)
     .update(payload)
     .digest('hex');
-  return expectedSignature === signature;
+  
+  if (expectedSignature === signature) {
+    console.log("[Webhook] HMAC signature match successful");
+    return true;
+  }
+  
+  return false;
 }
 
 export async function POST(req: NextRequest) {
