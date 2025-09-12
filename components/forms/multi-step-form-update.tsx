@@ -549,12 +549,12 @@ const MultiStepFormUpdate = ({
                         />
 
                         <div className="flex flex-col items-center justify-center mt-1">
-                          <p className="text-[#767676] text-sm">
+                          <p className="text-[#767676] text-xs">
                             Drop your image here or{" "}
                             <span className="text-green-500">browse</span>
                           </p>
-                          <p className="text-[#767676] text-xs">
-                            PNG, JPEG, and GIF files under 25MB
+                          <p className="text-[#767676] text-[10px]">
+                            PNG, JPEG, GIF under 25MB
                           </p>
                         </div>
 
@@ -576,23 +576,23 @@ const MultiStepFormUpdate = ({
                         photo={coverPhoto}
                         aspect={16 / 9}
                         setPhoto={setCoverPhoto}
-                        className="w-full aspect-[16/9] rounded-2xl overflow-hidden border-none "
+                        className="w-full aspect-[3/1] rounded-xl overflow-hidden border-none "
                         imageClassName="rounded-2xl"
                         fallback={
-                          <div className="w-full aspect-[16/9] flex flex-col items-center gap-y-2 rounded-2xl border-dashed border-2 border-gray-500">
+                          <div className="w-full aspect-[3/1] flex flex-col items-center gap-y-1 rounded-xl border-dashed border-2 border-gray-500">
                             <Image
                               src={"/assets/image-plus.svg"}
                               width={50}
                               height={50}
                               alt="plus"
-                              className="size-10 lg:size-auto mt-4 border p-2 rounded-md cursor-pointer"
+                              className="size-8 mt-2 border p-2 rounded-md cursor-pointer"
                             />
-                            <p className="text-[#767676] text-base">
+                            <p className="text-[#767676] text-xs">
                               Drop your image here or{" "}
                               <span className="text-green-500">browse</span>
                             </p>
-                            <p className="text-[#767676] text-xs">
-                              We support PNG, JPEG, and GIF files under 25MB
+                            <p className="text-[#767676] text-[10px]">
+                              PNG, JPEG, GIF under 25MB
                             </p>
                           </div>
                         }
@@ -695,26 +695,26 @@ const MultiStepFormUpdate = ({
                                 return updated;
                               });
                             }}
-                            className="w-full aspect-[16/9] rounded-2xl overflow-hidden border-dashed border-2"
+                            className="w-full aspect-[2.5/1] rounded-xl overflow-hidden border-dashed border-2"
                             imageClassName="rounded-2xl"
                             disableUpload={
                               (company.servicePhotos?.length ?? 0) >= 5
                             }
                             fallback={
-                              <div className="w-full aspect-[16/9] flex flex-col items-center gap-y-2">
+                              <div className="w-full aspect-[2.5/1] flex flex-col items-center gap-y-1">
                                 <Image
                                   src={"/assets/image-plus.svg"}
                                   width={50}
                                   height={50}
                                   alt="plus"
-                                  className="size-10 lg:size-auto mt-8 border p-2 rounded-md cursor-pointer"
+                                  className="size-8 mt-2 border p-2 rounded-md cursor-pointer"
                                 />
-                                <p className="text-[#767676] text-xl">
+                                <p className="text-[#767676] text-sm">
                                   Drop your image here or{" "}
                                   <span className="text-green-500">browse</span>
                                 </p>
-                                <p className="text-[#767676] text-xs">
-                                  We support PNG, JPEG, and GIF files under 25MB
+                                <p className="text-[#767676] text-[10px]">
+                                  PNG, JPEG, GIF under 25MB
                                 </p>
                               </div>
                             }

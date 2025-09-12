@@ -147,7 +147,9 @@ export const Template1Container: React.FC<{ children: React.ReactNode }> = ({
     overflow="hidden"
     minHeight="screen"
   >
-    {children}
+    <div className="min-h-screen flex flex-col">
+      {children}
+    </div>
   </TemplateContainer>
 );
 
@@ -160,7 +162,7 @@ export const Template2Container: React.FC<{ children: React.ReactNode }> = ({
     maxWidth="480px"
     minHeight="screen"
   >
-    <div className="border border-white/30 h-full p-4 rounded-lg">
+    <div className="border border-white/30 min-h-screen p-4 rounded-lg flex flex-col">
       {children}
     </div>
   </TemplateContainer>

@@ -40,6 +40,7 @@ const Template2 = ({
 
   return (
     <Template2Container>
+      <div className="flex-grow">
       {/* COVER PHOTO + PROFILE */}
       <div className="mt-2 flex flex-col relative rounded-4xl">
         <div className="w-full h-48 px-2">
@@ -81,7 +82,6 @@ const Template2 = ({
           size="md"
           icons="lucide"
           buttonClassName="text-black bg-white hover:bg-gray-100 border-white"
-          iconClassName="text-black"
         />
       </div>
 
@@ -164,6 +164,7 @@ const Template2 = ({
             </div>
           </div>
         ))}
+      </div>
 
       <TemplateFooter className="flex flex-col mt-8 items-center gap-1 text-center pb-4">
         <a
