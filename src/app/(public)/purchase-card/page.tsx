@@ -66,6 +66,7 @@ const CardPurchasePreviewPage = () => {
       name: card.title || "",
       price: card.price || 0,
       image: card.image || "",
+      description: card.description || "Premium digital business card",
     });
 
     if (timeoutRefs.current[card.id]) {
@@ -207,6 +208,7 @@ const CardPurchasePreviewPage = () => {
                         name: card?.title || "",
                         price: card?.price || 0,
                         image: card?.image || "",
+                        description: card?.description || "Premium digital business card",
                       });
                       router.push(user ? "/cards/checkout" : "/delivery-form");
                     }}

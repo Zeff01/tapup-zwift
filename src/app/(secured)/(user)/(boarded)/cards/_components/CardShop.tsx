@@ -117,6 +117,7 @@ const OrderPhysicalCard = () => {
       name: selectedCard?.title || "",
       price: selectedPlan?.price || 0,
       image: selectedCard?.image || "",
+      description: selectedCard?.description || "Premium digital business card",
       subscriptionPlan: selectedPlan ?? undefined,
     });
 

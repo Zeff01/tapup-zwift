@@ -18,6 +18,7 @@ export type CartItem = {
   price: number;
   quantity: number;
   image: string;
+  description?: string;
   subscriptionPlan?: SubscriptionPlan;
 };
 
