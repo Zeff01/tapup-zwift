@@ -1,7 +1,7 @@
 "use client";
 import { useState, useEffect } from "react";
 import Image from "next/image";
-import { updateUserById } from "@/lib/firebase/actions/user.action";
+import { updateUserProfile, extractCardDataFromForm } from "@/lib/firebase/actions/user-profile.action";
 import { Photo } from "@/types/types";
 import { Loader2, LoaderCircle, X } from "lucide-react";
 import Cropper from "../Cropper";
@@ -174,7 +174,10 @@ export default function CardsAndUsersCreateFields({
 
   const { mutate: onBoardUserMutation, isPending: isLoadingOnBoarding } =
     useMutation({
-      mutationFn: updateUserById,
+      mutationFn: async ({ user_id, userData }: { user_id: string; userData: any }) => {
+        const { userData: profileData } = extractCardDataFromForm(userData);
+        return updateUserProfile({ user_id, userData: profileData });
+      },
       onSuccess: () => {
         queryClient.invalidateQueries({
           queryKey: ["current-active-user", user?.uid],
@@ -186,7 +189,7 @@ export default function CardsAndUsersCreateFields({
   const formSubmit = async (data: z.infer<typeof createPortfolioSchema>) => {
     if (!user) return;
     if (!card) {
-      onBoardUserMutation({ user_id: user.uid, user: data });
+      onBoardUserMutation({ user_id: user.uid, userData: data });
       return;
     }
     createCardMutation({

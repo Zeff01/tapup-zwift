@@ -44,6 +44,7 @@ export function useFirebaseConnection() {
     // Sync with React Query
     onlineManager.setEventListener(setOnline => {
       setOnline(navigator.onLine);
+      return undefined;
     });
 
     return () => {

@@ -33,7 +33,7 @@ import {
   Users,
 } from "@/types/types";
 import { redirect } from "next/navigation";
-import { updateUserById } from "./actions/user.action";
+import { updateUserProfile, extractCardDataFromForm } from "./actions/user-profile.action";
 
 export const authCurrentUser = async () => {
   try {
@@ -113,9 +113,10 @@ export const signUpHandler = async (data: z.infer<typeof signupSchema>) => {
         const { email, ...cleanOnboardingData } = onboardingData;
 
         console.log("Updating user with onboarding data");
-        await updateUserById({
+        const { userData: profileData } = extractCardDataFromForm(cleanOnboardingData);
+        await updateUserProfile({
           user_id: userID,
-          user: cleanOnboardingData,
+          userData: profileData,
         });
 
         if (cleanOnboardingData.chosenPhysicalCard) {
