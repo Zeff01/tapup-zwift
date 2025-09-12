@@ -55,7 +55,7 @@ const OverlayMenu = () => {
       >
         <SheetTitle className="sr-only">Mobile Navigation</SheetTitle>
         <Link
-          href={"/dashboard"}
+          href={"/cards"}
           onClick={() => setOpenMenu(false)}
           className="inline-block self-start h-12 w-24"
         >

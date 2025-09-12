@@ -141,7 +141,7 @@ export const CTAButtons: React.FC<CTAButtonsProps> = ({
       )}
       {(userProfile.company || userProfile.position || userProfile.email) && (
         <button
-          onClick={() => downloadVCard(userProfile)}
+          onClick={() => downloadVCard(userProfile as any)}
           className={buttonClass}
           title="Save Contact"
           type="button"

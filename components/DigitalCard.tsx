@@ -16,6 +16,8 @@ import {
 } from "@/lib/firebase/actions/user.action";
 import { getLoggedInUser } from "@/lib/session";
 import { getCardImage } from "@/lib/utils";
+import { getCardAnalytics } from "@/lib/firebase/actions/analytics.action";
+import { AnalyticsCard } from "./AnalyticsCard";
 import {
   Card,
   CustomerType,
@@ -100,6 +102,14 @@ const DigitalCard = ({ card, confirm, user }: Prop) => {
 
   const router = useRouter();
   const queryClient = useQueryClient();
+
+  // Fetch analytics data
+  const { data: analytics } = useQuery({
+    queryKey: ["card-analytics", card.id],
+    queryFn: () => getCardAnalytics(card.id!),
+    enabled: !!card.id,
+    staleTime: 1000 * 60 * 5, // 5 minutes
+  });
 
   const { mutate: duplicateCardMutation } = useMutation({
     mutationFn: duplicateCard,
@@ -564,6 +574,14 @@ const DigitalCard = ({ card, confirm, user }: Prop) => {
           )}
         </div>
       </div>
+      
+      {/* Analytics Summary */}
+      {analytics && (
+        <div className="mt-3">
+          <AnalyticsCard card={card} analytics={analytics} />
+        </div>
+      )}
+      
       {/* <Dialog.Root open={expiredDialogOpen} onOpenChange={setExpiredDialogOpen}>
         <Dialog.Portal>
           <Dialog.Overlay className="fixed inset-0 bg-black/50 backdrop-blur-sm z-50" />

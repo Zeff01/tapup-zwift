@@ -98,7 +98,7 @@ const Header = () => {
         )}
 
         {user && !isLoadingUserContext && (
-          <Link className="hidden lg:block" href={"/dashboard"}>
+          <Link className="hidden lg:block" href={"/cards">
             <Avatar className="h-12 w-12">
               <AvatarImage
                 src={user?.profilePictureUrl || "/placeholder.svg"}
@@ -195,7 +195,7 @@ const Header = () => {
             )}
 
             {user && !isLoadingUserContext && (
-              <Link href={"/dashboard"}>
+              <Link href={"/cards">
                 <Avatar className="h-12 w-12">
                   <AvatarImage
                     src={user?.profilePictureUrl || "/placeholder.svg"}

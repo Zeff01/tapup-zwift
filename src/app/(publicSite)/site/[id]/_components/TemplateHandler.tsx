@@ -1,5 +1,6 @@
 "use client";
 
+import { useEffect } from "react";
 import Template1 from "@/components/templates/Template1";
 import Template2 from "@/components/templates/Template2";
 import Template3 from "@/components/templates/Template3";
@@ -24,6 +25,28 @@ import { Card, CardContent } from "@/components/ui/card";
 import Link from "next/link";
 
 const UserPage = ({ userData }: { userData: cardType }) => {
+  // Track card view
+  useEffect(() => {
+    const trackView = async () => {
+      try {
+        await fetch('/api/analytics/track-view', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify({
+            cardId: userData.id,
+            ownerId: userData.owner
+          }),
+        });
+      } catch (error) {
+        console.error('Failed to track view:', error);
+      }
+    };
+
+    trackView();
+  }, [userData.id, userData.owner]);
+
   const renderTemplate = {
     template1: <Template1 {...userData} />,
     template2: <Template2 {...userData} />,
@@ -69,7 +92,7 @@ const UserPage = ({ userData }: { userData: cardType }) => {
 
               {/* Button */}
               <Link
-                href="/dashboard"
+                href="/cards"
                 className="inline-block mt-8 bg-[#22A348] hover:bg-[#1B8A3A] text-white px-6 py-2.5 rounded-md transition-colors duration-200"
               >
                 Back To Main
