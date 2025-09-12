@@ -21,34 +21,40 @@ export const AnalyticsCard: React.FC<AnalyticsCardProps> = ({
   analytics,
   className
 }) => {
-  if (!analytics) {
-    return null;
-  }
+  // Show default values if no analytics data
+  const defaultAnalytics = {
+    totalViews: 0,
+    uniqueViews: 0,
+    totalVcfDownloads: 0,
+    totalLinkClicks: 0
+  };
+
+  const data = analytics || defaultAnalytics;
 
   const stats = [
     {
       icon: Eye,
       label: "Views",
-      value: analytics.totalViews || 0,
-      subValue: `${analytics.uniqueViews || 0} unique`,
+      value: data.totalViews,
+      subValue: `${data.uniqueViews} unique`,
       color: "text-blue-600"
     },
     {
       icon: Download,
       label: "Downloads",
-      value: analytics.totalVcfDownloads || 0,
+      value: data.totalVcfDownloads,
       color: "text-green-600"
     },
     {
       icon: MousePointer,
       label: "Link Clicks",
-      value: analytics.totalLinkClicks || 0,
+      value: data.totalLinkClicks,
       color: "text-purple-600"
     }
   ];
 
   return (
-    <div className={cn("bg-white dark:bg-gray-800 rounded-lg p-4 shadow-sm border border-gray-200 dark:border-gray-700", className)}>
+    <div className={cn("rounded-lg p-4", className)}>
       <div className="flex items-center gap-2 mb-3">
         <TrendingUp className="w-4 h-4 text-gray-600" />
         <h3 className="text-sm font-medium text-gray-700 dark:text-gray-300">Analytics</h3>

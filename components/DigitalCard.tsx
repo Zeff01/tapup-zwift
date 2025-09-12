@@ -576,11 +576,9 @@ const DigitalCard = ({ card, confirm, user }: Prop) => {
       </div>
       
       {/* Analytics Summary */}
-      {analytics && (
-        <div className="mt-3">
-          <AnalyticsCard card={card} analytics={analytics} />
-        </div>
-      )}
+      <div className="mt-3">
+        <AnalyticsCard card={card} analytics={analytics} />
+      </div>
       
       {/* <Dialog.Root open={expiredDialogOpen} onOpenChange={setExpiredDialogOpen}>
         <Dialog.Portal>

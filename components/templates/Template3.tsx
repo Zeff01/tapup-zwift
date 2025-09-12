@@ -30,6 +30,7 @@ const Template3 = ({
   websiteUrl,
   customUrl,
   companies,
+  owner,
 }: Card) => {
   const userProfile = {
     id,
@@ -99,6 +100,8 @@ const Template3 = ({
           viberUrl={viberUrl}
           tiktokUrl={tiktokUrl}
           websiteUrl={websiteUrl}
+          cardId={id}
+          ownerId={owner}
           size="md"
           className="flex items-center justify-center gap-2 mt-6 my-4 mx-auto w-full"
           iconClassName="text-white hover:text-gray-300"

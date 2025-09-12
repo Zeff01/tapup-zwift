@@ -30,6 +30,7 @@ const Template5 = ({
   websiteUrl,
   viberUrl,
   customUrl,
+  owner,
 }: Card) => {
   const userProfile = {
     id,
@@ -84,6 +85,8 @@ const Template5 = ({
             viberUrl={viberUrl}
             whatsappNumber={whatsappNumber}
             websiteUrl={websiteUrl}
+            cardId={id}
+            ownerId={owner}
             variant="minimal"
             size="sm"
             className="flex flex-col gap-[6px]"

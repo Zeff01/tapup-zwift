@@ -32,6 +32,7 @@ const Template17 = ({
   tiktokUrl,
   customUrl,
   companies,
+  owner,
 }: Card) => {
   const userProfile = {
     id,
@@ -140,6 +141,8 @@ const Template17 = ({
               whatsappNumber={whatsappNumber}
               viberUrl={viberUrl}
               websiteUrl={websiteUrl}
+              cardId={id}
+              ownerId={owner}
               variant="colorful"
               size="lg"
               iconSet="solid"

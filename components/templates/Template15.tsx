@@ -36,6 +36,7 @@ const Template15 = ({
   tiktokUrl,
   customUrl,
   companies,
+  owner,
 }: Card) => {
   const userProfile = {
     id,
@@ -158,6 +159,8 @@ const Template15 = ({
                 whatsappNumber={whatsappNumber}
                 viberUrl={viberUrl}
                 websiteUrl={websiteUrl}
+                cardId={id}
+                ownerId={owner}
                 size="md"
                 iconClassName="rounded-full p-2 bg-[#1a425b] text-[#7eabc2] hover:bg-[#245573] size-full "
                 iconSet="outline"

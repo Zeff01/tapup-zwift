@@ -267,6 +267,7 @@ const Template10 = ({
   whatsappNumber,
   websiteUrl,
   customUrl,
+  owner,
 }: Card) => {
   const userProfile = {
     id,
@@ -418,6 +419,8 @@ const Template10 = ({
             viberUrl={viberUrl}
             whatsappNumber={whatsappNumber}
             websiteUrl={websiteUrl}
+            cardId={id}
+            ownerId={owner}
             size="md"
             iconClassName="text-[#B6BCD2]"
             iconSet="outline"

@@ -1,6 +1,7 @@
 import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
 import React from "react";
+import { TrackedSocialLink } from "./TrackedSocialLink";
 import {
   FaFacebook,
   FaGlobe,
@@ -66,6 +67,8 @@ interface ColorfulColors {
 }
 
 interface SocialLinksProps {
+  cardId?: string;
+  ownerId?: string;
   facebookUrl?: string;
   instagramUrl?: string;
   linkedinUrl?: string;
@@ -182,6 +185,8 @@ const sizeMap = {
 };
 
 export const SocialLinks: React.FC<SocialLinksProps> = ({
+  cardId,
+  ownerId,
   facebookUrl,
   instagramUrl,
   linkedinUrl,
@@ -292,22 +297,28 @@ export const SocialLinks: React.FC<SocialLinksProps> = ({
             }
           }}
         >
-          <a
+          <TrackedSocialLink
             href={linkHref}
+            cardId={cardId}
+            ownerId={ownerId}
+            linkType={platform}
             target="_blank"
             rel="noopener noreferrer"
             title={label}
           >
             <Icon size={iconSize} />
-          </a>
+          </TrackedSocialLink>
         </Button>
       );
     }
 
     return (
-      <a
+      <TrackedSocialLink
         key={label}
         href={linkHref}
+        cardId={cardId}
+        ownerId={ownerId}
+        linkType={platform}
         target="_blank"
         rel="noopener noreferrer"
         className={cn(
@@ -318,7 +329,7 @@ export const SocialLinks: React.FC<SocialLinksProps> = ({
       >
         <Icon size={iconSize} className={iconClass} />
         {showLabels && <span className="text-sm">{label}</span>}
-      </a>
+      </TrackedSocialLink>
     );
   };
 
