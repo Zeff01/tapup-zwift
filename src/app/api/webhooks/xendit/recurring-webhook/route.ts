@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from "next/server";
 import { doc, updateDoc, getDoc, collection, query, where, getDocs } from "firebase/firestore";
 import { firebaseDb } from "@/lib/firebase/firebase";
+import { confirmReservation } from "@/lib/firebase/actions/card-reservation.action";
 import crypto from "crypto";
 
 /**
@@ -82,6 +83,7 @@ export async function POST(req: NextRequest) {
           if (!querySnapshot.empty) {
             const transactionDoc = querySnapshot.docs[0];
             const transactionRef = doc(firebaseDb, "transactions", transactionDoc.id);
+            const transactionData = transactionDoc.data();
             
             // Update status to completed
             await updateDoc(transactionRef, {
@@ -91,10 +93,21 @@ export async function POST(req: NextRequest) {
               updatedAt: new Date().toISOString()
             });
             
+            // Confirm card reservations
+            const userId = transactionData.user_id || transactionData.userId;
+            if (userId) {
+              try {
+                await confirmReservation(userId, transactionDoc.id);
+                console.log("Card reservations confirmed for user:", userId);
+              } catch (error) {
+                console.error("Error confirming card reservations:", error);
+              }
+            }
+            
             console.log("Transaction updated successfully:", transactionDoc.id);
             return NextResponse.json({ 
               success: true, 
-              message: "Payment processed and transaction updated",
+              message: "Payment processed, transaction updated, and cards confirmed",
               transactionId: transactionDoc.id,
               planId: planId 
             });
