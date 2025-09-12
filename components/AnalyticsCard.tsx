@@ -54,29 +54,25 @@ export const AnalyticsCard: React.FC<AnalyticsCardProps> = ({
   ];
 
   return (
-    <div className={cn("rounded-lg p-4", className)}>
-      <div className="flex items-center gap-2 mb-3">
-        <TrendingUp className="w-4 h-4 text-gray-600" />
-        <h3 className="text-sm font-medium text-gray-700 dark:text-gray-300">Analytics</h3>
-      </div>
-      
-      <div className="grid grid-cols-3 gap-4">
+    <div className={cn("px-4 py-3", className)}>
+      <div className="flex items-center justify-between gap-6">
         {stats.map((stat, index) => (
-          <div key={index} className="text-center">
-            <div className={cn("flex justify-center mb-1", stat.color)}>
-              <stat.icon className="w-4 h-4" />
+          <div key={index} className="flex items-center gap-2 flex-1">
+            <div className={cn("p-1.5 rounded-full bg-opacity-10", stat.color, 
+              stat.color === "text-blue-600" && "bg-blue-600",
+              stat.color === "text-green-600" && "bg-green-600",
+              stat.color === "text-purple-600" && "bg-purple-600"
+            )}>
+              <stat.icon className="w-3.5 h-3.5" />
             </div>
-            <div className="text-lg font-semibold text-gray-900 dark:text-white">
-              {stat.value.toLocaleString()}
-            </div>
-            <div className="text-xs text-gray-500 dark:text-gray-400">
-              {stat.label}
-            </div>
-            {stat.subValue && (
-              <div className="text-xs text-gray-400 dark:text-gray-500 mt-0.5">
-                {stat.subValue}
+            <div className="flex flex-col">
+              <div className="text-sm font-medium text-gray-900 dark:text-white">
+                {stat.value.toLocaleString()}
               </div>
-            )}
+              <div className="text-xs text-gray-500 dark:text-gray-400">
+                {stat.label}
+              </div>
+            </div>
           </div>
         ))}
       </div>
