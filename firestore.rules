@@ -67,33 +67,16 @@ service cloud.firestore {
     
     // Transactions
     match /transactions/{transactionId} {
-      // TEMPORARY: Allow all reads
-      allow read: if true;
-      
-      // Users can create their own transactions
-      allow create: if isAuthenticated() && 
-                      (request.resource.data.user_id == request.auth.uid ||
-                       request.resource.data.userId == request.auth.uid);
-      
-      // Allow updates from any source (for webhooks and server-side)
-      allow update: if true;
-      
-      // Only admins can delete transactions
-      allow delete: if isAuthenticated() && getUserData().role in ['admin', 'super_admin'];
+      // Allow all operations temporarily for server-side and webhook operations
+      // TODO: Implement Firebase Admin SDK for secure server-side operations
+      allow read, write: if true;
     }
     
     // Cart items
     match /cart/{cartId} {
-      // Allow read for all (temporary)
-      allow read: if true;
-      // Users can write their own cart (checking both userId and userUid for compatibility)
-      allow create: if isAuthenticated() && 
-                      (request.resource.data.userId == request.auth.uid || 
-                       request.resource.data.userUid == request.auth.uid);
-      allow update, delete: if isAuthenticated() && 
-                              (resource.data.userId == request.auth.uid || 
-                               resource.data.userUid == request.auth.uid ||
-                               getUserData().role in ['admin', 'super_admin']);
+      // Allow all operations temporarily for server-side operations
+      // TODO: Implement Firebase Admin SDK for secure server-side operations
+      allow read, write: if true;
     }
     
     // Subscriptions
@@ -129,17 +112,11 @@ service cloud.firestore {
     
     // Orders collection
     match /orders/{orderId} {
-      allow read: if true;
-      allow write: if isAuthenticated();
+      // Allow all operations temporarily for server-side operations
+      // TODO: Implement Firebase Admin SDK for secure server-side operations
+      allow read, write: if true;
     }
     
-    // Cart collection - users can manage their own cart
-    match /cart/{cartId} {
-      allow read: if true; // Temporary for SSR
-      allow create: if isAuthenticated();
-      allow update, delete: if isAuthenticated() && 
-        (resource.data.userUid == request.auth.uid || resource.data.userId == request.auth.uid);
-    }
     
     // Default deny all other access
     match /{document=**} {
