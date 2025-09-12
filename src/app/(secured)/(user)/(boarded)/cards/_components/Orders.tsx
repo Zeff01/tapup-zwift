@@ -188,6 +188,7 @@ const Orders = () => {
                                       src={cardDesign.image}
                                       alt={item.name}
                                       fill
+                                      sizes="(max-width: 768px) 64px, 64px"
                                       className="object-cover"
                                     />
                                   </div>
@@ -299,35 +300,6 @@ const Orders = () => {
                               </Button>
                             )}
                             
-                            {/* Debug button */}
-                            {process.env.NODE_ENV === 'development' && (
-                              <Button 
-                                className="w-full"
-                                size="sm"
-                                variant="ghost"
-                                onClick={async () => {
-                                  try {
-                                    const response = await fetch('/api/xendit/debug-transaction', {
-                                      method: 'POST',
-                                      headers: {
-                                        'Content-Type': 'application/json',
-                                      },
-                                      body: JSON.stringify({
-                                        transactionId: order.id,
-                                      }),
-                                    });
-                                    
-                                    const data = await response.json();
-                                    console.log("Transaction Debug Info:", data);
-                                    toast.info("Check console for debug info");
-                                  } catch (error) {
-                                    console.error("Debug error:", error);
-                                  }
-                                }}
-                              >
-                                Debug Transaction
-                              </Button>
-                            )}
                             
                             {/* Temporary button for testing - remove when webhooks are enabled */}
                             {process.env.NODE_ENV === 'development' && order.status === "pending" && (

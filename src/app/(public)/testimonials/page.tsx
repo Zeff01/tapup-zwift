@@ -52,6 +52,7 @@ const TestimonialPage = () => {
                 src={testimonial.image}
                 alt={testimonial.name}
                 fill
+                sizes="80px"
                 className="object-cover rounded-full mb-4"
               />
             </div>

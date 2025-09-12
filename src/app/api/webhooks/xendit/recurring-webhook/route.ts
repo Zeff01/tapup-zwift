@@ -21,7 +21,6 @@ import crypto from "crypto";
 function verifyWebhookSignature(payload: string, signature: string, secret: string): boolean {
   // First try direct token comparison (Xendit might use this for test environment)
   if (signature === secret) {
-    console.log("[Webhook] Direct token match successful");
     return true;
   }
   
@@ -32,7 +31,6 @@ function verifyWebhookSignature(payload: string, signature: string, secret: stri
     .digest('hex');
   
   if (expectedSignature === signature) {
-    console.log("[Webhook] HMAC signature match successful");
     return true;
   }
   
@@ -42,13 +40,6 @@ function verifyWebhookSignature(payload: string, signature: string, secret: stri
 export async function POST(req: NextRequest) {
   try {
     const webhookSecret = process.env.XENDIT_WEBHOOK_SECRET;
-    console.log("[Webhook] Environment check:", {
-      hasWebhookSecret: !!webhookSecret,
-      secretLength: webhookSecret?.length || 0,
-      secretPreview: webhookSecret ? `${webhookSecret.substring(0, 5)}...${webhookSecret.substring(webhookSecret.length - 5)}` : "not set",
-      nodeEnv: process.env.NODE_ENV
-    });
-    
     if (!webhookSecret) {
       console.error("Xendit webhook secret not configured");
       return NextResponse.json({ error: "Webhook not configured" }, { status: 500 });
@@ -58,13 +49,6 @@ export async function POST(req: NextRequest) {
     const rawBody = await req.text();
     const signature = req.headers.get('x-callback-token');
     
-    console.log("[Webhook] Request details:", {
-      hasSignature: !!signature,
-      signatureLength: signature?.length || 0,
-      signaturePreview: signature ? `${signature.substring(0, 5)}...${signature.substring(signature.length - 5)}` : "not provided",
-      bodyLength: rawBody.length
-    });
-    
     if (!signature) {
       console.error("Missing webhook signature");
       return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
@@ -72,22 +56,8 @@ export async function POST(req: NextRequest) {
 
     // Verify webhook signature
     const isValid = verifyWebhookSignature(rawBody, signature, webhookSecret);
-    
-    console.log("[Webhook] Signature verification:", {
-      isValid,
-      expectedSignaturePreview: crypto.createHmac('sha256', webhookSecret).update(rawBody).digest('hex').substring(0, 10) + "...",
-      receivedSignaturePreview: signature.substring(0, 10) + "...",
-      secretFromEnv: webhookSecret ? `${webhookSecret.substring(0, 8)}...${webhookSecret.substring(webhookSecret.length - 8)}` : "not set"
-    });
-    
     if (!isValid) {
-      console.error("Invalid webhook signature - full details:", {
-        receivedSignature: signature,
-        webhookSecretLength: webhookSecret.length,
-        webhookSecretStart: webhookSecret.substring(0, 10),
-        webhookSecretEnd: webhookSecret.substring(webhookSecret.length - 10),
-        bodyPreview: rawBody.substring(0, 100) + "..."
-      });
+      console.error("Invalid webhook signature");
       return NextResponse.json({ error: "Invalid signature" }, { status: 401 });
     }
 
@@ -104,10 +74,6 @@ export async function POST(req: NextRequest) {
       case "recurring_plan.payment.succeeded":
       case "recurring.charge.succeeded":
       case "recurring.cycle.succeeded":
-        // Check if this is an immediate payment cycle
-        if (payload.data?.type === "IMMEDIATE" && payload.data?.status === "SUCCEEDED") {
-          console.log("Processing immediate payment cycle success");
-        }
         
         // Payment successful - update transaction to completed
         const planId = payload.data?.plan_id || payload.data?.recurring_plan_id;

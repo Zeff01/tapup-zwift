@@ -79,7 +79,6 @@ export default function CheckoutForm() {
       });
 
       // Using card bank instead of inventory system
-      console.log("[Checkout] Processing order for", newCards.length, "cards");
 
       // Use API route instead of direct client call
       const response = await fetch('/api/xendit/create-recurring-plan', {
@@ -103,7 +102,6 @@ export default function CheckoutForm() {
       }
 
       const recurringPlan = await response.json();
-      console.log("[Checkout] Recurring plan response:", recurringPlan);
 
       // Create transaction record - in test mode, payment is instant
       const transactionData: any = {
@@ -152,7 +150,6 @@ export default function CheckoutForm() {
       
       // Redirect to Xendit payment page
       const paymentUrl = recurringPlan.recurringPlan.actions?.[0]?.url;
-      console.log("[Checkout] Redirecting to payment URL:", paymentUrl);
       
       if (!paymentUrl) {
         throw new Error("No payment URL received from Xendit");

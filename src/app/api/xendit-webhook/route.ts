@@ -5,23 +5,9 @@ import { confirmReservation } from "@/lib/firebase/actions/card-reservation.acti
 
 export async function POST(req: NextRequest) {
   try {
-    // Log all headers for debugging
-    console.log("Webhook received with headers:", Object.fromEntries(req.headers.entries()));
-    
     // Get the webhook token from header (Xendit uses x-callback-token)
     const token = req.headers.get('x-callback-token');
     const expectedToken = process.env.XENDIT_WEBHOOK_SECRET;
-    
-    // Log token details for debugging
-    console.log("[Simple Webhook] Token verification:", {
-      hasToken: !!token,
-      hasExpectedToken: !!expectedToken,
-      tokenMatch: token === expectedToken,
-      receivedLength: token?.length || 0,
-      expectedLength: expectedToken?.length || 0,
-      receivedPreview: token ? `${token.substring(0, 10)}...${token.substring(token.length - 10)}` : "none",
-      expectedPreview: expectedToken ? `${expectedToken.substring(0, 10)}...${expectedToken.substring(expectedToken.length - 10)}` : "none"
-    });
     
     // Simple token verification
     if (token !== expectedToken) {
