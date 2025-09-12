@@ -59,11 +59,21 @@ export async function POST(req: NextRequest) {
 
     // Verify webhook signature
     const isValid = verifyWebhookSignature(rawBody, signature, webhookSecret);
+    
+    console.log("[Webhook] Signature verification:", {
+      isValid,
+      expectedSignaturePreview: crypto.createHmac('sha256', webhookSecret).update(rawBody).digest('hex').substring(0, 10) + "...",
+      receivedSignaturePreview: signature.substring(0, 10) + "...",
+      secretFromEnv: webhookSecret ? `${webhookSecret.substring(0, 8)}...${webhookSecret.substring(webhookSecret.length - 8)}` : "not set"
+    });
+    
     if (!isValid) {
-      console.error("Invalid webhook signature", {
+      console.error("Invalid webhook signature - full details:", {
         receivedSignature: signature,
-        webhookSecret: webhookSecret.substring(0, 5) + "...",
-        bodyLength: rawBody.length
+        webhookSecretLength: webhookSecret.length,
+        webhookSecretStart: webhookSecret.substring(0, 10),
+        webhookSecretEnd: webhookSecret.substring(webhookSecret.length - 10),
+        bodyPreview: rawBody.substring(0, 100) + "..."
       });
       return NextResponse.json({ error: "Invalid signature" }, { status: 401 });
     }

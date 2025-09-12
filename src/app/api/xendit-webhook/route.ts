@@ -12,12 +12,20 @@ export async function POST(req: NextRequest) {
     const token = req.headers.get('x-callback-token');
     const expectedToken = process.env.XENDIT_WEBHOOK_SECRET;
     
+    // Log token details for debugging
+    console.log("[Simple Webhook] Token verification:", {
+      hasToken: !!token,
+      hasExpectedToken: !!expectedToken,
+      tokenMatch: token === expectedToken,
+      receivedLength: token?.length || 0,
+      expectedLength: expectedToken?.length || 0,
+      receivedPreview: token ? `${token.substring(0, 10)}...${token.substring(token.length - 10)}` : "none",
+      expectedPreview: expectedToken ? `${expectedToken.substring(0, 10)}...${expectedToken.substring(expectedToken.length - 10)}` : "none"
+    });
+    
     // Simple token verification
     if (token !== expectedToken) {
-      console.error("Webhook token mismatch", { 
-        received: token?.substring(0, 10) + "...",
-        expected: expectedToken?.substring(0, 10) + "..."
-      });
+      console.error("Webhook token mismatch");
       return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
     }
     
