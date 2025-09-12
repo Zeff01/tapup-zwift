@@ -44,8 +44,8 @@ export function useUserSession(initSession: string | null = null) {
 
     if (!sessionCookie) {
       await createSession(authUser.uid);
-      if (pathname !== "/dashboard") {
-        router.push("/dashboard");
+      if (pathname !== "/cards") {
+        router.push("/cards");
       }
       return;
     }

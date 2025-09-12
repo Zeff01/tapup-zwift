@@ -171,7 +171,7 @@ export const loginHandler = async ({
       await createSession(userID);
     }
     toast.success("Login successful!");
-    redirect("/dashboard");
+    redirect("/cards");
   } catch (error) {
     if (error instanceof FirebaseError) {
       console.log(error.code);
@@ -204,7 +204,7 @@ export const signInWithGoogle = async () => {
     if (docSnap.exists()) {
       await createSession(userID);
       toast.success("Login successful!");
-      redirect("/dashboard");
+      redirect("/cards");
     }
     await setDoc(doc(firebaseDb, "user-account", userID), {
       role: USER_ROLE_ENUMS.USER,
@@ -214,7 +214,7 @@ export const signInWithGoogle = async () => {
     await createSession(userID);
 
     toast.success("Login successful!");
-    redirect("/dashboard");
+    redirect("/cards");
   } catch (error) {
     if (error instanceof FirebaseError) {
       console.log(error.code);
