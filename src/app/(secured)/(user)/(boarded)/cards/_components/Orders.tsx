@@ -63,7 +63,7 @@ const statusConfig = {
 const Orders = () => {
   const { user } = useUserContext();
 
-  const { data: orders = [], status } = useQuery({
+  const { data: orders = [], status, refetch } = useQuery({
     enabled: !!user?.uid,
     queryKey: ["user-orders", user?.uid],
     queryFn: async () => {
@@ -120,6 +120,7 @@ const Orders = () => {
       }
     },
     staleTime: 1000 * 60 * 5,
+    refetchInterval: 30000, // Refetch every 30 seconds
   });
 
   const copyToClipboard = (text: string, label: string) => {
@@ -298,6 +299,36 @@ const Orders = () => {
                               </Button>
                             )}
                             
+                            {/* Debug button */}
+                            {process.env.NODE_ENV === 'development' && (
+                              <Button 
+                                className="w-full"
+                                size="sm"
+                                variant="ghost"
+                                onClick={async () => {
+                                  try {
+                                    const response = await fetch('/api/xendit/debug-transaction', {
+                                      method: 'POST',
+                                      headers: {
+                                        'Content-Type': 'application/json',
+                                      },
+                                      body: JSON.stringify({
+                                        transactionId: order.id,
+                                      }),
+                                    });
+                                    
+                                    const data = await response.json();
+                                    console.log("Transaction Debug Info:", data);
+                                    toast.info("Check console for debug info");
+                                  } catch (error) {
+                                    console.error("Debug error:", error);
+                                  }
+                                }}
+                              >
+                                Debug Transaction
+                              </Button>
+                            )}
+                            
                             {/* Temporary button for testing - remove when webhooks are enabled */}
                             {process.env.NODE_ENV === 'development' && order.status === "pending" && (
                               <Button 
@@ -318,11 +349,12 @@ const Orders = () => {
                                     });
                                     
                                     if (response.ok) {
-                                      toast.success("Order marked as completed. Please refresh to see updates.");
-                                      // Refresh the page to see the updated status
-                                      setTimeout(() => window.location.reload(), 1500);
+                                      toast.success("Order marked as completed!");
+                                      // Refetch orders to show updated status
+                                      setTimeout(() => refetch(), 500);
                                     } else {
-                                      toast.error("Failed to update order status.");
+                                      const error = await response.json();
+                                      toast.error(error.error || "Failed to update order status.");
                                     }
                                   } catch (error) {
                                     console.error("Error updating order status:", error);

@@ -103,6 +103,7 @@ export default function CheckoutForm() {
       }
 
       const recurringPlan = await response.json();
+      console.log("[Checkout] Recurring plan response:", recurringPlan);
 
       // Create transaction record - in test mode, payment is instant
       const transactionData: any = {
@@ -150,7 +151,14 @@ export default function CheckoutForm() {
       await clearCart();
       
       // Redirect to Xendit payment page
-      window.location.href = recurringPlan.recurringPlan.actions?.[0]?.url;
+      const paymentUrl = recurringPlan.recurringPlan.actions?.[0]?.url;
+      console.log("[Checkout] Redirecting to payment URL:", paymentUrl);
+      
+      if (!paymentUrl) {
+        throw new Error("No payment URL received from Xendit");
+      }
+      
+      window.location.href = paymentUrl;
     } catch (error: any) {
       console.error("Error placing order:", error);
       

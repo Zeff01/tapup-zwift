@@ -126,6 +126,14 @@ export async function POST(req: NextRequest) {
       recurringPlanData
     );
 
+    console.log("[Xendit] Recurring plan created:", {
+      planId: recurringPlan.id,
+      status: recurringPlan.status,
+      actions: recurringPlan.actions,
+      immediate_action_type: recurringPlan.immediate_action_type,
+      schedule: recurringPlan.schedule
+    });
+
     return NextResponse.json({ customer, recurringPlan });
   } catch (error: any) {
     
