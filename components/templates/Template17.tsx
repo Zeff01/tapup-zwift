@@ -30,7 +30,6 @@ const Template17 = ({
   twitterUrl,
   youtubeUrl,
   whatsappNumber,
-  skypeInviteUrl,
   websiteUrl,
   viberUrl,
   tiktokUrl,
@@ -159,16 +158,15 @@ const Template17 = ({
           {/* Social Icons */}
           <div className="flex justify-center mt-3 sm:mt-5">
             <SocialLinks
-              facebookUrl={facebookUrl || sampleSocials.facebookUrl}
-              twitterUrl={twitterUrl || sampleSocials.twitterUrl}
-              tiktokUrl={tiktokUrl || sampleSocials.tiktokUrl}
-              youtubeUrl={youtubeUrl || sampleSocials.youtubeUrl}
-              instagramUrl={instagramUrl || sampleSocials.instagramUrl}
-              linkedinUrl={linkedinUrl || sampleSocials.linkedinUrl}
-              viberUrl={viberUrl || sampleSocials.viberUrl}
-              whatsappNumber={whatsappNumber || sampleSocials.whatsappNumber}
-              skypeInviteUrl={skypeInviteUrl || sampleSocials.skypeInviteUrl}
-              websiteUrl={websiteUrl || sampleSocials.websiteUrl}
+              facebookUrl={facebookUrl}
+              instagramUrl={instagramUrl}
+              linkedinUrl={linkedinUrl}
+              twitterUrl={twitterUrl}
+              youtubeUrl={youtubeUrl}
+              tiktokUrl={tiktokUrl}
+              whatsappNumber={whatsappNumber}
+              viberUrl={viberUrl}
+              websiteUrl={websiteUrl}
               variant="colorful"
               size="lg"
               iconSet="solid"
@@ -211,11 +209,6 @@ const Template17 = ({
                 },
                 viber: {
                   icon: "#665cac",
-                  background: "#f3f4f6",
-                  hover: { background: "#e5e7eb" },
-                },
-                skype: {
-                  icon: "#00aff0",
                   background: "#f3f4f6",
                   hover: { background: "#e5e7eb" },
                 },

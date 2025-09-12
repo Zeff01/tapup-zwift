@@ -121,6 +121,7 @@ const OrderCard: React.FC<OrderCardProps> = ({ order }) => {
                   src={item.product.image}
                   alt={item.product.title}
                   fill
+                  sizes="(max-width: 768px) 56px, 80px"
                   className="object-cover rounded-sm"
                 />
               </div>

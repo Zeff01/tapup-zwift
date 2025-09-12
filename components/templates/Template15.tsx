@@ -34,7 +34,6 @@ const Template15 = ({
   youtubeUrl,
   twitterUrl,
   whatsappNumber,
-  skypeInviteUrl,
   websiteUrl,
   viberUrl,
   tiktokUrl,
@@ -176,16 +175,15 @@ const Template15 = ({
             {/* Social Icons */}
             <div className=" mb-6 ">
               <SocialLinks
-                facebookUrl={facebookUrl || sampleSocials.facebookUrl}
-                twitterUrl={twitterUrl || sampleSocials.twitterUrl}
-                tiktokUrl={tiktokUrl || sampleSocials.tiktokUrl}
-                youtubeUrl={youtubeUrl || sampleSocials.youtubeUrl}
-                instagramUrl={instagramUrl || sampleSocials.instagramUrl}
-                linkedinUrl={linkedinUrl || sampleSocials.linkedinUrl}
-                viberUrl={viberUrl || sampleSocials.viberUrl}
-                whatsappNumber={whatsappNumber || sampleSocials.whatsappNumber}
-                skypeInviteUrl={skypeInviteUrl || sampleSocials.skypeInviteUrl}
-                websiteUrl={websiteUrl || sampleSocials.websiteUrl}
+                facebookUrl={facebookUrl}
+                instagramUrl={instagramUrl}
+                linkedinUrl={linkedinUrl}
+                twitterUrl={twitterUrl}
+                youtubeUrl={youtubeUrl}
+                tiktokUrl={tiktokUrl}
+                whatsappNumber={whatsappNumber}
+                viberUrl={viberUrl}
+                websiteUrl={websiteUrl}
                 size="md"
                 iconClassName="rounded-full p-2 bg-[#1a425b] text-[#7eabc2] hover:bg-[#245573] size-full "
                 iconSet="outline"

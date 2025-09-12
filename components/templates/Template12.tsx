@@ -267,7 +267,6 @@ const Template12 = ({
   linkedinUrl,
   tiktokUrl,
   whatsappNumber,
-  skypeInviteUrl,
   viberUrl,
   websiteUrl,
   customUrl,
@@ -292,7 +291,6 @@ const Template12 = ({
     tiktokUrl,
     youtubeUrl,
     whatsappNumber,
-    skypeInviteUrl,
     websiteUrl,
     viberUrl,
   });
@@ -410,16 +408,15 @@ const Template12 = ({
         <div className="text-center flex flex-col w-full pb-4 space-y-1 bg-[#D3F1DF] bg-gradient-to-t from-[#85A98F] overflow-hidden to-[#D3F1DF] rounded-t-3xl  z-20 relative -mt-8 flex-1">
           <div className=" flex  items-center w-full gap-3 py-4 text-2xl bg-gradient-to-t from-[#D3F1DF]  to-[#f4fcf7] text-neutral-700 h-16 justify-center">
             <SocialLinks
-              facebookUrl={facebookUrl || sampleSocials.facebookUrl}
-              twitterUrl={twitterUrl || sampleSocials.twitterUrl}
-              tiktokUrl={tiktokUrl || sampleSocials.tiktokUrl}
-              youtubeUrl={youtubeUrl || sampleSocials.youtubeUrl}
-              instagramUrl={instagramUrl || sampleSocials.instagramUrl}
-              linkedinUrl={linkedinUrl || sampleSocials.linkedinUrl}
-              viberUrl={viberUrl || sampleSocials.viberUrl}
-              whatsappNumber={whatsappNumber || sampleSocials.whatsappNumber}
-              skypeInviteUrl={skypeInviteUrl || sampleSocials.skypeInviteUrl}
-              websiteUrl={websiteUrl || sampleSocials.websiteUrl}
+              facebookUrl={facebookUrl}
+              twitterUrl={twitterUrl}
+              tiktokUrl={tiktokUrl}
+              youtubeUrl={youtubeUrl}
+              instagramUrl={instagramUrl}
+              linkedinUrl={linkedinUrl}
+              viberUrl={viberUrl}
+              whatsappNumber={whatsappNumber}
+              websiteUrl={websiteUrl}
               size="md"
               iconClassName="text-neutral-700"
             />

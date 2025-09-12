@@ -14,28 +14,28 @@ const Products = () => {
 
   const cardTemplates = [
     {
-      src: "/assets/cards/back/card7.png",
-      alt: "Modern Business Card Template",
+      src: "/assets/cards/Eclipse-back.png",
+      alt: "Eclipse Business Card Template",
       color: "from-purple-400 to-pink-400",
     },
     {
-      src: "/assets/cards/back/card6.png",
-      alt: "Professional Card Template",
+      src: "/assets/cards/Aurora-back.png",
+      alt: "Aurora Card Template",
       color: "from-blue-400 to-cyan-400",
     },
     {
-      src: "/assets/cards/back/card1.png",
-      alt: "Classic Card Template",
+      src: "/assets/cards/Viper-back.png",
+      alt: "Viper Card Template",
       color: "from-green-400 to-emerald-400",
     },
     {
-      src: "/assets/cards/back/card4.png",
-      alt: "Creative Card Template",
+      src: "/assets/cards/Vortex-back.png",
+      alt: "Vortex Card Template",
       color: "from-orange-400 to-red-400",
     },
     {
-      src: "/assets/cards/back/card5.png",
-      alt: "Minimalist Card Template",
+      src: "/assets/cards/Bloom-back.png",
+      alt: "Bloom Card Template",
       color: "from-indigo-400 to-purple-400",
     },
   ];

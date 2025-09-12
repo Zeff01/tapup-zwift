@@ -6,7 +6,7 @@ import { Label } from "../ui/label";
 import {
   type CartItem as CartItemType,
   useCart,
-} from "@/providers/cart-provider-v2";
+} from "@/providers/cart-provider";
 import { Button } from "@/components/ui/button";
 import {
   Sheet,
@@ -47,14 +47,20 @@ export default function Cart() {
     } else {
       setCheckedItems([]);
     }
-
-    console.log(checkedItems);
   };
 
   useEffect(() => {
-    // Keep "Select All" in sync if individual checkboxes are manually changed
+    setCheckedItems((prevCheckedItems) =>
+      prevCheckedItems.filter((checkedItem) =>
+        items.some((cartItem) => cartItem.id === checkedItem.id)
+      )
+    );
+  }, [items]);
+
+  useEffect(() => {
     setIsAllSelected(checkedItems.length === items.length && items.length > 0);
   }, [checkedItems, items]);
+
   return (
     <>
       <div className="relative hover:bg-transparent" onClick={openCart}>
@@ -97,19 +103,10 @@ export default function Cart() {
                   onClick={() => {
                     if (isAllSelected) {
                       clearCart();
-                      setCheckedItems([]);
                     } else {
                       checkedItems.forEach((checkedItem) => {
                         removeItem(checkedItem.id);
                       });
-                      setCheckedItems((prev) =>
-                        prev.filter(
-                          (item) =>
-                            !checkedItems.some(
-                              (checkedItem) => checkedItem.id === item.id
-                            )
-                        )
-                      );
                     }
                   }}
                   className={

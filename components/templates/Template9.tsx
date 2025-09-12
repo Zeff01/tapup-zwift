@@ -206,7 +206,6 @@ const Template9 = ({
   tiktokUrl,
   viberUrl,
   whatsappNumber,
-  skypeInviteUrl,
   websiteUrl,
   customUrl,
 }: Card) => {
@@ -230,7 +229,6 @@ const Template9 = ({
     tiktokUrl,
     youtubeUrl,
     whatsappNumber,
-    skypeInviteUrl,
     websiteUrl,
     viberUrl,
   });
@@ -333,16 +331,15 @@ const Template9 = ({
             </div>
             <div className="flex items-center gap-x-4 py-4 text-2xl text-neutral-700 h-16 justify-center">
               <Template9Socials
-                facebookUrl={facebookUrl || sampleSocials.facebookUrl}
-                twitterUrl={twitterUrl || sampleSocials.twitterUrl}
-                tiktokUrl={tiktokUrl || sampleSocials.tiktokUrl}
-                youtubeUrl={youtubeUrl || sampleSocials.youtubeUrl}
-                instagramUrl={instagramUrl || sampleSocials.instagramUrl}
-                linkedinUrl={linkedinUrl || sampleSocials.linkedinUrl}
-                viberUrl={viberUrl || sampleSocials.viberUrl}
-                whatsappNumber={whatsappNumber || sampleSocials.whatsappNumber}
-                skypeInviteUrl={skypeInviteUrl || sampleSocials.skypeInviteUrl}
-                websiteUrl={websiteUrl || sampleSocials.websiteUrl}
+                facebookUrl={facebookUrl}
+                twitterUrl={twitterUrl}
+                tiktokUrl={tiktokUrl}
+                youtubeUrl={youtubeUrl}
+                instagramUrl={instagramUrl}
+                linkedinUrl={linkedinUrl}
+                viberUrl={viberUrl}
+                whatsappNumber={whatsappNumber}
+                websiteUrl={websiteUrl}
                 size="lg"
                 iconSet="outline"
               />

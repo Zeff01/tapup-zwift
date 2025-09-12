@@ -145,8 +145,11 @@ export const Template1Container: React.FC<{ children: React.ReactNode }> = ({
     padding="sm"
     maxWidth="480px"
     overflow="hidden"
+    minHeight="screen"
   >
-    {children}
+    <div className="min-h-screen flex flex-col">
+      {children}
+    </div>
   </TemplateContainer>
 );
 
@@ -154,18 +157,21 @@ export const Template2Container: React.FC<{ children: React.ReactNode }> = ({
   children,
 }) => (
   <TemplateContainer
-    backgroundColor="bg-neutral-800"
+    backgroundColor="bg-black"
     padding="sm"
     maxWidth="480px"
+    minHeight="screen"
   >
-    {children}
+    <div className="border border-white/30 min-h-screen p-4 rounded-lg flex flex-col">
+      {children}
+    </div>
   </TemplateContainer>
 );
 
 export const Template3Container: React.FC<{ children: React.ReactNode }> = ({
   children,
 }) => (
-  <TemplateContainer backgroundColor="bg-black" padding="none" maxWidth="480px">
+  <TemplateContainer backgroundColor="bg-black" padding="none" maxWidth="480px" minHeight="screen">
     {children}
   </TemplateContainer>
 );
@@ -173,7 +179,7 @@ export const Template3Container: React.FC<{ children: React.ReactNode }> = ({
 export const Template4Container: React.FC<{ children: React.ReactNode }> = ({
   children,
 }) => (
-  <TemplateContainer backgroundColor="bg-white" padding="none" maxWidth="480px">
+  <TemplateContainer backgroundColor="bg-white" padding="none" maxWidth="480px" minHeight="screen">
     {children}
   </TemplateContainer>
 );
@@ -186,6 +192,7 @@ export const Template5Container: React.FC<{ children: React.ReactNode }> = ({
     backgroundImage="/assets/template5bg.png"
     padding="none"
     maxWidth="480px"
+    minHeight="screen"
   >
     {children}
   </TemplateContainer>
@@ -200,6 +207,7 @@ export const Template6Container: React.FC<{ children: React.ReactNode }> = ({
     maxWidth="480px"
     overflowY="auto"
     overflowX="hidden"
+    minHeight="screen"
   >
     {children}
   </TemplateContainer>
@@ -208,7 +216,7 @@ export const Template6Container: React.FC<{ children: React.ReactNode }> = ({
 export const Template7Container: React.FC<{ children: React.ReactNode }> = ({
   children,
 }) => (
-  <TemplateContainer backgroundColor="bg-white" padding="md" maxWidth="480px">
+  <TemplateContainer backgroundColor="bg-white" padding="md" maxWidth="480px" minHeight="screen">
     {children}
   </TemplateContainer>
 );
@@ -216,7 +224,7 @@ export const Template7Container: React.FC<{ children: React.ReactNode }> = ({
 export const Template8Container: React.FC<{ children: React.ReactNode }> = ({
   children,
 }) => (
-  <TemplateContainer backgroundColor="bg-white" padding="md" maxWidth="480px">
+  <TemplateContainer backgroundColor="bg-white" padding="md" maxWidth="480px" minHeight="screen">
     {children}
   </TemplateContainer>
 );
@@ -232,6 +240,7 @@ export const Template9Container: React.FC<{ children: React.ReactNode }> = ({
     flexDirection="col"
     alignItems="stretch"
     justifyContent="start"
+    minHeight="screen"
   >
     {children}
   </TemplateContainer>

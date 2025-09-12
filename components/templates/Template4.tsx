@@ -32,7 +32,6 @@ const Template4 = ({
   tiktokUrl,
   youtubeUrl,
   whatsappNumber,
-  skypeInviteUrl,
   websiteUrl,
   viberUrl,
   customUrl,
@@ -49,22 +48,6 @@ const Template4 = ({
     websiteUrl,
     customUrl,
   };
-
-  const sampleSocials = getSampleSocialUrls({
-    facebookUrl,
-    linkedinUrl,
-    instagramUrl,
-    twitterUrl,
-    tiktokUrl,
-    youtubeUrl,
-    whatsappNumber,
-    skypeInviteUrl,
-    websiteUrl,
-    viberUrl,
-  });
-
-  const displayCompanies =
-    companies && companies.length > 0 ? companies : sampleCompanies;
 
   return (
     <Template4Container>
@@ -252,16 +235,15 @@ const Template4 = ({
       <div className="flex flex-col justify-center items-center mt-3 mb-4">
         <h1 className="font-bold mb-2">Socials</h1>
         <SocialLinks
-          facebookUrl={facebookUrl || sampleSocials.facebookUrl}
-          twitterUrl={twitterUrl || sampleSocials.twitterUrl}
-          tiktokUrl={tiktokUrl || sampleSocials.tiktokUrl}
-          youtubeUrl={youtubeUrl || sampleSocials.youtubeUrl}
-          instagramUrl={instagramUrl || sampleSocials.instagramUrl}
-          linkedinUrl={linkedinUrl || sampleSocials.linkedinUrl}
-          viberUrl={viberUrl || sampleSocials.viberUrl}
-          whatsappNumber={whatsappNumber || sampleSocials.whatsappNumber}
-          skypeInviteUrl={skypeInviteUrl || sampleSocials.skypeInviteUrl}
-          websiteUrl={websiteUrl || sampleSocials.websiteUrl}
+          facebookUrl={facebookUrl}
+          instagramUrl={instagramUrl}
+          linkedinUrl={linkedinUrl}
+          twitterUrl={twitterUrl}
+          youtubeUrl={youtubeUrl}
+          tiktokUrl={tiktokUrl}
+          whatsappNumber={whatsappNumber}
+          viberUrl={viberUrl}
+          websiteUrl={websiteUrl}
           className="flex justify-center gap-4 mb-2"
         />
       </div>

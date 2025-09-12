@@ -5,14 +5,12 @@ import {
   FaGlobe,
   FaInstagram,
   FaLinkedin,
-  FaSkype,
   FaTiktok,
   FaViber,
   FaWhatsapp,
   FaXTwitter,
   FaYoutube,
 } from "react-icons/fa6";
-import { getSampleSocialUrls } from "../templates/templatesComponents";
 
 const SocialIcon = ({
   url,
@@ -47,70 +45,47 @@ const ProfileSocials = ({
   tiktokUrl,
   youtubeUrl,
   whatsappNumber,
-  skypeInviteUrl,
   websiteUrl,
   viberUrl,
 }: Partial<Card>) => {
-  const sampleSocials = getSampleSocialUrls({
-    facebookUrl,
-    linkedinUrl,
-    instagramUrl,
-    twitterUrl,
-    tiktokUrl,
-    youtubeUrl,
-    whatsappNumber,
-    skypeInviteUrl,
-    websiteUrl,
-    viberUrl,
-  });
-
   const socialLinks = [
     {
-      url: facebookUrl || sampleSocials.facebookUrl,
+      url: facebookUrl,
       icon: FaFacebook,
       label: "Facebook",
     },
     {
-      url: linkedinUrl || sampleSocials.linkedinUrl,
+      url: linkedinUrl,
       icon: FaLinkedin,
       label: "LinkedIn",
     },
     {
-      url: instagramUrl || sampleSocials.instagramUrl,
+      url: instagramUrl,
       icon: FaInstagram,
       label: "Instagram",
     },
     {
-      url: twitterUrl || sampleSocials.twitterUrl,
+      url: twitterUrl,
       icon: FaXTwitter,
       label: "Twitter",
     },
     {
-      url: tiktokUrl || sampleSocials.tiktokUrl,
+      url: tiktokUrl,
       icon: FaTiktok,
       label: "TikTok",
     },
     {
-      url: youtubeUrl || sampleSocials.youtubeUrl,
+      url: youtubeUrl,
       icon: FaYoutube,
       label: "YouTube",
     },
-    { url: viberUrl || sampleSocials.viberUrl, icon: FaViber, label: "Viber" },
+    { url: viberUrl, icon: FaViber, label: "Viber" },
     {
-      url: whatsappNumber || sampleSocials.whatsappNumber,
+      url: whatsappNumber,
       icon: FaWhatsapp,
       label: "WhatsApp",
     },
-    {
-      url: skypeInviteUrl || sampleSocials.skypeInviteUrl,
-      icon: FaSkype,
-      label: "Skype",
-    },
-    {
-      url: websiteUrl || sampleSocials.websiteUrl,
-      icon: FaGlobe,
-      label: "Website",
-    },
+    { url: websiteUrl, icon: FaGlobe, label: "Website" },
   ].filter((link) => link.url);
 
   if (socialLinks.length === 0) return null;

@@ -10,7 +10,6 @@ import {
   FaInstagram,
   FaLinkedin,
   FaWhatsapp,
-  FaSkype,
   FaGlobe,
   FaFacebookMessenger,
   FaEnvelope,
@@ -37,7 +36,6 @@ const Template8 = ({
   twitterUrl,
   linkedinUrl,
   whatsappNumber,
-  skypeInviteUrl,
   websiteUrl,
   customUrl,
 }: Card) => {

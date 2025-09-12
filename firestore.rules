@@ -2,8 +2,125 @@ rules_version = '2';
 
 service cloud.firestore {
   match /databases/{database}/documents {
+    // Helper functions
+    function isAuthenticated() {
+      return request.auth != null;
+    }
+    
+    function isOwner(userId) {
+      return isAuthenticated() && request.auth.uid == userId;
+    }
+    
+    function getUserData() {
+      return get(/databases/$(database)/documents/user-account/$(request.auth.uid)).data;
+    }
+    
+    function isAdmin() {
+      return isAuthenticated() && getUserData().role == 'admin';
+    }
+    
+    function isSuperAdmin() {
+      return isAuthenticated() && getUserData().role == 'super_admin';
+    }
+    
+    function isAdminOrSuperAdmin() {
+      return isAuthenticated() && getUserData().role in ['admin', 'super_admin'];
+    }
+    
+    // User accounts
+    match /user-account/{userId} {
+      // TEMPORARY: Allow all reads for authentication
+      allow read: if true;
+      
+      // Users can update their own data (except role), super admins can update all
+      allow update: if (isOwner(userId) && !request.resource.data.diff(resource.data).affectedKeys().hasAny(['role'])) 
+                    || (isAuthenticated() && getUserData().role == 'super_admin');
+                    
+      // Allow authenticated users to create their own account
+      allow create: if isAuthenticated() && request.auth.uid == userId;
+      
+      // Only super admins can delete users
+      allow delete: if isAuthenticated() && getUserData().role == 'super_admin';
+    }
+    
+    // Pregenerated cards
+    match /pregenerated-cards/{cardId} {
+      // TEMPORARY: Allow all reads
+      allow read: if true;
+      
+      // Allow all writes temporarily for server-side operations
+      // TODO: Implement Firebase Admin SDK for secure server-side operations
+      allow create, update, delete: if true;
+    }
+    
+    // Card generation logs
+    match /card-generation-logs/{logId} {
+      // Only super admins can read logs
+      allow read: if isAuthenticated() && getUserData().role == 'super_admin';
+      
+      // Only admins can create logs (when generating cards)
+      allow create: if isAuthenticated() && getUserData().role in ['admin', 'super_admin'];
+      
+      // No one can update or delete logs
+      allow update, delete: if false;
+    }
+    
+    // Transactions
+    match /transactions/{transactionId} {
+      // Allow all operations temporarily for server-side and webhook operations
+      // TODO: Implement Firebase Admin SDK for secure server-side operations
+      allow read, write: if true;
+    }
+    
+    // Cart items
+    match /cart/{cartId} {
+      // Allow all operations temporarily for server-side operations
+      // TODO: Implement Firebase Admin SDK for secure server-side operations
+      allow read, write: if true;
+    }
+    
+    // Subscriptions
+    match /subscriptions/{subscriptionId} {
+      // Allow all reads (temporary)
+      allow read: if true;
+      
+      // Only admins can modify subscriptions
+      allow create, update, delete: if isAuthenticated() && getUserData().role in ['admin', 'super_admin'];
+    }
+    
+    // Static collections (read-only for all)
+    match /subscription-plans/{planId} {
+      allow read: if true;
+      allow write: if isAuthenticated() && getUserData().role in ['admin', 'super_admin'];
+    }
+    
+    match /carousel-cards/{cardId} {
+      allow read: if true;
+      allow write: if isAuthenticated() && getUserData().role in ['admin', 'super_admin'];
+    }
+    
+    // Admin-only collections
+    match /settings/{settingId} {
+      allow read, write: if isAuthenticated() && getUserData().role in ['admin', 'super_admin'];
+    }
+    
+    // Cards collection
+    match /cards/{cardId} {
+      allow read: if true;
+      allow write: if isAuthenticated();
+    }
+    
+    // Orders collection
+    match /orders/{orderId} {
+      // Allow all operations temporarily for server-side operations
+      // TODO: Implement Firebase Admin SDK for secure server-side operations
+      allow read, write: if true;
+    }
+    
+    
+    // Default deny all other access
     match /{document=**} {
-      allow read, write;
+      allow read, write: if false;
     }
   }
 }

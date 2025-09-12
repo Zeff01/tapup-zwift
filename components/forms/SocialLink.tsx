@@ -13,7 +13,6 @@ import {
   FaWhatsapp,
   FaLinkedin,
   FaYoutube,
-  FaSkype,
   FaGlobe,
 } from "react-icons/fa";
 import { SiTiktok, SiViber } from "react-icons/si";
@@ -95,12 +94,6 @@ const socialLinks: SocialLink[] = [
     icon: <SiTiktok />,
     key: "tiktokUrl",
     value: "https://www.tiktok.com/",
-  },
-  {
-    label: "Skype",
-    icon: <FaSkype />,
-    key: "skypeInviteUrl",
-    value: "",
   },
 ];
 

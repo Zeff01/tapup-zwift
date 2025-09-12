@@ -132,6 +132,7 @@ const ShowDetails: React.FC<showDetailsProps> = ({ order }) => {
                   src={`${order.deliveryOption.image || ""}`}
                   alt="carrier image"
                   fill
+                  sizes="(max-width: 768px) 48px, 64px"
                   className="object-contain"
                 />
               </div>
@@ -167,6 +168,7 @@ const ShowDetails: React.FC<showDetailsProps> = ({ order }) => {
               src="/assets/payment/Visa.png"
               alt="payment method card"
               fill
+              sizes="(max-width: 768px) 40px, 64px"
               className="object-cover"
             />
           </div>

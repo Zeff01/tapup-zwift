@@ -28,7 +28,6 @@ const Template3 = ({
   twitterUrl,
   linkedinUrl,
   whatsappNumber,
-  skypeInviteUrl,
   tiktokUrl,
   viberUrl,
   websiteUrl,
@@ -46,23 +45,6 @@ const Template3 = ({
     websiteUrl,
     customUrl,
   };
-
-  const sampleSocials = getSampleSocialUrls({
-    facebookUrl,
-    linkedinUrl,
-    instagramUrl,
-    twitterUrl,
-    tiktokUrl,
-    youtubeUrl,
-    whatsappNumber,
-    skypeInviteUrl,
-    websiteUrl,
-    viberUrl,
-  });
-
-  const displayCompanies =
-    companies && companies.length > 0 ? companies : sampleCompanies;
-
   return (
     <Template3Container>
       {/* COVERPHOTO AND PROFILE PIC */}
@@ -119,16 +101,15 @@ const Template3 = ({
 
       <div className="flex justify-center mt-5 mb-6">
         <SocialLinks
-          facebookUrl={facebookUrl || sampleSocials.facebookUrl}
-          twitterUrl={twitterUrl || sampleSocials.twitterUrl}
-          tiktokUrl={tiktokUrl || sampleSocials.tiktokUrl}
-          youtubeUrl={youtubeUrl || sampleSocials.youtubeUrl}
-          instagramUrl={instagramUrl || sampleSocials.instagramUrl}
-          linkedinUrl={linkedinUrl || sampleSocials.linkedinUrl}
-          viberUrl={viberUrl || sampleSocials.viberUrl}
-          whatsappNumber={whatsappNumber || sampleSocials.whatsappNumber}
-          skypeInviteUrl={skypeInviteUrl || sampleSocials.skypeInviteUrl}
-          websiteUrl={websiteUrl || sampleSocials.websiteUrl}
+          facebookUrl={facebookUrl}
+          instagramUrl={instagramUrl}
+          linkedinUrl={linkedinUrl}
+          twitterUrl={twitterUrl}
+          youtubeUrl={youtubeUrl}
+          whatsappNumber={whatsappNumber}
+          viberUrl={viberUrl}
+          tiktokUrl={tiktokUrl}
+          websiteUrl={websiteUrl}
           size="md"
           className="flex items-center justify-center gap-2 mt-6 my-4 mx-auto w-full"
           iconClassName="text-white hover:text-gray-300"

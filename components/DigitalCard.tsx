@@ -8,6 +8,7 @@ import {
   toggleCardDisabled,
   transferCardOwnership,
 } from "@/lib/firebase/actions/card.action";
+import { Switch } from "@/components/ui/switch";
 import {
   createCustomerAndRecurringPlan,
   getSubscriptionPlans,
@@ -91,9 +92,6 @@ const DigitalCard = ({ card, confirm, user }: Prop) => {
     isDragging,
   } = useSortable({ id: card.id as UniqueIdentifier });
 
-  useEffect(() => {
-    console.log(`isDragging: ${isDragging}`);
-  }, [isDragging]);
 
   const style = {
     transform: CSS.Transform.toString(transform),
@@ -294,26 +292,6 @@ const DigitalCard = ({ card, confirm, user }: Prop) => {
 
   const handleToggleCard = async () => {
     if (!card.id) return;
-    const ok = await confirm(
-      undefined,
-      <>
-        {!card.disabled && (
-          <p className="mb-4 text-sm text-muted-foreground">
-            Disabling this card will make it inaccessible to others and remove
-            it from public view.
-          </p>
-        )}
-        <p>
-          Are you sure you want to{" "}
-          <span className="font-bold ">
-            {card.disabled ? "enable" : "disable"}
-          </span>{" "}
-          this card?
-        </p>
-      </>
-    );
-
-    if (!ok) return;
     toggleCardMutation(card.id);
   };
 
@@ -325,11 +303,6 @@ const DigitalCard = ({ card, confirm, user }: Prop) => {
 
   const iconAndFunctionMap = [
     { icon: Edit2, fn: handleUpdate, tooltip: "Edit Card" },
-    {
-      icon: isCardDisabled ? CheckCircle2 : IoCloseCircleOutline,
-      fn: handleToggleCard,
-      tooltip: isCardDisabled ? "Enable Card" : "Disable Card",
-    },
     {
       icon: ArrowRightLeft,
       fn: () => setTransferOpen(true),
@@ -489,6 +462,36 @@ const DigitalCard = ({ card, confirm, user }: Prop) => {
           onTouchEnd={() => setHovered(false)}
           onTouchCancel={() => setHovered(false)}
         >
+          {/* Overlay for text contrast */}
+          <div className="absolute inset-0 bg-gradient-to-b from-black/30 via-black/10 to-black/50 pointer-events-none" />
+          {/* Enable/Disable Toggle Switch */}
+          <div className="absolute top-3 right-3 z-40">
+            <Tooltip>
+              <TooltipTrigger asChild>
+                <div className="flex items-center gap-2">
+                  <Switch
+                    checked={!isCardDisabled}
+                    onCheckedChange={() => card.id && toggleCardMutation(card.id)}
+                    disabled={isPendingToggleCard}
+                    className={`data-[state=checked]:bg-green-600 data-[state=unchecked]:bg-red-600 scale-75`}
+                  />
+                  <span className={`text-xs font-medium ${isCardDisabled ? 'text-red-500' : 'text-green-500'} drop-shadow-[0_1px_2px_rgba(0,0,0,0.8)]`}>
+                    {isCardDisabled ? "Disabled" : "Enabled"}
+                  </span>
+                </div>
+              </TooltipTrigger>
+              <TooltipPortal>
+                <TooltipContent
+                  className="bg-black text-white text-xs px-2 py-1 rounded z-50"
+                  side="bottom"
+                >
+                  {isCardDisabled ? "Enable this card" : "Disable this card"}
+                  <TooltipArrow className="fill-black" />
+                </TooltipContent>
+              </TooltipPortal>
+            </Tooltip>
+          </div>
+
           <div className="absolute w-full top-1/2 right-0 -translate-y-1/2 flex items-center justify-end z-30">
             <div className="relative flex items-center justify-end group">
               <GripVertical
@@ -505,9 +508,9 @@ const DigitalCard = ({ card, confirm, user }: Prop) => {
             </div>
           )}
 
-          {(isCardExpired(card.expiryDate) || isCardDisabled) && !isLoading && (
+          {isCardExpired(card.expiryDate) && !isLoading && (
             <div className="absolute left-0 top-0 w-full h-full flex items-center justify-center bg-black/60 text-white text-lg font-semibold">
-              {isCardDisabled ? "Disabled" : "Expired"}
+              Expired
             </div>
           )}
 

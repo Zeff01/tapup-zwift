@@ -19,7 +19,6 @@ const Template14 = ({
   twitterUrl,
   linkedinUrl,
   whatsappNumber,
-  skypeInviteUrl,
   websiteUrl,
   customUrl,
 }: Card) => {

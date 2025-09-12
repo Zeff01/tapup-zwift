@@ -238,7 +238,6 @@ const Template11 = ({
   tiktokUrl,
   viberUrl,
   whatsappNumber,
-  skypeInviteUrl,
   websiteUrl,
   customUrl,
 }: Card) => {
@@ -370,16 +369,15 @@ const Template11 = ({
           {/* SOCIAL MEDIA ICONS */}
           <div className="flex items-center gap-1 mt-6 pb-10 pt-10 text-black text-2xl h-16 justify-center">
             <SocialLinks
-              facebookUrl={facebookUrl || sampleSocials.facebookUrl}
-              twitterUrl={twitterUrl || sampleSocials.twitterUrl}
-              tiktokUrl={tiktokUrl || sampleSocials.tiktokUrl}
-              youtubeUrl={youtubeUrl || sampleSocials.youtubeUrl}
-              instagramUrl={instagramUrl || sampleSocials.instagramUrl}
-              linkedinUrl={linkedinUrl || sampleSocials.linkedinUrl}
-              viberUrl={viberUrl || sampleSocials.viberUrl}
-              whatsappNumber={whatsappNumber || sampleSocials.whatsappNumber}
-              skypeInviteUrl={skypeInviteUrl || sampleSocials.skypeInviteUrl}
-              websiteUrl={websiteUrl || sampleSocials.websiteUrl}
+              facebookUrl={facebookUrl}
+              twitterUrl={twitterUrl}
+              tiktokUrl={tiktokUrl}
+              youtubeUrl={youtubeUrl}
+              instagramUrl={instagramUrl}
+              linkedinUrl={linkedinUrl}
+              viberUrl={viberUrl}
+              whatsappNumber={whatsappNumber}
+              websiteUrl={websiteUrl}
               size="sm"
               iconClassName="rounded-full p-2 bg-white opacity-50 size-full "
               iconSet="outline"

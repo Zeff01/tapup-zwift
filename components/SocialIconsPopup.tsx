@@ -6,7 +6,6 @@ import {
   FaInstagram,
   FaLinkedin,
   FaWhatsapp,
-  FaSkype,
   FaGlobe,
   FaViber,
   FaTiktok,
@@ -24,7 +23,6 @@ interface SocialIconsPopupProps {
   linkedinUrl?: string | null;
   viberUrl?: string | null;
   whatsappNumber?: string | null;
-  skypeInviteUrl?: string | null;
   websiteUrl?: string | null;
 }
 
@@ -42,7 +40,6 @@ const ICON_MAP: Record<keyof SocialIconsPopupProps, IconEntry> = {
   linkedinUrl: { icon: FaLinkedin, getHref: (v) => v },
   viberUrl: { icon: FaViber, getHref: (v) => v },
   whatsappNumber: { icon: FaWhatsapp, getHref: (v) => `https://wa.me/${v}` },
-  skypeInviteUrl: { icon: FaSkype, getHref: (v) => `skype:${v}?chat` },
   websiteUrl: { icon: FaGlobe, getHref: (v) => v },
 };
 

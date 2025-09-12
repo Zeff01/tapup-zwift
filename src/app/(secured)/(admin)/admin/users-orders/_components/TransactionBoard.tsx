@@ -1,8 +1,29 @@
 "use client";
 
-import { useState, useEffect } from "react";
+import { useState, useEffect, useMemo } from "react";
 import Image from "next/image";
-import { Search, Filter, Edit2 } from "lucide-react";
+import { 
+  Search, 
+  Filter, 
+  ChevronDown, 
+  ChevronUp,
+  Package,
+  Clock,
+  CheckCircle2,
+  XCircle,
+  AlertCircle,
+  Phone,
+  Mail,
+  MapPin,
+  Calendar,
+  DollarSign,
+  User,
+  Hash,
+  MoreVertical,
+  Eye,
+  Download,
+  Copy
+} from "lucide-react";
 import { Button } from "@/components/ui/button";
 import {
   Card,
@@ -30,7 +51,19 @@ import {
   DialogTitle,
   DialogTrigger,
 } from "@/components/ui/dialog";
-import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuSeparator,
+  DropdownMenuTrigger,
+} from "@/components/ui/dropdown-menu";
+import {
+  Tooltip,
+  TooltipContent,
+  TooltipProvider,
+  TooltipTrigger,
+} from "@/components/ui/tooltip";
 import { Label } from "@/components/ui/label";
 import { Separator } from "@/components/ui/separator";
 import { TransactionBoard } from "@/types/types";
@@ -38,6 +71,36 @@ import { carouselCards } from "@/constants";
 import { useUserContext } from "@/providers/user-provider";
 import { updateTransactionPerId } from "@/lib/firebase/actions/user.action";
 import { toast } from "react-toastify";
+import { cn } from "@/lib/utils";
+
+interface StatCardProps {
+  title: string;
+  value: string | number;
+  icon: React.ReactNode;
+  trend?: string;
+  color: string;
+}
+
+function StatCard({ title, value, icon, trend, color }: StatCardProps) {
+  return (
+    <Card className="relative overflow-hidden">
+      <CardContent className="p-3 sm:p-4">
+        <div className="flex items-center justify-between">
+          <div>
+            <p className="text-xs sm:text-sm font-medium text-muted-foreground">{title}</p>
+            <p className="text-lg sm:text-2xl font-bold">{value}</p>
+            {trend && (
+              <p className="text-xs text-muted-foreground mt-1">{trend}</p>
+            )}
+          </div>
+          <div className={cn("p-2 sm:p-3 rounded-full", color)}>
+            {icon}
+          </div>
+        </div>
+      </CardContent>
+    </Card>
+  );
+}
 
 export default function TransactionDashboard({
   transactionsData,
@@ -45,30 +108,44 @@ export default function TransactionDashboard({
   transactionsData: TransactionBoard[];
 }) {
   const { user } = useUserContext();
-  const [transactions, setTransactions] =
-    useState<TransactionBoard[]>(transactionsData);
-  const [filteredTransactions, setFilteredTransactions] =
-    useState<TransactionBoard[]>(transactionsData);
+  const [transactions, setTransactions] = useState<TransactionBoard[]>(transactionsData);
+  const [filteredTransactions, setFilteredTransactions] = useState<TransactionBoard[]>(transactionsData);
   const [searchTerm, setSearchTerm] = useState("");
   const [statusFilter, setStatusFilter] = useState<string>("all");
-  const [selectedTransaction, setSelectedTransaction] =
-    useState<TransactionBoard | null>(null);
-  const [selectedCardIndex, setSelectedCardIndex] = useState(0);
-  const [isLoading, setIsLoading] = useState(true);
+  const [expandedTransactions, setExpandedTransactions] = useState<Set<string>>(new Set());
+  const [selectedTransaction, setSelectedTransaction] = useState<TransactionBoard | null>(null);
+  const [isUpdating, setIsUpdating] = useState<string | null>(null);
+
+  // Calculate statistics
+  const statistics = useMemo(() => {
+    const total = transactions.length;
+    const pending = transactions.filter(t => t.status === "pending").length;
+    const completed = transactions.filter(t => t.status === "completed").length;
+    const processing = transactions.filter(t => t.status === "processing").length;
+    const cancelled = transactions.filter(t => t.status === "cancelled").length;
+    const totalRevenue = transactions
+      .filter(t => t.status === "completed")
+      .reduce((sum, t) => sum + t.amount, 0);
+
+    return { total, pending, completed, processing, cancelled, totalRevenue };
+  }, [transactions]);
 
   useEffect(() => {
     let filtered = [...transactions];
 
     if (searchTerm) {
       filtered = filtered.filter(
-        (transaction) =>
-          transaction.receiver.customerName
-            .toLowerCase()
-            .includes(searchTerm.toLowerCase()) ||
-          transaction.id.toLowerCase().includes(searchTerm.toLowerCase()) ||
-          transaction.cards.some((card) =>
-            card.name.toLowerCase().includes(searchTerm.toLowerCase())
-          )
+        (transaction) => {
+          const cards = transaction.cards || [];
+          return (
+            transaction.receiver.customerName.toLowerCase().includes(searchTerm.toLowerCase()) ||
+            transaction.id.toLowerCase().includes(searchTerm.toLowerCase()) ||
+            transaction.receiver.customerEmail.toLowerCase().includes(searchTerm.toLowerCase()) ||
+            cards.some((card) =>
+              card.name.toLowerCase().includes(searchTerm.toLowerCase())
+            )
+          );
+        }
       );
     }
 
@@ -78,434 +155,525 @@ export default function TransactionDashboard({
       );
     }
 
+    // Sort by date (newest first)
+    filtered.sort((a, b) => {
+      const dateA = new Date(a.createdAt).getTime();
+      const dateB = new Date(b.createdAt).getTime();
+      return dateB - dateA;
+    });
+
     setFilteredTransactions(filtered);
   }, [searchTerm, statusFilter, transactions]);
 
-  const updateTransactionStatus = (
-    id: string,
-    newStatus: "pending" | "completed" | "cancelled" | "processing"
-  ) => {
-    const updatedTransactions = transactions.map((transaction) =>
-      transaction.id === id
-        ? { ...transaction, status: newStatus }
-        : transaction
-    );
-    setTransactions(updatedTransactions);
+  const toggleExpanded = (id: string) => {
+    const newExpanded = new Set(expandedTransactions);
+    if (newExpanded.has(id)) {
+      newExpanded.delete(id);
+    } else {
+      newExpanded.add(id);
+    }
+    setExpandedTransactions(newExpanded);
   };
 
-  const handleSaveChanges = async (
-    transactionID: string,
-    newStatus: string
+  const handleStatusUpdate = async (
+    transactionId: string,
+    newStatus: "pending" | "completed" | "cancelled" | "processing"
   ) => {
+    setIsUpdating(transactionId);
     try {
       const result = await updateTransactionPerId({
         role: user?.role!,
-        transaction_id: transactionID,
+        transaction_id: transactionId,
         data: newStatus,
       });
 
-      if (!result.success) return toast.error(result.message);
-      toast.success(result.message);
+      if (!result.success) {
+        toast.error(result.message);
+        return;
+      }
+
+      // Update local state
+      setTransactions(prev => 
+        prev.map(t => t.id === transactionId ? { ...t, status: newStatus } : t)
+      );
+      
+      toast.success("Status updated successfully");
     } catch (error) {
-      console.log("Error updating transaction", error);
+      console.error("Error updating transaction:", error);
+      toast.error("Failed to update status");
+    } finally {
+      setIsUpdating(null);
+    }
+  };
+
+  const getStatusIcon = (status: string) => {
+    switch (status) {
+      case "pending":
+        return <Clock className="w-4 h-4" />;
+      case "completed":
+        return <CheckCircle2 className="w-4 h-4" />;
+      case "cancelled":
+        return <XCircle className="w-4 h-4" />;
+      case "processing":
+        return <AlertCircle className="w-4 h-4" />;
+      default:
+        return null;
     }
   };
 
   const getStatusColor = (status: string) => {
     switch (status) {
       case "pending":
-        return "bg-yellow-500 hover:bg-yellow-600";
+        return "bg-yellow-100 text-yellow-800 dark:bg-yellow-900/20 dark:text-yellow-400";
       case "completed":
-        return "bg-green-500 hover:bg-green-600";
+        return "bg-green-100 text-green-800 dark:bg-green-900/20 dark:text-green-400";
       case "cancelled":
-        return "bg-red-500 hover:bg-red-600";
+        return "bg-red-100 text-red-800 dark:bg-red-900/20 dark:text-red-400";
       case "processing":
-        return "bg-blue-500 hover:bg-blue-600";
+        return "bg-blue-100 text-blue-800 dark:bg-blue-900/20 dark:text-blue-400";
       default:
-        return "bg-gray-500 hover:bg-gray-600";
+        return "bg-gray-100 text-gray-800 dark:bg-gray-900/20 dark:text-gray-400";
     }
   };
 
+  const copyToClipboard = (text: string) => {
+    navigator.clipboard.writeText(text);
+    toast.success("Copied to clipboard");
+  };
+
+  const formatDate = (dateString: string) => {
+    const date = new Date(dateString);
+    return date.toLocaleDateString('en-US', { 
+      month: 'short', 
+      day: 'numeric', 
+      year: 'numeric',
+      hour: '2-digit',
+      minute: '2-digit'
+    });
+  };
+
   return (
-    <div className="container mx-auto py-8 px-4">
-      <h1 className="text-xl font-bold mb-6">Transaction Dashboard</h1>
-      <div className="flex flex-col md:flex-row gap-4 mb-6">
-        <div className="relative flex-1">
-          <Search
-            className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400"
-            size={18}
-          />
-          <Input
-            placeholder="Search by customer name, transaction ID, or card name"
-            value={searchTerm}
-            onChange={(e) => setSearchTerm(e.target.value)}
-            className="pl-10"
-          />
-        </div>
-        <div className="relative flex items-center gap-2 justify-end">
-          <Filter
-            size={18}
-            className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-500 md:relative md:left-0 md:top-0 md:translate-y-0"
-          />
-          <Select value={statusFilter} onValueChange={setStatusFilter}>
-            <SelectTrigger className="pl-10 w-full md:pl-3 md:w-[180px]">
-              <SelectValue placeholder="Filter by status" />
-            </SelectTrigger>
-            <SelectContent>
-              <SelectItem value="all">All Statuses</SelectItem>
-              <SelectItem value="pending">Pending</SelectItem>
-              <SelectItem value="completed">Completed</SelectItem>
-              <SelectItem value="cancelled">Cancelled</SelectItem>
-              <SelectItem value="processing">Processing</SelectItem>
-            </SelectContent>
-          </Select>
-        </div>
-      </div>
+    <TooltipProvider>
+      <div className="container mx-auto py-4 px-4 max-w-7xl">
+        <div className="space-y-4">
+          {/* Header */}
+          <div>
+            <h1 className="text-2xl font-bold">Orders Management</h1>
+            <p className="text-muted-foreground">Manage and track all customer orders</p>
+          </div>
 
-      {/* Transactions List */}
-      <div className="grid gap-4">
-        {filteredTransactions?.length > 0 ? (
-          filteredTransactions?.map((transaction, i) => (
-            <Card key={transaction.id} className="overflow-hidden">
-              <CardHeader className="pb-2">
-                <div className="flex justify-between items-start">
-                  <div>
-                    <CardTitle className="text-xl flex items-center gap-2">
-                      {`Transaction-${i + 1}`}
-                      <Badge className={getStatusColor(transaction.status)}>
-                        {transaction.status.charAt(0).toUpperCase() +
-                          transaction.status.slice(1)}
-                      </Badge>
-                    </CardTitle>
-                    <CardDescription>
-                      {transaction.createdAt &&
-                      typeof transaction.createdAt.seconds === "number" &&
-                      typeof transaction.createdAt.nanoseconds === "number"
-                        ? new Date(
-                            transaction.createdAt.seconds * 1000 +
-                              transaction.createdAt.nanoseconds / 1000000
-                          ).toLocaleString()
-                        : "Invalid Date"}
-                    </CardDescription>
-                  </div>
-                  <div className="text-2xl font-bold">
-                    ₱{transaction.amount}
-                  </div>
+          {/* Statistics Cards */}
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3">
+            <StatCard
+              title="Total Orders"
+              value={statistics.total}
+              icon={<Package className="w-4 h-4 text-white" />}
+              color="bg-primary"
+            />
+            <StatCard
+              title="Pending"
+              value={statistics.pending}
+              icon={<Clock className="w-4 h-4 text-white" />}
+              color="bg-yellow-500"
+            />
+            <StatCard
+              title="Completed"
+              value={statistics.completed}
+              icon={<CheckCircle2 className="w-4 h-4 text-white" />}
+              color="bg-green-500"
+            />
+            <StatCard
+              title="Revenue"
+              value={`₱${statistics.totalRevenue.toLocaleString()}`}
+              icon={<DollarSign className="w-4 h-4 text-white" />}
+              color="bg-blue-500"
+            />
+          </div>
+
+          {/* Filters */}
+          <div className="flex flex-col sm:flex-row gap-4">
+            <div className="relative flex-1">
+              <Search className="absolute left-3 top-1/2 -translate-y-1/2 text-muted-foreground w-4 h-4" />
+              <Input
+                placeholder="Search orders, customers, or cards..."
+                value={searchTerm}
+                onChange={(e) => setSearchTerm(e.target.value)}
+                className="pl-10"
+              />
+            </div>
+            <Select value={statusFilter} onValueChange={setStatusFilter}>
+              <SelectTrigger className="w-full sm:w-[180px]">
+                <Filter className="w-4 h-4 mr-2" />
+                <SelectValue placeholder="Filter by status" />
+              </SelectTrigger>
+              <SelectContent>
+                <SelectItem value="all">All Orders</SelectItem>
+                <SelectItem value="pending">Pending</SelectItem>
+                <SelectItem value="processing">Processing</SelectItem>
+                <SelectItem value="completed">Completed</SelectItem>
+                <SelectItem value="cancelled">Cancelled</SelectItem>
+              </SelectContent>
+            </Select>
+          </div>
+
+          {/* Orders List */}
+          <div className="space-y-3">
+            {filteredTransactions.length === 0 ? (
+              <Card className="p-12 text-center">
+                <div className="space-y-3">
+                  <Package className="w-12 h-12 mx-auto text-muted-foreground" />
+                  <h3 className="text-lg font-semibold">No orders found</h3>
+                  <p className="text-muted-foreground">
+                    {searchTerm || statusFilter !== "all" 
+                      ? "Try adjusting your filters"
+                      : "Orders will appear here once customers make purchases"}
+                  </p>
+                  {(searchTerm || statusFilter !== "all") && (
+                    <Button
+                      variant="outline"
+                      onClick={() => {
+                        setSearchTerm("");
+                        setStatusFilter("all");
+                      }}
+                    >
+                      Clear Filters
+                    </Button>
+                  )}
                 </div>
-              </CardHeader>
+              </Card>
+            ) : (
+              filteredTransactions.map((transaction) => {
+                const isExpanded = expandedTransactions.has(transaction.id);
+                const firstItemName = transaction.cards?.[0]?.name || '';
+                const matchingCard = Object.values(carouselCards).find(
+                  (item) => item.title === firstItemName
+                );
+                const cardImage = matchingCard?.image || carouselCards.eclipse.image;
 
-              <CardContent>
-                <Tabs defaultValue="details" className="w-full">
-                  <TabsList className="mb-4">
-                    <TabsTrigger value="details">Details</TabsTrigger>
-                    <TabsTrigger value="cards">
-                      Cards ({transaction.cards.length})
-                    </TabsTrigger>
-                    <TabsTrigger value="receiver">Receiver</TabsTrigger>
-                  </TabsList>
+                return (
+                  <Card 
+                    key={transaction.id} 
+                    className={cn(
+                      "transition-all duration-200",
+                      isExpanded && "ring-2 ring-primary/20"
+                    )}
+                  >
+                    {/* Order Summary - Always Visible */}
+                    <CardContent className="p-3 sm:p-4">
+                      <div className="flex items-start justify-between gap-3">
+                        {/* Left Section - Order Info */}
+                        <div className="flex gap-3 flex-1 min-w-0">
+                          {/* Card Image Preview - Credit card ratio 1.586:1 */}
+                          <div className="relative w-20 h-[50px] sm:w-24 sm:h-[60px] flex-shrink-0 overflow-hidden rounded-md border shadow-sm">
+                            <Image
+                              src={cardImage}
+                              alt={transaction.cards[0]?.name || "Card"}
+                              fill
+                              sizes="(max-width: 640px) 80px, 96px"
+                              className="object-cover"
+                            />
+                            {transaction.cards.length > 1 && (
+                              <div className="absolute -bottom-1 -right-1 bg-primary text-primary-foreground text-xs rounded-full w-5 h-5 flex items-center justify-center font-medium shadow-sm">
+                                +{transaction.cards.length - 1}
+                              </div>
+                            )}
+                          </div>
 
-                  <TabsContent value="details" className="space-y-4">
-                    <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                      <div>
-                        <h3 className="text-sm font-medium text-gray-500">
-                          Transaction ID
-                        </h3>
-                        <p>{transaction.id}</p>
-                      </div>
-                      <div>
-                        <h3 className="text-sm font-medium text-gray-500">
-                          Amount
-                        </h3>
-                        <p>₱{transaction.amount}</p>
-                      </div>
-                      <div>
-                        <h3 className="text-sm font-medium text-gray-500">
-                          Date
-                        </h3>
-                        <p>
-                          {transaction.createdAt &&
-                          typeof transaction.createdAt.seconds === "number" &&
-                          typeof transaction.createdAt.nanoseconds === "number"
-                            ? new Date(
-                                transaction.createdAt.seconds * 1000 +
-                                  transaction.createdAt.nanoseconds / 1000000
-                              ).toLocaleString() // Changed to toLocaleString()
-                            : "Invalid Date"}
-                        </p>
-                      </div>
-                      <div>
-                        <h3 className="text-sm font-medium text-gray-500">
-                          Status
-                        </h3>
-                        <div className="grid grid-cols-3 sm:flex items-center gap-4 sm:gap-2">
-                          <Badge
-                            className={`${getStatusColor(transaction.status)} text-center flex justify-center items-center sm:inline`}
-                          >
-                            {transaction.status.charAt(0).toUpperCase() +
-                              transaction.status.slice(1)}
-                          </Badge>
-                          <Dialog>
-                            <DialogTrigger asChild>
-                              <Button
-                                variant="outline"
-                                size="sm"
-                                className="col-span-2"
-                              >
-                                <Edit2 size={14} className="mr-1" /> Update
-                              </Button>
-                            </DialogTrigger>
-                            <DialogContent>
-                              <DialogHeader>
-                                <DialogTitle>
-                                  Update Transaction Status
-                                </DialogTitle>
-                                <DialogDescription>
-                                  Change the status for transaction{" "}
-                                  {transaction.id}
-                                </DialogDescription>
-                              </DialogHeader>
-                              <div className="grid gap-4 py-4">
-                                <div className="space-y-2">
-                                  <Label htmlFor="status">Status</Label>
-                                  <Select
-                                    defaultValue={transaction.status}
-                                    onValueChange={(value) =>
-                                      updateTransactionStatus(
-                                        transaction.id,
-                                        value as
-                                          | "pending"
-                                          | "completed"
-                                          | "cancelled"
-                                          | "processing"
-                                      )
-                                    }
-                                  >
-                                    <SelectTrigger>
-                                      <SelectValue placeholder="Select status" />
-                                    </SelectTrigger>
-                                    <SelectContent>
-                                      <SelectItem value="pending">
-                                        Pending
-                                      </SelectItem>
-                                      <SelectItem value="processing">
-                                        Processing
-                                      </SelectItem>
-                                      <SelectItem value="completed">
-                                        Completed
-                                      </SelectItem>
-                                      <SelectItem value="cancelled">
-                                        Cancelled
-                                      </SelectItem>
-                                    </SelectContent>
-                                  </Select>
+                          {/* Order Details */}
+                          <div className="flex-1 min-w-0">
+                            <div className="flex items-start justify-between mb-1">
+                              <div>
+                                <h3 className="font-semibold truncate text-sm sm:text-base">
+                                  {transaction.receiver.customerName}
+                                </h3>
+                                <div className="flex items-center gap-3 text-xs sm:text-sm text-muted-foreground">
+                                  <span className="flex items-center gap-1">
+                                    <Hash className="w-3 h-3" />
+                                    {transaction.id.slice(0, 6)}...
+                                  </span>
+                                  <span className="hidden sm:flex items-center gap-1">
+                                    <Calendar className="w-3 h-3" />
+                                    {formatDate(transaction.createdAt)}
+                                  </span>
                                 </div>
                               </div>
-                              <DialogFooter>
-                                <DialogClose asChild>
-                                  <Button
-                                    onClick={() =>
-                                      handleSaveChanges(
-                                        transaction.id,
-                                        transaction.status
-                                      )
-                                    }
-                                    className="bg-greenColor text-white hover:bg-greenTitle mt-4"
-                                  >
-                                    Save changes
-                                  </Button>
-                                </DialogClose>
-                              </DialogFooter>
-                            </DialogContent>
-                          </Dialog>
-                        </div>
-                      </div>
-                    </div>
-                  </TabsContent>
-
-                  <TabsContent value="cards">
-                    <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                      {transaction.cards.map((card, index) => {
-                        // console.log("card here", card);
-                        const cardImage = Object.values(carouselCards).filter(
-                          (item) => item.title === card.name
-                        )[0].image;
-                        return (
-                          <div
-                            key={card.id}
-                            className="border rounded-lg p-4 flex gap-4"
-                          >
-                            <div className="w-20 h-28 relative flex-shrink-0">
-                              <Image
-                                src={
-                                  cardImage ||
-                                  "https://ralfvanveen.com/wp-content/uploads/2021/06/Placeholder-_-Glossary.svg"
-                                }
-                                alt={card.name}
-                                fill
-                                className="object-cover rounded-md"
-                              />
                             </div>
-                            <div className="flex-grow-0 sm:flex-1 min-w-0 w-full">
-                              <h3 className="font-medium truncate">
-                                {card.name}
-                              </h3>
-                              <p className="text-sm text-gray-500 truncate">
-                                ID: {card.id}
-                              </p>
-                              <Button
-                                variant="outline"
-                                size="sm"
-                                className="mt-8 w-full sm:w-auto"
-                                onClick={() => {
-                                  setSelectedTransaction(transaction);
-                                  setSelectedCardIndex(index);
-                                }}
-                              >
-                                View Details
-                              </Button>
+
+                            {/* Quick Info */}
+                            <div className="flex items-center gap-2 mt-1">
+                              <Badge className={cn("gap-1 text-xs", getStatusColor(transaction.status))}>
+                                {getStatusIcon(transaction.status)}
+                                {transaction.status}
+                              </Badge>
+                              <span className="font-semibold text-sm sm:text-base">
+                                ₱{transaction.amount.toLocaleString()}
+                              </span>
+                              <span className="text-xs text-muted-foreground">
+                                {transaction.cards.length} {transaction.cards.length === 1 ? 'card' : 'cards'}
+                              </span>
                             </div>
                           </div>
-                        );
-                      })}
-                    </div>
-                  </TabsContent>
+                        </div>
 
-                  <TabsContent value="receiver" className="space-y-4">
-                    <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                      <div>
-                        <h3 className="text-sm font-medium text-gray-500">
-                          Customer Name
-                        </h3>
-                        <p>{transaction.receiver.customerName}</p>
+                        {/* Right Section - Actions */}
+                        <div className="flex items-center gap-1">
+                          <DropdownMenu>
+                            <DropdownMenuTrigger asChild>
+                              <Button 
+                                variant="ghost" 
+                                size="sm"
+                                className="h-8 w-8 p-0"
+                                disabled={isUpdating === transaction.id}
+                              >
+                                <MoreVertical className="w-4 h-4" />
+                              </Button>
+                            </DropdownMenuTrigger>
+                            <DropdownMenuContent align="end">
+                              <DropdownMenuItem 
+                                onClick={() => setSelectedTransaction(transaction)}
+                              >
+                                <Eye className="w-4 h-4 mr-2" />
+                                View Details
+                              </DropdownMenuItem>
+                              <DropdownMenuItem 
+                                onClick={() => copyToClipboard(transaction.id)}
+                              >
+                                <Copy className="w-4 h-4 mr-2" />
+                                Copy Order ID
+                              </DropdownMenuItem>
+                              <DropdownMenuSeparator />
+                              <Label className="px-2 py-1.5 text-xs font-normal text-muted-foreground">
+                                Update Status
+                              </Label>
+                              {["pending", "processing", "completed", "cancelled"].map((status) => (
+                                <DropdownMenuItem
+                                  key={status}
+                                  onClick={() => handleStatusUpdate(
+                                    transaction.id,
+                                    status as any
+                                  )}
+                                  disabled={transaction.status === status}
+                                >
+                                  <Badge 
+                                    variant="outline" 
+                                    className={cn(
+                                      "w-full justify-start gap-1",
+                                      getStatusColor(status)
+                                    )}
+                                  >
+                                    {getStatusIcon(status)}
+                                    {status}
+                                  </Badge>
+                                </DropdownMenuItem>
+                              ))}
+                            </DropdownMenuContent>
+                          </DropdownMenu>
+
+                          <Button
+                            variant="ghost"
+                            size="sm"
+                            className="h-8 w-8 p-0"
+                            onClick={() => toggleExpanded(transaction.id)}
+                          >
+                            {isExpanded ? (
+                              <ChevronUp className="w-4 h-4" />
+                            ) : (
+                              <ChevronDown className="w-4 h-4" />
+                            )}
+                          </Button>
+                        </div>
                       </div>
-                      <div>
-                        <h3 className="text-sm font-medium text-gray-500">
-                          Customer ID
-                        </h3>
-                        <p className="text-balance">
-                          {transaction.receiver.customerId}
-                        </p>
-                      </div>
-                      <div>
-                        <h3 className="text-sm font-medium text-gray-500">
-                          Email
-                        </h3>
-                        <p className="text-balance">
-                          {transaction.receiver.customerEmail}
-                        </p>
-                      </div>
-                      <div>
-                        <h3 className="text-sm font-medium text-gray-500">
-                          Phone
-                        </h3>
-                        <p>{transaction.receiver.customerPhone}</p>
-                      </div>
-                      <div className="md:col-span-2">
-                        <h3 className="text-sm font-medium text-gray-500">
-                          Address
-                        </h3>
-                        <p>{transaction.receiver.customerAddress}</p>
-                      </div>
-                    </div>
-                  </TabsContent>
-                </Tabs>
-              </CardContent>
-            </Card>
-          ))
-        ) : (
-          <div className="text-center py-8">
-            <p className="text-gray-500">
-              No transactions found matching your filters.
-            </p>
-            <Button
-              variant="outline"
-              className="mt-2"
-              onClick={() => {
-                setSearchTerm("");
-                setStatusFilter("all");
-              }}
-            >
-              Clear Filters
-            </Button>
+
+                      {/* Expanded Details */}
+                      {isExpanded && (
+                        <>
+                          <Separator className="my-3" />
+                          
+                          {/* Customer Information */}
+                          <div className="space-y-3">
+                            <div>
+                              <h4 className="font-semibold text-sm mb-2">Customer Information</h4>
+                              <div className="grid grid-cols-1 sm:grid-cols-2 gap-2 text-sm">
+                                <div className="flex items-center gap-2 text-sm">
+                                  <User className="w-4 h-4 text-muted-foreground" />
+                                  <span>{transaction.receiver.customerName}</span>
+                                </div>
+                                <div className="flex items-center gap-2 text-sm">
+                                  <Mail className="w-4 h-4 text-muted-foreground" />
+                                  <span className="truncate">{transaction.receiver.customerEmail}</span>
+                                </div>
+                                <div className="flex items-center gap-2 text-sm">
+                                  <Phone className="w-4 h-4 text-muted-foreground" />
+                                  <span>{transaction.receiver.customerPhone || "Not provided"}</span>
+                                </div>
+                                <div className="flex items-center gap-2 text-sm">
+                                  <MapPin className="w-4 h-4 text-muted-foreground" />
+                                  <span className="truncate">
+                                    {transaction.receiver.customerAddress || "Not provided"}
+                                  </span>
+                                </div>
+                              </div>
+                            </div>
+
+                            {/* Ordered Cards */}
+                            <div>
+                              <h4 className="font-semibold text-sm mb-2">Ordered Cards</h4>
+                              <div className="grid grid-cols-1 sm:grid-cols-2 gap-2">
+                                {transaction.cards.map((card) => {
+                                  const cardData = Object.values(carouselCards).find(
+                                    (item) => item.title === card.name
+                                  );
+                                  const image = cardData?.image || carouselCards.eclipse.image;
+                                  
+                                  return (
+                                    <div 
+                                      key={card.id} 
+                                      className="flex items-center gap-2 p-2 rounded-md border bg-muted/30"
+                                    >
+                                      <div className="relative w-12 h-8 flex-shrink-0 overflow-hidden rounded">
+                                        <Image
+                                          src={image}
+                                          alt={card.name}
+                                          fill
+                                          sizes="48px"
+                                          className="object-cover"
+                                        />
+                                      </div>
+                                      <div className="flex-1 min-w-0">
+                                        <p className="font-medium text-xs">{card.name}</p>
+                                        <p className="text-xs text-muted-foreground truncate">
+                                          ID: {card.id.slice(0, 8)}...
+                                        </p>
+                                      </div>
+                                    </div>
+                                  );
+                                })}
+                              </div>
+                            </div>
+                          </div>
+                        </>
+                      )}
+                    </CardContent>
+                  </Card>
+                );
+              })
+            )}
           </div>
+        </div>
+
+        {/* Detail Modal */}
+        {selectedTransaction && (
+          <Dialog
+            open={!!selectedTransaction}
+            onOpenChange={(open) => !open && setSelectedTransaction(null)}
+          >
+            <DialogContent className="max-w-2xl max-h-[90vh] overflow-y-auto">
+              <DialogHeader>
+                <DialogTitle>Order Details</DialogTitle>
+                <DialogDescription>
+                  Order #{selectedTransaction.id}
+                </DialogDescription>
+              </DialogHeader>
+
+              <div className="space-y-6 mt-4">
+                {/* Order Summary */}
+                <div className="grid grid-cols-2 gap-4">
+                  <div>
+                    <Label className="text-muted-foreground">Status</Label>
+                    <Badge className={cn("mt-1", getStatusColor(selectedTransaction.status))}>
+                      {getStatusIcon(selectedTransaction.status)}
+                      {selectedTransaction.status}
+                    </Badge>
+                  </div>
+                  <div>
+                    <Label className="text-muted-foreground">Amount</Label>
+                    <p className="text-xl font-semibold">
+                      ₱{selectedTransaction.amount.toLocaleString()}
+                    </p>
+                  </div>
+                  <div>
+                    <Label className="text-muted-foreground">Order Date</Label>
+                    <p>{formatDate(selectedTransaction.createdAt)}</p>
+                  </div>
+                  <div>
+                    <Label className="text-muted-foreground">Cards Ordered</Label>
+                    <p>{selectedTransaction.cards.length} cards</p>
+                  </div>
+                </div>
+
+                <Separator />
+
+                {/* Customer Details */}
+                <div>
+                  <h3 className="font-semibold mb-3">Customer Information</h3>
+                  <div className="space-y-2">
+                    <div className="flex justify-between">
+                      <span className="text-muted-foreground">Name</span>
+                      <span>{selectedTransaction.receiver.customerName}</span>
+                    </div>
+                    <div className="flex justify-between">
+                      <span className="text-muted-foreground">Email</span>
+                      <span>{selectedTransaction.receiver.customerEmail}</span>
+                    </div>
+                    <div className="flex justify-between">
+                      <span className="text-muted-foreground">Phone</span>
+                      <span>{selectedTransaction.receiver.customerPhone || "Not provided"}</span>
+                    </div>
+                    <div className="flex justify-between">
+                      <span className="text-muted-foreground">Address</span>
+                      <span className="text-right ml-4">
+                        {selectedTransaction.receiver.customerAddress || "Not provided"}
+                      </span>
+                    </div>
+                  </div>
+                </div>
+
+                <Separator />
+
+                {/* Cards */}
+                <div>
+                  <h3 className="font-semibold mb-3">Ordered Cards</h3>
+                  <div className="space-y-3">
+                    {selectedTransaction.cards.map((card, index) => {
+                      const cardData = Object.values(carouselCards).find(
+                        (item) => item.title === card.name
+                      );
+                      const image = cardData?.image || carouselCards.eclipse.image;
+                      
+                      return (
+                        <div key={card.id} className="flex gap-4 p-3 rounded-lg border">
+                          <div className="relative w-20 h-28 flex-shrink-0 overflow-hidden rounded-md">
+                            <Image
+                              src={image}
+                              alt={card.name}
+                              fill
+                              sizes="80px"
+                              className="object-cover"
+                            />
+                          </div>
+                          <div className="flex-1">
+                            <h4 className="font-medium">{card.name}</h4>
+                            <p className="text-sm text-muted-foreground">ID: {card.id}</p>
+                            <p className="text-sm text-muted-foreground mt-1">
+                              Card {index + 1} of {selectedTransaction.cards.length}
+                            </p>
+                          </div>
+                        </div>
+                      );
+                    })}
+                  </div>
+                </div>
+              </div>
+
+              <DialogFooter>
+                <Button variant="outline" onClick={() => setSelectedTransaction(null)}>
+                  Close
+                </Button>
+              </DialogFooter>
+            </DialogContent>
+          </Dialog>
         )}
       </div>
-
-      {/* Card Image Viewer Dialog */}
-      {selectedTransaction && (
-        <Dialog
-          open={!!selectedTransaction}
-          onOpenChange={(open) => !open && setSelectedTransaction(null)}
-        >
-          <DialogContent className="sm:max-w-md">
-            <DialogHeader>
-              <DialogTitle>
-                {selectedTransaction.cards[selectedCardIndex].name}
-              </DialogTitle>
-              <DialogDescription>
-                Card ID: {selectedTransaction.cards[selectedCardIndex].id}
-              </DialogDescription>
-            </DialogHeader>
-            <div className="flex flex-col items-center sm:py-4">
-              <div className="relative w-full h-80 sm:mb-4">
-                <Image
-                  src={
-                    Object.values(carouselCards).filter(
-                      (c) =>
-                        c.title ===
-                        selectedTransaction.cards[selectedCardIndex].name
-                    )[0].image ||
-                    "https://ralfvanveen.com/wp-content/uploads/2021/06/Placeholder-_-Glossary.svg"
-                  }
-                  alt={selectedTransaction.cards[selectedCardIndex].name}
-                  fill
-                  className="object-contain rounded-md"
-                />
-              </div>
-              <div className="flex sm:gap-2 overflow-x-auto w-full pb-4 sm:py-2">
-                {selectedTransaction.cards.map((card, index) => {
-                  const cardImage = Object.values(carouselCards).filter(
-                    (item) => item.title === card.name
-                  )[0].image;
-
-                  return (
-                    <button
-                      key={card.id}
-                      className={`relative w-16 h-24 rounded-md overflow-hidden border-2 ${
-                        index === selectedCardIndex
-                          ? "border-primary"
-                          : "border-transparent"
-                      }`}
-                      onClick={() => setSelectedCardIndex(index)}
-                    >
-                      <Image
-                        src={
-                          cardImage ||
-                          "https://ralfvanveen.com/wp-content/uploads/2021/06/Placeholder-_-Glossary.svg"
-                        }
-                        alt={card.name}
-                        fill
-                        className="object-cover"
-                      />
-                    </button>
-                  );
-                })}
-              </div>
-            </div>
-            <div className="space-y-2 text-sm sm:text-base">
-              <div className="flex justify-between">
-                <span className="font-medium">Name:</span>
-                <span>{selectedTransaction.cards[selectedCardIndex].name}</span>
-              </div>
-              <Separator />
-              <div className="flex justify-between">
-                <span className="font-medium">Transaction ID:</span>
-                <span>{selectedTransaction.id}</span>
-              </div>
-            </div>
-          </DialogContent>
-        </Dialog>
-      )}
-    </div>
+    </TooltipProvider>
   );
 }

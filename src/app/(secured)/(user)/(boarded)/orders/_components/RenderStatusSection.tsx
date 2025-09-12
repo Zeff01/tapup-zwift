@@ -1,3 +1,5 @@
+"use client";
+
 import { Order } from "@/types/types";
 import { usePathname } from "next/navigation";
 

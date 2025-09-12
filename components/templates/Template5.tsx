@@ -30,7 +30,6 @@ const Template5 = ({
   tiktokUrl,
   youtubeUrl,
   whatsappNumber,
-  skypeInviteUrl,
   websiteUrl,
   viberUrl,
   customUrl,
@@ -55,7 +54,6 @@ const Template5 = ({
     tiktokUrl,
     youtubeUrl,
     whatsappNumber,
-    skypeInviteUrl,
     websiteUrl,
     viberUrl,
   });
@@ -94,16 +92,15 @@ const Template5 = ({
       <div className="relative ">
         <div className="absolute -top-8  left-4  ">
           <SocialLinks
-            facebookUrl={facebookUrl || sampleSocials.facebookUrl}
-            twitterUrl={twitterUrl || sampleSocials.twitterUrl}
-            tiktokUrl={tiktokUrl || sampleSocials.tiktokUrl}
-            youtubeUrl={youtubeUrl || sampleSocials.youtubeUrl}
-            instagramUrl={instagramUrl || sampleSocials.instagramUrl}
-            linkedinUrl={linkedinUrl || sampleSocials.linkedinUrl}
-            viberUrl={viberUrl || sampleSocials.viberUrl}
-            whatsappNumber={whatsappNumber || sampleSocials.whatsappNumber}
-            skypeInviteUrl={skypeInviteUrl || sampleSocials.skypeInviteUrl}
-            websiteUrl={websiteUrl || sampleSocials.websiteUrl}
+            facebookUrl={facebookUrl}
+            twitterUrl={twitterUrl}
+            tiktokUrl={tiktokUrl}
+            youtubeUrl={youtubeUrl}
+            instagramUrl={instagramUrl}
+            linkedinUrl={linkedinUrl}
+            viberUrl={viberUrl}
+            whatsappNumber={whatsappNumber}
+            websiteUrl={websiteUrl}
             variant="minimal"
             size="sm"
             className="flex flex-col gap-[6px]"

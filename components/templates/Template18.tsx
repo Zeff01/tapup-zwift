@@ -30,7 +30,6 @@ const Template18 = ({
   twitterUrl,
   youtubeUrl,
   whatsappNumber,
-  skypeInviteUrl,
   websiteUrl,
   viberUrl,
   tiktokUrl,
@@ -177,20 +176,15 @@ const Template18 = ({
                 {/* Social Icons */}
                 <div className="flex flex-wrap justify-center  mt-5 text-white max-w-xs mx-auto">
                   <SocialLinks
-                    facebookUrl={facebookUrl || sampleSocials.facebookUrl}
-                    twitterUrl={twitterUrl || sampleSocials.twitterUrl}
-                    tiktokUrl={tiktokUrl || sampleSocials.tiktokUrl}
-                    youtubeUrl={youtubeUrl || sampleSocials.youtubeUrl}
-                    instagramUrl={instagramUrl || sampleSocials.instagramUrl}
-                    linkedinUrl={linkedinUrl || sampleSocials.linkedinUrl}
-                    viberUrl={viberUrl || sampleSocials.viberUrl}
-                    whatsappNumber={
-                      whatsappNumber || sampleSocials.whatsappNumber
-                    }
-                    skypeInviteUrl={
-                      skypeInviteUrl || sampleSocials.skypeInviteUrl
-                    }
-                    websiteUrl={websiteUrl || sampleSocials.websiteUrl}
+                    facebookUrl={facebookUrl}
+                    instagramUrl={instagramUrl}
+                    linkedinUrl={linkedinUrl}
+                    twitterUrl={twitterUrl}
+                    youtubeUrl={youtubeUrl}
+                    tiktokUrl={tiktokUrl}
+                    whatsappNumber={whatsappNumber}
+                    viberUrl={viberUrl}
+                    websiteUrl={websiteUrl}
                     variant="colorful"
                     size="sm"
                     iconClassName="p-2 rounded-full w-full h-full text-white text-sm sm:text-base"

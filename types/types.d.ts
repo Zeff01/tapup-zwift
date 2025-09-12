@@ -48,7 +48,6 @@ export type Users = {
   twitterUrl?: string;
   linkedinUrl?: string;
   whatsappNumber?: string;
-  skypeInviteUrl?: string;
   websiteUrl?: string;
   tiktokUrl?: string;
   viberUrl?: string;
@@ -131,12 +130,15 @@ export type Transaction = {
   status: "pending" | "completed" | "failed";
 };
 
+export type UserRole = "super_admin" | "admin" | "user";
+
 export interface ExtendedUserInterface extends Users {
   uid: string;
-  role: string;
+  role: UserRole;
   onboarding: boolean;
   deliveryAddresses?: DeliveryAddress[];
   cardOrdering?: string[];
+  cardCount?: number;
 }
 
 export type UserState = ExtendedUserInterface | null;
@@ -207,7 +209,7 @@ export interface TransactionBoard {
   id: string;
   amount: number;
   cards: CardItemTransactionBoard[];
-  createdAt: Timestamp | FieldValue;
+  createdAt: Timestamp | FieldValue | string;
   receiver: ReceiverTransactionBoard;
   status: "pending" | "completed" | "cancelled" | "processing";
 }

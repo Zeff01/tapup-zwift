@@ -238,7 +238,6 @@ const Template13 = ({
   youtubeUrl,
   twitterUrl,
   whatsappNumber,
-  skypeInviteUrl,
   websiteUrl,
   viberUrl,
   tiktokUrl,
@@ -381,16 +380,15 @@ const Template13 = ({
             <span className="text-left font-medium text-sm">Links</span>
             <span className="flex flex-wrap gap-3 text-xl text-left">
               <Template13Socials
-                facebookUrl={facebookUrl || sampleSocials.facebookUrl}
-                twitterUrl={twitterUrl || sampleSocials.twitterUrl}
-                tiktokUrl={tiktokUrl || sampleSocials.tiktokUrl}
-                youtubeUrl={youtubeUrl || sampleSocials.youtubeUrl}
-                instagramUrl={instagramUrl || sampleSocials.instagramUrl}
-                linkedinUrl={linkedinUrl || sampleSocials.linkedinUrl}
-                viberUrl={viberUrl || sampleSocials.viberUrl}
-                whatsappNumber={whatsappNumber || sampleSocials.whatsappNumber}
-                skypeInviteUrl={skypeInviteUrl || sampleSocials.skypeInviteUrl}
-                websiteUrl={websiteUrl || sampleSocials.websiteUrl}
+                facebookUrl={facebookUrl}
+                twitterUrl={twitterUrl}
+                tiktokUrl={tiktokUrl}
+                youtubeUrl={youtubeUrl}
+                instagramUrl={instagramUrl}
+                linkedinUrl={linkedinUrl}
+                viberUrl={viberUrl}
+                whatsappNumber={whatsappNumber}
+                websiteUrl={websiteUrl}
                 size="md"
               />
             </span>

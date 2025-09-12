@@ -58,6 +58,7 @@ const Cards = () => {
       if (!user?.uid) throw new Error("User UID is undefined");
 
       const cards = await getCardsByOwner(user.uid);
+      
       const sortedCards = await sortCards(cards, user.uid);
       return sortedCards;
     },
@@ -116,13 +117,15 @@ const Cards = () => {
       cleanTranferCode,
       currentUser.uid
     );
+    setLoadTransferCode(false);
     if (success) {
       setIsDialogOpen(false);
-      setTransferCode("");
+      setTransferCode(""); // Clear the input
       queryClient.invalidateQueries({ queryKey: ["cards", currentUser.uid] });
+    } else {
+      // Also clear on failure to allow retry with new code
+      setTransferCode("");
     }
-    if (ctxTimeout) clearTimeout(ctxTimeout);
-    ctxTimeout = setTimeout(() => setLoadTransferCode(false), 1500);
   };
 
   if (status === "pending") return <Loading />;
@@ -137,8 +140,7 @@ const Cards = () => {
       >
         <ConfirmDialog />
         <div className="grid grid-cols-1 grid-rows-[auto_1fr] min-h-screen py-4 md:py-8 gap-4">
-          <div className="flex items-center justify-between px-4 md:px-16">
-            <h1 className="text-xl md:text-2xl font-semibold">My Cards</h1>
+          <div className="flex items-center justify-end px-4 md:px-16">
             <div className="flex gap-x-2">
               <Button variant="outline" onClick={() => setIsDialogOpen(true)}>
                 Add Card
