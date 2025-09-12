@@ -1,11 +1,4 @@
 {
-  "redirects": [
-    {
-      "source": "/((?!api/).*)",
-      "destination": "https://www.tapup.tech/$1",
-      "permanent": true
-    }
-  ],
   "headers": [
     {
       "source": "/api/(.*)",

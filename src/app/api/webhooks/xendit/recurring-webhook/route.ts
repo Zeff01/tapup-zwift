@@ -29,6 +29,13 @@ function verifyWebhookSignature(payload: string, signature: string, secret: stri
 export async function POST(req: NextRequest) {
   try {
     const webhookSecret = process.env.XENDIT_WEBHOOK_SECRET;
+    console.log("[Webhook] Environment check:", {
+      hasWebhookSecret: !!webhookSecret,
+      secretLength: webhookSecret?.length || 0,
+      secretPreview: webhookSecret ? `${webhookSecret.substring(0, 5)}...${webhookSecret.substring(webhookSecret.length - 5)}` : "not set",
+      nodeEnv: process.env.NODE_ENV
+    });
+    
     if (!webhookSecret) {
       console.error("Xendit webhook secret not configured");
       return NextResponse.json({ error: "Webhook not configured" }, { status: 500 });
@@ -37,6 +44,13 @@ export async function POST(req: NextRequest) {
     // Get the raw body for signature verification
     const rawBody = await req.text();
     const signature = req.headers.get('x-callback-token');
+    
+    console.log("[Webhook] Request details:", {
+      hasSignature: !!signature,
+      signatureLength: signature?.length || 0,
+      signaturePreview: signature ? `${signature.substring(0, 5)}...${signature.substring(signature.length - 5)}` : "not provided",
+      bodyLength: rawBody.length
+    });
     
     if (!signature) {
       console.error("Missing webhook signature");
