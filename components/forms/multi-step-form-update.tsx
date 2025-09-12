@@ -202,7 +202,7 @@ const MultiStepFormUpdate = ({
   const [previewMinimized, setPreviewMinimized] = useState(false);
 
   // Steps definition based on current form arrangement:
-  // Step 1: Profile Photo, Cover Photo
+  // Step 1: Profile Photo, Cover Photo, Company Info
   // Step 2: Company Info (multiple with service photos), Personal Info, Social Links
   // Step 3: Custom URL, Card Name, Template Selection
 
@@ -498,7 +498,7 @@ const MultiStepFormUpdate = ({
                       </h2>
                       <p className="text-gray-600 dark:text-gray-400">
                         {currentStep === 1 &&
-                          "Upload your profile and cover photos"}
+                          "Upload your profile and cover photos, and add company information"}
                         {currentStep === 2 &&
                           "Add your company information, personal details and social profiles"}
                         {currentStep === 3 &&
@@ -597,6 +597,14 @@ const MultiStepFormUpdate = ({
                         }
                       />
                     </div>
+                  </div>
+
+                  {/* Company Information Section */}
+                  <div>
+                    <CompanyInfoForm
+                      control={methods.control}
+                      isAllFieldsRequired={false}
+                    />
                   </div>
 
                 </div>
