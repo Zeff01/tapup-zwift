@@ -64,6 +64,7 @@ const PaymentMethod: React.FC = () => {
                   src={item.image}
                   alt="credit card"
                   fill
+                  sizes="64px"
                   className="object-cover"
                 />
               </div>

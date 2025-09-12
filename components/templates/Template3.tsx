@@ -25,7 +25,6 @@ const Template3 = ({
   twitterUrl,
   linkedinUrl,
   whatsappNumber,
-  skypeInviteUrl,
   tiktokUrl,
   viberUrl,
   websiteUrl,
@@ -45,6 +44,7 @@ const Template3 = ({
   };
   return (
     <Template3Container>
+      <div className="flex-grow">
       {/* COVERPHOTO AND PROFILE PIC */}
       <ProfileHeader
         profilePictureUrl={profilePictureUrl}
@@ -98,7 +98,6 @@ const Template3 = ({
           whatsappNumber={whatsappNumber}
           viberUrl={viberUrl}
           tiktokUrl={tiktokUrl}
-          skypeInviteUrl={skypeInviteUrl}
           websiteUrl={websiteUrl}
           size="md"
           className="flex items-center justify-center gap-2 mt-6 my-4 mx-auto w-full"
@@ -238,6 +237,7 @@ const Template3 = ({
             </div>
           </div>
         ))}
+      </div>
       </div>
 
       {/* FOOTER */}

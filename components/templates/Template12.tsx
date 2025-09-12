@@ -264,7 +264,6 @@ const Template12 = ({
   linkedinUrl,
   tiktokUrl,
   whatsappNumber,
-  skypeInviteUrl,
   viberUrl,
   websiteUrl,
   customUrl,
@@ -289,6 +288,7 @@ const Template12 = ({
       flex
       flexDirection="col"
     >
+      <div className="flex-grow">
       <div className="max-w-[480px] mx-auto min-h-screen relative  flex flex-col">
         <div className="absolute flex gap-x-2 m-4 top-0 right-0">
           <span className=" bg-white text-2xl p-2 text-neutral-800 rounded-full">
@@ -399,7 +399,6 @@ const Template12 = ({
               linkedinUrl={linkedinUrl}
               viberUrl={viberUrl}
               whatsappNumber={whatsappNumber}
-              skypeInviteUrl={skypeInviteUrl}
               websiteUrl={websiteUrl}
               size="md"
               iconClassName="text-neutral-700"
@@ -425,6 +424,7 @@ const Template12 = ({
             </div>
           </div>
         </div>
+      </div>
       </div>
 
       <TemplateFooter className="flex flex-col items-center mb-1 gap-1 text-center text-xs py-4">

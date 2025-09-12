@@ -203,7 +203,6 @@ const Template9 = ({
   tiktokUrl,
   viberUrl,
   whatsappNumber,
-  skypeInviteUrl,
   websiteUrl,
   customUrl,
 }: Card) => {
@@ -221,6 +220,7 @@ const Template9 = ({
 
   return (
     <Template9Container>
+      <div className="flex-grow">
       <div className="flex flex-col min-h-full max-w-[480px] mx-auto">
         <div className="h-96 relative">
           <div className="absolute flex m-1 top-1 right-1 ">
@@ -322,7 +322,6 @@ const Template9 = ({
                 linkedinUrl={linkedinUrl}
                 viberUrl={viberUrl}
                 whatsappNumber={whatsappNumber}
-                skypeInviteUrl={skypeInviteUrl}
                 websiteUrl={websiteUrl}
                 size="lg"
                 iconSet="outline"
@@ -349,6 +348,7 @@ const Template9 = ({
               />
             )}
           </div>
+        </div>
         </div>
 
         {/* footer */}

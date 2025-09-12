@@ -171,7 +171,6 @@ const AdminTable = ({
                             <Button
                               variant="ghost"
                               size="sm"
-                              className="opacity-0 group-hover:opacity-100 transition-opacity"
                               disabled={isUpdating === user.id!}
                             >
                               <MoreVertical className="w-4 h-4" />

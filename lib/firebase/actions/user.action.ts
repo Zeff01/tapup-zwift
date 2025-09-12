@@ -129,6 +129,39 @@ export const getAllUsers = async (): Promise<ExtendedUserInterface[]> => {
   }
 };
 
+// Get all users with their card counts
+export const getAllUsersWithCardCount = async (): Promise<(ExtendedUserInterface & { cardCount: number })[]> => {
+  try {
+    // Get all users
+    const users = await getAllUsers();
+    
+    // Get all cards in one query
+    const cardsCollection = collection(firebaseDb, "cards");
+    const cardsSnapshot = await getDocs(cardsCollection);
+    
+    // Create a map of user ID to card count
+    const cardCountMap: Record<string, number> = {};
+    cardsSnapshot.docs.forEach((doc) => {
+      const cardData = doc.data();
+      const ownerId = cardData.owner;
+      if (ownerId) {
+        cardCountMap[ownerId] = (cardCountMap[ownerId] || 0) + 1;
+      }
+    });
+    
+    // Add card count to each user
+    const usersWithCardCount = users.map((user) => ({
+      ...user,
+      cardCount: cardCountMap[user.uid || user.id || ""] || 0,
+    }));
+    
+    return usersWithCardCount;
+  } catch (error) {
+    console.error("Error getting users with card count: ", error);
+    return [];
+  }
+};
+
 export const deleteUser = async () => {
   try {
     const currentUser = firebaseAuth.currentUser;

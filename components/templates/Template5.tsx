@@ -27,7 +27,6 @@ const Template5 = ({
   tiktokUrl,
   youtubeUrl,
   whatsappNumber,
-  skypeInviteUrl,
   websiteUrl,
   viberUrl,
   customUrl,
@@ -46,6 +45,7 @@ const Template5 = ({
 
   return (
     <Template5Container>
+      <div className="flex-grow">
       {/* COVERPHOTO AND PROFILE PIC */}
       <ProfileHeader
         profilePictureUrl={profilePictureUrl}
@@ -83,7 +83,6 @@ const Template5 = ({
             linkedinUrl={linkedinUrl}
             viberUrl={viberUrl}
             whatsappNumber={whatsappNumber}
-            skypeInviteUrl={skypeInviteUrl}
             websiteUrl={websiteUrl}
             variant="minimal"
             size="sm"
@@ -249,6 +248,7 @@ const Template5 = ({
       <h2 className="text-xs font-extrabold mx-auto w-full text-center mb-2">
         {company ?? "COMPANY"}
       </h2>
+      </div>
 
       <TemplateFooter className="flex flex-col mt-8 mb-1 items-center gap-1 text-center text-xs">
         <a

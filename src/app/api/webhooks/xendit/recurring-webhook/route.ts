@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from "next/server";
 import { doc, updateDoc, getDoc, collection, query, where, getDocs } from "firebase/firestore";
 import { firebaseDb } from "@/lib/firebase/firebase";
+import { confirmReservation } from "@/lib/firebase/actions/card-reservation.action";
 import crypto from "crypto";
 
 /**
@@ -9,8 +10,8 @@ import crypto from "crypto";
  * To enable this webhook:
  * 1. Go to Xendit Dashboard > Settings > Webhooks
  * 2. Add this URL: https://yourdomain.com/api/webhooks/xendit/recurring-webhook
- * 3. Select events: recurring_plan.payment.succeeded, recurring.charge.succeeded
- * 4. Copy the webhook secret and add to .env as XENDIT_WEBHOOK_SECRET
+ * 3. Select events: recurring_plan.payment.succeeded, recurring.charge.succeeded, recurring.cycle.succeeded
+ * 4. Copy the webhook verification token and add to .env as XENDIT_WEBHOOK_SECRET
  * 
  * When enabled, this will automatically update transaction status from "pending" to "completed"
  * after successful payment.
@@ -18,11 +19,22 @@ import crypto from "crypto";
 
 // Verify webhook signature from Xendit
 function verifyWebhookSignature(payload: string, signature: string, secret: string): boolean {
+  // First try direct token comparison (Xendit might use this for test environment)
+  if (signature === secret) {
+    return true;
+  }
+  
+  // Then try HMAC verification
   const expectedSignature = crypto
     .createHmac('sha256', secret)
     .update(payload)
     .digest('hex');
-  return expectedSignature === signature;
+  
+  if (expectedSignature === signature) {
+    return true;
+  }
+  
+  return false;
 }
 
 export async function POST(req: NextRequest) {
@@ -61,6 +73,8 @@ export async function POST(req: NextRequest) {
     switch (payload.event) {
       case "recurring_plan.payment.succeeded":
       case "recurring.charge.succeeded":
+      case "recurring.cycle.succeeded":
+        
         // Payment successful - update transaction to completed
         const planId = payload.data?.plan_id || payload.data?.recurring_plan_id;
         const paymentId = payload.data?.id;
@@ -82,6 +96,7 @@ export async function POST(req: NextRequest) {
           if (!querySnapshot.empty) {
             const transactionDoc = querySnapshot.docs[0];
             const transactionRef = doc(firebaseDb, "transactions", transactionDoc.id);
+            const transactionData = transactionDoc.data();
             
             // Update status to completed
             await updateDoc(transactionRef, {
@@ -91,10 +106,21 @@ export async function POST(req: NextRequest) {
               updatedAt: new Date().toISOString()
             });
             
+            // Confirm card reservations
+            const userId = transactionData.user_id || transactionData.userId;
+            if (userId) {
+              try {
+                await confirmReservation(userId, transactionDoc.id);
+                console.log("Card reservations confirmed for user:", userId);
+              } catch (error) {
+                console.error("Error confirming card reservations:", error);
+              }
+            }
+            
             console.log("Transaction updated successfully:", transactionDoc.id);
             return NextResponse.json({ 
               success: true, 
-              message: "Payment processed and transaction updated",
+              message: "Payment processed, transaction updated, and cards confirmed",
               transactionId: transactionDoc.id,
               planId: planId 
             });

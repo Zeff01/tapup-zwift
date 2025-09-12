@@ -31,7 +31,6 @@ const Template15 = ({
   youtubeUrl,
   twitterUrl,
   whatsappNumber,
-  skypeInviteUrl,
   websiteUrl,
   viberUrl,
   tiktokUrl,
@@ -60,6 +59,7 @@ const Template15 = ({
       alignItems="center"
       className="py-2 relative overflow-hidden"
     >
+      <div className="flex-grow">
       <div className="max-w-[480px] mx-auto flex flex-col w-full">
         {/* === Profile and Cover Section === */}
         <section
@@ -156,7 +156,6 @@ const Template15 = ({
                 youtubeUrl={youtubeUrl}
                 tiktokUrl={tiktokUrl}
                 whatsappNumber={whatsappNumber}
-                skypeInviteUrl={skypeInviteUrl}
                 viberUrl={viberUrl}
                 websiteUrl={websiteUrl}
                 size="md"
@@ -385,6 +384,7 @@ const Template15 = ({
             </div>
           )}
         </section>
+      </div>
       </div>
       {/* === Footer Section === */}
       <TemplateFooter className="w-full max-w-md mx-auto text-center text-gray-400 text-sm relative px-2 sm:px-6">

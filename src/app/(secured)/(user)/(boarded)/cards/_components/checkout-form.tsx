@@ -79,7 +79,6 @@ export default function CheckoutForm() {
       });
 
       // Using card bank instead of inventory system
-      console.log("[Checkout] Processing order for", newCards.length, "cards");
 
       // Use API route instead of direct client call
       const response = await fetch('/api/xendit/create-recurring-plan', {
@@ -147,10 +146,16 @@ export default function CheckoutForm() {
         });
       }
 
-      clearCart();
+      await clearCart();
       
       // Redirect to Xendit payment page
-      window.location.href = recurringPlan.recurringPlan.actions?.[0]?.url;
+      const paymentUrl = recurringPlan.recurringPlan.actions?.[0]?.url;
+      
+      if (!paymentUrl) {
+        throw new Error("No payment URL received from Xendit");
+      }
+      
+      window.location.href = paymentUrl;
     } catch (error: any) {
       console.error("Error placing order:", error);
       

@@ -5,7 +5,6 @@ import {
   FaGlobe,
   FaInstagram,
   FaLinkedin,
-  FaSkype,
   FaTiktok,
   FaViber,
   FaWhatsapp,
@@ -33,7 +32,6 @@ const DraftTemplate1 = ({
   tiktokUrl,
   viberUrl,
   whatsappNumber,
-  skypeInviteUrl,
   websiteUrl,
 }: Card) => {
   const userProfile = {
@@ -348,16 +346,6 @@ const DraftTemplate1 = ({
               className="w-10 h-10 bg-gradient-to-br from-green-500 to-green-600 rounded-full flex items-center justify-center text-white hover:scale-110 transition-transform shadow-lg"
             >
               <FaWhatsapp size={18} />
-            </a>
-          )}
-          {skypeInviteUrl && (
-            <a
-              href={skypeInviteUrl}
-              target="_blank"
-              rel="noopener noreferrer"
-              className="w-10 h-10 bg-gradient-to-br from-sky-500 to-sky-600 rounded-full flex items-center justify-center text-white hover:scale-110 transition-transform shadow-lg"
-            >
-              <FaSkype size={18} />
             </a>
           )}
           {websiteUrl && (

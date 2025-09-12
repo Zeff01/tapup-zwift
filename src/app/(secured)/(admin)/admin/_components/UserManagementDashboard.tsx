@@ -21,6 +21,7 @@ import {
   TrendingDown,
   ChevronDown,
   SlidersHorizontal,
+  ArrowUpDown,
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -140,6 +141,8 @@ export default function UserManagementDashboard({
   const [selectedUser, setSelectedUser] =
     useState<ExtendedUserInterface | null>(null);
   const [isUpdating, setIsUpdating] = useState<string | null>(null);
+  const [sortBy, setSortBy] = useState<"name" | "email" | "date" | "status" | "cards">("name");
+  const [sortOrder, setSortOrder] = useState<"asc" | "desc">("asc");
 
   // Separate users and admins
   const admins = users.filter(
@@ -156,7 +159,8 @@ export default function UserManagementDashboard({
     const totalUsers = regularUsers.length;
     const activeUsers = users.filter((u) => u.onboarding).length;
     const verifiedUsers = users.filter((u) => u.email).length; // Count users with email as verified
-    const withCards = users.filter((u) => u.printStatus).length;
+    const withCards = users.filter((u) => (u.cardCount || 0) > 0).length;
+    const totalCards = users.reduce((sum, u) => sum + (u.cardCount || 0), 0);
 
     // Calculate trends (mock data - replace with actual historical data)
     const userGrowth = 12.5; // percentage
@@ -169,6 +173,7 @@ export default function UserManagementDashboard({
       activeUsers,
       verifiedUsers,
       withCards,
+      totalCards,
       userGrowth,
       activeGrowth,
     };
@@ -228,10 +233,48 @@ export default function UserManagementDashboard({
       });
     }
 
-    // Sort by creation date (newest first)
+    // Apply sorting
     filtered.sort((a, b) => {
-      // Mock sorting - replace with actual date field
-      return 0;
+      let compareValue = 0;
+      
+      switch (sortBy) {
+        case "name":
+          const nameA = `${a.firstName || ""} ${a.lastName || ""}`.toLowerCase();
+          const nameB = `${b.firstName || ""} ${b.lastName || ""}`.toLowerCase();
+          compareValue = nameA.localeCompare(nameB);
+          break;
+        case "email":
+          compareValue = (a.email || "").localeCompare(b.email || "");
+          break;
+        case "status":
+          // Sort by activity status (active > partial > inactive)
+          const getStatusScore = (user: ExtendedUserInterface) => {
+            const hasCompletedOnboarding = user.onboarding;
+            const hasCards = user.printStatus;
+            const hasProfile = user.firstName && user.lastName && user.company;
+            
+            if (hasCompletedOnboarding && (hasCards || hasProfile)) return 3; // active
+            if (hasCompletedOnboarding) return 2; // partial
+            return 1; // inactive
+          };
+          compareValue = getStatusScore(b) - getStatusScore(a);
+          break;
+        case "date":
+          // Sort by timestamp if available, otherwise keep original order
+          if (a.timestamp && b.timestamp) {
+            compareValue = new Date(b.timestamp).getTime() - new Date(a.timestamp).getTime();
+          }
+          break;
+        case "cards":
+          // Sort by card count
+          const cardCountA = a.cardCount || 0;
+          const cardCountB = b.cardCount || 0;
+          compareValue = cardCountB - cardCountA;
+          break;
+      }
+      
+      // Apply sort order
+      return sortOrder === "asc" ? compareValue : -compareValue;
     });
 
     return filtered;
@@ -243,6 +286,8 @@ export default function UserManagementDashboard({
     roleFilter,
     statusFilter,
     verificationFilter,
+    sortBy,
+    sortOrder,
   ]);
 
   const handleSelectAll = (checked: boolean) => {
@@ -422,7 +467,7 @@ export default function UserManagementDashboard({
       </div>
 
       {/* Statistics */}
-      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3">
+      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-3">
         <StatCard
           title="Total Users"
           value={statistics.total}
@@ -443,6 +488,13 @@ export default function UserManagementDashboard({
           icon={<CheckCircle2 className="w-4 h-4 text-white" />}
           color="bg-blue-500"
           description={`${Math.round((statistics.verifiedUsers / statistics.total) * 100)}% verified`}
+        />
+        <StatCard
+          title="Total Cards"
+          value={statistics.totalCards}
+          icon={<CreditCard className="w-4 h-4 text-white" />}
+          color="bg-orange-500"
+          description={`${statistics.withCards} users have cards`}
         />
         <StatCard
           title="Admins"
@@ -481,6 +533,112 @@ export default function UserManagementDashboard({
                 className="pl-10 w-full sm:w-[300px]"
               />
             </div>
+
+            {/* Sort Dropdown */}
+            <DropdownMenu>
+              <DropdownMenuTrigger asChild>
+                <Button variant="outline" className="gap-2">
+                  <ArrowUpDown className="w-4 h-4" />
+                  Sort
+                </Button>
+              </DropdownMenuTrigger>
+              <DropdownMenuContent align="end" className="w-48">
+                <div className="px-2 py-1.5 text-xs font-medium text-muted-foreground">
+                  Sort by
+                </div>
+                <DropdownMenuItem
+                  onClick={() => setSortBy("name")}
+                  className={sortBy === "name" ? "bg-accent" : ""}
+                >
+                  <Users className="w-4 h-4 mr-2" />
+                  Name
+                  {sortBy === "name" && (
+                    <ChevronDown
+                      className={cn(
+                        "w-4 h-4 ml-auto",
+                        sortOrder === "desc" && "rotate-180"
+                      )}
+                    />
+                  )}
+                </DropdownMenuItem>
+                <DropdownMenuItem
+                  onClick={() => setSortBy("email")}
+                  className={sortBy === "email" ? "bg-accent" : ""}
+                >
+                  <Mail className="w-4 h-4 mr-2" />
+                  Email
+                  {sortBy === "email" && (
+                    <ChevronDown
+                      className={cn(
+                        "w-4 h-4 ml-auto",
+                        sortOrder === "desc" && "rotate-180"
+                      )}
+                    />
+                  )}
+                </DropdownMenuItem>
+                <DropdownMenuItem
+                  onClick={() => setSortBy("status")}
+                  className={sortBy === "status" ? "bg-accent" : ""}
+                >
+                  <Activity className="w-4 h-4 mr-2" />
+                  Activity Status
+                  {sortBy === "status" && (
+                    <ChevronDown
+                      className={cn(
+                        "w-4 h-4 ml-auto",
+                        sortOrder === "desc" && "rotate-180"
+                      )}
+                    />
+                  )}
+                </DropdownMenuItem>
+                <DropdownMenuItem
+                  onClick={() => setSortBy("date")}
+                  className={sortBy === "date" ? "bg-accent" : ""}
+                >
+                  <Calendar className="w-4 h-4 mr-2" />
+                  Join Date
+                  {sortBy === "date" && (
+                    <ChevronDown
+                      className={cn(
+                        "w-4 h-4 ml-auto",
+                        sortOrder === "desc" && "rotate-180"
+                      )}
+                    />
+                  )}
+                </DropdownMenuItem>
+                <DropdownMenuItem
+                  onClick={() => setSortBy("cards")}
+                  className={sortBy === "cards" ? "bg-accent" : ""}
+                >
+                  <CreditCard className="w-4 h-4 mr-2" />
+                  Card Count
+                  {sortBy === "cards" && (
+                    <ChevronDown
+                      className={cn(
+                        "w-4 h-4 ml-auto",
+                        sortOrder === "desc" && "rotate-180"
+                      )}
+                    />
+                  )}
+                </DropdownMenuItem>
+                <DropdownMenuSeparator />
+                <DropdownMenuItem
+                  onClick={() => setSortOrder(sortOrder === "asc" ? "desc" : "asc")}
+                >
+                  {sortOrder === "asc" ? (
+                    <>
+                      <TrendingUp className="w-4 h-4 mr-2" />
+                      Ascending
+                    </>
+                  ) : (
+                    <>
+                      <TrendingDown className="w-4 h-4 mr-2" />
+                      Descending
+                    </>
+                  )}
+                </DropdownMenuItem>
+              </DropdownMenuContent>
+            </DropdownMenu>
 
             <Popover open={showFilters} onOpenChange={setShowFilters}>
               <PopoverTrigger asChild>

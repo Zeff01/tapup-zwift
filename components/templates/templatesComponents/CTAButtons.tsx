@@ -100,7 +100,7 @@ export const CTAButtons: React.FC<CTAButtonsProps> = ({
     switch (variant) {
       case "rounded":
         return cn(
-          "rounded-full border-2 border-black bg-white hover:bg-gray-100",
+          "rounded-full border border-black bg-white hover:bg-gray-100",
           baseClasses
         );
       case "pills":

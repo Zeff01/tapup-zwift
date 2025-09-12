@@ -96,7 +96,6 @@ export default function CardsAndUsersFields({
       twitterUrl: userData.twitterUrl || "",
       linkedinUrl: userData.linkedinUrl || "",
       whatsappNumber: userData.whatsappNumber || "",
-      skypeInviteUrl: userData.skypeInviteUrl || "",
       websiteUrl: userData.websiteUrl || "",
     },
   });

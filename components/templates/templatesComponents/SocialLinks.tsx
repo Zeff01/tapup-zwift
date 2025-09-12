@@ -6,7 +6,6 @@ import {
   FaGlobe,
   FaInstagram,
   FaLinkedin,
-  FaSkype,
   FaTiktok,
   FaViber,
   FaWhatsapp,
@@ -15,7 +14,7 @@ import {
 } from "react-icons/fa6";
 import { FiYoutube } from "react-icons/fi";
 import { GoGlobe } from "react-icons/go";
-import { SiSkypeforbusiness, SiTiktok, SiViber } from "react-icons/si";
+import { SiTiktok, SiViber } from "react-icons/si";
 import { SlSocialFacebook } from "react-icons/sl";
 
 interface ColorfulColors {
@@ -59,11 +58,6 @@ interface ColorfulColors {
     background?: string;
     hover?: { icon?: string; background?: string };
   };
-  skype?: {
-    icon?: string;
-    background?: string;
-    hover?: { icon?: string; background?: string };
-  };
   website?: {
     icon?: string;
     background?: string;
@@ -80,7 +74,6 @@ interface SocialLinksProps {
   tiktokUrl?: string;
   whatsappNumber?: string;
   viberUrl?: string;
-  skypeInviteUrl?: string;
   websiteUrl?: string;
   variant?: "default" | "buttons" | "minimal" | "colorful";
   size?: "sm" | "md" | "lg";
@@ -102,7 +95,6 @@ const iconSets = {
     tiktok: FaTiktok,
     whatsapp: FaWhatsapp,
     viber: FaViber,
-    skype: FaSkype,
     website: FaGlobe,
   },
   outline: {
@@ -114,7 +106,6 @@ const iconSets = {
     tiktok: SiTiktok,
     whatsapp: FaWhatsapp,
     viber: SiViber,
-    skype: SiSkypeforbusiness,
     website: GoGlobe,
   },
   solid: {
@@ -126,7 +117,6 @@ const iconSets = {
     tiktok: FaTiktok,
     whatsapp: FaWhatsapp,
     viber: FaViber,
-    skype: FaSkype,
     website: FaGlobe,
   },
 };
@@ -178,11 +168,6 @@ const defaultColorfulColors: ColorfulColors = {
     background: "#665CAC",
     hover: { icon: "#ffffff", background: "#5B5299" },
   },
-  skype: {
-    icon: "#ffffff",
-    background: "#00AFF0",
-    hover: { icon: "#ffffff", background: "#009ED6" },
-  },
   website: {
     icon: "#ffffff",
     background: "#6B7280",
@@ -205,7 +190,6 @@ export const SocialLinks: React.FC<SocialLinksProps> = ({
   tiktokUrl,
   whatsappNumber,
   viberUrl,
-  skypeInviteUrl,
   websiteUrl,
   variant = "default",
   size = "md",
@@ -359,13 +343,6 @@ export const SocialLinks: React.FC<SocialLinksProps> = ({
         `https://wa.me/${whatsappNumber}`
       )}
       {renderSocialLink(viberUrl, icons.viber, "Viber", "viber", viberUrl)}
-      {renderSocialLink(
-        skypeInviteUrl,
-        icons.skype,
-        "Skype",
-        "skype",
-        `skype:${skypeInviteUrl}?chat`
-      )}
       {renderSocialLink(websiteUrl, icons.website, "Website", "website")}
     </div>
   );

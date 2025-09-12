@@ -10,12 +10,12 @@ import PendingClock from "@/public/assets/pending-clock.png";
 
 const OrderStatusSuccess = () => {
   const { state: shippingState } = useShippingInfo();
-  const { state: cartState } = useCart();
+  const { items } = useCart();
   const { deliveryOption } = shippingState;
 
   const calculateSubtotal = () => {
-    return cartState.items.reduce(
-      (total, item) => total + item.product.price * item.quantity,
+    return items.reduce(
+      (total, item) => total + item.price * item.quantity,
       0
     );
   };
@@ -52,28 +52,28 @@ const OrderStatusSuccess = () => {
         </h3>
         <div className="border rounded-md p-3">
           <div className="space-y-4 max-h-60 overflow-auto">
-            {cartState.items.map((item, index) => (
+            {items.map((item, index) => (
               <div
                 key={index}
                 className="flex justify-between w-full items-center "
               >
                 <div className="flex gap-3 items-center">
                   <Image
-                    src={item.product.image}
-                    alt={item.product.title}
+                    src={item.image}
+                    alt={item.name}
                     width={50}
                     height={50}
                     className="rounded-md"
                   />
                   <div>
-                    <h1>{item.product.title}</h1>
+                    <h1>{item.name}</h1>
                   </div>
                 </div>
                 <div className="flex justify-end gap-4">
                   <h3>{item.quantity}</h3>
                   <h3>X</h3>
                   <p className="text-muted-foreground">
-                    ₱ {item.product.price}
+                    ₱ {item.price}
                   </p>
                 </div>
               </div>

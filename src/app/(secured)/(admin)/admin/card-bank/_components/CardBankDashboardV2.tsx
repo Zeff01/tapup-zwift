@@ -116,7 +116,8 @@ export default function CardBankDashboardV2({ userRole, currentUser, initialCard
       });
       
       const userDetailsMap: Record<string, any> = {};
-      for (const userId of userIds) {
+      const userIdArray = Array.from(userIds);
+      for (const userId of userIdArray) {
         if (!userDetails[userId]) {
           try {
             const user = await getUserById(userId);
@@ -168,6 +169,12 @@ export default function CardBankDashboardV2({ userRole, currentUser, initialCard
 
   const handleGenerateCards = async () => {
     if (!selectedVariant || generateCount < 1) return;
+    
+    // Double-check permission
+    if (!isSuperAdmin) {
+      toast.error("Only Super Admins can generate cards. Please contact a Super Admin to generate cards for you.");
+      return;
+    }
     
     try {
       setIsGenerating(true);
@@ -391,7 +398,7 @@ export default function CardBankDashboardV2({ userRole, currentUser, initialCard
           {/* Card Variants Grid */}
           <div className="space-y-4">
             <h2 className="text-lg font-semibold">Card Variants</h2>
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-5 gap-4">
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 2xl:grid-cols-5 gap-4">
               {cardVariantStock.map((variant) => (
                 <UICard key={variant.id} className="overflow-hidden">
                   <div className="aspect-[1.586/1] relative">
@@ -399,12 +406,12 @@ export default function CardBankDashboardV2({ userRole, currentUser, initialCard
                       src={variant.image}
                       alt={variant.title}
                       fill
-                      sizes="(max-width: 768px) 100vw, (max-width: 1024px) 50vw, (max-width: 1280px) 33vw, 20vw"
+                      sizes="(max-width: 768px) 100vw, (max-width: 1024px) 50vw, (max-width: 1280px) 33vw, (max-width: 1536px) 25vw, 20vw"
                       priority={variant.image.includes('Eclipse-front.png')}
                       className="object-cover"
                     />
                   </div>
-                  <CardContent className="p-4 space-y-3">
+                  <CardContent className="p-3 sm:p-4 space-y-3">
                     <div className="flex items-center justify-between">
                       <h3 className="font-semibold">{variant.title}</h3>
                       {getStockBadge(variant.availableCards)}
@@ -445,6 +452,10 @@ export default function CardBankDashboardV2({ userRole, currentUser, initialCard
                         size="sm"
                         className={canViewDetails ? "flex-1" : "w-full"}
                         onClick={() => {
+                          if (!isSuperAdmin) {
+                            toast.error("Only Super Admins can generate cards. Please contact a Super Admin to generate cards for you.");
+                            return;
+                          }
                           setSelectedVariant(variant.id);
                           setShowGenerateDialog(true);
                         }}

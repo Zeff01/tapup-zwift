@@ -29,7 +29,6 @@ const Template4 = ({
   tiktokUrl,
   youtubeUrl,
   whatsappNumber,
-  skypeInviteUrl,
   websiteUrl,
   viberUrl,
   customUrl,
@@ -49,6 +48,7 @@ const Template4 = ({
 
   return (
     <Template4Container>
+      <div className="flex-grow">
       {/* COVERPHOTO AND PROFILE PIC */}
       <ProfileHeader
         profilePictureUrl={profilePictureUrl}
@@ -236,10 +236,10 @@ const Template4 = ({
           tiktokUrl={tiktokUrl}
           whatsappNumber={whatsappNumber}
           viberUrl={viberUrl}
-          skypeInviteUrl={skypeInviteUrl}
           websiteUrl={websiteUrl}
           className="flex justify-center gap-4 mb-2"
         />
+      </div>
       </div>
 
       <TemplateFooter className="flex flex-col mt-3 mb-1 items-center gap-1 text-center text-xs">

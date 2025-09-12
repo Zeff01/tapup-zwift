@@ -115,45 +115,14 @@ export const getCardsByOwner = async (owner_id: string) => {
     const user = await authCurrentUser();
     if (!user) throw new Error("No Auth User");
 
-    console.log("\n[getCardsByOwner] ===== STARTING QUERY =====");
-    console.log("[getCardsByOwner] Owner ID:", owner_id);
-    console.log("[getCardsByOwner] Time:", new Date().toISOString());
     
     const cardsCol = collection(firebaseDb, "cards");
     const queryFn = query(cardsCol, where("owner", "==", owner_id), limit(10));
     const cards = await getDocs(queryFn);
 
     if (cards.empty) {
-      console.log("[getCardsByOwner] No cards found for owner:", owner_id);
       return [];
     }
-    
-    console.log("[getCardsByOwner] Found", cards.size, "cards for owner:", owner_id);
-    
-    // Log all card details
-    cards.docs.forEach((doc, index) => {
-      const data = doc.data();
-      console.log(`[getCardsByOwner] Card ${index + 1}:`, {
-        id: doc.id,
-        owner: data.owner,
-        status: data.status,
-        activated: data.activated,
-        chosenPhysicalCard: data.chosenPhysicalCard,
-        createdAt: data.createdAt?.toDate?.() || data.timestamp?.toDate?.(),
-        transferCode: data.transferCode,
-        subscription_id: data.subscription_id,
-        templateId: data.templateId,
-      });
-      
-      // Check if this looks like a physical card that shouldn't have an owner yet
-      if (data.chosenPhysicalCard && !data.activated && data.owner) {
-        console.error(`[getCardsByOwner] ⚠️ WARNING: Found physical card ${doc.id} with owner but NOT activated!`);
-        console.error(`[getCardsByOwner] ⚠️ This indicates a virtual card was created for a physical card purchase`);
-        console.error(`[getCardsByOwner] ⚠️ Physical card type: ${data.chosenPhysicalCard?.id || 'unknown'}`);
-        console.error(`[getCardsByOwner] ⚠️ Card status: ${data.status}, Transfer code: ${data.transferCode}`);
-        console.error(`[getCardsByOwner] ⚠️ This should NOT happen - physical cards should only get owners when activated`);
-      }
-    });
 
     const result: Partial<Card>[] = [];
 
@@ -189,7 +158,6 @@ export const getCardById = async (
   options?: { publicSite: boolean }
 ): Promise<Card | undefined> => {
   try {
-    console.log("Card ID or Custom URL:", input);
 
     if (!input) throw new Error("Parameters Missing");
 
@@ -201,7 +169,6 @@ export const getCardById = async (
 
     // If card is not found, check if input is a custom URL inside the "cards" collection
     if (!docSnap.exists()) {
-      console.log("Searching for card by custom URL...");
 
       const cardsCollection = collection(firebaseDb, "cards");
 

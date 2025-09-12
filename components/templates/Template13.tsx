@@ -235,7 +235,6 @@ const Template13 = ({
   youtubeUrl,
   twitterUrl,
   whatsappNumber,
-  skypeInviteUrl,
   websiteUrl,
   viberUrl,
   tiktokUrl,
@@ -262,6 +261,7 @@ const Template13 = ({
       flexDirection="col"
       className="text-white py-2"
     >
+      <div className="flex-grow">
       <div className="max-w-[480px] mx-auto flex flex-col">
         {/* === Profile and Cover Section === */}
         <section
@@ -363,7 +363,6 @@ const Template13 = ({
                 linkedinUrl={linkedinUrl}
                 viberUrl={viberUrl}
                 whatsappNumber={whatsappNumber}
-                skypeInviteUrl={skypeInviteUrl}
                 websiteUrl={websiteUrl}
                 size="md"
               />
@@ -393,6 +392,7 @@ const Template13 = ({
             )}
           </div>
         </div>
+      </div>
       </div>
 
       {/* === Footer Section === */}

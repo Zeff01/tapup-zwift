@@ -28,7 +28,6 @@ const Template16 = ({
   twitterUrl,
   youtubeUrl,
   whatsappNumber,
-  skypeInviteUrl,
   websiteUrl,
   viberUrl,
   tiktokUrl,
@@ -56,6 +55,7 @@ const Template16 = ({
       alignItems="center"
       className="font-sans"
     >
+      <div className="flex-grow">
       <div className="max-w-[480px] mx-auto flex flex-col">
         {/* === Cover Section === */}
         <section
@@ -132,7 +132,6 @@ const Template16 = ({
                   youtubeUrl={youtubeUrl}
                   tiktokUrl={tiktokUrl}
                   whatsappNumber={whatsappNumber}
-                  skypeInviteUrl={skypeInviteUrl}
                   viberUrl={viberUrl}
                   websiteUrl={websiteUrl}
                   size="sm"
@@ -344,6 +343,7 @@ const Template16 = ({
             </div>
           </div>
         )}
+      </div>
       </div>
 
       {/* === Footer Section === */}

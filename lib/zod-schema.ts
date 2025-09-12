@@ -150,19 +150,6 @@ export const createPortfolioSchema = z.object({
     .string()
     .refine(refinePhoneNumber, { message: "Invalid phone number" })
     .optional(),
-  skypeInviteUrl: z
-    .string()
-    .refine(
-      (value) =>
-        value === "" ||
-        /^(?:https?:\/\/)?(?:join\.skype\.com\/invite\/[a-zA-Z0-9_-]+)$/.test(
-          value
-        ),
-      {
-        message: "Invalid URL",
-      }
-    )
-    .optional(),
   websiteUrl: z
     .string()
     .refine(
@@ -257,10 +244,9 @@ export const editCardSchema = z.object({
     .refine(
       (value) =>
         value === "" ||
-        value.startsWith("https://facebook.com/") ||
-        value.startsWith("https://www.facebook.com/"),
+        /^\b(?:https?:\/\/)?(?:www\.)?[^ "]+\.[a-zA-Z]{2,}\b/.test(value),
       {
-        message: "Must be a valid Facebook URL",
+        message: "Invalid URL",
       }
     )
     .optional(),
@@ -270,10 +256,9 @@ export const editCardSchema = z.object({
     .refine(
       (value) =>
         value === "" ||
-        value.startsWith("https://youtube.com/") ||
-        value.startsWith("https://www.youtube.com/"),
+        /^\b(?:https?:\/\/)?(?:www\.)?[^ "]+\.[a-zA-Z]{2,}\b/.test(value),
       {
-        message: "Must be a valid YouTube URL",
+        message: "Invalid URL",
       }
     )
     .optional(),
@@ -283,10 +268,9 @@ export const editCardSchema = z.object({
     .refine(
       (value) =>
         value === "" ||
-        value.startsWith("https://instagram.com/") ||
-        value.startsWith("https://www.instagram.com/"),
+        /^\b(?:https?:\/\/)?(?:www\.)?[^ "]+\.[a-zA-Z]{2,}\b/.test(value),
       {
-        message: "Must be a valid Instagram URL",
+        message: "Invalid URL",
       }
     )
     .optional(),
@@ -296,10 +280,9 @@ export const editCardSchema = z.object({
     .refine(
       (value) =>
         value === "" ||
-        value.startsWith("https://twitter.com/") ||
-        value.startsWith("https://x.com/"),
+        /^\b(?:https?:\/\/)?(?:www\.)?[^ "]+\.[a-zA-Z]{2,}\b/.test(value),
       {
-        message: "Must be a valid Twitter/X URL",
+        message: "Invalid URL",
       }
     )
     .optional(),
@@ -309,10 +292,9 @@ export const editCardSchema = z.object({
     .refine(
       (value) =>
         value === "" ||
-        value.startsWith("https://linkedin.com/") ||
-        value.startsWith("https://www.linkedin.com/"),
+        /^\b(?:https?:\/\/)?(?:www\.)?[^ "]+\.[a-zA-Z]{2,}\b/.test(value),
       {
-        message: "Must be a valid LinkedIn URL",
+        message: "Invalid URL",
       }
     )
     .optional(),
@@ -322,10 +304,9 @@ export const editCardSchema = z.object({
     .refine(
       (value) =>
         value === "" ||
-        value.startsWith("https://tiktok.com/") ||
-        value.startsWith("https://www.tiktok.com/"),
+        /^\b(?:https?:\/\/)?(?:www\.)?[^ "]+\.[a-zA-Z]{2,}\b/.test(value),
       {
-        message: "Must be a valid TikTok URL",
+        message: "Invalid URL",
       }
     )
     .optional(),
@@ -337,17 +318,6 @@ export const editCardSchema = z.object({
   whatsappNumber: z
     .string()
     .refine(refinePhoneNumber, { message: "Invalid phone number" })
-    .optional(),
-  skypeInviteUrl: z
-    .string()
-    .refine(
-      (value) =>
-        value === "" ||
-        /^https:\/\/join\.skype\.com\/[a-zA-Z0-9_-]+$/.test(value),
-      {
-        message: "Must be a valid Skype invite URL",
-      }
-    )
     .optional(),
   websiteUrl: z
     .string()

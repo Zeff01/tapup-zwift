@@ -235,7 +235,6 @@ const Template11 = ({
   tiktokUrl,
   viberUrl,
   whatsappNumber,
-  skypeInviteUrl,
   websiteUrl,
   customUrl,
 }: Card) => {
@@ -261,6 +260,7 @@ const Template11 = ({
       alignItems="center"
       justifyContent="between"
     >
+      <div className="flex-grow">
       <div className="w-full mx-auto relative max-w-[480px]">
         <div className="flex gap-2 z-20 absolute right-0 top-0 p-1">
           <CTAButtons
@@ -359,7 +359,6 @@ const Template11 = ({
               linkedinUrl={linkedinUrl}
               viberUrl={viberUrl}
               whatsappNumber={whatsappNumber}
-              skypeInviteUrl={skypeInviteUrl}
               websiteUrl={websiteUrl}
               size="sm"
               iconClassName="rounded-full p-2 bg-white opacity-50 size-full "
@@ -386,6 +385,7 @@ const Template11 = ({
               />
             )}
           </div>
+        </div>
         </div>
 
         <TemplateFooter className="flex flex-col items-center  justify-center gap-x-1 text-xs  pb-4 ">

@@ -27,7 +27,6 @@ const Template17 = ({
   twitterUrl,
   youtubeUrl,
   whatsappNumber,
-  skypeInviteUrl,
   websiteUrl,
   viberUrl,
   tiktokUrl,
@@ -54,6 +53,7 @@ const Template17 = ({
       flexDirection="col"
       className="shadow-xl p-0 overflow-hidden font-sans pt-2"
     >
+      <div className="flex-grow">
       <div className="max-w-[480px] mx-auto flex flex-col">
         {/* === Profile and Cover Section === */}
         <section
@@ -138,7 +138,6 @@ const Template17 = ({
               youtubeUrl={youtubeUrl}
               tiktokUrl={tiktokUrl}
               whatsappNumber={whatsappNumber}
-              skypeInviteUrl={skypeInviteUrl}
               viberUrl={viberUrl}
               websiteUrl={websiteUrl}
               variant="colorful"
@@ -183,11 +182,6 @@ const Template17 = ({
                 },
                 viber: {
                   icon: "#665cac",
-                  background: "#f3f4f6",
-                  hover: { background: "#e5e7eb" },
-                },
-                skype: {
-                  icon: "#00aff0",
                   background: "#f3f4f6",
                   hover: { background: "#e5e7eb" },
                 },
@@ -301,6 +295,7 @@ const Template17 = ({
             </div>
           </section>
         )}
+      </div>
       </div>
 
       {/* === Footer Section === */}
