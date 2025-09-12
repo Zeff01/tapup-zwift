@@ -10,13 +10,15 @@ This migration moves card-specific data from the `user-account` collection to th
 
 1. **Preview changes (dry run):**
    ```bash
-   npx tsx migrations/run-migration.ts --dry-run
+   npx tsx migrations/standalone-migration.ts --dry-run
    ```
 
 2. **Execute the migration:**
    ```bash
-   npx tsx migrations/run-migration.ts --force
+   npx tsx migrations/standalone-migration.ts --force
    ```
+
+**Note:** The migration requires proper Firebase authentication. See README-auth.md for authentication options.
 
 ### What this migration does:
 
