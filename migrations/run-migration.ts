@@ -1,13 +1,9 @@
 /**
  * Script to run the user data migration
- * Run with: npx tsx scripts/run-migration.ts
+ * Run with: npx tsx migrations/run-migration.ts
  */
 
-import { config } from 'dotenv';
 import { dryRunMigration, migrateUserData } from './migrate-user-data';
-
-// Load environment variables
-config();
 
 async function main() {
   const args = process.argv.slice(2);
