@@ -10,8 +10,8 @@ import crypto from "crypto";
  * To enable this webhook:
  * 1. Go to Xendit Dashboard > Settings > Webhooks
  * 2. Add this URL: https://yourdomain.com/api/webhooks/xendit/recurring-webhook
- * 3. Select events: recurring_plan.payment.succeeded, recurring.charge.succeeded
- * 4. Copy the webhook secret and add to .env as XENDIT_WEBHOOK_SECRET
+ * 3. Select events: recurring_plan.payment.succeeded, recurring.charge.succeeded, recurring.cycle.succeeded
+ * 4. Copy the webhook verification token and add to .env as XENDIT_WEBHOOK_SECRET
  * 
  * When enabled, this will automatically update transaction status from "pending" to "completed"
  * after successful payment.
@@ -46,7 +46,11 @@ export async function POST(req: NextRequest) {
     // Verify webhook signature
     const isValid = verifyWebhookSignature(rawBody, signature, webhookSecret);
     if (!isValid) {
-      console.error("Invalid webhook signature");
+      console.error("Invalid webhook signature", {
+        receivedSignature: signature,
+        webhookSecret: webhookSecret.substring(0, 5) + "...",
+        bodyLength: rawBody.length
+      });
       return NextResponse.json({ error: "Invalid signature" }, { status: 401 });
     }
 
@@ -62,6 +66,12 @@ export async function POST(req: NextRequest) {
     switch (payload.event) {
       case "recurring_plan.payment.succeeded":
       case "recurring.charge.succeeded":
+      case "recurring.cycle.succeeded":
+        // Check if this is an immediate payment cycle
+        if (payload.data?.type === "IMMEDIATE" && payload.data?.status === "SUCCEEDED") {
+          console.log("Processing immediate payment cycle success");
+        }
+        
         // Payment successful - update transaction to completed
         const planId = payload.data?.plan_id || payload.data?.recurring_plan_id;
         const paymentId = payload.data?.id;
