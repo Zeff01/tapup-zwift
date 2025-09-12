@@ -522,53 +522,56 @@ const MultiStepFormUpdate = ({
 
               {/* Step 1 - Profile Pic and Cover Photo */}
               {currentStep === 1 && (
-                <div className="space-y-8">
-                  {/* Profile Photo Section */}
-                  <div>
-                    <h2 className="text-lg font-semibold mb-4">Profile Photo</h2>
-                    <div className="w-full flex justify-center items-center flex-col mb-4">
-                      <Cropper
-                        imageUrl={imageUrl}
-                        setImageUrl={setImageUrl}
-                        photo={photo}
-                        aspect={1}
-                        setPhoto={setPhoto}
-                        circularCrop
-                        className="w-[120px] h-[120px] lg:w-[150px] lg:h-[150px] rounded-full"
-                        fallback={
-                          <div className="relative w-full h-full rounded-full flex items-center justify-center border-2  border-dashed">
-                            <Image
-                              src={"/assets/image-plus.svg"}
-                              width={50}
-                              height={50}
-                              className="size-8 lg:size-auto p-2 border rounded-md border-gray-500"
-                              alt="gallery"
-                            />
-                          </div>
-                        }
-                      />
+                <div className="space-y-4">
+                  {/* Profile and Cover Photos */}
+                  <div className="grid grid-cols-1 lg:grid-cols-2 gap-4">
+                    {/* Profile Photo Section */}
+                    <div>
+                      <h2 className="text-lg font-semibold mb-2">Profile Photo</h2>
+                      <div className="w-full flex justify-center items-center flex-col">
+                        <Cropper
+                          imageUrl={imageUrl}
+                          setImageUrl={setImageUrl}
+                          photo={photo}
+                          aspect={1}
+                          setPhoto={setPhoto}
+                          circularCrop
+                          className="w-[120px] h-[120px] lg:w-[130px] lg:h-[130px] rounded-full"
+                          fallback={
+                            <div className="relative w-full h-full rounded-full flex items-center justify-center border-2  border-dashed">
+                              <Image
+                                src={"/assets/image-plus.svg"}
+                                width={50}
+                                height={50}
+                                className="size-8 lg:size-auto p-2 border rounded-md border-gray-500"
+                                alt="gallery"
+                              />
+                            </div>
+                          }
+                        />
 
-                      <div className="flex flex-col items-center justify-center mt-2">
-                        <p className="text-[#767676] text-base">
-                          Drop your image here or{" "}
-                          <span className="text-green-500">browse</span>
-                        </p>
-                        <p className="text-[#767676] text-xs">
-                          We support PNG, JPEG, and GIF files under 25MB
-                        </p>
+                        <div className="flex flex-col items-center justify-center mt-1">
+                          <p className="text-[#767676] text-sm">
+                            Drop your image here or{" "}
+                            <span className="text-green-500">browse</span>
+                          </p>
+                          <p className="text-[#767676] text-xs">
+                            PNG, JPEG, and GIF files under 25MB
+                          </p>
+                        </div>
+
+                        {methods.formState.errors.profilePictureUrl && (
+                          <span className="text-sm text-red-500 mt-2">
+                            {methods.formState.errors.profilePictureUrl.message}
+                          </span>
+                        )}
                       </div>
-
-                      <span className="text-sm text-red-500 pt-4">
-                        {methods.formState.errors.profilePictureUrl?.message ??
-                          ""}
-                      </span>
                     </div>
-                  </div>
-                  
-                  {/* Cover Photo Section */}
-                  <div>
-                    <h2 className="text-lg font-semibold mb-4">Cover Photo</h2>
-                    <div className="w-full max-w-lg mx-auto">
+                    
+                    {/* Cover Photo Section */}
+                    <div>
+                      <h2 className="text-lg font-semibold mb-2">Cover Photo</h2>
+                      <div className="w-full">
                       <Cropper
                         imageUrl={coverPhotoUrl}
                         setImageUrl={setCoverPhotoUrl}
@@ -584,9 +587,9 @@ const MultiStepFormUpdate = ({
                               width={50}
                               height={50}
                               alt="plus"
-                              className="size-10 lg:size-auto mt-8 border p-2 rounded-md cursor-pointer"
+                              className="size-10 lg:size-auto mt-4 border p-2 rounded-md cursor-pointer"
                             />
-                            <p className="text-[#767676] text-lg">
+                            <p className="text-[#767676] text-base">
                               Drop your image here or{" "}
                               <span className="text-green-500">browse</span>
                             </p>
@@ -596,6 +599,7 @@ const MultiStepFormUpdate = ({
                           </div>
                         }
                       />
+                      </div>
                     </div>
                   </div>
 
