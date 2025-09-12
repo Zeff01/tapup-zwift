@@ -11,9 +11,6 @@ import {
   SocialLinks,
   TemplateContainer,
   TemplateFooter,
-  sampleCompanies,
-  getSampleSocialUrls,
-  samplePersonalInfo,
 } from "./templatesComponents";
 
 const poppins = Advent_Pro({
@@ -283,21 +280,6 @@ const Template12 = ({
     customUrl,
   };
 
-  const sampleSocials = getSampleSocialUrls({
-    facebookUrl,
-    linkedinUrl,
-    instagramUrl,
-    twitterUrl,
-    tiktokUrl,
-    youtubeUrl,
-    whatsappNumber,
-    websiteUrl,
-    viberUrl,
-  });
-
-  const displayCompanies =
-    companies && companies.length > 0 ? companies : sampleCompanies;
-
   return (
     <TemplateContainer
       backgroundColor="bg-[#34463b]"
@@ -386,8 +368,8 @@ const Template12 = ({
             </div>
             <div className="">
               <CTAButtons
-                number={number || samplePersonalInfo.number}
-                email={email || samplePersonalInfo.email}
+                number={number}
+                email={email}
                 userProfile={userProfile}
                 variant="floating"
                 size="sm"
@@ -430,9 +412,9 @@ const Template12 = ({
             </p>
 
             <div className="w-full mx-auto mt-4">
-              {displayCompanies && displayCompanies.length > 0 && (
+              {companies && companies.length > 0 && (
                 <CompanyShowcase
-                  companies={displayCompanies}
+                  companies={companies}
                   profilePictureUrl={profilePictureUrl}
                   firstName={firstName}
                   lastName={lastName}

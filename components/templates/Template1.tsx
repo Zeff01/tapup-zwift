@@ -6,9 +6,6 @@ import {
   Template1Socials,
   TemplateFooter,
   Template1CTA,
-  sampleCompanies,
-  getSampleSocialUrls,
-  samplePersonalInfo,
 } from "./templatesComponents";
 
 const Template1 = ({

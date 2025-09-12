@@ -8,9 +8,6 @@ import {
   CTAButtons,
   SocialLinks,
   TemplateFooter,
-  sampleCompanies,
-  getSampleSocialUrls,
-  samplePersonalInfo,
 } from "./templatesComponents";
 
 // fonts
@@ -283,21 +280,6 @@ const Template10 = ({
     customUrl,
   };
 
-  const sampleSocials = getSampleSocialUrls({
-    facebookUrl,
-    linkedinUrl,
-    instagramUrl,
-    twitterUrl,
-    tiktokUrl,
-    youtubeUrl,
-    whatsappNumber,
-    websiteUrl,
-    viberUrl,
-  });
-
-  const displayCompanies =
-    companies && companies.length > 0 ? companies : sampleCompanies;
-
   return (
     <TemplateContainer
       backgroundColor="bg-black"
@@ -337,8 +319,8 @@ const Template10 = ({
             />
             <div className="flex gap-x-2 absolute right-0 top-0 text-[#FFFBD8] bg-black pl-4 pb-2 rounded-bl-3xl">
               <CTAButtons
-                number={number || samplePersonalInfo.number}
-                email={email || samplePersonalInfo.email}
+                number={number}
+                email={email}
                 userProfile={userProfile}
                 variant="floating"
                 size="sm"
@@ -401,7 +383,7 @@ const Template10 = ({
           <div className="gap-x-2 w-full text-[#B6BCD2] flex justify-center items-center">
             <input
               type="text"
-              value={email || samplePersonalInfo.email}
+              value={email}
               readOnly
               className="max-w-[120px] truncate bg-transparent border-none outline-none cursor-pointer text-center font-light text-sm text-[#B6BCD2]"
               onClick={(e) => {
@@ -412,7 +394,7 @@ const Template10 = ({
             <span>|</span>
             <input
               type="text"
-              value={String(number || samplePersonalInfo.number)}
+              value={String(number)}
               readOnly
               className="max-w-[120px] truncate bg-transparent border-none outline-none cursor-pointer text-center font-light text-sm text-[#B6BCD2]"
               onClick={(e) => {
@@ -451,9 +433,9 @@ const Template10 = ({
           </p>
 
           <div className="w-full mx-auto mt-4">
-            {displayCompanies && displayCompanies.length > 0 && (
+            {companies && companies.length > 0 && (
               <CompanyShowcase
-                companies={displayCompanies}
+                companies={companies}
                 profilePictureUrl={profilePictureUrl}
                 firstName={firstName}
                 lastName={lastName}

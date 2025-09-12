@@ -7,9 +7,6 @@ import {
   SocialLinks,
   TemplateContainer,
   TemplateFooter,
-  sampleCompanies,
-  getSampleSocialUrls,
-  samplePersonalInfo,
 } from "./templatesComponents";
 
 const Template16 = ({
@@ -48,22 +45,6 @@ const Template16 = ({
     websiteUrl,
     customUrl,
   };
-
-  const sampleSocials = getSampleSocialUrls({
-    facebookUrl,
-    linkedinUrl,
-    instagramUrl,
-    twitterUrl,
-    tiktokUrl,
-    youtubeUrl,
-    whatsappNumber,
-    skypeInviteUrl,
-    websiteUrl,
-    viberUrl,
-  });
-
-  const displayCompanies =
-    companies && companies.length > 0 ? companies : sampleCompanies;
 
   return (
     <TemplateContainer
@@ -177,8 +158,8 @@ const Template16 = ({
           >
             <div className="flex gap-3 w-full justify-center">
               <CTAButtons
-                number={number || samplePersonalInfo.number}
-                email={email || samplePersonalInfo.email}
+                number={number}
+                email={email}
                 userProfile={userProfile}
                 variant="pills"
                 size="md"
@@ -190,7 +171,7 @@ const Template16 = ({
         </section>
 
         {/* === Companies Section === */}
-        {displayCompanies.length > 0 && (
+        {companies.length > 0 && (
           <div className="w-full px-6 mb-6">
             <h2 className="text-base font-bold text-black mb-4 text-center">
               Professional Portfolio
@@ -201,7 +182,7 @@ const Template16 = ({
             </p>
 
             <div className="space-y-5">
-              {displayCompanies.map((company, idx) => (
+              {companies.map((company, idx) => (
                 <div key={idx} className="relative group">
                   {/* Modern Company Card - Minimalist Design */}
                   <div className="bg-white rounded-2xl border border-gray-200 shadow-lg hover:shadow-xl transition-all duration-300 overflow-hidden">

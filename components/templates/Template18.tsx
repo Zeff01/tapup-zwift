@@ -6,9 +6,6 @@ import {
   SocialLinks,
   TemplateContainer,
   TemplateFooter,
-  sampleCompanies,
-  getSampleSocialUrls,
-  samplePersonalInfo,
 } from "./templatesComponents";
 
 const Template18 = ({
@@ -47,22 +44,6 @@ const Template18 = ({
     websiteUrl,
     customUrl,
   };
-
-  const sampleSocials = getSampleSocialUrls({
-    facebookUrl,
-    linkedinUrl,
-    instagramUrl,
-    twitterUrl,
-    tiktokUrl,
-    youtubeUrl,
-    whatsappNumber,
-    skypeInviteUrl,
-    websiteUrl,
-    viberUrl,
-  });
-
-  const displayCompanies =
-    companies && companies.length > 0 ? companies : sampleCompanies;
 
   return (
     <TemplateContainer
@@ -162,8 +143,8 @@ const Template18 = ({
                 <div className="flex flex-col sm:flex-row gap-2 sm:gap-3 w-full mt-3 sm:mt-4">
                   <div className="flex gap-3 w-full justify-center">
                     <CTAButtons
-                      number={number || samplePersonalInfo.number}
-                      email={email || samplePersonalInfo.email}
+                      number={number}
+                      email={email}
                       userProfile={userProfile}
                       variant="floating"
                       size="md"
@@ -196,7 +177,7 @@ const Template18 = ({
         </section>
 
         {/* === Companies Section === */}
-        {displayCompanies.length > 0 && (
+        {companies.length > 0 && (
           <section
             aria-label="Companies"
             className="px-3 sm:px-4 pb-3 text-xs sm:text-sm flex-1"
@@ -205,11 +186,12 @@ const Template18 = ({
               Professional Portfolio
             </h3>
             <p className="text-gray-300 text-center mb-3 sm:mb-4">
-              A snapshot of my experience and the companies I’ve worked with.
+              A snapshot of my experience and the companies I&apos;ve worked
+              with.
             </p>
 
             <div className="space-y-4">
-              {displayCompanies.map((c, idx) => (
+              {companies.map((c, idx) => (
                 <div
                   key={idx}
                   className="relative group bg-[#0b2b45] rounded-xl border border-[#00d4ff]/20 shadow-[0_0_0_1px_rgba(0,212,255,0.08)] hover:shadow-[0_0_0_1px_rgba(0,212,255,0.18),0_10px_30px_-10px_rgba(0,212,255,0.25)] transition-all duration-300 overflow-hidden"

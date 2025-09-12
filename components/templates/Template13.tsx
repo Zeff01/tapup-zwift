@@ -6,9 +6,6 @@ import {
   Template13Socials,
   TemplateFooter,
   CTAButtons,
-  sampleCompanies,
-  getSampleSocialUrls,
-  samplePersonalInfo,
 } from "./templatesComponents";
 
 // Company Showcase Component for Template13 - Modern Card Design
@@ -255,22 +252,6 @@ const Template13 = ({
     customUrl,
   };
 
-  const sampleSocials = getSampleSocialUrls({
-    facebookUrl,
-    linkedinUrl,
-    instagramUrl,
-    twitterUrl,
-    tiktokUrl,
-    youtubeUrl,
-    whatsappNumber,
-    skypeInviteUrl,
-    websiteUrl,
-    viberUrl,
-  });
-
-  const displayCompanies =
-    companies && companies.length > 0 ? companies : sampleCompanies;
-
   return (
     <TemplateContainer
       backgroundColor="bg-gradient-to-br from-[#1a1a1a] via-[#232323] to-[#553838]"
@@ -351,8 +332,8 @@ const Template13 = ({
             </div>
             <div className="flex gap-2 mb-2">
               <CTAButtons
-                number={number || samplePersonalInfo.number}
-                email={email || samplePersonalInfo.email}
+                number={number}
+                email={email}
                 userProfile={userProfile}
                 variant="floating"
                 size="md"
@@ -407,9 +388,9 @@ const Template13 = ({
           </p>
 
           <div className="w-full mx-auto mt-4">
-            {displayCompanies && displayCompanies.length > 0 && (
+            {companies && companies.length > 0 && (
               <CompanyShowcase
-                companies={displayCompanies}
+                companies={companies}
                 profilePictureUrl={profilePictureUrl}
                 firstName={firstName}
                 lastName={lastName}

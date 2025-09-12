@@ -6,9 +6,6 @@ import {
   SocialLinks,
   TemplateContainer,
   TemplateFooter,
-  sampleCompanies,
-  getSampleSocialUrls,
-  samplePersonalInfo,
 } from "./templatesComponents";
 
 const Template17 = ({
@@ -47,22 +44,6 @@ const Template17 = ({
     websiteUrl,
     customUrl,
   };
-
-  const sampleSocials = getSampleSocialUrls({
-    facebookUrl,
-    linkedinUrl,
-    instagramUrl,
-    twitterUrl,
-    tiktokUrl,
-    youtubeUrl,
-    whatsappNumber,
-    skypeInviteUrl,
-    websiteUrl,
-    viberUrl,
-  });
-
-  const displayCompanies =
-    companies && companies.length > 0 ? companies : sampleCompanies;
 
   return (
     <TemplateContainer
@@ -145,8 +126,8 @@ const Template17 = ({
           {/* Buttons */}
           <div className="flex gap-3 w-full justify-center mt-3 sm:mt-4">
             <CTAButtons
-              number={number || samplePersonalInfo.number}
-              email={email || samplePersonalInfo.email}
+              number={number}
+              email={email}
               userProfile={userProfile}
               variant="pills"
               size="md"
@@ -222,7 +203,7 @@ const Template17 = ({
           </div>
         </section>
         {/* === Companies Section === */}
-        {displayCompanies.length > 0 && (
+        {companies.length > 0 && (
           <section aria-label="Companies" className="px-3 sm:px-4 pb-3">
             <h3 className="font-bold text-sm sm:text-base mb-2 text-center">
               Professional Portfolio
@@ -232,7 +213,7 @@ const Template17 = ({
             </p>
 
             <div className="space-y-4">
-              {displayCompanies.map((c, idx) => (
+              {companies.map((c, idx) => (
                 <div
                   key={idx}
                   className="bg-white rounded-xl border border-gray-200 shadow-md hover:shadow-lg transition-shadow duration-300 overflow-hidden"

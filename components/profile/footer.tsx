@@ -5,7 +5,7 @@ import Link from "next/link";
 
 const Footer = ({ customUrl, websiteUrl }: Partial<Card>) => {
   return (
-    <footer className="py-6 px-4 bg-gray-50 ">
+    <footer className="py-6 px-4 bg-gray-50 mt-auto">
       {/* Contact Buttons */}
 
       {/* Logo and Copyright */}

@@ -10,9 +10,6 @@ import {
   SocialLinks,
   TemplateContainer,
   TemplateFooter,
-  sampleCompanies,
-  getSampleSocialUrls,
-  samplePersonalInfo,
 } from "./templatesComponents";
 
 const roboto_c = Roboto_Condensed({
@@ -253,22 +250,6 @@ const Template11 = ({
     customUrl,
   };
 
-  const sampleSocials = getSampleSocialUrls({
-    facebookUrl,
-    linkedinUrl,
-    instagramUrl,
-    twitterUrl,
-    tiktokUrl,
-    youtubeUrl,
-    whatsappNumber,
-    skypeInviteUrl,
-    websiteUrl,
-    viberUrl,
-  });
-
-  const displayCompanies =
-    companies && companies.length > 0 ? companies : sampleCompanies;
-
   return (
     <TemplateContainer
       backgroundColor="bg-white"
@@ -282,8 +263,8 @@ const Template11 = ({
       <div className="w-full mx-auto relative max-w-[480px]">
         <div className="flex gap-2 z-20 absolute right-0 top-0 p-1">
           <CTAButtons
-            number={number || samplePersonalInfo.number}
-            email={email || samplePersonalInfo.email}
+            number={number}
+            email={email}
             userProfile={userProfile}
             variant="floating"
             size="sm"
@@ -362,9 +343,9 @@ const Template11 = ({
           </div>
 
           <div className="gap-x-2 w-full text-xs font-thin gap-y-1  flex flex-col text-black opacity-50 justify-center items-center">
-            <p>{email || samplePersonalInfo.email}</p>
+            <p>{email}</p>
 
-            <p>{number || samplePersonalInfo.number}</p>
+            <p>{number}</p>
           </div>
           {/* SOCIAL MEDIA ICONS */}
           <div className="flex items-center gap-1 mt-6 pb-10 pt-10 text-black text-2xl h-16 justify-center">
@@ -394,9 +375,9 @@ const Template11 = ({
           </p>
 
           <div className="w-full mx-auto mt-4">
-            {displayCompanies && displayCompanies.length > 0 && (
+            {companies && companies.length > 0 && (
               <CompanyShowcase
-                companies={displayCompanies}
+                companies={companies}
                 profilePictureUrl={profilePictureUrl}
                 firstName={firstName}
                 lastName={lastName}

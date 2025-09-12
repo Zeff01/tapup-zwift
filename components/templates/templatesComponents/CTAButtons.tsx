@@ -10,8 +10,8 @@ import {
 } from "react-icons/md";
 
 interface CTAButtonsProps {
-  number: string;
-  email: string;
+  number?: string;
+  email?: string;
   userProfile: {
     id?: string;
     firstName?: string;

@@ -7,9 +7,6 @@ import {
   Template15CTA,
   TemplateContainer,
   TemplateFooter,
-  sampleCompanies,
-  getSampleSocialUrls,
-  samplePersonalInfo,
 } from "./templatesComponents";
 
 const Template15 = ({
@@ -51,22 +48,6 @@ const Template15 = ({
     websiteUrl,
     customUrl,
   };
-
-  const sampleSocials = getSampleSocialUrls({
-    facebookUrl,
-    linkedinUrl,
-    instagramUrl,
-    twitterUrl,
-    tiktokUrl,
-    youtubeUrl,
-    whatsappNumber,
-    skypeInviteUrl,
-    websiteUrl,
-    viberUrl,
-  });
-
-  const displayCompanies =
-    companies && companies.length > 0 ? companies : sampleCompanies;
 
   return (
     <TemplateContainer
@@ -164,8 +145,8 @@ const Template15 = ({
 
             <div className="flex gap-2 mb-5">
               <Template15CTA
-                number={number || samplePersonalInfo.number}
-                email={email || samplePersonalInfo.email}
+                number={number}
+                email={email}
                 userProfile={userProfile}
                 size="md"
                 icons="lucide"
@@ -223,7 +204,7 @@ const Template15 = ({
           )}
 
           {/* === Companies Section === */}
-          {displayCompanies.length > 0 && (
+          {companies.length > 0 && (
             <div className="w-full px-3 mb-6">
               <h2 className="text-base font-bold text-white mb-4 text-center">
                 Professional Portfolio
@@ -234,7 +215,7 @@ const Template15 = ({
               </p>
 
               <div className="space-y-6">
-                {displayCompanies.map((company, idx) => (
+                {companies.map((company, idx) => (
                   <div key={idx} className="relative group">
                     {/* Modern Company Card - Horizontal Layout */}
                     <div className="bg-[#0f1f2a] rounded-2xl border border-[#38bdf8]/30 shadow-xl hover:shadow-2xl transition-all duration-500 overflow-hidden">
