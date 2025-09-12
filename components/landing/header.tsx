@@ -62,7 +62,7 @@ const Header = () => {
   }, [isMenuOpen]);
 
   return (
-    <header className="flex sticky top-0 z-50 bg-background justify-between items-center md:px-10 shadow-xl  p-4">
+    <div className="flex sticky top-0 z-50 bg-background justify-between items-center md:px-10 shadow-xl  p-4">
       <Link href="/" rel="preload" onClick={() => setActivePath("/")}>
         <div className="aspect-[130/48] w-20 lg:w-28">
           <TapupLogo />
@@ -222,7 +222,7 @@ const Header = () => {
           </nav>
         </div>
       </div>
-    </header>
+    </div>
   );
 };
 
