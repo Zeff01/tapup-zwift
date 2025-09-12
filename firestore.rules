@@ -48,8 +48,9 @@ service cloud.firestore {
       // TEMPORARY: Allow all reads
       allow read: if true;
       
-      // Allow authenticated writes temporarily for debugging
-      allow create, update, delete: if isAuthenticated();
+      // Allow all writes temporarily for server-side operations
+      // TODO: Implement Firebase Admin SDK for secure server-side operations
+      allow create, update, delete: if true;
     }
     
     // Card generation logs
