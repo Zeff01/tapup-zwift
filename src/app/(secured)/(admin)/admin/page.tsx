@@ -1,5 +1,5 @@
 import React from "react";
-import { getAllUsers } from "@/lib/firebase/actions/user.action";
+import { getAllUsersWithCardCount } from "@/lib/firebase/actions/user.action";
 import { authCurrentUserv2 } from "@/lib/firebase/auth";
 import { USER_ROLE_ENUMS } from "@/constants";
 import { notFound, redirect } from "next/navigation";
@@ -16,7 +16,7 @@ export default async function UsersPage() {
     notFound();
   }
 
-  const users = await getAllUsers();
+  const users = await getAllUsersWithCardCount();
   const allUsers = JSON.parse(JSON.stringify(users));
   const serializedAuth = JSON.parse(JSON.stringify(auth));
 

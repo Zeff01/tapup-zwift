@@ -28,7 +28,6 @@ const Template16 = ({
   twitterUrl,
   youtubeUrl,
   whatsappNumber,
-  skypeInviteUrl,
   websiteUrl,
   viberUrl,
   tiktokUrl,
@@ -132,7 +131,6 @@ const Template16 = ({
                   youtubeUrl={youtubeUrl}
                   tiktokUrl={tiktokUrl}
                   whatsappNumber={whatsappNumber}
-                  skypeInviteUrl={skypeInviteUrl}
                   viberUrl={viberUrl}
                   websiteUrl={websiteUrl}
                   size="sm"

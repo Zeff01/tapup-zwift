@@ -57,26 +57,7 @@ const Cards = () => {
     queryFn: async () => {
       if (!user?.uid) throw new Error("User UID is undefined");
 
-      console.log("[CARDS PAGE] Fetching cards for user:", user.uid);
-      console.log("[CARDS PAGE] Current URL:", window.location.href);
-      console.log("[CARDS PAGE] URL params:", window.location.search);
-      
-      // Check if we're returning from Xendit
-      const urlParams = new URLSearchParams(window.location.search);
-      if (urlParams.has('status') || urlParams.has('external_id') || urlParams.has('payment_status')) {
-        console.error("[CARDS PAGE] 🚨 RETURNING FROM XENDIT!");
-        console.error("[CARDS PAGE] 🚨 URL Parameters:", Object.fromEntries(urlParams));
-      }
-      
       const cards = await getCardsByOwner(user.uid);
-      console.log("[CARDS PAGE] Received cards:", cards);
-      
-      // Check if any cards look suspicious
-      cards.forEach((card) => {
-        if (card.chosenPhysicalCard && !('activated' in card && card.activated)) {
-          console.error("[CARDS PAGE] 🚨 Found physical card with owner but not activated:", card);
-        }
-      });
       
       const sortedCards = await sortCards(cards, user.uid);
       return sortedCards;
@@ -85,25 +66,8 @@ const Cards = () => {
   });
 
   useEffect(() => {
-    console.log("[CARDS PAGE] useEffect - cards updated:", cards?.length);
     if (cards) setOrderedCards(cards);
   }, [cards]);
-  
-  // Check if something happens on mount
-  useEffect(() => {
-    console.log("[CARDS PAGE] Component mounted");
-    console.log("[CARDS PAGE] Initial URL:", window.location.href);
-    
-    // Check localStorage or sessionStorage for any pending operations
-    const pendingOrder = localStorage.getItem('pending_order');
-    const pendingCard = sessionStorage.getItem('pending_card');
-    
-    if (pendingOrder || pendingCard) {
-      console.error("[CARDS PAGE] 🚨 Found pending data in storage!");
-      console.error("[CARDS PAGE] Pending order:", pendingOrder);
-      console.error("[CARDS PAGE] Pending card:", pendingCard);
-    }
-  }, []);
 
   const sensors = useSensors(
     useSensor(PointerSensor),

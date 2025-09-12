@@ -30,7 +30,6 @@ const Template7 = ({
   twitterUrl,
   linkedinUrl,
   whatsappNumber,
-  skypeInviteUrl,
   websiteUrl,
   customUrl,
 }: Card) => {

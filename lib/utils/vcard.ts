@@ -23,7 +23,6 @@ export const getVCardData = (user: Partial<Card>, qrScan?: boolean) => {
     twitterUrl = "",
     youtubeUrl = "",
     whatsappNumber = "",
-    skypeInviteUrl = "",
     viberUrl = "",
     tiktokUrl = "",
   } = user;

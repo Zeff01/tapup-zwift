@@ -264,7 +264,6 @@ const Template12 = ({
   linkedinUrl,
   tiktokUrl,
   whatsappNumber,
-  skypeInviteUrl,
   viberUrl,
   websiteUrl,
   customUrl,
@@ -399,7 +398,6 @@ const Template12 = ({
               linkedinUrl={linkedinUrl}
               viberUrl={viberUrl}
               whatsappNumber={whatsappNumber}
-              skypeInviteUrl={skypeInviteUrl}
               websiteUrl={websiteUrl}
               size="md"
               iconClassName="text-neutral-700"

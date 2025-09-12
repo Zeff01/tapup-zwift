@@ -27,7 +27,6 @@ const Template17 = ({
   twitterUrl,
   youtubeUrl,
   whatsappNumber,
-  skypeInviteUrl,
   websiteUrl,
   viberUrl,
   tiktokUrl,
@@ -138,7 +137,6 @@ const Template17 = ({
               youtubeUrl={youtubeUrl}
               tiktokUrl={tiktokUrl}
               whatsappNumber={whatsappNumber}
-              skypeInviteUrl={skypeInviteUrl}
               viberUrl={viberUrl}
               websiteUrl={websiteUrl}
               variant="colorful"
@@ -183,11 +181,6 @@ const Template17 = ({
                 },
                 viber: {
                   icon: "#665cac",
-                  background: "#f3f4f6",
-                  hover: { background: "#e5e7eb" },
-                },
-                skype: {
-                  icon: "#00aff0",
                   background: "#f3f4f6",
                   hover: { background: "#e5e7eb" },
                 },

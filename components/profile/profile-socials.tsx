@@ -5,7 +5,6 @@ import {
   FaGlobe,
   FaInstagram,
   FaLinkedin,
-  FaSkype,
   FaTiktok,
   FaViber,
   FaWhatsapp,
@@ -46,7 +45,6 @@ const ProfileSocials = ({
   tiktokUrl,
   youtubeUrl,
   whatsappNumber,
-  skypeInviteUrl,
   websiteUrl,
   viberUrl,
 }: Partial<Card>) => {
@@ -62,11 +60,6 @@ const ProfileSocials = ({
       url: whatsappNumber ? `https://wa.me/${whatsappNumber}` : null,
       icon: FaWhatsapp,
       label: "WhatsApp",
-    },
-    {
-      url: skypeInviteUrl ? `skype:${skypeInviteUrl}?chat` : null,
-      icon: FaSkype,
-      label: "Skype",
     },
     { url: websiteUrl, icon: FaGlobe, label: "Website" },
   ].filter((link) => link.url);

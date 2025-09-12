@@ -99,7 +99,7 @@ const UserTable = ({
               <TableHead>Type</TableHead>
               <TableHead>Verification</TableHead>
               <TableHead>Cards</TableHead>
-              <TableHead>Activity</TableHead>
+              <TableHead>Company</TableHead>
               <TableHead className="text-right">Actions</TableHead>
             </TableRow>
           </TableHeader>
@@ -153,16 +153,12 @@ const UserTable = ({
                     <TableCell>{getUserStatusBadge(user)}</TableCell>
                     <TableCell>{getVerificationBadge(user)}</TableCell>
                     <TableCell>
-                      {user.printStatus ? (
-                        <div className="flex items-center gap-1">
-                          <CreditCard className="w-4 h-4 text-muted-foreground" />
-                          <span className="text-sm">Has cards</span>
-                        </div>
-                      ) : (
-                        <span className="text-sm text-muted-foreground">
-                          No cards
+                      <div className="flex items-center gap-1">
+                        <CreditCard className="w-4 h-4 text-muted-foreground" />
+                        <span className="text-sm font-medium">
+                          {user.cardCount || 0}
                         </span>
-                      )}
+                      </div>
                     </TableCell>
                     <TableCell>
                       <div className="space-y-1">
@@ -185,7 +181,6 @@ const UserTable = ({
                           <Button
                             variant="ghost"
                             size="sm"
-                            className="opacity-0 group-hover:opacity-100 transition-opacity"
                             disabled={isUpdating === user.id!}
                           >
                             <MoreVertical className="w-4 h-4" />

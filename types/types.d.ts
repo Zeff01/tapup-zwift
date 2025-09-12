@@ -48,7 +48,6 @@ export type Users = {
   twitterUrl?: string;
   linkedinUrl?: string;
   whatsappNumber?: string;
-  skypeInviteUrl?: string;
   websiteUrl?: string;
   tiktokUrl?: string;
   viberUrl?: string;
@@ -139,6 +138,7 @@ export interface ExtendedUserInterface extends Users {
   onboarding: boolean;
   deliveryAddresses?: DeliveryAddress[];
   cardOrdering?: string[];
+  cardCount?: number;
 }
 
 export type UserState = ExtendedUserInterface | null;

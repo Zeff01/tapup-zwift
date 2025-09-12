@@ -97,7 +97,6 @@ export default function CardsAndUsersCreateFields({
       twitterUrl: "",
       linkedinUrl: "",
       whatsappNumber: "",
-      skypeInviteUrl: "",
       websiteUrl: "",
       chosenTemplate: "template1",
       chosenPhysicalCard: "eclipse",

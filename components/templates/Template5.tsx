@@ -27,7 +27,6 @@ const Template5 = ({
   tiktokUrl,
   youtubeUrl,
   whatsappNumber,
-  skypeInviteUrl,
   websiteUrl,
   viberUrl,
   customUrl,
@@ -83,7 +82,6 @@ const Template5 = ({
             linkedinUrl={linkedinUrl}
             viberUrl={viberUrl}
             whatsappNumber={whatsappNumber}
-            skypeInviteUrl={skypeInviteUrl}
             websiteUrl={websiteUrl}
             variant="minimal"
             size="sm"

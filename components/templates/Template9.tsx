@@ -203,7 +203,6 @@ const Template9 = ({
   tiktokUrl,
   viberUrl,
   whatsappNumber,
-  skypeInviteUrl,
   websiteUrl,
   customUrl,
 }: Card) => {
@@ -322,7 +321,6 @@ const Template9 = ({
                 linkedinUrl={linkedinUrl}
                 viberUrl={viberUrl}
                 whatsappNumber={whatsappNumber}
-                skypeInviteUrl={skypeInviteUrl}
                 websiteUrl={websiteUrl}
                 size="lg"
                 iconSet="outline"

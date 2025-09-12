@@ -25,7 +25,6 @@ const Template3 = ({
   twitterUrl,
   linkedinUrl,
   whatsappNumber,
-  skypeInviteUrl,
   tiktokUrl,
   viberUrl,
   websiteUrl,
@@ -98,7 +97,6 @@ const Template3 = ({
           whatsappNumber={whatsappNumber}
           viberUrl={viberUrl}
           tiktokUrl={tiktokUrl}
-          skypeInviteUrl={skypeInviteUrl}
           websiteUrl={websiteUrl}
           size="md"
           className="flex items-center justify-center gap-2 mt-6 my-4 mx-auto w-full"

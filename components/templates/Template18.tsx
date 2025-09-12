@@ -27,7 +27,6 @@ const Template18 = ({
   twitterUrl,
   youtubeUrl,
   whatsappNumber,
-  skypeInviteUrl,
   websiteUrl,
   viberUrl,
   tiktokUrl,
@@ -159,7 +158,6 @@ const Template18 = ({
                     youtubeUrl={youtubeUrl}
                     tiktokUrl={tiktokUrl}
                     whatsappNumber={whatsappNumber}
-                    skypeInviteUrl={skypeInviteUrl}
                     viberUrl={viberUrl}
                     websiteUrl={websiteUrl}
                     variant="colorful"
