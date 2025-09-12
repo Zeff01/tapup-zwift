@@ -18,10 +18,11 @@ export default async function UsersPage() {
 
   const users = await getAllUsers();
   const allUsers = JSON.parse(JSON.stringify(users));
+  const serializedAuth = JSON.parse(JSON.stringify(auth));
 
   return (
     <main className="flex h-full flex-col">
-      <UserManagementDashboard users={allUsers} currentUser={auth} />
+      <UserManagementDashboard users={allUsers} currentUser={serializedAuth} />
     </main>
   );
 }
