@@ -147,7 +147,7 @@ export default function CheckoutForm() {
         });
       }
 
-      clearCart();
+      await clearCart();
       
       // Redirect to Xendit payment page
       window.location.href = recurringPlan.recurringPlan.actions?.[0]?.url;
