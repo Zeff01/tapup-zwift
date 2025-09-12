@@ -115,7 +115,7 @@ export function TemplateTabs({
   setSelectedTemplateId,
 }: TemplateTabsProps) {
   // Group templates by category
-  const categories = [...new Set(templates.map(t => t.category))];
+  const categories = Array.from(new Set(templates.map(t => t.category)));
   const templatesByCategory = categories.reduce((acc, category) => {
     acc[category] = templates.filter(t => t.category === category);
     return acc;

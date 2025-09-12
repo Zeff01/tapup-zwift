@@ -137,14 +137,8 @@ const MultiStepFormUpdate = ({
         servicePhotos: company.servicePhotos || [],
       }));
     } else {
-      // Pre-populate with one empty company box
-      return [{
-        company: "",
-        position: "",
-        companyBackground: "",
-        serviceDescription: "",
-        servicePhotos: []
-      }];
+      // Return empty array for new cards
+      return [];
     }
   });
 
@@ -797,7 +791,7 @@ const MultiStepFormUpdate = ({
                         setServicePhotoFiles((prev) => [...prev, []]);
                       }}
                     >
-                      Add More Company
+                      {companies.length > 0 ? "Add More Company" : "Add Company"}
                     </Button>
                     <span className="text-xs text-red-500">
                       {methods.formState.errors.companies?.message ?? ""}
