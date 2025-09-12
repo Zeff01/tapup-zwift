@@ -64,13 +64,13 @@ const Header = () => {
   return (
     <>
       <div className="flex sticky top-0 z-50 bg-background justify-between items-center md:px-10 shadow-xl  p-4">
-      <Link href="/" rel="preload" onClick={() => setActivePath("/")}>
-        <div className="aspect-[130/48] w-20 lg:w-28">
-          <TapupLogo />
-        </div>
-      </Link>
+        <Link href="/" rel="preload" onClick={() => setActivePath("/")}>
+          <div className="aspect-[130/48] w-20 lg:w-28">
+            <TapupLogo />
+          </div>
+        </Link>
 
-      <div className="flex items-center gap-4  lg:gap-8">
+        <div className="flex items-center gap-4  lg:gap-8">
         {/* Desktop Navigation */}
         <nav className="hidden lg:flex gap-6 text-xl">
           {headerItems.map((item, index) => (
@@ -99,7 +99,7 @@ const Header = () => {
         )}
 
         {user && !isLoadingUserContext && (
-          <Link className="hidden lg:block" href={"/cards">
+          <Link className="hidden lg:block" href={"/cards"}>
             <Avatar className="h-12 w-12">
               <AvatarImage
                 src={user?.profilePictureUrl || "/placeholder.svg"}
@@ -117,16 +117,16 @@ const Header = () => {
         )}
 
         <Cart />
-        <ThemeToggle />
+          <ThemeToggle />
 
-        {/* Mobile Menu Trigger */}
-        <div className="lg:hidden cursor-pointer" onClick={handleMobileMenu}>
-          <RxHamburgerMenu size={20} />
+          {/* Mobile Menu Trigger */}
+          <div className="lg:hidden cursor-pointer" onClick={handleMobileMenu}>
+            <RxHamburgerMenu size={20} />
+          </div>
         </div>
-      </div>
 
-      {/* Mobile Menu Overlay */}
-      <div
+        {/* Mobile Menu Overlay */}
+        <div
         className={`
           fixed 
           top-0 
