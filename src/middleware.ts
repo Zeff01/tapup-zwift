@@ -13,11 +13,13 @@ import {
   ACTION_ROUTE,
   RESET_PASSWORD_ROUTE,
   FORGOT_PASSWORD_ROUTE,
+  HOME_ROUTE,
 } from "@/constants";
 
 const protectedRoutes = [
   ONBOARDING_ROUTE,
   CARD_ROUTE,
+  HOME_ROUTE,
   DASHBOARD_ROUTE,
   USER_ROUTE,
   UPDATE_ROUTE,

@@ -26,6 +26,7 @@ import { IoCardOutline } from "react-icons/io5";
 export const ROOT_ROUTE = "/";
 export const LOGIN_ROUTE = "/login";
 export const SIGNUP_ROUTE = "/signup";
+export const HOME_ROUTE = "/home";
 export const RESET_PASSWORD_ROUTE = "/resetPassword";
 export const FORGOT_PASSWORD_ROUTE = "/forgotPassword";
 export const SESSION_COOKIE_NAME = "user_session";

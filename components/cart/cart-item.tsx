@@ -23,7 +23,7 @@ export function CartItem({ item }: CartItemProps) {
           src={item.image || "/placeholder.svg"}
           alt={item.name}
           fill
-          className="object-contain"
+          className="object-contain size-full"
         />
       </div>
       <div className="flex flex-1 flex-col">
