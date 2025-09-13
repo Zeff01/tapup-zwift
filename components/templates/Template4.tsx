@@ -36,6 +36,7 @@ const Template4 = ({
   viberUrl,
   customUrl,
   companies,
+  owner,
 }: Card) => {
   const userProfile = {
     id,
@@ -242,6 +243,8 @@ const Template4 = ({
           whatsappNumber={whatsappNumber}
           viberUrl={viberUrl}
           websiteUrl={websiteUrl}
+          cardId={id}
+          ownerId={owner}
           className="flex justify-center gap-4 mb-2"
         />
       </div>

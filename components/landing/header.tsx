@@ -62,7 +62,7 @@ const Header = () => {
   }, [isMenuOpen]);
 
   return (
-    <header className="flex sticky top-0 z-50 bg-background justify-between items-center md:px-10 shadow-xl  p-4">
+    <div className="flex sticky top-0 z-50 bg-background justify-between items-center md:px-10 shadow-xl  p-4">
       <Link href="/" rel="preload" onClick={() => setActivePath("/")}>
         <div className="aspect-[130/48] w-20 lg:w-28">
           <TapupLogo />
@@ -98,7 +98,7 @@ const Header = () => {
         )}
 
         {user && !isLoadingUserContext && (
-          <Link className="hidden lg:block" href={"/dashboard"}>
+          <Link className="hidden lg:block" href={"/cards"}>
             <Avatar className="h-12 w-12">
               <AvatarImage
                 src={user?.profilePictureUrl || "/placeholder.svg"}
@@ -195,7 +195,7 @@ const Header = () => {
             )}
 
             {user && !isLoadingUserContext && (
-              <Link href={"/dashboard"}>
+              <Link href={"/cards"}>
                 <Avatar className="h-12 w-12">
                   <AvatarImage
                     src={user?.profilePictureUrl || "/placeholder.svg"}
@@ -222,7 +222,7 @@ const Header = () => {
           </nav>
         </div>
       </div>
-    </header>
+    </div>
   );
 };
 

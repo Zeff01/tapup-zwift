@@ -10,6 +10,7 @@ import {
 
 const Template2 = ({
   id,
+  owner,
   profilePictureUrl,
   coverPhotoUrl,
   firstName,
@@ -88,6 +89,8 @@ const Template2 = ({
         {/* SOCIAL LINKS */}
         <div className="flex justify-center mt-5 mb-6">
           <SocialLinks
+            cardId={id}
+            ownerId={owner}
             facebookUrl={facebookUrl}
             twitterUrl={twitterUrl}
             tiktokUrl={tiktokUrl}

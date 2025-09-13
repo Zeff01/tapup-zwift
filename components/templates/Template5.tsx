@@ -30,6 +30,7 @@ const Template5 = ({
   websiteUrl,
   viberUrl,
   customUrl,
+  owner,
 }: Card) => {
   const userProfile = {
     id,
@@ -72,26 +73,28 @@ const Template5 = ({
           buttonClassName="border border-pink-600 text-pink-400 bg-white hover:bg-pink-50"
         />
 
-        {/* SOCIAL MEDIA ICONS */}
-        <div className="relative ">
-          <div className="absolute -top-8  left-4  ">
-            <SocialLinks
-              facebookUrl={facebookUrl}
-              twitterUrl={twitterUrl}
-              tiktokUrl={tiktokUrl}
-              youtubeUrl={youtubeUrl}
-              instagramUrl={instagramUrl}
-              linkedinUrl={linkedinUrl}
-              viberUrl={viberUrl}
-              whatsappNumber={whatsappNumber}
-              websiteUrl={websiteUrl}
-              variant="minimal"
-              size="sm"
-              className="flex flex-col gap-[6px]"
-              iconClassName="text-gray-900 hover:text-pink-500"
-            />
-          </div>
+      {/* SOCIAL MEDIA ICONS */}
+      <div className="relative ">
+        <div className="absolute -top-8  left-4  ">
+          <SocialLinks
+            facebookUrl={facebookUrl}
+            twitterUrl={twitterUrl}
+            tiktokUrl={tiktokUrl}
+            youtubeUrl={youtubeUrl}
+            instagramUrl={instagramUrl}
+            linkedinUrl={linkedinUrl}
+            viberUrl={viberUrl}
+            whatsappNumber={whatsappNumber}
+            websiteUrl={websiteUrl}
+            cardId={id}
+            ownerId={owner}
+            variant="minimal"
+            size="sm"
+            className="flex flex-col gap-[6px]"
+            iconClassName="text-gray-900 hover:text-pink-500"
+          />
         </div>
+      </div>
 
         {/* PERSONAL INFORMATION */}
         <div className="text-center mt-4 space-y-1 ">

@@ -290,9 +290,8 @@ export const businessList = [
 ];
 
 export const menuItems = [
-  { icon: TbCards, title: "Cards", href: "/cards" },
   { icon: Home, title: "Home", href: "/home" },
-  { icon: RxDashboard, title: "Dashboard", href: "/dashboard" },
+  { icon: TbCards, title: "Cards", href: "/cards" },
   { icon: FiShoppingBag, title: "My Orders", href: "/cards?tab=orders" },
 ];
 

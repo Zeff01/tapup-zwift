@@ -103,10 +103,30 @@ export const getVCardData = (user: Partial<Card>, qrScan?: boolean) => {
 /**
  * Download vCard file for a user profile
  */
-export const downloadVCard = (userProfile: Partial<Card>) => {
+export const downloadVCard = async (userProfile: Partial<Card>) => {
   const vCardString = getVCardData(userProfile);
 
   if (!vCardString) return;
+
+  // Track VCF download
+  if (userProfile.id && userProfile.owner) {
+    try {
+      await fetch('/api/analytics/track-vcf', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          cardId: userProfile.id,
+          ownerId: userProfile.owner,
+          platform: navigator.userAgent.includes('iPhone') ? 'iOS' : 
+                   navigator.userAgent.includes('Android') ? 'Android' : 'Other'
+        }),
+      });
+    } catch (error) {
+      console.error('Failed to track VCF download:', error);
+    }
+  }
 
   const { firstName, lastName } = userProfile;
   // Create a Blob from the vCard String

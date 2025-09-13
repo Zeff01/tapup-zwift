@@ -139,15 +139,17 @@ export const CTAButtons: React.FC<CTAButtonsProps> = ({
           {showLabels && <span className={cn("ml-2", textSize)}>Email</span>}
         </Link>
       )}
-      <button
-        onClick={() => downloadVCard(userProfile)}
-        className={buttonClass}
-        title="Save Contact"
-        type="button"
-      >
-        <DownloadIcon size={iconSize} />
-        {showLabels && <span className={cn("ml-2", textSize)}>Save</span>}
-      </button>
+      {(userProfile.company || userProfile.position || userProfile.email) && (
+        <button
+          onClick={() => downloadVCard(userProfile as any)}
+          className={buttonClass}
+          title="Save Contact"
+          type="button"
+        >
+          <DownloadIcon size={iconSize} />
+          {showLabels && <span className={cn("ml-2", textSize)}>Save</span>}
+        </button>
+      )}
     </div>
   );
 };
