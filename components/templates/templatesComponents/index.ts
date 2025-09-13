@@ -26,7 +26,6 @@ export const getSampleSocialUrls = ({
   tiktokUrl,
   youtubeUrl,
   whatsappNumber,
-  skypeInviteUrl,
   websiteUrl,
   viberUrl,
 }: Partial<Card>) => {
@@ -39,7 +38,6 @@ export const getSampleSocialUrls = ({
     websiteUrl: websiteUrl || "https://www.zwiftech.com",
     tiktokUrl: tiktokUrl || "https://www.tiktok.com",
     whatsappNumber: whatsappNumber || "https://www.whatsapp.com",
-    skypeInviteUrl: skypeInviteUrl || "https://teams.live.com/free",
     viberUrl: viberUrl || "https://www.viber.com/en",
   };
 };
