@@ -53,6 +53,12 @@ const templates: Template[] = [
     imageUrl: "/assets/template6.png",
     route: "/create/template/6",
   },
+  // {
+  //   id: "template8",
+  //   name: "wendel White",
+  //   imageUrl: "/assets/template8.png",
+  //   route: "/create/template/8",
+  // },
   {
     id: "template9",
     name: "Business",
@@ -119,12 +125,7 @@ const templates: Template[] = [
   //   imageUrl: "/assets/template6.png",
   //   route: "/create/template/7",
   // },
-  // {
-  //   id: "template8",
-  //   name: "Simple White",
-  //   imageUrl: "/assets/template6.png",
-  //   route: "/create/template/8",
-  // },
+
 ];
 
 interface TemplateCarouselProps {
@@ -148,11 +149,10 @@ export function TemplateCarousel({
           {templates.map((template) => (
             <CarouselItem key={template.id} className="flex-none w-1/2 p-2">
               <div
-                className={`block transform hover:scale-105 transition-transform duration-300 cursor-pointer  ${
-                  selectedTemplateId === template.id
-                    ? "outline outline-4 rounded-lg outline-green-500"
-                    : ""
-                }`}
+                className={`block transform hover:scale-105 transition-transform duration-300 cursor-pointer  ${selectedTemplateId === template.id
+                  ? "outline outline-4 rounded-lg outline-green-500"
+                  : ""
+                  }`}
                 onClick={() => setSelectedTemplateId(template.id)}
               >
                 <Card className="bg-black rounded-lg overflow-hidden border-none">

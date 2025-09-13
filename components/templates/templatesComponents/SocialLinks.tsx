@@ -368,6 +368,7 @@ export const Template7Socials: React.FC<Omit<SocialLinksProps, "variant">> = (
   props
 ) => <SocialLinks {...props} variant="buttons" />;
 
+
 export const Template9Socials: React.FC<Omit<SocialLinksProps, "variant">> = (
   props
 ) => (
