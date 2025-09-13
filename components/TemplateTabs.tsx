@@ -49,6 +49,12 @@ const templates: Template[] = [
     imageUrl: "/assets/template6.png",
     category: "Minimal",
   },
+  // {
+  //   id: "template8",
+  //   name: "Simple White",
+  //   imageUrl: "/assets/template6.png",
+  //   category: "Minimal",
+  // },
   {
     id: "template9",
     name: "Business",
@@ -128,12 +134,12 @@ export function TemplateTabs({
   return (
     <div>
       <h1 className="text-lg font-semibold mb-4">Choose a Template</h1>
-      
+
       <Tabs defaultValue={currentCategory} className="w-full">
         <TabsList className="grid grid-cols-2 md:grid-cols-5 mb-4 h-auto">
           {categories.map((category) => (
-            <TabsTrigger 
-              key={category} 
+            <TabsTrigger
+              key={category}
               value={category}
               className="data-[state=active]:bg-primary data-[state=active]:text-primary-foreground"
             >
@@ -144,7 +150,7 @@ export function TemplateTabs({
             </TabsTrigger>
           ))}
         </TabsList>
-        
+
         {categories.map((category) => (
           <TabsContent key={category} value={category} className="mt-4">
             <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-4">
@@ -160,7 +166,7 @@ export function TemplateTabs({
           </TabsContent>
         ))}
       </Tabs>
-      
+
       <p className="text-xs text-gray-500 mt-4 text-center">
         💡 Tip: Templates are organized by style. Click any template to preview your card
       </p>
@@ -184,11 +190,11 @@ function TemplateCard({ template, isSelected, onClick }: TemplateCardProps) {
         isSelected && "scale-105"
       )}
     >
-      <Card 
+      <Card
         className={cn(
           "overflow-hidden border-2 transition-all",
-          isSelected 
-            ? "border-green-500 shadow-lg" 
+          isSelected
+            ? "border-green-500 shadow-lg"
             : "border-transparent hover:border-gray-300"
         )}
       >
@@ -202,14 +208,14 @@ function TemplateCard({ template, isSelected, onClick }: TemplateCardProps) {
               className="object-cover"
               sizes="(max-width: 640px) 50vw, (max-width: 768px) 33vw, 25vw"
             />
-            
+
             {/* Selected Indicator */}
             {isSelected && (
               <div className="absolute top-2 right-2 bg-green-500 text-white rounded-full p-1">
                 <Check className="h-4 w-4" />
               </div>
             )}
-            
+
             {/* Hover Overlay */}
             <div className={cn(
               "absolute inset-0 bg-black/50 flex items-center justify-center transition-opacity",
@@ -218,7 +224,7 @@ function TemplateCard({ template, isSelected, onClick }: TemplateCardProps) {
               <p className="text-white font-medium text-sm">Click to Select</p>
             </div>
           </div>
-          
+
           {/* Template Name */}
           <div className="p-2 bg-white">
             <h3 className="text-sm font-medium text-center">

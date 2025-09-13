@@ -159,9 +159,12 @@ export const Template1CTA: React.FC<Omit<CTAButtonsProps, "variant">> = (
   props
 ) => <CTAButtons {...props} variant="rounded" />;
 
+
 export const Template9CTA: React.FC<
   Omit<CTAButtonsProps, "variant" | "size">
 > = (props) => <CTAButtons {...props} variant="floating" size="sm" />;
+
+
 
 export const Template13CTA: React.FC<Omit<CTAButtonsProps, "variant">> = (
   props

@@ -290,144 +290,144 @@ const Template12 = ({
       flexDirection="col"
     >
       <div className="flex-grow">
-      <div className="max-w-[480px] mx-auto min-h-screen relative  flex flex-col">
-        <div className="absolute flex gap-x-2 m-4 top-0 right-0">
-          <span className=" bg-white text-2xl p-2 text-neutral-800 rounded-full">
-            <a href={`mailto:${email}`}>
-              <CiMail className="cursor-pointer" />
-            </a>
-          </span>
-          <span className=" bg-white text-2xl p-2 text-neutral-800 rounded-full">
-            <CiSaveDown2
-              className="cursor-pointer"
-              onClick={() => downloadVCard(userProfile)}
-            />
-          </span>
-        </div>
-        <div className="relative -z-1 h-[240px]">
-          <div className="absolute w-full  flex flex-col items-center justify-center z-20 top-0 left-1/2 transform -translate-x-1/2  ">
-            <div className="flex flex-col w-full items-center justify-center pt-2 ">
-              {firstName ? (
-                <h1
-                  className={cn(
-                    "text-xl   text-[#D3F1DF] capitalize",
+        <div className="max-w-[480px] mx-auto min-h-screen relative  flex flex-col">
+          <div className="absolute flex gap-x-2 m-4 top-0 right-0">
+            <span className=" bg-white text-2xl p-2 text-neutral-800 rounded-full">
+              <a href={`mailto:${email}`}>
+                <CiMail className="cursor-pointer" />
+              </a>
+            </span>
+            <span className=" bg-white text-2xl p-2 text-neutral-800 rounded-full">
+              <CiSaveDown2
+                className="cursor-pointer"
+                onClick={() => downloadVCard(userProfile)}
+              />
+            </span>
+          </div>
+          <div className="relative -z-1 h-[240px]">
+            <div className="absolute w-full  flex flex-col items-center justify-center z-20 top-0 left-1/2 transform -translate-x-1/2  ">
+              <div className="flex flex-col w-full items-center justify-center pt-2 ">
+                {firstName ? (
+                  <h1
+                    className={cn(
+                      "text-xl   text-[#D3F1DF] capitalize",
 
-                    michroma.className
-                  )}
-                >
-                  {firstName + " " + lastName}
-                </h1>
-              ) : (
-                <h1 className="text-xl font-bold mt-2 text-[#D3F1DF]">
-                  Hussain Watkins
-                </h1>
-              )}
-              <div className="flex">
-                <h2
-                  className={cn(
-                    "text-xs font-semibold   text-[#D3F1DF] capitalize",
+                      michroma.className
+                    )}
+                  >
+                    {firstName + " " + lastName}
+                  </h1>
+                ) : (
+                  <h1 className="text-xl font-bold mt-2 text-[#D3F1DF]">
+                    Hussain Watkins
+                  </h1>
+                )}
+                <div className="flex">
+                  <h2
+                    className={cn(
+                      "text-xs font-semibold   text-[#D3F1DF] capitalize",
 
-                    michroma.className
-                  )}
-                >
-                  {company ?? "COMPANY"}
-                </h2>
-                <Separator
-                  orientation="vertical"
-                  className="h-4 bg-[#D3F1DF] mx-2"
-                />
-                <h2
-                  className={cn(
-                    "text-xs font-semibold   text-[#D3F1DF] capitalize",
+                      michroma.className
+                    )}
+                  >
+                    {company ?? "COMPANY"}
+                  </h2>
+                  <Separator
+                    orientation="vertical"
+                    className="h-4 bg-[#D3F1DF] mx-2"
+                  />
+                  <h2
+                    className={cn(
+                      "text-xs font-semibold   text-[#D3F1DF] capitalize",
 
-                    michroma.className
-                  )}
-                >
-                  {position ?? "Chief Technology Officer"}
-                </h2>
+                      michroma.className
+                    )}
+                  >
+                    {position ?? "Chief Technology Officer"}
+                  </h2>
+                </div>
+                {profilePictureUrl ? (
+                  <div className=" rounded-full mx-auto overflow-hidden my-2">
+                    <Image
+                      src={profilePictureUrl}
+                      alt="Profile Image"
+                      width={80}
+                      height={80}
+                      className="rounded-full w-24 h-24"
+                    />
+                  </div>
+                ) : (
+                  <div className=" w-28 h-28 rounded-full mx-auto flex items-center justify-center">
+                    <Image
+                      src={"/assets/template10samplepic.png"}
+                      alt="Profile Image"
+                      width={80}
+                      height={80}
+                      className="rounded-full w-24 h-24"
+                    />
+                  </div>
+                )}
               </div>
-              {profilePictureUrl ? (
-                <div className=" rounded-full mx-auto overflow-hidden my-2">
-                  <Image
-                    src={profilePictureUrl}
-                    alt="Profile Image"
-                    width={80}
-                    height={80}
-                    className="rounded-full w-24 h-24"
-                  />
-                </div>
-              ) : (
-                <div className=" w-28 h-28 rounded-full mx-auto flex items-center justify-center">
-                  <Image
-                    src={"/assets/template10samplepic.png"}
-                    alt="Profile Image"
-                    width={80}
-                    height={80}
-                    className="rounded-full w-24 h-24"
-                  />
-                </div>
-              )}
+              <div className="">
+                <CTAButtons
+                  number={number}
+                  email={email}
+                  userProfile={userProfile}
+                  variant="floating"
+                  size="sm"
+                  icons="lucide"
+                  buttonClassName="bg-[#D3F1DF] w-12 text-xs hover:bg-[#466b55] transition-colors duration-300 border-none rounded-full h-7 text-black shadow-md"
+                  layout="horizontal"
+                />
+              </div>
             </div>
-            <div className="">
-              <CTAButtons
-                number={number}
-                email={email}
-                userProfile={userProfile}
-                variant="floating"
-                size="sm"
-                icons="lucide"
-                buttonClassName="bg-[#D3F1DF] w-12 text-xs hover:bg-[#466b55] transition-colors duration-300 border-none rounded-full h-7 text-black shadow-md"
-                layout="horizontal"
+            <Image
+              src={coverPhotoUrl || "/assets/template9coverphoto.png"}
+              alt="Cover Image"
+              width={400}
+              height={200}
+              className="size-full object-cover"
+            />
+          </div>
+          <div className="text-center flex flex-col w-full pb-4 space-y-1 bg-[#D3F1DF] bg-gradient-to-t from-[#85A98F] overflow-hidden to-[#D3F1DF] rounded-t-3xl  z-20 relative -mt-8 flex-1">
+            <div className=" flex  items-center w-full gap-3 py-4 text-2xl bg-gradient-to-t from-[#D3F1DF]  to-[#f4fcf7] text-neutral-700 h-16 justify-center">
+              <SocialLinks
+                facebookUrl={facebookUrl}
+                twitterUrl={twitterUrl}
+                tiktokUrl={tiktokUrl}
+                youtubeUrl={youtubeUrl}
+                instagramUrl={instagramUrl}
+                linkedinUrl={linkedinUrl}
+                viberUrl={viberUrl}
+                whatsappNumber={whatsappNumber}
+                websiteUrl={websiteUrl}
+                cardId={id}
+                ownerId={owner}
+                size="md"
+                iconClassName="text-neutral-700"
               />
             </div>
-          </div>
-          <Image
-            src={coverPhotoUrl || "/assets/template9coverphoto.png"}
-            alt="Cover Image"
-            width={400}
-            height={200}
-            className="size-full object-cover"
-          />
-        </div>
-        <div className="text-center flex flex-col w-full pb-4 space-y-1 bg-[#D3F1DF] bg-gradient-to-t from-[#85A98F] overflow-hidden to-[#D3F1DF] rounded-t-3xl  z-20 relative -mt-8 flex-1">
-          <div className=" flex  items-center w-full gap-3 py-4 text-2xl bg-gradient-to-t from-[#D3F1DF]  to-[#f4fcf7] text-neutral-700 h-16 justify-center">
-            <SocialLinks
-              facebookUrl={facebookUrl}
-              twitterUrl={twitterUrl}
-              tiktokUrl={tiktokUrl}
-              youtubeUrl={youtubeUrl}
-              instagramUrl={instagramUrl}
-              linkedinUrl={linkedinUrl}
-              viberUrl={viberUrl}
-              whatsappNumber={whatsappNumber}
-              websiteUrl={websiteUrl}
-              cardId={id}
-              ownerId={owner}
-              size="md"
-              iconClassName="text-neutral-700"
-            />
-          </div>
-          <div className=" flex flex-col gap-y-2 flex-grow text-black mt-28 px-4">
-            <h2 className="text-lg font-bold mt-3">Professional Portfolio</h2>
-            <p className="text-sm">
-              Below you&#39;ll find details about my professional experience and
-              the companies I&#39;ve worked with. Each entry highlights my role,
-              responsibilities, and the services offered.
-            </p>
+            <div className=" flex flex-col gap-y-2 flex-grow text-black mt-28 px-4">
+              <h2 className="text-lg font-bold mt-3">Professional Portfolio</h2>
+              <p className="text-sm">
+                Below you&#39;ll find details about my professional experience and
+                the companies I&#39;ve worked with. Each entry highlights my role,
+                responsibilities, and the services offered.
+              </p>
 
-            <div className="w-full mx-auto mt-4">
-              {companies && companies.length > 0 && (
-                <CompanyShowcase
-                  companies={companies}
-                  profilePictureUrl={profilePictureUrl}
-                  firstName={firstName}
-                  lastName={lastName}
-                />
-              )}
+              <div className="w-full mx-auto mt-4">
+                {companies && companies.length > 0 && (
+                  <CompanyShowcase
+                    companies={companies}
+                    profilePictureUrl={profilePictureUrl}
+                    firstName={firstName}
+                    lastName={lastName}
+                  />
+                )}
+              </div>
             </div>
           </div>
         </div>
-      </div>
       </div>
 
       <TemplateFooter className="flex flex-col items-center mb-1 gap-1 text-center text-xs py-4">
