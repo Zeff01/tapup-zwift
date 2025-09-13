@@ -54,7 +54,7 @@ export const ProfileHeader: React.FC<ProfileHeaderProps> = ({
   const coverHeightClass = coverHeightMap[coverHeight];
 
   const profilePositionClasses = {
-    left: "left-8",
+    left: "left-5",
     center: "left-1/2 transform -translate-x-1/2",
     right: "right-8",
   };

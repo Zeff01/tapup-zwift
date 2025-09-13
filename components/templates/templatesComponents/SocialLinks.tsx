@@ -353,7 +353,13 @@ export const SocialLinks: React.FC<SocialLinksProps> = ({
         "whatsapp",
         `https://wa.me/${whatsappNumber}`
       )}
-      {renderSocialLink(viberUrl, icons.viber, "Viber", "viber", viberUrl)}
+      {renderSocialLink(
+        viberUrl,
+        icons.viber,
+        "Viber",
+        "viber",
+        `viber://add?number=+${viberUrl}`
+      )}
       {renderSocialLink(websiteUrl, icons.website, "Website", "website")}
     </div>
   );

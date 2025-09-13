@@ -1,15 +1,183 @@
 import { Button } from "@/components/ui/button";
-import { downloadVCard } from "@/lib/utils";
+import { downloadVCard, getCopyrightYear } from "@/lib/utils";
 import { Card } from "@/types/types";
 import Image from "next/image";
 import {
-  FaEnvelope,
-  FaFacebook,
-  FaGlobe,
-  FaInstagram,
-  FaLinkedin,
-  FaPhone,
-} from "react-icons/fa6";
+  Template7ProfileHeader,
+  Template7Container,
+  CTAButtons,
+  Template1CTA,
+  SocialLinks,
+  TemplateFooter,
+} from "./templatesComponents";
+import Link from "next/link";
+
+const CompanyShowcase = ({
+  companies,
+  profilePictureUrl,
+  firstName,
+  lastName,
+}: {
+  companies?: Card["companies"];
+  profilePictureUrl?: string;
+  firstName?: string;
+  lastName?: string;
+}) => {
+  if (!companies || companies.length === 0) {
+    return null;
+  }
+
+  return (
+    <div className="space-y-6">
+      {companies.map((company, index) => (
+        <div
+          key={index}
+          className="bg-white rounded-2xl shadow-lg border border-gray-100 overflow-hidden hover:shadow-xl transition-all duration-300"
+        >
+          {/* Company Header */}
+          <div className="p-6 bg-gradient-to-r from-blue-50 via-indigo-50 to-purple-50 border-b border-gray-100">
+            <div className="flex items-center justify-between">
+              <div className="flex items-center space-x-4">
+                <div>
+                  <h3 className="text-2xl font-extrabold text-blue-500 mb-1">
+                    {company.company}
+                  </h3>
+                  <p className="text-gray-900 font-semibold">
+                    {company.position}
+                  </p>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          {/* Content */}
+          <div className="p-6 space-y-6">
+            {/* Company Background */}
+            {company.companyBackground && (
+              <div className="space-y-3">
+                <div className="flex items-center space-x-2">
+                  <h4 className="text-lg font-semibold text-gray-900">
+                    Company Overview
+                  </h4>
+                </div>
+                <div className="pl-4">
+                  <p className="text-gray-700 leading-relaxed">
+                    {company.companyBackground}
+                  </p>
+                </div>
+              </div>
+            )}
+
+            {/* Service Description */}
+            {company.serviceDescription && (
+              <div className="space-y-3">
+                <div className="flex items-center space-x-2">
+                  <h4 className="text-lg font-semibold text-gray-900">
+                    Services & Expertise
+                  </h4>
+                </div>
+                <div className="pl-4 ">
+                  <p className="text-gray-700 leading-relaxed">
+                    {company.serviceDescription}
+                  </p>
+                </div>
+              </div>
+            )}
+
+            {/* Service Photos */}
+            {Array.isArray(company.servicePhotos) &&
+              company.servicePhotos.length > 0 && (
+                <div className="space-y-3">
+                  <div className="flex items-center space-x-2">
+                    <h4 className="text-lg font-semibold text-gray-900">
+                      Portfolio Gallery
+                    </h4>
+                  </div>
+                  <div>
+                    {company.servicePhotos.length === 1 ? (
+                      <div className="rounded-xl overflow-hidden shadow-lg">
+                        <Image
+                          src={company.servicePhotos[0]}
+                          alt={`${company.company} portfolio`}
+                          width={600}
+                          height={400}
+                          className="w-full h-auto object-cover hover:scale-105 transition-transform duration-300"
+                        />
+                      </div>
+                    ) : (
+                      <div className="grid grid-cols-2 gap-4">
+                        {company.servicePhotos.map((photo, photoIndex) => (
+                          <div
+                            key={photoIndex}
+                            className="rounded-xl overflow-hidden shadow-lg group relative p-2 bg-gray-100"
+                          >
+                            <Image
+                              src={photo}
+                              alt={`${company.company} portfolio ${photoIndex + 1}`}
+                              width={300}
+                              height={photoIndex % 3 === 0 ? 230 : 200}
+                              className="w-full h-auto object-cover transition-all duration-300 group-hover:scale-110 rounded-xl"
+                            />
+                            <div className="absolute inset-0 bg-gradient-to-t from-black/40 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
+                            <div className="absolute bottom-2 left-2 opacity-0 group-hover:opacity-100 transition-opacity duration-300">
+                              <span className="text-white text-xs font-medium bg-black/50 px-2 py-1 rounded-full">
+                                View {photoIndex + 1}
+                              </span>
+                            </div>
+                          </div>
+                        ))}
+                      </div>
+                    )}
+                  </div>
+                </div>
+              )}
+
+            {/* Contact Info */}
+            <div className="pt-4 border-t border-gray-100">
+              <div className="flex items-center justify-center space-x-4 text-sm text-gray-600">
+                <span className="flex items-center space-x-1">
+                  <svg
+                    className="w-4 h-4 text-blue-500"
+                    fill="none"
+                    stroke="currentColor"
+                    viewBox="0 0 24 24"
+                  >
+                    <path
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                      strokeWidth={2}
+                      d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"
+                    />
+                  </svg>
+                  <span>
+                    {firstName} {lastName}
+                  </span>
+                </span>
+                <span className="w-1 h-1 bg-gray-300 rounded-full"></span>
+                <span className="flex items-center space-x-1">
+                  <svg
+                    className="w-4 h-4 text-indigo-500"
+                    fill="none"
+                    stroke="currentColor"
+                    viewBox="0 0 24 24"
+                  >
+                    <path
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                      strokeWidth={2}
+                      d="M21 13.255A23.931 23.931 0 0112 15c-3.183 0-6.22-.62-9-1.745M16 6V4a2 2 0 00-2-2h-4a2 2 0 00-2 2v2m4 6h.01M5 20h14a2 2 0 002-2V8a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"
+                    />
+                  </svg>
+                  <span>{company.position}</span>
+                </span>
+              </div>
+            </div>
+          </div>
+        </div>
+      ))}
+    </div>
+  );
+};
 
 const Template7 = ({
   id,
@@ -24,14 +192,18 @@ const Template7 = ({
   lastName,
   email,
   number,
+  companies,
   facebookUrl,
   youtubeUrl,
   instagramUrl,
   twitterUrl,
   linkedinUrl,
+  tiktokUrl,
   whatsappNumber,
   websiteUrl,
+  viberUrl,
   customUrl,
+  owner,
 }: Card) => {
   const userProfile = {
     id,
@@ -50,246 +222,199 @@ const Template7 = ({
   };
 
   return (
-    <div className="bg-white text-black p-4 flex flex-col justify-between min-h-screen">
+    <Template7Container>
       <div className="flex-grow">
-      <div className="w-full mx-auto  max-w-[480px]">
-        <div className="flex flex-col relative">
-          <div className="w-full h-48">
-            {coverPhotoUrl ? (
-              <Image
-                src={
-                  userProfile.coverPhotoUrl ||
-                  "/assets/template-7-cover-photo.jpeg"
-                }
-                alt="Cover Image"
-                width={400}
-                height={200}
-                className="w-full h-52 object-cover overflow-hidden"
-              />
-            ) : (
-              <Image
-                src={"/assets/template-7-cover-photo.jpeg"}
-                alt="Cover Image"
-                width={400}
-                height={200}
-                priority={false}
-                className="w-full h-52 object-cover overflow-hidden"
-              />
-            )}
-          </div>
-          <div className="absolute -bottom-16 rounded-xl left-1/4 transform -translate-x-24 bg-offWhiteTemplate border-8 border-offWhiteTemplate h-custom-29 w-custom-29">
-            {profilePictureUrl ? (
-              <Image
-                src={
-                  userProfile.profilePictureUrl ||
-                  "/assets/template-7-cover-photo.jpeg"
-                }
-                alt="Profile Image"
-                fill
-                className="rounded-xl"
-              />
-            ) : (
-              <div className="rounded-[20px]">
-                <Image
-                  src={"/assets/template-7-profile-picture.jpeg"}
-                  alt="Profile Image"
-                  fill
-                  className="rounded-xl"
-                />
+        <Template7ProfileHeader
+          profilePictureUrl={profilePictureUrl}
+          coverPhotoUrl={coverPhotoUrl}
+          firstName={firstName}
+          lastName={lastName}
+          profileSize="lg"
+          coverHeight="md"
+          profilePosition="left"
+          defaultProfileImage="/assets/template-7-image1.jpeg"
+          defaultCoverImage="/assets/template-7-cover-photo.jpeg"
+          profileClassName="border-2 border-white"
+        />
+
+        {/* CTA BUTTONS */}
+        <Template1CTA
+          number={number}
+          email={email}
+          userProfile={userProfile}
+          size="md"
+          icons="lucide"
+          buttonClassName="text-blue-500 bg-gray-100 border-gray-200 hover:bg-gray-300"
+          className="flex justify-end gap-1 pr-4 pt-4"
+        />
+
+        {/* PERSONAL INFORMATION */}
+        <div className="px-4 mb-4">
+          {firstName ? (
+            <h1 className="text-xl sm:text-2xl font-extrabold mt-2 text-blue-600">
+              {firstName + " " + lastName}
+            </h1>
+          ) : (
+            <h1 className="text-xl sm:text-2xl font-extrabold mt-4 text-blue-600">
+              Hussain Watkins
+            </h1>
+          )}
+          <p className="font-semibold text-black text-sm sm:text-lg">
+            {position ?? "Chief Technology Officer"}
+          </p>
+          <p className=" text-gray-500 text-xs sm:text-sm">{email}</p>
+          <p className=" text-gray-500 text-xs sm:text-sm"> {number}</p>
+        </div>
+
+        <div className="flex justify-start px-4 mt-3 sm:mt-5">
+          <SocialLinks
+            facebookUrl={facebookUrl}
+            instagramUrl={instagramUrl}
+            linkedinUrl={linkedinUrl}
+            twitterUrl={twitterUrl}
+            youtubeUrl={youtubeUrl}
+            tiktokUrl={tiktokUrl}
+            whatsappNumber={whatsappNumber}
+            viberUrl={viberUrl}
+            websiteUrl={websiteUrl}
+            cardId={id}
+            ownerId={owner}
+            variant="colorful"
+            size="lg"
+            iconSet="solid"
+            iconClassName=" p-2 rounded-full  w-full h-full"
+            colorfulColors={{
+              facebook: {
+                icon: "#1877f3",
+                background: "#f3f4f6",
+                hover: { background: "#e5e7eb" },
+              },
+              instagram: {
+                icon: "#e4405f",
+                background: "#f3f4f6",
+                hover: { background: "#e5e7eb" },
+              },
+              linkedin: {
+                icon: "#0a66c2",
+                background: "#f3f4f6",
+                hover: { background: "#e5e7eb" },
+              },
+              twitter: {
+                icon: "#000000",
+                background: "#f3f4f6",
+                hover: { background: "#e5e7eb" },
+              },
+              youtube: {
+                icon: "#ff0000",
+                background: "#f3f4f6",
+                hover: { background: "#e5e7eb" },
+              },
+              tiktok: {
+                icon: "#000000",
+                background: "#f3f4f6",
+                hover: { background: "#e5e7eb" },
+              },
+              whatsapp: {
+                icon: "#25d366",
+                background: "#f3f4f6",
+                hover: { background: "#e5e7eb" },
+              },
+              viber: {
+                icon: "#665cac",
+                background: "#f3f4f6",
+                hover: { background: "#e5e7eb" },
+              },
+              website: {
+                icon: "#6b7280",
+                background: "#f3f4f6",
+                hover: { background: "#e5e7eb" },
+              },
+            }}
+          />
+        </div>
+
+        <div className="flex items-center gap-4 mt-4 px-4">
+          {number && (
+            <Link
+              href={`tel:${number}`}
+              className="flex-1 bg-blue-500 rounded-md flex justify-center text-center py-3"
+            >
+              <span className="text-white font-medium">Email Me!</span>
+            </Link>
+          )}
+          {(userProfile.company ||
+            userProfile.position ||
+            userProfile.email) && (
+            <button
+              onClick={() => downloadVCard(userProfile as any)}
+              className="w-[104px] bg-gray-100 rounded-md text-center py-3"
+            >
+              <span className="text-blue-500 font-semibold">Save</span>
+            </button>
+          )}
+        </div>
+
+        {/* COMPANY INTRODUCTION */}
+        <div className="border-t border-t-neutral-300 mt-4 mb-6 px-4 pt-4">
+          <h2 className="text-lg font-bold  mb-1">Professional Portfolio</h2>
+          <p className="text-sm text-gray-600">
+            Below you&#39;ll find details about my professional experience and
+            the companies I&#39;ve worked with. Each entry highlights my role,
+            responsibilities, and the services offered.
+          </p>
+        </div>
+        <div className="px-4">
+          <div className="relative mb-6">
+            <div className="absolute left-0 right-0 h-px bg-gradient-to-r from-blue-500 via-purple-500 to-transparent" />
+            <div className="flex items-center justify-center">
+              <div className="px-4 py-1">
+                <span className="text-xs uppercase tracking-wider text-blue-500 font-medium">
+                  Company Experience
+                </span>
               </div>
-            )}
+            </div>
           </div>
         </div>
-        <div className="flex flex-col px-5">
-          {/* PERSONAL INFORMATION */}
-          <div className="mt-20 space-y-1">
-            {firstName ? (
-              <h1 className="text-xl font-bold mt-4 text-blue-600 ">
-                {firstName + " " + lastName}
-              </h1>
-            ) : (
-              <h1 className="text-xl font-bold mt-2 text-blue-600 ">
-                Janna Marie Smith
-              </h1>
+
+        <div className=" flex flex-col gap-y-6 pt-6 bg-white px-3 flex-grow  text-neutral-900 mt-4">
+          <div className="w-full mx-auto">
+            {/* Company Experience Section */}
+            {companies && companies.length > 0 && (
+              <CompanyShowcase
+                companies={companies}
+                profilePictureUrl={profilePictureUrl}
+                firstName={firstName}
+                lastName={lastName}
+              />
             )}
-            <p className="font-semibold text-grayTemplate">
-              {position ?? "ABC Company | UI/UX Designer"}
-            </p>
-            <p className=" text-grayTemplate text-xs">
-              {email ?? "jannamariesmith@gmail.com"}
-            </p>
-            <p className=" text-grayTemplate text-xs">
-              {" "}
-              {number ?? "+639123456789"}
-            </p>
-          </div>
-          {/* SOCIALS */}
-          <div className="flex pl-5 mt-3 gap-2">
-            {facebookUrl && (
-              <Button className="rounded-full">
-                <FaFacebook />
-              </Button>
-            )}
-            {instagramUrl && (
-              <Button className="rounded-full">
-                <FaInstagram />
-              </Button>
-            )}
-            {linkedinUrl && (
-              <Button className="rounded-full">
-                <FaLinkedin />
-              </Button>
-            )}
-            <Button className="rounded-full">
-              <a href={`mailto:${email}`}>
-                <FaEnvelope className="cursor-pointer" />
-              </a>
-            </Button>
-            <Button className="rounded-full">
-              <a href={`tel:${number}`} className="text-decoration-none">
-                <FaPhone className="cursor-pointer" />
-              </a>
-            </Button>
-            {websiteUrl && (
-              <Button className="rounded-full">
-                <FaGlobe />
-              </Button>
-            )}
-          </div>
-          {/* CTA BUTTONS */}
-          <div className="grid grid-cols-3 gap-4 mt-5">
-            <Button className="col-span-2 hover:bg-blueTemplate bg-blue-700 text-white">
-              <a href={`mailto:${email}`}>Email Me</a>
-            </Button>
-            <Button
-              onClick={() => downloadVCard(userProfile)}
-              className="bg-gray-800 text-white hover:bg-slate-900"
-            >
-              Save
-            </Button>
-          </div>
-          {/*COMPANY DETAILS */}
-          <div className="flex flex-col mt-5">
-            <div className="text-xl text-blue-600 font-bold mb-5">
-              {company ?? "ABC Company"}
-            </div>
-            <div className="flex flex-col gap-y-2 mb-3">
-              <div className="text-gray-500 text-xs font-semibold">
-                Company Overview
-              </div>
-              <div className="text-gray-500 text-2xs font-normal leading-4">
-                {userProfile.companyBackground}
-              </div>
-            </div>
-            <div className="flex flex-col gap-y-2 mb-3">
-              <div className="text-gray-500 text-xs font-semibold">
-                Our Services
-              </div>
-              <div className="text-gray-500 text-2xs font-normal leading-4">
-                {serviceDescription ??
-                  "Lorem ipsum dolor sit amet consectetur. Commodo non imperdiet tempus orci non id nibh faucibus. Laoreet at hendrerit at viverra "}
-              </div>
-            </div>
-          </div>
-          {/*Photos */}
-          <div className="grid grid-cols-2 gap-2">
-            <div className="flex flex-col gap-y-2">
-              {userProfile.servicePhotos?.[0] && (
-                <div className="relative h-52 p-2 rounded-lg bg-offWhiteTemplate">
-                  <div className="relative h-48">
-                    <Image
-                      src={
-                        userProfile.servicePhotos?.[0] ||
-                        "/assets/template-7-image1.jpeg"
-                      }
-                      alt="Image"
-                      className="rounded-lg"
-                      fill
-                    ></Image>
-                  </div>
-                </div>
-              )}
-              {userProfile.servicePhotos?.[1] && (
-                <div className="relative h-36 p-2 rounded-lg bg-offWhiteTemplate">
-                  <div className="relative h-32">
-                    <Image
-                      src={
-                        userProfile.servicePhotos?.[1] ||
-                        "/assets/template-7-image1.jpeg"
-                      }
-                      alt="Image"
-                      className="rounded-lg"
-                      fill
-                    ></Image>
-                  </div>
-                </div>
-              )}
-            </div>
-            <div className="flex flex-col gap-y-2">
-              {userProfile.servicePhotos?.[2] && (
-                <div className="relative h-36 p-2 rounded-lg bg-offWhiteTemplate">
-                  <div className="relative h-32">
-                    <Image
-                      src={
-                        userProfile.servicePhotos?.[2] ||
-                        "/assets/template-7-image1.jpeg"
-                      }
-                      alt="Image"
-                      className="rounded-lg"
-                      fill
-                    ></Image>
-                  </div>
-                </div>
-              )}
-              {userProfile.servicePhotos?.[3] && (
-                <div className="relative h-52 p-2 rounded-lg bg-offWhiteTemplate">
-                  <div className="relative h-48">
-                    <Image
-                      src={
-                        userProfile.servicePhotos?.[3] ||
-                        "/assets/template-7-image1.jpeg"
-                      }
-                      alt="Image"
-                      className="rounded-lg shadow-lg object-cover"
-                      fill
-                    ></Image>
-                  </div>
-                </div>
-              )}
-            </div>
-          </div>
-          </div>
-          {/*Footer */}
-          <div className="flex flex-col items-center my-3 gap-y-3">
-            <div className="text-base text-footerBlueTemplate font-bold">
-              {company ?? "ABC Company"}
-            </div>
-            <div className="flex justify-center gap-2.5">
-              {facebookUrl && (
-                <Button className="rounded-full h-2xs w-2xs">
-                  <FaFacebook />
-                </Button>
-              )}
-              {instagramUrl && (
-                <Button className="rounded-full h-2xs w-2xs">
-                  <FaInstagram />
-                </Button>
-              )}
-              {linkedinUrl && (
-                <Button className="rounded-full h-2xs w-2xs">
-                  <FaLinkedin />
-                </Button>
-              )}
-            </div>
-            <div className="flex justify-center">
-              <p className="text-3xs text-gray-500 font-light">
-                Copyright 2025 {userProfile.company}. All Right Reserved
-              </p>
-            </div>
           </div>
         </div>
       </div>
-    </div>
+
+      {/* footer */}
+      <TemplateFooter className="mt-auto bg-white px-5 pb-4">
+        <div className="flex flex-col mt-3 mb-1 items-center gap-1 text-center text-xs">
+          <a
+            href={userProfile?.customUrl ?? userProfile?.websiteUrl ?? "#"}
+            target="_blank"
+            rel="noopener noreferrer"
+          >
+            <Image
+              src="/assets/dark-ZwiftechLogo.png"
+              alt="Zwiftech Logo"
+              width={40}
+              height={15}
+              priority
+              className="opacity-90"
+            />
+          </a>
+
+          <span className="tracking-wide text-gray-800 text-[10px] ">
+            © {getCopyrightYear()} Zwiftech. All Rights Reserved.
+          </span>
+        </div>
+      </TemplateFooter>
+    </Template7Container>
   );
 };
 

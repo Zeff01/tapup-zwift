@@ -330,7 +330,7 @@ const Template12 = ({
                     michroma.className
                   )}
                 >
-                  {company ?? "COMPANY"}
+                  {company || "COMPANY"}
                 </h2>
                 <Separator
                   orientation="vertical"
@@ -343,7 +343,7 @@ const Template12 = ({
                     michroma.className
                   )}
                 >
-                  {position ?? "Chief Technology Officer"}
+                  {position || "Chief Technology Officer"}
                 </h2>
               </div>
               {profilePictureUrl ? (

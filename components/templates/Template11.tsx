@@ -336,18 +336,18 @@ const Template11 = ({
           )}
           <div className="flex text-sm text-gray-600 items-center justify-center gap-x-1">
             <h2 className={cn("capitalize text-end", roboto_c.className)}>
-              {company ?? "COMPANY"}
+              {company || "COMPANY"}
             </h2>
             <p>|</p>
             <h2 className={cn("capitalize text-start", roboto_c.className)}>
-              {position ?? "Chief Technology Officer"}
+              {position || "Chief Technology Officer"}
             </h2>
           </div>
 
           <div className="gap-x-2 w-full text-xs font-thin gap-y-1  flex flex-col text-black opacity-50 justify-center items-center">
-            <p>{email ?? "H.Watkins@gmail.com"}</p>
+            <p>{email}</p>
 
-            <p>{number ?? +639123456789}</p>
+            <p>{number}</p>
           </div>
           {/* SOCIAL MEDIA ICONS */}
           <div className="flex items-center gap-1 mt-6 pb-10 pt-10 text-black text-2xl h-16 justify-center">

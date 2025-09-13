@@ -49,15 +49,39 @@ const ProfileSocials = ({
   viberUrl,
 }: Partial<Card>) => {
   const socialLinks = [
-    { url: facebookUrl, icon: FaFacebook, label: "Facebook" },
-    { url: linkedinUrl, icon: FaLinkedin, label: "LinkedIn" },
-    { url: instagramUrl, icon: FaInstagram, label: "Instagram" },
-    { url: twitterUrl, icon: FaXTwitter, label: "Twitter" },
-    { url: tiktokUrl, icon: FaTiktok, label: "TikTok" },
-    { url: youtubeUrl, icon: FaYoutube, label: "YouTube" },
+    {
+      url: facebookUrl,
+      icon: FaFacebook,
+      label: "Facebook",
+    },
+    {
+      url: linkedinUrl,
+      icon: FaLinkedin,
+      label: "LinkedIn",
+    },
+    {
+      url: instagramUrl,
+      icon: FaInstagram,
+      label: "Instagram",
+    },
+    {
+      url: twitterUrl,
+      icon: FaXTwitter,
+      label: "Twitter",
+    },
+    {
+      url: tiktokUrl,
+      icon: FaTiktok,
+      label: "TikTok",
+    },
+    {
+      url: youtubeUrl,
+      icon: FaYoutube,
+      label: "YouTube",
+    },
     { url: viberUrl, icon: FaViber, label: "Viber" },
     {
-      url: whatsappNumber ? `https://wa.me/${whatsappNumber}` : null,
+      url: whatsappNumber,
       icon: FaWhatsapp,
       label: "WhatsApp",
     },

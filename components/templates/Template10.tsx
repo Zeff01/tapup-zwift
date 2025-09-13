@@ -379,13 +379,13 @@ const Template10 = ({
               poppins.className
             )}
           >
-            {position ?? "Chief Technology Officer"}
+            {position || "Chief Technology Officer"}
           </p>
 
           <div className="gap-x-2 w-full text-[#B6BCD2] flex justify-center items-center">
             <input
               type="text"
-              value={email ?? "H.Watkins@gmail.com"}
+              value={email}
               readOnly
               className="max-w-[120px] truncate bg-transparent border-none outline-none cursor-pointer text-center font-light text-sm text-[#B6BCD2]"
               onClick={(e) => {
@@ -396,7 +396,7 @@ const Template10 = ({
             <span>|</span>
             <input
               type="text"
-              value={String(number ?? +639123456789)}
+              value={String(number)}
               readOnly
               className="max-w-[120px] truncate bg-transparent border-none outline-none cursor-pointer text-center font-light text-sm text-[#B6BCD2]"
               onClick={(e) => {
