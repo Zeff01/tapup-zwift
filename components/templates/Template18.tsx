@@ -55,10 +55,9 @@ const Template18 = ({
       flexDirection="col"
       alignItems="center"
       justifyContent="center"
-      className="relative overflow-hidden p-0 py-2 text-white"
+      className="relative overflow-hidden p-0 text-white"
     >
-      <div className="flex-grow">
-      <div className="max-w-[480px] mx-auto flex flex-col ">
+      <div className="max-w-[480px] mx-auto flex flex-col pt-2">
         {/* === Decorative Background === */}
         <div
           className="absolute top-10 left-10 w-48 h-48 rounded-full"
@@ -282,32 +281,31 @@ const Template18 = ({
             </div>
           </section>
         )}
-        </div>
-
-        {/* === Footer Section === */}
-        <TemplateFooter className="bg-[#001d34] text-white text-center  text-xs rounded-b-[30px] px-2 sm:px-3">
-          <div className="flex flex-col py-4 items-center  gap-1 text-center text-xs">
-            <a
-              href={userProfile?.customUrl ?? userProfile?.websiteUrl ?? "#"}
-              target="_blank"
-              rel="noopener noreferrer"
-            >
-              <Image
-                src="/assets/light-ZwiftechLogo.png"
-                alt="Zwiftech Logo"
-                width={40}
-                height={15}
-                priority
-                className="opacity-90"
-              />
-            </a>
-
-            <span className="tracking-wide text-gray-400 text-[10px] ">
-              © {getCopyrightYear()} Zwiftech. All Rights Reserved.
-            </span>
-          </div>{" "}
-        </TemplateFooter>
       </div>
+
+      {/* === Footer Section === */}
+      <TemplateFooter className="bg-[#001d34] text-white text-center  text-xs rounded-b-[30px] px-2 sm:px-3">
+        <div className="flex flex-col py-4 items-center  gap-1 text-center text-xs">
+          <a
+            href={userProfile?.customUrl ?? userProfile?.websiteUrl ?? "#"}
+            target="_blank"
+            rel="noopener noreferrer"
+          >
+            <Image
+              src="/assets/light-ZwiftechLogo.png"
+              alt="Zwiftech Logo"
+              width={40}
+              height={15}
+              priority
+              className="opacity-90"
+            />
+          </a>
+
+          <span className="tracking-wide text-gray-400 text-[10px] ">
+            © {getCopyrightYear()} Zwiftech. All Rights Reserved.
+          </span>
+        </div>{" "}
+      </TemplateFooter>
     </TemplateContainer>
   );
 };

@@ -7,9 +7,6 @@ import {
   SocialLinks,
   Template4Container,
   TemplateFooter,
-  sampleCompanies,
-  getSampleSocialUrls,
-  samplePersonalInfo,
 } from "./templatesComponents";
 
 const Template4 = ({
@@ -53,8 +50,7 @@ const Template4 = ({
   return (
     <Template4Container>
       <div className="flex-grow">
-      {/* COVERPHOTO AND PROFILE PIC */}
-      <div className="flex flex-col">
+        {/* COVERPHOTO AND PROFILE PIC */}
         <ProfileHeader
           profilePictureUrl={profilePictureUrl}
           coverPhotoUrl={coverPhotoUrl}
@@ -91,7 +87,7 @@ const Template4 = ({
             <h1 className="text-xl font-bold mt-4 ">Hussain Watkins</h1>
           )}
           <p className="font-semibold text-gray-600 text-xl">
-            {position || "Chief Technology Officer"}
+            {position ?? "Chief Technology Officer"}
           </p>
           <p className=" text-gray-600 text-sm">{email}</p>
           <p className=" text-gray-600 text-sm"> {number}</p>
@@ -230,27 +226,27 @@ const Template4 = ({
           ))}
         </div>
 
-      {/* SOCIAL MEDIA ICONS */}
-      <div className="flex flex-col justify-center items-center mt-3 mb-4">
-        <h1 className="font-bold mb-2">Socials</h1>
-        <SocialLinks
-          facebookUrl={facebookUrl}
-          instagramUrl={instagramUrl}
-          linkedinUrl={linkedinUrl}
-          twitterUrl={twitterUrl}
-          youtubeUrl={youtubeUrl}
-          tiktokUrl={tiktokUrl}
-          whatsappNumber={whatsappNumber}
-          viberUrl={viberUrl}
-          websiteUrl={websiteUrl}
-          cardId={id}
-          ownerId={owner}
-          className="flex justify-center gap-4 mb-2"
-        />
-      </div>
+        {/* SOCIAL MEDIA ICONS */}
+        <div className="flex flex-col justify-center items-center mt-3 mb-4 px-4">
+          <h1 className="font-bold mb-2">Socials</h1>
+          <SocialLinks
+            facebookUrl={facebookUrl}
+            instagramUrl={instagramUrl}
+            linkedinUrl={linkedinUrl}
+            twitterUrl={twitterUrl}
+            youtubeUrl={youtubeUrl}
+            tiktokUrl={tiktokUrl}
+            whatsappNumber={whatsappNumber}
+            viberUrl={viberUrl}
+            websiteUrl={websiteUrl}
+            cardId={id}
+            ownerId={owner}
+            className="flex justify-center gap-4 mb-2"
+          />
+        </div>
       </div>
 
-      <TemplateFooter className="flex flex-col mt-auto mb-2 items-center gap-1 text-center text-xs">
+      <TemplateFooter className="flex flex-col mt-3 mb-1 items-center gap-1 text-center text-xs">
         <a
           href={userProfile?.customUrl ?? userProfile?.websiteUrl ?? "#"}
           target="_blank"

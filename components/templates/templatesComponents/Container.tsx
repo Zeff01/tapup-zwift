@@ -226,7 +226,7 @@ export const Template7Container: React.FC<{ children: React.ReactNode }> = ({
 }) => (
   <TemplateContainer
     backgroundColor="bg-white"
-    padding="md"
+    padding="none"
     maxWidth="480px"
     minHeight="screen"
   >
@@ -239,7 +239,7 @@ export const Template8Container: React.FC<{ children: React.ReactNode }> = ({
 }) => (
   <TemplateContainer
     backgroundColor="bg-white"
-    padding="md"
+    padding="none"
     maxWidth="480px"
     minHeight="screen"
   >

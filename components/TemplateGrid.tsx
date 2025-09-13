@@ -50,6 +50,18 @@ const templates: Template[] = [
     category: "Minimal",
   },
   {
+    id: "template7",
+    name: "Social Blue",
+    imageUrl: "/assets/template7.png",
+    category: "Modern",
+  },
+  {
+    id: "template8",
+    name: "Connect",
+    imageUrl: "/assets/template8.png",
+    category: "Creative",
+  },
+  {
     id: "template9",
     name: "Business",
     imageUrl: "/assets/template9.png",
@@ -119,7 +131,7 @@ export function TemplateGrid({
   return (
     <div>
       <h1 className="text-lg font-semibold mb-4">Choose a Template</h1>
-      
+
       {/* Grid Layout */}
       <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-4">
         {templates.map((template) => (
@@ -132,11 +144,11 @@ export function TemplateGrid({
               selectedTemplateId === template.id && "scale-105"
             )}
           >
-            <Card 
+            <Card
               className={cn(
                 "overflow-hidden border-2 transition-all",
-                selectedTemplateId === template.id 
-                  ? "border-green-500 shadow-lg" 
+                selectedTemplateId === template.id
+                  ? "border-green-500 shadow-lg"
                   : "border-transparent hover:border-gray-300"
               )}
             >
@@ -150,23 +162,27 @@ export function TemplateGrid({
                     className="object-cover"
                     sizes="(max-width: 640px) 50vw, (max-width: 768px) 33vw, (max-width: 1024px) 25vw, 20vw"
                   />
-                  
+
                   {/* Selected Indicator */}
                   {selectedTemplateId === template.id && (
                     <div className="absolute top-2 right-2 bg-green-500 text-white rounded-full p-1">
                       <Check className="h-4 w-4" />
                     </div>
                   )}
-                  
+
                   {/* Hover Overlay */}
-                  <div className={cn(
-                    "absolute inset-0 bg-black/50 flex items-center justify-center transition-opacity",
-                    selectedTemplateId === template.id ? "opacity-0" : "opacity-0 group-hover:opacity-100"
-                  )}>
+                  <div
+                    className={cn(
+                      "absolute inset-0 bg-black/50 flex items-center justify-center transition-opacity",
+                      selectedTemplateId === template.id
+                        ? "opacity-0"
+                        : "opacity-0 group-hover:opacity-100"
+                    )}
+                  >
                     <p className="text-white font-medium">Click to Select</p>
                   </div>
                 </div>
-                
+
                 {/* Template Info */}
                 <div className="p-2 bg-white">
                   <h3 className="text-sm font-medium text-center">
@@ -185,7 +201,7 @@ export function TemplateGrid({
           </div>
         ))}
       </div>
-      
+
       <p className="text-xs text-gray-500 mt-4 text-center">
         💡 Tip: Click on any template to see a live preview of your card
       </p>

@@ -47,8 +47,7 @@ const Template5 = ({
   return (
     <Template5Container>
       <div className="flex-grow">
-      {/* COVERPHOTO AND PROFILE PIC */}
-      <div className="flex flex-col">
+        {/* COVERPHOTO AND PROFILE PIC */}
         <ProfileHeader
           profilePictureUrl={profilePictureUrl}
           coverPhotoUrl={coverPhotoUrl}
@@ -73,28 +72,28 @@ const Template5 = ({
           buttonClassName="border border-pink-600 text-pink-400 bg-white hover:bg-pink-50"
         />
 
-      {/* SOCIAL MEDIA ICONS */}
-      <div className="relative ">
-        <div className="absolute -top-8  left-4  ">
-          <SocialLinks
-            facebookUrl={facebookUrl}
-            twitterUrl={twitterUrl}
-            tiktokUrl={tiktokUrl}
-            youtubeUrl={youtubeUrl}
-            instagramUrl={instagramUrl}
-            linkedinUrl={linkedinUrl}
-            viberUrl={viberUrl}
-            whatsappNumber={whatsappNumber}
-            websiteUrl={websiteUrl}
-            cardId={id}
-            ownerId={owner}
-            variant="minimal"
-            size="sm"
-            className="flex flex-col gap-[6px]"
-            iconClassName="text-gray-900 hover:text-pink-500"
-          />
+        {/* SOCIAL MEDIA ICONS */}
+        <div className="relative ">
+          <div className="absolute -top-8  left-4  ">
+            <SocialLinks
+              facebookUrl={facebookUrl}
+              twitterUrl={twitterUrl}
+              tiktokUrl={tiktokUrl}
+              youtubeUrl={youtubeUrl}
+              instagramUrl={instagramUrl}
+              linkedinUrl={linkedinUrl}
+              viberUrl={viberUrl}
+              whatsappNumber={whatsappNumber}
+              websiteUrl={websiteUrl}
+              cardId={id}
+              ownerId={owner}
+              variant="minimal"
+              size="sm"
+              className="flex flex-col gap-[6px]"
+              iconClassName="text-gray-900 hover:text-pink-500"
+            />
+          </div>
         </div>
-      </div>
 
         {/* PERSONAL INFORMATION */}
         <div className="text-center mt-4 space-y-1 ">
@@ -107,12 +106,14 @@ const Template5 = ({
           )}
 
           <p className="font-semibold text-gray-900 text-xs">
-            {position || "Chief Technology Officer"}
+            {position ?? "Chief Technology Officer"}
           </p>
 
-          <p className=" text-gray-500 text-xs">{email}</p>
+          <p className=" text-gray-500 text-xs">
+            {email ?? "H.Watkins@gmail.com"}
+          </p>
 
-          <p className=" text-gray-500 text-xs"> {number}</p>
+          <p className=" text-gray-500 text-xs"> {number ?? +639123456789}</p>
         </div>
 
         <div className="mt-[70px] mb-6 px-4">
@@ -247,8 +248,8 @@ const Template5 = ({
           ))}
         </div>
       </div>
-
-      <TemplateFooter className="flex flex-col mt-auto mb-2 items-center gap-1 text-center text-xs">
+      {/* FOOTER */}
+      <TemplateFooter className="flex flex-col mt-8 mb-1 items-center gap-1 text-center text-xs">
         <a
           href={userProfile?.customUrl ?? userProfile?.websiteUrl ?? "#"}
           target="_blank"
