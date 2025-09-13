@@ -5,8 +5,9 @@ import Hero from "./HeroSection";
 import HowItWorks from "./HowItWorks";
 import TemplateSelection from "./TemplateSelection";
 import UserWebsite from "./UserWebsite";
+import TapUpCardLoader from "@/components/TapUpCardLoader";
 
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 
 const sections = [
   { id: "hero", hash: "", Component: Hero },
@@ -18,6 +19,18 @@ const sections = [
 ];
 
 const LandingPage = () => {
+  const [showContent, setShowContent] = useState(false);
+
+  useEffect(() => {
+    // Small delay to allow middleware redirect to happen first
+    // This prevents the flash of landing page for authenticated users
+    const timer = setTimeout(() => {
+      setShowContent(true);
+    }, 100);
+
+    return () => clearTimeout(timer);
+  }, []);
+
   useEffect(() => {
     const observer = new IntersectionObserver(
       (entries) => {
@@ -46,6 +59,11 @@ const LandingPage = () => {
 
     return () => observer.disconnect();
   }, []);
+
+  // Show loading animation briefly to prevent flash
+  if (!showContent) {
+    return <TapUpCardLoader />;
+  }
 
   return (
     <>

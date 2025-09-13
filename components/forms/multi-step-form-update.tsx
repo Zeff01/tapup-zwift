@@ -2,7 +2,7 @@
 import CompanyInfoForm from "@/components/forms/CompanyInfoForm";
 import PersonalInfoForm from "@/components/forms/PersonalInfoForm";
 import ImageLoaded from "@/components/ImageLoaded";
-import { TemplateCarousel } from "@/components/TemplateCarousel";
+import { TemplateGrid } from "@/components/TemplateGrid";
 import {
   Form,
   FormControl,
@@ -137,6 +137,7 @@ const MultiStepFormUpdate = ({
         servicePhotos: company.servicePhotos || [],
       }));
     } else {
+      // Return empty array for new cards
       return [];
     }
   });
@@ -790,7 +791,7 @@ const MultiStepFormUpdate = ({
                         setServicePhotoFiles((prev) => [...prev, []]);
                       }}
                     >
-                      Add Company
+                      {companies.length > 0 ? "Add More Company" : "Add Company"}
                     </Button>
                     <span className="text-xs text-red-500">
                       {methods.formState.errors.companies?.message ?? ""}
@@ -990,7 +991,7 @@ const MultiStepFormUpdate = ({
                       <h3 className="text-md font-medium mb-3">
                         Available Templates
                       </h3>
-                      <TemplateCarousel
+                      <TemplateGrid
                         selectedTemplateId={selectedTemplateId}
                         setSelectedTemplateId={(id: ChosenTemplateType) => {
                           setSelectedTemplateId(id);
@@ -1021,6 +1022,16 @@ const MultiStepFormUpdate = ({
                 </div>
 
                 <div className="flex gap-3">
+                  <Button
+                    type="button"
+                    variant="outline"
+                    onClick={() => router.push('/cards')}
+                    disabled={isLoading}
+                    className="flex items-center gap-2"
+                  >
+                    Cancel
+                  </Button>
+                  
                   {currentStep > 1 && (
                     <Button
                       type="button"

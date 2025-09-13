@@ -260,6 +260,7 @@ const Template11 = ({
       alignItems="center"
       justifyContent="between"
     >
+      <div className="flex-grow">
       <div className="w-full mx-auto relative max-w-[480px]">
         <div className="flex gap-2 z-20 absolute right-0 top-0 p-1">
           <CTAButtons
@@ -384,6 +385,7 @@ const Template11 = ({
               />
             )}
           </div>
+        </div>
         </div>
 
         <TemplateFooter className="flex flex-col items-center  justify-center gap-x-1 text-xs  pb-4 ">

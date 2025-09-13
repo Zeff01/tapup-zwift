@@ -261,6 +261,7 @@ const Template13 = ({
       flexDirection="col"
       className="text-white py-2"
     >
+      <div className="flex-grow">
       <div className="max-w-[480px] mx-auto flex flex-col">
         {/* === Profile and Cover Section === */}
         <section
@@ -398,6 +399,7 @@ const Template13 = ({
             )}
           </div>
         </div>
+      </div>
       </div>
 
       {/* === Footer Section === */}

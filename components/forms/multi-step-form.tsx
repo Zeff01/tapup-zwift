@@ -1,7 +1,7 @@
 "use client";
 import { useState, useEffect } from "react";
 import Image from "next/image";
-import { updateUserById } from "@/lib/firebase/actions/user.action";
+import { updateUserProfile, extractCardDataFromForm } from "@/lib/firebase/actions/user-profile.action";
 import { Photo } from "@/types/types";
 import { Loader2, LoaderCircle, X } from "lucide-react";
 import Cropper from "../Cropper";
@@ -10,7 +10,7 @@ import { Form } from "@/components/ui/form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { z } from "zod";
 import { createPortfolioSchema } from "@/lib/zod-schema";
-import { TemplateCarousel } from "@/components/TemplateCarousel";
+import { TemplateGrid } from "@/components/TemplateGrid";
 import PersonalInfoForm from "@/components/forms/PersonalInfoForm";
 import CompanyInfoForm from "@/components/forms/CompanyInfoForm";
 import ImageLoaded from "@/components/ImageLoaded";
@@ -18,6 +18,7 @@ import { IoMdClose } from "react-icons/io";
 import { useUserContext } from "@/providers/user-provider";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { createCard } from "@/lib/firebase/actions/card.action";
+import { useRouter } from "next/navigation";
 import MultiStepProgress from "./MultiStepProgress";
 import TapupLogo from "../svgs/TapupLogo";
 import { formHeaderItems } from "@/constants";
@@ -51,6 +52,7 @@ export default function CardsAndUsersCreateFields({
 }) {
   const { user } = useUserContext();
   const queryClient = useQueryClient();
+  const router = useRouter();
 
   const [photo, setPhoto] = useState<Photo | null>(null);
   const [imageUrl, setImageUrl] = useState<string | null>(null);
@@ -172,7 +174,10 @@ export default function CardsAndUsersCreateFields({
 
   const { mutate: onBoardUserMutation, isPending: isLoadingOnBoarding } =
     useMutation({
-      mutationFn: updateUserById,
+      mutationFn: async ({ user_id, userData }: { user_id: string; userData: any }) => {
+        const { userData: profileData } = extractCardDataFromForm(userData);
+        return updateUserProfile({ user_id, userData: profileData });
+      },
       onSuccess: () => {
         queryClient.invalidateQueries({
           queryKey: ["current-active-user", user?.uid],
@@ -184,7 +189,7 @@ export default function CardsAndUsersCreateFields({
   const formSubmit = async (data: z.infer<typeof createPortfolioSchema>) => {
     if (!user) return;
     if (!card) {
-      onBoardUserMutation({ user_id: user.uid, user: data });
+      onBoardUserMutation({ user_id: user.uid, userData: data });
       return;
     }
     createCardMutation({
@@ -473,7 +478,7 @@ export default function CardsAndUsersCreateFields({
                         <p className="text-gray-500">No template selected</p>
                       </div>
                     )}
-                    <TemplateCarousel
+                    <TemplateGrid
                       selectedTemplateId={selectedTemplateId}
                       setSelectedTemplateId={setSelectedTemplateId}
                     />
@@ -481,7 +486,16 @@ export default function CardsAndUsersCreateFields({
                 )}
 
                 {/* Navigation Buttons */}
-                <div className="flex justify-end gap-5">
+                <div className="flex justify-between">
+                  <button
+                    type="button"
+                    onClick={() => router.push('/cards')}
+                    className="px-8 py-2 bg-gray-400 text-white rounded-full hover:bg-slate-700"
+                  >
+                    Cancel
+                  </button>
+                  
+                  <div className="flex gap-5">
                   {currentStep > 1 && (
                     <button
                       type="button"
@@ -500,6 +514,7 @@ export default function CardsAndUsersCreateFields({
                       Next
                     </button>
                   )}
+                  </div>
                 </div>
               </div>
             </div>

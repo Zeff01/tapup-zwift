@@ -139,6 +139,8 @@ export interface ExtendedUserInterface extends Users {
   deliveryAddresses?: DeliveryAddress[];
   cardOrdering?: string[];
   cardCount?: number;
+  timestamp?: string;
+  updatedAt?: string;
 }
 
 export type UserState = ExtendedUserInterface | null;

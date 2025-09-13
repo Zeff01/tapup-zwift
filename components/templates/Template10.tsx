@@ -290,6 +290,7 @@ const Template10 = ({
       alignItems="center"
       justifyContent="between"
     >
+      <div className="flex-grow">
       <div className="w-full mx-auto max-w-[480px]">
         <div className="flex flex-col relative rounded-4xl ">
           <div className="w-full h-48">
@@ -442,6 +443,7 @@ const Template10 = ({
               />
             )}
           </div>
+        </div>
         </div>
 
         {/* FOOTER */}

@@ -8,6 +8,7 @@ import { ThemeProvider } from "@/providers/theme-provider";
 import { QueryProvider } from "@/providers/query-provider";
 import { CartProvider } from "@/providers/cart-provider";
 import { UserContextProvider } from "@/providers/user-provider";
+import { ConnectionStatus } from "@/components/ConnectionStatus";
 
 const lato = Lato({ weight: "400", subsets: ["latin"] });
 
@@ -53,6 +54,7 @@ export default function RootLayout({
                   </div>
                 )}
                 <ToastContainer autoClose={1000} />
+                <ConnectionStatus />
               </CartProvider>
             </UserContextProvider>
           </QueryProvider>

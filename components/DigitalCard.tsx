@@ -321,7 +321,22 @@ const DigitalCard = ({ card, confirm, user }: Prop) => {
         <p className="text-[clamp(1rem,1.4vw,1.1rem)] mt-0 font-semibold capitalize text-white">
           {(card.firstName || "") + " " + (card.lastName || "")}
         </p>
-        <p className="text-xs capitalize text-white">{card.position || ""}</p>
+        {/* Show position if available from companies array or legacy position field */}
+        {(card.companies && card.companies.length > 0 && card.companies[0].position) || card.position ? (
+          <p className="text-xs capitalize text-white">
+            {card.companies && card.companies.length > 0 
+              ? card.companies[0].position
+              : card.position}
+          </p>
+        ) : null}
+        {/* Show company if available from companies array or legacy company field */}
+        {(card.companies && card.companies.length > 0 && card.companies[0].company) || card.company ? (
+          <p className="text-xs capitalize text-white">
+            {card.companies && card.companies.length > 0 
+              ? card.companies[0].company
+              : card.company}
+          </p>
+        ) : null}
         <p className="text-[clamp(1rem,1.4vw,1.1rem)] pt-2 sm:pt-3 font-semibold capitalize text-white">
           {card.cardName || ""}
         </p>

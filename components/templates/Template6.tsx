@@ -15,6 +15,7 @@ const Template6: React.FC<ProfilePageProps> = ({ userData }) => {
 
   return (
     <Template6Container>
+      <div className="flex-grow">
       <div className="mx-auto max-w-[480px]">
         <ProfileInfo {...userData} />
 

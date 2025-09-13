@@ -45,6 +45,7 @@ const Template5 = ({
 
   return (
     <Template5Container>
+      <div className="flex-grow">
       {/* COVERPHOTO AND PROFILE PIC */}
       <div className="flex flex-col">
         <ProfileHeader

@@ -44,6 +44,7 @@ const Template3 = ({
   };
   return (
     <Template3Container>
+      <div className="flex-grow">
       {/* COVERPHOTO AND PROFILE PIC */}
       <div className="flex flex-col">
         <ProfileHeader
@@ -241,6 +242,7 @@ const Template3 = ({
             </div>
           ))}
         </div>
+      </div>
       </div>
 
       {/* FOOTER */}

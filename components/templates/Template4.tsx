@@ -51,6 +51,7 @@ const Template4 = ({
 
   return (
     <Template4Container>
+      <div className="flex-grow">
       {/* COVERPHOTO AND PROFILE PIC */}
       <div className="flex flex-col">
         <ProfileHeader
@@ -228,22 +229,22 @@ const Template4 = ({
           ))}
         </div>
 
-        {/* SOCIAL MEDIA ICONS */}
-        <div className="flex flex-col justify-center items-center mt-3 mb-4">
-          <h1 className="font-bold mb-2">Socials</h1>
-          <SocialLinks
-            facebookUrl={facebookUrl}
-            instagramUrl={instagramUrl}
-            linkedinUrl={linkedinUrl}
-            twitterUrl={twitterUrl}
-            youtubeUrl={youtubeUrl}
-            tiktokUrl={tiktokUrl}
-            whatsappNumber={whatsappNumber}
-            viberUrl={viberUrl}
-            websiteUrl={websiteUrl}
-            className="flex justify-center gap-4 mb-2"
-          />
-        </div>
+      {/* SOCIAL MEDIA ICONS */}
+      <div className="flex flex-col justify-center items-center mt-3 mb-4">
+        <h1 className="font-bold mb-2">Socials</h1>
+        <SocialLinks
+          facebookUrl={facebookUrl}
+          instagramUrl={instagramUrl}
+          linkedinUrl={linkedinUrl}
+          twitterUrl={twitterUrl}
+          youtubeUrl={youtubeUrl}
+          tiktokUrl={tiktokUrl}
+          whatsappNumber={whatsappNumber}
+          viberUrl={viberUrl}
+          websiteUrl={websiteUrl}
+          className="flex justify-center gap-4 mb-2"
+        />
+      </div>
       </div>
 
       <TemplateFooter className="flex flex-col mt-auto mb-2 items-center gap-1 text-center text-xs">

@@ -56,6 +56,7 @@ const Template16 = ({
       alignItems="center"
       className="font-sans"
     >
+      <div className="flex-grow">
       <div className="max-w-[480px] mx-auto flex flex-col">
         {/* === Cover Section === */}
         <section
@@ -351,6 +352,7 @@ const Template16 = ({
             </div>
           </div>
         )}
+      </div>
       </div>
 
       {/* === Footer Section === */}
