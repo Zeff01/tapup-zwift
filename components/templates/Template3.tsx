@@ -1,3 +1,5 @@
+"use client";
+
 import { getCopyrightYear } from "@/lib/utils";
 import { Card } from "@/types/types";
 import Image from "next/image";
@@ -8,6 +10,8 @@ import {
   Template3Container,
   TemplateFooter,
 } from "./templatesComponents";
+import { ImageViewer, useImageViewer } from "@/components/ImageViewer";
+import { ClickableImage } from "./templatesComponents/ClickableImage";
 
 const Template3 = ({
   id,
@@ -32,6 +36,8 @@ const Template3 = ({
   companies,
   owner,
 }: Card) => {
+  const { viewerState, openViewer, closeViewer } = useImageViewer();
+  
   const userProfile = {
     id,
     owner,
@@ -44,6 +50,12 @@ const Template3 = ({
     websiteUrl,
     customUrl,
   };
+
+  const allImages = [
+    profilePictureUrl || "/assets/template4samplepic.png",
+    coverPhotoUrl || "/assets/template2coverphoto.png",
+    ...(companies?.flatMap(c => c.servicePhotos || []) || [])
+  ].filter(Boolean);
   return (
     <Template3Container>
       <div className="flex-grow">
@@ -144,12 +156,13 @@ const Template3 = ({
               <div className="flex items-center px-4 py-2 border-b border-neutral-700">
                 <div className="w-8 h-8 rounded-full overflow-hidden bg-neutral-700 flex-shrink-0 border border-neutral-600">
                   {profilePictureUrl ? (
-                    <Image
+                    <ClickableImage
                       src={profilePictureUrl}
                       alt="Profile"
                       width={32}
                       height={32}
                       className="w-full h-full object-cover"
+                      onClick={() => openViewer(allImages, 0)}
                     />
                   ) : (
                     <div className="w-full h-full flex items-center justify-center bg-blue-600">
@@ -209,13 +222,16 @@ const Template3 = ({
                     <div className="mt-2 mb-3">
                       {c.servicePhotos.length === 1 ? (
                         <div className="relative overflow-hidden rounded-lg border border-neutral-700">
-                          <Image
+                          <ClickableImage
                             src={c.servicePhotos[0]}
                             alt={`${c.company} Featured Image`}
                             width={600}
                             height={400}
-                            layout="responsive"
                             className="object-cover w-full"
+                            onClick={() => {
+                              const servicePhotoIndex = allImages.findIndex(img => img === c.servicePhotos[0]);
+                              openViewer(allImages, servicePhotoIndex);
+                            }}
                           />
                         </div>
                       ) : (
@@ -225,13 +241,16 @@ const Template3 = ({
                               key={index}
                               className="relative overflow-hidden rounded-md border border-neutral-700"
                             >
-                              <Image
+                              <ClickableImage
                                 src={photo}
                                 alt={`${c.company} Portfolio Image ${index + 1}`}
                                 width={300}
                                 height={300}
-                                layout="responsive"
                                 className="object-cover w-full"
+                                onClick={() => {
+                                  const servicePhotoIndex = allImages.findIndex(img => img === photo);
+                                  openViewer(allImages, servicePhotoIndex);
+                                }}
                               />
                             </div>
                           ))}
@@ -266,6 +285,14 @@ const Template3 = ({
           © {getCopyrightYear()} Zwiftech. All Rights Reserved.
         </span>
       </TemplateFooter>
+      
+      {viewerState.isOpen && (
+        <ImageViewer
+          images={viewerState.images}
+          initialIndex={viewerState.initialIndex}
+          onClose={closeViewer}
+        />
+      )}
     </Template3Container>
   );
 };

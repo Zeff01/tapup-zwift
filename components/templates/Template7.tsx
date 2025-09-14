@@ -1,3 +1,5 @@
+"use client";
+
 import { Button } from "@/components/ui/button";
 import { downloadVCard, getCopyrightYear } from "@/lib/utils";
 import { Card } from "@/types/types";
@@ -11,17 +13,21 @@ import {
   TemplateFooter,
 } from "./templatesComponents";
 import Link from "next/link";
+import { ImageViewer, useImageViewer } from "@/components/ImageViewer";
+import { ClickableImage } from "./templatesComponents/ClickableImage";
 
 const CompanyShowcase = ({
   companies,
   profilePictureUrl,
   firstName,
   lastName,
+  onImageClick,
 }: {
   companies?: Card["companies"];
   profilePictureUrl?: string;
   firstName?: string;
   lastName?: string;
+  onImageClick: (src: string) => void;
 }) => {
   if (!companies || companies.length === 0) {
     return null;
@@ -96,12 +102,13 @@ const CompanyShowcase = ({
                   <div>
                     {company.servicePhotos.length === 1 ? (
                       <div className="rounded-xl overflow-hidden shadow-lg">
-                        <Image
+                        <ClickableImage
                           src={company.servicePhotos[0]}
                           alt={`${company.company} portfolio`}
                           width={600}
                           height={400}
                           className="w-full h-auto object-cover hover:scale-105 transition-transform duration-300"
+                          onClick={() => onImageClick(company.servicePhotos[0])}
                         />
                       </div>
                     ) : (
@@ -111,12 +118,13 @@ const CompanyShowcase = ({
                             key={photoIndex}
                             className="rounded-xl overflow-hidden shadow-lg group relative p-2 bg-gray-100"
                           >
-                            <Image
+                            <ClickableImage
                               src={photo}
                               alt={`${company.company} portfolio ${photoIndex + 1}`}
                               width={300}
                               height={photoIndex % 3 === 0 ? 230 : 200}
                               className="w-full h-auto object-cover transition-all duration-300 group-hover:scale-110 rounded-xl"
+                              onClick={() => onImageClick(photo)}
                             />
                             <div className="absolute inset-0 bg-gradient-to-t from-black/40 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
                             <div className="absolute bottom-2 left-2 opacity-0 group-hover:opacity-100 transition-opacity duration-300">
@@ -205,6 +213,8 @@ const Template7 = ({
   customUrl,
   owner,
 }: Card) => {
+  const { viewerState, openViewer, closeViewer } = useImageViewer();
+  
   const userProfile = {
     id,
     owner,
@@ -220,6 +230,19 @@ const Template7 = ({
     position,
     websiteUrl,
     customUrl,
+  };
+
+  const allImages = [
+    profilePictureUrl || "/assets/template-7-image1.jpeg",
+    coverPhotoUrl || "/assets/template-7-cover-photo.jpeg",
+    ...(companies?.flatMap(c => c.servicePhotos || []) || [])
+  ].filter(Boolean);
+
+  const handleImageClick = (src: string) => {
+    const index = allImages.findIndex(img => img === src);
+    if (index !== -1) {
+      openViewer(allImages, index);
+    }
   };
 
   return (
@@ -386,6 +409,7 @@ const Template7 = ({
                 profilePictureUrl={profilePictureUrl}
                 firstName={firstName}
                 lastName={lastName}
+                onImageClick={handleImageClick}
               />
             )}
           </div>
@@ -415,6 +439,14 @@ const Template7 = ({
           </span>
         </div>
       </TemplateFooter>
+      
+      {viewerState.isOpen && (
+        <ImageViewer
+          images={viewerState.images}
+          initialIndex={viewerState.initialIndex}
+          onClose={closeViewer}
+        />
+      )}
     </Template7Container>
   );
 };

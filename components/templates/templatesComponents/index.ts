@@ -3,6 +3,7 @@ export * from "./CTAButtons";
 export * from "./SocialLinks";
 export * from "./ProfileHeader";
 export * from "./TemplateFooter";
+export * from "./ClickableImage";
 
 import { Card } from "@/types/types";
 

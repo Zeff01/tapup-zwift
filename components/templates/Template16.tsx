@@ -381,6 +381,15 @@ const Template16 = ({
           </span>
         </div>
       </TemplateFooter>
+      
+      <ImageViewer
+        images={imageViewer.images}
+        isOpen={imageViewer.isOpen}
+        currentIndex={imageViewer.currentIndex}
+        onClose={imageViewer.closeViewer}
+        onNext={imageViewer.nextImage}
+        onPrevious={imageViewer.previousImage}
+      />
     </TemplateContainer>
   );
 };

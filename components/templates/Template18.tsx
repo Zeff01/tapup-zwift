@@ -1,3 +1,5 @@
+"use client";
+
 import { getCopyrightYear } from "@/lib/utils";
 import { Card } from "@/types/types";
 import Image from "next/image";
@@ -6,7 +8,9 @@ import {
   SocialLinks,
   TemplateContainer,
   TemplateFooter,
+  ClickableImage,
 } from "./templatesComponents";
+import { ImageViewer, useImageViewer } from "@/components/ImageViewer";
 
 const Template18 = ({
   id,
@@ -34,6 +38,8 @@ const Template18 = ({
   companies,
   owner,
 }: Card) => {
+  const imageViewer = useImageViewer();
+  
   const userProfile = {
     id,
     owner,
@@ -46,6 +52,30 @@ const Template18 = ({
     websiteUrl,
     customUrl,
   };
+
+  // Collect all images for the viewer
+  const allImages: string[] = [];
+  
+  // Add profile picture if exists
+  if (profilePictureUrl) {
+    allImages.push(profilePictureUrl);
+  }
+  
+  // Add cover photo if exists
+  if (coverPhotoUrl) {
+    allImages.push(coverPhotoUrl);
+  }
+  
+  // Add all service photos from companies
+  if (companies) {
+    companies.forEach((company) => {
+      if (company.servicePhotos && Array.isArray(company.servicePhotos)) {
+        allImages.push(...company.servicePhotos);
+      }
+    });
+  }
+
+  imageViewer.setImages(allImages);
 
   return (
     <TemplateContainer
@@ -91,12 +121,22 @@ const Template18 = ({
           className="relative px-2 sm:px-3 pb-6"
         >
           {/* Cover Image */}
-          <div
-            className="relative h-64 bg-cover bg-center rounded-t-[30px]"
-            style={{
-              backgroundImage: `url(${coverPhotoUrl || "/assets/template-7-cover-photo.jpeg"})`,
-            }}
-          />
+          {coverPhotoUrl ? (
+            <div
+              className="relative h-64 bg-cover bg-center rounded-t-[30px] cursor-pointer"
+              style={{
+                backgroundImage: `url(${coverPhotoUrl})`,
+              }}
+              onClick={() => imageViewer.openViewer(profilePictureUrl ? 1 : 0)}
+            />
+          ) : (
+            <div
+              className="relative h-64 bg-cover bg-center rounded-t-[30px]"
+              style={{
+                backgroundImage: `url(/assets/template-7-cover-photo.jpeg)`,
+              }}
+            />
+          )}
 
           {/* Profile Content */}
           <div className="-mt-20 px-4 sm:px-6">
@@ -104,13 +144,24 @@ const Template18 = ({
               {/* Profile Picture */}
               <div className="absolute -top-12 left-1/2 transform -translate-x-1/2">
                 <div className="w-24 h-24 rounded-full border-4 border-white shadow-md overflow-hidden">
-                  <Image
-                    src={profilePictureUrl || "/assets/template4samplepic.png"}
-                    alt="Profile"
-                    width={96}
-                    height={96}
-                    className="w-full h-full object-cover"
-                  />
+                  {profilePictureUrl ? (
+                    <ClickableImage
+                      src={profilePictureUrl}
+                      alt="Profile"
+                      width={96}
+                      height={96}
+                      className="w-full h-full object-cover"
+                      onClick={() => imageViewer.openViewer(0)}
+                    />
+                  ) : (
+                    <Image
+                      src="/assets/template4samplepic.png"
+                      alt="Profile"
+                      width={96}
+                      height={96}
+                      className="w-full h-full object-cover"
+                    />
+                  )}
                 </div>
               </div>
 
@@ -252,10 +303,22 @@ const Template18 = ({
                         </h5>
                         {c.servicePhotos.length === 1 ? (
                           <div className="rounded-lg overflow-hidden border border-[#00d4ff]/20">
-                            <img
+                            <ClickableImage
                               src={c.servicePhotos[0]}
                               alt={`${c.company} portfolio`}
+                              width={600}
+                              height={400}
                               className="w-full h-auto object-cover"
+                              onClick={() => {
+                                let photoIndex = (profilePictureUrl ? 1 : 0) + (coverPhotoUrl ? 1 : 0);
+                                // Find the index of this specific photo
+                                companies.forEach((comp, compIdx) => {
+                                  if (compIdx < idx && comp.servicePhotos) {
+                                    photoIndex += comp.servicePhotos.length;
+                                  }
+                                });
+                                imageViewer.openViewer(photoIndex);
+                              }}
                             />
                           </div>
                         ) : (
@@ -265,10 +328,23 @@ const Template18 = ({
                                 key={pIdx}
                                 className="rounded-lg overflow-hidden border border-[#00d4ff]/20"
                               >
-                                <img
+                                <ClickableImage
                                   src={photo}
                                   alt={`${c.company} portfolio ${pIdx + 1}`}
+                                  width={300}
+                                  height={200}
                                   className="w-full h-auto object-cover"
+                                  onClick={() => {
+                                    let photoIndex = (profilePictureUrl ? 1 : 0) + (coverPhotoUrl ? 1 : 0);
+                                    // Calculate the correct index
+                                    companies.forEach((comp, compIdx) => {
+                                      if (compIdx < idx && comp.servicePhotos) {
+                                        photoIndex += comp.servicePhotos.length;
+                                      }
+                                    });
+                                    photoIndex += pIdx;
+                                    imageViewer.openViewer(photoIndex);
+                                  }}
                                 />
                               </div>
                             ))}
@@ -307,6 +383,15 @@ const Template18 = ({
           </span>
         </div>{" "}
       </TemplateFooter>
+      
+      <ImageViewer
+        images={imageViewer.images}
+        isOpen={imageViewer.isOpen}
+        currentIndex={imageViewer.currentIndex}
+        onClose={imageViewer.closeViewer}
+        onNext={imageViewer.nextImage}
+        onPrevious={imageViewer.previousImage}
+      />
     </TemplateContainer>
   );
 };
