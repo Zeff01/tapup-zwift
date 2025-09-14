@@ -1,4 +1,4 @@
-"use server";
+// Order actions for Firebase
 
 import { firebaseDb } from "@/lib/firebase/firebase";
 import {
@@ -35,10 +35,18 @@ export async function getAllOrders(): Promise<Order[]> {
       } as Order);
     });
     
+    // If no orders in database, return example orders for demo
+    if (orders.length === 0) {
+      const { exampleOrders } = await import("@/constants/exampleOrders");
+      return exampleOrders;
+    }
+    
     return orders;
   } catch (error) {
     console.error("Error fetching all orders:", error);
-    return [];
+    // Return example orders as fallback
+    const { exampleOrders } = await import("@/constants/exampleOrders");
+    return exampleOrders;
   }
 }
 
@@ -65,10 +73,19 @@ export async function getOrdersByUserId(userId: string): Promise<Order[]> {
       } as Order);
     });
     
+    // If no orders in database, return some example orders for demo
+    if (orders.length === 0) {
+      const { exampleOrders } = await import("@/constants/exampleOrders");
+      // Return first 3 example orders as user's orders
+      return exampleOrders.slice(0, 3);
+    }
+    
     return orders;
   } catch (error) {
     console.error("Error fetching user orders:", error);
-    return [];
+    // Return example orders as fallback
+    const { exampleOrders } = await import("@/constants/exampleOrders");
+    return exampleOrders.slice(0, 3);
   }
 }
 
