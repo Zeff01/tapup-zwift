@@ -18,74 +18,159 @@ import { Order } from "@/types/types";
 
 /**
  * Get all orders (admin only)
+ * Note: Currently orders are stored as transactions in Firebase
  */
 export async function getAllOrders(): Promise<Order[]> {
   try {
+    // Try fetching from orders collection first
     const ordersRef = collection(firebaseDb, "orders");
-    const q = query(ordersRef, orderBy("orderDate", "desc"));
-    const snapshot = await getDocs(q);
+    const ordersQuery = query(ordersRef, orderBy("orderDate", "desc"));
+    const ordersSnapshot = await getDocs(ordersQuery);
     
     const orders: Order[] = [];
-    snapshot.forEach((doc) => {
-      const data = doc.data();
-      orders.push({
-        ...data,
-        orderId: doc.id,
-        orderDate: data.orderDate?.toDate() || new Date(),
-      } as Order);
-    });
     
-    // If no orders in database, return example orders for demo
-    if (orders.length === 0) {
-      const { exampleOrders } = await import("@/constants/exampleOrders");
-      return exampleOrders;
+    // If we have orders in the orders collection
+    if (!ordersSnapshot.empty) {
+      ordersSnapshot.forEach((doc) => {
+        const data = doc.data();
+        orders.push({
+          ...data,
+          orderId: doc.id,
+          orderDate: data.orderDate?.toDate() || new Date(),
+        } as Order);
+      });
+      return orders;
     }
+    
+    // Otherwise, fetch from transactions collection and transform
+    const transactionsRef = collection(firebaseDb, "transactions");
+    const transQuery = query(transactionsRef, orderBy("createdAt", "desc"));
+    const transSnapshot = await getDocs(transQuery);
+    
+    transSnapshot.forEach((doc) => {
+      const data = doc.data();
+      // Transform transaction to order format
+      const order: Order = {
+        orderId: data.orderId || doc.id,
+        userId: data.userId,
+        items: data.items || [],
+        shippingInfo: data.shippingInfo || {
+          recipientName: "Unknown",
+          contactNumber: "Unknown",
+          address: {
+            city: "Unknown",
+            street: "Unknown",
+            unit: "",
+            postalCode: "Unknown"
+          }
+        },
+        deliveryOption: data.deliveryOption || {
+          name: "Standard Delivery",
+          shippingFee: 0,
+          minDays: 3,
+          maxDays: 7
+        },
+        orderDate: data.createdAt?.toDate() || new Date(),
+        totalAmount: data.totalAmount || 0,
+        status: data.status === "pending-payment" ? "Pending" : 
+                data.status === "completed" ? "To Ship" : 
+                data.status || "Pending",
+        returnStatus: data.returnStatus
+      };
+      orders.push(order);
+    });
     
     return orders;
   } catch (error) {
     console.error("Error fetching all orders:", error);
-    // Return example orders as fallback
-    const { exampleOrders } = await import("@/constants/exampleOrders");
-    return exampleOrders;
+    return [];
   }
 }
 
 /**
  * Get orders by user ID
+ * Note: Currently orders are stored as transactions in Firebase
  */
 export async function getOrdersByUserId(userId: string): Promise<Order[]> {
   try {
-    const ordersRef = collection(firebaseDb, "orders");
-    const q = query(
-      ordersRef,
-      where("userId", "==", userId),
-      orderBy("orderDate", "desc")
-    );
-    const snapshot = await getDocs(q);
-    
-    const orders: Order[] = [];
-    snapshot.forEach((doc) => {
-      const data = doc.data();
-      orders.push({
-        ...data,
-        orderId: doc.id,
-        orderDate: data.orderDate?.toDate() || new Date(),
-      } as Order);
-    });
-    
-    // If no orders in database, return some example orders for demo
-    if (orders.length === 0) {
-      const { exampleOrders } = await import("@/constants/exampleOrders");
-      // Return first 3 example orders as user's orders
-      return exampleOrders.slice(0, 3);
+    if (!userId) {
+      console.error("No userId provided");
+      return [];
     }
+
+    const orders: Order[] = [];
+
+    // Try fetching from orders collection first
+    try {
+      const ordersRef = collection(firebaseDb, "orders");
+      const ordersQuery = query(
+        ordersRef,
+        where("userId", "==", userId),
+        orderBy("orderDate", "desc")
+      );
+      const ordersSnapshot = await getDocs(ordersQuery);
+      
+      if (!ordersSnapshot.empty) {
+        ordersSnapshot.forEach((doc) => {
+          const data = doc.data();
+          orders.push({
+            ...data,
+            orderId: doc.id,
+            orderDate: data.orderDate?.toDate() || new Date(),
+          } as Order);
+        });
+        return orders;
+      }
+    } catch (e) {
+      console.log("No orders collection or error querying orders:", e);
+    }
+
+    // Otherwise, fetch from transactions collection
+    const transactionsRef = collection(firebaseDb, "transactions");
+    const transQuery = query(
+      transactionsRef,
+      where("userId", "==", userId),
+      orderBy("createdAt", "desc")
+    );
+    const transSnapshot = await getDocs(transQuery);
+    
+    transSnapshot.forEach((doc) => {
+      const data = doc.data();
+      // Transform transaction to order format
+      const order: Order = {
+        orderId: data.orderId || doc.id,
+        userId: data.userId,
+        items: data.items || [],
+        shippingInfo: data.shippingInfo || {
+          recipientName: "Unknown",
+          contactNumber: "Unknown",
+          address: {
+            city: "Unknown",
+            street: "Unknown",
+            unit: "",
+            postalCode: "Unknown"
+          }
+        },
+        deliveryOption: data.deliveryOption || {
+          name: "Standard Delivery",
+          shippingFee: 0,
+          minDays: 3,
+          maxDays: 7
+        },
+        orderDate: data.createdAt?.toDate() || new Date(),
+        totalAmount: data.totalAmount || 0,
+        status: data.status === "pending-payment" ? "Pending" : 
+                data.status === "completed" ? "To Ship" : 
+                data.status || "Pending",
+        returnStatus: data.returnStatus
+      };
+      orders.push(order);
+    });
     
     return orders;
   } catch (error) {
     console.error("Error fetching user orders:", error);
-    // Return example orders as fallback
-    const { exampleOrders } = await import("@/constants/exampleOrders");
-    return exampleOrders.slice(0, 3);
+    return [];
   }
 }
 
