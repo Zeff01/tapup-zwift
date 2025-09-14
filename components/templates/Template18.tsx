@@ -36,6 +36,7 @@ const Template18 = ({
 }: Card) => {
   const userProfile = {
     id,
+    owner,
     firstName,
     lastName,
     email,

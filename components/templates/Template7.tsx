@@ -207,6 +207,7 @@ const Template7 = ({
 }: Card) => {
   const userProfile = {
     id,
+    owner,
     profilePictureUrl,
     coverPhotoUrl,
     servicePhotos,

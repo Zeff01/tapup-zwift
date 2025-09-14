@@ -239,9 +239,11 @@ const Template13 = ({
   viberUrl,
   tiktokUrl,
   customUrl,
+  owner,
 }: Card) => {
   const userProfile = {
     id,
+    owner,
     firstName,
     lastName,
     email,

@@ -16,6 +16,7 @@ import { LuDownload } from "react-icons/lu";
 
 const ProfileInfo = ({
   id,
+  owner,
   profilePictureUrl,
   coverPhotoUrl,
   position,
@@ -29,6 +30,7 @@ const ProfileInfo = ({
 }: Partial<Card>) => {
   const userProfile = {
     id,
+    owner,
     firstName,
     lastName,
     email,

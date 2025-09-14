@@ -52,6 +52,7 @@ const Template8 = ({
 }: Card) => {
   const userProfile = {
     id,
+    owner,
     companyBackground,
     serviceDescription,
     servicePhotos,

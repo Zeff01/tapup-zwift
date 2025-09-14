@@ -28,9 +28,11 @@ const Template1 = ({
   viberUrl,
   customUrl,
   companies,
+  owner,
 }: Card) => {
   const userProfile = {
     id,
+    owner,
     firstName,
     lastName,
     email,

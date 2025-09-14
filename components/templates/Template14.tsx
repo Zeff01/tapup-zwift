@@ -21,6 +21,7 @@ const Template14 = ({
   whatsappNumber,
   websiteUrl,
   customUrl,
+  owner,
 }: Card) => {
   // TODO: Implement Template14 design
   return (

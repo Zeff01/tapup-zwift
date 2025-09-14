@@ -205,9 +205,11 @@ const Template9 = ({
   whatsappNumber,
   websiteUrl,
   customUrl,
+  owner,
 }: Card) => {
   const userProfile = {
     id,
+    owner,
     firstName,
     lastName,
     email,
