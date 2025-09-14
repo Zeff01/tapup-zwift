@@ -292,7 +292,7 @@ export const businessList = [
 export const menuItems = [
   { icon: Home, title: "Home", href: "/home" },
   { icon: TbCards, title: "Cards", href: "/cards" },
-  { icon: FiShoppingBag, title: "My Orders", href: "/cards?tab=orders" },
+  { icon: FiShoppingBag, title: "My Orders", href: "/orders" },
 ];
 
 export const adminMenuItems = [
