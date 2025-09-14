@@ -1,3 +1,5 @@
+"use client";
+
 import { getCopyrightYear } from "@/lib/utils";
 import { Card } from "@/types/types";
 import Image from "next/image";
@@ -7,7 +9,9 @@ import {
   Template15CTA,
   TemplateContainer,
   TemplateFooter,
+  ClickableImage,
 } from "./templatesComponents";
+import { ImageViewer, useImageViewer } from "@/components/ImageViewer";
 
 const Template15 = ({
   id,
@@ -38,6 +42,8 @@ const Template15 = ({
   companies,
   owner,
 }: Card) => {
+  const imageViewer = useImageViewer();
+  
   const userProfile = {
     id,
     owner,
@@ -50,6 +56,30 @@ const Template15 = ({
     websiteUrl,
     customUrl,
   };
+
+  // Collect all images for the viewer
+  const allImages: string[] = [];
+  
+  // Add profile picture if exists
+  if (profilePictureUrl) {
+    allImages.push(profilePictureUrl);
+  }
+  
+  // Add cover photo if exists
+  if (coverPhotoUrl) {
+    allImages.push(coverPhotoUrl);
+  }
+  
+  // Add all service photos from companies
+  if (companies) {
+    companies.forEach((company) => {
+      if (company.servicePhotos && Array.isArray(company.servicePhotos)) {
+        allImages.push(...company.servicePhotos);
+      }
+    });
+  }
+
+  imageViewer.setImages(allImages);
 
   return (
     <TemplateContainer
@@ -75,13 +105,24 @@ const Template15 = ({
           >
             <div className="w-32 h-32 rounded-full bg-[#9A3A1975] opacity-80 blur-2xl" />
           </div>
-          <Image
-            src={coverPhotoUrl || "/assets/template2coverphoto.png"}
-            alt="Cover"
-            width={480}
-            height={144}
-            className="object-cover w-full h-32 md:h-36 rounded-t-2xl shadow-lg"
-          />
+          {coverPhotoUrl ? (
+            <ClickableImage
+              src={coverPhotoUrl}
+              alt="Cover"
+              width={480}
+              height={144}
+              className="object-cover w-full h-32 md:h-36 rounded-t-2xl shadow-lg"
+              onClick={() => imageViewer.openViewer(profilePictureUrl ? 1 : 0)}
+            />
+          ) : (
+            <Image
+              src="/assets/template2coverphoto.png"
+              alt="Cover"
+              width={480}
+              height={144}
+              className="object-cover w-full h-32 md:h-36 rounded-t-2xl shadow-lg"
+            />
+          )}
           {/* Fade effect at the bottom of the cover */}
           <div
             className="absolute left-0 bottom-0 w-full h-10 rounded-t-2xl pointer-events-none"
@@ -93,13 +134,24 @@ const Template15 = ({
           {/* Profile Image - centered and overlapping */}
           <div className="absolute left-1/2 -bottom-14 transform -translate-x-1/2 z-20">
             <div className="w-28 h-28 rounded-full border-4 border-[#7dd3fc] overflow-hidden bg-[#222]">
-              <Image
-                src={profilePictureUrl || "/assets/template4samplepic.png"}
-                alt="Profile"
-                width={112}
-                height={112}
-                className="object-cover w-full h-full"
-              />
+              {profilePictureUrl ? (
+                <ClickableImage
+                  src={profilePictureUrl}
+                  alt="Profile"
+                  width={112}
+                  height={112}
+                  className="object-cover w-full h-full"
+                  onClick={() => imageViewer.openViewer(0)}
+                />
+              ) : (
+                <Image
+                  src="/assets/template4samplepic.png"
+                  alt="Profile"
+                  width={112}
+                  height={112}
+                  className="object-cover w-full h-full"
+                />
+              )}
             </div>
           </div>
         </section>
@@ -347,10 +399,22 @@ const Template15 = ({
                                   {company.servicePhotos.length === 1 ? (
                                     <div className="relative group/photo">
                                       <div className="rounded-xl overflow-hidden border border-[#38bdf8]/40 shadow-lg">
-                                        <img
+                                        <ClickableImage
                                           src={company.servicePhotos[0]}
                                           alt={`${company.company} portfolio`}
+                                          width={600}
+                                          height={400}
                                           className="w-full h-auto object-cover transition-transform duration-500 group-hover/photo:scale-110"
+                                          onClick={() => {
+                                            let photoIndex = (profilePictureUrl ? 1 : 0) + (coverPhotoUrl ? 1 : 0);
+                                            // Find the index of this specific photo
+                                            companies.forEach((comp, compIdx) => {
+                                              if (compIdx < idx && comp.servicePhotos) {
+                                                photoIndex += comp.servicePhotos.length;
+                                              }
+                                            });
+                                            imageViewer.openViewer(photoIndex);
+                                          }}
                                         />
                                       </div>
                                       <div className="absolute inset-0 bg-gradient-to-t from-[#38bdf8]/50 via-transparent to-transparent opacity-0 group-hover/photo:opacity-100 transition-opacity duration-300 rounded-xl"></div>
@@ -368,10 +432,23 @@ const Template15 = ({
                                             key={photoIdx}
                                             className="relative group/photo rounded-xl overflow-hidden border border-[#38bdf8]/40 shadow-lg"
                                           >
-                                            <img
+                                            <ClickableImage
                                               src={photo}
                                               alt={`${company.company} portfolio ${photoIdx + 1}`}
+                                              width={300}
+                                              height={200}
                                               className="w-full h-auto object-cover transition-all duration-500 group-hover/photo:scale-110"
+                                              onClick={() => {
+                                                let photoIndex = (profilePictureUrl ? 1 : 0) + (coverPhotoUrl ? 1 : 0);
+                                                // Calculate the correct index
+                                                companies.forEach((comp, compIdx) => {
+                                                  if (compIdx < idx && comp.servicePhotos) {
+                                                    photoIndex += comp.servicePhotos.length;
+                                                  }
+                                                });
+                                                photoIndex += photoIdx;
+                                                imageViewer.openViewer(photoIndex);
+                                              }}
                                             />
                                             <div className="absolute inset-0 bg-gradient-to-t from-[#38bdf8]/60 via-transparent to-transparent opacity-0 group-hover/photo:opacity-100 transition-opacity duration-300"></div>
                                             <div className="absolute bottom-2 left-2 opacity-0 group-hover/photo:opacity-100 transition-opacity duration-300">
@@ -421,6 +498,15 @@ const Template15 = ({
           </span>
         </div>
       </TemplateFooter>
+      
+      <ImageViewer
+        images={imageViewer.images}
+        isOpen={imageViewer.isOpen}
+        currentIndex={imageViewer.currentIndex}
+        onClose={imageViewer.closeViewer}
+        onNext={imageViewer.nextImage}
+        onPrevious={imageViewer.previousImage}
+      />
     </TemplateContainer>
   );
 };

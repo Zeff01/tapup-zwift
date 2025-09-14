@@ -1,3 +1,5 @@
+"use client";
+
 import { cn, downloadVCard, getCopyrightYear } from "@/lib/utils";
 import { Card } from "@/types/types";
 import { Advent_Pro, Akatab } from "next/font/google";
@@ -11,7 +13,9 @@ import {
   SocialLinks,
   TemplateContainer,
   TemplateFooter,
+  ClickableImage,
 } from "./templatesComponents";
+import { ImageViewer, useImageViewer } from "@/components/ImageViewer";
 
 const poppins = Advent_Pro({
   weight: "400",
@@ -29,11 +33,15 @@ const CompanyShowcase = ({
   profilePictureUrl,
   firstName,
   lastName,
+  imageViewer,
+  startingIndex,
 }: {
   companies?: Card["companies"];
   profilePictureUrl?: string;
   firstName?: string;
   lastName?: string;
+  imageViewer?: ReturnType<typeof useImageViewer>;
+  startingIndex?: number;
 }) => {
   if (!companies || companies.length === 0) {
     return null;
@@ -196,12 +204,24 @@ const CompanyShowcase = ({
                       {company.servicePhotos.length === 1 ? (
                         <div className="relative group/photo">
                           <div className="rounded-xl overflow-hidden border border-gray-300 shadow-md">
-                            <Image
+                            <ClickableImage
                               src={company.servicePhotos[0]}
                               alt={`${company.company} portfolio`}
                               width={600}
                               height={400}
                               className="w-full h-auto object-cover transition-transform duration-300 group-hover/photo:scale-105"
+                              onClick={() => {
+                                if (imageViewer && startingIndex !== undefined) {
+                                  let photoIndex = startingIndex;
+                                  // Find the index of this specific photo
+                                  companies.forEach((comp, compIdx) => {
+                                    if (compIdx < index && comp.servicePhotos) {
+                                      photoIndex += comp.servicePhotos.length;
+                                    }
+                                  });
+                                  imageViewer.openViewer(photoIndex);
+                                }
+                              }}
                             />
                           </div>
                           <div className="absolute inset-0 bg-gradient-to-t from-[#34463b]/30 via-transparent to-transparent opacity-0 group-hover/photo:opacity-100 transition-opacity duration-300 rounded-xl"></div>
@@ -218,12 +238,25 @@ const CompanyShowcase = ({
                               key={photoIndex}
                               className="relative group/photo rounded-xl overflow-hidden border border-gray-300 shadow-md"
                             >
-                              <Image
+                              <ClickableImage
                                 src={photo}
                                 alt={`${company.company} portfolio ${photoIndex + 1}`}
                                 width={300}
                                 height={200}
                                 className="w-full h-auto object-cover transition-all duration-300 group-hover/photo:scale-110"
+                                onClick={() => {
+                                  if (imageViewer && startingIndex !== undefined) {
+                                    let photoIdx = startingIndex;
+                                    // Calculate the correct index
+                                    companies.forEach((comp, compIdx) => {
+                                      if (compIdx < index && comp.servicePhotos) {
+                                        photoIdx += comp.servicePhotos.length;
+                                      }
+                                    });
+                                    photoIdx += photoIndex;
+                                    imageViewer.openViewer(photoIdx);
+                                  }
+                                }}
                               />
                               <div className="absolute inset-0 bg-gradient-to-t from-[#34463b]/40 via-transparent to-transparent opacity-0 group-hover/photo:opacity-100 transition-opacity duration-300"></div>
                               <div className="absolute bottom-2 left-2 opacity-0 group-hover/photo:opacity-100 transition-opacity duration-300">
@@ -269,6 +302,8 @@ const Template12 = ({
   customUrl,
   owner,
 }: Card) => {
+  const imageViewer = useImageViewer();
+  
   const userProfile = {
     id,
     owner,
@@ -281,6 +316,30 @@ const Template12 = ({
     websiteUrl,
     customUrl,
   };
+
+  // Collect all images for the viewer
+  const allImages: string[] = [];
+  
+  // Add profile picture if exists
+  if (profilePictureUrl) {
+    allImages.push(profilePictureUrl);
+  }
+  
+  // Add cover photo if exists
+  if (coverPhotoUrl) {
+    allImages.push(coverPhotoUrl);
+  }
+  
+  // Add all service photos from companies
+  if (companies) {
+    companies.forEach((company) => {
+      if (company.servicePhotos && Array.isArray(company.servicePhotos)) {
+        allImages.push(...company.servicePhotos);
+      }
+    });
+  }
+
+  imageViewer.setImages(allImages);
 
   return (
     <TemplateContainer
@@ -349,12 +408,13 @@ const Template12 = ({
               </div>
               {profilePictureUrl ? (
                 <div className=" rounded-full mx-auto overflow-hidden my-2">
-                  <Image
+                  <ClickableImage
                     src={profilePictureUrl}
                     alt="Profile Image"
                     width={80}
                     height={80}
                     className="rounded-full w-24 h-24"
+                    onClick={() => imageViewer.openViewer(0)}
                   />
                 </div>
               ) : (
@@ -382,13 +442,24 @@ const Template12 = ({
               />
             </div>
           </div>
-          <Image
-            src={coverPhotoUrl || "/assets/template9coverphoto.png"}
-            alt="Cover Image"
-            width={400}
-            height={200}
-            className="size-full object-cover"
-          />
+          {coverPhotoUrl ? (
+            <ClickableImage
+              src={coverPhotoUrl}
+              alt="Cover Image"
+              width={400}
+              height={200}
+              className="size-full object-cover"
+              onClick={() => imageViewer.openViewer(profilePictureUrl ? 1 : 0)}
+            />
+          ) : (
+            <Image
+              src="/assets/template9coverphoto.png"
+              alt="Cover Image"
+              width={400}
+              height={200}
+              className="size-full object-cover"
+            />
+          )}
         </div>
         <div className="text-center flex flex-col w-full pb-4 space-y-1 bg-[#D3F1DF] bg-gradient-to-t from-[#85A98F] overflow-hidden to-[#D3F1DF] rounded-t-3xl  z-20 relative -mt-8 flex-1">
           <div className=" flex  items-center w-full gap-3 py-4 text-2xl bg-gradient-to-t from-[#D3F1DF]  to-[#f4fcf7] text-neutral-700 h-16 justify-center">
@@ -423,6 +494,10 @@ const Template12 = ({
                   profilePictureUrl={profilePictureUrl}
                   firstName={firstName}
                   lastName={lastName}
+                  imageViewer={imageViewer}
+                  startingIndex={
+                    (profilePictureUrl ? 1 : 0) + (coverPhotoUrl ? 1 : 0)
+                  }
                 />
               )}
             </div>
@@ -450,6 +525,15 @@ const Template12 = ({
           © {getCopyrightYear()} Zwiftech. All Rights Reserved.
         </span>
       </TemplateFooter>
+      
+      <ImageViewer
+        images={imageViewer.images}
+        isOpen={imageViewer.isOpen}
+        currentIndex={imageViewer.currentIndex}
+        onClose={imageViewer.closeViewer}
+        onNext={imageViewer.nextImage}
+        onPrevious={imageViewer.previousImage}
+      />
     </TemplateContainer>
   );
 };

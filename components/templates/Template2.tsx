@@ -1,3 +1,5 @@
+"use client";
+
 import { getCopyrightYear } from "@/lib/utils";
 import { Card } from "@/types/types";
 import Image from "next/image";
@@ -7,6 +9,8 @@ import {
   TemplateFooter,
   Template1CTA,
 } from "./templatesComponents";
+import { ImageViewer, useImageViewer } from "@/components/ImageViewer";
+import { ClickableImage } from "./templatesComponents/ClickableImage";
 
 const Template2 = ({
   id,
@@ -29,6 +33,8 @@ const Template2 = ({
   customUrl,
   companies,
 }: Card) => {
+  const { viewerState, openViewer, closeViewer } = useImageViewer();
+  
   const userProfile = {
     id,
     owner,
@@ -40,27 +46,35 @@ const Template2 = ({
     customUrl,
   };
 
+  const allImages = [
+    profilePictureUrl || "/assets/template4samplepic.png",
+    coverPhotoUrl || "/assets/template1coverphoto.png",
+    ...(companies?.flatMap(c => c.servicePhotos || []) || [])
+  ].filter(Boolean);
+
   return (
     <Template2Container>
       <div className="flex-grow">
         {/* COVER PHOTO + PROFILE */}
         <div className="mt-2 flex flex-col relative rounded-4xl">
           <div className="w-full h-48 px-2">
-            <Image
+            <ClickableImage
               src={coverPhotoUrl || "/assets/template1coverphoto.png"}
               alt="Cover"
               width={400}
               height={200}
               className="w-full h-48 object-cover rounded-[2rem] overflow-hidden"
+              onClick={() => openViewer(allImages, 1)}
             />
           </div>
           <div className="absolute -bottom-16 left-1/2 transform -translate-x-1/2">
-            <Image
+            <ClickableImage
               src={profilePictureUrl || "/assets/template4samplepic.png"}
               alt="Profile"
               width={112}
               height={112}
               className="rounded-full w-32 h-32 border border-white/30"
+              onClick={() => openViewer(allImages, 0)}
             />
           </div>
         </div>
@@ -151,14 +165,17 @@ const Template2 = ({
                       c.servicePhotos.length > 0 && (
                         <div className="grid grid-cols-2 gap-4 mt-4">
                           {c.servicePhotos.map((photo, i) => (
-                            <Image
+                            <ClickableImage
                               key={i}
                               src={photo}
                               alt={`Service Photo ${i + 1}`}
                               width={300}
                               height={300}
-                              layout="responsive"
-                              className="rounded-md object-cover w-full "
+                              className="rounded-md object-cover w-full"
+                              onClick={() => {
+                                const servicePhotoIndex = allImages.findIndex(img => img === photo);
+                                openViewer(allImages, servicePhotoIndex);
+                              }}
                             />
                           ))}
                         </div>
@@ -190,6 +207,14 @@ const Template2 = ({
           © {getCopyrightYear()} Zwiftech. All Rights Reserved.
         </span>
       </TemplateFooter>
+      
+      {viewerState.isOpen && (
+        <ImageViewer
+          images={viewerState.images}
+          initialIndex={viewerState.initialIndex}
+          onClose={closeViewer}
+        />
+      )}
     </Template2Container>
   );
 };

@@ -298,7 +298,7 @@ export const menuItems = [
 export const adminMenuItems = [
   { icon: Users, title: "User Management", href: "/admin" },
   { icon: Receipt, title: "Transactions", href: "/admin/transactions" },
-  { icon: FiShoppingBag, title: "Orders", href: "/admin/users-orders" },
+  { icon: FiShoppingBag, title: "User Orders", href: "/admin/users-orders" },
   { icon: Package, title: "Card Bank", href: "/admin/card-bank" },
 ];
 

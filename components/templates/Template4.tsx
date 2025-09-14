@@ -1,3 +1,5 @@
+"use client";
+
 import { getCopyrightYear } from "@/lib/utils";
 import { Card } from "@/types/types";
 import Image from "next/image";
@@ -8,6 +10,8 @@ import {
   Template4Container,
   TemplateFooter,
 } from "./templatesComponents";
+import { ImageViewer, useImageViewer } from "@/components/ImageViewer";
+import { ClickableImage } from "./templatesComponents/ClickableImage";
 
 const Template4 = ({
   id,
@@ -35,6 +39,8 @@ const Template4 = ({
   companies,
   owner,
 }: Card) => {
+  const { viewerState, openViewer, closeViewer } = useImageViewer();
+  
   const userProfile = {
     id,
     owner,
@@ -47,6 +53,12 @@ const Template4 = ({
     websiteUrl,
     customUrl,
   };
+
+  const allImages = [
+    profilePictureUrl || "/assets/template4samplepic.png",
+    coverPhotoUrl || "/assets/template1coverphoto.png",
+    ...(companies?.flatMap(c => c.servicePhotos || []) || [])
+  ].filter(Boolean);
 
   return (
     <Template4Container>
@@ -127,12 +139,13 @@ const Template4 = ({
               <div className="flex items-center px-4 py-2 border-b border-neutral-300">
                 <div className="w-8 h-8 rounded-full overflow-hidden bg-blue-100 flex-shrink-0 border border-blue-200">
                   {profilePictureUrl ? (
-                    <Image
+                    <ClickableImage
                       src={profilePictureUrl}
                       alt="Profile"
                       width={32}
                       height={32}
                       className="w-full h-full object-cover"
+                      onClick={() => openViewer(allImages, 0)}
                     />
                   ) : (
                     <div className="w-full h-full flex items-center justify-center bg-blue-500">
@@ -192,13 +205,16 @@ const Template4 = ({
                     <div className="mt-2 mb-3">
                       {c.servicePhotos.length === 1 ? (
                         <div className="relative overflow-hidden rounded-lg border border-neutral-300 shadow-md">
-                          <Image
+                          <ClickableImage
                             src={c.servicePhotos[0]}
                             alt={`${c.company} Featured Image`}
                             width={600}
                             height={400}
-                            layout="responsive"
                             className="object-cover w-full"
+                            onClick={() => {
+                              const servicePhotoIndex = allImages.findIndex(img => img === c.servicePhotos[0]);
+                              openViewer(allImages, servicePhotoIndex);
+                            }}
                           />
                         </div>
                       ) : (
@@ -208,13 +224,16 @@ const Template4 = ({
                               key={index}
                               className="relative overflow-hidden rounded-md border border-neutral-300 shadow-md"
                             >
-                              <Image
+                              <ClickableImage
                                 src={photo}
                                 alt={`${c.company} Portfolio Image ${index + 1}`}
                                 width={300}
                                 height={300}
-                                layout="responsive"
                                 className="object-cover w-full"
+                                onClick={() => {
+                                  const servicePhotoIndex = allImages.findIndex(img => img === photo);
+                                  openViewer(allImages, servicePhotoIndex);
+                                }}
                               />
                             </div>
                           ))}
@@ -267,6 +286,14 @@ const Template4 = ({
           © {getCopyrightYear()} Zwiftech. All Rights Reserved.
         </span>
       </TemplateFooter>
+      
+      {viewerState.isOpen && (
+        <ImageViewer
+          images={viewerState.images}
+          initialIndex={viewerState.initialIndex}
+          onClose={closeViewer}
+        />
+      )}
     </Template4Container>
   );
 };
