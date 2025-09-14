@@ -1,3 +1,5 @@
+"use client";
+
 import { getCopyrightYear } from "@/lib/utils";
 import { Card } from "@/types/types";
 import Image from "next/image";
@@ -6,7 +8,9 @@ import {
   Template13Socials,
   TemplateFooter,
   CTAButtons,
+  ClickableImage,
 } from "./templatesComponents";
+import { ImageViewer, useImageViewer } from "@/components/ImageViewer";
 
 // Company Showcase Component for Template13 - Modern Card Design
 const CompanyShowcase = ({
@@ -14,11 +18,15 @@ const CompanyShowcase = ({
   profilePictureUrl,
   firstName,
   lastName,
+  imageViewer,
+  startingIndex,
 }: {
   companies?: Card["companies"];
   profilePictureUrl?: string;
   firstName?: string;
   lastName?: string;
+  imageViewer?: ReturnType<typeof useImageViewer>;
+  startingIndex?: number;
 }) => {
   if (!companies || companies.length === 0) {
     return null;
@@ -165,12 +173,24 @@ const CompanyShowcase = ({
                       {company.servicePhotos.length === 1 ? (
                         <div className="relative group/photo">
                           <div className="rounded-xl overflow-hidden border border-neutral-700 shadow-lg">
-                            <Image
+                            <ClickableImage
                               src={company.servicePhotos[0]}
                               alt={`${company.company} portfolio`}
                               width={600}
                               height={400}
                               className="w-full h-auto object-cover transition-transform duration-500 group-hover/photo:scale-110"
+                              onClick={() => {
+                                if (imageViewer && startingIndex !== undefined) {
+                                  let photoIndex = startingIndex;
+                                  // Find the index of this specific photo
+                                  companies.forEach((comp, compIdx) => {
+                                    if (compIdx < index && comp.servicePhotos) {
+                                      photoIndex += comp.servicePhotos.length;
+                                    }
+                                  });
+                                  imageViewer.openViewer(photoIndex);
+                                }
+                              }}
                             />
                           </div>
                           <div className="absolute inset-0 bg-gradient-to-t from-[#553838]/60 via-transparent to-transparent opacity-0 group-hover/photo:opacity-100 transition-opacity duration-300 rounded-xl"></div>
@@ -187,12 +207,25 @@ const CompanyShowcase = ({
                               key={photoIndex}
                               className="relative group/photo rounded-xl overflow-hidden border border-neutral-700 shadow-lg"
                             >
-                              <Image
+                              <ClickableImage
                                 src={photo}
                                 alt={`${company.company} portfolio ${photoIndex + 1}`}
                                 width={300}
                                 height={200}
                                 className="w-full h-auto object-cover transition-all duration-500 group-hover/photo:scale-110"
+                                onClick={() => {
+                                  if (imageViewer && startingIndex !== undefined) {
+                                    let photoIdx = startingIndex;
+                                    // Calculate the correct index
+                                    companies.forEach((comp, compIdx) => {
+                                      if (compIdx < index && comp.servicePhotos) {
+                                        photoIdx += comp.servicePhotos.length;
+                                      }
+                                    });
+                                    photoIdx += photoIndex;
+                                    imageViewer.openViewer(photoIdx);
+                                  }
+                                }}
                               />
                               <div className="absolute inset-0 bg-gradient-to-t from-[#553838]/60 via-transparent to-transparent opacity-0 group-hover/photo:opacity-100 transition-opacity duration-300"></div>
                               <div className="absolute bottom-3 left-3 opacity-0 group-hover/photo:opacity-100 transition-opacity duration-300">
@@ -239,9 +272,13 @@ const Template13 = ({
   viberUrl,
   tiktokUrl,
   customUrl,
+  owner,
 }: Card) => {
+  const imageViewer = useImageViewer();
+  
   const userProfile = {
     id,
+    owner,
     firstName,
     lastName,
     email,
@@ -251,6 +288,30 @@ const Template13 = ({
     websiteUrl,
     customUrl,
   };
+
+  // Collect all images for the viewer
+  const allImages: string[] = [];
+  
+  // Add profile picture if exists
+  if (profilePictureUrl) {
+    allImages.push(profilePictureUrl);
+  }
+  
+  // Add cover photo if exists
+  if (coverPhotoUrl) {
+    allImages.push(coverPhotoUrl);
+  }
+  
+  // Add all service photos from companies
+  if (companies) {
+    companies.forEach((company) => {
+      if (company.servicePhotos && Array.isArray(company.servicePhotos)) {
+        allImages.push(...company.servicePhotos);
+      }
+    });
+  }
+
+  imageViewer.setImages(allImages);
 
   return (
     <TemplateContainer
@@ -270,12 +331,13 @@ const Template13 = ({
         >
           <div className="w-full h-40 rounded-2xl overflow-hidden bg-neutral-800 relative">
             {coverPhotoUrl ? (
-              <Image
+              <ClickableImage
                 src={coverPhotoUrl}
                 alt="Cover Photo"
                 width={480}
                 height={160}
                 className="object-cover w-full h-full"
+                onClick={() => imageViewer.openViewer(profilePictureUrl ? 1 : 0)}
                 onError={(e) => {
                   e.currentTarget.src = "/assets/sampleCoverPhoto.png";
                 }}
@@ -293,36 +355,65 @@ const Template13 = ({
 
           <div className="flex flex-col items-start w-full px-4 -mt-12 z-10">
             <div className="w-24 h-24 flex items-center justify-center mb-4 shadow-lg relative">
-              <Image
-                src={profilePictureUrl || "/assets/template4samplepic.png"}
-                alt="avatar"
-                width={96}
-                height={96}
-                className="w-24 h-24 object-cover"
-                style={{
-                  WebkitMaskImage: "url(/assets/template13profileshape.svg)",
-                  maskImage: "url(/assets/template13profileshape.svg)",
-                  WebkitMaskSize: "cover",
-                  maskSize: "cover",
-                  WebkitMaskRepeat: "no-repeat",
-                  maskRepeat: "no-repeat",
-                  WebkitMaskPosition: "center",
-                  maskPosition: "center",
-                  background: "#fff", // fallback
-                }}
-              />
+              {profilePictureUrl ? (
+                <ClickableImage
+                  src={profilePictureUrl}
+                  alt="avatar"
+                  width={96}
+                  height={96}
+                  className="w-24 h-24 object-cover"
+                  onClick={() => imageViewer.openViewer(0)}
+                  style={{
+                    WebkitMaskImage: "url(/assets/template13profileshape.svg)",
+                    maskImage: "url(/assets/template13profileshape.svg)",
+                    WebkitMaskSize: "cover",
+                    maskSize: "cover",
+                    WebkitMaskRepeat: "no-repeat",
+                    maskRepeat: "no-repeat",
+                    WebkitMaskPosition: "center",
+                    maskPosition: "center",
+                    background: "#fff", // fallback
+                  }}
+                />
+              ) : (
+                <Image
+                  src="/assets/template4samplepic.png"
+                  alt="avatar"
+                  width={96}
+                  height={96}
+                  className="w-24 h-24 object-cover"
+                  style={{
+                    WebkitMaskImage: "url(/assets/template13profileshape.svg)",
+                    maskImage: "url(/assets/template13profileshape.svg)",
+                    WebkitMaskSize: "cover",
+                    maskSize: "cover",
+                    WebkitMaskRepeat: "no-repeat",
+                    maskRepeat: "no-repeat",
+                    WebkitMaskPosition: "center",
+                    maskPosition: "center",
+                    background: "#fff", // fallback
+                  }}
+                />
+              )}
             </div>
             <div className="flex items-center gap-2 mb-1">
-              <h1 className="font-semibold tracking-tight text-white leading-snug">
-                {prefix && <span>{prefix}. </span>}
-                {firstName}
-                {middleName && <span> {middleName}</span>}
-                {lastName && <span> {lastName}</span>}
-                {suffix && <span>, {suffix}</span>}
-              </h1>
+              {firstName ? (
+                <h1 className="font-semibold tracking-tight text-white leading-snug">
+                  {prefix && <span>{prefix}. </span>}
+                  {firstName}
+                  {middleName && <span> {middleName}</span>}
+                  {lastName && <span> {lastName}</span>}
+                  {suffix && <span>, {suffix}</span>}
+                </h1>
+              ) : (
+                <h1 className="font-semibold tracking-tight text-white leading-snug">
+                  Hussain Watkins
+                </h1>
+              )}
             </div>
             <div className="text-sm text-gray-300 mb-4 font-medium">
-              {position} {company && <>· {company}</>}
+              {position || "Chief Technology Officer"}{" "}
+              {`@ ${company || "Zwiftech"}`}
             </div>
             <div className="flex gap-2 mb-2">
               <CTAButtons
@@ -388,6 +479,10 @@ const Template13 = ({
                 profilePictureUrl={profilePictureUrl}
                 firstName={firstName}
                 lastName={lastName}
+                imageViewer={imageViewer}
+                startingIndex={
+                  (profilePictureUrl ? 1 : 0) + (coverPhotoUrl ? 1 : 0)
+                }
               />
             )}
           </div>
@@ -418,6 +513,15 @@ const Template13 = ({
           </span>
         </div>
       </TemplateFooter>
+      
+      <ImageViewer
+        images={imageViewer.images}
+        isOpen={imageViewer.isOpen}
+        currentIndex={imageViewer.currentIndex}
+        onClose={imageViewer.closeViewer}
+        onNext={imageViewer.nextImage}
+        onPrevious={imageViewer.previousImage}
+      />
     </TemplateContainer>
   );
 };

@@ -56,6 +56,18 @@ const templates: Template[] = [
   //   category: "Minimal",
   // },
   {
+    id: "template7",
+    name: "Social Blue",
+    imageUrl: "/assets/template7.png",
+    category: "Modern",
+  },
+  {
+    id: "template8",
+    name: "Connect",
+    imageUrl: "/assets/template8.png",
+    category: "Creative",
+  },
+  {
     id: "template9",
     name: "Business",
     imageUrl: "/assets/template9.png",
@@ -165,10 +177,14 @@ export function TemplateGrid({
                   )}
 
                   {/* Hover Overlay */}
-                  <div className={cn(
-                    "absolute inset-0 bg-black/50 flex items-center justify-center transition-opacity",
-                    selectedTemplateId === template.id ? "opacity-0" : "opacity-0 group-hover:opacity-100"
-                  )}>
+                  <div
+                    className={cn(
+                      "absolute inset-0 bg-black/50 flex items-center justify-center transition-opacity",
+                      selectedTemplateId === template.id
+                        ? "opacity-0"
+                        : "opacity-0 group-hover:opacity-100"
+                    )}
+                  >
                     <p className="text-white font-medium">Click to Select</p>
                   </div>
                 </div>

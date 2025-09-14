@@ -32,7 +32,7 @@ export const FORGOT_PASSWORD_ROUTE = "/forgotPassword";
 export const SESSION_COOKIE_NAME = "user_session";
 export const ONBOARDING_ROUTE = "/onboarding";
 export const HOME_ROUTE = "/home";
-export const DASHBOARD_ROUTE = "/dashboard";
+export const DASHBOARD_ROUTE = "/cards";
 export const ADMIN_ONLY_ROUTE = "/users";
 export const CARD_ROUTE = "/cards";
 export const USER_ROUTE = "/users";
@@ -292,13 +292,13 @@ export const businessList = [
 export const menuItems = [
   { icon: Home, title: "Home", href: "/home" },
   { icon: TbCards, title: "Cards", href: "/cards" },
-  { icon: FiShoppingBag, title: "My Orders", href: "/cards?tab=orders" },
+  { icon: FiShoppingBag, title: "My Orders", href: "/orders" },
 ];
 
 export const adminMenuItems = [
   { icon: Users, title: "User Management", href: "/admin" },
   { icon: Receipt, title: "Transactions", href: "/admin/transactions" },
-  { icon: FiShoppingBag, title: "Orders", href: "/admin/users-orders" },
+  { icon: FiShoppingBag, title: "User Orders", href: "/admin/users-orders" },
   { icon: Package, title: "Card Bank", href: "/admin/card-bank" },
 ];
 

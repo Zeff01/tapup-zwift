@@ -50,12 +50,11 @@ export default function QRCodeModalV2({
           <h2 className="font-semibold text-xl">
             {userProfile.firstName} {userProfile.lastName}
           </h2>
-          <h3 className="dark:text-slate-400 text-gray-500 text-lg">
-            {userProfile.company}
-          </h3>
-          <h4 className="font-normal dark:text-slate-400 text-gray-500 text-lg">
-            {userProfile.position}
-          </h4>
+          {userProfile.cardName && (
+            <p className="text-lg text-gray-600 dark:text-gray-400 mt-1 mb-4">
+              {userProfile.cardName}
+            </p>
+          )}
 
           <div className="p-3 border dark:border-slate-800 inline-block border-gray-300 rounded-md mt-4">
             <QRCodeCanvas

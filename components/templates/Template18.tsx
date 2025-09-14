@@ -1,3 +1,5 @@
+"use client";
+
 import { getCopyrightYear } from "@/lib/utils";
 import { Card } from "@/types/types";
 import Image from "next/image";
@@ -6,7 +8,9 @@ import {
   SocialLinks,
   TemplateContainer,
   TemplateFooter,
+  ClickableImage,
 } from "./templatesComponents";
+import { ImageViewer, useImageViewer } from "@/components/ImageViewer";
 
 const Template18 = ({
   id,
@@ -34,8 +38,11 @@ const Template18 = ({
   companies,
   owner,
 }: Card) => {
+  const imageViewer = useImageViewer();
+  
   const userProfile = {
     id,
+    owner,
     firstName,
     lastName,
     email,
@@ -46,6 +53,30 @@ const Template18 = ({
     customUrl,
   };
 
+  // Collect all images for the viewer
+  const allImages: string[] = [];
+  
+  // Add profile picture if exists
+  if (profilePictureUrl) {
+    allImages.push(profilePictureUrl);
+  }
+  
+  // Add cover photo if exists
+  if (coverPhotoUrl) {
+    allImages.push(coverPhotoUrl);
+  }
+  
+  // Add all service photos from companies
+  if (companies) {
+    companies.forEach((company) => {
+      if (company.servicePhotos && Array.isArray(company.servicePhotos)) {
+        allImages.push(...company.servicePhotos);
+      }
+    });
+  }
+
+  imageViewer.setImages(allImages);
+
   return (
     <TemplateContainer
       backgroundColor="bg-[#001e36]"
@@ -55,10 +86,9 @@ const Template18 = ({
       flexDirection="col"
       alignItems="center"
       justifyContent="center"
-      className="relative overflow-hidden p-0 py-2 text-white"
+      className="relative overflow-hidden p-0 text-white"
     >
-      <div className="flex-grow">
-      <div className="max-w-[480px] mx-auto flex flex-col ">
+      <div className="max-w-[480px] mx-auto flex flex-col pt-2">
         {/* === Decorative Background === */}
         <div
           className="absolute top-10 left-10 w-48 h-48 rounded-full"
@@ -91,12 +121,22 @@ const Template18 = ({
           className="relative px-2 sm:px-3 pb-6"
         >
           {/* Cover Image */}
-          <div
-            className="relative h-64 bg-cover bg-center rounded-t-[30px]"
-            style={{
-              backgroundImage: `url(${coverPhotoUrl})`,
-            }}
-          />
+          {coverPhotoUrl ? (
+            <div
+              className="relative h-64 bg-cover bg-center rounded-t-[30px] cursor-pointer"
+              style={{
+                backgroundImage: `url(${coverPhotoUrl})`,
+              }}
+              onClick={() => imageViewer.openViewer(profilePictureUrl ? 1 : 0)}
+            />
+          ) : (
+            <div
+              className="relative h-64 bg-cover bg-center rounded-t-[30px]"
+              style={{
+                backgroundImage: `url(/assets/template-7-cover-photo.jpeg)`,
+              }}
+            />
+          )}
 
           {/* Profile Content */}
           <div className="-mt-20 px-4 sm:px-6">
@@ -104,26 +144,43 @@ const Template18 = ({
               {/* Profile Picture */}
               <div className="absolute -top-12 left-1/2 transform -translate-x-1/2">
                 <div className="w-24 h-24 rounded-full border-4 border-white shadow-md overflow-hidden">
-                  <Image
-                    src={profilePictureUrl || "/assets/template4samplepic.png"}
-                    alt="Profile"
-                    width={96}
-                    height={96}
-                    className="w-full h-full object-cover"
-                  />
+                  {profilePictureUrl ? (
+                    <ClickableImage
+                      src={profilePictureUrl}
+                      alt="Profile"
+                      width={96}
+                      height={96}
+                      className="w-full h-full object-cover"
+                      onClick={() => imageViewer.openViewer(0)}
+                    />
+                  ) : (
+                    <Image
+                      src="/assets/template4samplepic.png"
+                      alt="Profile"
+                      width={96}
+                      height={96}
+                      className="w-full h-full object-cover"
+                    />
+                  )}
                 </div>
               </div>
 
               {/* Info */}
               <div className="mt-9">
-                <h2 className="text-lg font-bold">
-                  {prefix && `${prefix}. `}
-                  {firstName} {middleName && `${middleName} `}
-                  {lastName}
-                  {suffix && `, ${suffix}`}
-                </h2>
+                {firstName || lastName ? (
+                  <h2 className="text-lg font-bold">
+                    {prefix && `${prefix}. `}
+                    {firstName} {middleName && `${middleName} `}
+                    {lastName}
+                    {suffix && `, ${suffix}`}
+                  </h2>
+                ) : (
+                  <h2 className="text-lg font-bold">Hussain Watkins</h2>
+                )}
+
                 <div className="text-sm mt-1">
-                  {company} {position && `| ${position}`}
+                  {company || "Zwiftech"}{" "}
+                  {`| ${position || "Chief Technology Officer"}`}
                 </div>
                 <div className="text-xs mt-1 break-words text-gray-300">
                   {email && (
@@ -175,7 +232,7 @@ const Template18 = ({
         </section>
 
         {/* === Companies Section === */}
-        {companies?.length > 0 && (
+        {companies.length > 0 && (
           <section
             aria-label="Companies"
             className="px-3 sm:px-4 pb-3 text-xs sm:text-sm flex-1"
@@ -184,7 +241,8 @@ const Template18 = ({
               Professional Portfolio
             </h3>
             <p className="text-gray-300 text-center mb-3 sm:mb-4">
-              A snapshot of my experience and the companies I’ve worked with.
+              A snapshot of my experience and the companies I&apos;ve worked
+              with.
             </p>
 
             <div className="space-y-4">
@@ -245,10 +303,22 @@ const Template18 = ({
                         </h5>
                         {c.servicePhotos.length === 1 ? (
                           <div className="rounded-lg overflow-hidden border border-[#00d4ff]/20">
-                            <img
+                            <ClickableImage
                               src={c.servicePhotos[0]}
                               alt={`${c.company} portfolio`}
+                              width={600}
+                              height={400}
                               className="w-full h-auto object-cover"
+                              onClick={() => {
+                                let photoIndex = (profilePictureUrl ? 1 : 0) + (coverPhotoUrl ? 1 : 0);
+                                // Find the index of this specific photo
+                                companies.forEach((comp, compIdx) => {
+                                  if (compIdx < idx && comp.servicePhotos) {
+                                    photoIndex += comp.servicePhotos.length;
+                                  }
+                                });
+                                imageViewer.openViewer(photoIndex);
+                              }}
                             />
                           </div>
                         ) : (
@@ -258,10 +328,23 @@ const Template18 = ({
                                 key={pIdx}
                                 className="rounded-lg overflow-hidden border border-[#00d4ff]/20"
                               >
-                                <img
+                                <ClickableImage
                                   src={photo}
                                   alt={`${c.company} portfolio ${pIdx + 1}`}
+                                  width={300}
+                                  height={200}
                                   className="w-full h-auto object-cover"
+                                  onClick={() => {
+                                    let photoIndex = (profilePictureUrl ? 1 : 0) + (coverPhotoUrl ? 1 : 0);
+                                    // Calculate the correct index
+                                    companies.forEach((comp, compIdx) => {
+                                      if (compIdx < idx && comp.servicePhotos) {
+                                        photoIndex += comp.servicePhotos.length;
+                                      }
+                                    });
+                                    photoIndex += pIdx;
+                                    imageViewer.openViewer(photoIndex);
+                                  }}
                                 />
                               </div>
                             ))}
@@ -275,32 +358,40 @@ const Template18 = ({
             </div>
           </section>
         )}
-        </div>
-
-        {/* === Footer Section === */}
-        <TemplateFooter className="bg-[#001d34] text-white text-center  text-xs rounded-b-[30px] px-2 sm:px-3">
-          <div className="flex flex-col py-4 items-center  gap-1 text-center text-xs">
-            <a
-              href={userProfile?.customUrl ?? userProfile?.websiteUrl ?? "#"}
-              target="_blank"
-              rel="noopener noreferrer"
-            >
-              <Image
-                src="/assets/light-ZwiftechLogo.png"
-                alt="Zwiftech Logo"
-                width={40}
-                height={15}
-                priority
-                className="opacity-90"
-              />
-            </a>
-
-            <span className="tracking-wide text-gray-400 text-[10px] ">
-              © {getCopyrightYear()} Zwiftech. All Rights Reserved.
-            </span>
-          </div>{" "}
-        </TemplateFooter>
       </div>
+
+      {/* === Footer Section === */}
+      <TemplateFooter className="bg-[#001d34] text-white text-center  text-xs rounded-b-[30px] px-2 sm:px-3">
+        <div className="flex flex-col py-4 items-center  gap-1 text-center text-xs">
+          <a
+            href={userProfile?.customUrl ?? userProfile?.websiteUrl ?? "#"}
+            target="_blank"
+            rel="noopener noreferrer"
+          >
+            <Image
+              src="/assets/light-ZwiftechLogo.png"
+              alt="Zwiftech Logo"
+              width={40}
+              height={15}
+              priority
+              className="opacity-90"
+            />
+          </a>
+
+          <span className="tracking-wide text-gray-400 text-[10px] ">
+            © {getCopyrightYear()} Zwiftech. All Rights Reserved.
+          </span>
+        </div>{" "}
+      </TemplateFooter>
+      
+      <ImageViewer
+        images={imageViewer.images}
+        isOpen={imageViewer.isOpen}
+        currentIndex={imageViewer.currentIndex}
+        onClose={imageViewer.closeViewer}
+        onNext={imageViewer.nextImage}
+        onPrevious={imageViewer.previousImage}
+      />
     </TemplateContainer>
   );
 };

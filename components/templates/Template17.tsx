@@ -1,3 +1,5 @@
+"use client";
+
 import { getCopyrightYear } from "@/lib/utils";
 import { Card } from "@/types/types";
 import Image from "next/image";
@@ -6,7 +8,9 @@ import {
   SocialLinks,
   TemplateContainer,
   TemplateFooter,
+  ClickableImage,
 } from "./templatesComponents";
+import { ImageViewer, useImageViewer } from "@/components/ImageViewer";
 
 const Template17 = ({
   id,
@@ -34,8 +38,11 @@ const Template17 = ({
   companies,
   owner,
 }: Card) => {
+  const imageViewer = useImageViewer();
+  
   const userProfile = {
     id,
+    owner,
     firstName,
     lastName,
     email,
@@ -45,6 +52,31 @@ const Template17 = ({
     websiteUrl,
     customUrl,
   };
+
+  // Collect all images for the viewer
+  const allImages: string[] = [];
+  
+  // Add profile picture if exists
+  if (profilePictureUrl) {
+    allImages.push(profilePictureUrl);
+  }
+  
+  // Add cover photo if exists
+  if (coverPhotoUrl) {
+    allImages.push(coverPhotoUrl);
+  }
+  
+  // Add all service photos from companies
+  if (companies) {
+    companies.forEach((company) => {
+      if (company.servicePhotos && Array.isArray(company.servicePhotos)) {
+        allImages.push(...company.servicePhotos);
+      }
+    });
+  }
+
+  imageViewer.setImages(allImages);
+
   return (
     <TemplateContainer
       backgroundColor="bg-white"
@@ -63,29 +95,55 @@ const Template17 = ({
         >
           <div className="relative w-full h-48 sm:h-60 overflow-hidden">
             {/* Image with clip-path */}
-            <Image
-              src={coverPhotoUrl || "/assets/template-7-cover-photo.jpeg"}
-              alt="Cover"
-              width={480}
-              height={240}
-              className="w-full h-full object-cover rounded-t-xl sm:rounded-t-[2rem]"
-              style={{
-                clipPath:
-                  "polygon(0 0, 100% 0, 100% 100%, 75% 85%, 50% 70%, 25% 85%, 0 100%)",
-              }}
-            />
+            {coverPhotoUrl ? (
+              <ClickableImage
+                src={coverPhotoUrl}
+                alt="Cover"
+                width={480}
+                height={240}
+                className="w-full h-full object-cover rounded-t-xl sm:rounded-t-[2rem]"
+                style={{
+                  clipPath:
+                    "polygon(0 0, 100% 0, 100% 100%, 75% 85%, 50% 70%, 25% 85%, 0 100%)",
+                }}
+                onClick={() => imageViewer.openViewer(profilePictureUrl ? 1 : 0)}
+              />
+            ) : (
+              <Image
+                src="/assets/template-7-cover-photo.jpeg"
+                alt="Cover"
+                width={480}
+                height={240}
+                className="w-full h-full object-cover rounded-t-xl sm:rounded-t-[2rem]"
+                style={{
+                  clipPath:
+                    "polygon(0 0, 100% 0, 100% 100%, 75% 85%, 50% 70%, 25% 85%, 0 100%)",
+                }}
+              />
+            )}
           </div>
 
           {/* Profile Image */}
           <div className="absolute left-1/2 -bottom-10 sm:-bottom-12 transform -translate-x-1/2 z-10">
             <div className="w-20 h-20 sm:w-24 sm:h-24 rounded-full border-3 sm:border-4 border-white bg-white overflow-hidden shadow-lg">
-              <Image
-                src={profilePictureUrl || "/assets/template4samplepic.png"}
-                alt="Profile"
-                width={96}
-                height={96}
-                className="w-full h-full object-cover"
-              />
+              {profilePictureUrl ? (
+                <ClickableImage
+                  src={profilePictureUrl}
+                  alt="Profile"
+                  width={96}
+                  height={96}
+                  className="w-full h-full object-cover"
+                  onClick={() => imageViewer.openViewer(0)}
+                />
+              ) : (
+                <Image
+                  src="/assets/template4samplepic.png"
+                  alt="Profile"
+                  width={96}
+                  height={96}
+                  className="w-full h-full object-cover"
+                />
+              )}
             </div>
           </div>
         </section>
@@ -95,14 +153,22 @@ const Template17 = ({
           className="pt-12 sm:pt-16 pb-4 sm:pb-6 px-3 sm:px-4 flex flex-col items-center"
         >
           {/* Name & Position */}
-          <h2 className="text-lg sm:text-xl font-bold text-center leading-tight">
-            {prefix && `${prefix}. `}
-            {firstName} {middleName && `${middleName} `}
-            {lastName}
-            {suffix && `, ${suffix}`}
-          </h2>
+          {firstName || lastName ? (
+            <h2 className="text-lg sm:text-xl font-bold text-center leading-tight">
+              {prefix && `${prefix}. `}
+              {firstName} {middleName && `${middleName} `}
+              {lastName}
+              {suffix && `, ${suffix}`}
+            </h2>
+          ) : (
+            <h2 className="text-lg sm:text-xl font-bold text-center leading-tight">
+              Hussain Watkins
+            </h2>
+          )}
+
           <div className="text-xs sm:text-sm text-gray-700 text-center mt-1">
-            {company} {position && `| ${position}`}
+            {company || "Zwiftech"}{" "}
+            {`| ${position || "Chief Technology Officer"}`}
           </div>
 
           {/* Contact Info */}
@@ -198,7 +264,7 @@ const Template17 = ({
           </div>
         </section>
         {/* === Companies Section === */}
-        {companies?.length > 0 && (
+        {companies.length > 0 && (
           <section aria-label="Companies" className="px-3 sm:px-4 pb-3">
             <h3 className="font-bold text-sm sm:text-base mb-2 text-center">
               Professional Portfolio
@@ -268,10 +334,22 @@ const Template17 = ({
                         </h5>
                         {c.servicePhotos.length === 1 ? (
                           <div className="rounded-lg overflow-hidden border border-gray-200">
-                            <img
+                            <ClickableImage
                               src={c.servicePhotos[0]}
                               alt={`${c.company} portfolio`}
+                              width={600}
+                              height={400}
                               className="w-full h-auto object-cover"
+                              onClick={() => {
+                                let photoIndex = (profilePictureUrl ? 1 : 0) + (coverPhotoUrl ? 1 : 0);
+                                // Find the index of this specific photo
+                                companies.forEach((comp, compIdx) => {
+                                  if (compIdx < idx && comp.servicePhotos) {
+                                    photoIndex += comp.servicePhotos.length;
+                                  }
+                                });
+                                imageViewer.openViewer(photoIndex);
+                              }}
                             />
                           </div>
                         ) : (
@@ -281,10 +359,23 @@ const Template17 = ({
                                 key={pIdx}
                                 className="rounded-lg overflow-hidden border border-gray-200"
                               >
-                                <img
+                                <ClickableImage
                                   src={photo}
                                   alt={`${c.company} portfolio ${pIdx + 1}`}
+                                  width={300}
+                                  height={200}
                                   className="w-full h-auto object-cover"
+                                  onClick={() => {
+                                    let photoIndex = (profilePictureUrl ? 1 : 0) + (coverPhotoUrl ? 1 : 0);
+                                    // Calculate the correct index
+                                    companies.forEach((comp, compIdx) => {
+                                      if (compIdx < idx && comp.servicePhotos) {
+                                        photoIndex += comp.servicePhotos.length;
+                                      }
+                                    });
+                                    photoIndex += pIdx;
+                                    imageViewer.openViewer(photoIndex);
+                                  }}
                                 />
                               </div>
                             ))}
@@ -324,6 +415,15 @@ const Template17 = ({
           </span>
         </div>
       </TemplateFooter>
+      
+      <ImageViewer
+        images={imageViewer.images}
+        isOpen={imageViewer.isOpen}
+        currentIndex={imageViewer.currentIndex}
+        onClose={imageViewer.closeViewer}
+        onNext={imageViewer.nextImage}
+        onPrevious={imageViewer.previousImage}
+      />
     </TemplateContainer>
   );
 };

@@ -1,3 +1,5 @@
+"use client";
+
 import { getCopyrightYear } from "@/lib/utils";
 import { Card } from "@/types/types";
 import Image from "next/image";
@@ -7,6 +9,8 @@ import {
   TemplateFooter,
   Template1CTA,
 } from "./templatesComponents";
+import { ImageViewer, useImageViewer } from "@/components/ImageViewer";
+import { ClickableImage } from "./templatesComponents/ClickableImage";
 
 const Template1 = ({
   id,
@@ -16,6 +20,7 @@ const Template1 = ({
   lastName,
   email,
   number,
+  position,
   facebookUrl,
   linkedinUrl,
   instagramUrl,
@@ -27,9 +32,13 @@ const Template1 = ({
   viberUrl,
   customUrl,
   companies,
+  owner,
 }: Card) => {
+  const { viewerState, openViewer, closeViewer } = useImageViewer();
+  
   const userProfile = {
     id,
+    owner,
     firstName,
     lastName,
     email,
@@ -38,130 +47,143 @@ const Template1 = ({
     customUrl,
   };
 
+  const allImages = [
+    profilePictureUrl || "/assets/template4samplepic.png",
+    coverPhotoUrl || "/assets/template1coverphoto.png",
+    ...(companies?.flatMap(c => c.servicePhotos || []) || [])
+  ].filter(Boolean);
+
   return (
     <Template1Container>
       <div className="flex-grow">
-      {/* COVER PHOTO + PROFILE */}
-      <div className="mt-2 flex flex-col relative rounded-4xl">
-        <div className="w-full h-48 px-2">
-          <Image
-            src={coverPhotoUrl || "/assets/template1coverphoto.png"}
-            alt="Cover"
-            width={400}
-            height={200}
-            className="w-full h-48 object-cover rounded-[2rem] overflow-hidden"
-          />
-        </div>
-        <div className="absolute -bottom-16 left-1/2 transform -translate-x-1/2">
-          <Image
-            src={profilePictureUrl || "/assets/template4samplepic.png"}
-            alt="Profile"
-            width={112}
-            height={112}
-            className="rounded-full w-32 h-32"
-          />
-        </div>
-      </div>
-
-      {/* PERSONAL INFO */}
-      <div className="text-center mt-20 space-y-1">
-        <h1 className="text-xl font-bold">
-          {firstName ? `${firstName} ${lastName}` : "Hussain Watkins"}
-        </h1>
-
-        <p className="text-gray-500 text-xs">{email}</p>
-        <p className="text-gray-500 text-xs">{number}</p>
-      </div>
-
-      {/* CTA */}
-      <div className="flex  justify-center mt-5">
-        <Template1CTA
-          number={number}
-          email={email}
-          userProfile={userProfile}
-          size="md"
-          icons="lucide"
-        />
-      </div>
-
-      {/* SOCIAL LINKS */}
-      <div className="flex justify-center mt-5 mb-6">
-        <Template1Socials
-          facebookUrl={facebookUrl}
-          twitterUrl={twitterUrl}
-          tiktokUrl={tiktokUrl}
-          youtubeUrl={youtubeUrl}
-          instagramUrl={instagramUrl}
-          linkedinUrl={linkedinUrl}
-          viberUrl={viberUrl}
-          whatsappNumber={whatsappNumber}
-          websiteUrl={websiteUrl}
-          size="lg"
-          className="gap-1 md:gap-2 xl:gap-4"
-        />
-      </div>
-
-      <hr />
-
-      {companies?.length > 0 &&
-        companies.map((c, idx) => (
-          <div key={idx}>
-            {/* Add horizontal line between companies if there are 2 or more */}
-            {companies.length >= 2 && idx > 0 && (
-              <hr className="my-8 border-gray-200" />
-            )}
-            <div className="mt-6">
-              <div className="flex flex-col items-center text-center space-y-1">
-                <h2 className="text-2xl font-bold text-gray-800">{c.company}</h2>
-                <h3 className="text-sm font-medium text-gray-600">
-                  {c.position}
-                </h3>
-              </div>
-
-              {c.companyBackground && (
-                <div className="mt-6">
-                  <h3 className="text-sm font-bold text-gray-800">
-                    Company Background
-                  </h3>
-                  <p className="text-xs text-gray-600 mt-2 leading-relaxed break-words whitespace-pre-line max-w-full">
-                    {c.companyBackground}
-                  </p>
-                </div>
-              )}
-
-              {(c.serviceDescription ||
-                (Array.isArray(c.servicePhotos) &&
-                  c.servicePhotos.length > 0)) && (
-                <div className="mt-4">
-                  <h3 className="text-sm font-bold text-gray-800">
-                    Our Services
-                  </h3>
-                  {c.serviceDescription && (
-                    <p className="text-xs text-gray-600 mt-2 leading-relaxed break-words whitespace-pre-line max-w-full">
-                      {c.serviceDescription}
-                    </p>
-                  )}
-                  {Array.isArray(c.servicePhotos) &&
-                    c.servicePhotos.length > 0 && (
-                      <div className="grid grid-cols-2 gap-4 mt-4">
-                        {c.servicePhotos.map((photo, i) => (
-                          <Image
-                            key={i}
-                            src={photo}
-                            alt={`Service Photo ${i + 1}`}
-                            width={300}
-                            height={300}
-                            layout="responsive"
-                            className="rounded-md object-cover w-full "
-                          />
-                        ))}
-                      </div>
-                    )}
-                </div>
-              )}
-            </div>
+        {/* COVER PHOTO + PROFILE */}
+        <div className="mt-2 flex flex-col relative rounded-4xl">
+          <div className="w-full h-48 px-2">
+            <ClickableImage
+              src={coverPhotoUrl || "/assets/template1coverphoto.png"}
+              alt="Cover"
+              width={400}
+              height={200}
+              className="w-full h-48 object-cover rounded-[2rem] overflow-hidden"
+              onClick={() => openViewer(allImages, 1)}
+            />
           </div>
-        ))}
+          <div className="absolute -bottom-16 left-1/2 transform -translate-x-1/2">
+            <ClickableImage
+              src={profilePictureUrl || "/assets/template4samplepic.png"}
+              alt="Profile"
+              width={112}
+              height={112}
+              className="rounded-full w-32 h-32 object-cover"
+              onClick={() => openViewer(allImages, 0)}
+            />
+          </div>
+        </div>
+
+        {/* PERSONAL INFO */}
+        <div className="text-center mt-20 space-y-1">
+          <h1 className="text-xl font-bold">
+            {firstName ? `${firstName} ${lastName}` : "Hussain Watkins"}
+          </h1>
+
+          <p className="text-gray-500 text-xs">{email}</p>
+          <p className="text-gray-500 text-xs">{number}</p>
+        </div>
+
+        {/* CTA */}
+        <div className="flex  justify-center mt-5">
+          <Template1CTA
+            number={number}
+            email={email}
+            userProfile={userProfile}
+            size="md"
+            icons="lucide"
+          />
+        </div>
+
+        {/* SOCIAL LINKS */}
+        <div className="flex justify-center mt-5 mb-6">
+          <Template1Socials
+            facebookUrl={facebookUrl}
+            twitterUrl={twitterUrl}
+            tiktokUrl={tiktokUrl}
+            youtubeUrl={youtubeUrl}
+            instagramUrl={instagramUrl}
+            linkedinUrl={linkedinUrl}
+            viberUrl={viberUrl}
+            whatsappNumber={whatsappNumber}
+            websiteUrl={websiteUrl}
+            size="lg"
+            className="gap-1 md:gap-2 xl:gap-4"
+          />
+        </div>
+
+        <hr />
+
+        {companies?.length > 0 &&
+          companies.map((c, idx) => (
+            <div key={idx}>
+              {/* Add horizontal line between companies if there are 2 or more */}
+              {companies.length >= 2 && idx > 0 && (
+                <hr className="my-8 border-gray-200" />
+              )}
+              <div className="mt-6">
+                <div className="flex flex-col items-center text-center space-y-1">
+                  <h2 className="text-2xl font-bold text-gray-800">
+                    {c.company}
+                  </h2>
+                  <h3 className="text-sm font-medium text-gray-600">
+                    {c.position}
+                  </h3>
+                </div>
+
+                {c.companyBackground && (
+                  <div className="mt-6">
+                    <h3 className="text-sm font-bold text-gray-800">
+                      Company Background
+                    </h3>
+                    <p className="text-xs text-gray-600 mt-2 leading-relaxed break-words whitespace-pre-line max-w-full">
+                      {c.companyBackground}
+                    </p>
+                  </div>
+                )}
+
+                {(c.serviceDescription ||
+                  (Array.isArray(c.servicePhotos) &&
+                    c.servicePhotos.length > 0)) && (
+                  <div className="mt-4">
+                    <h3 className="text-sm font-bold text-gray-800">
+                      Our Services
+                    </h3>
+                    {c.serviceDescription && (
+                      <p className="text-xs text-gray-600 mt-2 leading-relaxed break-words whitespace-pre-line max-w-full">
+                        {c.serviceDescription}
+                      </p>
+                    )}
+                    {Array.isArray(c.servicePhotos) &&
+                      c.servicePhotos.length > 0 && (
+                        <div className="grid grid-cols-2 gap-4 mt-4">
+                          {c.servicePhotos.map((photo, i) => (
+                            <ClickableImage
+                              key={i}
+                              src={photo}
+                              alt={`Service Photo ${i + 1}`}
+                              width={300}
+                              height={300}
+                              className="rounded-md object-cover w-full"
+                              onClick={() => {
+                                const servicePhotoIndex = allImages.findIndex(img => img === photo);
+                                openViewer(allImages, servicePhotoIndex);
+                              }}
+                            />
+                          ))}
+                        </div>
+                      )}
+                  </div>
+                )}
+              </div>
+            </div>
+          ))}
       </div>
 
       <TemplateFooter className="flex flex-col mt-8 items-center gap-1 text-center pb-4">
@@ -184,6 +206,14 @@ const Template1 = ({
           © {getCopyrightYear()} Zwiftech. All Rights Reserved.
         </span>
       </TemplateFooter>
+      
+      {viewerState.isOpen && (
+        <ImageViewer
+          images={viewerState.images}
+          initialIndex={viewerState.initialIndex}
+          onClose={closeViewer}
+        />
+      )}
     </Template1Container>
   );
 };

@@ -127,7 +127,7 @@ export const TemplateContainer: React.FC<ContainerProps> = ({
       <div
         className={cn(
           innerContainerClasses,
-          flex && "flex flex-col flex-grow min-h-full"
+          flex && "flex flex-col flex-grow min-h-screen"
         )}
       >
         {children}
@@ -147,9 +147,7 @@ export const Template1Container: React.FC<{ children: React.ReactNode }> = ({
     overflow="hidden"
     minHeight="screen"
   >
-    <div className="min-h-screen flex flex-col">
-      {children}
-    </div>
+    <div className="min-h-screen flex flex-col">{children}</div>
   </TemplateContainer>
 );
 
@@ -171,20 +169,26 @@ export const Template2Container: React.FC<{ children: React.ReactNode }> = ({
 export const Template3Container: React.FC<{ children: React.ReactNode }> = ({
   children,
 }) => (
-  <TemplateContainer backgroundColor="bg-black" padding="none" maxWidth="480px" minHeight="screen">
-    <div className="min-h-screen flex flex-col">
-      {children}
-    </div>
+  <TemplateContainer
+    backgroundColor="bg-black"
+    padding="none"
+    maxWidth="480px"
+    minHeight="screen"
+  >
+    <div className="min-h-screen flex flex-col">{children}</div>
   </TemplateContainer>
 );
 
 export const Template4Container: React.FC<{ children: React.ReactNode }> = ({
   children,
 }) => (
-  <TemplateContainer backgroundColor="bg-white" padding="none" maxWidth="480px" minHeight="screen">
-    <div className="min-h-screen flex flex-col">
-      {children}
-    </div>
+  <TemplateContainer
+    backgroundColor="bg-white"
+    padding="none"
+    maxWidth="480px"
+    minHeight="screen"
+  >
+    <div className="min-h-screen flex flex-col">{children}</div>
   </TemplateContainer>
 );
 
@@ -198,9 +202,7 @@ export const Template5Container: React.FC<{ children: React.ReactNode }> = ({
     maxWidth="480px"
     minHeight="screen"
   >
-    <div className="min-h-screen flex flex-col">
-      {children}
-    </div>
+    <div className="min-h-screen flex flex-col">{children}</div>
   </TemplateContainer>
 );
 
@@ -215,29 +217,33 @@ export const Template6Container: React.FC<{ children: React.ReactNode }> = ({
     overflowX="hidden"
     minHeight="screen"
   >
-    <div className="min-h-screen flex flex-col">
-      {children}
-    </div>
+    <div className="min-h-screen flex flex-col">{children}</div>
   </TemplateContainer>
 );
 
 export const Template7Container: React.FC<{ children: React.ReactNode }> = ({
   children,
 }) => (
-  <TemplateContainer backgroundColor="bg-white" padding="md" maxWidth="480px" minHeight="screen">
-    <div className="min-h-screen flex flex-col">
-      {children}
-    </div>
+  <TemplateContainer
+    backgroundColor="bg-white"
+    padding="none"
+    maxWidth="480px"
+    minHeight="screen"
+  >
+    <div className="min-h-screen flex flex-col">{children}</div>
   </TemplateContainer>
 );
 
 export const Template8Container: React.FC<{ children: React.ReactNode }> = ({
   children,
 }) => (
-  <TemplateContainer backgroundColor="bg-white" padding="md" maxWidth="480px" minHeight="screen">
-    <div className="min-h-screen flex flex-col">
-      {children}
-    </div>
+  <TemplateContainer
+    backgroundColor="bg-white"
+    padding="none"
+    maxWidth="480px"
+    minHeight="screen"
+  >
+    <div className="min-h-screen flex flex-col">{children}</div>
   </TemplateContainer>
 );
 
@@ -254,8 +260,6 @@ export const Template9Container: React.FC<{ children: React.ReactNode }> = ({
     justifyContent="start"
     minHeight="screen"
   >
-    <div className="min-h-screen flex flex-col">
-      {children}
-    </div>
+    <div className="min-h-screen flex flex-col">{children}</div>
   </TemplateContainer>
 );

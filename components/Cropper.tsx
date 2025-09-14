@@ -154,15 +154,33 @@ export default function Cropper({
               imgElement.src = event.target?.result as string;
               imgElement.onload = async function (e: any) {
                 const canvas = document.createElement("canvas");
-                const MAX_WIDTH = 400;
+                // Improved sizing logic that considers both width and height
+                const MAX_WIDTH = 800; // Increased for better quality
+                const MAX_HEIGHT = 800; // Add height constraint
+                
+                let width = e.target.width;
+                let height = e.target.height;
+                let scale = 1;
 
-                const scaleSize = MAX_WIDTH / e.target.width;
-                canvas.width = MAX_WIDTH;
-                canvas.height = e.target.height * scaleSize;
+                // Calculate scale to fit within bounds while maintaining aspect ratio
+                if (width > MAX_WIDTH || height > MAX_HEIGHT) {
+                  const scaleX = MAX_WIDTH / width;
+                  const scaleY = MAX_HEIGHT / height;
+                  scale = Math.min(scaleX, scaleY);
+                  width = Math.floor(width * scale);
+                  height = Math.floor(height * scale);
+                }
+
+                canvas.width = width;
+                canvas.height = height;
 
                 const ctx = canvas.getContext("2d");
-
-                ctx?.drawImage(e.target, 0, 0, canvas.width, canvas.height);
+                // Enable image smoothing for better quality
+                if (ctx) {
+                  ctx.imageSmoothingEnabled = true;
+                  ctx.imageSmoothingQuality = 'high';
+                  ctx.drawImage(e.target, 0, 0, width, height);
+                }
 
                 canvas.toBlob((newBlob) => {
                   if (newBlob) {
@@ -171,8 +189,9 @@ export default function Cropper({
                     newreader.onload = async (newevent) => {
                       const fileAsDataURL = newevent.target?.result;
                       if (typeof fileAsDataURL === "string") {
-                        const file = new File([newBlob], "cropped-image.png", {
-                          type: "image/png",
+                        // Use JPEG for better compression and quality balance
+                        const file = new File([newBlob], "cropped-image.jpg", {
+                          type: "image/jpeg",
                         });
                         try {
                           const dl_url = await uploadImage({
@@ -194,7 +213,7 @@ export default function Cropper({
                       }
                     };
                   }
-                }, "image/png");
+                }, "image/jpeg", 0.9); // 90% quality for good balance
               };
             };
             if (blobUrlRef.current) {
@@ -349,32 +368,46 @@ export default function Cropper({
                 </div>
                 <div className="px-2">
                   {!!imgSrc && (
-                    <ReactCrop
-                      crop={crop}
-                      onChange={(_, percentCrop) => setCrop(percentCrop)}
-                      onComplete={(c) => setCompletedCrop(c)}
-                      aspect={aspect}
-                      // minWidth={400}
-                      minHeight={60}
-                      maxHeight={maxHeight}
-                      circularCrop={circularCrop}
-                    >
-                      <div className="relative flex items-center justify-center bg-black/30">
-                        <Loader2 className="animate-spin size-20 absolute " />
-                        <Image
-                          ref={imgRef}
-                          alt="Crop me"
-                          src={imgSrc || "/assets/zwift-logo.png"}
-                          style={{
-                            transform: `scale(${scale})`,
-                            opacity: imageLoaded ? "100" : "0",
-                          }}
-                          onLoad={onImageLoad}
-                          width={400}
-                          height={400}
-                        />
+                    <>
+                      {/* Aspect Ratio Info */}
+                      <div className="mb-2 text-center text-sm text-gray-400">
+                        {aspect === 1 && "Profile Photo (Square - 1:1)"}
+                        {aspect === 16/9 && "Cover Photo (Wide - 16:9)"}
+                        {!aspect && "Free Crop"}
                       </div>
-                    </ReactCrop>
+                      <ReactCrop
+                        crop={crop}
+                        onChange={(_, percentCrop) => setCrop(percentCrop)}
+                        onComplete={(c) => setCompletedCrop(c)}
+                        aspect={aspect}
+                        // minWidth={400}
+                        minHeight={60}
+                        maxHeight={maxHeight}
+                        circularCrop={circularCrop}
+                      >
+                        <div className="relative flex items-center justify-center bg-black/30">
+                          <Loader2 className="animate-spin size-20 absolute " />
+                          <Image
+                            ref={imgRef}
+                            alt="Crop me"
+                            src={imgSrc || "/assets/zwift-logo.png"}
+                            style={{
+                              transform: `scale(${scale})`,
+                              opacity: imageLoaded ? "100" : "0",
+                            }}
+                            onLoad={onImageLoad}
+                            width={400}
+                            height={400}
+                          />
+                        </div>
+                      </ReactCrop>
+                      {/* Dimensions Info */}
+                      {completedCrop && (
+                        <div className="mt-2 text-center text-xs text-gray-500">
+                          Crop Size: {Math.round(completedCrop.width)} × {Math.round(completedCrop.height)} px
+                        </div>
+                      )}
+                    </>
                   )}
                 </div>
                 {!!completedCrop && (
