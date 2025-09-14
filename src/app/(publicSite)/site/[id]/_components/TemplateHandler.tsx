@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect } from "react";
+import { useEffect, useRef } from "react";
 import Template1 from "@/components/templates/Template1";
 import Template2 from "@/components/templates/Template2";
 import Template3 from "@/components/templates/Template3";
@@ -25,11 +25,16 @@ import { Card, CardContent } from "@/components/ui/card";
 import Link from "next/link";
 
 const UserPage = ({ userData }: { userData: cardType }) => {
+  // Use ref to track if view has been logged
+  const viewTrackedRef = useRef(false);
+  
   // Track card view
   useEffect(() => {
     const trackView = async () => {
+      // Check if we've already tracked this view
+      if (viewTrackedRef.current) return;
+      
       // Check if we've already tracked this view in this session
-      const sessionKey = `viewed_${userData.id}_${Date.now()}`;
       const viewedKey = `viewed_${userData.id}`;
       
       // Check if viewed in the last 30 seconds (to prevent duplicate tracking on refresh)
@@ -37,6 +42,7 @@ const UserPage = ({ userData }: { userData: cardType }) => {
       if (lastViewed) {
         const timeSinceLastView = Date.now() - parseInt(lastViewed);
         if (timeSinceLastView < 30000) { // 30 seconds
+          viewTrackedRef.current = true; // Mark as tracked to prevent further attempts
           return;
         }
       }
@@ -60,6 +66,8 @@ const UserPage = ({ userData }: { userData: cardType }) => {
           const result = await response.json();
           // Mark as viewed in session storage
           sessionStorage.setItem(viewedKey, Date.now().toString());
+          // Mark as tracked using ref
+          viewTrackedRef.current = true;
         }
       } catch (error) {
         console.error('Failed to track view:', error);
