@@ -53,7 +53,6 @@ import React, { useEffect, useState } from "react";
 import { IoCloseCircleOutline } from "react-icons/io5";
 import { toast } from "react-toastify";
 import QRCodeModalV2 from "./qrcode/QRCodeModalV2";
-import { QRCodeSVG } from "qrcode.react";
 import { Button } from "./ui/button";
 
 type Prop = {
@@ -328,26 +327,13 @@ const DigitalCard = ({ card, confirm, user }: Prop) => {
 
   const CardInfo = (
     <div className="flex-grow flex flex-col justify-between">
-      <div className="flex items-center justify-between w-full">
-        <div className="flex-1">
-          <p className="text-[clamp(1rem,1.4vw,1.1rem)] mt-0 font-semibold capitalize text-white">
-            {(card.firstName || "") + " " + (card.lastName || "")}
-          </p>
-          <p className="text-[clamp(1rem,1.4vw,1.1rem)] pt-2 sm:pt-3 font-semibold capitalize text-white">
-            {card.cardName || ""}
-          </p>
-        </div>
-        {/* QR Code */}
-        {card.id && card.portfolioStatus && !isCardDisabled && (
-          <div className="bg-white p-2 rounded-lg shadow-lg ml-4">
-            <QRCodeSVG 
-              value={`${domain}/site/${card.customUrl ? card.customUrl : card.id}`}
-              size={80}
-              level="M"
-              includeMargin={false}
-            />
-          </div>
-        )}
+      <div>
+        <p className="text-[clamp(1rem,1.4vw,1.1rem)] mt-0 font-semibold capitalize text-white">
+          {(card.firstName || "") + " " + (card.lastName || "")}
+        </p>
+        <p className="text-[clamp(1rem,1.4vw,1.1rem)] pt-2 sm:pt-3 font-semibold capitalize text-white">
+          {card.cardName || ""}
+        </p>
       </div>
     </div>
   );

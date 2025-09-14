@@ -28,8 +28,20 @@ const UserPage = ({ userData }: { userData: cardType }) => {
   // Track card view
   useEffect(() => {
     const trackView = async () => {
+      // Check if we've already tracked this view in this session
+      const sessionKey = `viewed_${userData.id}_${Date.now()}`;
+      const viewedKey = `viewed_${userData.id}`;
+      
+      // Check if viewed in the last 30 seconds (to prevent duplicate tracking on refresh)
+      const lastViewed = sessionStorage.getItem(viewedKey);
+      if (lastViewed) {
+        const timeSinceLastView = Date.now() - parseInt(lastViewed);
+        if (timeSinceLastView < 30000) { // 30 seconds
+          return;
+        }
+      }
+      
       try {
-        console.log('Tracking view for card:', userData.id, 'owner:', userData.owner);
         const response = await fetch('/api/analytics/track-view', {
           method: 'POST',
           headers: {
@@ -46,7 +58,8 @@ const UserPage = ({ userData }: { userData: cardType }) => {
           console.error('Track view API error:', error);
         } else {
           const result = await response.json();
-          console.log('View tracked successfully:', result);
+          // Mark as viewed in session storage
+          sessionStorage.setItem(viewedKey, Date.now().toString());
         }
       } catch (error) {
         console.error('Failed to track view:', error);
