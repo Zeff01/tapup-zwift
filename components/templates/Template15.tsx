@@ -125,16 +125,24 @@ const Template15 = ({
           </div>
 
           <div className="w-full flex flex-col items-center px-2 sm:px-6">
-            <h1 className="text-xl font-bold text-white text-center">
-              {prefix && `${prefix}. `}
-              {firstName}
-              {middleName && ` ${middleName}`}
-              {lastName && ` ${lastName}`}
-              {suffix && `, ${suffix}`}
-            </h1>
+            {firstName || lastName ? (
+              <h1 className="text-xl font-bold text-white text-center">
+                {prefix && `${prefix}. `}
+                {firstName}
+                {middleName && ` ${middleName}`}
+                {lastName && ` ${lastName}`}
+                {suffix && `, ${suffix}`}
+              </h1>
+            ) : (
+              <h1 className="text-xl font-bold text-white text-center">
+                {" "}
+                Hussain Watkins
+              </h1>
+            )}
 
             <p className="text-sm text-gray-300 font-medium mt-1 mb-5 text-center">
-              {position} {company && `@ ${company}`}
+              {position || "Chief Technology Officer"}{" "}
+              {`@ ${company || "Zwiftech"}`}
             </p>
 
             <div className="flex gap-2 mb-5">
@@ -200,7 +208,7 @@ const Template15 = ({
           )}
 
           {/* === Companies Section === */}
-          {companies?.length > 0 && (
+          {companies.length > 0 && (
             <div className="w-full px-3 mb-6">
               <h2 className="text-base font-bold text-white mb-4 text-center">
                 Professional Portfolio

@@ -313,16 +313,23 @@ const Template13 = ({
               />
             </div>
             <div className="flex items-center gap-2 mb-1">
-              <h1 className="font-semibold tracking-tight text-white leading-snug">
-                {prefix && <span>{prefix}. </span>}
-                {firstName}
-                {middleName && <span> {middleName}</span>}
-                {lastName && <span> {lastName}</span>}
-                {suffix && <span>, {suffix}</span>}
-              </h1>
+              {firstName ? (
+                <h1 className="font-semibold tracking-tight text-white leading-snug">
+                  {prefix && <span>{prefix}. </span>}
+                  {firstName}
+                  {middleName && <span> {middleName}</span>}
+                  {lastName && <span> {lastName}</span>}
+                  {suffix && <span>, {suffix}</span>}
+                </h1>
+              ) : (
+                <h1 className="font-semibold tracking-tight text-white leading-snug">
+                  Hussain Watkins
+                </h1>
+              )}
             </div>
             <div className="text-sm text-gray-300 mb-4 font-medium">
-              {position} {company && <>· {company}</>}
+              {position || "Chief Technology Officer"}{" "}
+              {`@ ${company || "Zwiftech"}`}
             </div>
             <div className="flex gap-2 mb-2">
               <CTAButtons

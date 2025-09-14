@@ -55,10 +55,9 @@ const Template18 = ({
       flexDirection="col"
       alignItems="center"
       justifyContent="center"
-      className="relative overflow-hidden p-0 py-2 text-white"
+      className="relative overflow-hidden p-0 text-white"
     >
-      <div className="flex-grow">
-      <div className="max-w-[480px] mx-auto flex flex-col ">
+      <div className="max-w-[480px] mx-auto flex flex-col pt-2">
         {/* === Decorative Background === */}
         <div
           className="absolute top-10 left-10 w-48 h-48 rounded-full"
@@ -94,7 +93,7 @@ const Template18 = ({
           <div
             className="relative h-64 bg-cover bg-center rounded-t-[30px]"
             style={{
-              backgroundImage: `url(${coverPhotoUrl})`,
+              backgroundImage: `url(${coverPhotoUrl || "/assets/template-7-cover-photo.jpeg"})`,
             }}
           />
 
@@ -116,14 +115,20 @@ const Template18 = ({
 
               {/* Info */}
               <div className="mt-9">
-                <h2 className="text-lg font-bold">
-                  {prefix && `${prefix}. `}
-                  {firstName} {middleName && `${middleName} `}
-                  {lastName}
-                  {suffix && `, ${suffix}`}
-                </h2>
+                {firstName || lastName ? (
+                  <h2 className="text-lg font-bold">
+                    {prefix && `${prefix}. `}
+                    {firstName} {middleName && `${middleName} `}
+                    {lastName}
+                    {suffix && `, ${suffix}`}
+                  </h2>
+                ) : (
+                  <h2 className="text-lg font-bold">Hussain Watkins</h2>
+                )}
+
                 <div className="text-sm mt-1">
-                  {company} {position && `| ${position}`}
+                  {company || "Zwiftech"}{" "}
+                  {`| ${position || "Chief Technology Officer"}`}
                 </div>
                 <div className="text-xs mt-1 break-words text-gray-300">
                   {email && (
@@ -175,7 +180,7 @@ const Template18 = ({
         </section>
 
         {/* === Companies Section === */}
-        {companies?.length > 0 && (
+        {companies.length > 0 && (
           <section
             aria-label="Companies"
             className="px-3 sm:px-4 pb-3 text-xs sm:text-sm flex-1"
@@ -184,7 +189,8 @@ const Template18 = ({
               Professional Portfolio
             </h3>
             <p className="text-gray-300 text-center mb-3 sm:mb-4">
-              A snapshot of my experience and the companies I’ve worked with.
+              A snapshot of my experience and the companies I&apos;ve worked
+              with.
             </p>
 
             <div className="space-y-4">
@@ -275,32 +281,31 @@ const Template18 = ({
             </div>
           </section>
         )}
-        </div>
-
-        {/* === Footer Section === */}
-        <TemplateFooter className="bg-[#001d34] text-white text-center  text-xs rounded-b-[30px] px-2 sm:px-3">
-          <div className="flex flex-col py-4 items-center  gap-1 text-center text-xs">
-            <a
-              href={userProfile?.customUrl ?? userProfile?.websiteUrl ?? "#"}
-              target="_blank"
-              rel="noopener noreferrer"
-            >
-              <Image
-                src="/assets/light-ZwiftechLogo.png"
-                alt="Zwiftech Logo"
-                width={40}
-                height={15}
-                priority
-                className="opacity-90"
-              />
-            </a>
-
-            <span className="tracking-wide text-gray-400 text-[10px] ">
-              © {getCopyrightYear()} Zwiftech. All Rights Reserved.
-            </span>
-          </div>{" "}
-        </TemplateFooter>
       </div>
+
+      {/* === Footer Section === */}
+      <TemplateFooter className="bg-[#001d34] text-white text-center  text-xs rounded-b-[30px] px-2 sm:px-3">
+        <div className="flex flex-col py-4 items-center  gap-1 text-center text-xs">
+          <a
+            href={userProfile?.customUrl ?? userProfile?.websiteUrl ?? "#"}
+            target="_blank"
+            rel="noopener noreferrer"
+          >
+            <Image
+              src="/assets/light-ZwiftechLogo.png"
+              alt="Zwiftech Logo"
+              width={40}
+              height={15}
+              priority
+              className="opacity-90"
+            />
+          </a>
+
+          <span className="tracking-wide text-gray-400 text-[10px] ">
+            © {getCopyrightYear()} Zwiftech. All Rights Reserved.
+          </span>
+        </div>{" "}
+      </TemplateFooter>
     </TemplateContainer>
   );
 };

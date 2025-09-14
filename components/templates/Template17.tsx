@@ -45,6 +45,7 @@ const Template17 = ({
     websiteUrl,
     customUrl,
   };
+
   return (
     <TemplateContainer
       backgroundColor="bg-white"
@@ -95,14 +96,22 @@ const Template17 = ({
           className="pt-12 sm:pt-16 pb-4 sm:pb-6 px-3 sm:px-4 flex flex-col items-center"
         >
           {/* Name & Position */}
-          <h2 className="text-lg sm:text-xl font-bold text-center leading-tight">
-            {prefix && `${prefix}. `}
-            {firstName} {middleName && `${middleName} `}
-            {lastName}
-            {suffix && `, ${suffix}`}
-          </h2>
+          {firstName || lastName ? (
+            <h2 className="text-lg sm:text-xl font-bold text-center leading-tight">
+              {prefix && `${prefix}. `}
+              {firstName} {middleName && `${middleName} `}
+              {lastName}
+              {suffix && `, ${suffix}`}
+            </h2>
+          ) : (
+            <h2 className="text-lg sm:text-xl font-bold text-center leading-tight">
+              Hussain Watkins
+            </h2>
+          )}
+
           <div className="text-xs sm:text-sm text-gray-700 text-center mt-1">
-            {company} {position && `| ${position}`}
+            {company || "Zwiftech"}{" "}
+            {`| ${position || "Chief Technology Officer"}`}
           </div>
 
           {/* Contact Info */}
@@ -198,7 +207,7 @@ const Template17 = ({
           </div>
         </section>
         {/* === Companies Section === */}
-        {companies?.length > 0 && (
+        {companies.length > 0 && (
           <section aria-label="Companies" className="px-3 sm:px-4 pb-3">
             <h3 className="font-bold text-sm sm:text-base mb-2 text-center">
               Professional Portfolio

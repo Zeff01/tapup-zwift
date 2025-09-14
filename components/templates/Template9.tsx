@@ -286,13 +286,13 @@ const Template9 = ({
             )}
 
             <p className="text-lg  font-normal text-neutral-700">
-              {position ?? "Chief Technology Officer"}
+              {position || "Chief Technology Officer"}
             </p>
 
             <div className="flex items-center font-light text-sm text-neutral-600 justify-center gap-x-2">
               <input
                 type="text"
-                value={email ?? "H.Watkins@gmail.com"}
+                value={email}
                 readOnly
                 className="max-w-[120px] truncate bg-transparent border-none outline-none cursor-pointer text-center font-light text-sm text-neutral-600"
                 onClick={(e) => {
@@ -303,7 +303,7 @@ const Template9 = ({
               <span>|</span>
               <input
                 type="text"
-                value={String(number ?? +639123456789)}
+                value={String(number)}
                 readOnly
                 className="max-w-[120px] truncate bg-transparent border-none outline-none cursor-pointer text-center font-light text-sm text-neutral-600"
                 onClick={(e) => {
