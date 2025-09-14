@@ -47,17 +47,11 @@ export default function QRCodeModalV2({
           id="qr-download-content"
           className="p-4 text-center font-semibold bg-background"
         >
-          <h2 className="font-semibold text-xl">
+          <h2 className="font-semibold text-xl mb-4">
             {userProfile.firstName} {userProfile.lastName}
           </h2>
-          <h3 className="dark:text-slate-400 text-gray-500 text-lg">
-            {userProfile.company}
-          </h3>
-          <h4 className="font-normal dark:text-slate-400 text-gray-500 text-lg">
-            {userProfile.position}
-          </h4>
 
-          <div className="p-3 border dark:border-slate-800 inline-block border-gray-300 rounded-md mt-4">
+          <div className="p-3 border dark:border-slate-800 inline-block border-gray-300 rounded-md">
             <QRCodeCanvas
               value={vCardData}
               size={200}
