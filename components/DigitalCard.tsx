@@ -53,6 +53,7 @@ import React, { useEffect, useState } from "react";
 import { IoCloseCircleOutline } from "react-icons/io5";
 import { toast } from "react-toastify";
 import QRCodeModalV2 from "./qrcode/QRCodeModalV2";
+import { QRCodeSVG } from "qrcode.react";
 import { Button } from "./ui/button";
 
 type Prop = {
