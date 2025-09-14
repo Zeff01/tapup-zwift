@@ -327,29 +327,26 @@ const DigitalCard = ({ card, confirm, user }: Prop) => {
 
   const CardInfo = (
     <div className="flex-grow flex flex-col justify-between">
-      <div>
-        <p className="text-[clamp(1rem,1.4vw,1.1rem)] mt-0 font-semibold capitalize text-white">
-          {(card.firstName || "") + " " + (card.lastName || "")}
-        </p>
-        {/* Show position if available from companies array or legacy position field */}
-        {(card.companies && card.companies.length > 0 && card.companies[0].position) || card.position ? (
-          <p className="text-xs capitalize text-white">
-            {card.companies && card.companies.length > 0 
-              ? card.companies[0].position
-              : card.position}
+      <div className="flex items-center justify-between w-full">
+        <div className="flex-1">
+          <p className="text-[clamp(1rem,1.4vw,1.1rem)] mt-0 font-semibold capitalize text-white">
+            {(card.firstName || "") + " " + (card.lastName || "")}
           </p>
-        ) : null}
-        {/* Show company if available from companies array or legacy company field */}
-        {(card.companies && card.companies.length > 0 && card.companies[0].company) || card.company ? (
-          <p className="text-xs capitalize text-white">
-            {card.companies && card.companies.length > 0 
-              ? card.companies[0].company
-              : card.company}
+          <p className="text-[clamp(1rem,1.4vw,1.1rem)] pt-2 sm:pt-3 font-semibold capitalize text-white">
+            {card.cardName || ""}
           </p>
-        ) : null}
-        <p className="text-[clamp(1rem,1.4vw,1.1rem)] pt-2 sm:pt-3 font-semibold capitalize text-white">
-          {card.cardName || ""}
-        </p>
+        </div>
+        {/* QR Code */}
+        {card.id && card.portfolioStatus && !isCardDisabled && (
+          <div className="bg-white p-2 rounded-lg shadow-lg ml-4">
+            <QRCodeSVG 
+              value={`${domain}/site/${card.customUrl ? card.customUrl : card.id}`}
+              size={80}
+              level="M"
+              includeMargin={false}
+            />
+          </div>
+        )}
       </div>
     </div>
   );
