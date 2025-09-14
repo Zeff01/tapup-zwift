@@ -74,27 +74,23 @@ const Template5 = ({
         />
 
         {/* SOCIAL MEDIA ICONS */}
-        <div className="relative ">
-          <div className="absolute -top-8  left-4  ">
-            <SocialLinks
-              facebookUrl={facebookUrl}
-              twitterUrl={twitterUrl}
-              tiktokUrl={tiktokUrl}
-              youtubeUrl={youtubeUrl}
-              instagramUrl={instagramUrl}
-              linkedinUrl={linkedinUrl}
-              viberUrl={viberUrl}
-              whatsappNumber={whatsappNumber}
-              websiteUrl={websiteUrl}
-              cardId={id}
-              ownerId={owner}
-              variant="minimal"
-              size="sm"
-              className="flex flex-col gap-[6px]"
-              iconClassName="text-gray-900 hover:text-pink-500"
-            />
-          </div>
-        </div>
+        <SocialLinks
+          facebookUrl={facebookUrl}
+          twitterUrl={twitterUrl}
+          tiktokUrl={tiktokUrl}
+          youtubeUrl={youtubeUrl}
+          instagramUrl={instagramUrl}
+          linkedinUrl={linkedinUrl}
+          viberUrl={viberUrl}
+          whatsappNumber={whatsappNumber}
+          websiteUrl={websiteUrl}
+          cardId={id}
+          ownerId={owner}
+          variant="minimal"
+          size="lg"
+          className="flex  gap-[6px]"
+          iconClassName="text-gray-800 hover:text-pink-500 mt-6"
+        />
 
         {/* PERSONAL INFORMATION */}
         <div className="text-center mt-4 space-y-1 ">
@@ -106,9 +102,9 @@ const Template5 = ({
             <h1 className="text-xl font-bold mt-4 ">Hussain Watkins</h1>
           )}
 
-          <p className="font-semibold text-gray-900 text-xs">
+          {/* <p className="font-semibold text-gray-900 text-xs">
             {position ?? "Chief Technology Officer"}
-          </p>
+          </p> */}
 
           <p className=" text-gray-500 text-xs">
             {email ?? "H.Watkins@gmail.com"}
@@ -117,7 +113,7 @@ const Template5 = ({
           <p className=" text-gray-500 text-xs"> {number ?? +639123456789}</p>
         </div>
 
-        <div className="mt-[70px] mb-6 px-4">
+        <div className="mt-12 mb-6 px-4">
           <h2 className="text-lg font-bold mb-1">Professional Portfolio</h2>
           <p className="text-sm">
             Below you&#39;ll find details about my professional experience and

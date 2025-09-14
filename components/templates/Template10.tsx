@@ -54,13 +54,13 @@ const CompanyShowcase = ({
           {/* Background Glow Effect */}
           <div className="absolute inset-0 bg-gradient-to-r from-emerald-500/10 via-cyan-500/10 to-blue-500/10 rounded-3xl blur-xl opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
 
-          <div className="relative bg-gradient-to-br from-slate-800 via-slate-900 to-black rounded-3xl border border-slate-700/50 overflow-hidden shadow-2xl hover:shadow-emerald-500/20 transition-all duration-500">
+          <div className="relative bg-gradient-to-br from-slate-800 via-slate-900 to-black rounded-3xl border border-slate-700/50 overflow-hidden shadow-2xl hover:shadow-purple-500/20 transition-all duration-500">
             {/* Header Section */}
             <div className="relative p-4 bg-gradient-to-r from-slate-800/80 to-slate-900/80 backdrop-blur-sm border-b border-slate-700/50">
               <div className="flex items-center space-x-6">
                 {/* Company Logo */}
                 <div className="relative">
-                  <div className="w-20 h-20 rounded-2xl bg-gradient-to-br from-emerald-400 via-cyan-400 to-blue-500 p-0.5">
+                  <div className="w-20 h-20 rounded-2xl bg-gradient-to-br from-purple-400 via-purple-400 to-blue-500 p-0.5">
                     <div className="w-full h-full rounded-2xl bg-slate-900 flex items-center justify-center">
                       <span className="text-2xl font-bold bg-gradient-to-r from-emerald-400 to-cyan-400 bg-clip-text text-transparent">
                         {company.company?.charAt(0) || "C"}
@@ -293,161 +293,163 @@ const Template10 = ({
       justifyContent="between"
     >
       <div className="flex-grow">
-      <div className="w-full mx-auto max-w-[480px]">
-        <div className="flex flex-col relative rounded-4xl ">
-          <div className="w-full h-48">
-            {coverPhotoUrl ? (
+        <div className="w-full mx-auto max-w-[480px]">
+          <div className="flex flex-col relative rounded-4xl ">
+            <div className="w-full h-48">
+              {coverPhotoUrl ? (
+                <Image
+                  src={coverPhotoUrl}
+                  alt="Cover Image"
+                  width={400}
+                  height={200}
+                  className="mx-auto w-full h-48 object-cover rounded-xl overflow-hidden"
+                />
+              ) : (
+                <Image
+                  src={"/assets/template10coverphoto.png"}
+                  alt="Cover Image"
+                  width={400}
+                  height={200}
+                  className="mx-auto"
+                />
+              )}
               <Image
-                src={coverPhotoUrl}
-                alt="Cover Image"
-                width={400}
-                height={200}
-                className="mx-auto w-full h-48 object-cover rounded-[2rem] overflow-hidden"
+                className=" absolute right-0 top-0"
+                src={wavy}
+                alt="wavy"
+                width={100}
+                height={100}
               />
+              <div className="flex gap-x-2 absolute right-0 top-0 text-[#FFFBD8] bg-black pl-4 pb-2 rounded-bl-3xl">
+                <CTAButtons
+                  number={number}
+                  email={email}
+                  userProfile={userProfile}
+                  variant="floating"
+                  size="sm"
+                  icons="lucide"
+                  buttonClassName="border-[#FFFBD8] text-[#FFFBD8] hover:bg-[#FFFBD8] hover:text-black bg-transparent"
+                />
+              </div>
+            </div>
+            <div className="absolute -bottom-12 left-1/2 transform -translate-x-1/2">
+              {profilePictureUrl ? (
+                <div className="border-[8px] border-black rounded-full mx-auto overflow-hidden">
+                  <Image
+                    src={profilePictureUrl}
+                    alt="Profile Image"
+                    width={80}
+                    height={80}
+                    className="rounded-full w-24 h-24"
+                  />
+                </div>
+              ) : (
+                <div className="bg-black w-28 h-28 rounded-full mx-auto flex items-center justify-center">
+                  <Image
+                    src={"/assets/template10samplepic.png"}
+                    alt="Profile Image"
+                    width={80}
+                    height={80}
+                    className="rounded-full w-24 h-24"
+                  />
+                </div>
+              )}
+            </div>
+          </div>
+
+          {/* PERSONAL INFORMATION */}
+          <div className="text-center mt-14 space-y-1 ">
+            {firstName ? (
+              <h1
+                className={cn(
+                  "text-lg font-normal tracking-wider text-[#FFFBD8] capitalize",
+                  firstName ? "mt-4" : "mt-2",
+                  michroma.className
+                )}
+              >
+                {firstName + " " + lastName}
+              </h1>
             ) : (
-              <Image
-                src={"/assets/template10coverphoto.png"}
-                alt="Cover Image"
-                width={400}
-                height={200}
-                className="mx-auto"
-              />
+              <h1 className="text-lg font-bold mt-2 ">Hussain Watkins</h1>
             )}
-            <Image
-              className=" absolute right-0 top-0"
-              src={wavy}
-              alt="wavy"
-              width={100}
-              height={100}
-            />
-            <div className="flex gap-x-2 absolute right-0 top-0 text-[#FFFBD8] bg-black pl-4 pb-2 rounded-bl-3xl">
-              <CTAButtons
-                number={number}
-                email={email}
-                userProfile={userProfile}
-                variant="floating"
-                size="sm"
-                icons="lucide"
-                buttonClassName="border-[#FFFBD8] text-[#FFFBD8] hover:bg-[#FFFBD8] hover:text-black bg-transparent"
+
+            <p
+              className={cn(
+                "text-sm tracking-wider text-[#9C9EFFE5] font-bold pt-1",
+                firstName ? "mt-5" : "mt-3",
+                poppins.className
+              )}
+            >
+              {position || "Chief Technology Officer"}
+            </p>
+
+            <div className="gap-x-2 w-full text-[#B6BCD2] flex justify-center items-center">
+              <input
+                type="text"
+                value={email}
+                readOnly
+                className="max-w-[120px] truncate bg-transparent border-none outline-none cursor-pointer text-center font-light text-sm text-[#B6BCD2]"
+                onClick={(e) => {
+                  e.currentTarget.select();
+                  navigator.clipboard.writeText(e.currentTarget.value);
+                }}
+              />
+              <span>|</span>
+              <input
+                type="text"
+                value={String(number)}
+                readOnly
+                className="max-w-[120px] truncate bg-transparent border-none outline-none cursor-pointer text-center font-light text-sm text-[#B6BCD2]"
+                onClick={(e) => {
+                  e.currentTarget.select();
+                  navigator.clipboard.writeText(e.currentTarget.value);
+                }}
               />
             </div>
           </div>
-          <div className="absolute -bottom-12 left-1/2 transform -translate-x-1/2">
-            {profilePictureUrl ? (
-              <div className="border-[8px] border-black rounded-full mx-auto overflow-hidden">
-                <Image
-                  src={profilePictureUrl}
-                  alt="Profile Image"
-                  width={80}
-                  height={80}
-                  className="rounded-full w-24 h-24"
-                />
-              </div>
-            ) : (
-              <div className="bg-black w-28 h-28 rounded-full mx-auto flex items-center justify-center">
-                <Image
-                  src={"/assets/template10samplepic.png"}
-                  alt="Profile Image"
-                  width={80}
-                  height={80}
-                  className="rounded-full w-24 h-24"
-                />
-              </div>
-            )}
-          </div>
-        </div>
 
-        {/* PERSONAL INFORMATION */}
-        <div className="text-center mt-14 space-y-1 ">
-          {firstName ? (
-            <h1
-              className={cn(
-                "text-lg font-normal tracking-wider text-[#FFFBD8] capitalize",
-                firstName ? "mt-4" : "mt-2",
-                michroma.className
+          {/* SOCIAL MEDIA ICONS */}
+          <div className="flex items-center gap-x-4 py-10 text-2xl text-[#B6BCD2] h-16 justify-center">
+            <SocialLinks
+              facebookUrl={facebookUrl}
+              twitterUrl={twitterUrl}
+              tiktokUrl={tiktokUrl}
+              youtubeUrl={youtubeUrl}
+              instagramUrl={instagramUrl}
+              linkedinUrl={linkedinUrl}
+              viberUrl={viberUrl}
+              whatsappNumber={whatsappNumber}
+              websiteUrl={websiteUrl}
+              cardId={id}
+              ownerId={owner}
+              size="md"
+              iconClassName="text-[#B6BCD2]"
+              iconSet="outline"
+            />
+          </div>
+
+          <hr className="border-[#B6BCD2]" />
+          <div className=" flex flex-col gap-y-3 flex-grow border-t text-white mt-2">
+            <h2 className="text-lg font-bold text-[#9C9EFFE5]">
+              Professional Portfolio
+            </h2>
+            <p className="text-sm">
+              Below you&#39;ll find details about my professional experience and
+              the companies I&#39;ve worked with. Each entry highlights my role,
+              responsibilities, and the services offered.
+            </p>
+
+            <div className="w-full mx-auto mt-4">
+              {companies && companies.length > 0 && (
+                <CompanyShowcase
+                  companies={companies}
+                  profilePictureUrl={profilePictureUrl}
+                  firstName={firstName}
+                  lastName={lastName}
+                />
               )}
-            >
-              {firstName + " " + lastName}
-            </h1>
-          ) : (
-            <h1 className="text-lg font-bold mt-2 ">Hussain Watkins</h1>
-          )}
-
-          <p
-            className={cn(
-              "text-sm tracking-wider text-[#9C9EFFE5] font-bold pt-1",
-              firstName ? "mt-5" : "mt-3",
-              poppins.className
-            )}
-          >
-            {position || "Chief Technology Officer"}
-          </p>
-
-          <div className="gap-x-2 w-full text-[#B6BCD2] flex justify-center items-center">
-            <input
-              type="text"
-              value={email}
-              readOnly
-              className="max-w-[120px] truncate bg-transparent border-none outline-none cursor-pointer text-center font-light text-sm text-[#B6BCD2]"
-              onClick={(e) => {
-                e.currentTarget.select();
-                navigator.clipboard.writeText(e.currentTarget.value);
-              }}
-            />
-            <span>|</span>
-            <input
-              type="text"
-              value={String(number)}
-              readOnly
-              className="max-w-[120px] truncate bg-transparent border-none outline-none cursor-pointer text-center font-light text-sm text-[#B6BCD2]"
-              onClick={(e) => {
-                e.currentTarget.select();
-                navigator.clipboard.writeText(e.currentTarget.value);
-              }}
-            />
+            </div>
           </div>
-        </div>
-
-        {/* SOCIAL MEDIA ICONS */}
-        <div className="flex items-center gap-x-4 py-10 text-2xl text-[#B6BCD2] h-16 justify-center">
-          <SocialLinks
-            facebookUrl={facebookUrl}
-            twitterUrl={twitterUrl}
-            tiktokUrl={tiktokUrl}
-            youtubeUrl={youtubeUrl}
-            instagramUrl={instagramUrl}
-            linkedinUrl={linkedinUrl}
-            viberUrl={viberUrl}
-            whatsappNumber={whatsappNumber}
-            websiteUrl={websiteUrl}
-            cardId={id}
-            ownerId={owner}
-            size="md"
-            iconClassName="text-[#B6BCD2]"
-            iconSet="outline"
-          />
-        </div>
-
-        <hr className="border-[#B6BCD2]" />
-        <div className=" flex flex-col gap-y-3 flex-grow border-t text-white mt-2">
-          <h2 className="text-lg font-bold">Professional Portfolio</h2>
-          <p className="text-sm">
-            Below you&#39;ll find details about my professional experience and
-            the companies I&#39;ve worked with. Each entry highlights my role,
-            responsibilities, and the services offered.
-          </p>
-
-          <div className="w-full mx-auto mt-4">
-            {companies && companies.length > 0 && (
-              <CompanyShowcase
-                companies={companies}
-                profilePictureUrl={profilePictureUrl}
-                firstName={firstName}
-                lastName={lastName}
-              />
-            )}
-          </div>
-        </div>
         </div>
 
         {/* FOOTER */}

@@ -99,7 +99,7 @@ const Template1 = ({
             viberUrl={viberUrl}
             whatsappNumber={whatsappNumber}
             websiteUrl={websiteUrl}
-            size="lg"
+            size="md"
             className="gap-1 md:gap-2 xl:gap-4"
           />
         </div>

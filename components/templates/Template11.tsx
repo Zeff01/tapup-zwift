@@ -263,133 +263,181 @@ const Template11 = ({
       justifyContent="between"
     >
       <div className="flex-grow">
-      <div className="w-full mx-auto relative max-w-[480px]">
-        <div className="flex gap-2 z-20 absolute right-0 top-0 p-1">
-          <CTAButtons
-            number={number}
-            email={email}
-            userProfile={userProfile}
-            variant="floating"
-            size="sm"
-            icons="outline"
-            buttonClassName="bg-[#A0E9FF] text-[#00A9FF] border-0 shadow hover:bg-[#00A9FF] hover:text-white transform hover:scale-110"
-          />
-        </div>
-
-        {/* COVERPHOTO AND PROFILE PIC */}
-        <div className="  flex flex-col relative ">
-          {coverPhotoUrl ? (
-            <Image
-              src={coverPhotoUrl}
-              alt="Cover Image"
-              width={400}
-              height={200}
-              className="mx-auto w-full h-56 object-cover  overflow-hidden"
+        <div className="w-full mx-auto relative max-w-[480px]">
+          <div className="flex gap-2 z-20 absolute right-0 top-0 p-1">
+            <CTAButtons
+              number={number}
+              email={email}
+              userProfile={userProfile}
+              variant="floating"
+              size="sm"
+              icons="outline"
+              buttonClassName="bg-[#A0E9FF] text-[#00A9FF] border-0 shadow hover:bg-[#00A9FF] hover:text-white transform hover:scale-110"
             />
-          ) : (
-            <Image
-              src={"/assets/template10coverphoto.png"}
-              alt="Cover Image"
-              width={400}
-              height={200}
-              className="mx-auto"
-            />
-          )}
-        </div>
+          </div>
 
-        {/* PERSONAL INFORMATION */}
-        <div className="text-center mt-24 top-0 w-[calc(100%-32px)] rounded-3xl  space-y-1 absolute left-1/2 transform -translate-x-1/2 bg-[#A0E9FF] shadow-md">
-          {profilePictureUrl ? (
-            <div className="flex justify-center w-full -mt-14">
-              <div className=" bg-[#A0E9FF] w-fit  rounded-full mx-auto overflow-hidden p-[5px]">
+          {/* COVERPHOTO AND PROFILE PIC */}
+          <div className="  flex flex-col relative ">
+            {coverPhotoUrl ? (
+              <Image
+                src={coverPhotoUrl}
+                alt="Cover Image"
+                width={400}
+                height={200}
+                className="mx-auto w-full h-56 object-cover  overflow-hidden"
+              />
+            ) : (
+              <Image
+                src={"/assets/template10coverphoto.png"}
+                alt="Cover Image"
+                width={400}
+                height={200}
+                className="mx-auto"
+              />
+            )}
+          </div>
+
+          {/* PERSONAL INFORMATION */}
+          <div className="text-center mt-24 top-0 w-[calc(100%-32px)] rounded-3xl  space-y-1 absolute left-1/2 transform -translate-x-1/2 bg-[#A0E9FF] shadow-md">
+            {profilePictureUrl ? (
+              <div className="flex justify-center w-full -mt-14">
+                <div className=" bg-[#A0E9FF] w-fit  rounded-full mx-auto overflow-hidden p-[5px]">
+                  <Image
+                    src={profilePictureUrl}
+                    alt="Profile Image"
+                    width={80}
+                    height={80}
+                    className="rounded-full w-24 h-24"
+                  />
+                </div>
+              </div>
+            ) : (
+              <div className="bg-black w-28 h-28 rounded-full mx-auto flex items-center justify-center">
                 <Image
-                  src={profilePictureUrl}
+                  src={"/assets/template10samplepic.png"}
                   alt="Profile Image"
                   width={80}
                   height={80}
                   className="rounded-full w-24 h-24"
                 />
               </div>
-            </div>
-          ) : (
-            <div className="bg-black w-28 h-28 rounded-full mx-auto flex items-center justify-center">
-              <Image
-                src={"/assets/template10samplepic.png"}
-                alt="Profile Image"
-                width={80}
-                height={80}
-                className="rounded-full w-24 h-24"
-              />
-            </div>
-          )}
-          {firstName ? (
-            <h1
-              className={cn(
-                "text-xl font-extrabold tracking-wider text-[#00A9FF] capitalize",
-                firstName ? "mt-4" : "mt-2",
-                mulish.className
-              )}
-            >
-              {firstName + " " + lastName}
-            </h1>
-          ) : (
-            <h1 className="text-xl font-bold mt-2 ">Hussain Watkins</h1>
-          )}
-          <div className="flex text-sm text-gray-600 items-center justify-center gap-x-1">
-            <h2 className={cn("capitalize text-end", roboto_c.className)}>
-              {company || "COMPANY"}
-            </h2>
-            <p>|</p>
-            <h2 className={cn("capitalize text-start", roboto_c.className)}>
-              {position || "Chief Technology Officer"}
-            </h2>
-          </div>
-
-          <div className="gap-x-2 w-full text-xs font-thin gap-y-1  flex flex-col text-black opacity-50 justify-center items-center">
-            <p>{email}</p>
-
-            <p>{number}</p>
-          </div>
-          {/* SOCIAL MEDIA ICONS */}
-          <div className="flex items-center gap-1 mt-6 pb-10 pt-10 text-black text-2xl h-16 justify-center">
-            <SocialLinks
-              facebookUrl={facebookUrl}
-              twitterUrl={twitterUrl}
-              tiktokUrl={tiktokUrl}
-              youtubeUrl={youtubeUrl}
-              instagramUrl={instagramUrl}
-              linkedinUrl={linkedinUrl}
-              viberUrl={viberUrl}
-              whatsappNumber={whatsappNumber}
-              websiteUrl={websiteUrl}
-              cardId={id}
-              ownerId={owner}
-              size="sm"
-              iconClassName="rounded-full p-2 bg-white opacity-50 size-full "
-              iconSet="outline"
-            />
-          </div>
-        </div>
-
-        <div className=" flex flex-col gap-y-3 flex-grow text-black mt-28 px-4">
-          <h2 className="text-lg font-bold">Professional Portfolio</h2>
-          <p className="text-sm">
-            Below you&#39;ll find details about my professional experience and
-            the companies I&#39;ve worked with. Each entry highlights my role,
-            responsibilities, and the services offered.
-          </p>
-
-          <div className="w-full mx-auto mt-4">
-            {companies && companies.length > 0 && (
-              <CompanyShowcase
-                companies={companies}
-                profilePictureUrl={profilePictureUrl}
-                firstName={firstName}
-                lastName={lastName}
-              />
             )}
+            {firstName ? (
+              <h1
+                className={cn(
+                  "text-xl font-extrabold tracking-wider text-[#00A9FF] capitalize",
+                  firstName ? "mt-4" : "mt-2",
+                  mulish.className
+                )}
+              >
+                {firstName + " " + lastName}
+              </h1>
+            ) : (
+              <h1 className="text-xl font-bold mt-2 ">Hussain Watkins</h1>
+            )}
+            <div className="flex text-sm text-gray-600 items-center justify-center gap-x-1">
+              <h2 className={cn("capitalize text-end", roboto_c.className)}>
+                {company || "COMPANY"}
+              </h2>
+              <p>|</p>
+              <h2 className={cn("capitalize text-start", roboto_c.className)}>
+                {position || "Chief Technology Officer"}
+              </h2>
+            </div>
+
+            <div className="gap-x-2 w-full text-xs font-thin gap-y-1  flex flex-col text-black opacity-50 justify-center items-center">
+              <p>{email}</p>
+
+              <p>{number}</p>
+            </div>
+            {/* SOCIAL MEDIA ICONS */}
+            <div className="flex justify-start px-4 mt-3 sm:mt-5 pb-2">
+              <SocialLinks
+                facebookUrl={facebookUrl}
+                instagramUrl={instagramUrl}
+                linkedinUrl={linkedinUrl}
+                twitterUrl={twitterUrl}
+                youtubeUrl={youtubeUrl}
+                tiktokUrl={tiktokUrl}
+                whatsappNumber={whatsappNumber}
+                viberUrl={viberUrl}
+                websiteUrl={websiteUrl}
+                cardId={id}
+                ownerId={owner}
+                variant="colorful"
+                size="lg"
+                iconSet="solid"
+                iconClassName=" p-2 rounded-full  w-full h-full"
+                colorfulColors={{
+                  facebook: {
+                    icon: "#1877f3",
+                    background: "rgb(255 255 255 / 0.5)",
+                    hover: { background: "#ffffff" },
+                  },
+                  instagram: {
+                    icon: "#e4405f",
+                    background: "rgb(255 255 255 / 0.5)",
+                    hover: { background: "#ffffff" },
+                  },
+                  linkedin: {
+                    icon: "#0a66c2",
+                    background: "rgb(255 255 255 / 0.5)",
+                    hover: { background: "#ffffff" },
+                  },
+                  twitter: {
+                    icon: "#000000",
+                    background: "rgb(255 255 255 / 0.5)",
+                    hover: { background: "#ffffff" },
+                  },
+                  youtube: {
+                    icon: "#ff0000",
+                    background: "rgb(255 255 255 / 0.5)",
+                    hover: { background: "#ffffff" },
+                  },
+                  tiktok: {
+                    icon: "#000000",
+                    background: "rgb(255 255 255 / 0.5)",
+                    hover: { background: "#ffffff" },
+                  },
+                  whatsapp: {
+                    icon: "#25d366",
+                    background: "rgb(255 255 255 / 0.5)",
+                    hover: { background: "#ffffff" },
+                  },
+                  viber: {
+                    icon: "#665cac",
+                    background: "rgb(255 255 255 / 0.5)",
+                    hover: { background: "#ffffff" },
+                  },
+                  website: {
+                    icon: "#6b7280",
+                    background: "rgb(255 255 255 / 0.5)",
+                    hover: { background: "#ffffff" },
+                  },
+                }}
+              />
+            </div>
           </div>
-        </div>
+
+          <div className=" flex flex-col gap-y-3 flex-grow text-black mt-28 px-4">
+            <h2 className="text-lg font-bold ">Professional Portfolio</h2>
+            <p className="text-sm">
+              Below you&#39;ll find details about my professional experience and
+              the companies I&#39;ve worked with. Each entry highlights my role,
+              responsibilities, and the services offered.
+            </p>
+
+            <div className="w-full mx-auto mt-4">
+              {companies && companies.length > 0 && (
+                <CompanyShowcase
+                  companies={companies}
+                  profilePictureUrl={profilePictureUrl}
+                  firstName={firstName}
+                  lastName={lastName}
+                />
+              )}
+            </div>
+          </div>
         </div>
 
         <TemplateFooter className="flex flex-col items-center  justify-center gap-x-1 text-xs  pb-4 ">

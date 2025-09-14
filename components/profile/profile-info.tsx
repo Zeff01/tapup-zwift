@@ -61,21 +61,24 @@ const ProfileInfo = ({
         </div>
       </div>
 
-      <div className="flex w-full justify-between">
+      <div className="flex w-full justify-between mx-4">
         {/* PERSONAL INFORMATION */}
-        <div className="px-4 mt-16">
+        <div className="space-y-1 px-4 mt-16">
           {firstName ? (
-            <h1 className="text-xl font-bold">{firstName + " " + lastName}</h1>
+            <h1 className="text-xl font-extrabold mt-4 ">
+              {firstName + " " + lastName}
+            </h1>
           ) : (
-            <h1 className="text-xl">Hussain Watkins</h1>
+            <h1 className="text-xl font-bold mt-4 ">Hussain Watkins</h1>
           )}
-
-          <p className="font-semibold text-gray-900 text-xs">
-            {position || "Chief Technology Officer"}
-          </p>
+          {/* <p className="font-semibold text-gray-600 text-xl">
+            {position ?? "Chief Technology Officer"}
+          </p> */}
+          <p className=" text-gray-600 text-sm">{email}</p>
+          <p className=" text-gray-600 text-sm"> {number}</p>
         </div>
 
-        <div className="flex flex-col gap-[4rem] pt-3 pr-5">
+        <div className="flex flex-col gap-[4rem] pt-3">
           <div className="flex gap-1 justify-center items-end">
             <Link
               href={`tel:${number}`}
