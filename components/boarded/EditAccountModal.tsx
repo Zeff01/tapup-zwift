@@ -28,7 +28,8 @@ import { UserIcon, Camera, Edit2, Upload } from "lucide-react";
 import { useUserContext } from "@/providers/user-provider";
 import { toast } from "react-toastify";
 import { uploadImage } from "@/lib/firebase/actions/user.action";
-import { ExtendedUserInterface } from "@/types/types";
+import { ExtendedUserInterface, Photo } from "@/types/types";
+import ImageCropperModal from "./ImageCropperModal";
 
 // Form validation schema
 const editAccountSchema = z.object({
@@ -56,6 +57,8 @@ const EditAccountModal = ({ trigger }: EditAccountModalProps) => {
   );
   const [isLoading, setIsLoading] = useState(false);
   const [isUploadingImage, setIsUploadingImage] = useState(false);
+  const [showCropper, setShowCropper] = useState(false);
+  const [selectedPhoto, setSelectedPhoto] = useState<Photo | null>(null);
   const fileInputRef = useRef<HTMLInputElement>(null);
 
   const form = useForm<EditAccountFormData>({
@@ -81,15 +84,11 @@ const EditAccountModal = ({ trigger }: EditAccountModalProps) => {
     return new Promise((resolve) => {
       const img = new Image();
       img.onload = () => {
-        // Check if image is square and at least 200x200 pixels
+        // Check if image is at least 200x200 pixels
         const isValidSize = img.width >= 200 && img.height >= 200;
-        const isSquare = img.width === img.height;
 
         if (!isValidSize) {
           toast.error("Image must be at least 200x200 pixels");
-          resolve(false);
-        } else if (!isSquare) {
-          toast.error("Image must be square (same width and height)");
           resolve(false);
         } else {
           resolve(true);
@@ -125,24 +124,34 @@ const EditAccountModal = ({ trigger }: EditAccountModalProps) => {
     const isValidImage = await validateImageDimensions(file);
     if (!isValidImage) return;
 
+    // Open cropper instead of directly uploading
+    const imageUrl = URL.createObjectURL(file);
+    setSelectedPhoto({
+      preview: imageUrl,
+      raw: file,
+    });
+    setShowCropper(true);
+  };
+
+  const handleCroppedImage = async (croppedPhoto: Photo) => {
+    setShowCropper(false);
     setIsUploadingImage(true);
     try {
-      const imageUrl = URL.createObjectURL(file);
-
-      const url = await uploadImage({
-        preview: imageUrl,
-        raw: file,
-      });
-
+      const url = await uploadImage(croppedPhoto);
       setAvatarUrl(url);
-
       toast.success("Image uploaded successfully!");
     } catch (error) {
       console.error("Error uploading image:", error);
       toast.error("Failed to upload image. Please try again.");
     } finally {
       setIsUploadingImage(false);
+      setSelectedPhoto(null);
     }
+  };
+
+  const handleCropperClose = () => {
+    setShowCropper(false);
+    setSelectedPhoto(null);
   };
 
   const handleSubmit = async (data: EditAccountFormData) => {
@@ -202,129 +211,142 @@ const EditAccountModal = ({ trigger }: EditAccountModalProps) => {
   }
 
   return (
-    <Dialog open={isOpen} onOpenChange={handleOpenChange}>
-      <DialogTrigger asChild>
-        {trigger || (
-          <span className="ml-auto flex cursor-pointer ">
-            <Edit2 className="size-4" />
-          </span>
-        )}
-      </DialogTrigger>
-      <DialogContent className="sm:max-w-md">
-        <DialogHeader className="mb-4">
-          <DialogTitle>Edit Account</DialogTitle>
-          <DialogDescription>
-            Update your account information and profile picture.
-          </DialogDescription>
-        </DialogHeader>
+    <>
+      <Dialog open={isOpen} onOpenChange={handleOpenChange}>
+        <DialogTrigger asChild>
+          {trigger || (
+            <span className="ml-auto flex cursor-pointer ">
+              <Edit2 className="size-4" />
+            </span>
+          )}
+        </DialogTrigger>
+        <DialogContent className="sm:max-w-md">
+          <DialogHeader className="mb-4">
+            <DialogTitle>Edit Account</DialogTitle>
+            <DialogDescription>
+              Update your account information and profile picture.
+            </DialogDescription>
+          </DialogHeader>
 
-        <Form {...form}>
-          <form
-            onSubmit={form.handleSubmit(handleSubmit)}
-            className="space-y-6"
-          >
-            {/* Avatar Upload Section */}
-            <div className="flex flex-col items-center space-y-3">
-              <div className="relative">
-                <Avatar className="h-20 w-20">
-                  <AvatarImage src={avatarUrl || undefined} />
-                  <AvatarFallback className="bg-muted">
-                    <UserIcon className="h-10 w-10 text-muted-foreground" />
-                  </AvatarFallback>
-                </Avatar>
-                {avatarUrl && (
-                  <div className="absolute -bottom-1 -right-1 bg-primary rounded-full p-1">
-                    <Camera className="h-3 w-3 text-primary-foreground" />
+          <Form {...form}>
+            <form
+              onSubmit={form.handleSubmit(handleSubmit)}
+              className="space-y-6"
+            >
+              {/* Avatar Upload Section */}
+              <div className="flex flex-col items-center space-y-3">
+                <div className="relative">
+                  <Avatar className="h-20 w-20">
+                    <AvatarImage src={avatarUrl || undefined} />
+                    <AvatarFallback className="bg-muted">
+                      <UserIcon className="h-10 w-10 text-muted-foreground" />
+                    </AvatarFallback>
+                  </Avatar>
+                  {avatarUrl && (
+                    <div className="absolute -bottom-1 -right-1 bg-primary rounded-full p-1">
+                      <Camera className="h-3 w-3 text-primary-foreground" />
+                    </div>
+                  )}
+                </div>
+
+                <div className="flex flex-col items-center space-y-2">
+                  <input
+                    ref={fileInputRef}
+                    type="file"
+                    accept="image/*"
+                    onChange={handleImageUpload}
+                    className="hidden"
+                  />
+                  <Button
+                    type="button"
+                    variant="outline"
+                    size="sm"
+                    onClick={() => fileInputRef.current?.click()}
+                    disabled={isUploadingImage}
+                    className="gap-2"
+                  >
+                    <Upload className="h-4 w-4" />
+                    {isUploadingImage ? "Uploading..." : "Change Avatar"}
+                  </Button>
+                  <div className="text-center">
+                    <p className="text-xs text-muted-foreground">
+                      Min 200x200px • Max 5MB
+                    </p>
+                    <p className="text-xs text-muted-foreground">
+                      Supported: JPG, PNG, GIF
+                    </p>
                   </div>
-                )}
+                </div>
               </div>
 
-              <div className="flex flex-col items-center space-y-2">
-                <input
-                  ref={fileInputRef}
-                  type="file"
-                  accept="image/*"
-                  onChange={handleImageUpload}
-                  className="hidden"
+              {/* Form Fields */}
+              <div className="grid grid-cols-2 gap-4">
+                <FormField
+                  control={form.control}
+                  name="firstName"
+                  render={({ field }) => (
+                    <FormItem>
+                      <FormLabel>First Name</FormLabel>
+                      <FormControl>
+                        <Input
+                          placeholder="Enter first name"
+                          {...field}
+                          disabled={isLoading}
+                        />
+                      </FormControl>
+                      <FormMessage />
+                    </FormItem>
+                  )}
                 />
+
+                <FormField
+                  control={form.control}
+                  name="lastName"
+                  render={({ field }) => (
+                    <FormItem>
+                      <FormLabel>Last Name</FormLabel>
+                      <FormControl>
+                        <Input
+                          placeholder="Enter last name"
+                          {...field}
+                          disabled={isLoading}
+                        />
+                      </FormControl>
+                      <FormMessage />
+                    </FormItem>
+                  )}
+                />
+              </div>
+
+              <DialogFooter>
                 <Button
                   type="button"
                   variant="outline"
-                  size="sm"
-                  onClick={() => fileInputRef.current?.click()}
-                  disabled={isUploadingImage}
-                  className="gap-2"
+                  onClick={handleClose}
+                  disabled={isLoading}
                 >
-                  <Upload className="h-4 w-4" />
-                  {isUploadingImage ? "Uploading..." : "Change Avatar"}
+                  Cancel
                 </Button>
-                <div className="text-center">
-                  <p className="text-xs text-muted-foreground">
-                    Square image required • Min 200x200px • Max 5MB
-                  </p>
-                  <p className="text-xs text-muted-foreground">
-                    Supported: JPG, PNG, GIF
-                  </p>
-                </div>
-              </div>
-            </div>
+                <Button type="submit" variant="green" disabled={isLoading}>
+                  {isLoading ? "Saving..." : "Save Changes"}
+                </Button>
+              </DialogFooter>
+            </form>
+          </Form>
+        </DialogContent>
+      </Dialog>
 
-            {/* Form Fields */}
-            <div className="grid grid-cols-2 gap-4">
-              <FormField
-                control={form.control}
-                name="firstName"
-                render={({ field }) => (
-                  <FormItem>
-                    <FormLabel>First Name</FormLabel>
-                    <FormControl>
-                      <Input
-                        placeholder="Enter first name"
-                        {...field}
-                        disabled={isLoading}
-                      />
-                    </FormControl>
-                    <FormMessage />
-                  </FormItem>
-                )}
-              />
-
-              <FormField
-                control={form.control}
-                name="lastName"
-                render={({ field }) => (
-                  <FormItem>
-                    <FormLabel>Last Name</FormLabel>
-                    <FormControl>
-                      <Input
-                        placeholder="Enter last name"
-                        {...field}
-                        disabled={isLoading}
-                      />
-                    </FormControl>
-                    <FormMessage />
-                  </FormItem>
-                )}
-              />
-            </div>
-
-            <DialogFooter>
-              <Button
-                type="button"
-                variant="outline"
-                onClick={handleClose}
-                disabled={isLoading}
-              >
-                Cancel
-              </Button>
-              <Button type="submit" variant="green" disabled={isLoading}>
-                {isLoading ? "Saving..." : "Save Changes"}
-              </Button>
-            </DialogFooter>
-          </form>
-        </Form>
-      </DialogContent>
-    </Dialog>
+      {/* Cropper Modal */}
+      {showCropper && selectedPhoto && (
+        <ImageCropperModal
+          open={showCropper}
+          onClose={handleCropperClose}
+          photo={selectedPhoto}
+          onCrop={handleCroppedImage}
+          aspectRatio={1}
+        />
+      )}
+    </>
   );
 };
 
