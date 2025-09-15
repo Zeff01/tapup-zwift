@@ -288,7 +288,7 @@ export default function CardsAndUsersCreateFields({
                       <div className="rounded-lg animate-pulse absolute w-full h-full" />
                       <div className="flex flex-col items-center relative w-full">
                         <div className="w-full">
-                          <ImageCropperNew
+                          <ImageCropper
                             imageUrl={coverPhotoUrl}
                             setImageUrl={setCoverPhotoUrl}
                             photo={coverPhoto}
@@ -328,7 +328,7 @@ export default function CardsAndUsersCreateFields({
                       <div className="">
                         <h1 className="text-lg font-semibold mt-2">Photos</h1>
                         <div className="w-full mt-2">
-                          <ImageCropperNew
+                          <ImageCropper
                             imageUrl={null}
                             setImageUrl={addServiceImageUrl}
                             photo={null}

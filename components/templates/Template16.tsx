@@ -1,3 +1,5 @@
+"use client";
+
 import { getCopyrightYear } from "@/lib/utils";
 import { Card } from "@/types/types";
 import Image from "next/image";
@@ -8,6 +10,8 @@ import {
   TemplateContainer,
   TemplateFooter,
 } from "./templatesComponents";
+import { ImageViewer, useImageViewer } from "@/components/ImageViewer";
+import { ClickableImage } from "./templatesComponents/ClickableImage";
 
 const Template16 = ({
   id,
@@ -35,6 +39,8 @@ const Template16 = ({
   companies,
   owner,
 }: Card) => {
+  const { viewerState, openViewer, closeViewer } = useImageViewer();
+  
   const userProfile = {
     id,
     owner,
@@ -47,6 +53,13 @@ const Template16 = ({
     websiteUrl,
     customUrl,
   };
+  
+  // Collect all images for the viewer
+  const allImages = [
+    profilePictureUrl,
+    coverPhotoUrl,
+    ...(companies?.flatMap(company => company.servicePhotos || []) || [])
+  ].filter(Boolean) as string[];
 
   return (
     <TemplateContainer
@@ -65,20 +78,22 @@ const Template16 = ({
             aria-label="Cover Section"
             className="w-full max-w-md h-40 relative"
           >
-            <Image
+            <ClickableImage
               src={coverPhotoUrl || "/assets/template2coverphoto.png"}
               alt="Cover"
               fill
               className="object-cover"
               priority
+              onClick={() => openViewer(allImages.indexOf(coverPhotoUrl || "/assets/template2coverphoto.png"), allImages)}
             />
             <div className="w-20 h-20 rounded-full border-[5px] border-white overflow-hidden shadow-md flex-shrink-0 absolute z-20 -bottom-10 left-4">
-              <Image
+              <ClickableImage
                 src={profilePictureUrl || "/assets/template4samplepic.png"}
                 alt="Profile"
                 width={96}
                 height={96}
                 className="w-full h-full object-cover"
+                onClick={() => openViewer(allImages.indexOf(profilePictureUrl || "/assets/template4samplepic.png"), allImages)}
               />
             </div>
           </section>
@@ -383,12 +398,10 @@ const Template16 = ({
       </TemplateFooter>
       
       <ImageViewer
-        images={imageViewer.images}
-        isOpen={imageViewer.isOpen}
-        currentIndex={imageViewer.currentIndex}
-        onClose={imageViewer.closeViewer}
-        onNext={imageViewer.nextImage}
-        onPrevious={imageViewer.previousImage}
+        images={viewerState.images}
+        isOpen={viewerState.isOpen}
+        currentIndex={viewerState.currentIndex}
+        onClose={closeViewer}
       />
     </TemplateContainer>
   );
