@@ -713,8 +713,9 @@ const PreviewCreateForm = ({
                             )}
 
                             {/* Navigation Buttons */}
-                            <div className="flex justify-between items-center mt-8 pt-6 border-t">
-                                <div className="flex items-center gap-2 text-sm text-gray-500">
+                            <div className="mt-8 pt-6 border-t">
+                                {/* Step Progress Indicator */}
+                                <div className="flex items-center gap-2 text-sm text-gray-500 mb-4">
                                     <span>
                                         Step {currentStep} of {steps.length}
                                     </span>
@@ -725,7 +726,8 @@ const PreviewCreateForm = ({
                                     )}
                                 </div>
 
-                                <div className="flex gap-3">
+                                {/* Navigation Buttons */}
+                                <div className="flex justify-end gap-3">
                                     {currentStep > 1 && (
                                         <Button
                                             type="button"
