@@ -47,7 +47,7 @@ import {
   GripVertical,
   Loader2Icon,
   QrCode,
-  Trash2,
+  Eraser,
 } from "lucide-react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
@@ -337,7 +337,7 @@ const DigitalCard = ({ card, confirm, user }: Prop) => {
       tooltip: "Share Card",
     },
     {
-      icon: Trash2,
+      icon: Eraser,
       fn: () => setClearCardDialogOpen(true),
       tooltip: "Clear Card Data",
     },
