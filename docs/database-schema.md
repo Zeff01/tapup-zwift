@@ -30,9 +30,36 @@ Digital business card data and configurations.
 - `status` (string) - "active", "reserved", "inactive"
 - `activated` (boolean) - Whether card is activated
 - `customUrl` (string) - Custom URL path for the card
-- `lastCustomUrlChange` (timestamp) - URL change timestamp
-- `cardData` (object) - All card content and customization
-  - Personal info, social links, company details, etc.
+- `customUrlUpdatedAt` (timestamp) - URL change timestamp
+- `disabled` (boolean) - Whether card is disabled/enabled
+- `printStatus` (boolean) - Whether card has been printed
+- `portfolioStatus` (boolean) - Whether card has portfolio content
+- `onboarding` (boolean) - Whether card has completed onboarding
+- `subscription_id` (string) - Foreign key to subscriptions.id
+- `expiryDate` (number) - Calculated expiry timestamp
+- `cardName` (string) - User-defined card name
+- `timestamp` (timestamp) - Last modification timestamp
+- Personal Information Fields:
+  - `firstName` (string) - First name on card
+  - `lastName` (string) - Last name on card
+  - `email` (string) - Contact email
+  - `number` (string) - Contact phone number
+  - `position` (string) - Job title/position
+  - `company` (string) - Company name
+  - `companyBackground` (string) - Company description
+  - `serviceDescription` (string) - Services offered
+  - `servicePhotos` (array) - Array of service image URLs
+  - `coverPhotoUrl` (string) - Cover photo URL
+  - `profilePictureUrl` (string) - Profile picture URL
+- Social Media Links:
+  - `facebookUrl` (string) - Facebook profile URL
+  - `youtubeUrl` (string) - YouTube channel URL
+  - `instagramUrl` (string) - Instagram profile URL
+  - `twitterUrl` (string) - Twitter/X profile URL
+  - `linkedinUrl` (string) - LinkedIn profile URL
+  - `whatsappNumber` (string) - WhatsApp contact number
+  - `skypeInviteUrl` (string) - Skype contact URL
+  - `websiteUrl` (string) - Personal/company website URL
 - `createdAt` (timestamp) - Card creation date
 - `updatedAt` (timestamp) - Last update timestamp
 
@@ -55,15 +82,10 @@ Card subscription and expiration tracking.
 
 **Fields:**
 - `id` (string) - Primary key, auto-generated
-- `cardId` (string) - Foreign key to cards.id
-- `userId` (string) - Foreign key to user-account.uid
-- `planId` (string) - Subscription plan ID
-- `planName` (string) - Plan name (e.g., "1 Year Plan")
-- `price` (number) - Subscription price
-- `durationDays` (number) - Subscription duration
-- `startDate` (timestamp) - Subscription start
-- `endDate` (timestamp) - Subscription expiration
-- `status` (string) - "active", "expired", "cancelled"
+- `card_id` (string) - Foreign key to cards.id
+- `user_id` (string) - Foreign key to user-account.uid
+- `subscriptionDays` (number) - Subscription duration in days
+- `dateStarted` (timestamp) - Subscription start date
 - `createdAt` (timestamp) - Subscription creation date
 
 ### 5. transactions

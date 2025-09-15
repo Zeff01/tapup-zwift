@@ -130,7 +130,7 @@ export function TemplateGrid({
       <h1 className="text-lg font-semibold mb-4">Choose a Template</h1>
 
       {/* Grid Layout */}
-      <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-4">
+      <div className="grid grid-cols-2 md:grid-cols-3 gap-6">
         {templates.map((template) => (
           <div
             key={template.id}
@@ -151,7 +151,7 @@ export function TemplateGrid({
             >
               <CardContent className="p-0">
                 {/* Template Image */}
-                <div className="relative aspect-[9/16] bg-gray-100">
+                <div className="relative aspect-[9/20] bg-white">
                   <Image
                     src={template.imageUrl}
                     alt={template.name}

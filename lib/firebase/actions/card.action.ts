@@ -470,32 +470,40 @@ export const transferCardOwnership = async ({
 
     const newOwnerId = userSnap.docs[0].id;
 
-    const subscriptionRef = doc(
-      firebaseDb,
-      "subscriptions",
-      cardData.subscription_id ?? ""
-    );
-
-    const subscriptionSnap = await getDoc(subscriptionRef);
-    const subscriptionData = subscriptionSnap.data();
-
-    const subscriptionUpdateData: { user_id: string; dateStarted?: any } = {
-      user_id: newOwnerId,
-    };
-
-    if (!subscriptionData?.dateStarted) {
-      subscriptionUpdateData.dateStarted = serverTimestamp();
-    }
-
+    // Update card ownership
     const updateCardPromise = updateDoc(cardRef, {
       owner: newOwnerId,
       transferCode: crypto.randomUUID().split("-").slice(0, 2).join("-"),
     });
 
-    const updateSubscriptionPromise = updateDoc(
-      subscriptionRef,
-      subscriptionUpdateData
-    );
+    // Update subscription if it exists
+    let updateSubscriptionPromise = Promise.resolve();
+    
+    if (cardData.subscription_id) {
+      const subscriptionRef = doc(
+        firebaseDb,
+        "subscriptions",
+        cardData.subscription_id
+      );
+
+      const subscriptionSnap = await getDoc(subscriptionRef);
+      
+      if (subscriptionSnap.exists()) {
+        const subscriptionData = subscriptionSnap.data();
+        const subscriptionUpdateData: { user_id: string; dateStarted?: any } = {
+          user_id: newOwnerId,
+        };
+
+        if (!subscriptionData?.dateStarted) {
+          subscriptionUpdateData.dateStarted = serverTimestamp();
+        }
+
+        updateSubscriptionPromise = updateDoc(
+          subscriptionRef,
+          subscriptionUpdateData
+        );
+      }
+    }
 
     await Promise.all([updateCardPromise, updateSubscriptionPromise]);
 
@@ -648,43 +656,46 @@ export const transferCardOwnershipUsingCode = async (
     }
 
     const cardRef = doc(firebaseDb, "cards", cardDoc.id);
-    const subscriptionRef = doc(
-      firebaseDb,
-      "subscriptions",
-      cardData.subscription_id
-    );
-
-    const subscriptionSnap = await getDoc(subscriptionRef);
-    const subscriptionData = subscriptionSnap.data();
-
-    const subscriptionUpdateData: { user_id: string; dateStarted?: any } = {
-      user_id: newOwnerId,
-    };
-
-    if (!subscriptionData?.dateStarted) {
-      subscriptionUpdateData.dateStarted = serverTimestamp();
-    }
-
+    
+    // Update card ownership and reset fields
     const updateCardPromise = updateDoc(cardRef, {
       ...resetCardFields(),
       owner: newOwnerId,
       transferCode: crypto.randomUUID().split("-").slice(0, 2).join("-"),
     });
 
-    const updateSubscriptionPromise = updateDoc(
-      subscriptionRef,
-      subscriptionUpdateData
-    );
+    // Update subscription if it exists
+    let updateSubscriptionPromise = Promise.resolve();
+    
+    if (cardData.subscription_id) {
+      const subscriptionRef = doc(
+        firebaseDb,
+        "subscriptions",
+        cardData.subscription_id
+      );
 
-    const [updateCardResult, _] = await Promise.all([
-      updateCardPromise,
-      updateSubscriptionPromise,
-    ]);
+      const subscriptionSnap = await getDoc(subscriptionRef);
+      
+      if (subscriptionSnap.exists()) {
+        const subscriptionData = subscriptionSnap.data();
+        const subscriptionUpdateData: { user_id: string; dateStarted?: any } = {
+          user_id: newOwnerId,
+        };
 
-    console.log(
-      "Card ownership transferred successfully to:",
-      updateCardResult
-    );
+        if (!subscriptionData?.dateStarted) {
+          subscriptionUpdateData.dateStarted = serverTimestamp();
+        }
+
+        updateSubscriptionPromise = updateDoc(
+          subscriptionRef,
+          subscriptionUpdateData
+        );
+      }
+    }
+
+    await Promise.all([updateCardPromise, updateSubscriptionPromise]);
+
+    console.log("Card ownership transferred successfully");
     toast.success("Card transferred successfully!");
     revalidatePath("/admin/print-cards");
     return true;
