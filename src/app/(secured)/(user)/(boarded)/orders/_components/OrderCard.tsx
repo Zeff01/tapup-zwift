@@ -93,8 +93,8 @@ const OrderCard: React.FC<OrderCardProps> = ({ order }) => {
           <div key={index} className="flex gap-3">
             <div className="relative w-16 h-16 flex-shrink-0">
               <Image
-                src={item.product?.image || item.image || '/assets/placeholder.png'}
-                alt={item.product?.title || item.title || 'Product'}
+                src={item.product?.image || '/assets/placeholder.png'}
+                alt={item.product?.title || 'Product'}
                 fill
                 className="object-cover rounded-md"
                 onError={(e) => {
@@ -103,11 +103,11 @@ const OrderCard: React.FC<OrderCardProps> = ({ order }) => {
               />
             </div>
             <div className="flex-1">
-              <p className="font-medium">{item.product?.title || item.title || 'Unknown Product'}</p>
+              <p className="font-medium">{item.product?.title || 'Unknown Product'}</p>
               <p className="text-sm text-gray-500">
-                {item.product?.description || item.description || 'No description'} • Qty: {item.quantity || 1}
+                {item.product?.description || 'No description'} • Qty: {item.quantity || 1}
               </p>
-              <p className="text-sm font-medium">₱{item.product?.price || item.price || 0}</p>
+              <p className="text-sm font-medium">₱{item.product?.price || 0}</p>
             </div>
           </div>
         ))}

@@ -38,7 +38,7 @@ const Template17 = ({
   companies,
   owner,
 }: Card) => {
-  const imageViewer = useImageViewer();
+  const { viewerState, openViewer, closeViewer } = useImageViewer();
   
   const userProfile = {
     id,
@@ -75,7 +75,7 @@ const Template17 = ({
     });
   }
 
-  imageViewer.setImages(allImages);
+  // Images are now passed directly to openViewer
 
   return (
     <TemplateContainer
@@ -96,18 +96,21 @@ const Template17 = ({
           <div className="relative w-full h-48 sm:h-60 overflow-hidden">
             {/* Image with clip-path */}
             {coverPhotoUrl ? (
-              <ClickableImage
-                src={coverPhotoUrl}
-                alt="Cover"
-                width={480}
-                height={240}
-                className="w-full h-full object-cover rounded-t-xl sm:rounded-t-[2rem]"
+              <div
                 style={{
                   clipPath:
                     "polygon(0 0, 100% 0, 100% 100%, 75% 85%, 50% 70%, 25% 85%, 0 100%)",
                 }}
-                onClick={() => imageViewer.openViewer(profilePictureUrl ? 1 : 0)}
-              />
+              >
+                <ClickableImage
+                  src={coverPhotoUrl}
+                  alt="Cover"
+                  width={480}
+                  height={240}
+                  className="w-full h-full object-cover rounded-t-xl sm:rounded-t-[2rem]"
+                  onClick={() => openViewer(allImages, profilePictureUrl ? 1 : 0)}
+                />
+              </div>
             ) : (
               <Image
                 src="/assets/template-7-cover-photo.jpeg"
@@ -133,7 +136,7 @@ const Template17 = ({
                   width={96}
                   height={96}
                   className="w-full h-full object-cover"
-                  onClick={() => imageViewer.openViewer(0)}
+                  onClick={() => openViewer(allImages, 0)}
                 />
               ) : (
                 <Image
@@ -335,7 +338,7 @@ const Template17 = ({
                         {c.servicePhotos.length === 1 ? (
                           <div className="rounded-lg overflow-hidden border border-gray-200">
                             <ClickableImage
-                              src={c.servicePhotos[0]}
+                              src={c.servicePhotos?.[0]}
                               alt={`${c.company} portfolio`}
                               width={600}
                               height={400}
@@ -348,7 +351,7 @@ const Template17 = ({
                                     photoIndex += comp.servicePhotos.length;
                                   }
                                 });
-                                imageViewer.openViewer(photoIndex);
+                                openViewer(allImages, photoIndex);
                               }}
                             />
                           </div>
@@ -374,7 +377,7 @@ const Template17 = ({
                                       }
                                     });
                                     photoIndex += pIdx;
-                                    imageViewer.openViewer(photoIndex);
+                                    openViewer(allImages, photoIndex);
                                   }}
                                 />
                               </div>
@@ -416,14 +419,13 @@ const Template17 = ({
         </div>
       </TemplateFooter>
       
-      <ImageViewer
-        images={imageViewer.images}
-        isOpen={imageViewer.isOpen}
-        currentIndex={imageViewer.currentIndex}
-        onClose={imageViewer.closeViewer}
-        onNext={imageViewer.nextImage}
-        onPrevious={imageViewer.previousImage}
-      />
+      {viewerState.isOpen && (
+        <ImageViewer
+          images={viewerState.images}
+          initialIndex={viewerState.initialIndex}
+          onClose={closeViewer}
+        />
+      )}
     </TemplateContainer>
   );
 };

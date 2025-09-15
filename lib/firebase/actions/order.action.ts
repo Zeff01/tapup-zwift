@@ -52,7 +52,6 @@ export async function getAllOrders(): Promise<Order[]> {
       // Transform transaction to order format
       const order: Order = {
         orderId: data.orderId || doc.id,
-        userId: data.userId,
         items: (data.items || []).map((item: any) => ({
           quantity: item.quantity || 1,
           product: {
@@ -198,7 +197,6 @@ export async function getOrdersByUserId(userId: string): Promise<Order[]> {
           // Transform transaction to order format
           const order: Order = {
             orderId: data.orderId || doc.id,
-            userId: data.uid || data.userId,
             items: (data.items || []).map((item: any) => ({
               quantity: item.quantity || 1,
               product: {
@@ -244,7 +242,6 @@ export async function getOrdersByUserId(userId: string): Promise<Order[]> {
       // Transform transaction to order format
       const order: Order = {
         orderId: data.orderId || doc.id,
-        userId: data.userId,
         items: (data.items || []).map((item: any) => ({
           quantity: item.quantity || 1,
           product: {

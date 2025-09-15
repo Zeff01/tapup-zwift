@@ -170,7 +170,7 @@ export const ImageCropperEasy: React.FC<ImageCropperEasyProps> = ({
           // Clean up object URL
           URL.revokeObjectURL(objectUrl);
 
-          onCropComplete(croppedPhoto, downloadUrl);
+          onCropComplete(croppedPhoto, downloadUrl || undefined);
           toast.success("Image cropped successfully");
           handleClose();
         } catch (error) {

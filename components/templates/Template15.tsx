@@ -42,7 +42,7 @@ const Template15 = ({
   companies,
   owner,
 }: Card) => {
-  const imageViewer = useImageViewer();
+  const { viewerState, openViewer, closeViewer } = useImageViewer();
   
   const userProfile = {
     id,
@@ -79,7 +79,7 @@ const Template15 = ({
     });
   }
 
-  imageViewer.setImages(allImages);
+  // Images are now passed directly to openViewer
 
   return (
     <TemplateContainer
@@ -112,7 +112,7 @@ const Template15 = ({
               width={480}
               height={144}
               className="object-cover w-full h-32 md:h-36 rounded-t-2xl shadow-lg"
-              onClick={() => imageViewer.openViewer(profilePictureUrl ? 1 : 0)}
+              onClick={() => openViewer(allImages, profilePictureUrl ? 1 : 0)}
             />
           ) : (
             <Image
@@ -141,7 +141,7 @@ const Template15 = ({
                   width={112}
                   height={112}
                   className="object-cover w-full h-full"
-                  onClick={() => imageViewer.openViewer(0)}
+                  onClick={() => openViewer(allImages, 0)}
                 />
               ) : (
                 <Image
@@ -400,7 +400,7 @@ const Template15 = ({
                                     <div className="relative group/photo">
                                       <div className="rounded-xl overflow-hidden border border-[#38bdf8]/40 shadow-lg">
                                         <ClickableImage
-                                          src={company.servicePhotos[0]}
+                                          src={company.servicePhotos?.[0]}
                                           alt={`${company.company} portfolio`}
                                           width={600}
                                           height={400}
@@ -413,7 +413,7 @@ const Template15 = ({
                                                 photoIndex += comp.servicePhotos.length;
                                               }
                                             });
-                                            imageViewer.openViewer(photoIndex);
+                                            openViewer(allImages, photoIndex);
                                           }}
                                         />
                                       </div>
@@ -447,7 +447,7 @@ const Template15 = ({
                                                   }
                                                 });
                                                 photoIndex += photoIdx;
-                                                imageViewer.openViewer(photoIndex);
+                                                openViewer(allImages, photoIndex);
                                               }}
                                             />
                                             <div className="absolute inset-0 bg-gradient-to-t from-[#38bdf8]/60 via-transparent to-transparent opacity-0 group-hover/photo:opacity-100 transition-opacity duration-300"></div>
@@ -499,14 +499,13 @@ const Template15 = ({
         </div>
       </TemplateFooter>
       
-      <ImageViewer
-        images={imageViewer.images}
-        isOpen={imageViewer.isOpen}
-        currentIndex={imageViewer.currentIndex}
-        onClose={imageViewer.closeViewer}
-        onNext={imageViewer.nextImage}
-        onPrevious={imageViewer.previousImage}
-      />
+      {viewerState.isOpen && (
+        <ImageViewer
+          images={viewerState.images}
+          initialIndex={viewerState.initialIndex}
+          onClose={closeViewer}
+        />
+      )}
     </TemplateContainer>
   );
 };

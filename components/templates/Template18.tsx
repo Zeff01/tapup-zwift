@@ -38,7 +38,7 @@ const Template18 = ({
   companies,
   owner,
 }: Card) => {
-  const imageViewer = useImageViewer();
+  const { viewerState, openViewer, closeViewer } = useImageViewer();
   
   const userProfile = {
     id,
@@ -75,7 +75,7 @@ const Template18 = ({
     });
   }
 
-  imageViewer.setImages(allImages);
+  // Images are now passed directly to openViewer
 
   return (
     <TemplateContainer
@@ -127,7 +127,7 @@ const Template18 = ({
               style={{
                 backgroundImage: `url(${coverPhotoUrl})`,
               }}
-              onClick={() => imageViewer.openViewer(profilePictureUrl ? 1 : 0)}
+              onClick={() => openViewer(allImages, profilePictureUrl ? 1 : 0)}
             />
           ) : (
             <div
@@ -151,7 +151,7 @@ const Template18 = ({
                       width={96}
                       height={96}
                       className="w-full h-full object-cover"
-                      onClick={() => imageViewer.openViewer(0)}
+                      onClick={() => openViewer(allImages, 0)}
                     />
                   ) : (
                     <Image
@@ -304,7 +304,7 @@ const Template18 = ({
                         {c.servicePhotos.length === 1 ? (
                           <div className="rounded-lg overflow-hidden border border-[#00d4ff]/20">
                             <ClickableImage
-                              src={c.servicePhotos[0]}
+                              src={c.servicePhotos?.[0]}
                               alt={`${c.company} portfolio`}
                               width={600}
                               height={400}
@@ -317,7 +317,7 @@ const Template18 = ({
                                     photoIndex += comp.servicePhotos.length;
                                   }
                                 });
-                                imageViewer.openViewer(photoIndex);
+                                openViewer(allImages, photoIndex);
                               }}
                             />
                           </div>
@@ -343,7 +343,7 @@ const Template18 = ({
                                       }
                                     });
                                     photoIndex += pIdx;
-                                    imageViewer.openViewer(photoIndex);
+                                    openViewer(allImages, photoIndex);
                                   }}
                                 />
                               </div>
@@ -384,14 +384,13 @@ const Template18 = ({
         </div>{" "}
       </TemplateFooter>
       
-      <ImageViewer
-        images={imageViewer.images}
-        isOpen={imageViewer.isOpen}
-        currentIndex={imageViewer.currentIndex}
-        onClose={imageViewer.closeViewer}
-        onNext={imageViewer.nextImage}
-        onPrevious={imageViewer.previousImage}
-      />
+      {viewerState.isOpen && (
+        <ImageViewer
+          images={viewerState.images}
+          initialIndex={viewerState.initialIndex}
+          onClose={closeViewer}
+        />
+      )}
     </TemplateContainer>
   );
 };

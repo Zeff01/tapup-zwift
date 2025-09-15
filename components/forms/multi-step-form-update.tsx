@@ -673,25 +673,48 @@ const MultiStepFormUpdate = ({
                           </h3>
                           <CropperMultipleNew
                             photos={servicePhotoFiles[idx] ?? []}
-                            setPhotos={(photos: Photo[]) => {
-                              setServicePhotoFiles((prev) => {
-                                const updated = [...prev];
-                                updated[idx] = photos;
-                                return updated;
-                              });
-                              setServicePhotoPreviews((prev) => {
-                                const updated = [...prev];
-                                updated[idx] = photos.map(
-                                  (p: Photo) => p.preview
-                                );
-                                return updated;
-                              });
+                            setPhotos={(newPhotos) => {
+                              if (typeof newPhotos === 'function') {
+                                setServicePhotoFiles((prev) => {
+                                  const updated = [...prev];
+                                  updated[idx] = newPhotos(servicePhotoFiles[idx] || []);
+                                  return updated;
+                                });
+                                setServicePhotoPreviews((prev) => {
+                                  const updated = [...prev];
+                                  const photos = newPhotos(servicePhotoFiles[idx] || []);
+                                  updated[idx] = photos.map(
+                                    (p: Photo) => p.preview
+                                  );
+                                  return updated;
+                                });
+                              } else {
+                                setServicePhotoFiles((prev) => {
+                                  const updated = [...prev];
+                                  updated[idx] = newPhotos;
+                                  return updated;
+                                });
+                                setServicePhotoPreviews((prev) => {
+                                  const updated = [...prev];
+                                  updated[idx] = newPhotos.map(
+                                    (p: Photo) => p.preview
+                                  );
+                                  return updated;
+                                });
+                              }
                             }}
                             photosUrl={company.servicePhotos ?? []}
-                            setPhotosUrl={(urls: string[]) => {
-                              const updated = [...companies];
-                              updated[idx].servicePhotos = urls;
-                              setCompanies(updated);
+                            setPhotosUrl={(newUrls) => {
+                              if (typeof newUrls === 'function') {
+                                const updatedUrls = newUrls(company.servicePhotos || []);
+                                const updated = [...companies];
+                                updated[idx].servicePhotos = updatedUrls.filter((u): u is string => u !== null);
+                                setCompanies(updated);
+                              } else {
+                                const updated = [...companies];
+                                updated[idx].servicePhotos = newUrls.filter((u): u is string => u !== null);
+                                setCompanies(updated);
+                              }
                             }}
                             aspect={1}
                             maxPhotos={5}

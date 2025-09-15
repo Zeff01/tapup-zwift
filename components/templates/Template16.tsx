@@ -81,10 +81,10 @@ const Template16 = ({
             <ClickableImage
               src={coverPhotoUrl || "/assets/template2coverphoto.png"}
               alt="Cover"
-              fill
-              className="object-cover"
-              priority
-              onClick={() => openViewer(allImages.indexOf(coverPhotoUrl || "/assets/template2coverphoto.png"), allImages)}
+              width={480}
+              height={160}
+              className="w-full h-full object-cover"
+              onClick={() => openViewer(allImages, allImages.indexOf(coverPhotoUrl || "/assets/template2coverphoto.png"))}
             />
             <div className="w-20 h-20 rounded-full border-[5px] border-white overflow-hidden shadow-md flex-shrink-0 absolute z-20 -bottom-10 left-4">
               <ClickableImage
@@ -93,7 +93,7 @@ const Template16 = ({
                 width={96}
                 height={96}
                 className="w-full h-full object-cover"
-                onClick={() => openViewer(allImages.indexOf(profilePictureUrl || "/assets/template4samplepic.png"), allImages)}
+                onClick={() => openViewer(allImages, allImages.indexOf(profilePictureUrl || "/assets/template4samplepic.png"))}
               />
             </div>
           </section>
@@ -325,7 +325,7 @@ const Template16 = ({
                                   <div className="relative group/photo">
                                     <div className="rounded-xl overflow-hidden border border-gray-200 shadow-sm">
                                       <img
-                                        src={company.servicePhotos[0]}
+                                        src={company.servicePhotos?.[0]}
                                         alt={`${company.company} portfolio`}
                                         className="w-full h-auto object-cover transition-transform duration-300 group-hover/photo:scale-105"
                                       />
@@ -397,12 +397,13 @@ const Template16 = ({
         </div>
       </TemplateFooter>
       
-      <ImageViewer
-        images={viewerState.images}
-        isOpen={viewerState.isOpen}
-        currentIndex={viewerState.currentIndex}
-        onClose={closeViewer}
-      />
+      {viewerState.isOpen && (
+        <ImageViewer
+          images={viewerState.images}
+          initialIndex={viewerState.initialIndex}
+          onClose={closeViewer}
+        />
+      )}
     </TemplateContainer>
   );
 };

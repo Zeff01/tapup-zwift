@@ -186,12 +186,12 @@ const CompanyShowcase = ({
                       <div className="relative group/photo">
                         <div className="rounded-2xl overflow-hidden border border-slate-700/50">
                           <ClickableImage
-                            src={company.servicePhotos[0]}
+                            src={company.servicePhotos?.[0]}
                             alt={`${company.company} portfolio`}
                             width={600}
                             height={400}
                             className="w-full h-auto object-cover transition-transform duration-500 group-hover/photo:scale-105"
-                            onClick={() => onImageClick(company.servicePhotos[0])}
+                            onClick={() => onImageClick(company.servicePhotos?.[0] || '')}
                           />
                         </div>
                         <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-transparent opacity-0 group-hover/photo:opacity-100 transition-opacity duration-300"></div>
@@ -380,31 +380,8 @@ const Template10 = ({
                   onClick={() => openViewer(allImages, 0)}
                 />
               </div>
-            </div>
-            <div className="absolute -bottom-12 left-1/2 transform -translate-x-1/2">
-              {profilePictureUrl ? (
-                <div className="border-[8px] border-black rounded-full mx-auto overflow-hidden">
-                  <Image
-                    src={profilePictureUrl}
-                    alt="Profile Image"
-                    width={80}
-                    height={80}
-                    className="rounded-full w-24 h-24"
-                  />
-                </div>
-              ) : (
-                <div className="bg-black w-28 h-28 rounded-full mx-auto flex items-center justify-center">
-                  <Image
-                    src={"/assets/template10samplepic.png"}
-                    alt="Profile Image"
-                    width={80}
-                    height={80}
-                    className="rounded-full w-24 h-24"
-                  />
-                </div>
-              )}
-            </div>
-          </div>
+            )}
+        </div>
 
           {/* PERSONAL INFORMATION */}
           <div className="text-center mt-14 space-y-1 ">
@@ -500,6 +477,8 @@ const Template10 = ({
           </div>
         </div>
 
+        </div>
+        
         {/* FOOTER */}
         <TemplateFooter className="flex flex-col items-center mt-8 gap-1 text-center text-xs">
           <a
@@ -521,6 +500,7 @@ const Template10 = ({
             © {getCopyrightYear()} Zwiftech. All Rights Reserved.
           </span>
         </TemplateFooter>
+      </div>
       </div>
       
       {viewerState.isOpen && (

@@ -220,13 +220,13 @@ const Template3 = ({
                       {c.servicePhotos.length === 1 ? (
                         <div className="relative overflow-hidden rounded-lg border border-neutral-700">
                           <ClickableImage
-                            src={c.servicePhotos[0]}
+                            src={c.servicePhotos?.[0]}
                             alt={`${c.company} Featured Image`}
                             width={600}
                             height={400}
                             className="object-cover w-full"
                             onClick={() => {
-                              const servicePhotoIndex = allImages.findIndex(img => img === c.servicePhotos[0]);
+                              const servicePhotoIndex = allImages.findIndex(img => img === c.servicePhotos?.[0]);
                               openViewer(allImages, servicePhotoIndex);
                             }}
                           />
