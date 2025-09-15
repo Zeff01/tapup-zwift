@@ -1,6 +1,5 @@
 import { ChosenTemplateType } from "@/components/forms/CardsAndUsersCreateFields";
 import { Card, CardContent } from "@/components/ui/card";
-import { Badge } from "@/components/ui/badge";
 import { Check } from "lucide-react";
 import Image from "next/image";
 import { cn } from "@/lib/utils";
@@ -120,20 +119,18 @@ const templates: Template[] = [
 interface TemplateGridProps {
   selectedTemplateId: ChosenTemplateType;
   setSelectedTemplateId: (id: ChosenTemplateType) => void;
-  showCategories?: boolean;
 }
 
 export function TemplateGrid({
   selectedTemplateId,
   setSelectedTemplateId,
-  showCategories = true,
 }: TemplateGridProps) {
   return (
     <div>
       <h1 className="text-lg font-semibold mb-4">Choose a Template</h1>
 
       {/* Grid Layout */}
-      <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-4">
+      <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-4">
         {templates.map((template) => (
           <div
             key={template.id}
@@ -188,13 +185,6 @@ export function TemplateGrid({
                   <h3 className="text-xs font-semibold text-center text-black">
                     {template.name}
                   </h3>
-                  {showCategories && template.category && (
-                    <div className="flex justify-center mt-1">
-                      <Badge variant="secondary" className="text-xs">
-                        {template.category}
-                      </Badge>
-                    </div>
-                  )}
                 </div>
               </CardContent>
             </Card>
