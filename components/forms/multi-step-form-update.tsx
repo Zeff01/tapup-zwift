@@ -36,8 +36,8 @@ import { useForm } from "react-hook-form";
 import { IoMdClose } from "react-icons/io";
 import { toast } from "react-toastify";
 import { z } from "zod";
-import Cropper from "../Cropper";
-import CropperMultiple from "../CropperMultiple";
+import ImageCropper from "../ImageCropper";
+import CropperMultipleNew from "../CropperMultipleNew";
 import TapupLogo from "../svgs/TapupLogo";
 import { Button } from "../ui/button";
 import { Input } from "../ui/input";
@@ -528,7 +528,7 @@ const MultiStepFormUpdate = ({
                     <div>
                       <h2 className="text-lg font-semibold mb-2">Profile Photo</h2>
                       <div className="w-full flex justify-center items-center flex-col">
-                        <Cropper
+                        <ImageCropper
                           imageUrl={imageUrl}
                           setImageUrl={setImageUrl}
                           photo={photo}
@@ -571,7 +571,7 @@ const MultiStepFormUpdate = ({
                     <div>
                       <h2 className="text-lg font-semibold mb-2">Cover Photo</h2>
                       <div className="w-full">
-                      <Cropper
+                      <ImageCropper
                         imageUrl={coverPhotoUrl}
                         setImageUrl={setCoverPhotoUrl}
                         photo={coverPhoto}
@@ -671,16 +671,7 @@ const MultiStepFormUpdate = ({
                           <h3 className="text-sm leading-none font-medium my-2">
                             Service Photos
                           </h3>
-                          <CropperMultiple
-                            previewImageUrl={null}
-                            imageUrls={company.servicePhotos ?? []}
-                            setImageUrls={(urls: string[]) => {
-                              const updated = [...companies];
-                              updated[idx].servicePhotos = urls;
-                              setCompanies(updated);
-                            }}
-                            previewPhoto={null}
-                            aspect={1}
+                          <CropperMultipleNew
                             photos={servicePhotoFiles[idx] ?? []}
                             setPhotos={(photos: Photo[]) => {
                               setServicePhotoFiles((prev) => {
@@ -696,26 +687,25 @@ const MultiStepFormUpdate = ({
                                 return updated;
                               });
                             }}
-                            className="w-full aspect-[2.5/1] rounded-xl overflow-hidden border-dashed border-2"
-                            imageClassName="rounded-2xl"
-                            disableUpload={
-                              (company.servicePhotos?.length ?? 0) >= 5
-                            }
+                            photosUrl={company.servicePhotos ?? []}
+                            setPhotosUrl={(urls: string[]) => {
+                              const updated = [...companies];
+                              updated[idx].servicePhotos = urls;
+                              setCompanies(updated);
+                            }}
+                            aspect={1}
+                            maxPhotos={5}
                             fallback={
-                              <div className="w-full aspect-[2.5/1] flex flex-col items-center gap-y-1">
+                              <div className="flex flex-col items-center gap-y-1 justify-center h-full">
                                 <Image
                                   src={"/assets/image-plus.svg"}
                                   width={50}
                                   height={50}
                                   alt="plus"
-                                  className="size-8 mt-2 border p-2 rounded-md cursor-pointer"
+                                  className="size-8 border p-2 rounded-md"
                                 />
-                                <p className="text-[#767676] text-sm">
-                                  Drop your image here or{" "}
-                                  <span className="text-green-500">browse</span>
-                                </p>
-                                <p className="text-[#767676] text-[10px]">
-                                  PNG, JPEG, GIF under 25MB
+                                <p className="text-[#767676] text-xs">
+                                  Add Photo
                                 </p>
                               </div>
                             }

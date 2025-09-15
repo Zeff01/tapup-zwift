@@ -29,7 +29,7 @@ import { useUserContext } from "@/providers/user-provider";
 import { toast } from "react-toastify";
 import { uploadImage } from "@/lib/firebase/actions/user.action";
 import { ExtendedUserInterface, Photo } from "@/types/types";
-import ImageCropperModal from "./ImageCropperModal";
+import ImageCropper from "../ImageCropper";
 
 // Form validation schema
 const editAccountSchema = z.object({
@@ -56,10 +56,7 @@ const EditAccountModal = ({ trigger }: EditAccountModalProps) => {
     user?.profilePictureUrl || null
   );
   const [isLoading, setIsLoading] = useState(false);
-  const [isUploadingImage, setIsUploadingImage] = useState(false);
-  const [showCropper, setShowCropper] = useState(false);
   const [selectedPhoto, setSelectedPhoto] = useState<Photo | null>(null);
-  const fileInputRef = useRef<HTMLInputElement>(null);
 
   const form = useForm<EditAccountFormData>({
     resolver: zodResolver(editAccountSchema),
@@ -80,78 +77,12 @@ const EditAccountModal = ({ trigger }: EditAccountModalProps) => {
     }
   }, [user, form]);
 
-  const validateImageDimensions = (file: File): Promise<boolean> => {
-    return new Promise((resolve) => {
-      const img = new Image();
-      img.onload = () => {
-        // Check if image is at least 200x200 pixels
-        const isValidSize = img.width >= 200 && img.height >= 200;
-
-        if (!isValidSize) {
-          toast.error("Image must be at least 200x200 pixels");
-          resolve(false);
-        } else {
-          resolve(true);
-        }
-      };
-      img.onerror = () => {
-        toast.error("Invalid image file");
-        resolve(false);
-      };
-      img.src = URL.createObjectURL(file);
-    });
+  const handlePhotoChange = (photo: Photo | null) => {
+    setSelectedPhoto(photo);
   };
-
-  const handleImageUpload = async (
-    event: React.ChangeEvent<HTMLInputElement>
-  ) => {
-    const file = event.target.files?.[0];
-    if (!file) return;
-
-    // Check file size (max 5MB)
-    if (file.size > 5 * 1024 * 1024) {
-      toast.error("Image must be smaller than 5MB");
-      return;
-    }
-
-    // Check file type
-    if (!file.type.startsWith("image/")) {
-      toast.error("Please select a valid image file");
-      return;
-    }
-
-    // Validate image dimensions
-    const isValidImage = await validateImageDimensions(file);
-    if (!isValidImage) return;
-
-    // Open cropper instead of directly uploading
-    const imageUrl = URL.createObjectURL(file);
-    setSelectedPhoto({
-      preview: imageUrl,
-      raw: file,
-    });
-    setShowCropper(true);
-  };
-
-  const handleCroppedImage = async (croppedPhoto: Photo) => {
-    setShowCropper(false);
-    setIsUploadingImage(true);
-    try {
-      const url = await uploadImage(croppedPhoto);
-      setAvatarUrl(url);
-      toast.success("Image uploaded successfully!");
-    } catch (error) {
-      console.error("Error uploading image:", error);
-      toast.error("Failed to upload image. Please try again.");
-    } finally {
-      setIsUploadingImage(false);
-      setSelectedPhoto(null);
-    }
-  };
-
-  const handleCropperClose = () => {
-    setShowCropper(false);
-    setSelectedPhoto(null);
+  
+  const handleUrlChange = (url: string | null) => {
+    setAvatarUrl(url);
   };
 
   const handleSubmit = async (data: EditAccountFormData) => {
@@ -235,47 +166,30 @@ const EditAccountModal = ({ trigger }: EditAccountModalProps) => {
             >
               {/* Avatar Upload Section */}
               <div className="flex flex-col items-center space-y-3">
-                <div className="relative">
-                  <Avatar className="h-20 w-20">
-                    <AvatarImage src={avatarUrl || undefined} />
-                    <AvatarFallback className="bg-muted">
+                <ImageCropper
+                  imageUrl={avatarUrl}
+                  setImageUrl={handleUrlChange}
+                  photo={selectedPhoto}
+                  setPhoto={handlePhotoChange}
+                  aspect={1}
+                  circularCrop
+                  className="h-20 w-20 rounded-full border-2 border-gray-200"
+                  fallback={
+                    <div className="flex items-center justify-center h-full w-full bg-muted rounded-full">
                       <UserIcon className="h-10 w-10 text-muted-foreground" />
-                    </AvatarFallback>
-                  </Avatar>
-                  {avatarUrl && (
-                    <div className="absolute -bottom-1 -right-1 bg-primary rounded-full p-1">
-                      <Camera className="h-3 w-3 text-primary-foreground" />
                     </div>
-                  )}
-                </div>
-
-                <div className="flex flex-col items-center space-y-2">
-                  <input
-                    ref={fileInputRef}
-                    type="file"
-                    accept="image/*"
-                    onChange={handleImageUpload}
-                    className="hidden"
-                  />
-                  <Button
-                    type="button"
-                    variant="outline"
-                    size="sm"
-                    onClick={() => fileInputRef.current?.click()}
-                    disabled={isUploadingImage}
-                    className="gap-2"
-                  >
-                    <Upload className="h-4 w-4" />
-                    {isUploadingImage ? "Uploading..." : "Change Avatar"}
-                  </Button>
-                  <div className="text-center">
-                    <p className="text-xs text-muted-foreground">
-                      Min 200x200px • Max 5MB
-                    </p>
-                    <p className="text-xs text-muted-foreground">
-                      Supported: JPG, PNG, GIF
-                    </p>
-                  </div>
+                  }
+                  showEditButtons={true}
+                  cropperTitle="Crop Profile Photo"
+                />
+                
+                <div className="text-center">
+                  <p className="text-xs text-muted-foreground">
+                    Click to upload • Min 200x200px • Max 5MB
+                  </p>
+                  <p className="text-xs text-muted-foreground">
+                    Supported: JPG, PNG, GIF
+                  </p>
                 </div>
               </div>
 
@@ -336,16 +250,6 @@ const EditAccountModal = ({ trigger }: EditAccountModalProps) => {
         </DialogContent>
       </Dialog>
 
-      {/* Cropper Modal */}
-      {showCropper && selectedPhoto && (
-        <ImageCropperModal
-          open={showCropper}
-          onClose={handleCropperClose}
-          photo={selectedPhoto}
-          onCrop={handleCroppedImage}
-          aspectRatio={1}
-        />
-      )}
     </>
   );
 };

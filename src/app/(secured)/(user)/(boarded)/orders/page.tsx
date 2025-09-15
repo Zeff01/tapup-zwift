@@ -22,13 +22,26 @@ export default function MyOrdersPage() {
   const { user } = useUserContext();
   const [selectedStatus, setSelectedStatus] = useState<OrderStatus>("Pending");
 
+  // Debug logging
+  console.log("MyOrdersPage - User:", user?.uid);
+
   // Fetch user's orders
-  const { data: orders = [], isLoading } = useQuery({
+  const { data: orders = [], isLoading, error } = useQuery({
     queryKey: ["user-orders", user?.uid],
-    queryFn: () => getOrdersByUserId(user?.uid || ""),
+    queryFn: async () => {
+      console.log("Fetching orders for user:", user?.uid);
+      const result = await getOrdersByUserId(user?.uid || "");
+      console.log("Orders fetched:", result);
+      return result;
+    },
     enabled: !!user?.uid,
     staleTime: 1000 * 60 * 5, // 5 minutes
   });
+
+  // Log any errors
+  if (error) {
+    console.error("Error fetching orders:", error);
+  }
 
   // Calculate order counts by status
   const orderCounts = useMemo(() => {

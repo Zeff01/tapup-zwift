@@ -53,7 +53,15 @@ export async function getAllOrders(): Promise<Order[]> {
       const order: Order = {
         orderId: data.orderId || doc.id,
         userId: data.userId,
-        items: data.items || [],
+        items: (data.items || []).map((item: any) => ({
+          quantity: item.quantity || 1,
+          product: {
+            title: item.title || item.product?.title || 'Unknown Product',
+            description: item.description || item.product?.description || 'No description',
+            price: item.price || item.product?.price || 0,
+            image: item.image || item.product?.image || '/assets/placeholder.png'
+          }
+        })),
         shippingInfo: data.shippingInfo || {
           recipientName: "Unknown",
           contactNumber: "Unknown",
@@ -93,6 +101,8 @@ export async function getAllOrders(): Promise<Order[]> {
  */
 export async function getOrdersByUserId(userId: string): Promise<Order[]> {
   try {
+    console.log("[getOrdersByUserId] Called with userId:", userId);
+    
     if (!userId) {
       console.error("No userId provided");
       return [];
@@ -110,9 +120,15 @@ export async function getOrdersByUserId(userId: string): Promise<Order[]> {
       );
       const ordersSnapshot = await getDocs(ordersQuery);
       
+      console.log("[getOrdersByUserId] Orders collection query result:", {
+        empty: ordersSnapshot.empty,
+        size: ordersSnapshot.size
+      });
+      
       if (!ordersSnapshot.empty) {
         ordersSnapshot.forEach((doc) => {
           const data = doc.data();
+          console.log("[getOrdersByUserId] Order doc:", doc.id, data);
           orders.push({
             ...data,
             orderId: doc.id,
@@ -126,7 +142,34 @@ export async function getOrdersByUserId(userId: string): Promise<Order[]> {
     }
 
     // Otherwise, fetch from transactions collection
+    console.log("[getOrdersByUserId] Checking transactions collection for userId:", userId);
+    
     const transactionsRef = collection(firebaseDb, "transactions");
+    
+    // First, let's try to get ALL transactions to see what's there
+    const allTransQuery = query(transactionsRef, orderBy("createdAt", "desc"));
+    const allTransSnapshot = await getDocs(allTransQuery);
+    
+    console.log("[getOrdersByUserId] Total transactions in collection:", allTransSnapshot.size);
+    
+    // Log first few transactions to see their structure
+    let sampleCount = 0;
+    allTransSnapshot.forEach((doc) => {
+      if (sampleCount < 3) {
+        const data = doc.data();
+        console.log(`[getOrdersByUserId] Sample transaction ${doc.id}:`, {
+          userId: data.userId,
+          uid: data.uid,
+          owner: data.owner,
+          user: data.user,
+          createdAt: data.createdAt,
+          status: data.status,
+        });
+        sampleCount++;
+      }
+    });
+    
+    // Now try the specific query
     const transQuery = query(
       transactionsRef,
       where("userId", "==", userId),
@@ -134,13 +177,83 @@ export async function getOrdersByUserId(userId: string): Promise<Order[]> {
     );
     const transSnapshot = await getDocs(transQuery);
     
+    console.log("[getOrdersByUserId] Transactions found for userId", userId, ":", transSnapshot.size);
+    
+    // If no results with userId, try with uid field
+    if (transSnapshot.empty) {
+      console.log("[getOrdersByUserId] No transactions found with userId, trying uid field...");
+      const uidQuery = query(
+        transactionsRef,
+        where("uid", "==", userId),
+        orderBy("createdAt", "desc")
+      );
+      const uidSnapshot = await getDocs(uidQuery);
+      console.log("[getOrdersByUserId] Transactions found with uid field:", uidSnapshot.size);
+      
+      if (!uidSnapshot.empty) {
+        uidSnapshot.forEach((doc) => {
+          const data = doc.data();
+          console.log("[getOrdersByUserId] Processing transaction (uid field):", doc.id);
+          
+          // Transform transaction to order format
+          const order: Order = {
+            orderId: data.orderId || doc.id,
+            userId: data.uid || data.userId,
+            items: (data.items || []).map((item: any) => ({
+              quantity: item.quantity || 1,
+              product: {
+                title: item.title || item.product?.title || 'Unknown Product',
+                description: item.description || item.product?.description || 'No description',
+                price: item.price || item.product?.price || 0,
+                image: item.image || item.product?.image || '/assets/placeholder.png'
+              }
+            })),
+            shippingInfo: data.shippingInfo || {
+              recipientName: "Unknown",
+              contactNumber: "Unknown",
+              address: {
+                city: "Unknown",
+                street: "Unknown",
+                unit: "",
+                postalCode: "Unknown"
+              }
+            },
+            deliveryOption: data.deliveryOption || {
+              name: "Standard Delivery",
+              shippingFee: 0,
+              minDays: 3,
+              maxDays: 7
+            },
+            orderDate: data.createdAt?.toDate() || new Date(),
+            totalAmount: data.totalAmount || 0,
+            status: data.status === "pending-payment" ? "Pending" : 
+                    data.status === "completed" ? "To Ship" : 
+                    data.status || "Pending",
+            returnStatus: data.returnStatus
+          };
+          orders.push(order);
+        });
+        return orders;
+      }
+    }
+    
     transSnapshot.forEach((doc) => {
       const data = doc.data();
+      console.log("[getOrdersByUserId] Processing transaction:", doc.id);
+      
       // Transform transaction to order format
       const order: Order = {
         orderId: data.orderId || doc.id,
         userId: data.userId,
-        items: data.items || [],
+        items: (data.items || []).map((item: any) => ({
+          quantity: item.quantity || 1,
+          product: {
+            title: item.title || item.product?.title || 'Unknown Product',
+            description: item.description || item.product?.description || 'No description',
+            price: item.price || item.product?.price || 0,
+            image: item.image || item.product?.image || '/assets/placeholder.png'
+          }
+        })),
         shippingInfo: data.shippingInfo || {
           recipientName: "Unknown",
           contactNumber: "Unknown",
