@@ -4,9 +4,7 @@ import { useEffect, useRef } from "react";
 import Template1 from "@/components/templates/Template1";
 import Template2 from "@/components/templates/Template2";
 import Template3 from "@/components/templates/Template3";
-import Template4 from "@/components/templates/Template4";
 import Template5 from "@/components/templates/Template5";
-import Template6 from "@/components/templates/Template6";
 import Template7 from "@/components/templates/Template7";
 import Template8 from "@/components/templates/Template8";
 import Template9 from "@/components/templates/Template9";
@@ -83,9 +81,7 @@ const UserPage = ({ userData }: { userData: cardType }) => {
     template1: <Template1 {...userData} />,
     template2: <Template2 {...userData} />,
     template3: <Template3 {...userData} />,
-    template4: <Template4 {...userData} />,
     template5: <Template5 {...userData} />,
-    template6: <Template6 userData={userData} />,
     template7: <Template7 {...userData} />,
     template8: <Template8 {...userData} />,
     template9: <Template9 {...userData} />,

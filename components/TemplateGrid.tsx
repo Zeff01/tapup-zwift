@@ -31,22 +31,10 @@ const templates: Template[] = [
     category: "Modern",
   },
   {
-    id: "template4",
-    name: "Minimalist",
-    imageUrl: "/assets/template4.png",
-    category: "Minimal",
-  },
-  {
     id: "template5",
     name: "Floral",
     imageUrl: "/assets/template5.png",
     category: "Creative",
-  },
-  {
-    id: "template6",
-    name: "Simple White",
-    imageUrl: "/assets/template6.png",
-    category: "Minimal",
   },
   {
     id: "template7",
