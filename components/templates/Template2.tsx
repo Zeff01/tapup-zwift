@@ -115,7 +115,7 @@ const Template2 = ({
             viberUrl={viberUrl}
             whatsappNumber={whatsappNumber}
             websiteUrl={websiteUrl}
-            size="lg"
+            size="md"
             className="gap-1 md:gap-2 xl:gap-4"
             iconClassName="text-white hover:text-gray-100"
           />

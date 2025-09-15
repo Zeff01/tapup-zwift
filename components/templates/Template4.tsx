@@ -70,7 +70,7 @@ const Template4 = ({
           firstName={firstName}
           lastName={lastName}
           variant="overlay"
-          profileSize="xl"
+          profileSize="lg"
           coverHeight="md"
           profilePosition="left"
           defaultProfileImage="/assets/template4samplepic.png"
@@ -86,7 +86,7 @@ const Template4 = ({
           variant="rounded"
           size="sm"
           icons="lucide"
-          className="flex justify-end gap-2.5 pr-4 pt-4"
+          className="flex justify-end gap-2.5 pr-4 pt-2"
           buttonClassName="border-2 border-black bg-white hover:bg-gray-100"
         />
 
@@ -99,9 +99,9 @@ const Template4 = ({
           ) : (
             <h1 className="text-xl font-bold mt-4 ">Hussain Watkins</h1>
           )}
-          <p className="font-semibold text-gray-600 text-xl">
+          {/* <p className="font-semibold text-gray-600 text-xl">
             {position ?? "Chief Technology Officer"}
-          </p>
+          </p> */}
           <p className=" text-gray-600 text-sm">{email}</p>
           <p className=" text-gray-600 text-sm"> {number}</p>
         </div>

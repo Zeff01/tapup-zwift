@@ -185,7 +185,7 @@ export function TemplateGrid({
 
                 {/* Template Info */}
                 <div className="p-2 bg-white">
-                  <h3 className="text-sm font-medium text-center">
+                  <h3 className="text-xs font-semibold text-center text-black">
                     {template.name}
                   </h3>
                   {showCategories && template.category && (

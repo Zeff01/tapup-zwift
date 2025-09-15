@@ -83,11 +83,8 @@ const Template3 = ({
             <h1 className="text-xl font-bold mt-2 text-greenTitle">Jane Doe</h1>
           )}
 
-          <p className="font-semibold text-white text-xl">{position}</p>
-
-          <p className=" text-grayDescription text-sm">{email}</p>
-
-          <p className=" text-grayDescription text-sm"> {number}</p>
+          <p className=" text-gray-400 text-sm">{email}</p>
+          <p className=" text-gray-400 text-sm"> {number}</p>
         </div>
 
         {/* CTA BUTTONS */}
