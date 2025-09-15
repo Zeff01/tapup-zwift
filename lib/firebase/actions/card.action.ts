@@ -657,9 +657,8 @@ export const transferCardOwnershipUsingCode = async (
 
     const cardRef = doc(firebaseDb, "cards", cardDoc.id);
     
-    // Update card ownership and reset fields
+    // Update card ownership without resetting fields
     const updateCardPromise = updateDoc(cardRef, {
-      ...resetCardFields(),
       owner: newOwnerId,
       transferCode: crypto.randomUUID().split("-").slice(0, 2).join("-"),
     });
