@@ -346,10 +346,10 @@ const DigitalCard = ({ card, confirm, user }: Prop) => {
   const CardInfo = (
     <div className="flex-grow flex flex-col justify-between">
       <div>
-        <p className="text-[clamp(1rem,1.4vw,1.1rem)] mt-0 font-semibold capitalize text-white">
+        <p className="text-sm sm:text-base mt-0 font-semibold capitalize text-white [text-shadow:_0_1px_3px_rgb(0_0_0_/_80%),_0_0_8px_rgb(0_0_0_/_50%)]">
           {(card.firstName || "") + " " + (card.lastName || "")}
         </p>
-        <p className="text-[clamp(1rem,1.4vw,1.1rem)] pt-2 sm:pt-3 font-semibold capitalize text-white">
+        <p className="text-xs sm:text-sm pt-1 font-semibold capitalize text-white [text-shadow:_0_1px_3px_rgb(0_0_0_/_80%),_0_0_8px_rgb(0_0_0_/_50%)]">
           {card.cardName || ""}
         </p>
       </div>
@@ -489,8 +489,7 @@ const DigitalCard = ({ card, confirm, user }: Prop) => {
           onTouchEnd={() => setHovered(false)}
           onTouchCancel={() => setHovered(false)}
         >
-          {/* Overlay for text contrast */}
-          <div className="absolute inset-0 bg-gradient-to-b from-black/30 via-black/10 to-black/50 pointer-events-none" />
+          {/* Removed overlay - using text shadows instead */}
           {/* Enable/Disable Toggle Switch */}
           <div className="absolute top-3 right-3 z-40">
             <Tooltip>
