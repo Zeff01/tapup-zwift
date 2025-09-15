@@ -160,6 +160,11 @@ export function TemplateGrid({
                     sizes="(max-width: 640px) 50vw, (max-width: 768px) 33vw, (max-width: 1024px) 25vw, 20vw"
                   />
 
+                  {/* Template Number */}
+                  <div className="absolute top-2 left-2 bg-black/70 text-white rounded px-2 py-1 text-xs font-semibold">
+                    {template.id.replace('template', '')}
+                  </div>
+
                   {/* Selected Indicator */}
                   {selectedTemplateId === template.id && (
                     <div className="absolute top-2 right-2 bg-green-500 text-white rounded-full p-1">
