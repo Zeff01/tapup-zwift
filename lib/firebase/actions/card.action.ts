@@ -479,7 +479,30 @@ export const transferCardOwnership = async ({
     // Update subscription if it exists
     let updateSubscriptionPromise = Promise.resolve();
     
-    if (cardData.subscription_id) {
+    // First try to find subscription by card_id (preferred method)
+    const subscriptionCollection = collection(firebaseDb, "subscriptions");
+    const subscriptionQuery = query(subscriptionCollection, where("card_id", "==", cardId));
+    const subscriptionSnapshot = await getDocs(subscriptionQuery);
+    
+    if (!subscriptionSnapshot.empty) {
+      // Update all subscriptions linked to this card
+      const updatePromises = subscriptionSnapshot.docs.map((doc) => {
+        const subscriptionData = doc.data();
+        const subscriptionUpdateData: { user_id: string; dateStarted?: any } = {
+          user_id: newOwnerId,
+        };
+
+        // Only update dateStarted if it doesn't exist
+        if (!subscriptionData?.dateStarted) {
+          subscriptionUpdateData.dateStarted = serverTimestamp();
+        }
+
+        return updateDoc(doc.ref, subscriptionUpdateData);
+      });
+      
+      updateSubscriptionPromise = Promise.all(updatePromises);
+    } else if (cardData.subscription_id) {
+      // Fallback: try to find by subscription_id field
       const subscriptionRef = doc(
         firebaseDb,
         "subscriptions",
@@ -666,7 +689,30 @@ export const transferCardOwnershipUsingCode = async (
     // Update subscription if it exists
     let updateSubscriptionPromise = Promise.resolve();
     
-    if (cardData.subscription_id) {
+    // First try to find subscription by card_id (preferred method)
+    const subscriptionCollection = collection(firebaseDb, "subscriptions");
+    const subscriptionQuery = query(subscriptionCollection, where("card_id", "==", cardId));
+    const subscriptionSnapshot = await getDocs(subscriptionQuery);
+    
+    if (!subscriptionSnapshot.empty) {
+      // Update all subscriptions linked to this card
+      const updatePromises = subscriptionSnapshot.docs.map((doc) => {
+        const subscriptionData = doc.data();
+        const subscriptionUpdateData: { user_id: string; dateStarted?: any } = {
+          user_id: newOwnerId,
+        };
+
+        // Only update dateStarted if it doesn't exist
+        if (!subscriptionData?.dateStarted) {
+          subscriptionUpdateData.dateStarted = serverTimestamp();
+        }
+
+        return updateDoc(doc.ref, subscriptionUpdateData);
+      });
+      
+      updateSubscriptionPromise = Promise.all(updatePromises);
+    } else if (cardData.subscription_id) {
+      // Fallback: try to find by subscription_id field
       const subscriptionRef = doc(
         firebaseDb,
         "subscriptions",
