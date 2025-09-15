@@ -7,6 +7,7 @@ import {
   duplicateCard,
   toggleCardDisabled,
   transferCardOwnership,
+  clearCardData,
 } from "@/lib/firebase/actions/card.action";
 import { Switch } from "@/components/ui/switch";
 import {
@@ -46,6 +47,7 @@ import {
   GripVertical,
   Loader2Icon,
   QrCode,
+  Trash2,
 } from "lucide-react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
@@ -75,6 +77,7 @@ const DigitalCard = ({ card, confirm, user }: Prop) => {
   const [expiredDialogOpen, setExpiredDialogOpen] = useState(false);
   const [confirmTransferCardDialog, setConfirmTransferCardDialog] =
     useState(false);
+  const [clearCardDialogOpen, setClearCardDialogOpen] = useState(false);
 
   const [openQRCode, setOpenQRCode] = useState(false);
 
@@ -146,13 +149,30 @@ const DigitalCard = ({ card, confirm, user }: Prop) => {
 
   const { mutate: transferOwnershipMutation } = useMutation({
     mutationFn: transferCardOwnership,
+    onSuccess: (data) => {
+      if (data.success) {
+        queryClient.invalidateQueries({ queryKey: ["cards", user?.uid] });
+        toast.success("Ownership transferred successfully");
+        setTransferOpen(false);
+        setNewOwnerEmail("");
+      } else {
+        toast.error(data.message || "Failed to transfer ownership");
+      }
+    },
+    onError: (error) => {
+      toast.error(error instanceof Error ? error.message : "Something went wrong");
+    },
+  });
+
+  const { mutate: clearCardMutation, isPending: isPendingClearCard } = useMutation({
+    mutationFn: clearCardData,
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["cards", user?.uid] });
-      setTransferOpen(false);
-      setNewOwnerEmail("");
+      toast.success("Card data cleared successfully");
+      setClearCardDialogOpen(false);
     },
     onError: () => {
-      toast.error("Something went wrong");
+      toast.error("Failed to clear card data");
     },
   });
 
@@ -283,26 +303,19 @@ const DigitalCard = ({ card, confirm, user }: Prop) => {
 
   const handleTransferOwnership = async () => {
     if (!newOwnerEmail || !card.id) return;
-
-    const { success, message } = await transferCardOwnership({
-      cardId: card.id,
-      newOwnerEmail,
-    });
-
-    if (success) {
-      toast.success("Ownership transferred successfully");
-      setTransferOpen(false);
-      setNewOwnerEmail("");
-      transferOwnershipMutation({ cardId: card.id, newOwnerEmail });
-    } else {
-      toast.error(message);
-    }
+    
     setConfirmTransferCardDialog(false);
+    transferOwnershipMutation({ cardId: card.id, newOwnerEmail });
   };
 
   const handleToggleCard = async () => {
     if (!card.id) return;
     toggleCardMutation(card.id);
+  };
+
+  const handleClearCard = async () => {
+    if (!card.id) return;
+    clearCardMutation(card.id);
   };
 
   const formattedExpiryDate = card.expiryDate
@@ -322,6 +335,11 @@ const DigitalCard = ({ card, confirm, user }: Prop) => {
       icon: QrCode,
       fn: () => setOpenQRCode(true),
       tooltip: "Share Card",
+    },
+    {
+      icon: Trash2,
+      fn: () => setClearCardDialogOpen(true),
+      tooltip: "Clear Card Data",
     },
   ];
 
@@ -805,6 +823,73 @@ const DigitalCard = ({ card, confirm, user }: Prop) => {
         open={openQRCode}
         onClose={() => setOpenQRCode(false)}
       />
+
+      {/* Clear Card Data Dialog */}
+      <Dialog.Root open={clearCardDialogOpen} onOpenChange={setClearCardDialogOpen}>
+        <Dialog.Portal>
+          <Dialog.Overlay className="fixed inset-0 bg-black/50 backdrop-blur-sm z-50" />
+          <Dialog.Content className="fixed inset-0 flex items-center justify-center p-4 z-50">
+            <div className="bg-white dark:bg-gray-900 dark:text-white p-6 rounded-lg shadow-lg max-w-sm w-full">
+              <Dialog.Title className="text-xl font-bold text-red-600">
+                Clear Card Data
+              </Dialog.Title>
+              
+              <div className="mt-4 space-y-3">
+                <p className="text-gray-600 dark:text-gray-300">
+                  Are you sure you want to clear all data from this card?
+                </p>
+                
+                <div className="bg-red-50 dark:bg-red-900/20 border border-red-200 dark:border-red-800 rounded-md p-3">
+                  <p className="text-sm text-red-800 dark:text-red-200 font-medium">
+                    ⚠️ Warning: This action will:
+                  </p>
+                  <ul className="text-sm text-red-700 dark:text-red-300 mt-2 space-y-1 list-disc list-inside">
+                    <li>Remove all personal information</li>
+                    <li>Delete all company data</li>
+                    <li>Clear all social media links</li>
+                    <li>Reset the card to empty state</li>
+                  </ul>
+                  <p className="text-sm text-red-800 dark:text-red-200 font-medium mt-2">
+                    This action cannot be undone!
+                  </p>
+                </div>
+                
+                <div className="bg-gray-100 dark:bg-gray-800 rounded-md p-3">
+                  <p className="text-sm text-gray-700 dark:text-gray-300">
+                    Card: <span className="font-medium">{card.firstName} {card.lastName}</span>
+                  </p>
+                  <p className="text-sm text-gray-700 dark:text-gray-300">
+                    {card.cardName && `Name: ${card.cardName}`}
+                  </p>
+                </div>
+              </div>
+
+              <div className="flex justify-end gap-2 mt-6">
+                <Dialog.Close asChild>
+                  <Button variant="secondary" size="sm" disabled={isPendingClearCard}>
+                    Cancel
+                  </Button>
+                </Dialog.Close>
+                <Button
+                  variant="destructive"
+                  size="sm"
+                  onClick={handleClearCard}
+                  disabled={isPendingClearCard}
+                >
+                  {isPendingClearCard ? (
+                    <>
+                      <Loader2Icon className="mr-2 h-4 w-4 animate-spin" />
+                      Clearing...
+                    </>
+                  ) : (
+                    "Clear Card Data"
+                  )}
+                </Button>
+              </div>
+            </div>
+          </Dialog.Content>
+        </Dialog.Portal>
+      </Dialog.Root>
     </div>
   );
 };
