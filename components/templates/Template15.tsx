@@ -1,3 +1,5 @@
+"use client";
+
 import { getCopyrightYear } from "@/lib/utils";
 import { Card } from "@/types/types";
 import Image from "next/image";
@@ -7,7 +9,9 @@ import {
   Template15CTA,
   TemplateContainer,
   TemplateFooter,
+  ClickableImage,
 } from "./templatesComponents";
+import { ImageViewer, useImageViewer } from "@/components/ImageViewer";
 
 const Template15 = ({
   id,
@@ -31,15 +35,18 @@ const Template15 = ({
   youtubeUrl,
   twitterUrl,
   whatsappNumber,
-  skypeInviteUrl,
   websiteUrl,
   viberUrl,
   tiktokUrl,
   customUrl,
   companies,
+  owner,
 }: Card) => {
+  const { viewerState, openViewer, closeViewer } = useImageViewer();
+  
   const userProfile = {
     id,
+    owner,
     firstName,
     lastName,
     email,
@@ -49,6 +56,30 @@ const Template15 = ({
     websiteUrl,
     customUrl,
   };
+
+  // Collect all images for the viewer
+  const allImages: string[] = [];
+  
+  // Add profile picture if exists
+  if (profilePictureUrl) {
+    allImages.push(profilePictureUrl);
+  }
+  
+  // Add cover photo if exists
+  if (coverPhotoUrl) {
+    allImages.push(coverPhotoUrl);
+  }
+  
+  // Add all service photos from companies
+  if (companies) {
+    companies.forEach((company) => {
+      if (company.servicePhotos && Array.isArray(company.servicePhotos)) {
+        allImages.push(...company.servicePhotos);
+      }
+    });
+  }
+
+  // Images are now passed directly to openViewer
 
   return (
     <TemplateContainer
@@ -60,6 +91,7 @@ const Template15 = ({
       alignItems="center"
       className="py-2 relative overflow-hidden"
     >
+      <div className="flex-grow">
       <div className="max-w-[480px] mx-auto flex flex-col w-full">
         {/* === Profile and Cover Section === */}
         <section
@@ -73,13 +105,24 @@ const Template15 = ({
           >
             <div className="w-32 h-32 rounded-full bg-[#9A3A1975] opacity-80 blur-2xl" />
           </div>
-          <Image
-            src={coverPhotoUrl || "/assets/template2coverphoto.png"}
-            alt="Cover"
-            width={480}
-            height={144}
-            className="object-cover w-full h-32 md:h-36 rounded-t-2xl shadow-lg"
-          />
+          {coverPhotoUrl ? (
+            <ClickableImage
+              src={coverPhotoUrl}
+              alt="Cover"
+              width={480}
+              height={144}
+              className="object-cover w-full h-32 md:h-36 rounded-t-2xl shadow-lg"
+              onClick={() => openViewer(allImages, profilePictureUrl ? 1 : 0)}
+            />
+          ) : (
+            <Image
+              src="/assets/template2coverphoto.png"
+              alt="Cover"
+              width={480}
+              height={144}
+              className="object-cover w-full h-32 md:h-36 rounded-t-2xl shadow-lg"
+            />
+          )}
           {/* Fade effect at the bottom of the cover */}
           <div
             className="absolute left-0 bottom-0 w-full h-10 rounded-t-2xl pointer-events-none"
@@ -91,13 +134,24 @@ const Template15 = ({
           {/* Profile Image - centered and overlapping */}
           <div className="absolute left-1/2 -bottom-14 transform -translate-x-1/2 z-20">
             <div className="w-28 h-28 rounded-full border-4 border-[#7dd3fc] overflow-hidden bg-[#222]">
-              <Image
-                src={profilePictureUrl || "/assets/template4samplepic.png"}
-                alt="Profile"
-                width={112}
-                height={112}
-                className="object-cover w-full h-full"
-              />
+              {profilePictureUrl ? (
+                <ClickableImage
+                  src={profilePictureUrl}
+                  alt="Profile"
+                  width={112}
+                  height={112}
+                  className="object-cover w-full h-full"
+                  onClick={() => openViewer(allImages, 0)}
+                />
+              ) : (
+                <Image
+                  src="/assets/template4samplepic.png"
+                  alt="Profile"
+                  width={112}
+                  height={112}
+                  className="object-cover w-full h-full"
+                />
+              )}
             </div>
           </div>
         </section>
@@ -124,16 +178,24 @@ const Template15 = ({
           </div>
 
           <div className="w-full flex flex-col items-center px-2 sm:px-6">
-            <h1 className="text-xl font-bold text-white text-center">
-              {prefix && `${prefix}. `}
-              {firstName}
-              {middleName && ` ${middleName}`}
-              {lastName && ` ${lastName}`}
-              {suffix && `, ${suffix}`}
-            </h1>
+            {firstName || lastName ? (
+              <h1 className="text-xl font-bold text-white text-center">
+                {prefix && `${prefix}. `}
+                {firstName}
+                {middleName && ` ${middleName}`}
+                {lastName && ` ${lastName}`}
+                {suffix && `, ${suffix}`}
+              </h1>
+            ) : (
+              <h1 className="text-xl font-bold text-white text-center">
+                {" "}
+                Hussain Watkins
+              </h1>
+            )}
 
             <p className="text-sm text-gray-300 font-medium mt-1 mb-5 text-center">
-              {position} {company && `@ ${company}`}
+              {position || "Chief Technology Officer"}{" "}
+              {`@ ${company || "Zwiftech"}`}
             </p>
 
             <div className="flex gap-2 mb-5">
@@ -156,9 +218,10 @@ const Template15 = ({
                 youtubeUrl={youtubeUrl}
                 tiktokUrl={tiktokUrl}
                 whatsappNumber={whatsappNumber}
-                skypeInviteUrl={skypeInviteUrl}
                 viberUrl={viberUrl}
                 websiteUrl={websiteUrl}
+                cardId={id}
+                ownerId={owner}
                 size="md"
                 iconClassName="rounded-full p-2 bg-[#1a425b] text-[#7eabc2] hover:bg-[#245573] size-full "
                 iconSet="outline"
@@ -198,7 +261,7 @@ const Template15 = ({
           )}
 
           {/* === Companies Section === */}
-          {companies?.length > 0 && (
+          {companies.length > 0 && (
             <div className="w-full px-3 mb-6">
               <h2 className="text-base font-bold text-white mb-4 text-center">
                 Professional Portfolio
@@ -336,10 +399,22 @@ const Template15 = ({
                                   {company.servicePhotos.length === 1 ? (
                                     <div className="relative group/photo">
                                       <div className="rounded-xl overflow-hidden border border-[#38bdf8]/40 shadow-lg">
-                                        <img
-                                          src={company.servicePhotos[0]}
+                                        <ClickableImage
+                                          src={company.servicePhotos?.[0]}
                                           alt={`${company.company} portfolio`}
+                                          width={600}
+                                          height={400}
                                           className="w-full h-auto object-cover transition-transform duration-500 group-hover/photo:scale-110"
+                                          onClick={() => {
+                                            let photoIndex = (profilePictureUrl ? 1 : 0) + (coverPhotoUrl ? 1 : 0);
+                                            // Find the index of this specific photo
+                                            companies.forEach((comp, compIdx) => {
+                                              if (compIdx < idx && comp.servicePhotos) {
+                                                photoIndex += comp.servicePhotos.length;
+                                              }
+                                            });
+                                            openViewer(allImages, photoIndex);
+                                          }}
                                         />
                                       </div>
                                       <div className="absolute inset-0 bg-gradient-to-t from-[#38bdf8]/50 via-transparent to-transparent opacity-0 group-hover/photo:opacity-100 transition-opacity duration-300 rounded-xl"></div>
@@ -357,10 +432,23 @@ const Template15 = ({
                                             key={photoIdx}
                                             className="relative group/photo rounded-xl overflow-hidden border border-[#38bdf8]/40 shadow-lg"
                                           >
-                                            <img
+                                            <ClickableImage
                                               src={photo}
                                               alt={`${company.company} portfolio ${photoIdx + 1}`}
+                                              width={300}
+                                              height={200}
                                               className="w-full h-auto object-cover transition-all duration-500 group-hover/photo:scale-110"
+                                              onClick={() => {
+                                                let photoIndex = (profilePictureUrl ? 1 : 0) + (coverPhotoUrl ? 1 : 0);
+                                                // Calculate the correct index
+                                                companies.forEach((comp, compIdx) => {
+                                                  if (compIdx < idx && comp.servicePhotos) {
+                                                    photoIndex += comp.servicePhotos.length;
+                                                  }
+                                                });
+                                                photoIndex += photoIdx;
+                                                openViewer(allImages, photoIndex);
+                                              }}
                                             />
                                             <div className="absolute inset-0 bg-gradient-to-t from-[#38bdf8]/60 via-transparent to-transparent opacity-0 group-hover/photo:opacity-100 transition-opacity duration-300"></div>
                                             <div className="absolute bottom-2 left-2 opacity-0 group-hover/photo:opacity-100 transition-opacity duration-300">
@@ -386,6 +474,7 @@ const Template15 = ({
           )}
         </section>
       </div>
+      </div>
       {/* === Footer Section === */}
       <TemplateFooter className="w-full max-w-md mx-auto text-center text-gray-400 text-sm relative px-2 sm:px-6">
         <div className="flex flex-col pb-4 items-center gap-1 text-center text-xs">
@@ -409,6 +498,14 @@ const Template15 = ({
           </span>
         </div>
       </TemplateFooter>
+      
+      {viewerState.isOpen && (
+        <ImageViewer
+          images={viewerState.images}
+          initialIndex={viewerState.initialIndex}
+          onClose={closeViewer}
+        />
+      )}
     </TemplateContainer>
   );
 };

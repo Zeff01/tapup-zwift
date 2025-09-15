@@ -1,4 +1,4 @@
-import { OrderStatus } from "@/src/app/(secured)/(user)/(boarded)/orders/_components/OrderStatus";
+import { OrderStatus } from "@/src/app/(secured)/(user)/(boarded)/orders/page";
 
 export const statusToUrl: Record<OrderStatus, string> = {
   Pending: "pending",

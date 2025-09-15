@@ -1,3 +1,5 @@
+"use client";
+
 import { getCopyrightYear } from "@/lib/utils";
 import { Card } from "@/types/types";
 import Image from "next/image";
@@ -7,6 +9,8 @@ import {
   Template9Socials,
   TemplateFooter,
 } from "./templatesComponents";
+import { ImageViewer, useImageViewer } from "@/components/ImageViewer";
+import { ClickableImage } from "./templatesComponents/ClickableImage";
 
 // Company Showcase Component for Template9
 const CompanyShowcase = ({
@@ -14,11 +18,13 @@ const CompanyShowcase = ({
   profilePictureUrl,
   firstName,
   lastName,
+  onImageClick,
 }: {
   companies?: Card["companies"];
   profilePictureUrl?: string;
   firstName?: string;
   lastName?: string;
+  onImageClick: (src: string) => void;
 }) => {
   if (!companies || companies.length === 0) {
     return null;
@@ -101,12 +107,13 @@ const CompanyShowcase = ({
                   <div className="pl-4">
                     {company.servicePhotos.length === 1 ? (
                       <div className="rounded-xl overflow-hidden shadow-lg">
-                        <Image
-                          src={company.servicePhotos[0]}
+                        <ClickableImage
+                          src={company.servicePhotos?.[0]}
                           alt={`${company.company} portfolio`}
                           width={600}
                           height={400}
                           className="w-full h-auto object-cover hover:scale-105 transition-transform duration-300"
+                          onClick={() => onImageClick(company.servicePhotos?.[0] || '')}
                         />
                       </div>
                     ) : (
@@ -116,12 +123,13 @@ const CompanyShowcase = ({
                             key={photoIndex}
                             className="rounded-xl overflow-hidden shadow-lg group relative"
                           >
-                            <Image
+                            <ClickableImage
                               src={photo}
                               alt={`${company.company} portfolio ${photoIndex + 1}`}
                               width={300}
                               height={200}
                               className="w-full h-auto object-cover transition-all duration-300 group-hover:scale-110"
+                              onClick={() => onImageClick(photo)}
                             />
                             <div className="absolute inset-0 bg-gradient-to-t from-black/40 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
                             <div className="absolute bottom-2 left-2 opacity-0 group-hover:opacity-100 transition-opacity duration-300">
@@ -203,12 +211,15 @@ const Template9 = ({
   tiktokUrl,
   viberUrl,
   whatsappNumber,
-  skypeInviteUrl,
   websiteUrl,
   customUrl,
+  owner,
 }: Card) => {
+  const { viewerState, openViewer, closeViewer } = useImageViewer();
+  
   const userProfile = {
     id,
+    owner,
     firstName,
     lastName,
     email,
@@ -219,8 +230,22 @@ const Template9 = ({
     customUrl,
   };
 
+  const allImages = [
+    profilePictureUrl || "/assets/template10samplepic.png",
+    coverPhotoUrl || "/assets/template9coverphoto.png",
+    ...(companies?.flatMap(c => c.servicePhotos || []) || [])
+  ].filter(Boolean);
+
+  const handleImageClick = (src: string) => {
+    const index = allImages.findIndex(img => img === src);
+    if (index !== -1) {
+      openViewer(allImages, index);
+    }
+  };
+
   return (
     <Template9Container>
+      <div className="flex-grow">
       <div className="flex flex-col min-h-full max-w-[480px] mx-auto">
         <div className="h-96 relative">
           <div className="absolute flex m-1 top-1 right-1 ">
@@ -234,20 +259,22 @@ const Template9 = ({
 
           <div className="">
             {coverPhotoUrl ? (
-              <Image
+              <ClickableImage
                 src={coverPhotoUrl}
                 alt="Cover Image"
                 width={400}
                 height={200}
                 className="mx-auto w-full object-cover overflow-hidden"
+                onClick={() => openViewer(allImages, 1)}
               />
             ) : (
-              <Image
+              <ClickableImage
                 src={"/assets/template9coverphoto.png"}
                 alt="Cover Image"
                 width={400}
                 height={200}
                 className="mx-auto"
+                onClick={() => openViewer(allImages, 1)}
               />
             )}
           </div>
@@ -255,22 +282,24 @@ const Template9 = ({
           <div className="absolute  z-20 top-[118px] left-1/2 transform -translate-x-1/2 ">
             {profilePictureUrl ? (
               <div className=" rounded-full mx-auto overflow-hidden">
-                <Image
+                <ClickableImage
                   src={profilePictureUrl}
                   alt="Profile Image"
                   width={80}
                   height={80}
                   className="rounded-full w-24 h-24"
+                  onClick={() => openViewer(allImages, 0)}
                 />
               </div>
             ) : (
               <div className=" w-28 h-28 rounded-full mx-auto flex items-center justify-center">
-                <Image
+                <ClickableImage
                   src={"/assets/template10samplepic.png"}
                   alt="Profile Image"
                   width={80}
                   height={80}
                   className="rounded-full w-24 h-24"
+                  onClick={() => openViewer(allImages, 0)}
                 />
               </div>
             )}
@@ -286,13 +315,13 @@ const Template9 = ({
             )}
 
             <p className="text-lg  font-normal text-neutral-700">
-              {position ?? "Chief Technology Officer"}
+              {position || "Chief Technology Officer"}
             </p>
 
             <div className="flex items-center font-light text-sm text-neutral-600 justify-center gap-x-2">
               <input
                 type="text"
-                value={email ?? "H.Watkins@gmail.com"}
+                value={email}
                 readOnly
                 className="max-w-[120px] truncate bg-transparent border-none outline-none cursor-pointer text-center font-light text-sm text-neutral-600"
                 onClick={(e) => {
@@ -303,7 +332,7 @@ const Template9 = ({
               <span>|</span>
               <input
                 type="text"
-                value={String(number ?? +639123456789)}
+                value={String(number)}
                 readOnly
                 className="max-w-[120px] truncate bg-transparent border-none outline-none cursor-pointer text-center font-light text-sm text-neutral-600"
                 onClick={(e) => {
@@ -322,7 +351,6 @@ const Template9 = ({
                 linkedinUrl={linkedinUrl}
                 viberUrl={viberUrl}
                 whatsappNumber={whatsappNumber}
-                skypeInviteUrl={skypeInviteUrl}
                 websiteUrl={websiteUrl}
                 size="lg"
                 iconSet="outline"
@@ -346,9 +374,11 @@ const Template9 = ({
                 profilePictureUrl={profilePictureUrl}
                 firstName={firstName}
                 lastName={lastName}
+                onImageClick={handleImageClick}
               />
             )}
           </div>
+        </div>
         </div>
 
         {/* footer */}
@@ -378,6 +408,14 @@ const Template9 = ({
           </div>
         </TemplateFooter>
       </div>
+      
+      {viewerState.isOpen && (
+        <ImageViewer
+          images={viewerState.images}
+          initialIndex={viewerState.initialIndex}
+          onClose={closeViewer}
+        />
+      )}
     </Template9Container>
   );
 };

@@ -19,9 +19,9 @@ const Template14 = ({
   twitterUrl,
   linkedinUrl,
   whatsappNumber,
-  skypeInviteUrl,
   websiteUrl,
   customUrl,
+  owner,
 }: Card) => {
   // TODO: Implement Template14 design
   return (

@@ -23,13 +23,15 @@ export const getVCardData = (user: Partial<Card>, qrScan?: boolean) => {
     twitterUrl = "",
     youtubeUrl = "",
     whatsappNumber = "",
-    skypeInviteUrl = "",
     viberUrl = "",
     tiktokUrl = "",
+    companies = [],
   } = user;
 
-  const portfolioUrl = customUrl ? customUrl : id;
-  const cardUrl = `https://www.tapup.tech/cards/${id}`;
+  // Generate the digital portfolio URL
+  const digitalPortfolioUrl = customUrl 
+    ? `https://www.tapup.tech/site/${customUrl}`
+    : `https://www.tapup.tech/site/${id}`;
 
   if (!email) {
     console.error("No email available for vCard");
@@ -47,41 +49,84 @@ export const getVCardData = (user: Partial<Card>, qrScan?: boolean) => {
     .join(" ")
     .trim();
 
+  // Get primary company info (either from companies array or fallback to single company fields)
+  const primaryCompany = companies && companies.length > 0 
+    ? companies[0] 
+    : { company, position };
+  
+  // Build company/organization strings
+  const orgStrings = [];
+  if (primaryCompany.company) {
+    orgStrings.push(`ORG:${primaryCompany.company}`);
+  }
+  if (primaryCompany.position) {
+    orgStrings.push(`TITLE:${primaryCompany.position}`);
+  }
+  
+  // Add additional companies as notes
+  const additionalCompanies = companies && companies.length > 1 
+    ? companies.slice(1).map((c, index) => 
+        `NOTE:Company ${index + 2}: ${c.company || ''} - ${c.position || ''}`
+      ).filter(note => note.includes(' - ') && !note.endsWith(' - '))
+    : [];
+
   const vcardFields = [
     "BEGIN:VCARD",
-    "VERSION:4.0",
+    "VERSION:3.0",
     `FN:${formattedName}`,
     `N:${lastName};${firstName};${middleName};${prefix};${suffix}`,
-    company && `ORG:${company}`,
-    position && `TITLE:${position}`,
-    number && `TEL;TYPE=cell:${number}`,
-    `EMAIL;TYPE=work:${email}`,
-    // portfolioUrl && `URL:https://www.tapup.tech/site/${portfolioUrl}`,
-    // qrScan && `URL:${cardUrl}`,
-    // portfolioUrl && `URL:https://www.tapup.tech/site/${portfolioUrl}`,
-    // facebookUrl && `URL:${facebookUrl}\nNOTE:Facebook`,
-    // instagramUrl && `URL:${instagramUrl}\nNOTE:Instagram`,
-    // linkedinUrl && `URL:${linkedinUrl}\nNOTE:LinkedIn`,
-    // twitterUrl && `URL:${twitterUrl}\nNOTE:Twitter`,
-    // youtubeUrl && `URL:${youtubeUrl}\nNOTE:YouTube`,
-    // tiktokUrl && `URL:${tiktokUrl}\nNOTE:TikTok`,
-    // websiteUrl && `URL:${websiteUrl}`,
-    // whatsappNumber && `IMPP:whatsapp:${whatsappNumber}`,
-    // skypeInviteUrl && `IMPP:${skypeInviteUrl}`,
-    // viberUrl && `IMPP:viber:${viberUrl}`,
+    ...orgStrings,
+    number && `TEL;TYPE=CELL:${number}`,
+    `EMAIL;TYPE=WORK,INTERNET:${email}`,
+    // Digital Portfolio URL (primary URL)
+    `URL;TYPE=WORK:${digitalPortfolioUrl}`,
+    // Social media URLs
+    websiteUrl && `URL;TYPE=HOME:${websiteUrl}`,
+    facebookUrl && `X-SOCIALPROFILE;TYPE=facebook:${facebookUrl}`,
+    instagramUrl && `X-SOCIALPROFILE;TYPE=instagram:${instagramUrl}`,
+    linkedinUrl && `X-SOCIALPROFILE;TYPE=linkedin:${linkedinUrl}`,
+    twitterUrl && `X-SOCIALPROFILE;TYPE=twitter:${twitterUrl}`,
+    youtubeUrl && `X-SOCIALPROFILE;TYPE=youtube:${youtubeUrl}`,
+    tiktokUrl && `X-SOCIALPROFILE;TYPE=tiktok:${tiktokUrl}`,
+    whatsappNumber && `TEL;TYPE=CELL,VOICE;PREF:${whatsappNumber}`,
+    viberUrl && `X-SOCIALPROFILE;TYPE=viber:${viberUrl}`,
+    // Add multiple companies as notes
+    ...additionalCompanies,
+    // Add a note about the digital portfolio
+    `NOTE:View my digital portfolio at ${digitalPortfolioUrl}`,
     "END:VCARD",
   ];
 
-  return vcardFields.filter(Boolean).join("\n");
+  return vcardFields.filter(Boolean).join("\r\n");
 };
 
 /**
  * Download vCard file for a user profile
  */
-export const downloadVCard = (userProfile: Partial<Card>) => {
+export const downloadVCard = async (userProfile: Partial<Card>) => {
   const vCardString = getVCardData(userProfile);
 
   if (!vCardString) return;
+
+  // Track VCF download
+  if (userProfile.id && userProfile.owner) {
+    try {
+      await fetch('/api/analytics/track-vcf', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          cardId: userProfile.id,
+          ownerId: userProfile.owner,
+          platform: navigator.userAgent.includes('iPhone') ? 'iOS' : 
+                   navigator.userAgent.includes('Android') ? 'Android' : 'Other'
+        }),
+      });
+    } catch (error) {
+      console.error('Failed to track VCF download:', error);
+    }
+  }
 
   const { firstName, lastName } = userProfile;
   // Create a Blob from the vCard String

@@ -1,3 +1,5 @@
+"use client";
+
 import { getCopyrightYear } from "@/lib/utils";
 import { Card } from "@/types/types";
 import Image from "next/image";
@@ -6,7 +8,9 @@ import {
   Template13Socials,
   TemplateFooter,
   CTAButtons,
+  ClickableImage,
 } from "./templatesComponents";
+import { ImageViewer, useImageViewer } from "@/components/ImageViewer";
 
 // Company Showcase Component for Template13 - Modern Card Design
 const CompanyShowcase = ({
@@ -14,11 +18,17 @@ const CompanyShowcase = ({
   profilePictureUrl,
   firstName,
   lastName,
+  allImages,
+  openViewer,
+  startingIndex,
 }: {
   companies?: Card["companies"];
   profilePictureUrl?: string;
   firstName?: string;
   lastName?: string;
+  allImages?: string[];
+  openViewer?: (images: string[], index: number) => void;
+  startingIndex?: number;
 }) => {
   if (!companies || companies.length === 0) {
     return null;
@@ -165,12 +175,24 @@ const CompanyShowcase = ({
                       {company.servicePhotos.length === 1 ? (
                         <div className="relative group/photo">
                           <div className="rounded-xl overflow-hidden border border-neutral-700 shadow-lg">
-                            <Image
-                              src={company.servicePhotos[0]}
+                            <ClickableImage
+                              src={company.servicePhotos?.[0]}
                               alt={`${company.company} portfolio`}
                               width={600}
                               height={400}
                               className="w-full h-auto object-cover transition-transform duration-500 group-hover/photo:scale-110"
+                              onClick={() => {
+                                if (openViewer && allImages && startingIndex !== undefined) {
+                                  let photoIndex = startingIndex;
+                                  // Find the index of this specific photo
+                                  companies.forEach((comp, compIdx) => {
+                                    if (compIdx < index && comp.servicePhotos) {
+                                      photoIndex += comp.servicePhotos.length;
+                                    }
+                                  });
+                                  openViewer(allImages, photoIndex);
+                                }
+                              }}
                             />
                           </div>
                           <div className="absolute inset-0 bg-gradient-to-t from-[#553838]/60 via-transparent to-transparent opacity-0 group-hover/photo:opacity-100 transition-opacity duration-300 rounded-xl"></div>
@@ -187,12 +209,25 @@ const CompanyShowcase = ({
                               key={photoIndex}
                               className="relative group/photo rounded-xl overflow-hidden border border-neutral-700 shadow-lg"
                             >
-                              <Image
+                              <ClickableImage
                                 src={photo}
                                 alt={`${company.company} portfolio ${photoIndex + 1}`}
                                 width={300}
                                 height={200}
                                 className="w-full h-auto object-cover transition-all duration-500 group-hover/photo:scale-110"
+                                onClick={() => {
+                                  if (openViewer && allImages && startingIndex !== undefined) {
+                                    let photoIdx = startingIndex;
+                                    // Calculate the correct index
+                                    companies.forEach((comp, compIdx) => {
+                                      if (compIdx < index && comp.servicePhotos) {
+                                        photoIdx += comp.servicePhotos.length;
+                                      }
+                                    });
+                                    photoIdx += photoIndex;
+                                    openViewer(allImages, photoIdx);
+                                  }
+                                }}
                               />
                               <div className="absolute inset-0 bg-gradient-to-t from-[#553838]/60 via-transparent to-transparent opacity-0 group-hover/photo:opacity-100 transition-opacity duration-300"></div>
                               <div className="absolute bottom-3 left-3 opacity-0 group-hover/photo:opacity-100 transition-opacity duration-300">
@@ -235,14 +270,17 @@ const Template13 = ({
   youtubeUrl,
   twitterUrl,
   whatsappNumber,
-  skypeInviteUrl,
   websiteUrl,
   viberUrl,
   tiktokUrl,
   customUrl,
+  owner,
 }: Card) => {
+  const { viewerState, openViewer, closeViewer } = useImageViewer();
+  
   const userProfile = {
     id,
+    owner,
     firstName,
     lastName,
     email,
@@ -253,6 +291,30 @@ const Template13 = ({
     customUrl,
   };
 
+  // Collect all images for the viewer
+  const allImages: string[] = [];
+  
+  // Add profile picture if exists
+  if (profilePictureUrl) {
+    allImages.push(profilePictureUrl);
+  }
+  
+  // Add cover photo if exists
+  if (coverPhotoUrl) {
+    allImages.push(coverPhotoUrl);
+  }
+  
+  // Add all service photos from companies
+  if (companies) {
+    companies.forEach((company) => {
+      if (company.servicePhotos && Array.isArray(company.servicePhotos)) {
+        allImages.push(...company.servicePhotos);
+      }
+    });
+  }
+
+  // Images are now passed directly to openViewer
+
   return (
     <TemplateContainer
       backgroundColor="bg-gradient-to-br from-[#1a1a1a] via-[#232323] to-[#553838]"
@@ -262,6 +324,7 @@ const Template13 = ({
       flexDirection="col"
       className="text-white py-2"
     >
+      <div className="flex-grow">
       <div className="max-w-[480px] mx-auto flex flex-col">
         {/* === Profile and Cover Section === */}
         <section
@@ -270,15 +333,13 @@ const Template13 = ({
         >
           <div className="w-full h-40 rounded-2xl overflow-hidden bg-neutral-800 relative">
             {coverPhotoUrl ? (
-              <Image
+              <ClickableImage
                 src={coverPhotoUrl}
                 alt="Cover Photo"
                 width={480}
                 height={160}
                 className="object-cover w-full h-full"
-                onError={(e) => {
-                  e.currentTarget.src = "/assets/sampleCoverPhoto.png";
-                }}
+                onClick={() => openViewer(allImages, profilePictureUrl ? 1 : 0)}
               />
             ) : (
               <Image
@@ -293,36 +354,69 @@ const Template13 = ({
 
           <div className="flex flex-col items-start w-full px-4 -mt-12 z-10">
             <div className="w-24 h-24 flex items-center justify-center mb-4 shadow-lg relative">
-              <Image
-                src={profilePictureUrl || "/assets/template4samplepic.png"}
-                alt="avatar"
-                width={96}
-                height={96}
-                className="w-24 h-24 object-cover"
-                style={{
-                  WebkitMaskImage: "url(/assets/template13profileshape.svg)",
-                  maskImage: "url(/assets/template13profileshape.svg)",
-                  WebkitMaskSize: "cover",
-                  maskSize: "cover",
-                  WebkitMaskRepeat: "no-repeat",
-                  maskRepeat: "no-repeat",
-                  WebkitMaskPosition: "center",
-                  maskPosition: "center",
-                  background: "#fff", // fallback
-                }}
-              />
+              {profilePictureUrl ? (
+                <div
+                  style={{
+                    WebkitMaskImage: "url(/assets/template13profileshape.svg)",
+                    maskImage: "url(/assets/template13profileshape.svg)",
+                    WebkitMaskSize: "cover",
+                    maskSize: "cover",
+                    WebkitMaskRepeat: "no-repeat",
+                    maskRepeat: "no-repeat",
+                    WebkitMaskPosition: "center",
+                    maskPosition: "center",
+                  }}
+                  className="w-24 h-24"
+                >
+                  <ClickableImage
+                    src={profilePictureUrl}
+                    alt="avatar"
+                    width={96}
+                    height={96}
+                    className="w-24 h-24 object-cover"
+                    onClick={() => openViewer(allImages, 0)}
+                    showExpandIcon={false}
+                  />
+                </div>
+              ) : (
+                <Image
+                  src="/assets/template4samplepic.png"
+                  alt="avatar"
+                  width={96}
+                  height={96}
+                  className="w-24 h-24 object-cover"
+                  style={{
+                    WebkitMaskImage: "url(/assets/template13profileshape.svg)",
+                    maskImage: "url(/assets/template13profileshape.svg)",
+                    WebkitMaskSize: "cover",
+                    maskSize: "cover",
+                    WebkitMaskRepeat: "no-repeat",
+                    maskRepeat: "no-repeat",
+                    WebkitMaskPosition: "center",
+                    maskPosition: "center",
+                    background: "#fff", // fallback
+                  }}
+                />
+              )}
             </div>
             <div className="flex items-center gap-2 mb-1">
-              <h1 className="font-semibold tracking-tight text-white leading-snug">
-                {prefix && <span>{prefix}. </span>}
-                {firstName}
-                {middleName && <span> {middleName}</span>}
-                {lastName && <span> {lastName}</span>}
-                {suffix && <span>, {suffix}</span>}
-              </h1>
+              {firstName ? (
+                <h1 className="font-semibold tracking-tight text-white leading-snug">
+                  {prefix && <span>{prefix}. </span>}
+                  {firstName}
+                  {middleName && <span> {middleName}</span>}
+                  {lastName && <span> {lastName}</span>}
+                  {suffix && <span>, {suffix}</span>}
+                </h1>
+              ) : (
+                <h1 className="font-semibold tracking-tight text-white leading-snug">
+                  Hussain Watkins
+                </h1>
+              )}
             </div>
             <div className="text-sm text-gray-300 mb-4 font-medium">
-              {position} {company && <>· {company}</>}
+              {position || "Chief Technology Officer"}{" "}
+              {`@ ${company || "Zwiftech"}`}
             </div>
             <div className="flex gap-2 mb-2">
               <CTAButtons
@@ -363,7 +457,6 @@ const Template13 = ({
                 linkedinUrl={linkedinUrl}
                 viberUrl={viberUrl}
                 whatsappNumber={whatsappNumber}
-                skypeInviteUrl={skypeInviteUrl}
                 websiteUrl={websiteUrl}
                 size="md"
               />
@@ -389,10 +482,16 @@ const Template13 = ({
                 profilePictureUrl={profilePictureUrl}
                 firstName={firstName}
                 lastName={lastName}
+                allImages={allImages}
+                openViewer={openViewer}
+                startingIndex={
+                  (profilePictureUrl ? 1 : 0) + (coverPhotoUrl ? 1 : 0)
+                }
               />
             )}
           </div>
         </div>
+      </div>
       </div>
 
       {/* === Footer Section === */}
@@ -418,6 +517,14 @@ const Template13 = ({
           </span>
         </div>
       </TemplateFooter>
+      
+      {viewerState.isOpen && (
+        <ImageViewer
+          images={viewerState.images}
+          initialIndex={viewerState.initialIndex}
+          onClose={closeViewer}
+        />
+      )}
     </TemplateContainer>
   );
 };

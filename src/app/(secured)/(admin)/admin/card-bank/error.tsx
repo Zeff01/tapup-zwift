@@ -31,10 +31,10 @@ export default function Error({
         </div>
         <div className="flex gap-4 justify-center">
           <Button
-            onClick={() => window.location.href = '/dashboard'}
+            onClick={() => window.location.href = '/cards'}
             variant="outline"
           >
-            Go to Dashboard
+            Go to Cards
           </Button>
           <Button onClick={reset}>
             Try again

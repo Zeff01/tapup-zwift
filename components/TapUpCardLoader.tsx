@@ -112,6 +112,7 @@ export default function TapUpCardLoader() {
               alt={`${card.name} Front`}
               fill
               className="object-cover"
+              sizes="(max-width: 768px) 100vw, 288px"
               priority
             />
             {/* Shimmer effect */}
@@ -142,6 +143,7 @@ export default function TapUpCardLoader() {
               alt={`${card.name} Back`}
               fill
               className="object-cover"
+              sizes="(max-width: 768px) 100vw, 288px"
               priority
             />
             {/* NFC animation on back */}
@@ -263,6 +265,7 @@ export default function TapUpCardLoader() {
           height={30}
           priority
           className="hidden dark:block"
+          style={{ width: 'auto', height: 'auto' }}
         />
         <Image
           src="/assets/tap-up-header-logo.png"
@@ -271,6 +274,7 @@ export default function TapUpCardLoader() {
           height={30}
           priority
           className="block dark:hidden"
+          style={{ width: 'auto', height: 'auto' }}
         />
       </motion.div>
     </div>

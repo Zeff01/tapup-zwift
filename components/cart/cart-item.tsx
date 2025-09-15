@@ -18,6 +18,7 @@ export function CartItem({ item }: CartItemProps) {
 
   return (
     <div className="flex items-start gap-4 w-full">
+
       <div className="relative aspect-[16/10] w-full max-w-28 overflow-hidden rounded shadow-md">
         <Image
           src={item.image || "/placeholder.svg"}

@@ -7,7 +7,9 @@ import {
   duplicateCard,
   toggleCardDisabled,
   transferCardOwnership,
+  clearCardData,
 } from "@/lib/firebase/actions/card.action";
+import { Switch } from "@/components/ui/switch";
 import {
   createCustomerAndRecurringPlan,
   getSubscriptionPlans,
@@ -15,6 +17,8 @@ import {
 } from "@/lib/firebase/actions/user.action";
 import { getLoggedInUser } from "@/lib/session";
 import { getCardImage } from "@/lib/utils";
+import { getCardAnalytics } from "@/lib/firebase/actions/analytics.action";
+import { AnalyticsCard } from "./AnalyticsCard";
 import {
   Card,
   CustomerType,
@@ -43,6 +47,7 @@ import {
   GripVertical,
   Loader2Icon,
   QrCode,
+  Eraser,
 } from "lucide-react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
@@ -72,6 +77,7 @@ const DigitalCard = ({ card, confirm, user }: Prop) => {
   const [expiredDialogOpen, setExpiredDialogOpen] = useState(false);
   const [confirmTransferCardDialog, setConfirmTransferCardDialog] =
     useState(false);
+  const [clearCardDialogOpen, setClearCardDialogOpen] = useState(false);
 
   const [openQRCode, setOpenQRCode] = useState(false);
 
@@ -91,9 +97,6 @@ const DigitalCard = ({ card, confirm, user }: Prop) => {
     isDragging,
   } = useSortable({ id: card.id as UniqueIdentifier });
 
-  useEffect(() => {
-    console.log(`isDragging: ${isDragging}`);
-  }, [isDragging]);
 
   const style = {
     transform: CSS.Transform.toString(transform),
@@ -102,6 +105,14 @@ const DigitalCard = ({ card, confirm, user }: Prop) => {
 
   const router = useRouter();
   const queryClient = useQueryClient();
+
+  // Fetch analytics data
+  const { data: analytics } = useQuery({
+    queryKey: ["card-analytics", card.id],
+    queryFn: () => getCardAnalytics(card.id!),
+    enabled: !!card.id,
+    staleTime: 1000 * 60 * 5, // 5 minutes
+  });
 
   const { mutate: duplicateCardMutation } = useMutation({
     mutationFn: duplicateCard,
@@ -138,13 +149,30 @@ const DigitalCard = ({ card, confirm, user }: Prop) => {
 
   const { mutate: transferOwnershipMutation } = useMutation({
     mutationFn: transferCardOwnership,
+    onSuccess: (data) => {
+      if (data.success) {
+        queryClient.invalidateQueries({ queryKey: ["cards", user?.uid] });
+        toast.success("Ownership transferred successfully");
+        setTransferOpen(false);
+        setNewOwnerEmail("");
+      } else {
+        toast.error(data.message || "Failed to transfer ownership");
+      }
+    },
+    onError: (error) => {
+      toast.error(error instanceof Error ? error.message : "Something went wrong");
+    },
+  });
+
+  const { mutate: clearCardMutation, isPending: isPendingClearCard } = useMutation({
+    mutationFn: clearCardData,
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["cards", user?.uid] });
-      setTransferOpen(false);
-      setNewOwnerEmail("");
+      toast.success("Card data cleared successfully");
+      setClearCardDialogOpen(false);
     },
     onError: () => {
-      toast.error("Something went wrong");
+      toast.error("Failed to clear card data");
     },
   });
 
@@ -275,46 +303,19 @@ const DigitalCard = ({ card, confirm, user }: Prop) => {
 
   const handleTransferOwnership = async () => {
     if (!newOwnerEmail || !card.id) return;
-
-    const { success, message } = await transferCardOwnership({
-      cardId: card.id,
-      newOwnerEmail,
-    });
-
-    if (success) {
-      toast.success("Ownership transferred successfully");
-      setTransferOpen(false);
-      setNewOwnerEmail("");
-      transferOwnershipMutation({ cardId: card.id, newOwnerEmail });
-    } else {
-      toast.error(message);
-    }
+    
     setConfirmTransferCardDialog(false);
+    transferOwnershipMutation({ cardId: card.id, newOwnerEmail });
   };
 
   const handleToggleCard = async () => {
     if (!card.id) return;
-    const ok = await confirm(
-      undefined,
-      <>
-        {!card.disabled && (
-          <p className="mb-4 text-sm text-muted-foreground">
-            Disabling this card will make it inaccessible to others and remove
-            it from public view.
-          </p>
-        )}
-        <p>
-          Are you sure you want to{" "}
-          <span className="font-bold ">
-            {card.disabled ? "enable" : "disable"}
-          </span>{" "}
-          this card?
-        </p>
-      </>
-    );
-
-    if (!ok) return;
     toggleCardMutation(card.id);
+  };
+
+  const handleClearCard = async () => {
+    if (!card.id) return;
+    clearCardMutation(card.id);
   };
 
   const formattedExpiryDate = card.expiryDate
@@ -326,11 +327,6 @@ const DigitalCard = ({ card, confirm, user }: Prop) => {
   const iconAndFunctionMap = [
     { icon: Edit2, fn: handleUpdate, tooltip: "Edit Card" },
     {
-      icon: isCardDisabled ? CheckCircle2 : IoCloseCircleOutline,
-      fn: handleToggleCard,
-      tooltip: isCardDisabled ? "Enable Card" : "Disable Card",
-    },
-    {
       icon: ArrowRightLeft,
       fn: () => setTransferOpen(true),
       tooltip: "Transfer Ownership",
@@ -340,16 +336,20 @@ const DigitalCard = ({ card, confirm, user }: Prop) => {
       fn: () => setOpenQRCode(true),
       tooltip: "Share Card",
     },
+    {
+      icon: Eraser,
+      fn: () => setClearCardDialogOpen(true),
+      tooltip: "Clear Card Data",
+    },
   ];
 
   const CardInfo = (
     <div className="flex-grow flex flex-col justify-between">
       <div>
-        <p className="text-[clamp(1rem,1.4vw,1.1rem)] mt-0 font-semibold capitalize text-white">
+        <p className="text-sm sm:text-base mt-0 font-semibold capitalize text-white [text-shadow:_0_1px_3px_rgb(0_0_0_/_80%),_0_0_8px_rgb(0_0_0_/_50%)]">
           {(card.firstName || "") + " " + (card.lastName || "")}
         </p>
-        <p className="text-xs capitalize text-white">{card.position || ""}</p>
-        <p className="text-[clamp(1rem,1.4vw,1.1rem)] pt-2 sm:pt-3 font-semibold capitalize text-white">
+        <p className="text-xs sm:text-sm pt-1 font-semibold capitalize text-white [text-shadow:_0_1px_3px_rgb(0_0_0_/_80%),_0_0_8px_rgb(0_0_0_/_50%)]">
           {card.cardName || ""}
         </p>
       </div>
@@ -489,6 +489,35 @@ const DigitalCard = ({ card, confirm, user }: Prop) => {
           onTouchEnd={() => setHovered(false)}
           onTouchCancel={() => setHovered(false)}
         >
+          {/* Removed overlay - using text shadows instead */}
+          {/* Enable/Disable Toggle Switch */}
+          <div className="absolute top-3 right-3 z-40">
+            <Tooltip>
+              <TooltipTrigger asChild>
+                <div className="flex items-center gap-2">
+                  <Switch
+                    checked={!isCardDisabled}
+                    onCheckedChange={() => card.id && toggleCardMutation(card.id)}
+                    disabled={isPendingToggleCard}
+                    className={`data-[state=checked]:bg-green-600 data-[state=unchecked]:bg-red-600 scale-75`}
+                  />
+                  <span className={`text-xs font-semibold ${isCardDisabled ? 'text-red-500' : 'text-green-500'} [text-shadow:_0_1px_3px_rgb(0_0_0_/_80%),_0_0_8px_rgb(0_0_0_/_50%)]`}>
+                    {isCardDisabled ? "Disabled" : "Enabled"}
+                  </span>
+                </div>
+              </TooltipTrigger>
+              <TooltipPortal>
+                <TooltipContent
+                  className="bg-black text-white text-xs px-2 py-1 rounded z-50"
+                  side="bottom"
+                >
+                  {isCardDisabled ? "Enable this card" : "Disable this card"}
+                  <TooltipArrow className="fill-black" />
+                </TooltipContent>
+              </TooltipPortal>
+            </Tooltip>
+          </div>
+
           <div className="absolute w-full top-1/2 right-0 -translate-y-1/2 flex items-center justify-end z-30">
             <div className="relative flex items-center justify-end group">
               <GripVertical
@@ -505,9 +534,9 @@ const DigitalCard = ({ card, confirm, user }: Prop) => {
             </div>
           )}
 
-          {(isCardExpired(card.expiryDate) || isCardDisabled) && !isLoading && (
+          {isCardExpired(card.expiryDate) && !isLoading && (
             <div className="absolute left-0 top-0 w-full h-full flex items-center justify-center bg-black/60 text-white text-lg font-semibold">
-              {isCardDisabled ? "Disabled" : "Expired"}
+              Expired
             </div>
           )}
 
@@ -546,6 +575,12 @@ const DigitalCard = ({ card, confirm, user }: Prop) => {
           )}
         </div>
       </div>
+      
+      {/* Analytics Summary */}
+      <div className="mt-3">
+        <AnalyticsCard card={card} analytics={analytics} />
+      </div>
+      
       {/* <Dialog.Root open={expiredDialogOpen} onOpenChange={setExpiredDialogOpen}>
         <Dialog.Portal>
           <Dialog.Overlay className="fixed inset-0 bg-black/50 backdrop-blur-sm z-50" />
@@ -787,6 +822,73 @@ const DigitalCard = ({ card, confirm, user }: Prop) => {
         open={openQRCode}
         onClose={() => setOpenQRCode(false)}
       />
+
+      {/* Clear Card Data Dialog */}
+      <Dialog.Root open={clearCardDialogOpen} onOpenChange={setClearCardDialogOpen}>
+        <Dialog.Portal>
+          <Dialog.Overlay className="fixed inset-0 bg-black/50 backdrop-blur-sm z-50" />
+          <Dialog.Content className="fixed inset-0 flex items-center justify-center p-4 z-50">
+            <div className="bg-white dark:bg-gray-900 dark:text-white p-6 rounded-lg shadow-lg max-w-sm w-full">
+              <Dialog.Title className="text-xl font-bold text-red-600">
+                Clear Card Data
+              </Dialog.Title>
+              
+              <div className="mt-4 space-y-3">
+                <p className="text-gray-600 dark:text-gray-300">
+                  Are you sure you want to clear all data from this card?
+                </p>
+                
+                <div className="bg-red-50 dark:bg-red-900/20 border border-red-200 dark:border-red-800 rounded-md p-3">
+                  <p className="text-sm text-red-800 dark:text-red-200 font-medium">
+                    ⚠️ Warning: This action will:
+                  </p>
+                  <ul className="text-sm text-red-700 dark:text-red-300 mt-2 space-y-1 list-disc list-inside">
+                    <li>Remove all personal information</li>
+                    <li>Delete all company data</li>
+                    <li>Clear all social media links</li>
+                    <li>Reset the card to empty state</li>
+                  </ul>
+                  <p className="text-sm text-red-800 dark:text-red-200 font-medium mt-2">
+                    This action cannot be undone!
+                  </p>
+                </div>
+                
+                <div className="bg-gray-100 dark:bg-gray-800 rounded-md p-3">
+                  <p className="text-sm text-gray-700 dark:text-gray-300">
+                    Card: <span className="font-medium">{card.firstName} {card.lastName}</span>
+                  </p>
+                  <p className="text-sm text-gray-700 dark:text-gray-300">
+                    {card.cardName && `Name: ${card.cardName}`}
+                  </p>
+                </div>
+              </div>
+
+              <div className="flex justify-end gap-2 mt-6">
+                <Dialog.Close asChild>
+                  <Button variant="secondary" size="sm" disabled={isPendingClearCard}>
+                    Cancel
+                  </Button>
+                </Dialog.Close>
+                <Button
+                  variant="destructive"
+                  size="sm"
+                  onClick={handleClearCard}
+                  disabled={isPendingClearCard}
+                >
+                  {isPendingClearCard ? (
+                    <>
+                      <Loader2Icon className="mr-2 h-4 w-4 animate-spin" />
+                      Clearing...
+                    </>
+                  ) : (
+                    "Clear Card Data"
+                  )}
+                </Button>
+              </div>
+            </div>
+          </Dialog.Content>
+        </Dialog.Portal>
+      </Dialog.Root>
     </div>
   );
 };

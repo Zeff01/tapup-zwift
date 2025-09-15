@@ -66,12 +66,6 @@ const SocialLinksForm: React.FC<SocialLinksFormProps> = ({ control }) => {
       />
       <CustomInput
         control={control}
-        name="skypeInviteUrl"
-        label="Skype Invite Url"
-        placeholder="Enter your Skype Invite Url"
-      />
-      <CustomInput
-        control={control}
         name="websiteUrl"
         label="Website URL"
         placeholder="Enter your website URL"

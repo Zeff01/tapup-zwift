@@ -63,7 +63,7 @@ const statusConfig = {
 const Orders = () => {
   const { user } = useUserContext();
 
-  const { data: orders = [], status } = useQuery({
+  const { data: orders = [], status, refetch } = useQuery({
     enabled: !!user?.uid,
     queryKey: ["user-orders", user?.uid],
     queryFn: async () => {
@@ -120,6 +120,7 @@ const Orders = () => {
       }
     },
     staleTime: 1000 * 60 * 5,
+    refetchInterval: 30000, // Refetch every 30 seconds
   });
 
   const copyToClipboard = (text: string, label: string) => {
@@ -187,6 +188,7 @@ const Orders = () => {
                                       src={cardDesign.image}
                                       alt={item.name}
                                       fill
+                                      sizes="(max-width: 768px) 64px, 64px"
                                       className="object-cover"
                                     />
                                   </div>
@@ -298,6 +300,7 @@ const Orders = () => {
                               </Button>
                             )}
                             
+                            
                             {/* Temporary button for testing - remove when webhooks are enabled */}
                             {process.env.NODE_ENV === 'development' && order.status === "pending" && (
                               <Button 
@@ -318,11 +321,12 @@ const Orders = () => {
                                     });
                                     
                                     if (response.ok) {
-                                      toast.success("Order marked as completed. Please refresh to see updates.");
-                                      // Refresh the page to see the updated status
-                                      setTimeout(() => window.location.reload(), 1500);
+                                      toast.success("Order marked as completed!");
+                                      // Refetch orders to show updated status
+                                      setTimeout(() => refetch(), 500);
                                     } else {
-                                      toast.error("Failed to update order status.");
+                                      const error = await response.json();
+                                      toast.error(error.error || "Failed to update order status.");
                                     }
                                   } catch (error) {
                                     console.error("Error updating order status:", error);

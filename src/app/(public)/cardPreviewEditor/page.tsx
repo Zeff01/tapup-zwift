@@ -50,7 +50,6 @@ export default function CardPreviewEditor() {
     twitterUrl: "https://twitter.com/johndoe",
     linkedinUrl: "https://linkedin.com/in/johndoe",
     whatsappNumber: "+1234567890",
-    skypeInviteUrl: "https://join.skype.com/invite/example",
     websiteUrl: "https://johndoe.com",
     printStatus: true,
     userCode: "JD12345",

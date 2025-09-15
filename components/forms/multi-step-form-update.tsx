@@ -2,7 +2,7 @@
 import CompanyInfoForm from "@/components/forms/CompanyInfoForm";
 import PersonalInfoForm from "@/components/forms/PersonalInfoForm";
 import ImageLoaded from "@/components/ImageLoaded";
-import { TemplateCarousel } from "@/components/TemplateCarousel";
+import { TemplateGrid } from "@/components/TemplateGrid";
 import {
   Form,
   FormControl,
@@ -36,8 +36,8 @@ import { useForm } from "react-hook-form";
 import { IoMdClose } from "react-icons/io";
 import { toast } from "react-toastify";
 import { z } from "zod";
-import Cropper from "../Cropper";
-import CropperMultiple from "../CropperMultiple";
+import ImageCropper from "../ImageCropper";
+import CropperMultipleNew from "../CropperMultipleNew";
 import TapupLogo from "../svgs/TapupLogo";
 import { Button } from "../ui/button";
 import { Input } from "../ui/input";
@@ -57,9 +57,7 @@ export type ChosenTemplateType =
   | "template1"
   | "template2"
   | "template3"
-  | "template4"
   | "template5"
-  | "template6"
   | "template7"
   | "template8"
   | "template9"
@@ -113,6 +111,9 @@ const MultiStepFormUpdate = ({
   const [coverPhotoUrl, setCoverPhotoUrl] = useState<string | null>(
     userData.coverPhotoUrl || null
   );
+  
+  // Track if we're updating images to prevent redirect
+  const [isUpdatingImage, setIsUpdatingImage] = useState(false);
 
   // State for multiple companies with all schema fields
   const [companies, setCompanies] = useState<
@@ -137,6 +138,7 @@ const MultiStepFormUpdate = ({
         servicePhotos: company.servicePhotos || [],
       }));
     } else {
+      // Return empty array for new cards
       return [];
     }
   });
@@ -179,7 +181,6 @@ const MultiStepFormUpdate = ({
       { key: "tiktokUrl", label: "TikTok" },
       { key: "viberUrl", label: "Viber" },
       { key: "whatsappNumber", label: "WhatsApp" },
-      { key: "skypeInviteUrl", label: "Skype" },
       { key: "websiteUrl", label: "Website" },
     ];
 
@@ -202,30 +203,24 @@ const MultiStepFormUpdate = ({
   const [previewMinimized, setPreviewMinimized] = useState(false);
 
   // Steps definition based on current form arrangement:
-  // Step 1: Profile Photo, Cover Photo, Personal Info, Social Links
-  // Step 2: Company Info, Service Photos
-  // Step 3: Custom URL, Card Name, Template Selection
-
-  // Steps definition based on current form arrangement:
-  // Step 1: Profile Photo, Cover Photo, Personal Info, Social Links
-  // Step 2: Company Info (multiple), Service Photos (per company)
+  // Step 1: Profile Photo, Cover Photo, Company Info
+  // Step 2: Company Info (multiple with service photos), Personal Info, Social Links
   // Step 3: Custom URL, Card Name, Template Selection
 
   const steps: Array<Array<keyof z.infer<typeof editCardSchema>>> = [
     [
-      // Step 1: Profile Photo, Cover Photo, Personal Info, Social Links
+      // Step 1: Profile Photo, Cover Photo
       "profilePictureUrl",
       "coverPhotoUrl",
+    ],
+    [
+      // Step 2: Companies, Personal Info, Social Links
+      "companies",
       "firstName",
       "lastName",
       "email",
       "number",
       ...selectedLinks.map((link) => link.key),
-    ],
-    [
-      // Step 2: Companies array (each company has its own fields)
-      // Validation will be handled for the entire companies array
-      "companies",
     ],
     [
       // Step 3: Custom URL, Card Name, Template Selection
@@ -290,7 +285,6 @@ const MultiStepFormUpdate = ({
       twitterUrl: userData.twitterUrl || "",
       linkedinUrl: userData.linkedinUrl || "",
       whatsappNumber: userData.whatsappNumber || "",
-      skypeInviteUrl: userData.skypeInviteUrl || "",
       websiteUrl: userData.websiteUrl || "",
       viberUrl: userData.viberUrl || "",
       tiktokUrl: userData.tiktokUrl || "",
@@ -347,7 +341,7 @@ const MultiStepFormUpdate = ({
 
   const formSubmit = async (data: z.infer<typeof editCardSchema>) => {
     try {
-      console.log("formSubmit");
+      console.log("formSubmit called, currentStep:", currentStep, "total steps:", steps.length, "isUpdatingImage:", isUpdatingImage);
       if (isOnboarding) {
         console.log("Inside onboarding block");
 
@@ -397,7 +391,13 @@ const MultiStepFormUpdate = ({
           },
         });
 
-        router.push("/cards");
+        // Only redirect if user is on the last step (clicked Save button)
+        // Don't redirect when just updating images
+        if (currentStep === steps.length && !isUpdatingImage) {
+          router.push("/cards");
+        }
+        // Reset the flag after form submission
+        setIsUpdatingImage(false);
         return;
       }
 
@@ -504,9 +504,9 @@ const MultiStepFormUpdate = ({
                       </h2>
                       <p className="text-gray-600 dark:text-gray-400">
                         {currentStep === 1 &&
-                          "Upload your visual content and share your company story"}
+                          "Upload your profile and cover photos, and add company information"}
                         {currentStep === 2 &&
-                          "Add your personal details and connect your social profiles"}
+                          "Add your personal details and social profiles"}
                         {currentStep === 3 &&
                           "Choose your design and finalize your digital business card"}
                       </p>
@@ -526,213 +526,312 @@ const MultiStepFormUpdate = ({
                 allowNavigation={true}
               />
 
-              {/* Step 1 - Cover Photo and Profile Pic */}
+              {/* Step 1 - Profile Pic and Cover Photo */}
               {currentStep === 1 && (
-                <div className="space-y-8">
-                  {/* Cover Photo Section */}
-                  <div>
-                    <h2 className="text-lg font-semibold mb-4">Cover Photo</h2>
-                    <div className="w-full max-w-lg mx-auto">
-                      <Cropper
-                        imageUrl={coverPhotoUrl}
-                        setImageUrl={setCoverPhotoUrl}
-                        photo={coverPhoto}
-                        aspect={16 / 9}
-                        setPhoto={setCoverPhoto}
-                        className="w-full aspect-[16/9] rounded-2xl overflow-hidden border-none "
-                        imageClassName="rounded-2xl"
-                        fallback={
-                          <div className="w-full aspect-[16/9] flex flex-col items-center gap-y-2 rounded-2xl border-dashed border-2 border-gray-500">
-                            <Image
-                              src={"/assets/image-plus.svg"}
-                              width={50}
-                              height={50}
-                              alt="plus"
-                              className="size-10 lg:size-auto mt-8 border p-2 rounded-md cursor-pointer"
-                            />
-                            <p className="text-[#767676] text-lg">
-                              Drop your image here or{" "}
-                              <span className="text-green-500">browse</span>
-                            </p>
-                            <p className="text-[#767676] text-xs">
-                              We support PNG, JPEG, and GIF files under 25MB
-                            </p>
-                          </div>
-                        }
-                      />
-                    </div>
-                  </div>
-
-                  {/* Company Information Section */}
-                  <div>
-                    <CompanyInfoForm
-                      control={methods.control}
-                      isAllFieldsRequired={false}
-                    />
-                  </div>
-
-                  {/* Service Photos Section */}
-                  <div>
-                    <h2 className="text-lg font-semibold mb-4">
-                      Service Photos
-                    </h2>
-                    <div className="w-full">
-                      <CropperMultiple
-                        previewImageUrl={null}
-                        imageUrls={serviceImageUrls}
-                        setImageUrls={setServiceImageUrls}
-                        previewPhoto={null}
-                        aspect={1}
-                        photos={servicePhotos}
-                        setPhotos={setServicePhotos}
-                        className="w-full aspect-[16/9] rounded-2xl overflow-hidden border-dashed border-2"
-                        imageClassName="rounded-2xl"
-                        disableUpload={serviceImageUrls.length >= 5}
-                        fallback={
-                          <div className="w-full aspect-[16/9] flex flex-col items-center gap-y-2">
-                            <Image
-                              src={"/assets/image-plus.svg"}
-                              width={50}
-                              height={50}
-                              alt="plus"
-                              className="size-10 lg:size-auto mt-8 border p-2 rounded-md cursor-pointer"
-                            />
-                            <p className="text-[#767676] text-lg">
-                              Drop your image here or{" "}
-                              <span className="text-green-500">browse</span>
-                            </p>
-                            <p className="text-[#767676] text-xs">
-                              We support PNG, JPEG, and GIF files under 25MB
-                            </p>
-                          </div>
-                        }
-                      />
-
-                      <div className="grid grid-cols-4 sm:grid-cols-5 md:grid-cols-6 gap-2 mt-4">
-                        {serviceImageUrls.map((url, index) => (
-                          <div
-                            key={`service-image-${index}`}
-                            className="relative aspect-square overflow-hidden rounded-md bg-[#222224] border border-[#2c2c2c]"
-                          >
-                            {/* Delete Button */}
-                            <button
-                              type="button"
-                              onClick={() => {
-                                setServiceImageUrls((prev) =>
-                                  prev.filter((_, i) => i !== index)
-                                );
-                                setServicePhotos((prev) =>
-                                  prev.filter((_, i) => i !== index)
-                                );
-                              }}
-                              className="absolute top-1 right-1 flex items-center justify-center h-4 w-4 rounded-full bg-gray-900 z-10 hover:bg-gray-700"
-                            >
-                              <IoMdClose className="size-2 text-white" />
-                            </button>
-
-                            <Loader2 className="animate-spin absolute inset-0 m-auto" />
-                            <ImageLoaded
-                              url={url}
-                              className="absolute inset-0 w-full h-full object-cover rounded-md"
-                            />
-                          </div>
-                        ))}
-                      </div>
-                    </div>
-                  </div>
-                </div>
-              )}
-
-              {/* Step 2 - Company Info and Personal Info */}
-              {currentStep === 2 && (
-                <div className="">
-                  <h2>Profile Photo</h2>
-                  <div className="w-full flex justify-center items-center flex-col my-4">
-                    <Cropper
-                      imageUrl={imageUrl}
-                      setImageUrl={setImageUrl}
-                      photo={photo}
-                      aspect={1}
-                      setPhoto={setPhoto}
-                      circularCrop
-                      className="w-[120px] h-[120px] lg:w-[150px] lg:h-[150px] rounded-full"
-                      fallback={
-                        <div className="relative w-full h-full rounded-full flex items-center justify-center border-2  border-dashed">
-                          <Image
-                            src={"/assets/image-plus.svg"}
-                            width={50}
-                            height={50}
-                            className="size-8 lg:size-auto p-2 border rounded-md border-gray-500"
-                            alt="gallery"
-                          />
-                        </div>
-                      }
-                    />
-
-                    <div className="flex flex-col items-center justify-center mt-2">
-                      <p className="text-[#767676] text-base">
-                        Drop your image here or{" "}
-                        <span className="text-green-500">browse</span>
-                      </p>
-                      <p className="text-[#767676] text-xs">
-                        We support PNG, JPEG, and GIF files under 25MB
-                      </p>
-                    </div>
-
-                    <span className="text-sm text-red-500 pt-4">
-                      {methods.formState.errors.profilePictureUrl?.message ??
-                        ""}
-                    </span>
-                  </div>
-
-                  <h2>Cover Photo</h2>
-                  <div className="w-full flex justify-center items-center flex-col my-4">
-                    <div className="flex flex-col items-center relative w-full">
-                      <div className="w-full relative">
-                        <Cropper
-                          imageUrl={coverPhotoUrl}
-                          setImageUrl={setCoverPhotoUrl}
-                          photo={coverPhoto}
-                          aspect={16 / 9}
-                          setPhoto={setCoverPhoto}
-                          className="w-full aspect-[16/9] rounded-2xl overflow-hidden border-input border-2"
+                <div className="space-y-4">
+                  {/* Profile and Cover Photos - Vertically Aligned */}
+                  <div className="space-y-6">
+                    {/* Profile Photo Section */}
+                    <div>
+                      <h2 className="text-lg font-semibold mb-2">Profile Photo</h2>
+                      <div className="w-full flex justify-center items-center flex-col">
+                        <ImageCropper
+                          imageUrl={imageUrl}
+                          setImageUrl={(url: string | null) => {
+                            setIsUpdatingImage(true);
+                            setImageUrl(url);
+                          }}
+                          photo={photo}
+                          aspect={1}
+                          setPhoto={setPhoto}
+                          circularCrop
+                          className="w-[120px] h-[120px] lg:w-[130px] lg:h-[130px] rounded-full"
                           fallback={
-                            <div className="w-full aspect-[16/9] flex flex-col items-center gap-y-2 rounded-2xl border-dashed border-2 border-gray-500">
+                            <div className="relative w-full h-full rounded-full flex items-center justify-center border-2  border-dashed">
                               <Image
                                 src={"/assets/image-plus.svg"}
                                 width={50}
                                 height={50}
-                                alt="plus"
-                                className="size-10 lg:size-auto mt-8 border p-2 rounded-md cursor-pointer"
+                                className="size-8 lg:size-auto p-2 border rounded-md border-gray-500"
+                                alt="gallery"
                               />
-                              <p className="text-[#767676] text-xl">
-                                Drop your image here or{" "}
-                                <span className="text-green-500">browse</span>
-                              </p>
-                              <p className="text-[#767676] text-xs">
-                                We support PNG, JPEG, and GIF files under 25MB
-                              </p>
                             </div>
                           }
                         />
-                        <div className="flex flex-col items-center justify-center mt-2">
-                          <p className="text-[#767676] text-base">
+
+                        <div className="flex flex-col items-center justify-center mt-1">
+                          <p className="text-[#767676] text-xs">
                             Drop your image here or{" "}
                             <span className="text-green-500">browse</span>
                           </p>
-                          <p className="text-[#767676] text-xs">
-                            We support PNG, JPEG, and GIF files under 25MB
+                          <p className="text-[#767676] text-[10px]">
+                            PNG, JPEG, GIF under 25MB
                           </p>
                         </div>
 
-                        <span className="text-sm text-red-500 pt-4">
-                          {methods.formState.errors.profilePictureUrl
-                            ?.message ?? ""}
-                        </span>
+                        {methods.formState.errors.profilePictureUrl && (
+                          <span className="text-sm text-red-500 mt-2">
+                            {methods.formState.errors.profilePictureUrl.message}
+                          </span>
+                        )}
+                      </div>
+                    </div>
+                    
+                    {/* Cover Photo Section */}
+                    <div>
+                      <h2 className="text-lg font-semibold mb-2">Cover Photo</h2>
+                      <div className="w-full">
+                      <ImageCropper
+                        imageUrl={coverPhotoUrl}
+                        setImageUrl={(url: string | null) => {
+                          setIsUpdatingImage(true);
+                          setCoverPhotoUrl(url);
+                        }}
+                        photo={coverPhoto}
+                        aspect={16 / 9}
+                        setPhoto={setCoverPhoto}
+                        className="w-full aspect-[3/1] rounded-xl overflow-hidden border-none "
+                        imageClassName="rounded-2xl"
+                        fallback={
+                          <div className="w-full aspect-[3/1] flex flex-col items-center gap-y-1 rounded-xl border-dashed border-2 border-gray-500">
+                            <Image
+                              src={"/assets/image-plus.svg"}
+                              width={50}
+                              height={50}
+                              alt="plus"
+                              className="size-8 mt-2 border p-2 rounded-md cursor-pointer"
+                            />
+                            <p className="text-[#767676] text-xs">
+                              Drop your image here or{" "}
+                              <span className="text-green-500">browse</span>
+                            </p>
+                            <p className="text-[#767676] text-[10px]">
+                              PNG, JPEG, GIF under 25MB
+                            </p>
+                          </div>
+                        }
+                      />
                       </div>
                     </div>
                   </div>
+
+                  {/* Multiple Companies Section */}
+                  <div className="space-y-6">
+                    <h2 className="text-lg font-semibold mb-2">Companies</h2>
+                    {companies.map((company, idx) => (
+                      <div
+                        key={idx}
+                        className="border rounded-lg p-4 mb-4 bg-secondary"
+                      >
+                        <div className="flex gap-2 items-center mb-2">
+                          <Input
+                            placeholder="Company Name"
+                            value={company.company}
+                            onChange={(e) => {
+                              const updated = [...companies];
+                              updated[idx].company = e.target.value;
+                              setCompanies(updated);
+                            }}
+                            className="flex-1"
+                          />
+                          <Button
+                            type="button"
+                            variant="destructive"
+                            onClick={() => {
+                              setCompanies(companies.filter((_, i) => i !== idx));
+                              setServicePhotoPreviews((prev) =>
+                                prev.filter((_, i) => i !== idx)
+                              );
+                              setServicePhotoFiles((prev) =>
+                                prev.filter((_, i) => i !== idx)
+                              );
+                            }}
+                          >
+                            <IoMdClose />
+                          </Button>
+                        </div>
+                        <Input
+                          placeholder="Position"
+                          value={company.position ?? ""}
+                          onChange={(e) => {
+                            const updated = [...companies];
+                            updated[idx].position = e.target.value;
+                            setCompanies(updated);
+                          }}
+                          className="flex-1 mb-2"
+                        />
+                        <textarea
+                          placeholder="Company Background"
+                          value={company.companyBackground ?? ""}
+                          onChange={(e) => {
+                            const updated = [...companies];
+                            updated[idx].companyBackground = e.target.value;
+                            setCompanies(updated);
+                          }}
+                          className="flex w-full rounded-md border border-input bg-background px-3 py-2 text-base ring-offset-background placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50 md:text-sm mb-2 resize-none h-[120px]"
+                        />
+                        <textarea
+                          placeholder="Service Description"
+                          value={company.serviceDescription ?? ""}
+                          onChange={(e) => {
+                            const updated = [...companies];
+                            updated[idx].serviceDescription = e.target.value;
+                            setCompanies(updated);
+                          }}
+                          className="flex w-full rounded-md border border-input bg-background px-3 py-2 text-base ring-offset-background placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50 md:text-sm mb-2 resize-none h-[120px]"
+                        />
+                        <div>
+                          <h3 className="text-sm leading-none font-medium my-2">
+                            Service Photos
+                          </h3>
+                          <CropperMultipleNew
+                            photos={servicePhotoFiles[idx] ?? []}
+                            setPhotos={(newPhotos) => {
+                              if (typeof newPhotos === 'function') {
+                                setServicePhotoFiles((prev) => {
+                                  const updated = [...prev];
+                                  updated[idx] = newPhotos(servicePhotoFiles[idx] || []);
+                                  return updated;
+                                });
+                                setServicePhotoPreviews((prev) => {
+                                  const updated = [...prev];
+                                  const photos = newPhotos(servicePhotoFiles[idx] || []);
+                                  updated[idx] = photos.map(
+                                    (p: Photo) => p.preview
+                                  );
+                                  return updated;
+                                });
+                              } else {
+                                setServicePhotoFiles((prev) => {
+                                  const updated = [...prev];
+                                  updated[idx] = newPhotos;
+                                  return updated;
+                                });
+                                setServicePhotoPreviews((prev) => {
+                                  const updated = [...prev];
+                                  updated[idx] = newPhotos.map(
+                                    (p: Photo) => p.preview
+                                  );
+                                  return updated;
+                                });
+                              }
+                            }}
+                            photosUrl={company.servicePhotos ?? []}
+                            setPhotosUrl={(newUrls) => {
+                              if (typeof newUrls === 'function') {
+                                const updatedUrls = newUrls(company.servicePhotos || []);
+                                const updated = [...companies];
+                                updated[idx].servicePhotos = updatedUrls.filter((u): u is string => u !== null);
+                                setCompanies(updated);
+                              } else {
+                                const updated = [...companies];
+                                updated[idx].servicePhotos = newUrls.filter((u): u is string => u !== null);
+                                setCompanies(updated);
+                              }
+                            }}
+                            aspect={1}
+                            maxPhotos={5}
+                            fallback={
+                              <div className="flex flex-col items-center gap-y-1 justify-center h-full">
+                                <Image
+                                  src={"/assets/image-plus.svg"}
+                                  width={50}
+                                  height={50}
+                                  alt="plus"
+                                  className="size-8 border p-2 rounded-md"
+                                />
+                                <p className="text-[#767676] text-xs">
+                                  Add Photo
+                                </p>
+                              </div>
+                            }
+                          />
+
+                          {/* Service photo previews for this company */}
+                          <div className="flex gap-2 mt-4 flex-wrap">
+                            {(company.servicePhotos ?? []).map((url, index) => (
+                              <div
+                                key={`service-image-${idx}-${index}`}
+                                className="relative flex items-center justify-center h-[77px] w-[77px] overflow-hidden rounded-md bg-[#222224] border border-[#2c2c2c]"
+                              >
+                                {/* Delete Button */}
+                                <button
+                                  type="button"
+                                  onClick={() => {
+                                    // Remove from this company's servicePhotos
+                                    const updatedCompanies = [...companies];
+                                    updatedCompanies[idx].servicePhotos =
+                                      updatedCompanies[idx].servicePhotos?.filter(
+                                        (_, i) => i !== index
+                                      ) ?? [];
+                                    setCompanies(updatedCompanies);
+
+                                    // Optionally, also remove from previews/files if you use those for display
+                                    setServicePhotoPreviews((prev) => {
+                                      const updated = [...prev];
+                                      updated[idx] = updated[idx].filter(
+                                        (_, i) => i !== index
+                                      );
+                                      return updated;
+                                    });
+                                    setServicePhotoFiles((prev) => {
+                                      const updated = [...prev];
+                                      updated[idx] = updated[idx].filter(
+                                        (_, i) => i !== index
+                                      );
+                                      return updated;
+                                    });
+                                  }}
+                                  className="absolute top-1 right-1 flex items-center justify-center h-4 w-4 rounded-full bg-gray-900 z-10 hover:bg-gray-700"
+                                >
+                                  <IoMdClose className="size-2 text-white" />
+                                </button>
+
+                                <Loader2 className="animate-spin" />
+                                <ImageLoaded
+                                  url={url}
+                                  className="absolute top-0 left-0 h-full w-full object-cover rounded-md"
+                                />
+                              </div>
+                            ))}
+                          </div>
+                        </div>
+                      </div>
+                    ))}
+                    <Button
+                      variant="outline"
+                      type="button"
+                      className="mt-4"
+                      onClick={() => {
+                        setCompanies([
+                          ...companies,
+                          {
+                            company: "",
+                            position: "",
+                            companyBackground: "",
+                            serviceDescription: "",
+                            servicePhotos: [],
+                          },
+                        ]);
+                        setServicePhotoPreviews((prev) => [...prev, []]);
+                        setServicePhotoFiles((prev) => [...prev, []]);
+                      }}
+                    >
+                      {companies.length > 0 ? "Add More Company" : "Add Company"}
+                    </Button>
+                    <span className="text-xs text-red-500">
+                      {methods.formState.errors.companies?.message ?? ""}
+                    </span>
+                  </div>
+
+                </div>
+              )}
+
+              {/* Step 2 - Personal Info & Social Links */}
+              {currentStep === 2 && (
+                <div className="space-y-6">
                   <PersonalInfoForm control={methods.control} isCard />
+
                   <SocialLinksSelector
                     onAddLink={handleAddLink}
                     existingValues={methods.watch()}
@@ -784,203 +883,6 @@ const MultiStepFormUpdate = ({
                       </div>
                     ))}
                   </div>
-                </div>
-              )}
-
-              {/* Step 2 - Company Info and Personal Info */}
-              {currentStep === 2 && (
-                <div className="space-y-6">
-                  {companies.map((company, idx) => (
-                    <div
-                      key={idx}
-                      className="border rounded-lg p-4 mb-4 bg-secondary"
-                    >
-                      <div className="flex gap-2 items-center mb-2">
-                        <Input
-                          placeholder="Company Name"
-                          value={company.company}
-                          onChange={(e) => {
-                            const updated = [...companies];
-                            updated[idx].company = e.target.value;
-                            setCompanies(updated);
-                          }}
-                          className="flex-1"
-                        />
-                        <Button
-                          type="button"
-                          variant="destructive"
-                          onClick={() => {
-                            setCompanies(companies.filter((_, i) => i !== idx));
-                            setServicePhotoPreviews((prev) =>
-                              prev.filter((_, i) => i !== idx)
-                            );
-                            setServicePhotoFiles((prev) =>
-                              prev.filter((_, i) => i !== idx)
-                            );
-                          }}
-                        >
-                          <IoMdClose />
-                        </Button>
-                      </div>
-                      <Input
-                        placeholder="Position"
-                        value={company.position ?? ""}
-                        onChange={(e) => {
-                          const updated = [...companies];
-                          updated[idx].position = e.target.value;
-                          setCompanies(updated);
-                        }}
-                        className="flex-1 mb-2"
-                      />
-                      <textarea
-                        placeholder="Company Background"
-                        value={company.companyBackground ?? ""}
-                        onChange={(e) => {
-                          const updated = [...companies];
-                          updated[idx].companyBackground = e.target.value;
-                          setCompanies(updated);
-                        }}
-                        className="flex w-full rounded-md border border-input bg-background px-3 py-2 text-base ring-offset-background placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50 md:text-sm mb-2 resize-none h-[120px]"
-                      />
-                      <textarea
-                        placeholder="Service Description"
-                        value={company.serviceDescription ?? ""}
-                        onChange={(e) => {
-                          const updated = [...companies];
-                          updated[idx].serviceDescription = e.target.value;
-                          setCompanies(updated);
-                        }}
-                        className="flex w-full rounded-md border border-input bg-background px-3 py-2 text-base ring-offset-background placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50 md:text-sm mb-2 resize-none h-[120px]"
-                      />
-                      <div>
-                        <h3 className="text-sm leading-none font-medium my-2">
-                          Service Photos
-                        </h3>
-                        <CropperMultiple
-                          previewImageUrl={null}
-                          imageUrls={company.servicePhotos ?? []}
-                          setImageUrls={(urls: string[]) => {
-                            const updated = [...companies];
-                            updated[idx].servicePhotos = urls;
-                            setCompanies(updated);
-                          }}
-                          previewPhoto={null}
-                          aspect={1}
-                          photos={servicePhotoFiles[idx] ?? []}
-                          setPhotos={(photos: Photo[]) => {
-                            setServicePhotoFiles((prev) => {
-                              const updated = [...prev];
-                              updated[idx] = photos;
-                              return updated;
-                            });
-                            setServicePhotoPreviews((prev) => {
-                              const updated = [...prev];
-                              updated[idx] = photos.map(
-                                (p: Photo) => p.preview
-                              );
-                              return updated;
-                            });
-                          }}
-                          className="w-full aspect-[16/9] rounded-2xl overflow-hidden border-dashed border-2"
-                          imageClassName="rounded-2xl"
-                          disableUpload={
-                            (company.servicePhotos?.length ?? 0) >= 5
-                          }
-                          fallback={
-                            <div className="w-full aspect-[16/9] flex flex-col items-center gap-y-2">
-                              <Image
-                                src={"/assets/image-plus.svg"}
-                                width={50}
-                                height={50}
-                                alt="plus"
-                                className="size-10 lg:size-auto mt-8 border p-2 rounded-md cursor-pointer"
-                              />
-                              <p className="text-[#767676] text-xl">
-                                Drop your image here or{" "}
-                                <span className="text-green-500">browse</span>
-                              </p>
-                              <p className="text-[#767676] text-xs">
-                                We support PNG, JPEG, and GIF files under 25MB
-                              </p>
-                            </div>
-                          }
-                        />
-
-                        {/* Service photo previews for this company */}
-                        <div className="flex gap-2 mt-4 flex-wrap">
-                          {(company.servicePhotos ?? []).map((url, index) => (
-                            <div
-                              key={`service-image-${idx}-${index}`}
-                              className="relative flex items-center justify-center h-[77px] w-[77px] overflow-hidden rounded-md bg-[#222224] border border-[#2c2c2c]"
-                            >
-                              {/* Delete Button */}
-                              <button
-                                type="button"
-                                onClick={() => {
-                                  // Remove from this company's servicePhotos
-                                  const updatedCompanies = [...companies];
-                                  updatedCompanies[idx].servicePhotos =
-                                    updatedCompanies[idx].servicePhotos?.filter(
-                                      (_, i) => i !== index
-                                    ) ?? [];
-                                  setCompanies(updatedCompanies);
-
-                                  // Optionally, also remove from previews/files if you use those for display
-                                  setServicePhotoPreviews((prev) => {
-                                    const updated = [...prev];
-                                    updated[idx] = updated[idx].filter(
-                                      (_, i) => i !== index
-                                    );
-                                    return updated;
-                                  });
-                                  setServicePhotoFiles((prev) => {
-                                    const updated = [...prev];
-                                    updated[idx] = updated[idx].filter(
-                                      (_, i) => i !== index
-                                    );
-                                    return updated;
-                                  });
-                                }}
-                                className="absolute top-1 right-1 flex items-center justify-center h-4 w-4 rounded-full bg-gray-900 z-10 hover:bg-gray-700"
-                              >
-                                <IoMdClose className="size-2 text-white" />
-                              </button>
-
-                              <Loader2 className="animate-spin" />
-                              <ImageLoaded
-                                url={url}
-                                className="absolute top-0 left-0 h-full w-full object-cover rounded-md"
-                              />
-                            </div>
-                          ))}
-                        </div>
-                      </div>
-                    </div>
-                  ))}
-                  <Button
-                    variant="outline"
-                    type="button"
-                    className="mt-4"
-                    onClick={() => {
-                      setCompanies([
-                        ...companies,
-                        {
-                          company: "",
-                          position: "",
-                          companyBackground: "",
-                          serviceDescription: "",
-                          servicePhotos: [],
-                        },
-                      ]);
-                      setServicePhotoPreviews((prev) => [...prev, []]);
-                      setServicePhotoFiles((prev) => [...prev, []]);
-                    }}
-                  >
-                    Add Company
-                  </Button>
-                  <span className="text-xs text-red-500">
-                    {methods.formState.errors.companies?.message ?? ""}
-                  </span>
                 </div>
               )}
 
@@ -1115,7 +1017,7 @@ const MultiStepFormUpdate = ({
                       <h3 className="text-md font-medium mb-3">
                         Available Templates
                       </h3>
-                      <TemplateCarousel
+                      <TemplateGrid
                         selectedTemplateId={selectedTemplateId}
                         setSelectedTemplateId={(id: ChosenTemplateType) => {
                           setSelectedTemplateId(id);
@@ -1133,8 +1035,9 @@ const MultiStepFormUpdate = ({
               )}
 
               {/* Navigation Buttons */}
-              <div className="flex justify-between items-center mt-8 pt-6 border-t">
-                <div className="flex items-center gap-2 text-sm text-gray-500">
+              <div className="mt-8 pt-6 border-t">
+                {/* Step Progress Indicator */}
+                <div className="flex items-center gap-2 text-sm text-gray-500 mb-4">
                   <span>
                     Step {currentStep} of {steps.length}
                   </span>
@@ -1145,7 +1048,18 @@ const MultiStepFormUpdate = ({
                   )}
                 </div>
 
-                <div className="flex gap-3">
+                {/* Navigation Buttons */}
+                <div className="flex justify-end gap-3">
+                  <Button
+                    type="button"
+                    variant="outline"
+                    onClick={() => router.push('/cards')}
+                    disabled={isLoading}
+                    className="flex items-center gap-2"
+                  >
+                    Cancel
+                  </Button>
+                  
                   {currentStep > 1 && (
                     <Button
                       type="button"

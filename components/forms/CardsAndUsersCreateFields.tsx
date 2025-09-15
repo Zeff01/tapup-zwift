@@ -84,7 +84,6 @@ export default function CardsAndUsersCreateFields({
       twitterUrl: "",
       linkedinUrl: "",
       whatsappNumber: "",
-      skypeInviteUrl: "",
       websiteUrl: "",
     },
   });

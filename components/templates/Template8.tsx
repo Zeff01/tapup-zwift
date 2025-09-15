@@ -1,3 +1,5 @@
+"use client";
+
 import { Card } from "@/types/types";
 import Image from "next/image";
 import { CiMail, CiPhone, CiSaveDown2 } from "react-icons/ci";
@@ -10,13 +12,21 @@ import {
   FaInstagram,
   FaLinkedin,
   FaWhatsapp,
-  FaSkype,
   FaGlobe,
   FaFacebookMessenger,
   FaEnvelope,
   FaPhone,
 } from "react-icons/fa6";
-import { downloadVCard } from "@/lib/utils";
+import { downloadVCard, getCopyrightYear } from "@/lib/utils";
+import {
+  CTAButtons,
+  SocialLinks,
+  Template8Container,
+  TemplateFooter,
+} from "./templatesComponents";
+import Link from "next/link";
+import { ImageViewer, useImageViewer } from "@/components/ImageViewer";
+import { ClickableImage } from "./templatesComponents/ClickableImage";
 
 const Template8 = ({
   id,
@@ -34,15 +44,21 @@ const Template8 = ({
   facebookUrl,
   youtubeUrl,
   instagramUrl,
+  tiktokUrl,
+  viberUrl,
   twitterUrl,
   linkedinUrl,
   whatsappNumber,
-  skypeInviteUrl,
   websiteUrl,
   customUrl,
+  companies,
+  owner,
 }: Card) => {
+  const { viewerState, openViewer, closeViewer } = useImageViewer();
+  
   const userProfile = {
     id,
+    owner,
     companyBackground,
     serviceDescription,
     servicePhotos,
@@ -57,182 +73,350 @@ const Template8 = ({
     customUrl,
   };
 
+  const allImages = [
+    profilePictureUrl || "/assets/template4samplepic.png",
+    coverPhotoUrl || "/assets/template-7-cover-photo.jpeg",
+    ...(companies?.flatMap(c => c.servicePhotos || []) || [])
+  ].filter(Boolean);
+
   return (
-    <div className="bg-white text-black p-4 flex flex-col justify-between min-h-screen">
-      <div className="w-full mx-auto  max-w-[480px]">
-        <div className="flex flex-col relative">
-          {/*Cover Color Gradient */}
-          <div className="w-full h-[244px] bg-[radial-gradient(circle_at_top_left,_#ffffff_1%,_#1d4ed8_90%)]">
-            <svg
-              className="absolute bottom-0 left-0 w-full"
-              xmlns="http://www.w3.org/2000/svg"
-              viewBox="0 0 1440 320"
-            >
-              <path
-                fill="#ffffff"
-                d="M0,200 C480,96 960,96 1440,200 L1440,320 L0,320 Z"
-              ></path>
-            </svg>
+    <Template8Container>
+      <div className="flex-grow">
+        <div className="w-full mx-auto  max-w-[480px]">
+          <section
+            aria-label="Cover Section"
+            className="relative h-48 sm:h-60 w-full"
+          >
+            <div className="relative w-full h-48 sm:h-60 overflow-hidden">
+              {/* Image with clip-path */}
+              <div className="relative w-full h-48 sm:h-60 overflow-hidden">
+                <svg className="w-full h-full">
+                  <defs>
+                    <clipPath id="curve" clipPathUnits="objectBoundingBox">
+                      <path d="M0,0 H1 V0.85 Q0.5,0.5, 0,0.85 Z" />
+                    </clipPath>
+                  </defs>
+                  <image
+                    href={
+                      coverPhotoUrl || "/assets/template-7-cover-photo.jpeg"
+                    }
+                    width="100%"
+                    height="100%"
+                    preserveAspectRatio="xMidYMid slice"
+                    clipPath="url(#curve)"
+                  />
+                </svg>
+              </div>
+            </div>
+
+            {/* Profile Image */}
+            <div className="absolute left-1/2 bottom-4  transform -translate-x-1/2 z-10">
+              <div className="w-20 h-20 sm:w-[120px] sm:h-[120px] rounded-full border-3 sm:border-4 border-white bg-white overflow-hidden shadow-lg">
+                <ClickableImage
+                  src={profilePictureUrl || "/assets/template4samplepic.png"}
+                  alt="Profile"
+                  width={120}
+                  height={120}
+                  className="w-full h-full object-cover"
+                  onClick={() => openViewer(allImages, 0)}
+                />
+              </div>
+            </div>
+          </section>
+
+          <div className="px-4">
+            {firstName ? (
+              <h1 className="text-xl sm:text-2xl font-extrabold text-footerBlueTemplate text-center">
+                {firstName + " " + lastName}
+              </h1>
+            ) : (
+              <h1 className="text-xl sm:text-2xl font-extrabold mt-4 text-footerBlueTemplate text-center">
+                Hussain Watkins
+              </h1>
+            )}
+
+            <div className="text-xs sm:text-sm text-gray-700 text-center mt-1">
+              {company || "Zwiftech"}{" "}
+              {`| ${position || "Chief Technology Officer"}`}
+            </div>
           </div>
-          {/* Profile picture and bookmark icon */}
-          <div className="absolute rounded-full bg-offWhiteTemplate transform left-40 -bottom-1 w-custom-29 h-custom-29 border-offWhiteTemplate border-2xs">
-            <Image
-              src={
-                userProfile.profilePictureUrl ||
-                "/assets/template-8-profile-picture.jpeg"
-              }
-              fill
-              alt="profile picture"
-              className="rounded-full"
+
+          {/* Contact Info */}
+          <div className="text-xs text-gray-500 text-center mt-1 break-all">
+            {email && (
+              <>
+                {email}
+                {number && <> | {number}</>}
+              </>
+            )}
+            {!email && number && <>{number}</>}
+          </div>
+
+          {/* Buttons */}
+          <div className="flex gap-3 w-full justify-center mt-3 sm:mt-4 px-4">
+            <CTAButtons
+              number={number}
+              email={email}
+              userProfile={userProfile}
+              variant="pills"
+              size="sm"
+              icons="lucide"
+              buttonClassName="bg-blue-500 text-white hover:bg-blue-600"
             />
           </div>
-          <Button
-            onClick={() => downloadVCard(userProfile)}
-            className="absolute rounded-xl transform left-[19rem] top-40 w-10 h-10 bg-offWhiteTemplate hover:bg-offWhiteTemplate"
-          >
-            <Bookmark className="w-6 h-6" />
-          </Button>
-        </div>
-        {/* Profile details */}
-        <div className="flex flex-col items-center mt-6 gap-2 mb-5">
-          <h1 className="text-xl font-extrabold text-footerBlueTemplate leading-[25.1px]">
-            {userProfile.firstName}
-          </h1>
-          <p className="text-xs font-semibold leading-4 text-grayTemplate">
-            {userProfile.company}
-          </p>
-          <p className="font-normal text-grayTemplate text-xs leading-3">
-            {userProfile.email}
-          </p>
-        </div>
-        <div className="flex justify-center gap-2 mb-5">
-          {facebookUrl && (
-            <Button className="rounded-full">
-              <FaFacebook />
-            </Button>
-          )}
-          {instagramUrl && (
-            <Button className="rounded-full">
-              <FaInstagram />
-            </Button>
-          )}
-          {linkedinUrl && (
-            <Button className="rounded-full">
-              <FaLinkedin />
-            </Button>
-          )}
-          <Button className="rounded-full">
-            <a href={`mailto:${email}`}>
-              <FaEnvelope className="cursor-pointer" />
-            </a>
-          </Button>
-          <Button className="rounded-full">
-            <a href={`tel:${number}`} className="text-decoration-none">
-              <FaPhone className="cursor-pointer" />
-            </a>
-          </Button>
-          {websiteUrl && (
-            <Button className="rounded-full">
-              <FaGlobe />
-            </Button>
-          )}
-        </div>
-        {/* CTA BUTTON */}
-        <div className="mb-5">
-          <Button className="rounded-xl bg-footerBlueTemplate text-white w-full hover:bg-footerBlueTemplate">
-            <a href={`mailto:${email}`}>Email me! </a>
-          </Button>
-        </div>
-        {/*COMPANY DETAILS */}
-        <div className="flex flex-col justify-start gap-3">
-          <h1 className="text-base font-extrabold leading-8 text-footerBlueTemplate">
-            {userProfile.company}
-          </h1>
-          <h5 className="text-xs font-extrabold leading-4 text-grayTemplate">
-            Company Overview
-          </h5>
-          <p className="text-2xs leading-4 font-light text-grayTemplate">
-            {userProfile.companyBackground}
-          </p>
-          <h5 className="text-xs font-extrabold leading-4 text-grayTemplate">
-            Our Services
-          </h5>
-          <p className="text-2xs leading-4 font-light text-grayTemplate">
-            {userProfile.serviceDescription}
-          </p>
-          {/*Photos */}
-          <div className="grid grid-cols-2 gap-2">
-            <div className="flex flex-col gap-y-2">
-              <div className="relative h-36 p-2 rounded-2xl bg-offWhiteTemplate">
-                <div className="relative h-32">
-                  <Image
-                    src={userProfile.servicePhotos?.[0] || ""}
-                    fill
-                    alt="photo"
-                    className="rounded-2xs"
-                  />
-                </div>
-              </div>
-              {userProfile.servicePhotos?.[1] && (
-                <div className="relative h-36 p-2 rounded-2xl bg-offWhiteTemplate">
-                  <div className="relative h-32">
-                    <Image
-                      src={userProfile.servicePhotos?.[1] || ""}
-                      fill
-                      alt="photo"
-                      className="rounded-2xs"
-                    />
-                  </div>
-                </div>
-              )}
-            </div>
-            {userProfile.servicePhotos?.[2] && (
-              <div className="relative h-full p-2 rounded-2xl bg-[#F2F2F2]">
-                <div className="relative h-custom-278">
-                  <Image
-                    src={
-                      userProfile.servicePhotos?.[2] ||
-                      "/assets/template-7-image1.jpeg"
-                    }
-                    fill
-                    alt="photo"
-                    className="rounded-2xs"
-                  />
-                </div>
-              </div>
+
+          <div className="flex justify-center px-4 mt-3 sm:mt-5">
+            <SocialLinks
+              facebookUrl={facebookUrl}
+              instagramUrl={instagramUrl}
+              linkedinUrl={linkedinUrl}
+              twitterUrl={twitterUrl}
+              youtubeUrl={youtubeUrl}
+              tiktokUrl={tiktokUrl}
+              whatsappNumber={whatsappNumber}
+              viberUrl={viberUrl}
+              websiteUrl={websiteUrl}
+              cardId={id}
+              ownerId={owner}
+              variant="colorful"
+              size="lg"
+              iconSet="solid"
+              iconClassName=" p-2 rounded-full  w-full h-full"
+              colorfulColors={{
+                facebook: {
+                  icon: "#1877f3",
+                  background: "#f3f4f6",
+                  hover: { background: "#e5e7eb" },
+                },
+                instagram: {
+                  icon: "#e4405f",
+                  background: "#f3f4f6",
+                  hover: { background: "#e5e7eb" },
+                },
+                linkedin: {
+                  icon: "#0a66c2",
+                  background: "#f3f4f6",
+                  hover: { background: "#e5e7eb" },
+                },
+                twitter: {
+                  icon: "#000000",
+                  background: "#f3f4f6",
+                  hover: { background: "#e5e7eb" },
+                },
+                youtube: {
+                  icon: "#ff0000",
+                  background: "#f3f4f6",
+                  hover: { background: "#e5e7eb" },
+                },
+                tiktok: {
+                  icon: "#000000",
+                  background: "#f3f4f6",
+                  hover: { background: "#e5e7eb" },
+                },
+                whatsapp: {
+                  icon: "#25d366",
+                  background: "#f3f4f6",
+                  hover: { background: "#e5e7eb" },
+                },
+                viber: {
+                  icon: "#665cac",
+                  background: "#f3f4f6",
+                  hover: { background: "#e5e7eb" },
+                },
+                website: {
+                  icon: "#6b7280",
+                  background: "#f3f4f6",
+                  hover: { background: "#e5e7eb" },
+                },
+              }}
+            />
+          </div>
+
+          <div className="px-4 mt-4">
+            {email && (
+              <Link
+                href={`mailto:${email}`}
+                className="w-full flex justify-center items-center bg-footerBlueTemplate py-3 rounded-full"
+              >
+                <span className="text-white font-semibold text-sm">
+                  Email Me!
+                </span>
+              </Link>
             )}
           </div>
-          {/*Footer */}
-          <div className="flex flex-col items-center my-3 gap-y-3">
-            <div className="text-base text-footerBlueTemplate font-bold">
-              {company ?? "ABC Company"}
+
+          {/* COMPANY INTRODUCTION */}
+          <div className="border-t border-t-neutral-300 mt-4 mb-6 px-4 pt-4">
+            <h2 className="text-lg font-bold  mb-1">Professional Portfolio</h2>
+            <p className="text-sm text-gray-600">
+              Below you&#39;ll find details about my professional experience and
+              the companies I&#39;ve worked with. Each entry highlights my role,
+              responsibilities, and the services offered.
+            </p>
+          </div>
+          <div className="px-4">
+            <div className="relative mb-6">
+              <div className="absolute left-0 right-0 h-px bg-gradient-to-r from-blue-500 via-purple-500 to-transparent" />
+              <div className="flex items-center justify-center">
+                <div className="px-4 py-1">
+                  <span className="text-xs uppercase tracking-wider text-blue-500 font-medium">
+                    Company Experience
+                  </span>
+                </div>
+              </div>
             </div>
-            <div className="flex justify-center gap-2.5">
-              {facebookUrl && (
-                <Button className="rounded-full h-2xs w-2xs">
-                  <FaFacebook />
-                </Button>
-              )}
-              {instagramUrl && (
-                <Button className="rounded-full h-2xs w-2xs">
-                  <FaInstagram />
-                </Button>
-              )}
-              {linkedinUrl && (
-                <Button className="rounded-full h-2xs w-2xs">
-                  <FaLinkedin />
-                </Button>
-              )}
-            </div>
-            <div className="flex justify-center">
-              <p className="text-2xs text-gray-500 font-light">
-                Copyright 2025 {userProfile.company}. All Right Reserved
-              </p>
-            </div>
+          </div>
+
+          <div className="px-4">
+            {companies?.map((c, i) => (
+              <div
+                key={i}
+                className="mb-4 relative bg-gray-100 rounded-xl shadow-xl overflow-hidden border border-gray-300 "
+              >
+                {/* Company Post Header - Facebook Style */}
+                <div className="flex items-center px-4 py-2 border-b border-gray-300 ">
+                  <div className="w-8 h-8 rounded-full overflow-hidden bg-blue-100 flex-shrink-0 border border-blue-200">
+                    {profilePictureUrl ? (
+                      <ClickableImage
+                        src={profilePictureUrl}
+                        alt="Profile"
+                        width={32}
+                        height={32}
+                        className="w-full h-full object-cover"
+                        onClick={() => openViewer(allImages, 0)}
+                      />
+                    ) : (
+                      <div className="w-full h-full flex items-center justify-center bg-blue-500">
+                        <span className="text-white font-bold text-xs">
+                          {firstName?.charAt(0) || "U"}
+                        </span>
+                      </div>
+                    )}
+                  </div>
+                  <div className="ml-2 flex-1">
+                    <div className="flex flex-col">
+                      <span className="font-semibold text-sm text-gray-800">
+                        {firstName} {lastName}
+                      </span>
+                      <div className="flex items-center">
+                        <span className="text-xs text-gray-600">
+                          {c.position} at{" "}
+                        </span>
+                        <span className="text-xs font-medium text-blue-600 ml-1">
+                          {c.company}
+                        </span>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+
+                {/* About & Services Content - Above Images */}
+                <div className="px-4 pt-3">
+                  {/* Background & Services */}
+                  <div className="space-y-3 mb-3">
+                    {c.companyBackground?.trim() && (
+                      <div>
+                        <h2 className="text-sm font-bold text-blue-600 mb-1">
+                          About
+                        </h2>
+                        <p className="text-sm leading-relaxed text-gray-700">
+                          {c.companyBackground}
+                        </p>
+                      </div>
+                    )}
+
+                    {c.serviceDescription?.trim() && (
+                      <div className="mt-3">
+                        <h3 className="text-sm font-bold text-blue-600 mb-1">
+                          Services
+                        </h3>
+                        <p className="text-sm leading-relaxed text-gray-700">
+                          {c.serviceDescription}
+                        </p>
+                      </div>
+                    )}
+                  </div>
+
+                  {/* Service Photos - Below About & Services */}
+                  {Array.isArray(c.servicePhotos) &&
+                    c.servicePhotos.length > 0 && (
+                      <div className="mt-2 mb-3">
+                        {c.servicePhotos.length === 1 ? (
+                          <div className="relative overflow-hidden rounded-lg border border-neutral-300 shadow-md">
+                            <ClickableImage
+                              src={c.servicePhotos?.[0]}
+                              alt={`${c.company} Featured Image`}
+                              width={600}
+                              height={400}
+                              className="object-cover w-full"
+                              onClick={() => {
+                                const servicePhotoIndex = allImages.findIndex(img => img === c.servicePhotos?.[0]);
+                                openViewer(allImages, servicePhotoIndex);
+                              }}
+                            />
+                          </div>
+                        ) : (
+                          <div className="grid grid-cols-2 gap-1">
+                            {c.servicePhotos.map((photo, index) => (
+                              <div
+                                key={index}
+                                className="relative overflow-hidden rounded-md border border-neutral-300 shadow-md"
+                              >
+                                <ClickableImage
+                                  src={photo}
+                                  alt={`${c.company} Portfolio Image ${index + 1}`}
+                                  width={300}
+                                  height={300}
+                                  className="object-cover w-full"
+                                  onClick={() => {
+                                    const servicePhotoIndex = allImages.findIndex(img => img === photo);
+                                    openViewer(allImages, servicePhotoIndex);
+                                  }}
+                                />
+                              </div>
+                            ))}
+                          </div>
+                        )}
+                      </div>
+                    )}
+                </div>
+              </div>
+            ))}
           </div>
         </div>
       </div>
-    </div>
+      {/* footer */}
+      <TemplateFooter className="mt-auto bg-white px-5 pb-4">
+        <div className="flex flex-col mt-3 mb-1 items-center gap-1 text-center text-xs">
+          <a
+            href={userProfile?.customUrl ?? userProfile?.websiteUrl ?? "#"}
+            target="_blank"
+            rel="noopener noreferrer"
+          >
+            <Image
+              src="/assets/dark-ZwiftechLogo.png"
+              alt="Zwiftech Logo"
+              width={40}
+              height={15}
+              priority
+              className="opacity-90"
+            />
+          </a>
+
+          <span className="tracking-wide text-gray-800 text-[10px] ">
+            © {getCopyrightYear()} Zwiftech. All Rights Reserved.
+          </span>
+        </div>
+      </TemplateFooter>
+      
+      {viewerState.isOpen && (
+        <ImageViewer
+          images={viewerState.images}
+          initialIndex={viewerState.initialIndex}
+          onClose={closeViewer}
+        />
+      )}
+    </Template8Container>
   );
 };
 

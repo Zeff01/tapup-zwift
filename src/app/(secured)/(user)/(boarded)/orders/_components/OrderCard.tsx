@@ -1,275 +1,171 @@
 "use client";
 
+import React from "react";
 import { Order } from "@/types/types";
-import { Card, CardContent } from "@/components/ui/card";
-import Image from "next/image";
-import { usePathname, useRouter } from "next/navigation";
+import { Card } from "@/components/ui/card";
+import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
-import Link from "next/link";
-import RenderStatusSection from "./RenderStatusSection";
-import { useState } from "react";
-
-import { ChevronDown } from "lucide-react";
-import Modal from "@/components/Modal";
+import Image from "next/image";
+import { format } from "date-fns";
+import { Package, Truck, CheckCircle, AlertCircle, XCircle } from "lucide-react";
+import { cn } from "@/lib/utils";
 
 interface OrderCardProps {
   order: Order;
 }
+
+const statusConfig = {
+  "Pending": { 
+    icon: Package, 
+    color: "text-yellow-600", 
+    bgColor: "bg-yellow-100",
+    description: "Order is being processed"
+  },
+  "To Ship": { 
+    icon: Package, 
+    color: "text-blue-600", 
+    bgColor: "bg-blue-100",
+    description: "Preparing for shipment"
+  },
+  "To Receive": { 
+    icon: Truck, 
+    color: "text-purple-600", 
+    bgColor: "bg-purple-100",
+    description: "On the way to you"
+  },
+  "Delivered": { 
+    icon: CheckCircle, 
+    color: "text-green-600", 
+    bgColor: "bg-green-100",
+    description: "Order completed"
+  },
+  "To Return/Refund": { 
+    icon: AlertCircle, 
+    color: "text-orange-600", 
+    bgColor: "bg-orange-100",
+    description: "Return/Refund in progress"
+  },
+  "Cancelled": { 
+    icon: XCircle, 
+    color: "text-red-600", 
+    bgColor: "bg-red-100",
+    description: "Order cancelled"
+  },
+};
+
 const OrderCard: React.FC<OrderCardProps> = ({ order }) => {
-  const pathname = usePathname();
-  const router = useRouter();
-  const [showCancelModal, setShowCancelModal] = useState(false);
-  const [showAll, setShowAll] = useState(false);
-
-  const displayedItems = showAll ? order.items : order.items.slice(0, 2);
-
-  const handleCancelClick = (e: any) => {
-    if (buttonText === "Cancel Order") {
-      e.preventDefault(); // Prevent default navigation
-      console.log("modal", showCancelModal);
-      setShowCancelModal(true);
-    }
-  };
-
-  const getReturnButtonText = () => {
-    if (
-      order.returnStatus === "Return Rejected" &&
-      pathname === "/orders/delivered/showdetails"
-    ) {
-      return "Track Order";
-    }
-    switch (pathname) {
-      case "/orders/delivered":
-        return "Return/Refund";
-
-      case "/orders/to-ship":
-      case "/orders/pending":
-      case "/orders/pending/showdetails":
-      case "/orders/to-ship/showdetails":
-        return "Cancel Order";
-
-      case "/orders/to-receive":
-      case "/orders/to-receive/showdetails":
-        return "Track Order";
-
-      case "/orders/to-return-refund":
-      case "/orders/to-return-refund/showdetails":
-        return "Track Return";
-
-      case "orders/cancelled":
-        return "Track Cancellation";
-
-      default:
-        return null;
-    }
-  };
-
-  const getButtonHref = () => {
-    const hrefs = {
-      "/orders/to-receive": `/orders/trackorder?orderId=${order.orderId}`,
-      "/orders/delivered": "/orders/track-return",
-      "/orders/to-return-refund": "/orders/track-return",
-    };
-    return hrefs[pathname as keyof typeof hrefs] || "#";
-  };
-
-  const formatUrl = (status?: string) =>
-    status
-      ? status
-          .toLowerCase()
-          .trim()
-          .replace(/\s+/g, "-")
-          .replace(/[^a-z0-9-]/g, "-")
-      : "unknown";
-  const orderStatus = formatUrl(order?.status);
-  console.log("order stauts", order.status);
-
-  const buttonText = getReturnButtonText();
-  console.log("Button Text:", buttonText);
-
-  const handleTrackOrder = () => {
-    if (order?.orderId) {
-      router.push(`/orders/trackorder?orderId=${order.orderId}`);
-    }
-  };
+  const config = statusConfig[order.status] || statusConfig["Pending"];
+  const StatusIcon = config.icon;
 
   return (
-    <Card className=" md:p-4 mx-4">
-      <CardContent className="flex flex-col gap-4 p-3">
-        {pathname.includes("/orders/pending") && (
-          <div className="bg-yellow-100 border border-yellow-400 p-3 rounded-md mt-4">
-            <p className="md:text-lg text-yellow-700">
-              To proceed with the delivery, you must first fill out the
-              information needed for the cards.
-            </p>
-            <Link href="/cards">
-              <button className="bg-orderButton text-white hover:bg-greenColor w-full py-2 mt-2 rounded">
-                Fill Out Card Info
-              </button>
-            </Link>
-          </div>
+    <Card className="p-4 md:p-6">
+      {/* Order Header */}
+      <div className="flex flex-col md:flex-row md:items-center justify-between mb-4">
+        <div>
+          <p className="text-sm text-gray-500">Order ID</p>
+          <p className="font-semibold">{order.orderId}</p>
+        </div>
+        <div className="mt-2 md:mt-0 text-right">
+          <p className="text-sm text-gray-500">Order Date</p>
+          <p className="font-medium">
+            {format(new Date(order.orderDate), "MMM dd, yyyy")}
+          </p>
+        </div>
+      </div>
+
+      {/* Status */}
+      <div className="flex items-center gap-3 mb-4 p-3 rounded-lg bg-gray-50 dark:bg-gray-800">
+        <div className={cn("p-2 rounded-full", config.bgColor)}>
+          <StatusIcon className={cn("w-5 h-5", config.color)} />
+        </div>
+        <div className="flex-1">
+          <p className="font-medium">{order.status}</p>
+          <p className="text-sm text-gray-500">{config.description}</p>
+        </div>
+        {order.returnStatus && (
+          <Badge variant="outline">{order.returnStatus}</Badge>
         )}
-        {<RenderStatusSection order={order} />}
-        {displayedItems.map((item) => (
-          <div
-            key={item.product.id}
-            className="flex justify-between items-center"
-          >
-            <div className="flex gap-4 items-center">
-              <div className="relative w-14 h-9 md:w-20 md:h-12 items-center">
-                <Image
-                  src={item.product.image}
-                  alt={item.product.title}
-                  fill
-                  className="object-cover rounded-sm"
-                />
-              </div>
-              <div>
-                <h2 className="text-sm font-medium font-inter md:text-lg">
-                  {item.product.title}
-                </h2>
-                <p className="text-xs text-muted-foreground md:text-base">
-                  {item.product.description}
-                </p>
-              </div>
+      </div>
+
+      {/* Items */}
+      <div className="space-y-3 mb-4">
+        {order.items.map((item, index) => (
+          <div key={index} className="flex gap-3">
+            <div className="relative w-16 h-16 flex-shrink-0">
+              <Image
+                src={item.product?.image || '/assets/placeholder.png'}
+                alt={item.product?.title || 'Product'}
+                fill
+                className="object-cover rounded-md"
+                onError={(e) => {
+                  e.currentTarget.src = '/assets/placeholder.png';
+                }}
+              />
             </div>
-            <div className="flex gap-2 items-center justify-center">
-              <p className="text-sm font-semibold md:text-lg">
-                <span className="ml-2">{item.quantity}</span>
+            <div className="flex-1">
+              <p className="font-medium">{item.product?.title || 'Unknown Product'}</p>
+              <p className="text-sm text-gray-500">
+                {item.product?.description || 'No description'} • Qty: {item.quantity || 1}
               </p>
-              <p className="text-xs md:text-sm">x</p>
-              <p className="text-sm md:text-lg text-muted-foreground">
-                ₱ {item.product.price}
-              </p>
+              <p className="text-sm font-medium">₱{item.product?.price || 0}</p>
             </div>
           </div>
         ))}
+      </div>
 
-        {order.items.length > 2 && !showAll && (
+      {/* Shipping Info */}
+      <div className="border-t pt-4 mb-4">
+        <div className="grid grid-cols-2 gap-4 text-sm">
           <div>
-            <Button
-              className="bg-transparent text-muted-foreground font-medium mx-auto text-center text-sm md:text-lg  w-full border-none"
-              onClick={() => setShowAll(true)}
-            >
-              View More <ChevronDown />
-            </Button>
-          </div>
-        )}
-        {(order.items.length <= 2 || showAll) && (
-          <div className={`mt-2`}>
-            <h2 className="text-sm font-medium font-inter md:text-xl text-primary">
-              Shipping
-            </h2>
-            <p className="text-xs text-muted-foreground md:text-lg">
-              ₱{order.deliveryOption?.shippingFee}
+            <p className="text-gray-500">Ship to</p>
+            <p className="font-medium">{order.shippingInfo.recipientName}</p>
+            <p className="text-gray-600">
+              {order.shippingInfo.address.street}, {order.shippingInfo.address.city}
             </p>
           </div>
-        )}
-        <p className="text-lg md:text-xl text-right text-muted-foreground">
-          Total:{" "}
-          <span className="text-green-600 font-bold">
-            ₱{order.totalAmount! + order.deliveryOption?.shippingFee!}
-          </span>
-        </p>
+          <div>
+            <p className="text-gray-500">Delivery</p>
+            <div className="flex items-center gap-2 mt-1">
+              {order.deliveryOption?.image && (
+                <Image
+                  src={order.deliveryOption.image}
+                  alt={order.deliveryOption.name}
+                  width={24}
+                  height={24}
+                  className="object-contain"
+                  onError={(e) => {
+                    e.currentTarget.style.display = 'none';
+                  }}
+                />
+              )}
+              <p className="font-medium">{order.deliveryOption?.name || 'Standard Delivery'}</p>
+            </div>
+          </div>
+        </div>
+      </div>
 
-        <div className="flex justify-center gap-2 mt-4">
-          {order?.status && (
-            <Link
-              href={`/orders/${orderStatus}/showdetails?orderId=${order.orderId}`}
-              className="flex-1"
-            >
-              <Button variant="outline" className="w-full max-w-screen-lg">
-                {`${pathname === `/orders/${orderStatus}/showdetails` ? "Contact Support" : "Show Details"}`}
-              </Button>
-            </Link>
-          )}
-          {buttonText &&
-            !pathname.includes("/orders/cancelled") &&
-            order.returnStatus !== "Refunded" &&
-            order.returnStatus !== "Return Rejected" && (
-              <div className="flex-1">
-                {buttonText === "Cancel Order" ? (
-                  <button
-                    onClick={handleCancelClick}
-                    className={`${
-                      pathname.includes("/orders/to-receive") ||
-                      pathname.includes("/orders/to-return-refund")
-                        ? "hover:bg-greenColor text-white dark:hover:text-primary bg-orderButton"
-                        : "hover:bg-red-300 bg-[#EF4444]"
-                    } max-w-screen-lg w-full py-2 px-4 text-white rounded-lg`}
-                  >
-                    {buttonText}
-                  </button>
-                ) : (
-                  <Link href={getButtonHref()} className="flex-1">
-                    <Button
-                      className={`${
-                        pathname.includes("/orders/to-receive") ||
-                        pathname.includes("/orders/to-return-refund")
-                          ? "hover:bg-greenColor text-white dark:hover:text-primary bg-orderButton"
-                          : "hover:bg-red-300 bg-[#EF4444]"
-                      } max-w-screen-lg w-full`}
-                    >
-                      {buttonText}
-                    </Button>
-                  </Link>
-                )}
-              </div>
-            )}
-          {pathname.includes("/orders/delivered/showdetails") &&
-            order.returnStatus === "Return Rejected" && (
-              <Button
-                className="hover:bg-greenColor bg-orderButton flex-1  max-w-screen-lg w-full"
-                onClick={() => {
-                  handleTrackOrder();
-                }}
-              >
-                Track Order
-              </Button>
-            )}
-          {pathname.includes("/orders/cancelled/showdetails") && (
-            <Button
-              className="hover:bg-orderButton dark:hover:text-primary bg-greenColor flex-1  max-w-screen-lg w-full"
-              onClick={() =>
-                router.push(`/orders/trackreturn?orderId=${order.orderId}`)
-              }
-            >
-              Track Cancellation
+      {/* Footer */}
+      <div className="flex items-center justify-between border-t pt-4">
+        <div>
+          <p className="text-sm text-gray-500">Total Amount</p>
+          <p className="text-lg font-semibold">₱{order.totalAmount.toFixed(2)}</p>
+        </div>
+        <div className="flex gap-2">
+          {order.status === "Delivered" && (
+            <Button variant="outline" size="sm">
+              Rate & Review
             </Button>
           )}
+          {(order.status === "Pending" || order.status === "To Ship") && (
+            <Button variant="outline" size="sm" className="text-red-600 hover:text-red-700">
+              Cancel Order
+            </Button>
+          )}
+          <Button size="sm">
+            View Details
+          </Button>
         </div>
-
-        {/* Modal */}
-        {showCancelModal && (
-          <Modal
-            isOpen={showCancelModal}
-            onClose={() => setShowCancelModal(false)}
-          >
-            <div className="p-4 text-center">
-              <h2 className="text-sm md:text-lg font-semibold">
-                Are you sure you want to cancel this order?
-              </h2>
-              <div className="flex justify-center gap-4 mt-4">
-                <Button
-                  className="bg-red-500 hover:bg-red-600"
-                  onClick={() => {
-                    setShowCancelModal(false);
-                    // Handle actual cancellation logic here
-                  }}
-                >
-                  Yes
-                </Button>
-                <Button
-                  className="bg-gray-300 hover:bg-gray-400"
-                  onClick={() => setShowCancelModal(false)}
-                >
-                  No
-                </Button>
-              </div>
-            </div>
-          </Modal>
-        )}
-      </CardContent>
+      </div>
     </Card>
   );
 };

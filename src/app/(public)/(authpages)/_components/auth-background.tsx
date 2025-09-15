@@ -122,6 +122,7 @@ export default function BackGround() {
           fill
           src={TapUp}
           alt="TapUp Card Preview"
+          sizes="300px"
           className="object-contain"
         />
       </motion.div>

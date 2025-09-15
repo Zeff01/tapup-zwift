@@ -18,7 +18,7 @@ export default function CardBankPage() {
   useEffect(() => {
     if (!isLoading && user) {
       if (user.role !== USER_ROLE_ENUMS.ADMIN && user.role !== USER_ROLE_ENUMS.SUPER_ADMIN) {
-        router.push("/dashboard");
+        router.push("/cards");
       } else {
         // Fetch initial data without React Query
         const fetchInitialData = async () => {

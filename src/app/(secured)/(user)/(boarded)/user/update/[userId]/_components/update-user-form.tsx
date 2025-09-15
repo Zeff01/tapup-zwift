@@ -12,7 +12,7 @@ const UpdateUserForm = ({ data }: { data: ExtendedUserInterface }) => {
   const router = useRouter();
 
   if (!user) {
-    router.push("/dashboard");
+    router.push("/cards");
     return;
   }
 

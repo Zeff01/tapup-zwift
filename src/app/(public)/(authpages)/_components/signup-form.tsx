@@ -139,7 +139,7 @@ export function RegisterForm() {
   } = useMutation({
     mutationFn: signUpHandler,
     onSuccess: () => {
-      router.push("/dashboard");
+      router.push("/cards");
     },
   });
 

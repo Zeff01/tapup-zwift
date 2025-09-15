@@ -33,7 +33,7 @@ import {
   Users,
 } from "@/types/types";
 import { redirect } from "next/navigation";
-import { updateUserById } from "./actions/user.action";
+import { updateUserProfile, extractCardDataFromForm } from "./actions/user-profile.action";
 
 export const authCurrentUser = async () => {
   try {
@@ -113,9 +113,10 @@ export const signUpHandler = async (data: z.infer<typeof signupSchema>) => {
         const { email, ...cleanOnboardingData } = onboardingData;
 
         console.log("Updating user with onboarding data");
-        await updateUserById({
+        const { userData: profileData } = extractCardDataFromForm(cleanOnboardingData);
+        await updateUserProfile({
           user_id: userID,
-          user: cleanOnboardingData,
+          userData: profileData,
         });
 
         if (cleanOnboardingData.chosenPhysicalCard) {
@@ -171,7 +172,7 @@ export const loginHandler = async ({
       await createSession(userID);
     }
     toast.success("Login successful!");
-    redirect("/dashboard");
+    redirect("/cards");
   } catch (error) {
     if (error instanceof FirebaseError) {
       console.log(error.code);
@@ -204,7 +205,7 @@ export const signInWithGoogle = async () => {
     if (docSnap.exists()) {
       await createSession(userID);
       toast.success("Login successful!");
-      redirect("/dashboard");
+      redirect("/cards");
     }
     await setDoc(doc(firebaseDb, "user-account", userID), {
       role: USER_ROLE_ENUMS.USER,
@@ -214,7 +215,7 @@ export const signInWithGoogle = async () => {
     await createSession(userID);
 
     toast.success("Login successful!");
-    redirect("/dashboard");
+    redirect("/cards");
   } catch (error) {
     if (error instanceof FirebaseError) {
       console.log(error.code);

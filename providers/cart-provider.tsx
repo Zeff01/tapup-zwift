@@ -7,6 +7,7 @@ import { useUserContext } from "./user-provider";
 import {
   getCartByUserUid,
   saveCartItemsByUserUid,
+  clearCartByUserId,
 } from "@/lib/firebase/actions/cart.action";
 import { SubscriptionPlan } from "@/types/types";
 import { toast } from "react-toastify";
@@ -17,6 +18,7 @@ export type CartItem = {
   price: number;
   quantity: number;
   image: string;
+  description?: string;
   subscriptionPlan?: SubscriptionPlan;
 };
 
@@ -137,7 +139,23 @@ export function CartProvider({ children }: { children: React.ReactNode }) {
     );
   };
 
-  const clearCart = () => setItems([]);
+  const clearCart = async () => {
+    setItems([]);
+    
+    // Also clear from Firestore if user is authenticated
+    if (isAuthenticated && user?.uid) {
+      try {
+        await clearCartByUserId(user.uid);
+      } catch (error) {
+        console.error("Error clearing cart from database:", error);
+      }
+    }
+    
+    // Clear from localStorage for non-authenticated users
+    if (!isAuthenticated && typeof window !== "undefined") {
+      localStorage.removeItem("cart");
+    }
+  };
 
   const totalItems = items.reduce((total, item) => total + item.quantity, 0);
   const subtotal = items.reduce(

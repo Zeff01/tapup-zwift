@@ -28,7 +28,8 @@ import { UserIcon, Camera, Edit2, Upload } from "lucide-react";
 import { useUserContext } from "@/providers/user-provider";
 import { toast } from "react-toastify";
 import { uploadImage } from "@/lib/firebase/actions/user.action";
-import { ExtendedUserInterface } from "@/types/types";
+import { ExtendedUserInterface, Photo } from "@/types/types";
+import ImageCropper from "../ImageCropper";
 
 // Form validation schema
 const editAccountSchema = z.object({
@@ -55,8 +56,7 @@ const EditAccountModal = ({ trigger }: EditAccountModalProps) => {
     user?.profilePictureUrl || null
   );
   const [isLoading, setIsLoading] = useState(false);
-  const [isUploadingImage, setIsUploadingImage] = useState(false);
-  const fileInputRef = useRef<HTMLInputElement>(null);
+  const [selectedPhoto, setSelectedPhoto] = useState<Photo | null>(null);
 
   const form = useForm<EditAccountFormData>({
     resolver: zodResolver(editAccountSchema),
@@ -77,72 +77,12 @@ const EditAccountModal = ({ trigger }: EditAccountModalProps) => {
     }
   }, [user, form]);
 
-  const validateImageDimensions = (file: File): Promise<boolean> => {
-    return new Promise((resolve) => {
-      const img = new Image();
-      img.onload = () => {
-        // Check if image is square and at least 200x200 pixels
-        const isValidSize = img.width >= 200 && img.height >= 200;
-        const isSquare = img.width === img.height;
-
-        if (!isValidSize) {
-          toast.error("Image must be at least 200x200 pixels");
-          resolve(false);
-        } else if (!isSquare) {
-          toast.error("Image must be square (same width and height)");
-          resolve(false);
-        } else {
-          resolve(true);
-        }
-      };
-      img.onerror = () => {
-        toast.error("Invalid image file");
-        resolve(false);
-      };
-      img.src = URL.createObjectURL(file);
-    });
+  const handlePhotoChange = (photo: Photo | null) => {
+    setSelectedPhoto(photo);
   };
-
-  const handleImageUpload = async (
-    event: React.ChangeEvent<HTMLInputElement>
-  ) => {
-    const file = event.target.files?.[0];
-    if (!file) return;
-
-    // Check file size (max 5MB)
-    if (file.size > 5 * 1024 * 1024) {
-      toast.error("Image must be smaller than 5MB");
-      return;
-    }
-
-    // Check file type
-    if (!file.type.startsWith("image/")) {
-      toast.error("Please select a valid image file");
-      return;
-    }
-
-    // Validate image dimensions
-    const isValidImage = await validateImageDimensions(file);
-    if (!isValidImage) return;
-
-    setIsUploadingImage(true);
-    try {
-      const imageUrl = URL.createObjectURL(file);
-
-      const url = await uploadImage({
-        preview: imageUrl,
-        raw: file,
-      });
-
-      setAvatarUrl(url);
-
-      toast.success("Image uploaded successfully!");
-    } catch (error) {
-      console.error("Error uploading image:", error);
-      toast.error("Failed to upload image. Please try again.");
-    } finally {
-      setIsUploadingImage(false);
-    }
+  
+  const handleUrlChange = (url: string | null) => {
+    setAvatarUrl(url);
   };
 
   const handleSubmit = async (data: EditAccountFormData) => {
@@ -202,129 +142,115 @@ const EditAccountModal = ({ trigger }: EditAccountModalProps) => {
   }
 
   return (
-    <Dialog open={isOpen} onOpenChange={handleOpenChange}>
-      <DialogTrigger asChild>
-        {trigger || (
-          <span className="ml-auto flex cursor-pointer ">
-            <Edit2 className="size-4" />
-          </span>
-        )}
-      </DialogTrigger>
-      <DialogContent className="sm:max-w-md">
-        <DialogHeader className="mb-4">
-          <DialogTitle>Edit Account</DialogTitle>
-          <DialogDescription>
-            Update your account information and profile picture.
-          </DialogDescription>
-        </DialogHeader>
+    <>
+      <Dialog open={isOpen} onOpenChange={handleOpenChange}>
+        <DialogTrigger asChild>
+          {trigger || (
+            <span className="ml-auto flex cursor-pointer ">
+              <Edit2 className="size-4" />
+            </span>
+          )}
+        </DialogTrigger>
+        <DialogContent className="sm:max-w-md">
+          <DialogHeader className="mb-4">
+            <DialogTitle>Edit Account</DialogTitle>
+            <DialogDescription>
+              Update your account information and profile picture.
+            </DialogDescription>
+          </DialogHeader>
 
-        <Form {...form}>
-          <form
-            onSubmit={form.handleSubmit(handleSubmit)}
-            className="space-y-6"
-          >
-            {/* Avatar Upload Section */}
-            <div className="flex flex-col items-center space-y-3">
-              <div className="relative">
-                <Avatar className="h-20 w-20">
-                  <AvatarImage src={avatarUrl || undefined} />
-                  <AvatarFallback className="bg-muted">
-                    <UserIcon className="h-10 w-10 text-muted-foreground" />
-                  </AvatarFallback>
-                </Avatar>
-                {avatarUrl && (
-                  <div className="absolute -bottom-1 -right-1 bg-primary rounded-full p-1">
-                    <Camera className="h-3 w-3 text-primary-foreground" />
-                  </div>
-                )}
-              </div>
-
-              <div className="flex flex-col items-center space-y-2">
-                <input
-                  ref={fileInputRef}
-                  type="file"
-                  accept="image/*"
-                  onChange={handleImageUpload}
-                  className="hidden"
+          <Form {...form}>
+            <form
+              onSubmit={form.handleSubmit(handleSubmit)}
+              className="space-y-6"
+            >
+              {/* Avatar Upload Section */}
+              <div className="flex flex-col items-center space-y-3">
+                <ImageCropper
+                  imageUrl={avatarUrl}
+                  setImageUrl={handleUrlChange}
+                  photo={selectedPhoto}
+                  setPhoto={handlePhotoChange}
+                  aspect={1}
+                  circularCrop
+                  className="h-20 w-20 rounded-full border-2 border-gray-200"
+                  fallback={
+                    <div className="flex items-center justify-center h-full w-full bg-muted rounded-full">
+                      <UserIcon className="h-10 w-10 text-muted-foreground" />
+                    </div>
+                  }
+                  showEditButtons={true}
+                  cropperTitle="Crop Profile Photo"
                 />
-                <Button
-                  type="button"
-                  variant="outline"
-                  size="sm"
-                  onClick={() => fileInputRef.current?.click()}
-                  disabled={isUploadingImage}
-                  className="gap-2"
-                >
-                  <Upload className="h-4 w-4" />
-                  {isUploadingImage ? "Uploading..." : "Change Avatar"}
-                </Button>
+                
                 <div className="text-center">
                   <p className="text-xs text-muted-foreground">
-                    Square image required • Min 200x200px • Max 5MB
+                    Click to upload • Min 200x200px • Max 5MB
                   </p>
                   <p className="text-xs text-muted-foreground">
                     Supported: JPG, PNG, GIF
                   </p>
                 </div>
               </div>
-            </div>
 
-            {/* Form Fields */}
-            <div className="grid grid-cols-2 gap-4">
-              <FormField
-                control={form.control}
-                name="firstName"
-                render={({ field }) => (
-                  <FormItem>
-                    <FormLabel>First Name</FormLabel>
-                    <FormControl>
-                      <Input
-                        placeholder="Enter first name"
-                        {...field}
-                        disabled={isLoading}
-                      />
-                    </FormControl>
-                    <FormMessage />
-                  </FormItem>
-                )}
-              />
+              {/* Form Fields */}
+              <div className="grid grid-cols-2 gap-4">
+                <FormField
+                  control={form.control}
+                  name="firstName"
+                  render={({ field }) => (
+                    <FormItem>
+                      <FormLabel>First Name</FormLabel>
+                      <FormControl>
+                        <Input
+                          placeholder="Enter first name"
+                          {...field}
+                          disabled={isLoading}
+                        />
+                      </FormControl>
+                      <FormMessage />
+                    </FormItem>
+                  )}
+                />
 
-              <FormField
-                control={form.control}
-                name="lastName"
-                render={({ field }) => (
-                  <FormItem>
-                    <FormLabel>Last Name</FormLabel>
-                    <FormControl>
-                      <Input
-                        placeholder="Enter last name"
-                        {...field}
-                        disabled={isLoading}
-                      />
-                    </FormControl>
-                    <FormMessage />
-                  </FormItem>
-                )}
-              />
-            </div>
+                <FormField
+                  control={form.control}
+                  name="lastName"
+                  render={({ field }) => (
+                    <FormItem>
+                      <FormLabel>Last Name</FormLabel>
+                      <FormControl>
+                        <Input
+                          placeholder="Enter last name"
+                          {...field}
+                          disabled={isLoading}
+                        />
+                      </FormControl>
+                      <FormMessage />
+                    </FormItem>
+                  )}
+                />
+              </div>
 
-            <DialogFooter>
-              <Button
-                type="button"
-                variant="outline"
-                onClick={handleClose}
-                disabled={isLoading}
-              >
-                Cancel
-              </Button>
-              <Button type="submit" variant="green" disabled={isLoading}>
-                {isLoading ? "Saving..." : "Save Changes"}
-              </Button>
-            </DialogFooter>
-          </form>
-        </Form>
-      </DialogContent>
-    </Dialog>
+              <DialogFooter>
+                <Button
+                  type="button"
+                  variant="outline"
+                  onClick={handleClose}
+                  disabled={isLoading}
+                >
+                  Cancel
+                </Button>
+                <Button type="submit" variant="green" disabled={isLoading}>
+                  {isLoading ? "Saving..." : "Save Changes"}
+                </Button>
+              </DialogFooter>
+            </form>
+          </Form>
+        </DialogContent>
+      </Dialog>
+
+    </>
   );
 };
 

@@ -75,11 +75,11 @@ const DigitalCardOverlay = ({ card }: Prop) => {
           <div className="flex-1 py-3 px-4 relative">
             <div className="flex-grow flex flex-col justify-between">
               <div>
-                <p className="text-[clamp(1rem,1.4vw,1.1rem)] mt-3 sm:mt-0 font-semibold capitalize text-white">
+                <p className="text-sm sm:text-base mt-0 font-semibold capitalize text-white [text-shadow:_0_1px_3px_rgb(0_0_0_/_80%),_0_0_8px_rgb(0_0_0_/_50%)]">
                   {(card.firstName || "") + " " + (card.lastName || "")}
                 </p>
-                <p className="text-xs capitalize text-white">
-                  {card.position || ""}
+                <p className="text-xs sm:text-sm pt-1 font-semibold capitalize text-white [text-shadow:_0_1px_3px_rgb(0_0_0_/_80%),_0_0_8px_rgb(0_0_0_/_50%)]">
+                  {card.cardName || ""}
                 </p>
               </div>
             </div>

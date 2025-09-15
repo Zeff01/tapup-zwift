@@ -369,6 +369,7 @@ export default function TransactionDashboard({
                               src={cardImage}
                               alt={transaction.cards[0]?.name || "Card"}
                               fill
+                              sizes="(max-width: 640px) 80px, 96px"
                               className="object-cover"
                             />
                             {transaction.cards.length > 1 && (
@@ -534,6 +535,7 @@ export default function TransactionDashboard({
                                           src={image}
                                           alt={card.name}
                                           fill
+                                          sizes="48px"
                                           className="object-cover"
                                         />
                                       </div>
@@ -645,6 +647,7 @@ export default function TransactionDashboard({
                               src={image}
                               alt={card.name}
                               fill
+                              sizes="80px"
                               className="object-cover"
                             />
                           </div>

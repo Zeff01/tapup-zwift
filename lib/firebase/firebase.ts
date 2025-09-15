@@ -1,5 +1,5 @@
 import { initializeApp, getApp } from "firebase/app";
-import { getFirestore } from "firebase/firestore";
+import { getFirestore, initializeFirestore, persistentLocalCache, persistentMultipleTabManager } from "firebase/firestore";
 import { getStorage } from "firebase/storage";
 import { getAuth } from "firebase/auth";
 
@@ -24,10 +24,19 @@ console.log("[Firebase Init] Config:", {
 const firebaseApp = initializeApp(firebaseConfig);
 console.log("[Firebase Init] App initialized:", !!firebaseApp);
 
-const firebaseDb = getFirestore(firebaseApp);
+// Initialize Firestore with offline persistence
+const firebaseDb = initializeFirestore(firebaseApp, {
+  localCache: persistentLocalCache({
+    tabManager: persistentMultipleTabManager()
+  }),
+  experimentalForceLongPolling: false, // Use WebChannel instead of gRPC
+  experimentalAutoDetectLongPolling: true, // Automatically detect best connection method
+});
+
 console.log("[Firebase Init] Firestore initialized:", !!firebaseDb);
 
 const firebaseStorage = getStorage(firebaseApp);
 const firebaseAuth = getAuth(getApp());
 
 export { firebaseDb, firebaseStorage, firebaseAuth };
+export const db = firebaseDb; // Alias for the connection hook

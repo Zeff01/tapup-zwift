@@ -27,6 +27,26 @@ import ReactCrop, {
 import { cn } from "@/lib/utils";
 import { ReactNode } from "react";
 import "react-image-crop/dist/ReactCrop.css";
+
+// Add custom styles to fix image sizing issues
+const cropperStyles = `
+  .react-crop-container img {
+    max-width: none !important;
+    max-height: none !important;
+    min-width: 400px !important;
+    min-height: 300px !important;
+    width: auto !important;
+    height: auto !important;
+    object-fit: contain !important;
+  }
+  .ReactCrop {
+    min-height: 400px !important;
+  }
+  .ReactCrop__crop-selection {
+    min-width: 50px !important;
+    min-height: 50px !important;
+  }
+`;
 import { toast } from "react-toastify";
 import ImageLoaded from "./ImageLoaded";
 import TapupLogo from "./svgs/TapupLogo";
@@ -85,7 +105,7 @@ export default function Cropper({
   imageClassName,
   ...rest
 }: CropperProps) {
-  const [imgSrc, setImgSrc] = useState("");
+  const [imgSrc, setImgSrc] = useState(photo?.preview || imageUrl || "");
   const previewCanvasRef = useRef<HTMLCanvasElement>(null);
   const imgRef = useRef<HTMLImageElement>(null);
   const hiddenAnchorRef = useRef<HTMLAnchorElement>(null);
@@ -110,7 +130,9 @@ export default function Cropper({
   function toggleModal() {
     setCrop(undefined);
     setImageLoaded(false);
-    setImgSrc("");
+    if (!photo?.preview && !imageUrl) {
+      setImgSrc("");
+    }
     setShowModal((m) => !m);
   }
 
@@ -130,9 +152,18 @@ export default function Cropper({
   // TODO: Loaded Bug
   function onImageLoad(e: React.SyntheticEvent<HTMLImageElement>) {
     setImageLoaded(true);
+    const { naturalWidth, naturalHeight, width, height } = e.currentTarget;
+    console.log('Image loaded with natural dimensions:', naturalWidth, 'x', naturalHeight);
+    console.log('Image displayed dimensions:', width, 'x', height);
+    
+    // Force minimum display size if image is too small
+    if (width < 400) {
+      e.currentTarget.style.width = '400px';
+      e.currentTarget.style.height = 'auto';
+    }
+    
     if (aspect) {
-      const { width, height } = e.currentTarget;
-      setCrop(centerAspectCrop(width, height, aspect));
+      setCrop(centerAspectCrop(naturalWidth, naturalHeight, aspect));
     }
   }
 
@@ -154,15 +185,33 @@ export default function Cropper({
               imgElement.src = event.target?.result as string;
               imgElement.onload = async function (e: any) {
                 const canvas = document.createElement("canvas");
-                const MAX_WIDTH = 400;
+                // Improved sizing logic that considers both width and height
+                const MAX_WIDTH = 800; // Increased for better quality
+                const MAX_HEIGHT = 800; // Add height constraint
+                
+                let width = e.target.width;
+                let height = e.target.height;
+                let scale = 1;
 
-                const scaleSize = MAX_WIDTH / e.target.width;
-                canvas.width = MAX_WIDTH;
-                canvas.height = e.target.height * scaleSize;
+                // Calculate scale to fit within bounds while maintaining aspect ratio
+                if (width > MAX_WIDTH || height > MAX_HEIGHT) {
+                  const scaleX = MAX_WIDTH / width;
+                  const scaleY = MAX_HEIGHT / height;
+                  scale = Math.min(scaleX, scaleY);
+                  width = Math.floor(width * scale);
+                  height = Math.floor(height * scale);
+                }
+
+                canvas.width = width;
+                canvas.height = height;
 
                 const ctx = canvas.getContext("2d");
-
-                ctx?.drawImage(e.target, 0, 0, canvas.width, canvas.height);
+                // Enable image smoothing for better quality
+                if (ctx) {
+                  ctx.imageSmoothingEnabled = true;
+                  ctx.imageSmoothingQuality = 'high';
+                  ctx.drawImage(e.target, 0, 0, width, height);
+                }
 
                 canvas.toBlob((newBlob) => {
                   if (newBlob) {
@@ -171,8 +220,9 @@ export default function Cropper({
                     newreader.onload = async (newevent) => {
                       const fileAsDataURL = newevent.target?.result;
                       if (typeof fileAsDataURL === "string") {
-                        const file = new File([newBlob], "cropped-image.png", {
-                          type: "image/png",
+                        // Use JPEG for better compression and quality balance
+                        const file = new File([newBlob], "cropped-image.jpg", {
+                          type: "image/jpeg",
                         });
                         try {
                           const dl_url = await uploadImage({
@@ -194,7 +244,7 @@ export default function Cropper({
                       }
                     };
                   }
-                }, "image/png");
+                }, "image/jpeg", 0.9); // 90% quality for good balance
               };
             };
             if (blobUrlRef.current) {
@@ -242,11 +292,22 @@ export default function Cropper({
     SetCsr(true);
   }, []);
 
+  // Set imgSrc when photo or imageUrl changes
+  useEffect(() => {
+    if (photo?.preview) {
+      setImgSrc(photo.preview);
+    } else if (imageUrl) {
+      setImgSrc(imageUrl);
+    }
+  }, [photo?.preview, imageUrl]);
+
   if (!csr) {
     return null;
   }
   return (
-    <div className="cropper">
+    <>
+      <style dangerouslySetInnerHTML={{ __html: cropperStyles }} />
+      <div className="cropper">
       <div
         className={cn(
           "relative w-full h-full border border-[#2c2c2c]",
@@ -263,7 +324,10 @@ export default function Cropper({
           onClick={(e) => {
             if (disableUpload) {
               e.preventDefault();
-              toast.error("Maximum of 5 photos can be uploaded");
+              // When disableUpload is true and we have an image, open the cropper modal
+              if (photo?.preview || imageUrl) {
+                toggleModal();
+              }
             } else {
               toggleModal();
             }
@@ -291,32 +355,36 @@ export default function Cropper({
         )}
       </div>
 
+    </div>
+
       {createPortal(
         <>
           {showModal && (
-            <div className="z-50 fixed top-0 right-0 w-screen h-screen ">
-              <div className="z-20 w-full h-full bg-black opacity-80" />
-              <div className="z-30 absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 bg-secondary flex flex-col items-center gap-y-4 overflow-y-auto justify-between">
+            <div className="z-50 fixed inset-0 w-screen h-screen">
+              <div className="z-20 w-full h-full bg-black opacity-80" onClick={toggleModal} />
+              <div className="z-30 absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 bg-secondary flex flex-col items-center gap-y-4 overflow-y-auto justify-between max-h-[95vh] min-w-[800px] max-w-[95vw] rounded-lg p-6" style={{ minHeight: '600px' }}>
                 <div className="pt-8 w-full flex flex-col items-center ">
                   {/* <input type="file" accept="image/*" onChange={onSelectFile} /> */}
-                  <div className="w-[350px] sm:w-[400px] flex flex-col items-center gap-y-2 ">
+                  <div className="w-full max-w-[500px] flex flex-col items-center gap-y-2 px-4">
                     <TapupLogo className="w-[6rem] mb-3" />
-                    <p className="pb-4 font-bold text-2xl">Select the Image</p>
+                    <p className="pb-4 font-bold text-2xl">Crop Your Image</p>
                     <label htmlFor="scale" className="text-xl font-semibold">
                       Zoom
                     </label>
-                    <div className="flex flex-row items-center gap-2 w-full py-4 px-8 md:px-5 ">
-                      <Minus />
+                    <div className="flex flex-row items-center gap-2 w-full py-4 px-4">
+                      <Minus className="w-4 h-4" />
                       <Slider
                         defaultValue={[1]}
-                        max={3}
+                        max={2}
                         step={0.05}
-                        min={0.5}
+                        min={0.8}
+                        value={[scale]}
                         onValueChange={(v) => {
                           setScale(v[0]);
                         }}
+                        className="flex-1"
                       />
-                      <Plus />
+                      <Plus className="w-4 h-4" />
                     </div>
                   </div>
 
@@ -347,34 +415,62 @@ export default function Cropper({
                     )}
                   </div>
                 </div>
-                <div className="px-2">
+                <div className="px-4 pb-4 w-full">
                   {!!imgSrc && (
-                    <ReactCrop
-                      crop={crop}
-                      onChange={(_, percentCrop) => setCrop(percentCrop)}
-                      onComplete={(c) => setCompletedCrop(c)}
-                      aspect={aspect}
-                      // minWidth={400}
-                      minHeight={60}
-                      maxHeight={maxHeight}
-                      circularCrop={circularCrop}
-                    >
-                      <div className="relative flex items-center justify-center bg-black/30">
-                        <Loader2 className="animate-spin size-20 absolute " />
-                        <Image
-                          ref={imgRef}
-                          alt="Crop me"
-                          src={imgSrc || "/assets/zwift-logo.png"}
-                          style={{
-                            transform: `scale(${scale})`,
-                            opacity: imageLoaded ? "100" : "0",
-                          }}
-                          onLoad={onImageLoad}
-                          width={400}
-                          height={400}
-                        />
+                    <>
+                      {/* Aspect Ratio Info */}
+                      <div className="mb-4 text-center text-sm text-gray-400">
+                        {aspect === 1 && "Profile Photo (Square - 1:1)"}
+                        {aspect === 16/9 && "Cover Photo (Wide - 16:9)"}
+                        {!aspect && "Free Crop"}
                       </div>
-                    </ReactCrop>
+                      <div className="flex justify-center w-full">
+                        <div className="relative" style={{ maxWidth: '600px', width: '100%' }}>
+                          {!imageLoaded && (
+                            <div className="absolute inset-0 flex items-center justify-center z-10">
+                              <Loader2 className="animate-spin size-20" />
+                            </div>
+                          )}
+                          <ReactCrop
+                            crop={crop}
+                            onChange={(_, percentCrop) => setCrop(percentCrop)}
+                            onComplete={(c) => setCompletedCrop(c)}
+                            aspect={aspect}
+                            minHeight={200}
+                            circularCrop={circularCrop}
+                            style={{ 
+                              width: '100%', 
+                              height: 'auto',
+                              minHeight: '400px'
+                            }}
+                            className="react-crop-container"
+                          >
+                            <img
+                              ref={imgRef}
+                              alt="Crop me"
+                              src={imgSrc || "/assets/zwift-logo.png"}
+                              style={{
+                                transform: `scale(${scale})`,
+                                transformOrigin: 'center center',
+                                opacity: imageLoaded ? "1" : "0",
+                                display: 'block',
+                                maxWidth: '100%',
+                                height: 'auto',
+                                minHeight: '400px',
+                                objectFit: 'contain'
+                              }}
+                              onLoad={onImageLoad}
+                            />
+                          </ReactCrop>
+                        </div>
+                      </div>
+                      {/* Dimensions Info */}
+                      {completedCrop && (
+                        <div className="mt-4 text-center text-xs text-gray-500">
+                          Crop Size: {Math.round(completedCrop.width)} × {Math.round(completedCrop.height)} px
+                        </div>
+                      )}
+                    </>
                   )}
                 </div>
                 {!!completedCrop && (
@@ -413,6 +509,6 @@ export default function Cropper({
         </>,
         document.body
       )}
-    </div>
+    </>
   );
 }

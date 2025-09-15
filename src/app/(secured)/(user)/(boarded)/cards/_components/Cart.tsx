@@ -24,6 +24,7 @@ const Cart: React.FC<CartProps> = ({ showTrash }) => {
                 title: item.name,
                 image: item.image,
                 price: item.price,
+                description: item.description || "Premium digital business card",
               },
               quantity: item.quantity,
               subscriptionPlan: item.subscriptionPlan || null,
