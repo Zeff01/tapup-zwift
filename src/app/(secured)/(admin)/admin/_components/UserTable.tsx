@@ -33,6 +33,7 @@ import {
   Mail,
   MoreVertical,
   ShieldCheck,
+  Shield,
   Users,
   UserX,
 } from "lucide-react";
@@ -54,7 +55,7 @@ interface UserTableProps {
   ) => void;
   handleRoleUpdate: (
     userId: string,
-    newRole: "user" | "admin"
+    newRole: "user" | "admin" | "super_admin"
   ) => Promise<void>;
 }
 
@@ -128,13 +129,20 @@ const UserTable = ({
                     </TableCell>
                     <TableCell>
                       <div className="flex items-center gap-3">
-                        <Avatar className="w-10 h-10">
-                          <AvatarImage src={user.profilePictureUrl} />
-                          <AvatarFallback>
-                            {user.firstName?.[0]}
-                            {user.lastName?.[0]}
-                          </AvatarFallback>
-                        </Avatar>
+                        <div className="relative">
+                          <Avatar className="w-10 h-10">
+                            <AvatarImage src={user.profilePictureUrl} />
+                            <AvatarFallback>
+                              {user.firstName?.[0]}
+                              {user.lastName?.[0]}
+                            </AvatarFallback>
+                          </Avatar>
+                          {(user.role === "admin" || user.role === "super_admin") && (
+                            <div className="absolute -top-1 -right-1 bg-white rounded-full p-0.5">
+                              <Shield className={`w-4 h-4 ${user.role === "super_admin" ? "text-blue-600" : "text-orange-600"}`} />
+                            </div>
+                          )}
+                        </div>
                         <div className="space-y-1">
                           <div className="font-medium">
                             {user.firstName} {user.lastName}
@@ -206,6 +214,15 @@ const UserTable = ({
                               >
                                 <ShieldCheck className="w-4 h-4 mr-2" />
                                 Make Admin
+                              </DropdownMenuItem>
+                              <DropdownMenuItem
+                                onClick={() =>
+                                  handleRoleUpdate(user.id!, "super_admin")
+                                }
+                                className="text-blue-600"
+                              >
+                                <Shield className="w-4 h-4 mr-2" />
+                                Make Super Admin
                               </DropdownMenuItem>
                             </>
                           )}
