@@ -111,6 +111,9 @@ const MultiStepFormUpdate = ({
   const [coverPhotoUrl, setCoverPhotoUrl] = useState<string | null>(
     userData.coverPhotoUrl || null
   );
+  
+  // Track if we're updating images to prevent redirect
+  const [isUpdatingImage, setIsUpdatingImage] = useState(false);
 
   // State for multiple companies with all schema fields
   const [companies, setCompanies] = useState<
@@ -338,7 +341,7 @@ const MultiStepFormUpdate = ({
 
   const formSubmit = async (data: z.infer<typeof editCardSchema>) => {
     try {
-      console.log("formSubmit");
+      console.log("formSubmit called, currentStep:", currentStep, "total steps:", steps.length, "isUpdatingImage:", isUpdatingImage);
       if (isOnboarding) {
         console.log("Inside onboarding block");
 
@@ -388,7 +391,13 @@ const MultiStepFormUpdate = ({
           },
         });
 
-        router.push("/cards");
+        // Only redirect if user is on the last step (clicked Save button)
+        // Don't redirect when just updating images
+        if (currentStep === steps.length && !isUpdatingImage) {
+          router.push("/cards");
+        }
+        // Reset the flag after form submission
+        setIsUpdatingImage(false);
         return;
       }
 
@@ -528,7 +537,10 @@ const MultiStepFormUpdate = ({
                       <div className="w-full flex justify-center items-center flex-col">
                         <ImageCropper
                           imageUrl={imageUrl}
-                          setImageUrl={setImageUrl}
+                          setImageUrl={(url: string | null) => {
+                            setIsUpdatingImage(true);
+                            setImageUrl(url);
+                          }}
                           photo={photo}
                           aspect={1}
                           setPhoto={setPhoto}
@@ -571,7 +583,10 @@ const MultiStepFormUpdate = ({
                       <div className="w-full">
                       <ImageCropper
                         imageUrl={coverPhotoUrl}
-                        setImageUrl={setCoverPhotoUrl}
+                        setImageUrl={(url: string | null) => {
+                          setIsUpdatingImage(true);
+                          setCoverPhotoUrl(url);
+                        }}
                         photo={coverPhoto}
                         aspect={16 / 9}
                         setPhoto={setCoverPhoto}

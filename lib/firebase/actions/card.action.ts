@@ -477,7 +477,7 @@ export const transferCardOwnership = async ({
     });
 
     // Update subscription if it exists
-    let updateSubscriptionPromise = Promise.resolve();
+    let updateSubscriptionPromise: Promise<void> = Promise.resolve();
     
     // First try to find subscription by card_id (preferred method)
     const subscriptionCollection = collection(firebaseDb, "subscriptions");
@@ -500,7 +500,7 @@ export const transferCardOwnership = async ({
         return updateDoc(doc.ref, subscriptionUpdateData);
       });
       
-      updateSubscriptionPromise = Promise.all(updatePromises);
+      updateSubscriptionPromise = Promise.all(updatePromises).then(() => {});
     } else if (cardData.subscription_id) {
       // Fallback: try to find by subscription_id field
       const subscriptionRef = doc(
@@ -687,11 +687,11 @@ export const transferCardOwnershipUsingCode = async (
     });
 
     // Update subscription if it exists
-    let updateSubscriptionPromise = Promise.resolve();
+    let updateSubscriptionPromise: Promise<void> = Promise.resolve();
     
     // First try to find subscription by card_id (preferred method)
     const subscriptionCollection = collection(firebaseDb, "subscriptions");
-    const subscriptionQuery = query(subscriptionCollection, where("card_id", "==", cardId));
+    const subscriptionQuery = query(subscriptionCollection, where("card_id", "==", cardDoc.id));
     const subscriptionSnapshot = await getDocs(subscriptionQuery);
     
     if (!subscriptionSnapshot.empty) {
@@ -710,7 +710,7 @@ export const transferCardOwnershipUsingCode = async (
         return updateDoc(doc.ref, subscriptionUpdateData);
       });
       
-      updateSubscriptionPromise = Promise.all(updatePromises);
+      updateSubscriptionPromise = Promise.all(updatePromises).then(() => {});
     } else if (cardData.subscription_id) {
       // Fallback: try to find by subscription_id field
       const subscriptionRef = doc(
