@@ -45,24 +45,9 @@ const NavigationBoarded = () => {
     <nav
       className={`${isMinimized ? "w-16" : "w-[22rem]"} ${isMinimized ? "px-2" : "px-6"} flex flex-col border-r fixed z-50 ease-in-out h-screen transition-all duration-300 -translate-x-[25rem] lg:translate-x-0`}
     >
-      <div className="flex justify-between items-center self-start w-full h-12 my-6 relative">
+      <div className="flex justify-between items-center self-start w-full h-12 my-6">
         {!isMinimized ? (
           <>
-            {(isAdmin || isSuperAdmin) && (
-              <div className="absolute -top-6 left-0">
-                <p
-                  className={cn(
-                    "text-xs rounded-full px-3 py-1 text-center capitalize text-white whitespace-nowrap",
-                    {
-                      "bg-red-700": isAdmin && !isSuperAdmin,
-                      "bg-gradient-to-r from-purple-600 to-pink-600": isSuperAdmin,
-                    }
-                  )}
-                >
-                  {isSuperAdmin ? "super admin" : "admin"}
-                </p>
-              </div>
-            )}
             <Link href={"/home"}>
               <TapupLogo className="w-20 lg:w-28" />
             </Link>
@@ -99,6 +84,24 @@ const NavigationBoarded = () => {
           <ChevronLeft className="h-3 w-3" />
         </Button>
       )}
+      
+      {/* Role Badge */}
+      {!isMinimized && (isAdmin || isSuperAdmin) && (
+        <div className="mb-4">
+          <p
+            className={cn(
+              "text-xs rounded-full px-3 py-1 text-center capitalize text-white whitespace-nowrap inline-block",
+              {
+                "bg-red-700": isAdmin && !isSuperAdmin,
+                "bg-gradient-to-r from-purple-600 to-pink-600": isSuperAdmin,
+              }
+            )}
+          >
+            {isSuperAdmin ? "super admin" : "admin"}
+          </p>
+        </div>
+      )}
+      
       {isLoadingUserContext ? (
         <NavigationSkeleton />
       ) : (
