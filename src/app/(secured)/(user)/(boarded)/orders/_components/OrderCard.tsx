@@ -1,13 +1,13 @@
 "use client";
 
 import React from "react";
+import { useRouter } from "next/navigation";
 import { Order } from "@/types/types";
 import { Card } from "@/components/ui/card";
-import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import Image from "next/image";
 import { format } from "date-fns";
-import { Package, Truck, CheckCircle, AlertCircle, XCircle } from "lucide-react";
+import { Package, Truck, CheckCircle, AlertCircle, XCircle, ChevronRight } from "lucide-react";
 import { cn } from "@/lib/utils";
 
 interface OrderCardProps {
@@ -18,152 +18,138 @@ const statusConfig = {
   "Pending": { 
     icon: Package, 
     color: "text-yellow-600", 
-    bgColor: "bg-yellow-100",
-    description: "Order is being processed"
+    bgColor: "bg-yellow-50 dark:bg-yellow-900/20",
   },
   "To Ship": { 
     icon: Package, 
     color: "text-blue-600", 
-    bgColor: "bg-blue-100",
-    description: "Preparing for shipment"
+    bgColor: "bg-blue-50 dark:bg-blue-900/20",
   },
   "To Receive": { 
     icon: Truck, 
     color: "text-purple-600", 
-    bgColor: "bg-purple-100",
-    description: "On the way to you"
+    bgColor: "bg-purple-50 dark:bg-purple-900/20",
   },
   "Delivered": { 
     icon: CheckCircle, 
     color: "text-green-600", 
-    bgColor: "bg-green-100",
-    description: "Order completed"
+    bgColor: "bg-green-50 dark:bg-green-900/20",
   },
   "To Return/Refund": { 
     icon: AlertCircle, 
     color: "text-orange-600", 
-    bgColor: "bg-orange-100",
-    description: "Return/Refund in progress"
+    bgColor: "bg-orange-50 dark:bg-orange-900/20",
   },
   "Cancelled": { 
     icon: XCircle, 
     color: "text-red-600", 
-    bgColor: "bg-red-100",
-    description: "Order cancelled"
+    bgColor: "bg-red-50 dark:bg-red-900/20",
   },
 };
 
+// Map card names to their image paths
+const getCardImage = (cardName: string): string => {
+  const name = cardName.toLowerCase();
+  // Map to actual card front images
+  if (name.includes('eclipse')) return '/assets/cards/Eclipse-Front.png';
+  if (name.includes('aurora')) return '/assets/cards/Aurora-front.png';
+  if (name.includes('bloom')) return '/assets/cards/Bloom-front.png';
+  if (name.includes('viper')) return '/assets/cards/Viper-Front.png';
+  if (name.includes('vortex')) return '/assets/cards/Vortex-front.png';
+  
+  // Fallback to numbered cards
+  return '/assets/cards/front/card1.png';
+};
+
 const OrderCard: React.FC<OrderCardProps> = ({ order }) => {
+  const router = useRouter();
   const config = statusConfig[order.status] || statusConfig["Pending"];
   const StatusIcon = config.icon;
 
+  // Calculate total quantity
+  const totalQuantity = order.items.reduce((sum, item) => sum + (item.quantity || 1), 0);
+
   return (
-    <Card className="p-4 md:p-6">
-      {/* Order Header */}
-      <div className="flex flex-col md:flex-row md:items-center justify-between mb-4">
-        <div>
-          <p className="text-sm text-gray-500">Order ID</p>
-          <p className="font-semibold">{order.orderId}</p>
-        </div>
-        <div className="mt-2 md:mt-0 text-right">
-          <p className="text-sm text-gray-500">Order Date</p>
-          <p className="font-medium">
-            {format(new Date(order.orderDate), "MMM dd, yyyy")}
-          </p>
-        </div>
-      </div>
-
-      {/* Status */}
-      <div className="flex items-center gap-3 mb-4 p-3 rounded-lg bg-gray-50 dark:bg-gray-800">
-        <div className={cn("p-2 rounded-full", config.bgColor)}>
-          <StatusIcon className={cn("w-5 h-5", config.color)} />
-        </div>
-        <div className="flex-1">
-          <p className="font-medium">{order.status}</p>
-          <p className="text-sm text-gray-500">{config.description}</p>
-        </div>
-        {order.returnStatus && (
-          <Badge variant="outline">{order.returnStatus}</Badge>
-        )}
-      </div>
-
-      {/* Items */}
-      <div className="space-y-3 mb-4">
-        {order.items.map((item, index) => (
-          <div key={index} className="flex gap-3">
-            <div className="relative w-16 h-16 flex-shrink-0">
-              <Image
-                src={item.product?.image || '/assets/placeholder.png'}
-                alt={item.product?.title || 'Product'}
-                fill
-                className="object-cover rounded-md"
-                onError={(e) => {
-                  e.currentTarget.src = '/assets/placeholder.png';
-                }}
-              />
-            </div>
-            <div className="flex-1">
-              <p className="font-medium">{item.product?.title || 'Unknown Product'}</p>
-              <p className="text-sm text-gray-500">
-                {item.product?.description || 'No description'} • Qty: {item.quantity || 1}
-              </p>
-              <p className="text-sm font-medium">₱{item.product?.price || 0}</p>
-            </div>
-          </div>
-        ))}
-      </div>
-
-      {/* Shipping Info */}
-      <div className="border-t pt-4 mb-4">
-        <div className="grid grid-cols-2 gap-4 text-sm">
-          <div>
-            <p className="text-gray-500">Ship to</p>
-            <p className="font-medium">{order.shippingInfo.recipientName}</p>
-            <p className="text-gray-600">
-              {order.shippingInfo.address.street}, {order.shippingInfo.address.city}
-            </p>
-          </div>
-          <div>
-            <p className="text-gray-500">Delivery</p>
-            <div className="flex items-center gap-2 mt-1">
-              {order.deliveryOption?.image && (
+    <Card className="p-4 hover:shadow-md transition-shadow">
+      <div className="flex gap-4">
+        {/* Card Images Section */}
+        <div className="flex-shrink-0">
+          <div className={cn(
+            "flex",
+            order.items.length === 2 ? "flex-col gap-1" : "-space-x-6"
+          )}>
+            {order.items.slice(0, order.items.length === 2 ? 2 : 3).map((item, index) => (
+              <div 
+                key={index} 
+                className={cn(
+                  "relative w-20 h-14 rounded-lg overflow-hidden border-2 border-white dark:border-gray-800 shadow-sm",
+                  order.items.length > 2 && index > 0 && "z-10"
+                )}
+                style={{ zIndex: order.items.length > 2 ? 3 - index : undefined }}
+              >
                 <Image
-                  src={order.deliveryOption.image}
-                  alt={order.deliveryOption.name}
-                  width={24}
-                  height={24}
-                  className="object-contain"
+                  src={getCardImage(item.product?.title || '')}
+                  alt={item.product?.title || 'Card'}
+                  fill
+                  className="object-cover"
                   onError={(e) => {
-                    e.currentTarget.style.display = 'none';
+                    e.currentTarget.src = '/assets/cards/front/card1.png';
                   }}
                 />
-              )}
-              <p className="font-medium">{order.deliveryOption?.name || 'Standard Delivery'}</p>
-            </div>
+              </div>
+            ))}
+            {order.items.length > 3 && (
+              <div className="relative w-20 h-14 rounded-lg bg-gray-100 dark:bg-gray-800 border-2 border-white dark:border-gray-800 shadow-sm flex items-center justify-center">
+                <span className="text-sm font-medium text-gray-600 dark:text-gray-400">
+                  +{order.items.length - 3}
+                </span>
+              </div>
+            )}
           </div>
         </div>
-      </div>
 
-      {/* Footer */}
-      <div className="flex items-center justify-between border-t pt-4">
-        <div>
-          <p className="text-sm text-gray-500">Total Amount</p>
-          <p className="text-lg font-semibold">₱{order.totalAmount.toFixed(2)}</p>
-        </div>
-        <div className="flex gap-2">
-          {order.status === "Delivered" && (
-            <Button variant="outline" size="sm">
-              Rate & Review
+        {/* Order Info Section */}
+        <div className="flex-1 min-w-0">
+          <div className="flex items-start justify-between mb-2">
+            <div>
+              <p className="text-sm font-medium text-gray-900 dark:text-gray-100">
+                Order #{order.orderId.slice(-8).toUpperCase()}
+              </p>
+              <p className="text-xs text-gray-500 mt-0.5">
+                {format(new Date(order.orderDate), "MMM dd, yyyy 'at' h:mm a")}
+              </p>
+            </div>
+            <div className={cn("px-2.5 py-1 rounded-full text-xs font-medium flex items-center gap-1", config.bgColor, config.color)}>
+              <StatusIcon className="w-3.5 h-3.5" />
+              {order.status}
+            </div>
+          </div>
+
+          {/* Items Summary */}
+          <div className="mb-2">
+            <p className="text-sm text-gray-600 dark:text-gray-400 line-clamp-1">
+              {order.items.map(item => item.product?.title || 'Card').join(', ')}
+            </p>
+            <p className="text-xs text-gray-500 mt-0.5">
+              {totalQuantity} {totalQuantity === 1 ? 'item' : 'items'} • ₱{order.totalAmount.toFixed(2)}
+            </p>
+          </div>
+
+          {/* Shipping Info - Compact */}
+          <div className="flex items-center justify-between">
+            <p className="text-xs text-gray-500 truncate max-w-[200px]">
+              Ship to: {order.shippingInfo.recipientName}
+            </p>
+            <Button 
+              variant="ghost" 
+              size="sm" 
+              className="h-7 text-xs px-2"
+              onClick={() => router.push(`/orders/${order.orderId}`)}
+            >
+              View Details
+              <ChevronRight className="w-3.5 h-3.5 ml-1" />
             </Button>
-          )}
-          {(order.status === "Pending" || order.status === "To Ship") && (
-            <Button variant="outline" size="sm" className="text-red-600 hover:text-red-700">
-              Cancel Order
-            </Button>
-          )}
-          <Button size="sm">
-            View Details
-          </Button>
+          </div>
         </div>
       </div>
     </Card>

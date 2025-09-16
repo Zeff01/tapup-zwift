@@ -6,8 +6,9 @@ import { useUserContext } from "@/providers/user-provider";
 import { getOrdersByUserId } from "@/lib/firebase/actions/order.action";
 import OrderCard from "./_components/OrderCard";
 import { Order } from "@/types/types";
-import { Loader2 } from "lucide-react";
+import { Loader2, Package } from "lucide-react";
 import Link from "next/link";
+import { Card } from "@/components/ui/card";
 
 export type OrderStatus = 
   | "Pending"
@@ -50,36 +51,41 @@ export default function MyOrdersPage() {
   }
 
   return (
-    <div className="h-full">
-      <div className="border-b bg-white dark:bg-gray-900 px-4 py-4 md:px-6">
-        <h1 className="text-xl md:text-2xl font-semibold">My Orders</h1>
-        <p className="text-sm text-gray-500 mt-1">
-          View all your orders and track their status
-        </p>
+    <div className="h-full bg-gray-50 dark:bg-gray-900">
+      <div className="bg-white dark:bg-gray-800 px-4 py-3 md:px-6 border-b">
+        <div className="flex items-center justify-between">
+          <h1 className="text-lg md:text-xl font-semibold">My Orders</h1>
+          <span className="text-sm text-gray-500">
+            {orders.length} {orders.length === 1 ? 'order' : 'orders'}
+          </span>
+        </div>
       </div>
 
       <div className="p-4 md:p-6">
         {/* Orders List */}
-        <div className="space-y-4">
+        <div className="space-y-3">
           {orders.length > 0 ? (
             orders.map((order) => (
               <OrderCard key={order.orderId} order={order} />
             ))
           ) : (
-            <div className="text-center py-12">
+            <Card className="text-center py-12 px-6">
+              <div className="w-16 h-16 bg-gray-100 dark:bg-gray-800 rounded-full flex items-center justify-center mx-auto mb-4">
+                <Package className="w-8 h-8 text-gray-400" />
+              </div>
               <h3 className="text-lg font-medium text-gray-900 dark:text-white mb-2">
                 No orders yet
               </h3>
-              <p className="text-gray-500 mb-6">
+              <p className="text-gray-500 mb-6 max-w-sm mx-auto">
                 Start shopping to see your orders here
               </p>
               <Link
                 href="/cards/card-shop"
-                className="inline-flex items-center px-4 py-2 bg-green-600 text-white rounded-md hover:bg-green-700"
+                className="inline-flex items-center px-4 py-2 bg-green-600 text-white rounded-md hover:bg-green-700 transition-colors"
               >
                 Shop Now
               </Link>
-            </div>
+            </Card>
           )}
         </div>
       </div>

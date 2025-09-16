@@ -145,68 +145,65 @@ export async function getOrdersByUserId(userId: string): Promise<Order[]> {
     
     const transactionsRef = collection(firebaseDb, "transactions");
     
-    // First, let's try to get ALL transactions to see what's there
+    // Get ALL transactions and filter manually to handle different field names
     const allTransQuery = query(transactionsRef, orderBy("createdAt", "desc"));
     const allTransSnapshot = await getDocs(allTransQuery);
     
     console.log("[getOrdersByUserId] Total transactions in collection:", allTransSnapshot.size);
     
-    // Log first few transactions to see their structure
-    let sampleCount = 0;
+    // Filter for matching transactions (using a Set to avoid duplicates)
+    const seenIds = new Set<string>();
+    const userTransactions: any[] = [];
+    
     allTransSnapshot.forEach((doc) => {
-      if (sampleCount < 3) {
-        const data = doc.data();
-        console.log(`[getOrdersByUserId] Sample transaction ${doc.id}:`, {
-          userId: data.userId,
-          uid: data.uid,
-          owner: data.owner,
-          user: data.user,
-          createdAt: data.createdAt,
-          status: data.status,
-        });
-        sampleCount++;
+      const data = doc.data();
+      // Check all possible user ID fields
+      if (data.userId === userId || data.uid === userId || data.user_id === userId) {
+        if (!seenIds.has(doc.id)) {
+          seenIds.add(doc.id);
+          userTransactions.push({ id: doc.id, ...data });
+        }
       }
     });
     
-    // Now try the specific query
-    const transQuery = query(
-      transactionsRef,
-      where("userId", "==", userId),
-      orderBy("createdAt", "desc")
-    );
-    const transSnapshot = await getDocs(transQuery);
+    console.log("[getOrdersByUserId] Transactions found for user:", userTransactions.length);
     
-    console.log("[getOrdersByUserId] Transactions found for userId", userId, ":", transSnapshot.size);
-    
-    // If no results with userId, try with uid field
-    if (transSnapshot.empty) {
-      console.log("[getOrdersByUserId] No transactions found with userId, trying uid field...");
-      const uidQuery = query(
-        transactionsRef,
-        where("uid", "==", userId),
-        orderBy("createdAt", "desc")
-      );
-      const uidSnapshot = await getDocs(uidQuery);
-      console.log("[getOrdersByUserId] Transactions found with uid field:", uidSnapshot.size);
+    // Process all matching transactions
+    userTransactions.forEach((transaction) => {
+      const data = transaction;
+      console.log("[getOrdersByUserId] Processing transaction:", transaction.id);
       
-      if (!uidSnapshot.empty) {
-        uidSnapshot.forEach((doc) => {
-          const data = doc.data();
-          console.log("[getOrdersByUserId] Processing transaction (uid field):", doc.id);
-          
-          // Transform transaction to order format
-          const order: Order = {
-            orderId: data.orderId || doc.id,
-            items: (data.items || []).map((item: any) => ({
-              quantity: item.quantity || 1,
-              product: {
-                title: item.title || item.product?.title || 'Unknown Product',
-                description: item.description || item.product?.description || 'No description',
-                price: item.price || item.product?.price || 0,
-                image: item.image || item.product?.image || '/assets/placeholder.png'
+      // Transform transaction to order format
+      const order: Order = {
+        orderId: data.orderId || transaction.id,
+        items: (data.items || []).map((item: any) => ({
+          quantity: item.quantity || 1,
+          product: {
+            title: item.title || item.name || item.product?.title || 'Unknown Product',
+            description: item.description || item.product?.description || 'No description',
+            price: item.price || item.product?.price || 0,
+            image: item.image || item.product?.image || '/assets/placeholder.png'
+          }
+        })),
+        shippingInfo: (() => {
+          // Handle different shipping info structures
+          if (data.shippingInfo) {
+            return data.shippingInfo;
+          } else if (data.receiver) {
+            // Convert receiver format to shippingInfo format
+            const addressParts = data.receiver.customerAddress?.split(',') || [];
+            return {
+              recipientName: data.receiver.customerName || "Unknown",
+              contactNumber: data.receiver.customerPhone || "Unknown",
+              address: {
+                city: addressParts[1]?.trim() || "Unknown",
+                street: addressParts[0]?.trim() || "Unknown",
+                unit: "",
+                postalCode: addressParts[3]?.trim() || "Unknown"
               }
-            })),
-            shippingInfo: data.shippingInfo || {
+            };
+          } else {
+            return {
               recipientName: "Unknown",
               contactNumber: "Unknown",
               address: {
@@ -215,56 +212,9 @@ export async function getOrdersByUserId(userId: string): Promise<Order[]> {
                 unit: "",
                 postalCode: "Unknown"
               }
-            },
-            deliveryOption: data.deliveryOption || {
-              name: "Standard Delivery",
-              shippingFee: 0,
-              minDays: 3,
-              maxDays: 7
-            },
-            orderDate: data.createdAt?.toDate() || new Date(),
-            totalAmount: data.totalAmount || 0,
-            status: data.status === "pending-payment" ? "Pending" : 
-                    data.status === "pending" ? "Pending" :
-                    data.status === "completed" ? "Delivered" : 
-                    data.status === "to-ship" ? "To Ship" :
-                    data.status === "shipped" ? "To Receive" :
-                    data.status === "delivered" ? "Delivered" :
-                    data.status || "Pending",
-            returnStatus: data.returnStatus
-          };
-          orders.push(order);
-        });
-        return orders;
-      }
-    }
-    
-    transSnapshot.forEach((doc) => {
-      const data = doc.data();
-      console.log("[getOrdersByUserId] Processing transaction:", doc.id);
-      
-      // Transform transaction to order format
-      const order: Order = {
-        orderId: data.orderId || doc.id,
-        items: (data.items || []).map((item: any) => ({
-          quantity: item.quantity || 1,
-          product: {
-            title: item.title || item.product?.title || 'Unknown Product',
-            description: item.description || item.product?.description || 'No description',
-            price: item.price || item.product?.price || 0,
-            image: item.image || item.product?.image || '/assets/placeholder.png'
+            };
           }
-        })),
-        shippingInfo: data.shippingInfo || {
-          recipientName: "Unknown",
-          contactNumber: "Unknown",
-          address: {
-            city: "Unknown",
-            street: "Unknown",
-            unit: "",
-            postalCode: "Unknown"
-          }
-        },
+        })(),
         deliveryOption: data.deliveryOption || {
           name: "Standard Delivery",
           shippingFee: 0,
@@ -272,9 +222,13 @@ export async function getOrdersByUserId(userId: string): Promise<Order[]> {
           maxDays: 7
         },
         orderDate: data.createdAt?.toDate() || new Date(),
-        totalAmount: data.totalAmount || 0,
+        totalAmount: data.totalAmount || data.amount || 0,
         status: data.status === "pending-payment" ? "Pending" : 
-                data.status === "completed" ? "To Ship" : 
+                data.status === "pending" ? "Pending" :
+                data.status === "completed" ? "Delivered" : 
+                data.status === "to-ship" ? "To Ship" :
+                data.status === "shipped" ? "To Receive" :
+                data.status === "delivered" ? "Delivered" :
                 data.status || "Pending",
         returnStatus: data.returnStatus
       };
