@@ -89,43 +89,47 @@ const NavigationBoarded = () => {
       ) : (
         <React.Fragment>
           {!isMinimized ? (
-            <div className="relative border p-1 rounded-full outline-white outline-2 flex items-center gap-2">
-              <Image
-                unoptimized={true}
-                src={user?.profilePictureUrl || profilePic}
-                alt="user image"
-                width={50}
-                height={50}
-                className="object-cover rounded-full h-[50px] w-[50px]"
-              />
-              <div className="flex flex-col w-full overflow-hidden">
-                <input
-                  readOnly
-                  value={
-                    user?.firstName
-                      ? `${user?.firstName} ${user?.lastName}`
-                      : "Anonymous"
-                  }
-                  className="text-sm font-bold border-0 truncate w-full bg-transparent outline-none pr-2"
+            <div className="flex flex-col gap-2">
+              <div className="relative border p-1 rounded-full outline-white outline-2 flex items-center gap-2">
+                <Image
+                  unoptimized={true}
+                  src={user?.profilePictureUrl || profilePic}
+                  alt="user image"
+                  width={50}
+                  height={50}
+                  className="object-cover rounded-full h-[50px] w-[50px]"
                 />
-                <div className="flex items-center gap-2 mt-1">
-                  <p className="text-xs text-foreground/60 truncate flex-1">
+                <div className="flex flex-col w-full overflow-hidden">
+                  <input
+                    readOnly
+                    value={
+                      user?.firstName
+                        ? `${user?.firstName} ${user?.lastName}`
+                        : "Anonymous"
+                    }
+                    className="text-sm font-bold border-0 truncate w-full bg-transparent outline-none pr-2"
+                  />
+                  <p className="text-xs text-foreground/60 truncate mt-1">
                     {user?.email || "anonymous@mail.com"}
                   </p>
+                </div>
+                <EditAccountModal />
+              </div>
+              {(isAdmin || isSuperAdmin) && (
+                <div className="flex justify-center">
                   <p
                     className={cn(
-                      "text-xs rounded-full px-2 py-0.5 text-center capitalize text-white bg-greenColor whitespace-nowrap",
+                      "text-xs rounded-full px-3 py-1 text-center capitalize text-white whitespace-nowrap",
                       {
-                        "bg-red-700": isAdmin,
+                        "bg-red-700": isAdmin && !isSuperAdmin,
                         "bg-gradient-to-r from-purple-600 to-pink-600": isSuperAdmin,
                       }
                     )}
                   >
-                    {isSuperAdmin ? "super admin" : user?.role}
+                    {isSuperAdmin ? "super admin" : "admin"}
                   </p>
                 </div>
-              </div>
-              <EditAccountModal />
+              )}
             </div>
           ) : (
             <div className="flex flex-col items-center gap-4">
