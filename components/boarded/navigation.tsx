@@ -45,9 +45,24 @@ const NavigationBoarded = () => {
     <nav
       className={`${isMinimized ? "w-16" : "w-[22rem]"} ${isMinimized ? "px-2" : "px-6"} flex flex-col border-r fixed z-50 ease-in-out h-screen transition-all duration-300 -translate-x-[25rem] lg:translate-x-0`}
     >
-      <div className="flex justify-between items-center self-start w-full h-12 my-6">
+      <div className="flex justify-between items-center self-start w-full h-12 my-6 relative">
         {!isMinimized ? (
           <>
+            {(isAdmin || isSuperAdmin) && (
+              <div className="absolute -top-6 left-0">
+                <p
+                  className={cn(
+                    "text-xs rounded-full px-3 py-1 text-center capitalize text-white whitespace-nowrap",
+                    {
+                      "bg-red-700": isAdmin && !isSuperAdmin,
+                      "bg-gradient-to-r from-purple-600 to-pink-600": isSuperAdmin,
+                    }
+                  )}
+                >
+                  {isSuperAdmin ? "super admin" : "admin"}
+                </p>
+              </div>
+            )}
             <Link href={"/home"}>
               <TapupLogo className="w-20 lg:w-28" />
             </Link>
@@ -89,47 +104,30 @@ const NavigationBoarded = () => {
       ) : (
         <React.Fragment>
           {!isMinimized ? (
-            <div className="flex flex-col gap-2">
-              <div className="relative border p-1 rounded-full outline-white outline-2 flex items-center gap-2">
-                <Image
-                  unoptimized={true}
-                  src={user?.profilePictureUrl || profilePic}
-                  alt="user image"
-                  width={50}
-                  height={50}
-                  className="object-cover rounded-full h-[50px] w-[50px]"
+            <div className="relative border p-1 rounded-full outline-white outline-2 flex items-center gap-2">
+              <Image
+                unoptimized={true}
+                src={user?.profilePictureUrl || profilePic}
+                alt="user image"
+                width={50}
+                height={50}
+                className="object-cover rounded-full h-[50px] w-[50px]"
+              />
+              <div className="flex flex-col w-full overflow-hidden">
+                <input
+                  readOnly
+                  value={
+                    user?.firstName
+                      ? `${user?.firstName} ${user?.lastName}`
+                      : "Anonymous"
+                  }
+                  className="text-sm font-bold border-0 truncate w-full bg-transparent outline-none pr-2"
                 />
-                <div className="flex flex-col w-full overflow-hidden">
-                  <input
-                    readOnly
-                    value={
-                      user?.firstName
-                        ? `${user?.firstName} ${user?.lastName}`
-                        : "Anonymous"
-                    }
-                    className="text-sm font-bold border-0 truncate w-full bg-transparent outline-none pr-2"
-                  />
-                  <p className="text-xs text-foreground/60 truncate mt-1">
-                    {user?.email || "anonymous@mail.com"}
-                  </p>
-                </div>
-                <EditAccountModal />
+                <p className="text-xs text-foreground/60 truncate mt-1">
+                  {user?.email || "anonymous@mail.com"}
+                </p>
               </div>
-              {(isAdmin || isSuperAdmin) && (
-                <div className="flex justify-center">
-                  <p
-                    className={cn(
-                      "text-xs rounded-full px-3 py-1 text-center capitalize text-white whitespace-nowrap",
-                      {
-                        "bg-red-700": isAdmin && !isSuperAdmin,
-                        "bg-gradient-to-r from-purple-600 to-pink-600": isSuperAdmin,
-                      }
-                    )}
-                  >
-                    {isSuperAdmin ? "super admin" : "admin"}
-                  </p>
-                </div>
-              )}
+              <EditAccountModal />
             </div>
           ) : (
             <div className="flex flex-col items-center gap-4">
