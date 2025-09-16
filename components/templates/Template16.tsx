@@ -40,7 +40,7 @@ const Template16 = ({
   owner,
 }: Card) => {
   const { viewerState, openViewer, closeViewer } = useImageViewer();
-  
+
   const userProfile = {
     id,
     owner,
@@ -53,12 +53,12 @@ const Template16 = ({
     websiteUrl,
     customUrl,
   };
-  
+
   // Collect all images for the viewer
   const allImages = [
     profilePictureUrl,
     coverPhotoUrl,
-    ...(companies?.flatMap(company => company.servicePhotos || []) || [])
+    ...(companies?.flatMap((company) => company.servicePhotos || []) || []),
   ].filter(Boolean) as string[];
 
   return (
@@ -84,7 +84,14 @@ const Template16 = ({
               width={480}
               height={160}
               className="w-full h-full object-cover"
-              onClick={() => openViewer(allImages, allImages.indexOf(coverPhotoUrl || "/assets/template2coverphoto.png"))}
+              onClick={() =>
+                openViewer(
+                  allImages,
+                  allImages.indexOf(
+                    coverPhotoUrl || "/assets/template2coverphoto.png"
+                  )
+                )
+              }
             />
             <div className="w-20 h-20 rounded-full border-[5px] border-white overflow-hidden shadow-md flex-shrink-0 absolute z-20 -bottom-10 left-4">
               <ClickableImage
@@ -93,7 +100,14 @@ const Template16 = ({
                 width={96}
                 height={96}
                 className="w-full h-full object-cover"
-                onClick={() => openViewer(allImages, allImages.indexOf(profilePictureUrl || "/assets/template4samplepic.png"))}
+                onClick={() =>
+                  openViewer(
+                    allImages,
+                    allImages.indexOf(
+                      profilePictureUrl || "/assets/template4samplepic.png"
+                    )
+                  )
+                }
               />
             </div>
           </section>
@@ -375,28 +389,12 @@ const Template16 = ({
       </div>
 
       {/* === Footer Section === */}
-      <TemplateFooter className="w-full max-w-md px-6 text-center text-gray-500 text-sm mt-2">
-        <div className="flex flex-col pb-4 items-center gap-1 text-center text-xs">
-          <a
-            href={userProfile?.customUrl ?? userProfile?.websiteUrl ?? "#"}
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            <Image
-              src="/assets/dark-ZwiftechLogo.png"
-              alt="Zwiftech Logo"
-              width={40}
-              height={15}
-              priority
-              className="opacity-90"
-            />
-          </a>
-          <span className="tracking-wide text-gray-400 text-[10px] ">
-            © {getCopyrightYear()} Zwiftech. All Rights Reserved.
-          </span>
-        </div>
-      </TemplateFooter>
-      
+      <TemplateFooter
+        theme={"light"}
+        className="w-full max-w-md px-6 text-center text-sm mt-2"
+        yearClassName="tracking-wide text-gray-800 text-[10px]"
+      />
+
       {viewerState.isOpen && (
         <ImageViewer
           images={viewerState.images}

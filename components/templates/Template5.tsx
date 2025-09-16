@@ -37,7 +37,7 @@ const Template5 = ({
   owner,
 }: Card) => {
   const { viewerState, openViewer, closeViewer } = useImageViewer();
-  
+
   const userProfile = {
     id,
     owner,
@@ -54,7 +54,7 @@ const Template5 = ({
   const allImages = [
     profilePictureUrl || "/assets/template4samplepic.png",
     coverPhotoUrl || "/assets/template1coverphoto.png",
-    ...(companies?.flatMap(c => c.servicePhotos || []) || [])
+    ...(companies?.flatMap((c) => c.servicePhotos || []) || []),
   ].filter(Boolean);
 
   return (
@@ -230,7 +230,9 @@ const Template5 = ({
                             height={400}
                             className="object-cover w-full"
                             onClick={() => {
-                              const servicePhotoIndex = allImages.findIndex(img => img === c.servicePhotos?.[0]);
+                              const servicePhotoIndex = allImages.findIndex(
+                                (img) => img === c.servicePhotos?.[0]
+                              );
                               openViewer(allImages, servicePhotoIndex);
                             }}
                           />
@@ -249,7 +251,9 @@ const Template5 = ({
                                 height={300}
                                 className="object-cover w-full"
                                 onClick={() => {
-                                  const servicePhotoIndex = allImages.findIndex(img => img === photo);
+                                  const servicePhotoIndex = allImages.findIndex(
+                                    (img) => img === photo
+                                  );
                                   openViewer(allImages, servicePhotoIndex);
                                 }}
                               />
@@ -265,27 +269,10 @@ const Template5 = ({
         </div>
       </div>
       {/* FOOTER */}
-      <TemplateFooter className="flex flex-col mt-8 mb-1 items-center gap-1 text-center text-xs">
-        <a
-          href={userProfile?.customUrl ?? userProfile?.websiteUrl ?? "#"}
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <Image
-            src="/assets/dark-ZwiftechLogo.png"
-            alt="Zwiftech Logo"
-            width={40}
-            height={15}
-            priority
-            className="opacity-90"
-          />
-        </a>
+      <TemplateFooter theme="light" className="flex flex-col mt-8 mb-1 items-center gap-1 text-center text-xs" yearClassName="tracking-wide text-pink-800 text-[10px] font-medium"
+      />
+   
 
-        <span className="tracking-wide text-pink-800 text-[10px] font-medium ">
-          © {getCopyrightYear()} Zwiftech. All Rights Reserved.
-        </span>
-      </TemplateFooter>
-      
       {viewerState.isOpen && (
         <ImageViewer
           images={viewerState.images}

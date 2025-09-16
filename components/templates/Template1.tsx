@@ -11,6 +11,7 @@ import {
 } from "./templatesComponents";
 import { ImageViewer, useImageViewer } from "@/components/ImageViewer";
 import { ClickableImage } from "./templatesComponents/ClickableImage";
+import TapupLogo from "../svgs/TapupLogo";
 
 const Template1 = ({
   id,
@@ -35,7 +36,7 @@ const Template1 = ({
   owner,
 }: Card) => {
   const { viewerState, openViewer, closeViewer } = useImageViewer();
-  
+
   const userProfile = {
     id,
     owner,
@@ -50,7 +51,7 @@ const Template1 = ({
   const allImages = [
     profilePictureUrl || "/assets/template4samplepic.png",
     coverPhotoUrl || "/assets/template1coverphoto.png",
-    ...(companies?.flatMap(c => c.servicePhotos || []) || [])
+    ...(companies?.flatMap((c) => c.servicePhotos || []) || []),
   ].filter(Boolean);
 
   return (
@@ -172,7 +173,9 @@ const Template1 = ({
                               height={300}
                               className="rounded-md object-cover w-full"
                               onClick={() => {
-                                const servicePhotoIndex = allImages.findIndex(img => img === photo);
+                                const servicePhotoIndex = allImages.findIndex(
+                                  (img) => img === photo
+                                );
                                 openViewer(allImages, servicePhotoIndex);
                               }}
                             />
@@ -186,27 +189,11 @@ const Template1 = ({
           ))}
       </div>
 
-      <TemplateFooter className="flex flex-col mt-8 items-center gap-1 text-center pb-4">
-        <a
-          href={userProfile?.customUrl ?? userProfile?.websiteUrl ?? "#"}
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <Image
-            src="/assets/dark-ZwiftechLogo.png"
-            alt="Zwiftech Logo"
-            width={40}
-            height={15}
-            priority
-            className="opacity-90"
-          />
-        </a>
+      <TemplateFooter
+        theme={"light"}
+        className="flex flex-col mt-8 items-center gap-1 text-center pb-4"
+      />
 
-        <span className="tracking-wide text-gray-600 text-[10px] ">
-          © {getCopyrightYear()} Zwiftech. All Rights Reserved.
-        </span>
-      </TemplateFooter>
-      
       {viewerState.isOpen && (
         <ImageViewer
           images={viewerState.images}

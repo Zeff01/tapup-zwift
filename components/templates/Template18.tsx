@@ -39,7 +39,7 @@ const Template18 = ({
   owner,
 }: Card) => {
   const { viewerState, openViewer, closeViewer } = useImageViewer();
-  
+
   const userProfile = {
     id,
     owner,
@@ -55,17 +55,17 @@ const Template18 = ({
 
   // Collect all images for the viewer
   const allImages: string[] = [];
-  
+
   // Add profile picture if exists
   if (profilePictureUrl) {
     allImages.push(profilePictureUrl);
   }
-  
+
   // Add cover photo if exists
   if (coverPhotoUrl) {
     allImages.push(coverPhotoUrl);
   }
-  
+
   // Add all service photos from companies
   if (companies) {
     companies.forEach((company) => {
@@ -310,7 +310,9 @@ const Template18 = ({
                               height={400}
                               className="w-full h-auto object-cover"
                               onClick={() => {
-                                let photoIndex = (profilePictureUrl ? 1 : 0) + (coverPhotoUrl ? 1 : 0);
+                                let photoIndex =
+                                  (profilePictureUrl ? 1 : 0) +
+                                  (coverPhotoUrl ? 1 : 0);
                                 // Find the index of this specific photo
                                 companies.forEach((comp, compIdx) => {
                                   if (compIdx < idx && comp.servicePhotos) {
@@ -335,7 +337,9 @@ const Template18 = ({
                                   height={200}
                                   className="w-full h-auto object-cover"
                                   onClick={() => {
-                                    let photoIndex = (profilePictureUrl ? 1 : 0) + (coverPhotoUrl ? 1 : 0);
+                                    let photoIndex =
+                                      (profilePictureUrl ? 1 : 0) +
+                                      (coverPhotoUrl ? 1 : 0);
                                     // Calculate the correct index
                                     companies.forEach((comp, compIdx) => {
                                       if (compIdx < idx && comp.servicePhotos) {
@@ -361,29 +365,12 @@ const Template18 = ({
       </div>
 
       {/* === Footer Section === */}
-      <TemplateFooter className="bg-[#001d34] text-white text-center  text-xs rounded-b-[30px] px-2 sm:px-3">
-        <div className="flex flex-col py-4 items-center  gap-1 text-center text-xs">
-          <a
-            href={userProfile?.customUrl ?? userProfile?.websiteUrl ?? "#"}
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            <Image
-              src="/assets/light-ZwiftechLogo.png"
-              alt="Zwiftech Logo"
-              width={40}
-              height={15}
-              priority
-              className="opacity-90"
-            />
-          </a>
+      <TemplateFooter
+        theme="dark"
+        className="bg-[#001d34] text-white text-center  text-xs rounded-b-[30px] px-2 sm:px-3"
+        yearClassName="tracking-wide text-gray-400 text-[10px] "
+      />
 
-          <span className="tracking-wide text-gray-400 text-[10px] ">
-            © {getCopyrightYear()} Zwiftech. All Rights Reserved.
-          </span>
-        </div>{" "}
-      </TemplateFooter>
-      
       {viewerState.isOpen && (
         <ImageViewer
           images={viewerState.images}

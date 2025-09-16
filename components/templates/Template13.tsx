@@ -182,7 +182,11 @@ const CompanyShowcase = ({
                               height={400}
                               className="w-full h-auto object-cover transition-transform duration-500 group-hover/photo:scale-110"
                               onClick={() => {
-                                if (openViewer && allImages && startingIndex !== undefined) {
+                                if (
+                                  openViewer &&
+                                  allImages &&
+                                  startingIndex !== undefined
+                                ) {
                                   let photoIndex = startingIndex;
                                   // Find the index of this specific photo
                                   companies.forEach((comp, compIdx) => {
@@ -216,11 +220,18 @@ const CompanyShowcase = ({
                                 height={200}
                                 className="w-full h-auto object-cover transition-all duration-500 group-hover/photo:scale-110"
                                 onClick={() => {
-                                  if (openViewer && allImages && startingIndex !== undefined) {
+                                  if (
+                                    openViewer &&
+                                    allImages &&
+                                    startingIndex !== undefined
+                                  ) {
                                     let photoIdx = startingIndex;
                                     // Calculate the correct index
                                     companies.forEach((comp, compIdx) => {
-                                      if (compIdx < index && comp.servicePhotos) {
+                                      if (
+                                        compIdx < index &&
+                                        comp.servicePhotos
+                                      ) {
                                         photoIdx += comp.servicePhotos.length;
                                       }
                                     });
@@ -277,7 +288,7 @@ const Template13 = ({
   owner,
 }: Card) => {
   const { viewerState, openViewer, closeViewer } = useImageViewer();
-  
+
   const userProfile = {
     id,
     owner,
@@ -293,17 +304,17 @@ const Template13 = ({
 
   // Collect all images for the viewer
   const allImages: string[] = [];
-  
+
   // Add profile picture if exists
   if (profilePictureUrl) {
     allImages.push(profilePictureUrl);
   }
-  
+
   // Add cover photo if exists
   if (coverPhotoUrl) {
     allImages.push(coverPhotoUrl);
   }
-  
+
   // Add all service photos from companies
   if (companies) {
     companies.forEach((company) => {
@@ -325,199 +336,189 @@ const Template13 = ({
       className="text-white py-2"
     >
       <div className="flex-grow">
-      <div className="max-w-[480px] mx-auto flex flex-col">
-        {/* === Profile and Cover Section === */}
-        <section
-          aria-label="Profile Section"
-          className="w-full mb-8 relative flex flex-col items-center"
-        >
-          <div className="w-full h-40 rounded-2xl overflow-hidden bg-neutral-800 relative">
-            {coverPhotoUrl ? (
-              <ClickableImage
-                src={coverPhotoUrl}
-                alt="Cover Photo"
-                width={480}
-                height={160}
-                className="object-cover w-full h-full"
-                onClick={() => openViewer(allImages, profilePictureUrl ? 1 : 0)}
-              />
-            ) : (
-              <Image
-                src="/assets/template9coverphoto.png"
-                alt="Default Cover Photo"
-                width={480}
-                height={160}
-                className="object-cover w-full h-full"
-              />
-            )}
-          </div>
+        <div className="max-w-[480px] mx-auto flex flex-col">
+          {/* === Profile and Cover Section === */}
+          <section
+            aria-label="Profile Section"
+            className="w-full mb-8 relative flex flex-col items-center"
+          >
+            <div className="w-full h-40 rounded-2xl overflow-hidden bg-neutral-800 relative">
+              {coverPhotoUrl ? (
+                <ClickableImage
+                  src={coverPhotoUrl}
+                  alt="Cover Photo"
+                  width={480}
+                  height={160}
+                  className="object-cover w-full h-full"
+                  onClick={() =>
+                    openViewer(allImages, profilePictureUrl ? 1 : 0)
+                  }
+                />
+              ) : (
+                <Image
+                  src="/assets/template9coverphoto.png"
+                  alt="Default Cover Photo"
+                  width={480}
+                  height={160}
+                  className="object-cover w-full h-full"
+                />
+              )}
+            </div>
 
-          <div className="flex flex-col items-start w-full px-4 -mt-12 z-10">
-            <div className="w-24 h-24 flex items-center justify-center mb-4 shadow-lg relative">
-              {profilePictureUrl ? (
-                <div
-                  style={{
-                    WebkitMaskImage: "url(/assets/template13profileshape.svg)",
-                    maskImage: "url(/assets/template13profileshape.svg)",
-                    WebkitMaskSize: "cover",
-                    maskSize: "cover",
-                    WebkitMaskRepeat: "no-repeat",
-                    maskRepeat: "no-repeat",
-                    WebkitMaskPosition: "center",
-                    maskPosition: "center",
-                  }}
-                  className="w-24 h-24"
-                >
-                  <ClickableImage
-                    src={profilePictureUrl}
+            <div className="flex flex-col items-start w-full px-4 -mt-12 z-10">
+              <div className="w-24 h-24 flex items-center justify-center mb-4 shadow-lg relative">
+                {profilePictureUrl ? (
+                  <div
+                    style={{
+                      WebkitMaskImage:
+                        "url(/assets/template13profileshape.svg)",
+                      maskImage: "url(/assets/template13profileshape.svg)",
+                      WebkitMaskSize: "cover",
+                      maskSize: "cover",
+                      WebkitMaskRepeat: "no-repeat",
+                      maskRepeat: "no-repeat",
+                      WebkitMaskPosition: "center",
+                      maskPosition: "center",
+                    }}
+                    className="w-24 h-24"
+                  >
+                    <ClickableImage
+                      src={profilePictureUrl}
+                      alt="avatar"
+                      width={96}
+                      height={96}
+                      className="w-24 h-24 object-cover"
+                      onClick={() => openViewer(allImages, 0)}
+                      showExpandIcon={false}
+                    />
+                  </div>
+                ) : (
+                  <Image
+                    src="/assets/template4samplepic.png"
                     alt="avatar"
                     width={96}
                     height={96}
                     className="w-24 h-24 object-cover"
-                    onClick={() => openViewer(allImages, 0)}
-                    showExpandIcon={false}
+                    style={{
+                      WebkitMaskImage:
+                        "url(/assets/template13profileshape.svg)",
+                      maskImage: "url(/assets/template13profileshape.svg)",
+                      WebkitMaskSize: "cover",
+                      maskSize: "cover",
+                      WebkitMaskRepeat: "no-repeat",
+                      maskRepeat: "no-repeat",
+                      WebkitMaskPosition: "center",
+                      maskPosition: "center",
+                      background: "#fff", // fallback
+                    }}
                   />
-                </div>
-              ) : (
-                <Image
-                  src="/assets/template4samplepic.png"
-                  alt="avatar"
-                  width={96}
-                  height={96}
-                  className="w-24 h-24 object-cover"
-                  style={{
-                    WebkitMaskImage: "url(/assets/template13profileshape.svg)",
-                    maskImage: "url(/assets/template13profileshape.svg)",
-                    WebkitMaskSize: "cover",
-                    maskSize: "cover",
-                    WebkitMaskRepeat: "no-repeat",
-                    maskRepeat: "no-repeat",
-                    WebkitMaskPosition: "center",
-                    maskPosition: "center",
-                    background: "#fff", // fallback
-                  }}
+                )}
+              </div>
+              <div className="flex items-center gap-2 mb-1">
+                {firstName ? (
+                  <h1 className="font-semibold tracking-tight text-white leading-snug">
+                    {prefix && <span>{prefix}. </span>}
+                    {firstName}
+                    {middleName && <span> {middleName}</span>}
+                    {lastName && <span> {lastName}</span>}
+                    {suffix && <span>, {suffix}</span>}
+                  </h1>
+                ) : (
+                  <h1 className="font-semibold tracking-tight text-white leading-snug">
+                    Hussain Watkins
+                  </h1>
+                )}
+              </div>
+              <div className="text-sm text-gray-300 mb-4 font-medium">
+                {position || "Chief Technology Officer"}{" "}
+                {`@ ${company || "Zwiftech"}`}
+              </div>
+              <div className="flex gap-2 mb-2">
+                <CTAButtons
+                  number={number}
+                  email={email}
+                  userProfile={userProfile}
+                  variant="floating"
+                  size="md"
+                  icons="lucide"
+                  buttonClassName="bg-white text-black "
+                />
+              </div>
+            </div>
+          </section>
+
+          {/* === Contact Info Section === */}
+          <section
+            aria-label="Contact Information"
+            className="w-full mb-8 px-4"
+          >
+            <h2 className="font-bold mb-4 text-white text-left">
+              Contact Information
+            </h2>
+            <div className="grid grid-cols-2 gap-y-2 text-gray-300">
+              <span className="text-left font-medium text-sm">Email</span>
+              <span className="font-medium text-[12px] text-white text-left break-all">
+                {email}
+              </span>
+              <span className="text-left font-medium text-sm">Number</span>
+              <span className="font-medium text-white text-left text-[12px]">
+                {number}
+              </span>
+              <span className="text-left font-medium text-sm">Links</span>
+              <span className="flex flex-wrap gap-3 text-xl text-left">
+                <Template13Socials
+                  facebookUrl={facebookUrl}
+                  twitterUrl={twitterUrl}
+                  tiktokUrl={tiktokUrl}
+                  youtubeUrl={youtubeUrl}
+                  instagramUrl={instagramUrl}
+                  linkedinUrl={linkedinUrl}
+                  viberUrl={viberUrl}
+                  whatsappNumber={whatsappNumber}
+                  websiteUrl={websiteUrl}
+                  size="md"
+                />
+              </span>
+            </div>
+          </section>
+        </div>
+        <div className="flex-1 w-full max-w-[480px] mx-auto pb-4">
+          <div className=" flex flex-col gap-y-2 flex-grow text-white px-3 border-t border-neutral-500">
+            <h2 className="text-lg font-bold mt-3 text-white">
+              Professional Portfolio
+            </h2>
+            <p className="text-sm text-gray-300">
+              Below you&#39;ll find details about my professional experience and
+              the companies I&#39;ve worked with. Each entry highlights my role,
+              responsibilities, and the services offered.
+            </p>
+
+            <div className="w-full mx-auto mt-4">
+              {companies && companies.length > 0 && (
+                <CompanyShowcase
+                  companies={companies}
+                  profilePictureUrl={profilePictureUrl}
+                  firstName={firstName}
+                  lastName={lastName}
+                  allImages={allImages}
+                  openViewer={openViewer}
+                  startingIndex={
+                    (profilePictureUrl ? 1 : 0) + (coverPhotoUrl ? 1 : 0)
+                  }
                 />
               )}
             </div>
-            <div className="flex items-center gap-2 mb-1">
-              {firstName ? (
-                <h1 className="font-semibold tracking-tight text-white leading-snug">
-                  {prefix && <span>{prefix}. </span>}
-                  {firstName}
-                  {middleName && <span> {middleName}</span>}
-                  {lastName && <span> {lastName}</span>}
-                  {suffix && <span>, {suffix}</span>}
-                </h1>
-              ) : (
-                <h1 className="font-semibold tracking-tight text-white leading-snug">
-                  Hussain Watkins
-                </h1>
-              )}
-            </div>
-            <div className="text-sm text-gray-300 mb-4 font-medium">
-              {position || "Chief Technology Officer"}{" "}
-              {`@ ${company || "Zwiftech"}`}
-            </div>
-            <div className="flex gap-2 mb-2">
-              <CTAButtons
-                number={number}
-                email={email}
-                userProfile={userProfile}
-                variant="floating"
-                size="md"
-                icons="lucide"
-                buttonClassName="bg-white text-black "
-              />
-            </div>
-          </div>
-        </section>
-
-        {/* === Contact Info Section === */}
-        <section aria-label="Contact Information" className="w-full mb-8 px-4">
-          <h2 className="font-bold mb-4 text-white text-left">
-            Contact Information
-          </h2>
-          <div className="grid grid-cols-2 gap-y-2 text-gray-300">
-            <span className="text-left font-medium text-sm">Email</span>
-            <span className="font-medium text-[12px] text-white text-left break-all">
-              {email}
-            </span>
-            <span className="text-left font-medium text-sm">Number</span>
-            <span className="font-medium text-white text-left text-[12px]">
-              {number}
-            </span>
-            <span className="text-left font-medium text-sm">Links</span>
-            <span className="flex flex-wrap gap-3 text-xl text-left">
-              <Template13Socials
-                facebookUrl={facebookUrl}
-                twitterUrl={twitterUrl}
-                tiktokUrl={tiktokUrl}
-                youtubeUrl={youtubeUrl}
-                instagramUrl={instagramUrl}
-                linkedinUrl={linkedinUrl}
-                viberUrl={viberUrl}
-                whatsappNumber={whatsappNumber}
-                websiteUrl={websiteUrl}
-                size="md"
-              />
-            </span>
-          </div>
-        </section>
-      </div>
-      <div className="flex-1 w-full max-w-[480px] mx-auto pb-4">
-        <div className=" flex flex-col gap-y-2 flex-grow text-white px-3 border-t border-neutral-500">
-          <h2 className="text-lg font-bold mt-3 text-white">
-            Professional Portfolio
-          </h2>
-          <p className="text-sm text-gray-300">
-            Below you&#39;ll find details about my professional experience and
-            the companies I&#39;ve worked with. Each entry highlights my role,
-            responsibilities, and the services offered.
-          </p>
-
-          <div className="w-full mx-auto mt-4">
-            {companies && companies.length > 0 && (
-              <CompanyShowcase
-                companies={companies}
-                profilePictureUrl={profilePictureUrl}
-                firstName={firstName}
-                lastName={lastName}
-                allImages={allImages}
-                openViewer={openViewer}
-                startingIndex={
-                  (profilePictureUrl ? 1 : 0) + (coverPhotoUrl ? 1 : 0)
-                }
-              />
-            )}
           </div>
         </div>
-      </div>
       </div>
 
       {/* === Footer Section === */}
-      <TemplateFooter className="w-full mx-auto mt-2  text-center text-gray-400 text-sm border-t border-neutral-500">
-        <div className="flex flex-col items-center py-4 gap-1 text-center text-xs">
-          <a
-            href={userProfile?.customUrl ?? userProfile?.websiteUrl ?? "#"}
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            <Image
-              src="/assets/light-ZwiftechLogo.png"
-              alt="Zwiftech Logo"
-              width={40}
-              height={15}
-              priority
-              className="opacity-90"
-            />
-          </a>
+      <TemplateFooter
+        theme="dark"
+        className="w-full  pt-2  text-center text-gray-400 text-sm border-t border-neutral-500"
+        yearClassName="tracking-wide text-gray-400 text-[10px] "
+      />
 
-          <span className="tracking-wide text-gray-400 text-[10px] ">
-            © {getCopyrightYear()} Zwiftech. All Rights Reserved.
-          </span>
-        </div>
-      </TemplateFooter>
-      
       {viewerState.isOpen && (
         <ImageViewer
           images={viewerState.images}

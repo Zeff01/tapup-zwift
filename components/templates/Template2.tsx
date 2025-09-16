@@ -34,7 +34,7 @@ const Template2 = ({
   companies,
 }: Card) => {
   const { viewerState, openViewer, closeViewer } = useImageViewer();
-  
+
   const userProfile = {
     id,
     owner,
@@ -49,7 +49,7 @@ const Template2 = ({
   const allImages = [
     profilePictureUrl || "/assets/template4samplepic.png",
     coverPhotoUrl || "/assets/template1coverphoto.png",
-    ...(companies?.flatMap(c => c.servicePhotos || []) || [])
+    ...(companies?.flatMap((c) => c.servicePhotos || []) || []),
   ].filter(Boolean);
 
   return (
@@ -173,7 +173,9 @@ const Template2 = ({
                               height={300}
                               className="rounded-md object-cover w-full"
                               onClick={() => {
-                                const servicePhotoIndex = allImages.findIndex(img => img === photo);
+                                const servicePhotoIndex = allImages.findIndex(
+                                  (img) => img === photo
+                                );
                                 openViewer(allImages, servicePhotoIndex);
                               }}
                             />
@@ -187,27 +189,12 @@ const Template2 = ({
           ))}
       </div>
 
-      <TemplateFooter className="flex flex-col mt-8 items-center gap-1 text-center pb-4">
-        <a
-          href={userProfile?.customUrl ?? userProfile?.websiteUrl ?? "#"}
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <Image
-            src="/assets/light-ZwiftechLogo.png"
-            alt="Zwiftech Logo"
-            width={40}
-            height={15}
-            priority
-            className="opacity-90"
-          />
-        </a>
+      <TemplateFooter
+        theme="dark"
+        className="flex flex-col mt-8 items-center gap-1 text-center pb-4"
+        yearClassName="tracking-wide text-gray-200 text-[10px] "
+      />
 
-        <span className="tracking-wide text-gray-200 text-[10px] ">
-          © {getCopyrightYear()} Zwiftech. All Rights Reserved.
-        </span>
-      </TemplateFooter>
-      
       {viewerState.isOpen && (
         <ImageViewer
           images={viewerState.images}
