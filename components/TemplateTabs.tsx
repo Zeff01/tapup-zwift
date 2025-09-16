@@ -16,79 +16,79 @@ const templates: Template[] = [
   {
     id: "template1",
     name: "Plain White",
-    imageUrl: "/assets/template1.png",
+    imageUrl: "/assets/templates/thumbnails/template1.png",
     category: "Minimal",
   },
   {
     id: "template2",
     name: "Plain Black",
-    imageUrl: "/assets/template2.png",
+    imageUrl: "/assets/templates/thumbnails/template2.png",
     category: "Minimal",
   },
   {
     id: "template3",
     name: "Viper",
-    imageUrl: "/assets/template3.png",
+    imageUrl: "/assets/templates/thumbnails/template3.png",
     category: "Modern",
   },
   {
     id: "template5",
     name: "Floral",
-    imageUrl: "/assets/template5.png",
+    imageUrl: "/assets/templates/thumbnails/template5.png",
     category: "Creative",
   },
   {
     id: "template9",
     name: "Business",
-    imageUrl: "/assets/template9.png",
+    imageUrl: "/assets/templates/thumbnails/template9.png",
     category: "Professional",
   },
   {
     id: "template10",
     name: "Purple Aura",
-    imageUrl: "/assets/template10.png",
+    imageUrl: "/assets/templates/thumbnails/template10.png",
     category: "Creative",
   },
   {
     id: "template11",
     name: "Sky",
-    imageUrl: "/assets/template11.png",
+    imageUrl: "/assets/templates/thumbnails/template11.png",
     category: "Modern",
   },
   {
     id: "template12",
     name: "Dairy Green",
-    imageUrl: "/assets/template12.png",
+    imageUrl: "/assets/templates/thumbnails/template12.png",
     category: "Nature",
   },
   {
     id: "template13",
     name: "Urban Professional",
-    imageUrl: "/assets/template13.png",
+    imageUrl: "/assets/templates/thumbnails/template13.png",
     category: "Creative",
   },
   {
     id: "template15",
     name: "Neon Network",
-    imageUrl: "/assets/template15.png",
+    imageUrl: "/assets/templates/thumbnails/template15.png",
     category: "Modern",
   },
   {
     id: "template16",
     name: "Obsidian",
-    imageUrl: "/assets/template16.png",
+    imageUrl: "/assets/templates/thumbnails/template16.png",
     category: "Creative",
   },
   {
     id: "template17",
     name: "Designer Brand",
-    imageUrl: "/assets/template17.png",
+    imageUrl: "/assets/templates/thumbnails/template17.png",
     category: "Professional",
   },
   {
     id: "template18",
     name: "Ocean Depth",
-    imageUrl: "/assets/template18.png",
+    imageUrl: "/assets/templates/thumbnails/template18.png",
     category: "Nature",
   },
 ];
@@ -103,25 +103,28 @@ export function TemplateTabs({
   setSelectedTemplateId,
 }: TemplateTabsProps) {
   // Group templates by category
-  const categories = Array.from(new Set(templates.map(t => t.category)));
-  const templatesByCategory = categories.reduce((acc, category) => {
-    acc[category] = templates.filter(t => t.category === category);
-    return acc;
-  }, {} as Record<string, Template[]>);
+  const categories = Array.from(new Set(templates.map((t) => t.category)));
+  const templatesByCategory = categories.reduce(
+    (acc, category) => {
+      acc[category] = templates.filter((t) => t.category === category);
+      return acc;
+    },
+    {} as Record<string, Template[]>
+  );
 
   // Find the current template's category
-  const currentTemplate = templates.find(t => t.id === selectedTemplateId);
+  const currentTemplate = templates.find((t) => t.id === selectedTemplateId);
   const currentCategory = currentTemplate?.category || categories[0];
 
   return (
     <div>
       <h1 className="text-lg font-semibold mb-4">Choose a Template</h1>
-      
+
       <Tabs defaultValue={currentCategory} className="w-full">
         <TabsList className="grid grid-cols-2 md:grid-cols-5 mb-4 h-auto">
           {categories.map((category) => (
-            <TabsTrigger 
-              key={category} 
+            <TabsTrigger
+              key={category}
               value={category}
               className="data-[state=active]:bg-primary data-[state=active]:text-primary-foreground"
             >
@@ -132,7 +135,7 @@ export function TemplateTabs({
             </TabsTrigger>
           ))}
         </TabsList>
-        
+
         {categories.map((category) => (
           <TabsContent key={category} value={category} className="mt-4">
             <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-4">
@@ -148,9 +151,10 @@ export function TemplateTabs({
           </TabsContent>
         ))}
       </Tabs>
-      
+
       <p className="text-xs text-gray-500 mt-4 text-center">
-        💡 Tip: Templates are organized by style. Click any template to preview your card
+        💡 Tip: Templates are organized by style. Click any template to preview
+        your card
       </p>
     </div>
   );
@@ -172,11 +176,11 @@ function TemplateCard({ template, isSelected, onClick }: TemplateCardProps) {
         isSelected && "scale-105"
       )}
     >
-      <Card 
+      <Card
         className={cn(
           "overflow-hidden border-2 transition-all",
-          isSelected 
-            ? "border-green-500 shadow-lg" 
+          isSelected
+            ? "border-green-500 shadow-lg"
             : "border-transparent hover:border-gray-300"
         )}
       >
@@ -190,28 +194,28 @@ function TemplateCard({ template, isSelected, onClick }: TemplateCardProps) {
               className="object-cover"
               sizes="(max-width: 640px) 50vw, (max-width: 768px) 33vw, 25vw"
             />
-            
+
             {/* Selected Indicator */}
             {isSelected && (
               <div className="absolute top-2 right-2 bg-green-500 text-white rounded-full p-1">
                 <Check className="h-4 w-4" />
               </div>
             )}
-            
+
             {/* Hover Overlay */}
-            <div className={cn(
-              "absolute inset-0 bg-black/50 flex items-center justify-center transition-opacity",
-              isSelected ? "opacity-0" : "opacity-0 group-hover:opacity-100"
-            )}>
+            <div
+              className={cn(
+                "absolute inset-0 bg-black/50 flex items-center justify-center transition-opacity",
+                isSelected ? "opacity-0" : "opacity-0 group-hover:opacity-100"
+              )}
+            >
               <p className="text-white font-medium text-sm">Click to Select</p>
             </div>
           </div>
-          
+
           {/* Template Name */}
           <div className="p-2 bg-white">
-            <h3 className="text-sm font-medium text-center">
-              {template.name}
-            </h3>
+            <h3 className="text-sm font-medium text-center">{template.name}</h3>
           </div>
         </CardContent>
       </Card>

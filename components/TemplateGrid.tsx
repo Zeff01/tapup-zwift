@@ -15,91 +15,91 @@ const templates: Template[] = [
   {
     id: "template1",
     name: "Plain White",
-    imageUrl: "/assets/template1.png",
+    imageUrl: "/assets/templates/thumbnails/template1.png",
     category: "Minimal",
   },
   {
     id: "template2",
     name: "Plain Black",
-    imageUrl: "/assets/template2.png",
+    imageUrl: "/assets/templates/thumbnails/template2.png",
     category: "Minimal",
   },
   {
     id: "template3",
     name: "Viper",
-    imageUrl: "/assets/template3.png",
+    imageUrl: "/assets/templates/thumbnails/template3.png",
     category: "Modern",
   },
   {
     id: "template5",
     name: "Floral",
-    imageUrl: "/assets/template5.png",
+    imageUrl: "/assets/templates/thumbnails/template5.png",
     category: "Creative",
   },
   {
     id: "template7",
     name: "Social Blue",
-    imageUrl: "/assets/template7.png",
+    imageUrl: "/assets/templates/thumbnails/template7.png",
     category: "Modern",
   },
   {
     id: "template8",
     name: "Connect",
-    imageUrl: "/assets/template8.png",
+    imageUrl: "/assets/templates/thumbnails/template8.png",
     category: "Creative",
   },
   {
     id: "template9",
     name: "Business",
-    imageUrl: "/assets/template9.png",
+    imageUrl: "/assets/templates/thumbnails/template9.png",
     category: "Professional",
   },
   {
     id: "template10",
     name: "Purple Aura",
-    imageUrl: "/assets/template10.png",
+    imageUrl: "/assets/templates/thumbnails/template10.png",
     category: "Creative",
   },
   {
     id: "template11",
     name: "Sky",
-    imageUrl: "/assets/template11.png",
+    imageUrl: "/assets/templates/thumbnails/template11.png",
     category: "Modern",
   },
   {
     id: "template12",
     name: "Dairy Green",
-    imageUrl: "/assets/template12.png",
+    imageUrl: "/assets/templates/thumbnails/template12.png",
     category: "Nature",
   },
   {
     id: "template13",
     name: "Urban Professional",
-    imageUrl: "/assets/template13.png",
+    imageUrl: "/assets/templates/thumbnails/template13.png",
     category: "Creative",
   },
   {
     id: "template15",
     name: "Neon Network",
-    imageUrl: "/assets/template15.png",
+    imageUrl: "/assets/templates/thumbnails/template15.png",
     category: "Modern",
   },
   {
     id: "template16",
     name: "Obsidian",
-    imageUrl: "/assets/template16.png",
+    imageUrl: "/assets/templates/thumbnails/template16.png",
     category: "Creative",
   },
   {
     id: "template17",
     name: "Designer Brand",
-    imageUrl: "/assets/template17.png",
+    imageUrl: "/assets/templates/thumbnails/template17.png",
     category: "Professional",
   },
   {
     id: "template18",
     name: "Ocean Depth",
-    imageUrl: "/assets/template18.png",
+    imageUrl: "/assets/templates/thumbnails/template18.png",
     category: "Nature",
   },
 ];
@@ -124,14 +124,14 @@ export function TemplateGrid({
             key={template.id}
             onClick={() => setSelectedTemplateId(template.id)}
             className={cn(
-              "relative cursor-pointer group transition-all duration-200 max-w-[200px] mx-auto",
+              "relative cursor-pointer group transition-all duration-200",
               "hover:scale-105 hover:shadow-lg",
               selectedTemplateId === template.id && "scale-105"
             )}
           >
             <Card
               className={cn(
-                "overflow-hidden border-2 transition-all",
+                "overflow-hidden border-2 transition-all rounded-2xl",
                 selectedTemplateId === template.id
                   ? "border-green-500 shadow-lg"
                   : "border-transparent hover:border-gray-300"
@@ -139,7 +139,7 @@ export function TemplateGrid({
             >
               <CardContent className="p-0">
                 {/* Template Image */}
-                <div className="relative aspect-[9/20] bg-white">
+                <div className="relative aspect-[438/1355] bg-gray-100">
                   <Image
                     src={template.imageUrl}
                     alt={template.name}
@@ -147,11 +147,6 @@ export function TemplateGrid({
                     className="object-contain"
                     sizes="(max-width: 640px) 50vw, (max-width: 768px) 33vw, (max-width: 1024px) 25vw, 20vw"
                   />
-
-                  {/* Template Number */}
-                  <div className="absolute top-2 left-2 bg-black/70 text-white rounded px-2 py-1 text-xs font-semibold">
-                    {template.id.replace('template', '')}
-                  </div>
 
                   {/* Selected Indicator */}
                   {selectedTemplateId === template.id && (
