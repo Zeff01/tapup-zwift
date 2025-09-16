@@ -15,6 +15,22 @@ import {
   Timestamp,
 } from "firebase/firestore";
 import { Order } from "@/types/types";
+import { carouselCards } from "@/constants";
+
+// Helper function to get card image by title
+function getCardImageByTitle(title: string): string {
+  const normalizedTitle = title.toLowerCase().trim();
+  
+  // Check if title matches any carousel card
+  for (const [key, card] of Object.entries(carouselCards)) {
+    if (card.title.toLowerCase() === normalizedTitle || key === normalizedTitle) {
+      return card.image;
+    }
+  }
+  
+  // Fallback to profile placeholder
+  return '/assets/profile_placeholder.png';
+}
 
 /**
  * Get all orders (admin only)
@@ -47,30 +63,64 @@ export async function getAllOrders(): Promise<Order[]> {
     const transQuery = query(transactionsRef, orderBy("createdAt", "desc"));
     const transSnapshot = await getDocs(transQuery);
     
+    // Create a map of userId to user data for efficient lookup
+    const userIds = new Set<string>();
     transSnapshot.forEach((doc) => {
       const data = doc.data();
+      if (data.userId || data.uid || data.user_id) {
+        userIds.add(data.userId || data.uid || data.user_id);
+      }
+    });
+    
+    // Fetch user data
+    const userDataMap = new Map<string, any>();
+    if (userIds.size > 0) {
+      const userAccountRef = collection(firebaseDb, "user-account");
+      const userAccountSnapshot = await getDocs(userAccountRef);
+      userAccountSnapshot.forEach((doc) => {
+        userDataMap.set(doc.id, doc.data());
+      });
+    }
+
+    transSnapshot.forEach((doc) => {
+      const data = doc.data();
+      const userId = data.userId || data.uid || data.user_id;
+      const userData = userId ? userDataMap.get(userId) : null;
+      
       // Transform transaction to order format
       const order: Order = {
         orderId: data.orderId || doc.id,
         items: (data.items || []).map((item: any) => ({
           quantity: item.quantity || 1,
+          physicalCardId: item.physicalCardId || item.id || '',
           product: {
-            title: item.title || item.product?.title || 'Unknown Product',
+            id: item.id || item.product?.id || '',
+            title: item.title || item.product?.title || item.name || 'Unknown Product',
             description: item.description || item.product?.description || 'No description',
             price: item.price || item.product?.price || 0,
-            image: item.image || item.product?.image || '/assets/placeholder.png'
-          }
+            image: item.image || item.product?.image || item.imageUrl || getCardImageByTitle(item.title || item.product?.title || item.name || '')
+          },
+          subscriptionPlan: item.subscriptionPlan || null
         })),
-        shippingInfo: data.shippingInfo || {
+        shippingInfo: data.shippingInfo || (userData ? {
+          recipientName: `${userData.firstName || ''} ${userData.lastName || ''}`.trim() || userData.displayName || userData.email || "Unknown",
+          contactNumber: userData.phone || userData.phoneNumber || userData.mobile || data.receiver?.customerPhone || "",
+          address: userData.address || {
+            city: "Unknown",
+            street: "Unknown",
+            unit: "",
+            postalCode: "Unknown"
+          }
+        } : {
           recipientName: "Unknown",
-          contactNumber: "Unknown",
+          contactNumber: data.receiver?.customerPhone || "",
           address: {
             city: "Unknown",
             street: "Unknown",
             unit: "",
             postalCode: "Unknown"
           }
-        },
+        }),
         deliveryOption: data.deliveryOption || {
           name: "Standard Delivery",
           shippingFee: 0,
@@ -78,12 +128,32 @@ export async function getAllOrders(): Promise<Order[]> {
           maxDays: 7
         },
         orderDate: data.createdAt?.toDate() || new Date(),
-        totalAmount: data.totalAmount || 0,
+        totalAmount: data.totalAmount || data.amount || 0,
         status: data.status === "pending-payment" ? "Pending" : 
+                data.status === "pending" ? "Pending" :
                 data.status === "completed" ? "To Ship" : 
+                data.status === "to-ship" ? "To Ship" :
+                data.status === "shipped" ? "To Receive" :
+                data.status === "delivered" ? "Delivered" :
                 data.status || "Pending",
         returnStatus: data.returnStatus
       };
+      
+      // Handle receiver data format if shippingInfo is still unknown
+      if (order.shippingInfo.recipientName === "Unknown" && data.receiver) {
+        const addressParts = data.receiver.customerAddress?.split(',') || [];
+        order.shippingInfo = {
+          recipientName: data.receiver.customerName || userData?.displayName || userData?.email || "Unknown",
+          contactNumber: data.receiver.customerPhone || userData?.phone || "Unknown",
+          address: {
+            city: addressParts[1]?.trim() || "Unknown",
+            street: addressParts[0]?.trim() || "Unknown",
+            unit: "",
+            postalCode: addressParts[3]?.trim() || "Unknown"
+          }
+        };
+      }
+      
       orders.push(order);
     });
     
@@ -178,12 +248,15 @@ export async function getOrdersByUserId(userId: string): Promise<Order[]> {
         orderId: data.orderId || transaction.id,
         items: (data.items || []).map((item: any) => ({
           quantity: item.quantity || 1,
+          physicalCardId: item.physicalCardId || item.id || '',
           product: {
+            id: item.id || item.product?.id || '',
             title: item.title || item.name || item.product?.title || 'Unknown Product',
             description: item.description || item.product?.description || 'No description',
             price: item.price || item.product?.price || 0,
-            image: item.image || item.product?.image || '/assets/placeholder.png'
-          }
+            image: item.image || item.product?.image || item.imageUrl || '/assets/profile_placeholder.png'
+          },
+          subscriptionPlan: item.subscriptionPlan || null
         })),
         shippingInfo: (() => {
           // Handle different shipping info structures
@@ -225,7 +298,7 @@ export async function getOrdersByUserId(userId: string): Promise<Order[]> {
         totalAmount: data.totalAmount || data.amount || 0,
         status: data.status === "pending-payment" ? "Pending" : 
                 data.status === "pending" ? "Pending" :
-                data.status === "completed" ? "Delivered" : 
+                data.status === "completed" ? "To Ship" : 
                 data.status === "to-ship" ? "To Ship" :
                 data.status === "shipped" ? "To Receive" :
                 data.status === "delivered" ? "Delivered" :
@@ -334,20 +407,55 @@ export async function updateOrderStatus(
   returnStatus?: Order["returnStatus"]
 ): Promise<boolean> {
   try {
-    const orderRef = doc(firebaseDb, "orders", orderId);
-    
-    const updates: any = {
-      status,
-      updatedAt: Timestamp.now(),
-    };
-    
-    if (returnStatus !== undefined) {
-      updates.returnStatus = returnStatus;
+    // First try to update in orders collection
+    try {
+      const orderRef = doc(firebaseDb, "orders", orderId);
+      const orderDoc = await getDoc(orderRef);
+      
+      if (orderDoc.exists()) {
+        const updates: any = {
+          status,
+          updatedAt: Timestamp.now(),
+        };
+        
+        if (returnStatus !== undefined) {
+          updates.returnStatus = returnStatus;
+        }
+        
+        await updateDoc(orderRef, updates);
+        return true;
+      }
+    } catch (e) {
+      console.log("Order not found in orders collection, trying transactions...");
     }
     
-    await updateDoc(orderRef, updates);
+    // If not found in orders, try transactions collection
+    const transactionRef = doc(firebaseDb, "transactions", orderId);
+    const transactionDoc = await getDoc(transactionRef);
     
-    return true;
+    if (transactionDoc.exists()) {
+      // Map Order status back to transaction status format
+      const transactionStatus = status === "To Ship" ? "completed" :
+                              status === "To Receive" ? "shipped" :
+                              status === "Delivered" ? "delivered" :
+                              status === "Cancelled" ? "cancelled" :
+                              status === "To Return/Refund" ? "to-return" :
+                              "pending";
+      
+      const updates: any = {
+        status: transactionStatus,
+        updatedAt: Timestamp.now(),
+      };
+      
+      if (returnStatus !== undefined) {
+        updates.returnStatus = returnStatus;
+      }
+      
+      await updateDoc(transactionRef, updates);
+      return true;
+    }
+    
+    throw new Error("Order not found in any collection");
   } catch (error) {
     console.error("Error updating order status:", error);
     return false;

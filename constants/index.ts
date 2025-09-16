@@ -236,8 +236,8 @@ export const carouselCards = {
     id: "eclipse",
     title: "Eclipse",
     price: 600,
-    image: "/assets/cards/Eclipse-front.png",
-    backImage: "/assets/cards/Eclipse-back.png",
+    image: "/assets/cards/Eclipse-Front.png",
+    backImage: "/assets/cards/Eclipse-Back.png",
     description: `A bold, minimalist design featuring striking contrasts and celestial elements. Perfect for executives and leaders who want to make a powerful, memorable impression.`,
   },
   aurora: {
@@ -253,7 +253,7 @@ export const carouselCards = {
     title: "Viper",
     price: 600,
     image: "/assets/cards/Viper-Front.png",
-    backImage: "/assets/cards/Viper-back.png",
+    backImage: "/assets/cards/Viper-Back.png",
     description: `A sleek, aggressive design with sharp angles and dynamic patterns. Designed for entrepreneurs and innovators who want to project confidence and cutting-edge style.`,
   },
   vortex: {

@@ -166,13 +166,17 @@ const DigitalCard = ({ card, confirm, user }: Prop) => {
 
   const { mutate: clearCardMutation, isPending: isPendingClearCard } = useMutation({
     mutationFn: clearCardData,
-    onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ["cards", user?.uid] });
-      toast.success("Card data cleared successfully");
-      setClearCardDialogOpen(false);
+    onSuccess: (data) => {
+      if (data.success) {
+        queryClient.invalidateQueries({ queryKey: ["cards", user?.uid] });
+        toast.success(data.message || "Card data cleared successfully");
+        setClearCardDialogOpen(false);
+      } else {
+        toast.error(data.message || "Failed to clear card data");
+      }
     },
-    onError: () => {
-      toast.error("Failed to clear card data");
+    onError: (error) => {
+      toast.error(error instanceof Error ? error.message : "Failed to clear card data");
     },
   });
 
