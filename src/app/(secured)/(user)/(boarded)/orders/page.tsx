@@ -1,10 +1,9 @@
 "use client";
 
-import React, { useState, useMemo } from "react";
+import React from "react";
 import { useQuery } from "@tanstack/react-query";
 import { useUserContext } from "@/providers/user-provider";
 import { getOrdersByUserId } from "@/lib/firebase/actions/order.action";
-import OrderStatusTabs from "./_components/OrderStatusTabs";
 import OrderCard from "./_components/OrderCard";
 import { Order } from "@/types/types";
 import { Loader2 } from "lucide-react";
@@ -20,7 +19,6 @@ export type OrderStatus =
 
 export default function MyOrdersPage() {
   const { user } = useUserContext();
-  const [selectedStatus, setSelectedStatus] = useState<OrderStatus>("Pending");
 
   // Debug logging
   console.log("MyOrdersPage - User:", user?.uid);
@@ -43,23 +41,6 @@ export default function MyOrdersPage() {
     console.error("Error fetching orders:", error);
   }
 
-  // Calculate order counts by status
-  const orderCounts = useMemo(() => {
-    return orders.reduce(
-      (counts, order) => {
-        const status = order.status as OrderStatus;
-        counts[status] = (counts[status] || 0) + 1;
-        return counts;
-      },
-      {} as Record<OrderStatus, number>
-    );
-  }, [orders]);
-
-  // Filter orders by selected status
-  const filteredOrders = useMemo(() => {
-    return orders.filter((order) => order.status === selectedStatus);
-  }, [orders, selectedStatus]);
-
   if (isLoading) {
     return (
       <div className="flex items-center justify-center min-h-[400px]">
@@ -73,25 +54,18 @@ export default function MyOrdersPage() {
       <div className="border-b bg-white dark:bg-gray-900 px-4 py-4 md:px-6">
         <h1 className="text-xl md:text-2xl font-semibold">My Orders</h1>
         <p className="text-sm text-gray-500 mt-1">
-          Track your orders and manage returns
+          View all your orders and track their status
         </p>
       </div>
 
       <div className="p-4 md:p-6">
-        {/* Status Tabs */}
-        <OrderStatusTabs
-          selectedStatus={selectedStatus}
-          onStatusChange={setSelectedStatus}
-          orderCounts={orderCounts}
-        />
-
         {/* Orders List */}
-        <div className="mt-6 space-y-4">
-          {filteredOrders.length > 0 ? (
-            filteredOrders.map((order) => (
+        <div className="space-y-4">
+          {orders.length > 0 ? (
+            orders.map((order) => (
               <OrderCard key={order.orderId} order={order} />
             ))
-          ) : orders.length === 0 ? (
+          ) : (
             <div className="text-center py-12">
               <h3 className="text-lg font-medium text-gray-900 dark:text-white mb-2">
                 No orders yet
@@ -105,12 +79,6 @@ export default function MyOrdersPage() {
               >
                 Shop Now
               </Link>
-            </div>
-          ) : (
-            <div className="text-center py-12">
-              <p className="text-gray-500">
-                No orders found with status "{selectedStatus}"
-              </p>
             </div>
           )}
         </div>

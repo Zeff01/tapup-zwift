@@ -225,7 +225,11 @@ export async function getOrdersByUserId(userId: string): Promise<Order[]> {
             orderDate: data.createdAt?.toDate() || new Date(),
             totalAmount: data.totalAmount || 0,
             status: data.status === "pending-payment" ? "Pending" : 
-                    data.status === "completed" ? "To Ship" : 
+                    data.status === "pending" ? "Pending" :
+                    data.status === "completed" ? "Delivered" : 
+                    data.status === "to-ship" ? "To Ship" :
+                    data.status === "shipped" ? "To Receive" :
+                    data.status === "delivered" ? "Delivered" :
                     data.status || "Pending",
             returnStatus: data.returnStatus
           };
