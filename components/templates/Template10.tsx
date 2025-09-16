@@ -191,7 +191,9 @@ const CompanyShowcase = ({
                             width={600}
                             height={400}
                             className="w-full h-auto object-cover transition-transform duration-500 group-hover/photo:scale-105"
-                            onClick={() => onImageClick(company.servicePhotos?.[0] || '')}
+                            onClick={() =>
+                              onImageClick(company.servicePhotos?.[0] || "")
+                            }
                           />
                         </div>
                         <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-transparent opacity-0 group-hover/photo:opacity-100 transition-opacity duration-300"></div>
@@ -278,7 +280,7 @@ const Template10 = ({
   owner,
 }: Card) => {
   const { viewerState, openViewer, closeViewer } = useImageViewer();
-  
+
   const userProfile = {
     id,
     owner,
@@ -295,11 +297,11 @@ const Template10 = ({
   const allImages = [
     profilePictureUrl || "/assets/template10samplepic.png",
     coverPhotoUrl || "/assets/template10coverphoto.png",
-    ...(companies?.flatMap(c => c.servicePhotos || []) || [])
+    ...(companies?.flatMap((c) => c.servicePhotos || []) || []),
   ].filter(Boolean);
 
   const handleImageClick = (src: string) => {
-    const index = allImages.findIndex(img => img === src);
+    const index = allImages.findIndex((img) => img === src);
     if (index !== -1) {
       openViewer(allImages, index);
     }
@@ -316,169 +318,169 @@ const Template10 = ({
       justifyContent="between"
     >
       <div className="flex-grow">
-      <div className="w-full mx-auto max-w-[480px]">
-        <div className="flex flex-col relative rounded-4xl ">
-          <div className="w-full h-48">
-            {coverPhotoUrl ? (
-              <ClickableImage
-                src={coverPhotoUrl}
-                alt="Cover Image"
-                width={400}
-                height={200}
-                className="mx-auto w-full h-48 object-cover rounded-[2rem] overflow-hidden"
-                onClick={() => openViewer(allImages, 1)}
+        <div className="w-full min-h-screen mx-auto max-w-[480px]">
+          <div className="flex flex-col relative rounded-4xl ">
+            <div className="w-full h-48">
+              {coverPhotoUrl ? (
+                <ClickableImage
+                  src={coverPhotoUrl}
+                  alt="Cover Image"
+                  width={400}
+                  height={200}
+                  className="mx-auto w-full h-48 object-cover rounded-[2rem] overflow-hidden"
+                  onClick={() => openViewer(allImages, 1)}
+                />
+              ) : (
+                <ClickableImage
+                  src={"/assets/template10coverphoto.png"}
+                  alt="Cover Image"
+                  width={400}
+                  height={200}
+                  className="mx-auto"
+                  onClick={() => openViewer(allImages, 1)}
+                />
+              )}
+              <Image
+                className=" absolute right-0 top-0"
+                src={wavy}
+                alt="wavy"
+                width={100}
+                height={100}
               />
-            ) : (
-              <ClickableImage
-                src={"/assets/template10coverphoto.png"}
-                alt="Cover Image"
-                width={400}
-                height={200}
-                className="mx-auto"
-                onClick={() => openViewer(allImages, 1)}
-              />
-            )}
-            <Image
-              className=" absolute right-0 top-0"
-              src={wavy}
-              alt="wavy"
-              width={100}
-              height={100}
-            />
-            <div className="flex gap-x-2 absolute right-0 top-0 text-[#FFFBD8] bg-black pl-4 pb-2 rounded-bl-3xl">
-              <CTAButtons
-                number={number}
-                email={email}
-                userProfile={userProfile}
-                variant="floating"
-                size="sm"
-                icons="lucide"
-                buttonClassName="border-[#FFFBD8] text-[#FFFBD8] hover:bg-[#FFFBD8] hover:text-black bg-transparent"
-              />
+              <div className="flex gap-x-2 absolute right-0 top-0 text-[#FFFBD8] bg-black pl-4 pb-2 rounded-bl-3xl">
+                <CTAButtons
+                  number={number}
+                  email={email}
+                  userProfile={userProfile}
+                  variant="floating"
+                  size="sm"
+                  icons="lucide"
+                  buttonClassName="border-[#FFFBD8] text-[#FFFBD8] hover:bg-[#FFFBD8] hover:text-black bg-transparent"
+                />
+              </div>
             </div>
-          </div>
-          <div className="absolute -bottom-12 left-1/2 transform -translate-x-1/2">
-            {profilePictureUrl ? (
-              <div className="border-[8px] border-black rounded-full mx-auto overflow-hidden">
-                <ClickableImage
-                  src={profilePictureUrl}
-                  alt="Profile Image"
-                  width={80}
-                  height={80}
-                  className="rounded-full w-24 h-24"
-                  onClick={() => openViewer(allImages, 0)}
-                />
-              </div>
-            ) : (
-              <div className="bg-black w-28 h-28 rounded-full mx-auto flex items-center justify-center">
-                <ClickableImage
-                  src={"/assets/template10samplepic.png"}
-                  alt="Profile Image"
-                  width={80}
-                  height={80}
-                  className="rounded-full w-24 h-24"
-                  onClick={() => openViewer(allImages, 0)}
-                />
-              </div>
-            )}
-        </div>
+            <div className="absolute top-36 left-1/2 transform -translate-x-1/2">
+              {profilePictureUrl ? (
+                <div className="border-[8px] border-black rounded-full mx-auto overflow-hidden">
+                  <ClickableImage
+                    src={profilePictureUrl}
+                    alt="Profile Image"
+                    width={80}
+                    height={80}
+                    className="rounded-full w-24 h-24"
+                    onClick={() => openViewer(allImages, 0)}
+                  />
+                </div>
+              ) : (
+                <div className="bg-black w-28 h-28 rounded-full mx-auto flex items-center justify-center">
+                  <ClickableImage
+                    src={"/assets/template10samplepic.png"}
+                    alt="Profile Image"
+                    width={80}
+                    height={80}
+                    className="rounded-full w-24 h-24"
+                    onClick={() => openViewer(allImages, 0)}
+                  />
+                </div>
+              )}
+            </div>
 
-          {/* PERSONAL INFORMATION */}
-          <div className="text-center mt-14 space-y-1 ">
-            {firstName ? (
-              <h1
+            {/* PERSONAL INFORMATION */}
+            <div className="text-center mt-14 space-y-1 ">
+              {firstName ? (
+                <h1
+                  className={cn(
+                    "text-lg font-normal tracking-wider text-[#FFFBD8] capitalize",
+                    firstName ? "mt-4" : "mt-2",
+                    michroma.className
+                  )}
+                >
+                  {firstName + " " + lastName}
+                </h1>
+              ) : (
+                <h1 className="text-lg font-bold mt-2 ">Hussain Watkins</h1>
+              )}
+
+              <p
                 className={cn(
-                  "text-lg font-normal tracking-wider text-[#FFFBD8] capitalize",
-                  firstName ? "mt-4" : "mt-2",
-                  michroma.className
+                  "text-sm tracking-wider text-[#9C9EFFE5] font-bold pt-1",
+                  firstName ? "mt-5" : "mt-3",
+                  poppins.className
                 )}
               >
-                {firstName + " " + lastName}
-              </h1>
-            ) : (
-              <h1 className="text-lg font-bold mt-2 ">Hussain Watkins</h1>
-            )}
+                {position || "Chief Technology Officer"}
+              </p>
 
-            <p
-              className={cn(
-                "text-sm tracking-wider text-[#9C9EFFE5] font-bold pt-1",
-                firstName ? "mt-5" : "mt-3",
-                poppins.className
-              )}
-            >
-              {position || "Chief Technology Officer"}
-            </p>
+              <div className="gap-x-2 w-full text-[#B6BCD2] flex justify-center items-center">
+                <input
+                  type="text"
+                  value={email}
+                  readOnly
+                  className="max-w-[120px] truncate bg-transparent border-none outline-none cursor-pointer text-center font-light text-sm text-[#B6BCD2]"
+                  onClick={(e) => {
+                    e.currentTarget.select();
+                    navigator.clipboard.writeText(e.currentTarget.value);
+                  }}
+                />
+                <span>|</span>
+                <input
+                  type="text"
+                  value={String(number)}
+                  readOnly
+                  className="max-w-[120px] truncate bg-transparent border-none outline-none cursor-pointer text-center font-light text-sm text-[#B6BCD2]"
+                  onClick={(e) => {
+                    e.currentTarget.select();
+                    navigator.clipboard.writeText(e.currentTarget.value);
+                  }}
+                />
+              </div>
+            </div>
 
-            <div className="gap-x-2 w-full text-[#B6BCD2] flex justify-center items-center">
-              <input
-                type="text"
-                value={email}
-                readOnly
-                className="max-w-[120px] truncate bg-transparent border-none outline-none cursor-pointer text-center font-light text-sm text-[#B6BCD2]"
-                onClick={(e) => {
-                  e.currentTarget.select();
-                  navigator.clipboard.writeText(e.currentTarget.value);
-                }}
-              />
-              <span>|</span>
-              <input
-                type="text"
-                value={String(number)}
-                readOnly
-                className="max-w-[120px] truncate bg-transparent border-none outline-none cursor-pointer text-center font-light text-sm text-[#B6BCD2]"
-                onClick={(e) => {
-                  e.currentTarget.select();
-                  navigator.clipboard.writeText(e.currentTarget.value);
-                }}
+            {/* SOCIAL MEDIA ICONS */}
+            <div className="flex items-center gap-x-4 py-10 text-2xl text-[#B6BCD2] h-16 justify-center">
+              <SocialLinks
+                facebookUrl={facebookUrl}
+                twitterUrl={twitterUrl}
+                tiktokUrl={tiktokUrl}
+                youtubeUrl={youtubeUrl}
+                instagramUrl={instagramUrl}
+                linkedinUrl={linkedinUrl}
+                viberUrl={viberUrl}
+                whatsappNumber={whatsappNumber}
+                websiteUrl={websiteUrl}
+                cardId={id}
+                ownerId={owner}
+                size="md"
+                iconClassName="text-[#B6BCD2]"
+                iconSet="outline"
               />
             </div>
-          </div>
 
-          {/* SOCIAL MEDIA ICONS */}
-          <div className="flex items-center gap-x-4 py-10 text-2xl text-[#B6BCD2] h-16 justify-center">
-            <SocialLinks
-              facebookUrl={facebookUrl}
-              twitterUrl={twitterUrl}
-              tiktokUrl={tiktokUrl}
-              youtubeUrl={youtubeUrl}
-              instagramUrl={instagramUrl}
-              linkedinUrl={linkedinUrl}
-              viberUrl={viberUrl}
-              whatsappNumber={whatsappNumber}
-              websiteUrl={websiteUrl}
-              cardId={id}
-              ownerId={owner}
-              size="md"
-              iconClassName="text-[#B6BCD2]"
-              iconSet="outline"
-            />
-          </div>
-
-          <hr className="border-[#B6BCD2]" />
-          <div className=" flex flex-col gap-y-3 flex-grow border-t text-white mt-2">
-            <h2 className="text-lg font-bold text-[#9C9EFFE5]">
-              Professional Portfolio
-            </h2>
-            <p className="text-sm">
-              Below you&#39;ll find details about my professional experience and
-              the companies I&#39;ve worked with. Each entry highlights my role,
-              responsibilities, and the services offered.
-            </p>
-          <div className="w-full mx-auto mt-4">
-            {companies && companies.length > 0 && (
-              <CompanyShowcase
-                companies={companies}
-                profilePictureUrl={profilePictureUrl}
-                firstName={firstName}
-                lastName={lastName}
-                onImageClick={handleImageClick}
-              />
-            )}
+            <hr className="border-[#B6BCD2]" />
+            <div className=" flex flex-col gap-y-3 flex-grow border-t text-white mt-2">
+              <h2 className="text-lg font-bold text-[#9C9EFFE5]">
+                Professional Portfolio
+              </h2>
+              <p className="text-sm">
+                Below you&#39;ll find details about my professional experience
+                and the companies I&#39;ve worked with. Each entry highlights my
+                role, responsibilities, and the services offered.
+              </p>
+              <div className="w-full mx-auto mt-4">
+                {companies && companies.length > 0 && (
+                  <CompanyShowcase
+                    companies={companies}
+                    profilePictureUrl={profilePictureUrl}
+                    firstName={firstName}
+                    lastName={lastName}
+                    onImageClick={handleImageClick}
+                  />
+                )}
+              </div>
+            </div>
           </div>
         </div>
 
-        </div>
-        
         {/* FOOTER */}
         <TemplateFooter className="flex flex-col items-center mt-8 gap-1 text-center text-xs">
           <a
@@ -501,8 +503,7 @@ const Template10 = ({
           </span>
         </TemplateFooter>
       </div>
-      </div>
-      
+
       {viewerState.isOpen && (
         <ImageViewer
           images={viewerState.images}

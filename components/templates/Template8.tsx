@@ -55,7 +55,7 @@ const Template8 = ({
   owner,
 }: Card) => {
   const { viewerState, openViewer, closeViewer } = useImageViewer();
-  
+
   const userProfile = {
     id,
     owner,
@@ -76,13 +76,13 @@ const Template8 = ({
   const allImages = [
     profilePictureUrl || "/assets/template4samplepic.png",
     coverPhotoUrl || "/assets/template-7-cover-photo.jpeg",
-    ...(companies?.flatMap(c => c.servicePhotos || []) || [])
+    ...(companies?.flatMap((c) => c.servicePhotos || []) || []),
   ].filter(Boolean);
 
   return (
     <Template8Container>
       <div className="flex-grow">
-        <div className="w-full mx-auto  max-w-[480px]">
+        <div className="w-full mx-auto min-h-screen max-w-[480px]">
           <section
             aria-label="Cover Section"
             className="relative h-48 sm:h-60 w-full"
@@ -350,7 +350,9 @@ const Template8 = ({
                               height={400}
                               className="object-cover w-full"
                               onClick={() => {
-                                const servicePhotoIndex = allImages.findIndex(img => img === c.servicePhotos?.[0]);
+                                const servicePhotoIndex = allImages.findIndex(
+                                  (img) => img === c.servicePhotos?.[0]
+                                );
                                 openViewer(allImages, servicePhotoIndex);
                               }}
                             />
@@ -369,7 +371,10 @@ const Template8 = ({
                                   height={300}
                                   className="object-cover w-full"
                                   onClick={() => {
-                                    const servicePhotoIndex = allImages.findIndex(img => img === photo);
+                                    const servicePhotoIndex =
+                                      allImages.findIndex(
+                                        (img) => img === photo
+                                      );
                                     openViewer(allImages, servicePhotoIndex);
                                   }}
                                 />
@@ -384,31 +389,32 @@ const Template8 = ({
             ))}
           </div>
         </div>
-      </div>
-      {/* footer */}
-      <TemplateFooter className="mt-auto bg-white px-5 pb-4">
-        <div className="flex flex-col mt-3 mb-1 items-center gap-1 text-center text-xs">
-          <a
-            href={userProfile?.customUrl ?? userProfile?.websiteUrl ?? "#"}
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            <Image
-              src="/assets/dark-ZwiftechLogo.png"
-              alt="Zwiftech Logo"
-              width={40}
-              height={15}
-              priority
-              className="opacity-90"
-            />
-          </a>
 
-          <span className="tracking-wide text-gray-800 text-[10px] ">
-            © {getCopyrightYear()} Zwiftech. All Rights Reserved.
-          </span>
-        </div>
-      </TemplateFooter>
-      
+        {/* footer */}
+        <TemplateFooter className="mt-auto bg-white px-5 pb-4">
+          <div className="flex flex-col mt-3 mb-1 items-center gap-1 text-center text-xs">
+            <a
+              href={userProfile?.customUrl ?? userProfile?.websiteUrl ?? "#"}
+              target="_blank"
+              rel="noopener noreferrer"
+            >
+              <Image
+                src="/assets/dark-ZwiftechLogo.png"
+                alt="Zwiftech Logo"
+                width={40}
+                height={15}
+                priority
+                className="opacity-90"
+              />
+            </a>
+
+            <span className="tracking-wide text-gray-800 text-[10px] ">
+              © {getCopyrightYear()} Zwiftech. All Rights Reserved.
+            </span>
+          </div>
+        </TemplateFooter>
+      </div>
+
       {viewerState.isOpen && (
         <ImageViewer
           images={viewerState.images}
