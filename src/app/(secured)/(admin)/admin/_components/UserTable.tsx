@@ -129,7 +129,7 @@ const UserTable = ({
                     </TableCell>
                     <TableCell>
                       <div className="flex items-center gap-3">
-                        <div className="relative">
+                        <div className="flex flex-col items-center gap-1">
                           <Avatar className="w-10 h-10">
                             <AvatarImage src={user.profilePictureUrl} />
                             <AvatarFallback>
@@ -138,9 +138,7 @@ const UserTable = ({
                             </AvatarFallback>
                           </Avatar>
                           {(user.role === "admin" || user.role === "super_admin") && (
-                            <div className="absolute -top-1 -right-1 bg-white rounded-full p-0.5">
-                              <Shield className={`w-4 h-4 ${user.role === "super_admin" ? "text-blue-600" : "text-orange-600"}`} />
-                            </div>
+                            <Shield className={`w-4 h-4 ${user.role === "super_admin" ? "text-blue-600" : "text-orange-600"}`} />
                           )}
                         </div>
                         <div className="space-y-1">

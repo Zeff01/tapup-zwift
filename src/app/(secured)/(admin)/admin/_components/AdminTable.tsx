@@ -116,7 +116,7 @@ const AdminTable = ({
                     </TableCell>
                     <TableCell>
                       <div className="flex items-center gap-3">
-                        <div className="relative">
+                        <div className="flex flex-col items-center gap-1">
                           <Avatar className="w-10 h-10 ring-2 ring-purple-500/20">
                             <AvatarImage src={user.profilePictureUrl} />
                             <AvatarFallback className="bg-purple-100 text-purple-700">
@@ -125,9 +125,7 @@ const AdminTable = ({
                             </AvatarFallback>
                           </Avatar>
                           {user.role === "super_admin" && (
-                            <div className="absolute -top-1 -right-1 bg-white rounded-full p-0.5">
-                              <Shield className="w-4 h-4 text-blue-600" />
-                            </div>
+                            <Shield className="w-4 h-4 text-blue-600" />
                           )}
                         </div>
                         <div className="space-y-1">
