@@ -501,7 +501,7 @@ const DigitalCard = ({ card, confirm, user }: Prop) => {
                     disabled={isPendingToggleCard}
                     className={`data-[state=checked]:bg-green-600 data-[state=unchecked]:bg-red-600 scale-75`}
                   />
-                  <span className={`text-xs font-semibold ${isCardDisabled ? 'text-red-500' : 'text-green-500'} [text-shadow:_0_1px_3px_rgb(0_0_0_/_80%),_0_0_8px_rgb(0_0_0_/_50%)]`}>
+                  <span className={`text-xs font-semibold ${isCardDisabled ? 'text-red-500' : 'text-green-500'} [text-shadow:_0_1px_2px_rgb(255_255_255_/_30%)]`}>
                     {isCardDisabled ? "Disabled" : "Enabled"}
                   </span>
                 </div>
