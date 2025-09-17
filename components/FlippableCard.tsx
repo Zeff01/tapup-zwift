@@ -22,6 +22,7 @@ export function FlippableCard({
   autoFlip = false,
   className,
 }: FlippableCardProps) {
+  // Cache-bust deployment: 2025-01-17
   const [isHovered, setIsHovered] = useState(false);
   const isFlipped = autoFlip || isHovered;
 
