@@ -252,7 +252,7 @@ export const carouselCards = {
     id: "viper",
     title: "Viper",
     price: 600,
-    image: "/assets/cards/Viper-front.png",
+    image: "/assets/cards/Viper-Front.png",
     backImage: "/assets/cards/Viper-back.png",
     description: `A sleek, aggressive design with sharp angles and dynamic patterns. Designed for entrepreneurs and innovators who want to project confidence and cutting-edge style.`,
   },
