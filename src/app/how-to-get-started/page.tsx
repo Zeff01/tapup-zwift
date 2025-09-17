@@ -247,7 +247,7 @@ export default function HowToGetStartedPage() {
                         Edit Preview
                       </Button>
                     </Link>
-                    <Link href={`/templates?preview=${selectedTemplate}`}>
+                    <Link href={`/template-preview?template=${selectedTemplate}`}>
                       <Button variant="outline" size="sm">
                         <Eye className="w-4 h-4 mr-2" />
                         View Template

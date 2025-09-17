@@ -94,7 +94,7 @@ export default function Canvas2Card({
             <div>
               <QRCodeSVG
                 value={vCardData}
-                size={100}
+                size={150}
                 bgColor="#ffffff"
                 fgColor="#000000"
               />
