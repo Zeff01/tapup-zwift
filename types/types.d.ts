@@ -92,6 +92,23 @@ export interface Order {
     | "Delivered"
     | "Return Rejected"
     | "Cancelled";
+  // Cancellation fields
+  cancelledAt?: Date;
+  cancelReason?: string;
+  cancelledBy?: string;
+  // Refund fields
+  refundStatus?: "Pending" | "Processing" | "Completed" | "Rejected";
+  refundRequestedAt?: Date;
+  refundCompletedAt?: Date;
+  refundAmount?: number;
+  refundReason?: string;
+  refundMethod?: string;
+  refundTransactionId?: string;
+  paymentMethod?: string;
+  userId?: string;
+  // Payment continuation fields
+  paymentUrl?: string;
+  xenditPlanId?: string;
 }
 export interface Address {
   city: string;
@@ -190,6 +207,15 @@ export interface DeliveryAddress {
   state: string;
   zipCode: string;
   isDefault?: boolean;
+  // New Philippines address fields
+  country?: string;
+  regionCode?: string;
+  regionName?: string;
+  provinceCode?: string;
+  provinceName?: string;
+  cityCode?: string;
+  cityName?: string;
+  barangay?: string;
 }
 
 export interface CardItemTransactionBoard {

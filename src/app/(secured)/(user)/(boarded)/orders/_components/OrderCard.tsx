@@ -7,7 +7,7 @@ import { Card } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import Image from "next/image";
 import { format } from "date-fns";
-import { Package, Truck, CheckCircle, AlertCircle, XCircle, ChevronRight } from "lucide-react";
+import { Package, Truck, CheckCircle, AlertCircle, XCircle, ChevronRight, DollarSign } from "lucide-react";
 import { cn } from "@/lib/utils";
 
 interface OrderCardProps {
@@ -119,9 +119,22 @@ const OrderCard: React.FC<OrderCardProps> = ({ order }) => {
                 {format(new Date(order.orderDate), "MMM dd, yyyy 'at' h:mm a")}
               </p>
             </div>
-            <div className={cn("px-2.5 py-1 rounded-full text-xs font-medium flex items-center gap-1", config.bgColor, config.color)}>
-              <StatusIcon className="w-3.5 h-3.5" />
-              {order.status}
+            <div className="flex items-center gap-2">
+              <div className={cn("px-2.5 py-1 rounded-full text-xs font-medium flex items-center gap-1", config.bgColor, config.color)}>
+                <StatusIcon className="w-3.5 h-3.5" />
+                {order.status}
+              </div>
+              {order.refundStatus && (
+                <div className={cn(
+                  "px-2.5 py-1 rounded-full text-xs font-medium flex items-center gap-1",
+                  order.refundStatus === "Completed" ? "bg-green-50 text-green-600 dark:bg-green-900/20" :
+                  order.refundStatus === "Rejected" ? "bg-red-50 text-red-600 dark:bg-red-900/20" :
+                  "bg-yellow-50 text-yellow-600 dark:bg-yellow-900/20"
+                )}>
+                  <DollarSign className="w-3.5 h-3.5" />
+                  Refund {order.refundStatus}
+                </div>
+              )}
             </div>
           </div>
 
@@ -140,15 +153,27 @@ const OrderCard: React.FC<OrderCardProps> = ({ order }) => {
             <p className="text-xs text-gray-500 truncate max-w-[200px]">
               Ship to: {order.shippingInfo.recipientName}
             </p>
-            <Button 
-              variant="ghost" 
-              size="sm" 
-              className="h-7 text-xs px-2"
-              onClick={() => router.push(`/orders/${order.orderId}`)}
-            >
-              View Details
-              <ChevronRight className="w-3.5 h-3.5 ml-1" />
-            </Button>
+            <div className="flex items-center gap-2">
+              {order.status === "Pending" && order.paymentUrl && (
+                <Button 
+                  variant="outline" 
+                  size="sm" 
+                  className="h-7 text-xs px-2 text-green-600 hover:text-green-700 border-green-600"
+                  onClick={() => window.location.href = order.paymentUrl!}
+                >
+                  Continue Order
+                </Button>
+              )}
+              <Button 
+                variant="ghost" 
+                size="sm" 
+                className="h-7 text-xs px-2"
+                onClick={() => router.push(`/orders/${order.orderId}`)}
+              >
+                View Details
+                <ChevronRight className="w-3.5 h-3.5 ml-1" />
+              </Button>
+            </div>
           </div>
         </div>
       </div>

@@ -158,7 +158,7 @@ const TemplateSelection = () => {
                   className="bg-gradient-to-r from-green-600 to-emerald-500 hover:from-green-700 hover:to-emerald-600 text-white font-semibold px-8 py-6 rounded-full shadow-lg hover:shadow-xl transition-all duration-300 group flex items-center gap-2"
                 >
                   <a>
-                    View Full Template on screen
+                    View Template Preview
                     <Smartphone className="ml-2 h-5 w-5 group-hover:translate-x-1 transition-transform" />
                   </a>
                 </Button>

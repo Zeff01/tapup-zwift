@@ -143,7 +143,6 @@ const NavigationBoarded = () => {
                 className="object-cover rounded-full h-[32px] w-[32px]"
               />
               <div className="flex flex-col items-center gap-2">
-                <ThemeToggle variant="boarded" />
                 {isLoadingUserContext ? (
                   <ShoppingCart className="!size-5 shrink-0" />
                 ) : (

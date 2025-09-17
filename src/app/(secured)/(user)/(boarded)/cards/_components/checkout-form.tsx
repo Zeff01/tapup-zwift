@@ -53,14 +53,20 @@ export default function CheckoutForm() {
         (address) => address.id === selectedAddressId
       );
 
+      // Ensure all required fields have valid values
+      const firstName = user?.firstName || selectedAddress?.firstName || "Customer";
+      const lastName = user?.lastName || selectedAddress?.lastName || "";
+      const email = user?.email || selectedAddress?.email || "customer@example.com";
+      const phoneNumber = user?.number || selectedAddress?.phone || "";
+
       const customerData: CustomerType = {
         reference_id: referenceId,
         type: "INDIVIDUAL",
-        email: user?.email,
-        mobile_number: user?.number ?? selectedAddress?.phone,
+        email: email,
+        mobile_number: phoneNumber,
         individual_detail: {
-          given_names: user?.firstName ?? selectedAddress?.firstName ?? "",
-          surname: user?.lastName ?? selectedAddress?.lastName,
+          given_names: firstName.trim() || "Customer", // Ensure it's never empty
+          surname: lastName.trim(),
         },
       };
 

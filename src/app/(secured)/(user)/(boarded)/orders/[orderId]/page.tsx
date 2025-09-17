@@ -1,6 +1,6 @@
 "use client";
 
-import React from "react";
+import React, { useState } from "react";
 import { useParams, useRouter } from "next/navigation";
 import { useQuery } from "@tanstack/react-query";
 import { useUserContext } from "@/providers/user-provider";
@@ -13,6 +13,9 @@ import { format } from "date-fns";
 import { ArrowLeft, Package, Truck, CheckCircle, AlertCircle, XCircle, Copy, Download } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { toast } from "react-toastify";
+import { CancelOrderModal } from "../_components/CancelOrderModal";
+import { RefundRequestModal } from "../_components/RefundRequestModal";
+import { generateInvoice } from "@/lib/utils/generate-invoice";
 
 const statusConfig = {
   "Pending": { 
@@ -62,6 +65,8 @@ export default function OrderDetailsPage() {
   const router = useRouter();
   const { user } = useUserContext();
   const orderId = params.orderId as string;
+  const [showCancelModal, setShowCancelModal] = useState(false);
+  const [showRefundModal, setShowRefundModal] = useState(false);
 
   const { data: orders = [], isLoading } = useQuery({
     queryKey: ["user-orders", user?.uid],
@@ -156,6 +161,57 @@ export default function OrderDetailsPage() {
                   <div>
                     <p className="font-medium text-sm">{order.status}</p>
                     <p className="text-xs text-gray-500">Current Status</p>
+                  </div>
+                </div>
+              )}
+              {order.cancelledAt && (
+                <div className="flex gap-3">
+                  <div className="w-8 h-8 rounded-full bg-red-100 dark:bg-red-900/20 flex items-center justify-center">
+                    <XCircle className="w-4 h-4 text-red-600" />
+                  </div>
+                  <div>
+                    <p className="font-medium text-sm">Order Cancelled</p>
+                    <p className="text-xs text-gray-500">{format(new Date(order.cancelledAt), "MMM dd, yyyy 'at' h:mm a")}</p>
+                    {order.cancelReason && (
+                      <p className="text-xs text-gray-400 mt-0.5">Reason: {order.cancelReason}</p>
+                    )}
+                  </div>
+                </div>
+              )}
+              {order.refundStatus && (
+                <div className="flex gap-3">
+                  <div className={cn(
+                    "w-8 h-8 rounded-full flex items-center justify-center",
+                    order.refundStatus === "Completed" ? "bg-green-100 dark:bg-green-900/20" :
+                    order.refundStatus === "Rejected" ? "bg-red-100 dark:bg-red-900/20" :
+                    "bg-yellow-100 dark:bg-yellow-900/20"
+                  )}>
+                    <AlertCircle className={cn(
+                      "w-4 h-4",
+                      order.refundStatus === "Completed" ? "text-green-600" :
+                      order.refundStatus === "Rejected" ? "text-red-600" :
+                      "text-yellow-600"
+                    )} />
+                  </div>
+                  <div>
+                    <p className="font-medium text-sm">
+                      Refund {order.refundStatus}
+                    </p>
+                    {order.refundRequestedAt && (
+                      <p className="text-xs text-gray-500">
+                        Requested: {format(new Date(order.refundRequestedAt), "MMM dd, yyyy")}
+                      </p>
+                    )}
+                    {order.refundCompletedAt && (
+                      <p className="text-xs text-gray-500">
+                        Completed: {format(new Date(order.refundCompletedAt), "MMM dd, yyyy")}
+                      </p>
+                    )}
+                    {order.refundAmount && (
+                      <p className="text-xs text-gray-400 mt-0.5">
+                        Amount: ₱{order.refundAmount.toFixed(2)}
+                      </p>
+                    )}
                   </div>
                 </div>
               )}
@@ -256,17 +312,66 @@ export default function OrderDetailsPage() {
               Rate & Review
             </Button>
           )}
+          {order.status === "Pending" && order.paymentUrl && (
+            <Button 
+              className="bg-green-600 hover:bg-green-700 text-white"
+              onClick={() => window.location.href = order.paymentUrl!}
+            >
+              Continue Payment
+            </Button>
+          )}
           {(order.status === "Pending" || order.status === "To Ship") && (
-            <Button variant="outline" className="text-red-600 hover:text-red-700">
+            <Button 
+              variant="outline" 
+              className="text-red-600 hover:text-red-700"
+              onClick={() => setShowCancelModal(true)}
+            >
               Cancel Order
             </Button>
           )}
-          <Button variant="outline">
+          {order.status === "Cancelled" && !order.refundStatus && (
+            <Button 
+              variant="outline" 
+              className="text-blue-600 hover:text-blue-700"
+              onClick={() => setShowRefundModal(true)}
+            >
+              Request Refund
+            </Button>
+          )}
+          {order.status === "Cancelled" && order.refundStatus === "Rejected" && (
+            <Button 
+              variant="outline" 
+              className="text-blue-600 hover:text-blue-700"
+              onClick={() => setShowRefundModal(true)}
+            >
+              Resubmit Refund Request
+            </Button>
+          )}
+          <Button 
+            variant="outline"
+            onClick={() => generateInvoice(order, user?.displayName || user?.firstName)}
+          >
             <Download className="w-4 h-4 mr-2" />
             Download Invoice
           </Button>
         </div>
       </div>
+
+      {/* Cancel Order Modal */}
+      <CancelOrderModal
+        isOpen={showCancelModal}
+        onClose={() => setShowCancelModal(false)}
+        orderId={order.orderId}
+        userId={user?.uid || ""}
+      />
+      
+      {/* Refund Request Modal */}
+      <RefundRequestModal
+        isOpen={showRefundModal}
+        onClose={() => setShowRefundModal(false)}
+        order={order}
+        userId={user?.uid || ""}
+      />
     </div>
   );
 }

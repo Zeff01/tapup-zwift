@@ -13,7 +13,7 @@ import {
 } from "@/components/ui/table";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
-import { Eye, Edit, Trash2, MoreVertical, Check, Package, Truck, PackageCheck, XCircle, RotateCcw } from "lucide-react";
+import { Eye, Edit, Trash2, MoreVertical, Check, Package, Truck, PackageCheck, XCircle, RotateCcw, DollarSign, CheckCircle } from "lucide-react";
 import Image from "next/image";
 import { cn } from "@/lib/utils";
 import {
@@ -24,7 +24,7 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
-import { updateOrderStatus } from "@/lib/firebase/actions/order.action";
+import { updateOrderStatus, processRefund } from "@/lib/firebase/actions/order.action";
 import { toast } from "sonner";
 import { useQueryClient, useMutation } from "@tanstack/react-query";
 import { OrderDetailsModal } from "./OrderDetailsModal";
@@ -64,6 +64,22 @@ const OrdersTable: React.FC<OrdersTableProps> = ({ orders }) => {
       toast.error("Failed to update order status");
       console.error(error);
       setUpdatingOrderId(null);
+    },
+  });
+
+  const processRefundMutation = useMutation({
+    mutationFn: async ({ orderId }: { orderId: string }) => {
+      const result = await processRefund(orderId, "approve", "Admin approved refund from table");
+      if (!result.success) throw new Error(result.error);
+      return result;
+    },
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ["admin-orders"] });
+      toast.success("Refund approved and processed successfully");
+    },
+    onError: (error) => {
+      toast.error("Failed to process refund");
+      console.error(error);
     },
   });
 
@@ -166,20 +182,40 @@ const OrdersTable: React.FC<OrdersTableProps> = ({ orders }) => {
                 {format(new Date(order.orderDate), "MMM dd, yyyy")}
               </TableCell>
               <TableCell>
-                <Badge
-                  variant="secondary"
-                  className={cn(statusColors[order.status] || "")}
-                >
-                  {order.status}
-                </Badge>
-                {order.returnStatus && (
+                <div className="flex flex-col gap-1">
                   <Badge
-                    variant="outline"
-                    className="ml-2 text-xs"
+                    variant="secondary"
+                    className={cn(statusColors[order.status] || "")}
                   >
-                    {order.returnStatus}
+                    {order.status}
                   </Badge>
-                )}
+                  <div className="flex gap-1">
+                    {order.returnStatus && (
+                      <Badge
+                        variant="outline"
+                        className="text-xs"
+                      >
+                        {order.returnStatus}
+                      </Badge>
+                    )}
+                    {order.refundStatus && (
+                      <Badge
+                        variant={
+                          order.refundStatus === "Pending" 
+                            ? "default" 
+                            : order.refundStatus === "Completed" 
+                            ? "secondary" 
+                            : order.refundStatus === "Rejected"
+                            ? "destructive"
+                            : "outline"
+                        }
+                        className="text-xs"
+                      >
+                        Refund: {order.refundStatus}
+                      </Badge>
+                    )}
+                  </div>
+                </div>
               </TableCell>
               <TableCell>
                 <div className="flex items-center gap-2">
@@ -197,6 +233,20 @@ const OrdersTable: React.FC<OrdersTableProps> = ({ orders }) => {
               </TableCell>
               <TableCell className="text-right">
                 <div className="flex items-center justify-end gap-1">
+                  {/* Quick Refund Approval for Cancelled Orders with Pending Refunds */}
+                  {order.status === "Cancelled" && order.refundStatus === "Pending" && (
+                    <Button
+                      variant="default"
+                      size="sm"
+                      className="h-8 px-2 bg-green-600 hover:bg-green-700"
+                      title="Approve Refund"
+                      onClick={() => processRefundMutation.mutate({ orderId: order.orderId })}
+                    >
+                      <DollarSign className="h-4 w-4 mr-1" />
+                      <span className="text-xs">Approve Refund</span>
+                    </Button>
+                  )}
+                  
                   {/* Status Update Dropdown */}
                   {getNextStatuses(order.status).length > 0 && (
                     <DropdownMenu>

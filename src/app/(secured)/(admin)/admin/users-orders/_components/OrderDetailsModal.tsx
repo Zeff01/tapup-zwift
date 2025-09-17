@@ -14,7 +14,12 @@ import { Separator } from "@/components/ui/separator";
 import { format } from "date-fns";
 import Image from "next/image";
 import { cn } from "@/lib/utils";
-import { MapPin, Phone, Package, Truck, CreditCard, Calendar } from "lucide-react";
+import { MapPin, Phone, Package, Truck, CreditCard, Calendar, AlertCircle, CheckCircle, XCircle } from "lucide-react";
+import { Button } from "@/components/ui/button";
+import { useMutation, useQueryClient } from "@tanstack/react-query";
+import { processRefund } from "@/lib/firebase/actions/order.action";
+import { toast } from "sonner";
+import { useState } from "react";
 
 interface OrderDetailsModalProps {
   order: Order | null;
@@ -36,6 +41,37 @@ export const OrderDetailsModal: React.FC<OrderDetailsModalProps> = ({
   open,
   onOpenChange,
 }) => {
+  const queryClient = useQueryClient();
+  const [processingRefund, setProcessingRefund] = useState<"approve" | "reject" | null>(null);
+
+  const processRefundMutation = useMutation({
+    mutationFn: async ({ action }: { action: "approve" | "reject" }) => {
+      if (!order) return;
+      setProcessingRefund(action);
+      const result = await processRefund(
+        order.orderId,
+        action,
+        action === "approve" ? "Admin approved refund" : "Admin rejected refund"
+      );
+      if (!result.success) throw new Error(result.error);
+      return result;
+    },
+    onSuccess: (_, { action }) => {
+      queryClient.invalidateQueries({ queryKey: ["admin-orders"] });
+      toast.success(
+        action === "approve"
+          ? "Refund approved and processed successfully"
+          : "Refund request rejected"
+      );
+      setProcessingRefund(null);
+    },
+    onError: (error) => {
+      toast.error("Failed to process refund");
+      console.error(error);
+      setProcessingRefund(null);
+    },
+  });
+
   if (!order) return null;
 
   return (
@@ -71,6 +107,145 @@ export const OrderDetailsModal: React.FC<OrderDetailsModalProps> = ({
               {format(new Date(order.orderDate), "MMM dd, yyyy 'at' h:mm a")}
             </div>
           </div>
+
+          {/* Cancellation and Refund Information */}
+          {order.status === "Cancelled" && (
+            <div className="space-y-4 p-4 rounded-lg border border-red-200 bg-red-50 dark:bg-red-900/20 dark:border-red-800">
+              <h3 className="font-semibold flex items-center gap-2 text-red-700 dark:text-red-300">
+                <AlertCircle className="w-4 h-4" />
+                Cancellation & Refund Details
+              </h3>
+              
+              {/* Cancellation Info */}
+              <div className="space-y-2 text-sm">
+                {order.cancelledAt && (
+                  <p>
+                    <span className="text-gray-500">Cancelled At:</span>{" "}
+                    <span className="font-medium">
+                      {format(new Date(order.cancelledAt), "MMM dd, yyyy 'at' h:mm a")}
+                    </span>
+                  </p>
+                )}
+                {order.cancelReason && (
+                  <p>
+                    <span className="text-gray-500">Cancel Reason:</span>{" "}
+                    <span className="font-medium">{order.cancelReason}</span>
+                  </p>
+                )}
+                {order.cancelledBy && (
+                  <p>
+                    <span className="text-gray-500">Cancelled By:</span>{" "}
+                    <span className="font-medium">{order.cancelledBy}</span>
+                  </p>
+                )}
+              </div>
+              
+              {/* Refund Status */}
+              {order.refundStatus && (
+                <>
+                  <Separator />
+                  <div className="space-y-3">
+                    <div className="flex items-center justify-between">
+                      <h4 className="font-medium">Refund Status</h4>
+                      <Badge
+                        variant={
+                          order.refundStatus === "Completed"
+                            ? "default"
+                            : order.refundStatus === "Rejected"
+                            ? "destructive"
+                            : "secondary"
+                        }
+                      >
+                        {order.refundStatus}
+                      </Badge>
+                    </div>
+                    
+                    <div className="space-y-2 text-sm">
+                      {order.refundAmount !== undefined && (
+                        <p>
+                          <span className="text-gray-500">Refund Amount:</span>{" "}
+                          <span className="font-medium text-green-600">
+                            ₱{order.refundAmount.toFixed(2)}
+                          </span>
+                        </p>
+                      )}
+                      {order.refundReason && (
+                        <p>
+                          <span className="text-gray-500">Refund Reason:</span>{" "}
+                          <span className="font-medium">{order.refundReason}</span>
+                        </p>
+                      )}
+                      {order.refundMethod && (
+                        <p>
+                          <span className="text-gray-500">Refund Method:</span>{" "}
+                          <span className="font-medium">{order.refundMethod}</span>
+                        </p>
+                      )}
+                      {order.refundRequestedAt && (
+                        <p>
+                          <span className="text-gray-500">Requested At:</span>{" "}
+                          <span className="font-medium">
+                            {format(new Date(order.refundRequestedAt), "MMM dd, yyyy 'at' h:mm a")}
+                          </span>
+                        </p>
+                      )}
+                      {order.refundCompletedAt && (
+                        <p>
+                          <span className="text-gray-500">Completed At:</span>{" "}
+                          <span className="font-medium">
+                            {format(new Date(order.refundCompletedAt), "MMM dd, yyyy 'at' h:mm a")}
+                          </span>
+                        </p>
+                      )}
+                    </div>
+                    
+                    {/* Refund Action Buttons */}
+                    {order.refundStatus === "Pending" && (
+                      <div className="flex gap-2 pt-2">
+                        <Button
+                          size="sm"
+                          variant="default"
+                          className="bg-green-600 hover:bg-green-700"
+                          onClick={() => processRefundMutation.mutate({ action: "approve" })}
+                          disabled={processingRefund !== null}
+                        >
+                          {processingRefund === "approve" ? (
+                            <>
+                              <span className="animate-spin mr-2">⏳</span>
+                              Processing...
+                            </>
+                          ) : (
+                            <>
+                              <CheckCircle className="w-4 h-4 mr-2" />
+                              Approve Refund
+                            </>
+                          )}
+                        </Button>
+                        <Button
+                          size="sm"
+                          variant="destructive"
+                          onClick={() => processRefundMutation.mutate({ action: "reject" })}
+                          disabled={processingRefund !== null}
+                        >
+                          {processingRefund === "reject" ? (
+                            <>
+                              <span className="animate-spin mr-2">⏳</span>
+                              Processing...
+                            </>
+                          ) : (
+                            <>
+                              <XCircle className="w-4 h-4 mr-2" />
+                              Reject Refund
+                            </>
+                          )}
+                        </Button>
+                      </div>
+                    )}
+                  </div>
+                </>
+              )}
+            </div>
+          )}
 
           <Separator />
 
@@ -153,10 +328,10 @@ export const OrderDetailsModal: React.FC<OrderDetailsModalProps> = ({
                     {item.subscriptionPlan && (
                       <div className="text-sm bg-blue-50 dark:bg-blue-900/20 p-2 rounded">
                         <p className="font-medium text-blue-700 dark:text-blue-300">
-                          Subscription: {item.subscriptionPlan.interval}
+                          Subscription: {item.subscriptionPlan.name}
                         </p>
                         <p className="text-blue-600 dark:text-blue-400">
-                          ₱{item.subscriptionPlan.price.toFixed(2)} / {item.subscriptionPlan.interval}
+                          ₱{item.subscriptionPlan.price.toFixed(2)} for {item.subscriptionPlan.durationDays} days
                         </p>
                       </div>
                     )}
