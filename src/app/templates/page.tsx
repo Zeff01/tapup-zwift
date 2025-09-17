@@ -156,36 +156,73 @@ export default function TemplatesPage() {
                                         <div className="text-sm text-gray-500">Loading...</div>
                                       </div>
                                     }>
-                                      <TemplateComponent 
-                                        id="sample"
-                                        profilePictureUrl="/assets/profile_placeholder.png"
-                                        coverPhotoUrl="/assets/cards/cover-placeholder.jpg"
-                                        firstName="John"
-                                        lastName="Doe"
-                                        email="john.doe@example.com"
-                                        number="+1234567890"
-                                        position="CEO & Founder"
-                                        facebookUrl="https://facebook.com"
-                                        linkedinUrl="https://linkedin.com"
-                                        instagramUrl="https://instagram.com"
-                                        twitterUrl="https://twitter.com"
-                                        tiktokUrl="https://tiktok.com"
-                                        youtubeUrl="https://youtube.com"
-                                        whatsappNumber="+1234567890"
-                                        websiteUrl="https://example.com"
-                                        viberUrl=""
-                                        customUrl=""
-                                        companies={[{
-                                          id: "1",
-                                          name: "TapUp Digital",
-                                          position: "CEO & Founder",
-                                          description: "Leading digital business card solutions"
-                                        }]}
-                                        owner="sample-user"
-                                        transferCode=""
-                                        disabled={false}
-                                        createdAt={Timestamp.now()}
-                                      />
+                                      {index === 5 ? (
+                                        // Template6 expects userData prop
+                                        <TemplateComponent 
+                                          userData={{
+                                            id: "sample",
+                                            profilePictureUrl: "/assets/profile_placeholder.png",
+                                            coverPhotoUrl: "/assets/cards/cover-placeholder.jpg",
+                                            firstName: "John",
+                                            lastName: "Doe",
+                                            email: "john.doe@example.com",
+                                            number: "+1234567890",
+                                            position: "CEO & Founder",
+                                            facebookUrl: "https://facebook.com",
+                                            linkedinUrl: "https://linkedin.com",
+                                            instagramUrl: "https://instagram.com",
+                                            twitterUrl: "https://twitter.com",
+                                            tiktokUrl: "https://tiktok.com",
+                                            youtubeUrl: "https://youtube.com",
+                                            whatsappNumber: "+1234567890",
+                                            websiteUrl: "https://example.com",
+                                            viberUrl: "",
+                                            customUrl: "",
+                                            companies: [{
+                                              id: "1",
+                                              name: "TapUp Digital",
+                                              position: "CEO & Founder",
+                                              description: "Leading digital business card solutions"
+                                            }],
+                                            owner: "sample-user",
+                                            transferCode: "",
+                                            disabled: false,
+                                            createdAt: Timestamp.now()
+                                          }}
+                                        />
+                                      ) : (
+                                        // Other templates expect individual props
+                                        <TemplateComponent 
+                                          id="sample"
+                                          profilePictureUrl="/assets/profile_placeholder.png"
+                                          coverPhotoUrl="/assets/cards/cover-placeholder.jpg"
+                                          firstName="John"
+                                          lastName="Doe"
+                                          email="john.doe@example.com"
+                                          number="+1234567890"
+                                          position="CEO & Founder"
+                                          facebookUrl="https://facebook.com"
+                                          linkedinUrl="https://linkedin.com"
+                                          instagramUrl="https://instagram.com"
+                                          twitterUrl="https://twitter.com"
+                                          tiktokUrl="https://tiktok.com"
+                                          youtubeUrl="https://youtube.com"
+                                          whatsappNumber="+1234567890"
+                                          websiteUrl="https://example.com"
+                                          viberUrl=""
+                                          customUrl=""
+                                          companies={[{
+                                            id: "1",
+                                            name: "TapUp Digital",
+                                            position: "CEO & Founder",
+                                            description: "Leading digital business card solutions"
+                                          }]}
+                                          owner="sample-user"
+                                          transferCode=""
+                                          disabled={false}
+                                          createdAt={Timestamp.now()}
+                                        />
+                                      )}
                                     </React.Suspense>
                                   )}
                                 </div>
@@ -303,36 +340,73 @@ export default function TemplatesPage() {
                                     <div className="text-gray-500">Loading template...</div>
                                   </div>
                                 }>
-                                  <TemplateComponent 
-                                    id="sample"
-                                    profilePictureUrl="/assets/profile_placeholder.png"
-                                    coverPhotoUrl="/assets/cards/cover-placeholder.jpg"
-                                    firstName="John"
-                                    lastName="Doe"
-                                    email="john.doe@example.com"
-                                    number="+1234567890"
-                                    position="CEO & Founder"
-                                    facebookUrl="https://facebook.com"
-                                    linkedinUrl="https://linkedin.com"
-                                    instagramUrl="https://instagram.com"
-                                    twitterUrl="https://twitter.com"
-                                    tiktokUrl="https://tiktok.com"
-                                    youtubeUrl="https://youtube.com"
-                                    whatsappNumber="+1234567890"
-                                    websiteUrl="https://example.com"
-                                    viberUrl=""
-                                    customUrl=""
-                                    companies={[{
-                                      id: "1",
-                                      name: "TapUp Digital",
-                                      position: "CEO & Founder",
-                                      description: "Leading digital business card solutions"
-                                    }]}
-                                    owner="sample-user"
-                                    transferCode=""
-                                    disabled={false}
-                                    createdAt={Timestamp.now()}
-                                  />
+                                  {selectedTemplate === 5 ? (
+                                    // Template6 expects userData prop
+                                    <TemplateComponent 
+                                      userData={{
+                                        id: "sample",
+                                        profilePictureUrl: "/assets/profile_placeholder.png",
+                                        coverPhotoUrl: "/assets/cards/cover-placeholder.jpg",
+                                        firstName: "John",
+                                        lastName: "Doe",
+                                        email: "john.doe@example.com",
+                                        number: "+1234567890",
+                                        position: "CEO & Founder",
+                                        facebookUrl: "https://facebook.com",
+                                        linkedinUrl: "https://linkedin.com",
+                                        instagramUrl: "https://instagram.com",
+                                        twitterUrl: "https://twitter.com",
+                                        tiktokUrl: "https://tiktok.com",
+                                        youtubeUrl: "https://youtube.com",
+                                        whatsappNumber: "+1234567890",
+                                        websiteUrl: "https://example.com",
+                                        viberUrl: "",
+                                        customUrl: "",
+                                        companies: [{
+                                          id: "1",
+                                          name: "TapUp Digital",
+                                          position: "CEO & Founder",
+                                          description: "Leading digital business card solutions"
+                                        }],
+                                        owner: "sample-user",
+                                        transferCode: "",
+                                        disabled: false,
+                                        createdAt: Timestamp.now()
+                                      }}
+                                    />
+                                  ) : (
+                                    // Other templates expect individual props
+                                    <TemplateComponent 
+                                      id="sample"
+                                      profilePictureUrl="/assets/profile_placeholder.png"
+                                      coverPhotoUrl="/assets/cards/cover-placeholder.jpg"
+                                      firstName="John"
+                                      lastName="Doe"
+                                      email="john.doe@example.com"
+                                      number="+1234567890"
+                                      position="CEO & Founder"
+                                      facebookUrl="https://facebook.com"
+                                      linkedinUrl="https://linkedin.com"
+                                      instagramUrl="https://instagram.com"
+                                      twitterUrl="https://twitter.com"
+                                      tiktokUrl="https://tiktok.com"
+                                      youtubeUrl="https://youtube.com"
+                                      whatsappNumber="+1234567890"
+                                      websiteUrl="https://example.com"
+                                      viberUrl=""
+                                      customUrl=""
+                                      companies={[{
+                                        id: "1",
+                                        name: "TapUp Digital",
+                                        position: "CEO & Founder",
+                                        description: "Leading digital business card solutions"
+                                      }]}
+                                      owner="sample-user"
+                                      transferCode=""
+                                      disabled={false}
+                                      createdAt={Timestamp.now()}
+                                    />
+                                  )}
                                 </React.Suspense>
                               ) : null;
                             })()}
