@@ -89,7 +89,7 @@ export const headerItems = [
   { href: "/", label: "Home" },
   { href: "/#features", label: "Features" },
   { href: "/#quickguide", label: "Quick Guide" },
-  { href: "/#templates", label: "Products" },
+  { href: "/templates", label: "Templates" },
   { href: "/#contact", label: "Contact" },
 ];
 
