@@ -1,6 +1,7 @@
 import { OrderStatus } from "@/src/app/(secured)/(user)/(boarded)/orders/page";
 
 export const statusToUrl: Record<OrderStatus, string> = {
+  All: "all",
   Pending: "pending",
   "To Ship": "to-ship",
   "To Receive": "to-receive",
@@ -10,6 +11,7 @@ export const statusToUrl: Record<OrderStatus, string> = {
 };
 
 export const urlToStatus: Record<string, OrderStatus> = {
+  all: "All",
   pending: "Pending",
   "to-ship": "To Ship",
   "to-receive": "To Receive",

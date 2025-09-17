@@ -7,7 +7,7 @@ import { Form } from "@/components/ui/form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { z } from "zod";
 import { editCardSchema } from "@/lib/zod-schema";
-import { TemplateCarousel } from "@/components/TemplateCarousel";
+import { TemplateGrid } from "@/components/TemplateGrid";
 import PersonalInfoForm from "@/components/forms/PersonalInfoForm";
 import CompanyInfoForm from "@/components/forms/CompanyInfoForm";
 import ImageLoaded from "@/components/ImageLoaded";
@@ -21,7 +21,7 @@ import SocialLinksSelector from "./SocialLink";
 import { Input } from "../ui/input";
 import SelectedTemplate from "./SelectedTemplate";
 import SelectedPhysicalCard from "./SelectedPhysicalCard";
-import { ArrowLeft, ArrowRight, Save } from "lucide-react";
+import { ArrowLeft, ArrowRight, Save, X, Sparkles } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { PhysicalCardCarousel } from "../PhysicalCardCarousel";
 import { LoaderCircle } from "lucide-react";
@@ -274,17 +274,9 @@ const PreviewCreateForm = ({
 
     const formSubmit = async (data: z.infer<typeof editCardSchema>) => {
         if (isPreview) {
-            // For preview, just show the data
+            // For preview, redirect to how-to-get-started page
             console.log("Preview data:", data);
-            toast.success("🎉 Preview complete! Ready to create your professional digital business card?", {
-                duration: 5000,
-                action: {
-                    label: "Sign Up Now",
-                    onClick: () => {
-                        router.push('/signup');
-                    },
-                },
-            });
+            router.push('/how-to-get-started');
             return;
         }
         // Original save logic would go here, but since it's preview, we skip
@@ -644,40 +636,11 @@ const PreviewCreateForm = ({
                                                 looks in each template.
                                             </p>
 
-                                            <div className="flex items-center justify-between mb-4">
-                                                <span className="text-sm font-medium">
-                                                    Selected: {selectedTemplateId}
-                                                </span>
-                                                <Button
-                                                    variant="outline"
-                                                    size="sm"
-                                                    onClick={() => setPreviewMinimized(!previewMinimized)}
-                                                >
-                                                    {previewMinimized ? "Show Preview" : "Hide Preview"}
-                                                </Button>
-                                            </div>
-
-                                            {selectedTemplateId && (
-                                                <div className="w-full overflow-y-scroll border max-h-[400px] rounded-lg mb-4">
-                                                    <SelectedTemplate
-                                                        templateId={selectedTemplateId}
-                                                        formData={{
-                                                            ...methods.watch(),
-                                                            chosenPhysicalCard: {
-                                                                id: methods.watch().chosenPhysicalCard || "",
-                                                            },
-                                                        }}
-                                                    />
-                                                </div>
-                                            )}
                                         </div>
 
                                         {/* Template Selection */}
                                         <div>
-                                            <h3 className="text-md font-medium mb-3">
-                                                Available Templates
-                                            </h3>
-                                            <TemplateCarousel
+                                            <TemplateGrid
                                                 selectedTemplateId={selectedTemplateId}
                                                 setSelectedTemplateId={(id: ChosenTemplateType) => {
                                                     setSelectedTemplateId(id);
@@ -685,10 +648,6 @@ const PreviewCreateForm = ({
                                                     methods.setValue("chosenTemplate", id);
                                                 }}
                                             />
-                                            <p className="text-xs text-gray-500 mt-2 text-center">
-                                                💡 Tip: Click on any template to instantly see how your
-                                                card will look
-                                            </p>
                                         </div>
 
                                         {/* Sign Up Encouragement */}
@@ -728,6 +687,16 @@ const PreviewCreateForm = ({
 
                                 {/* Navigation Buttons */}
                                 <div className="flex justify-end gap-3">
+                                    <Button
+                                        type="button"
+                                        variant="outline"
+                                        onClick={() => router.push('/')}
+                                        disabled={isLoading}
+                                        className="flex items-center gap-2"
+                                    >
+                                        Cancel
+                                    </Button>
+                                    
                                     {currentStep > 1 && (
                                         <Button
                                             type="button"
@@ -755,7 +724,7 @@ const PreviewCreateForm = ({
                                         <Button
                                             type="button"
                                             disabled={isLoading}
-                                            onClick={() => router.push('/signup')}
+                                            onClick={() => router.push('/how-to-get-started')}
                                             className="flex items-center gap-2 text-white bg-green-600 hover:bg-green-500"
                                         >
                                             {isLoading ? (
@@ -765,8 +734,8 @@ const PreviewCreateForm = ({
                                                 </>
                                             ) : (
                                                 <>
-                                                    <Save className="h-4 w-4 text-white" />
-                                                    Create Your Card - Sign Up Free!
+                                                    <Sparkles className="h-4 w-4 text-white" />
+                                                    See How to Get This Card!
                                                 </>
                                             )}
                                         </Button>
