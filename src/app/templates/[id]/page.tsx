@@ -7,7 +7,7 @@ import { notFound } from "next/navigation";
 import { carouselCards } from "@/constants";
 import CardDetails from "@/components/landing/card-details";
 import dynamic from "next/dynamic";
-import { FieldValue } from "firebase/firestore";
+import { Timestamp } from "firebase/firestore";
 
 // Dynamically import template components
 const templateComponents = {
@@ -82,36 +82,39 @@ export default function TemplatePage({ params }: TemplatePageProps) {
             >
               {/* Template content with sample data */}
               <div className="w-full h-full">
-                <TemplateComponent 
-                  id="sample"
-                  profilePictureUrl="/assets/profile_placeholder.png"
-                  coverPhotoUrl="/assets/cards/cover-placeholder.jpg"
-                  firstName="John"
-                  lastName="Doe"
-                  email="john.doe@example.com"
-                  number="+1234567890"
-                  position="CEO & Founder"
-                  facebookUrl="https://facebook.com"
-                  linkedinUrl="https://linkedin.com"
-                  instagramUrl="https://instagram.com"
-                  twitterUrl="https://twitter.com"
-                  tiktokUrl="https://tiktok.com"
-                  youtubeUrl="https://youtube.com"
-                  whatsappNumber="+1234567890"
-                  websiteUrl="https://example.com"
-                  viberUrl=""
-                  customUrl=""
-                  companies={[{
-                    id: "1",
-                    name: "TapUp Digital",
-                    position: "CEO & Founder",
-                    description: "Leading digital business card solutions"
-                  }]}
-                  owner="sample-user"
-                  transferCode=""
-                  disabled={false}
-                  createdAt={new Date()}
-                />
+                <React.Suspense fallback={<div className="flex items-center justify-center h-full">Loading template...</div>}>
+                  <TemplateComponent 
+                    id="sample"
+                    profilePictureUrl="/assets/profile_placeholder.png"
+                    coverPhotoUrl="/assets/cards/cover-placeholder.jpg"
+                    firstName="John"
+                    lastName="Doe"
+                    email="john.doe@example.com"
+                    number="+1234567890"
+                    position="CEO & Founder"
+                    facebookUrl="https://facebook.com"
+                    linkedinUrl="https://linkedin.com"
+                    instagramUrl="https://instagram.com"
+                    twitterUrl="https://twitter.com"
+                    tiktokUrl="https://tiktok.com"
+                    youtubeUrl="https://youtube.com"
+                    whatsappNumber="+1234567890"
+                    websiteUrl="https://example.com"
+                    viberUrl=""
+                    customUrl=""
+                    companies={[{
+                      id: "1",
+                      name: "TapUp Digital",
+                      position: "CEO & Founder",
+                      description: "Leading digital business card solutions"
+                    }]}
+                    owner="sample-user"
+                    transferCode=""
+                    disabled={false}
+                    createdAt={Timestamp.now()}
+                  />
+                </React.Suspense>
+              </div>
             </div>
             {/* Home button */}
             <div className="absolute bottom-6 left-1/2 -translate-x-1/2 w-20 h-2 bg-gray-300 rounded-full opacity-80 z-10" />
