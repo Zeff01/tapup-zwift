@@ -90,13 +90,14 @@ const UserWebsite = () => {
                   <ExternalLink className="ml-2 h-5 w-5 group-hover:translate-x-1 transition-transform" />
                 </Button>
               </Link>
-              <Link href="#templates">
+              <Link href="/templates">
                 <Button
                   variant="outline"
                   size="lg"
-                  className="w-full sm:w-auto font-semibold px-8 py-6 rounded-full border-2 hover:bg-gray-50 dark:hover:bg-gray-800"
+                  className="w-full sm:w-auto font-semibold px-8 py-6 rounded-full border-2 hover:bg-gray-50 dark:hover:bg-gray-800 group"
                 >
-                  View Templates
+                  View Template Preview
+                  <Smartphone className="ml-2 h-5 w-5 group-hover:translate-x-1 transition-transform" />
                 </Button>
               </Link>
             </motion.div>
