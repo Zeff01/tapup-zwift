@@ -5,6 +5,13 @@ import Link from "next/link";
 import { ArrowLeft, Smartphone, Eye } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
 import { carouselCards } from "@/constants";
+
+// Template names for all 18 templates
+const templateNames = [
+  "Eclipse", "Aurora", "Viper", "Vortex", "Bloom", "Neon",
+  "Cosmos", "Phoenix", "Glacier", "Storm", "Zen", "Flame",
+  "Ocean", "Forest", "Desert", "Sky", "Earth", "Solar"
+];
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import CardDetails from "@/components/landing/card-details";
@@ -113,13 +120,13 @@ export default function TemplatesPage() {
               {/* Template Count */}
               <div className="text-center">
                 <Badge variant="secondary" className="text-sm px-4 py-2">
-                  {Object.keys(carouselCards).length} Premium Templates Available
+                  {templateNames.length} Premium Templates Available
                 </Badge>
               </div>
 
               {/* Templates Grid */}
               <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-6">
-                {Object.values(carouselCards).map((card, index) => {
+                {templateNames.map((templateName, index) => {
                   const TemplateComponent = templateComponents[index as keyof typeof templateComponents];
                   
                   return (
@@ -221,10 +228,10 @@ export default function TemplatesPage() {
                         {/* Template Info */}
                         <div className="p-4 border-t border-gray-100 dark:border-gray-700">
                           <h3 className="font-semibold text-lg mb-2 group-hover:text-green-600 dark:group-hover:text-green-400 transition-colors">
-                            {card.title}
+                            {templateName}
                           </h3>
                           <p className="text-sm text-gray-600 dark:text-gray-400 line-clamp-2">
-                            {card.description || "Premium digital business card template"}
+                            Premium digital business card template with modern design
                           </p>
                           
                           {/* Template Tags */}
@@ -232,11 +239,9 @@ export default function TemplatesPage() {
                             <Badge variant="outline" className="text-xs">
                               Template {index + 1}
                             </Badge>
-                            {card.category && (
-                              <Badge variant="outline" className="text-xs">
-                                {card.category}
-                              </Badge>
-                            )}
+                            <Badge variant="outline" className="text-xs">
+                              Digital Card
+                            </Badge>
                           </div>
                         </div>
                       </div>
@@ -362,9 +367,45 @@ export default function TemplatesPage() {
 
                   {/* Template Details */}
                   <div className="flex-1">
-                    <CardDetails
-                      card={Object.values(carouselCards)[selectedTemplate]}
-                    />
+                    <div className="space-y-6">
+                      <div>
+                        <h2 className="text-3xl font-bold mb-2">{templateNames[selectedTemplate]}</h2>
+                        <p className="text-lg text-gray-600 dark:text-gray-300">
+                          Premium digital business card template designed for modern professionals
+                        </p>
+                      </div>
+                      
+                      <div className="grid grid-cols-2 gap-4">
+                        <div className="bg-gray-50 dark:bg-gray-800 rounded-lg p-4">
+                          <h3 className="font-semibold mb-2">Template Features</h3>
+                          <ul className="text-sm text-gray-600 dark:text-gray-400 space-y-1">
+                            <li>• Responsive mobile design</li>
+                            <li>• Social media integration</li>
+                            <li>• Contact information display</li>
+                            <li>• Professional layout</li>
+                          </ul>
+                        </div>
+                        
+                        <div className="bg-gray-50 dark:bg-gray-800 rounded-lg p-4">
+                          <h3 className="font-semibold mb-2">Perfect For</h3>
+                          <ul className="text-sm text-gray-600 dark:text-gray-400 space-y-1">
+                            <li>• Business professionals</li>
+                            <li>• Entrepreneurs</li>
+                            <li>• Freelancers</li>
+                            <li>• Creative professionals</li>
+                          </ul>
+                        </div>
+                      </div>
+                      
+                      <div className="bg-blue-50 dark:bg-blue-900/20 border border-blue-200 dark:border-blue-800 rounded-lg p-4">
+                        <h3 className="font-semibold text-blue-900 dark:text-blue-300 mb-2">
+                          Customization Options
+                        </h3>
+                        <p className="text-sm text-blue-800 dark:text-blue-400">
+                          Easily customize colors, fonts, images, and content to match your personal brand and professional style.
+                        </p>
+                      </div>
+                    </div>
                   </div>
                 </div>
               )}
