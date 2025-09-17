@@ -173,8 +173,8 @@ export default function TemplatesPage() {
                             }>
                               {index === 5 ? (
                                 // Template6 expects userData prop
-                                <TemplateComponent 
-                                  userData={{
+                                React.createElement(TemplateComponent as any, {
+                                  userData: {
                                     id: "sample",
                                     profilePictureUrl: getProfilePic(index),
                                     coverPhotoUrl: getCoverPhoto(index),
@@ -203,40 +203,40 @@ export default function TemplatesPage() {
                                     transferCode: "",
                                     disabled: false,
                                     createdAt: Timestamp.now()
-                                  }}
-                                />
+                                  }
+                                })
                               ) : (
                                 // Other templates expect individual props
-                                <TemplateComponent 
-                                  id="sample"
-                                  profilePictureUrl={getProfilePic(index)}
-                                  coverPhotoUrl={getCoverPhoto(index)}
-                                  firstName="John"
-                                  lastName="Doe"
-                                  email="john.doe@example.com"
-                                  number="+1234567890"
-                                  position="CEO & Founder"
-                                  facebookUrl="https://facebook.com"
-                                  linkedinUrl="https://linkedin.com"
-                                  instagramUrl="https://instagram.com"
-                                  twitterUrl="https://twitter.com"
-                                  tiktokUrl="https://tiktok.com"
-                                  youtubeUrl="https://youtube.com"
-                                  whatsappNumber="+1234567890"
-                                  websiteUrl="https://example.com"
-                                  viberUrl=""
-                                  customUrl=""
-                                  companies={[{
+                                React.createElement(TemplateComponent as any, {
+                                  id: "sample",
+                                  profilePictureUrl: getProfilePic(index),
+                                  coverPhotoUrl: getCoverPhoto(index),
+                                  firstName: "John",
+                                  lastName: "Doe",
+                                  email: "john.doe@example.com",
+                                  number: "+1234567890",
+                                  position: "CEO & Founder",
+                                  facebookUrl: "https://facebook.com",
+                                  linkedinUrl: "https://linkedin.com",
+                                  instagramUrl: "https://instagram.com",
+                                  twitterUrl: "https://twitter.com",
+                                  tiktokUrl: "https://tiktok.com",
+                                  youtubeUrl: "https://youtube.com",
+                                  whatsappNumber: "+1234567890",
+                                  websiteUrl: "https://example.com",
+                                  viberUrl: "",
+                                  customUrl: "",
+                                  companies: [{
                                     id: "1",
                                     name: "TapUp Digital",
                                     position: "CEO & Founder",
                                     description: "Leading digital business card solutions"
-                                  }]}
-                                  owner="sample-user"
-                                  transferCode=""
-                                  disabled={false}
-                                  createdAt={Timestamp.now()}
-                                />
+                                  }],
+                                  owner: "sample-user",
+                                  transferCode: "",
+                                  disabled: false,
+                                  createdAt: Timestamp.now()
+                                })
                               )}
                             </React.Suspense>
                           )}

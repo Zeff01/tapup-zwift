@@ -1,8 +1,8 @@
 "use client";
 
-import React from "react";
+import React, { useEffect, useState } from "react";
 import Link from "next/link";
-import { useRouter } from "next/navigation";
+import { useRouter, useSearchParams } from "next/navigation";
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
 import { 
@@ -13,12 +13,61 @@ import {
   Package, 
   Smartphone,
   Check,
-  Sparkles
+  Sparkles,
+  Eye
 } from "lucide-react";
 import { motion } from "framer-motion";
+import dynamic from "next/dynamic";
+import { Timestamp } from "firebase/firestore";
+
+// Template names mapping
+const templateNames = [
+  "Plain White", "Plain Black", "Viper", "Template 4", "Floral", "Template 6", 
+  "Social Blue", "Connect", "Business", "Purple Aura", "Sky", "Dairy Green",
+  "Urban Professional", "Template 14", "Neon Network", "Obsidian", "Designer Brand", "Ocean Depth"
+];
+
+// Dynamically import template components
+const templateComponents = {
+  0: dynamic(() => import("@/components/templates/Template1")),
+  1: dynamic(() => import("@/components/templates/Template2")),
+  2: dynamic(() => import("@/components/templates/Template3")),
+  3: dynamic(() => import("@/components/templates/Template4")),
+  4: dynamic(() => import("@/components/templates/Template5")),
+  5: dynamic(() => import("@/components/templates/Template6")),
+  6: dynamic(() => import("@/components/templates/Template7")),
+  7: dynamic(() => import("@/components/templates/Template8")),
+  8: dynamic(() => import("@/components/templates/Template9")),
+  9: dynamic(() => import("@/components/templates/Template10")),
+  10: dynamic(() => import("@/components/templates/Template11")),
+  11: dynamic(() => import("@/components/templates/Template12")),
+  12: dynamic(() => import("@/components/templates/Template13")),
+  13: dynamic(() => import("@/components/templates/Template14")),
+  14: dynamic(() => import("@/components/templates/Template15")),
+  15: dynamic(() => import("@/components/templates/Template16")),
+  16: dynamic(() => import("@/components/templates/Template17")),
+  17: dynamic(() => import("@/components/templates/Template18")),
+};
 
 export default function HowToGetStartedPage() {
   const router = useRouter();
+  const searchParams = useSearchParams();
+  const templateIndex = searchParams.get("template");
+  const selectedTemplate = templateIndex ? parseInt(templateIndex) : null;
+  const [previewData, setPreviewData] = useState<any>(null);
+
+  // Load preview data from localStorage
+  useEffect(() => {
+    const storedData = localStorage.getItem('tapup-preview-data');
+    if (storedData) {
+      try {
+        const parsedData = JSON.parse(storedData);
+        setPreviewData(parsedData);
+      } catch (error) {
+        console.error("Error parsing preview data:", error);
+      }
+    }
+  }, []);
 
   const steps = [
     {
@@ -92,6 +141,124 @@ export default function HowToGetStartedPage() {
             </p>
           </div>
         </div>
+
+        {/* Template Preview Section */}
+        {selectedTemplate !== null && (
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            className="mb-12"
+          >
+            <Card className="p-6 bg-gradient-to-br from-green-50 to-emerald-50 dark:from-green-900/20 dark:to-emerald-900/20 border-green-200 dark:border-green-800">
+              <div className="flex flex-col lg:flex-row gap-8 items-center">
+                {/* Phone Mockup with Template Preview */}
+                {previewData && (
+                  <div className="flex-shrink-0">
+                    <div className="relative max-w-[300px] mx-auto bg-black rounded-xl overflow-hidden border-2 border-gray-200 flex flex-col" style={{aspectRatio: "9/16"}}>
+                      {/* Phone Screen */}
+                      <div className="flex-grow max-h-[500px] overflow-y-auto no-scrollbar">
+                        {/* Template Component */}
+                        {selectedTemplate !== null && templateComponents[selectedTemplate as keyof typeof templateComponents] && (
+                          <React.Suspense fallback={
+                            <div className="flex items-center justify-center h-full bg-gray-100 dark:bg-gray-800">
+                              <div className="text-sm text-gray-500">Loading preview...</div>
+                            </div>
+                          }>
+                            {selectedTemplate === 5 ? (
+                              // Template6 expects userData prop
+                              React.createElement(templateComponents[selectedTemplate as keyof typeof templateComponents] as any, {
+                                userData: {
+                                  id: "preview",
+                                  profilePictureUrl: previewData.profilePictureUrl || "",
+                                  coverPhotoUrl: previewData.coverPhotoUrl || "",
+                                  firstName: previewData.firstName || "",
+                                  lastName: previewData.lastName || "",
+                                  email: previewData.email || "",
+                                  number: previewData.number || "",
+                                  position: previewData.position || "",
+                                  facebookUrl: previewData.facebookUrl || "",
+                                  linkedinUrl: previewData.linkedinUrl || "",
+                                  instagramUrl: previewData.instagramUrl || "",
+                                  twitterUrl: previewData.twitterUrl || "",
+                                  tiktokUrl: previewData.tiktokUrl || "",
+                                  youtubeUrl: previewData.youtubeUrl || "",
+                                  whatsappNumber: previewData.whatsappNumber || "",
+                                  websiteUrl: previewData.websiteUrl || "",
+                                  viberUrl: previewData.viberUrl || "",
+                                  customUrl: previewData.customUrl || "",
+                                  companies: previewData.companies || [],
+                                  owner: "preview-user",
+                                  transferCode: "",
+                                  disabled: false,
+                                  createdAt: Timestamp.now()
+                                }
+                              })
+                            ) : (
+                              // Other templates expect individual props
+                              React.createElement(templateComponents[selectedTemplate as keyof typeof templateComponents] as any, {
+                                id: "preview",
+                                profilePictureUrl: previewData.profilePictureUrl || "",
+                                coverPhotoUrl: previewData.coverPhotoUrl || "",
+                                firstName: previewData.firstName || "",
+                                lastName: previewData.lastName || "",
+                                email: previewData.email || "",
+                                number: previewData.number || "",
+                                position: previewData.position || "",
+                                facebookUrl: previewData.facebookUrl || "",
+                                linkedinUrl: previewData.linkedinUrl || "",
+                                instagramUrl: previewData.instagramUrl || "",
+                                twitterUrl: previewData.twitterUrl || "",
+                                tiktokUrl: previewData.tiktokUrl || "",
+                                youtubeUrl: previewData.youtubeUrl || "",
+                                whatsappNumber: previewData.whatsappNumber || "",
+                                websiteUrl: previewData.websiteUrl || "",
+                                viberUrl: previewData.viberUrl || "",
+                                customUrl: previewData.customUrl || "",
+                                companies: previewData.companies || [],
+                                owner: "preview-user",
+                                transferCode: "",
+                                disabled: false,
+                                createdAt: Timestamp.now()
+                              })
+                            )}
+                          </React.Suspense>
+                        )}
+                      </div>
+                      <div className="flex-grow w-full flex justify-center items-center">
+                        <div className="h-6 w-6 border-gray-300 border-2 rounded-full"></div>
+                      </div>
+                    </div>
+                  </div>
+                )}
+
+                {/* Content */}
+                <div className="flex-1 text-center lg:text-left">
+                  <h2 className="text-2xl font-bold mb-2">Your {templateNames[selectedTemplate]} Card</h2>
+                  <p className="text-gray-600 dark:text-gray-400 mb-6">
+                    {previewData ? 
+                      "This is your personalized digital business card! Order your NFC card now to start sharing this profile with a simple tap." :
+                      "Great job! You've selected a beautiful template. Order your NFC card now to start sharing this profile with a simple tap!"
+                    }
+                  </p>
+                  <div className="flex flex-col sm:flex-row gap-3 justify-center lg:justify-start">
+                    <Link href="/preview-create">
+                      <Button variant="outline" size="sm">
+                        <ArrowLeft className="w-4 h-4 mr-2" />
+                        Edit Preview
+                      </Button>
+                    </Link>
+                    <Link href={`/templates?preview=${selectedTemplate}`}>
+                      <Button variant="outline" size="sm">
+                        <Eye className="w-4 h-4 mr-2" />
+                        View Template
+                      </Button>
+                    </Link>
+                  </div>
+                </div>
+              </div>
+            </Card>
+          </motion.div>
+        )}
 
         {/* Steps */}
         <motion.div

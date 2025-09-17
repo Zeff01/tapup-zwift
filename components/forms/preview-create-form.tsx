@@ -274,9 +274,30 @@ const PreviewCreateForm = ({
 
     const formSubmit = async (data: z.infer<typeof editCardSchema>) => {
         if (isPreview) {
-            // For preview, redirect to how-to-get-started page
+            // For preview, save the form data to localStorage and redirect
             console.log("Preview data:", data);
-            router.push('/how-to-get-started');
+            
+            // Prepare the preview data with all form values
+            const previewData = {
+                ...data,
+                profilePictureUrl: imageUrl || "",
+                coverPhotoUrl: coverPhotoUrl || "",
+                companies: companies,
+                selectedLinks: selectedLinks,
+                createdAt: new Date().toISOString()
+            };
+            
+            // Store in localStorage
+            localStorage.setItem('tapup-preview-data', JSON.stringify(previewData));
+            
+            const templateMap: { [key: string]: number } = {
+                "template1": 0, "template2": 1, "template3": 2, "template5": 4,
+                "template7": 6, "template8": 7, "template9": 8, "template10": 9,
+                "template11": 10, "template12": 11, "template13": 12, "template14": 13,
+                "template15": 14, "template16": 15, "template17": 16, "template18": 17
+            };
+            const templateIndex = templateMap[selectedTemplateId] ?? 0;
+            router.push(`/how-to-get-started?template=${templateIndex}`);
             return;
         }
         // Original save logic would go here, but since it's preview, we skip
@@ -722,9 +743,8 @@ const PreviewCreateForm = ({
                                         </Button>
                                     ) : (
                                         <Button
-                                            type="button"
+                                            type="submit"
                                             disabled={isLoading}
-                                            onClick={() => router.push('/how-to-get-started')}
                                             className="flex items-center gap-2 text-white bg-green-600 hover:bg-green-500"
                                         >
                                             {isLoading ? (

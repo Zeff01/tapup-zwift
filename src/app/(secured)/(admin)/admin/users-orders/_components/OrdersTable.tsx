@@ -69,7 +69,7 @@ const OrdersTable: React.FC<OrdersTableProps> = ({ orders }) => {
 
   const processRefundMutation = useMutation({
     mutationFn: async ({ orderId }: { orderId: string }) => {
-      const result = await processRefund(orderId, "approve", "Admin approved refund from table");
+      const result = await processRefund(orderId, true, "Admin approved refund from table");
       if (!result.success) throw new Error(result.error);
       return result;
     },

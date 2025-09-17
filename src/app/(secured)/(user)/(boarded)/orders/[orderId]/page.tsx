@@ -349,7 +349,7 @@ export default function OrderDetailsPage() {
           )}
           <Button 
             variant="outline"
-            onClick={() => generateInvoice(order, user?.displayName || user?.firstName)}
+            onClick={() => generateInvoice(order, user?.firstName)}
           >
             <Download className="w-4 h-4 mr-2" />
             Download Invoice

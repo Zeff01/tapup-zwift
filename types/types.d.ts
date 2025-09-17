@@ -12,8 +12,11 @@ import { FieldValue } from "react-hook-form";
 import { z } from "zod";
 
 export type Company = {
+  id?: string;
+  name?: string;
   company?: string;
   position?: string;
+  description?: string;
   companyBackground?: string;
   serviceDescription?: string;
   servicePhotos?: string[];
@@ -113,8 +116,10 @@ export interface Order {
 export interface Address {
   city: string;
   street: string;
-  unit: string;
+  unit?: string;
   postalCode: string;
+  state?: string;
+  barangay?: string;
 }
 
 export interface ShippingInfo {

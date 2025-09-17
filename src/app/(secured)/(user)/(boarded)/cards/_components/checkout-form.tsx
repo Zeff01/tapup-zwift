@@ -56,7 +56,7 @@ export default function CheckoutForm() {
       // Ensure all required fields have valid values
       const firstName = user?.firstName || selectedAddress?.firstName || "Customer";
       const lastName = user?.lastName || selectedAddress?.lastName || "";
-      const email = user?.email || selectedAddress?.email || "customer@example.com";
+      const email = user?.email || "customer@example.com";
       const phoneNumber = user?.number || selectedAddress?.phone || "";
 
       const customerData: CustomerType = {

@@ -50,7 +50,7 @@ export const OrderDetailsModal: React.FC<OrderDetailsModalProps> = ({
       setProcessingRefund(action);
       const result = await processRefund(
         order.orderId,
-        action,
+        action === "approve",
         action === "approve" ? "Admin approved refund" : "Admin rejected refund"
       );
       if (!result.success) throw new Error(result.error);

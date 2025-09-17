@@ -19,6 +19,7 @@ interface OrderDebugInfo {
   amount?: number;
   totalAmount?: number;
   createdAt?: any;
+  _source?: string;
 }
 
 export default function OrdersDebugPage() {
@@ -91,9 +92,11 @@ export default function OrdersDebugPage() {
           const userOrdersQuery1 = query(ordersRef, where("userId", "==", user.uid));
           const userOrdersSnapshot1 = await getDocs(userOrdersQuery1);
           userOrdersSnapshot1.forEach((doc) => {
+            const orderData = doc.data();
             userOrdersData.push({
               id: doc.id,
-              ...doc.data(),
+              status: orderData.status || "Unknown",
+              ...orderData,
               _source: "orders"
             } as OrderDebugInfo);
           });
@@ -110,26 +113,32 @@ export default function OrdersDebugPage() {
           ]);
           
           snap1.forEach((doc) => {
+            const transData = doc.data();
             userOrdersData.push({
               id: doc.id,
-              ...doc.data(),
+              status: transData.status || "Unknown",
+              ...transData,
               _source: "transactions"
             } as OrderDebugInfo);
           });
           snap2.forEach((doc) => {
             if (!userOrdersData.find(o => o.id === doc.id)) {
+              const transData = doc.data();
               userOrdersData.push({
                 id: doc.id,
-                ...doc.data(),
+                status: transData.status || "Unknown",
+                ...transData,
                 _source: "transactions"
               } as OrderDebugInfo);
             }
           });
           snap3.forEach((doc) => {
             if (!userOrdersData.find(o => o.id === doc.id)) {
+              const transData = doc.data();
               userOrdersData.push({
                 id: doc.id,
-                ...doc.data(),
+                status: transData.status || "Unknown",
+                ...transData,
                 _source: "transactions"
               } as OrderDebugInfo);
             }

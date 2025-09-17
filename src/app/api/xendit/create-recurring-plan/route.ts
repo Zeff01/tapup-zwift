@@ -200,7 +200,7 @@ export async function POST(req: NextRequest) {
         customerName: `${customerData.individual_detail?.given_names || ""} ${customerData.individual_detail?.surname || ""}`.trim(),
         customerPhone: customerData.mobile_number || "",
         customerAddress: selectedAddress ? 
-          `${selectedAddress.street || ""}, ${selectedAddress.city || selectedAddress.cityName || ""}, ${selectedAddress.state || selectedAddress.provinceName || ""}, ${selectedAddress.zipCode || ""}, Philippines` :
+          `${selectedAddress.street || ""}, ${selectedAddress.city || ""}, ${selectedAddress.state || ""}, ${selectedAddress.zipCode || ""}, Philippines` :
           "Philippines",
         totalAmount: totalPrice,
       },

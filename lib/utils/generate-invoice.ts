@@ -28,10 +28,10 @@ export function generateInvoice(order: Order, userName?: string) {
   
   // Bill To section
   doc.setFontSize(12);
-  doc.setFont(undefined, "bold");
+  doc.setFont("helvetica", "bold");
   doc.text("Bill To:", 20, 55);
   
-  doc.setFont(undefined, "normal");
+  doc.setFont("helvetica", "normal");
   doc.setFontSize(10);
   doc.text(order.shippingInfo.recipientName || userName || "Customer", 20, 62);
   doc.text(order.shippingInfo.contactNumber || "", 20, 68);
@@ -47,10 +47,10 @@ export function generateInvoice(order: Order, userName?: string) {
   
   // Order details section
   doc.setFontSize(12);
-  doc.setFont(undefined, "bold");
+  doc.setFont("helvetica", "bold");
   doc.text("Order Details:", 20, 110);
   
-  doc.setFont(undefined, "normal");
+  doc.setFont("helvetica", "normal");
   doc.setFontSize(10);
   doc.text(`Order ID: ${order.orderId}`, 20, 117);
   doc.text(`Status: ${order.status}`, 20, 123);
@@ -58,7 +58,7 @@ export function generateInvoice(order: Order, userName?: string) {
   
   // Items table header
   const tableTop = 145;
-  doc.setFont(undefined, "bold");
+  doc.setFont("helvetica", "bold");
   doc.text("Item", 20, tableTop);
   doc.text("Qty", 120, tableTop);
   doc.text("Price", 140, tableTop);
@@ -68,7 +68,7 @@ export function generateInvoice(order: Order, userName?: string) {
   doc.line(20, tableTop + 2, 190, tableTop + 2);
   
   // Items
-  doc.setFont(undefined, "normal");
+  doc.setFont("helvetica", "normal");
   let yPosition = tableTop + 10;
   
   order.items.forEach((item) => {
@@ -101,14 +101,14 @@ export function generateInvoice(order: Order, userName?: string) {
   
   // Grand total
   yPosition += 7;
-  doc.setFont(undefined, "bold");
+  doc.setFont("helvetica", "bold");
   doc.setFontSize(12);
   const grandTotal = order.totalAmount + (order.deliveryOption?.shippingFee || 0);
   doc.text("Total:", 140, yPosition);
   doc.text(`₱${grandTotal.toFixed(2)}`, 170, yPosition);
   
   // Footer
-  doc.setFont(undefined, "normal");
+  doc.setFont("helvetica", "normal");
   doc.setFontSize(8);
   doc.setTextColor(100);
   doc.text("Thank you for your business!", 105, 270, { align: "center" });
