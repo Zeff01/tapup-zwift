@@ -108,7 +108,9 @@ const CompanyShowcase = ({
                           width={600}
                           height={400}
                           className="w-full h-auto object-cover hover:scale-105 transition-transform duration-300"
-                          onClick={() => onImageClick(company.servicePhotos?.[0] || '')}
+                          onClick={() =>
+                            onImageClick(company.servicePhotos?.[0] || "")
+                          }
                         />
                       </div>
                     ) : (
@@ -214,7 +216,7 @@ const Template7 = ({
   owner,
 }: Card) => {
   const { viewerState, openViewer, closeViewer } = useImageViewer();
-  
+
   const userProfile = {
     id,
     owner,
@@ -235,11 +237,11 @@ const Template7 = ({
   const allImages = [
     profilePictureUrl || "/assets/template-7-image1.jpeg",
     coverPhotoUrl || "/assets/template-7-cover-photo.jpeg",
-    ...(companies?.flatMap(c => c.servicePhotos || []) || [])
+    ...(companies?.flatMap((c) => c.servicePhotos || []) || []),
   ].filter(Boolean);
 
   const handleImageClick = (src: string) => {
-    const index = allImages.findIndex(img => img === src);
+    const index = allImages.findIndex((img) => img === src);
     if (index !== -1) {
       openViewer(allImages, index);
     }
@@ -417,29 +419,12 @@ const Template7 = ({
       </div>
 
       {/* footer */}
-      <TemplateFooter className="mt-auto bg-white px-5 pb-4">
-        <div className="flex flex-col mt-3 mb-1 items-center gap-1 text-center text-xs">
-          <a
-            href={userProfile?.customUrl ?? userProfile?.websiteUrl ?? "#"}
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            <Image
-              src="/assets/dark-ZwiftechLogo.png"
-              alt="Zwiftech Logo"
-              width={40}
-              height={15}
-              priority
-              className="opacity-90"
-            />
-          </a>
+      <TemplateFooter
+        theme="light"
+        className="mt-6 bg-white px-5 pb-4"
+        yearClassName="tracking-wide text-gray-600 text-[10px]"
+      />
 
-          <span className="tracking-wide text-gray-800 text-[10px] ">
-            © {getCopyrightYear()} Zwiftech. All Rights Reserved.
-          </span>
-        </div>
-      </TemplateFooter>
-      
       {viewerState.isOpen && (
         <ImageViewer
           images={viewerState.images}

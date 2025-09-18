@@ -11,7 +11,7 @@ const Footer = ({ customUrl, websiteUrl }: Partial<Card>) => {
       {/* Logo and Copyright */}
       <div className="flex flex-col items-center gap-3 pt-4 border-t border-gray-200">
         <a
-          href={customUrl ?? websiteUrl ?? "#"}
+          href={"https://zwiftech.vercel.app/"}
           target="_blank"
           rel="noopener noreferrer"
           className="transition-transform hover:scale-105"

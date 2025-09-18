@@ -183,7 +183,10 @@ const CompanyShowcase = ({
                               height={400}
                               className="w-full h-auto object-cover transition-transform duration-300 group-hover/photo:scale-105"
                               onClick={() => {
-                                if (imageViewer && startingIndex !== undefined) {
+                                if (
+                                  imageViewer &&
+                                  startingIndex !== undefined
+                                ) {
                                   let photoIndex = startingIndex;
                                   // Find the index of this specific photo
                                   companies.forEach((comp, compIdx) => {
@@ -192,7 +195,10 @@ const CompanyShowcase = ({
                                     }
                                   });
                                   if (allImages) {
-                                    imageViewer.openViewer(allImages, photoIndex);
+                                    imageViewer.openViewer(
+                                      allImages,
+                                      photoIndex
+                                    );
                                   }
                                 }
                               }}
@@ -219,17 +225,26 @@ const CompanyShowcase = ({
                                 height={200}
                                 className="w-full h-auto object-cover transition-all duration-300 group-hover/photo:scale-110"
                                 onClick={() => {
-                                  if (imageViewer && startingIndex !== undefined) {
+                                  if (
+                                    imageViewer &&
+                                    startingIndex !== undefined
+                                  ) {
                                     let photoIdx = startingIndex;
                                     // Calculate the correct index
                                     companies.forEach((comp, compIdx) => {
-                                      if (compIdx < index && comp.servicePhotos) {
+                                      if (
+                                        compIdx < index &&
+                                        comp.servicePhotos
+                                      ) {
                                         photoIdx += comp.servicePhotos.length;
                                       }
                                     });
                                     photoIdx += photoIndex;
                                     if (allImages) {
-                                      imageViewer.openViewer(allImages, photoIdx);
+                                      imageViewer.openViewer(
+                                        allImages,
+                                        photoIdx
+                                      );
                                     }
                                   }
                                 }}
@@ -279,7 +294,7 @@ const Template11 = ({
   owner,
 }: Card) => {
   const { viewerState, openViewer, closeViewer } = useImageViewer();
-  
+
   const userProfile = {
     id,
     owner,
@@ -295,17 +310,17 @@ const Template11 = ({
 
   // Collect all images for the viewer
   const allImages: string[] = [];
-  
+
   // Add profile picture if exists
   if (profilePictureUrl) {
     allImages.push(profilePictureUrl);
   }
-  
+
   // Add cover photo if exists
   if (coverPhotoUrl) {
     allImages.push(coverPhotoUrl);
   }
-  
+
   // Add all service photos from companies
   if (companies) {
     companies.forEach((company) => {
@@ -328,57 +343,57 @@ const Template11 = ({
       justifyContent="between"
     >
       <div className="flex-grow">
-      <div className="w-full mx-auto relative max-w-[480px]">
-        <div className="flex gap-2 z-20 absolute right-0 top-0 p-1">
-          <CTAButtons
-            number={number}
-            email={email}
-            userProfile={userProfile}
-            variant="floating"
-            size="sm"
-            icons="outline"
-            buttonClassName="bg-[#A0E9FF] text-[#00A9FF] border-0 shadow hover:bg-[#00A9FF] hover:text-white transform hover:scale-110"
-          />
-        </div>
+        <div className="w-full mx-auto relative max-w-[480px]">
+          <div className="flex gap-2 z-20 absolute right-0 top-0 p-1">
+            <CTAButtons
+              number={number}
+              email={email}
+              userProfile={userProfile}
+              variant="floating"
+              size="sm"
+              icons="outline"
+              buttonClassName="bg-[#A0E9FF] text-[#00A9FF] border-0 shadow hover:bg-[#00A9FF] hover:text-white transform hover:scale-110"
+            />
+          </div>
 
-        {/* COVERPHOTO AND PROFILE PIC */}
-        <div className="  flex flex-col relative ">
-          {coverPhotoUrl ? (
-            <ClickableImage
-              src={coverPhotoUrl}
-              alt="Cover Image"
-              width={400}
-              height={200}
-              className="mx-auto w-full h-56 object-cover  overflow-hidden"
-              onClick={() => openViewer(allImages, profilePictureUrl ? 1 : 0)}
-            />
-          ) : (
-            <Image
-              src={"/assets/template10coverphoto.png"}
-              alt="Cover Image"
-              width={400}
-              height={200}
-              className="mx-auto"
-            />
-          )}
-        </div>
-            
-        {/* PERSONAL INFORMATION */}
-        <div className="text-center mt-24 top-0 w-[calc(100%-32px)] rounded-3xl  space-y-1 absolute left-1/2 transform -translate-x-1/2 bg-[#A0E9FF] shadow-md">
-          {profilePictureUrl ? (
-            <div className="flex justify-center w-full -mt-14">
-              <div className=" bg-[#A0E9FF] w-fit  rounded-full mx-auto overflow-hidden p-[5px]">
-                <ClickableImage
-                  src={profilePictureUrl}
-                  alt="Profile Image"
-                  width={80}
-                  height={80}
-                  className="rounded-full w-24 h-24"
-                  onClick={() => openViewer(allImages, 0)}
-                />
+          {/* COVERPHOTO AND PROFILE PIC */}
+          <div className="  flex flex-col relative ">
+            {coverPhotoUrl ? (
+              <ClickableImage
+                src={coverPhotoUrl}
+                alt="Cover Image"
+                width={400}
+                height={200}
+                className="mx-auto w-full h-56 object-cover  overflow-hidden"
+                onClick={() => openViewer(allImages, profilePictureUrl ? 1 : 0)}
+              />
+            ) : (
+              <Image
+                src={"/assets/template10coverphoto.png"}
+                alt="Cover Image"
+                width={400}
+                height={200}
+                className="mx-auto"
+              />
+            )}
+          </div>
+
+          {/* PERSONAL INFORMATION */}
+          <div className="text-center mt-24 top-0 w-[calc(100%-32px)] rounded-3xl  space-y-1 absolute left-1/2 transform -translate-x-1/2 bg-[#A0E9FF] shadow-md">
+            {profilePictureUrl ? (
+              <div className="flex justify-center w-full -mt-14">
+                <div className=" bg-[#A0E9FF] w-fit  rounded-full mx-auto overflow-hidden p-[5px]">
+                  <ClickableImage
+                    src={profilePictureUrl}
+                    alt="Profile Image"
+                    width={80}
+                    height={80}
+                    className="rounded-full w-24 h-24"
+                    onClick={() => openViewer(allImages, 0)}
+                  />
+                </div>
               </div>
-            </div>
-          ) : null}
+            ) : null}
             {firstName ? (
               <h1
                 className={cn(
@@ -484,48 +499,31 @@ const Template11 = ({
               responsibilities, and the services offered.
             </p>
 
-          <div className="w-full mx-auto mt-4">
-            {companies && companies.length > 0 && (
-              <CompanyShowcase
-                companies={companies}
-                profilePictureUrl={profilePictureUrl}
-                firstName={firstName}
-                lastName={lastName}
-                imageViewer={{ viewerState, openViewer, closeViewer }}
-                startingIndex={
-                  (profilePictureUrl ? 1 : 0) + (coverPhotoUrl ? 1 : 0)
-                }
-                allImages={allImages}
-              />
-            )}
+            <div className="w-full mx-auto mt-4">
+              {companies && companies.length > 0 && (
+                <CompanyShowcase
+                  companies={companies}
+                  profilePictureUrl={profilePictureUrl}
+                  firstName={firstName}
+                  lastName={lastName}
+                  imageViewer={{ viewerState, openViewer, closeViewer }}
+                  startingIndex={
+                    (profilePictureUrl ? 1 : 0) + (coverPhotoUrl ? 1 : 0)
+                  }
+                  allImages={allImages}
+                />
+              )}
+            </div>
           </div>
+
+          <TemplateFooter
+            theme="light"
+            className="flex flex-col items-center  justify-center gap-x-1 text-xs  pb-4 "
+            yearClassName="tracking-wide text-gray-800 text-[10px] "
+          />
         </div>
-
-        <TemplateFooter className="flex flex-col items-center  justify-center gap-x-1 text-xs  pb-4 ">
-          <div className="flex flex-col items-center mt-8 gap-1 text-center text-xs">
-            <a
-              href={userProfile?.customUrl ?? userProfile?.websiteUrl ?? "#"}
-              target="_blank"
-              rel="noopener noreferrer"
-            >
-              <Image
-                src="/assets/dark-ZwiftechLogo.png"
-                alt="Zwiftech Logo"
-                width={40}
-                height={15}
-                priority
-                className="opacity-90"
-              />
-            </a>
-
-            <span className="tracking-wide text-gray-800 text-[10px] ">
-              © {getCopyrightYear()} Zwiftech. All Rights Reserved.
-            </span>
-          </div>
-        </TemplateFooter>
       </div>
-      </div>
-      
+
       {viewerState.isOpen && (
         <ImageViewer
           images={viewerState.images}
