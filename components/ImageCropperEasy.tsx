@@ -7,7 +7,6 @@ import { Button } from "@/components/ui/button";
 import { Slider } from "@/components/ui/slider";
 import { Loader2, ZoomIn, ZoomOut, RotateCw, Upload, RotateCcw } from "lucide-react";
 import { toast } from "react-toastify";
-import { uploadImage } from "@/lib/firebase/actions/user.action";
 import { Photo } from "@/types/types";
 
 interface ImageCropperEasyProps {
@@ -153,24 +152,14 @@ export const ImageCropperEasy: React.FC<ImageCropperEasyProps> = ({
         const preview = e.target?.result as string;
         
         try {
-          // Create object URL for the cropped image
-          const objectUrl = URL.createObjectURL(file);
-          
-          // Upload the cropped image
-          const downloadUrl = await uploadImage({
-            preview: objectUrl,
-            raw: file,
-          });
-
           const croppedPhoto: Photo = {
             preview: preview, // Use the data URL for immediate preview
             raw: file,
           };
-          
-          // Clean up object URL
-          URL.revokeObjectURL(objectUrl);
 
-          onCropComplete(croppedPhoto, downloadUrl || undefined);
+          // Don't upload immediately - just pass the cropped photo back
+          // The upload will happen when the user saves the entire form
+          onCropComplete(croppedPhoto, undefined);
           toast.success("Image cropped successfully");
           handleClose();
         } catch (error) {

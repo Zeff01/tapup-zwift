@@ -235,8 +235,8 @@ export default function AddressManagement({
                 Add Address
               </Button>
             </DialogTrigger>
-            <DialogContent className="sm:max-w-md">
-              <DialogHeader>
+            <DialogContent className="max-w-[95vw] sm:max-w-lg max-h-[90vh] overflow-hidden flex flex-col">
+              <DialogHeader className="flex-shrink-0">
                 <DialogTitle>
                   {isEditMode ? "Edit Address" : "Add New Delivery Address"}
                 </DialogTitle>
@@ -246,7 +246,7 @@ export default function AddressManagement({
                     : "Enter the details for your new delivery address."}
                 </DialogDescription>
               </DialogHeader>
-              <div className="grid gap-4 py-4">
+              <div className="grid gap-4 py-4 overflow-y-auto flex-1 px-1">
                 <div className="flex gap-4">
                   <div className="flex-1 grid gap-2">
                     <Label htmlFor="first-name">First Name</Label>
@@ -316,7 +316,7 @@ export default function AddressManagement({
                   </div>
                 )}
               </div>
-              <DialogFooter>
+              <DialogFooter className="flex-shrink-0 border-t pt-4">
                 <Button
                   variant="outline"
                   onClick={resetAddressForm}
