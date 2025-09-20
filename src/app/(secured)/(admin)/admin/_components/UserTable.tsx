@@ -29,7 +29,6 @@ import { Button } from "@/components/ui/button";
 import {
   Building,
   CreditCard,
-  Eye,
   Hash,
   Mail,
   MoreVertical,
@@ -197,7 +196,6 @@ const UserTable = ({
                           <DropdownMenuItem
                             onClick={() => setSelectedUser(user)}
                           >
-                            <Eye className="w-4 h-4 mr-2" />
                             View Details
                           </DropdownMenuItem>
                           <DropdownMenuItem>
