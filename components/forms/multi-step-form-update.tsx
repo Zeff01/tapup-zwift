@@ -481,14 +481,14 @@ const MultiStepFormUpdate = ({
 
   return (
     <main
-      className={`h-full transition-all duration-300 ease-in-out ${previewMinimized ? "lg:pr-16" : "lg:pr-96"}`}
+      className={`h-screen overflow-hidden transition-all duration-300 ease-in-out ${previewMinimized ? "lg:pr-16" : "lg:pr-96"}`}
     >
       <Form {...methods}>
         <form
-          className="space-y-6 h-full"
+          className="space-y-6 h-full overflow-hidden"
           onSubmit={methods.handleSubmit(formSubmit)}
         >
-          <div className="flex flex-col py-8 px-4 sm:px-0 bg-background h-full">
+          <div className="flex flex-col py-8 px-4 sm:px-0 bg-background h-full overflow-y-auto">
             <div className="aspect-[130/48] w-80 mx-auto mb-10">
               <TapupLogo />
             </div>
@@ -546,6 +546,7 @@ const MultiStepFormUpdate = ({
                           setPhoto={setPhoto}
                           circularCrop
                           className="w-[120px] h-[120px] lg:w-[130px] lg:h-[130px] rounded-full"
+                          data-profile-image-cropper
                           fallback={
                             <div className="relative w-full h-full rounded-full flex items-center justify-center border-2  border-dashed">
                               <Image
@@ -559,10 +560,16 @@ const MultiStepFormUpdate = ({
                           }
                         />
 
-                        <div className="flex flex-col items-center justify-center mt-1">
+                        <div 
+                          className="flex flex-col items-center justify-center mt-1 cursor-pointer"
+                          onClick={() => {
+                            const imageContainer = document.querySelector('[data-profile-image-cropper]') as HTMLElement;
+                            imageContainer?.click();
+                          }}
+                        >
                           <p className="text-[#767676] text-xs">
                             Drop your image here or{" "}
-                            <span className="text-green-500">browse</span>
+                            <span className="text-green-500 underline">browse</span>
                           </p>
                           <p className="text-[#767676] text-[10px]">
                             PNG, JPEG, GIF under 25MB
@@ -603,7 +610,7 @@ const MultiStepFormUpdate = ({
                             />
                             <p className="text-[#767676] text-xs">
                               Drop your image here or{" "}
-                              <span className="text-green-500">browse</span>
+                              <span className="text-green-500 underline cursor-pointer">browse</span>
                             </p>
                             <p className="text-[#767676] text-[10px]">
                               PNG, JPEG, GIF under 25MB

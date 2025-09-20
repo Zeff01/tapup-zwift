@@ -121,6 +121,7 @@ export default function ImageCropper({
           !(imageUrl || photo?.preview) && "cursor-pointer"
         )}
         onClick={!(imageUrl || photo?.preview) ? handleClick : undefined}
+        data-profile-image-cropper={rest['data-profile-image-cropper']}
         {...rest}
       >
         <Input

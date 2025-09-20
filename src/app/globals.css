@@ -266,6 +266,36 @@
     transform: perspective(1000px) rotateY(10deg) rotateX(-10deg);
   }
 
+  /* iOS Safari circular image fix */
+  .rounded-full {
+    -webkit-mask-image: -webkit-radial-gradient(white, black);
+    mask-image: radial-gradient(white, black);
+  }
+
+  /* iOS overflow scrolling fix */
+  .overflow-y-auto {
+    -webkit-overflow-scrolling: touch;
+  }
+
+  /* React Easy Crop iOS circle shape fix */
+  .reactEasyCrop_CropArea {
+    will-change: transform;
+  }
+  
+  .reactEasyCrop_CropAreaRound {
+    -webkit-mask-image: -webkit-radial-gradient(white, black);
+    mask-image: radial-gradient(white, black);
+  }
+
+  /* iOS Safari form input fix */
+  input[type="text"],
+  input[type="email"],
+  input[type="tel"],
+  input[type="number"],
+  textarea {
+    font-size: 16px; /* Prevents zoom on focus in iOS Safari */
+  }
+
   /* Shine effect */
   @keyframes shine {
     from {
