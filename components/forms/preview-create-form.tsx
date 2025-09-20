@@ -7,7 +7,7 @@ import { Form } from "@/components/ui/form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { z } from "zod";
 import { editCardSchema } from "@/lib/zod-schema";
-import { TemplateCarousel } from "@/components/TemplateCarousel";
+import { TemplateGrid } from "@/components/TemplateGrid";
 import PersonalInfoForm from "@/components/forms/PersonalInfoForm";
 import CompanyInfoForm from "@/components/forms/CompanyInfoForm";
 import ImageLoaded from "@/components/ImageLoaded";
@@ -21,7 +21,7 @@ import SocialLinksSelector from "./SocialLink";
 import { Input } from "../ui/input";
 import SelectedTemplate from "./SelectedTemplate";
 import SelectedPhysicalCard from "./SelectedPhysicalCard";
-import { ArrowLeft, ArrowRight, Save } from "lucide-react";
+import { ArrowLeft, ArrowRight, Save, X, Sparkles } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { PhysicalCardCarousel } from "../PhysicalCardCarousel";
 import { LoaderCircle } from "lucide-react";
@@ -36,9 +36,7 @@ export type ChosenTemplateType =
     | "template1"
     | "template2"
     | "template3"
-    | "template4"
     | "template5"
-    | "template6"
     | "template7"
     | "template8"
     | "template9"
@@ -276,17 +274,30 @@ const PreviewCreateForm = ({
 
     const formSubmit = async (data: z.infer<typeof editCardSchema>) => {
         if (isPreview) {
-            // For preview, just show the data
+            // For preview, save the form data to localStorage and redirect
             console.log("Preview data:", data);
-            toast.success("🎉 Preview complete! Ready to create your professional digital business card?", {
-                duration: 5000,
-                action: {
-                    label: "Sign Up Now",
-                    onClick: () => {
-                        router.push('/signup');
-                    },
-                },
-            });
+            
+            // Prepare the preview data with all form values
+            const previewData = {
+                ...data,
+                profilePictureUrl: imageUrl || "",
+                coverPhotoUrl: coverPhotoUrl || "",
+                companies: companies,
+                selectedLinks: selectedLinks,
+                createdAt: new Date().toISOString()
+            };
+            
+            // Store in localStorage
+            localStorage.setItem('tapup-preview-data', JSON.stringify(previewData));
+            
+            const templateMap: { [key: string]: number } = {
+                "template1": 0, "template2": 1, "template3": 2, "template5": 4,
+                "template7": 6, "template8": 7, "template9": 8, "template10": 9,
+                "template11": 10, "template12": 11, "template13": 12, "template14": 13,
+                "template15": 14, "template16": 15, "template17": 16, "template18": 17
+            };
+            const templateIndex = templateMap[selectedTemplateId] ?? 0;
+            router.push(`/how-to-get-started?template=${templateIndex}`);
             return;
         }
         // Original save logic would go here, but since it's preview, we skip
@@ -646,40 +657,11 @@ const PreviewCreateForm = ({
                                                 looks in each template.
                                             </p>
 
-                                            <div className="flex items-center justify-between mb-4">
-                                                <span className="text-sm font-medium">
-                                                    Selected: {selectedTemplateId}
-                                                </span>
-                                                <Button
-                                                    variant="outline"
-                                                    size="sm"
-                                                    onClick={() => setPreviewMinimized(!previewMinimized)}
-                                                >
-                                                    {previewMinimized ? "Show Preview" : "Hide Preview"}
-                                                </Button>
-                                            </div>
-
-                                            {selectedTemplateId && (
-                                                <div className="w-full overflow-y-scroll border max-h-[400px] rounded-lg mb-4">
-                                                    <SelectedTemplate
-                                                        templateId={selectedTemplateId}
-                                                        formData={{
-                                                            ...methods.watch(),
-                                                            chosenPhysicalCard: {
-                                                                id: methods.watch().chosenPhysicalCard || "",
-                                                            },
-                                                        }}
-                                                    />
-                                                </div>
-                                            )}
                                         </div>
 
                                         {/* Template Selection */}
                                         <div>
-                                            <h3 className="text-md font-medium mb-3">
-                                                Available Templates
-                                            </h3>
-                                            <TemplateCarousel
+                                            <TemplateGrid
                                                 selectedTemplateId={selectedTemplateId}
                                                 setSelectedTemplateId={(id: ChosenTemplateType) => {
                                                     setSelectedTemplateId(id);
@@ -687,10 +669,6 @@ const PreviewCreateForm = ({
                                                     methods.setValue("chosenTemplate", id);
                                                 }}
                                             />
-                                            <p className="text-xs text-gray-500 mt-2 text-center">
-                                                💡 Tip: Click on any template to instantly see how your
-                                                card will look
-                                            </p>
                                         </div>
 
                                         {/* Sign Up Encouragement */}
@@ -715,8 +693,9 @@ const PreviewCreateForm = ({
                             )}
 
                             {/* Navigation Buttons */}
-                            <div className="flex justify-between items-center mt-8 pt-6 border-t">
-                                <div className="flex items-center gap-2 text-sm text-gray-500">
+                            <div className="mt-8 pt-6 border-t">
+                                {/* Step Progress Indicator */}
+                                <div className="flex items-center gap-2 text-sm text-gray-500 mb-4">
                                     <span>
                                         Step {currentStep} of {steps.length}
                                     </span>
@@ -727,7 +706,18 @@ const PreviewCreateForm = ({
                                     )}
                                 </div>
 
-                                <div className="flex gap-3">
+                                {/* Navigation Buttons */}
+                                <div className="flex justify-end gap-3">
+                                    <Button
+                                        type="button"
+                                        variant="outline"
+                                        onClick={() => router.push('/')}
+                                        disabled={isLoading}
+                                        className="flex items-center gap-2"
+                                    >
+                                        Cancel
+                                    </Button>
+                                    
                                     {currentStep > 1 && (
                                         <Button
                                             type="button"
@@ -753,9 +743,8 @@ const PreviewCreateForm = ({
                                         </Button>
                                     ) : (
                                         <Button
-                                            type="button"
+                                            type="submit"
                                             disabled={isLoading}
-                                            onClick={() => router.push('/signup')}
                                             className="flex items-center gap-2 text-white bg-green-600 hover:bg-green-500"
                                         >
                                             {isLoading ? (
@@ -765,8 +754,8 @@ const PreviewCreateForm = ({
                                                 </>
                                             ) : (
                                                 <>
-                                                    <Save className="h-4 w-4 text-white" />
-                                                    Create Your Card - Sign Up Free!
+                                                    <Sparkles className="h-4 w-4 text-white" />
+                                                    See How to Get This Card!
                                                 </>
                                             )}
                                         </Button>

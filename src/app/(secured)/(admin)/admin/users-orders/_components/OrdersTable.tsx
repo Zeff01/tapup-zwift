@@ -1,6 +1,6 @@
 "use client";
 
-import React from "react";
+import React, { useState } from "react";
 import { Order } from "@/types/types";
 import { format } from "date-fns";
 import {
@@ -13,9 +13,21 @@ import {
 } from "@/components/ui/table";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
-import { Eye, Edit, Trash2 } from "lucide-react";
+import { Eye, Edit, Trash2, MoreVertical, Check, Package, Truck, PackageCheck, XCircle, RotateCcw, DollarSign, CheckCircle } from "lucide-react";
 import Image from "next/image";
 import { cn } from "@/lib/utils";
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuLabel,
+  DropdownMenuSeparator,
+  DropdownMenuTrigger,
+} from "@/components/ui/dropdown-menu";
+import { updateOrderStatus, processRefund } from "@/lib/firebase/actions/order.action";
+import { toast } from "sonner";
+import { useQueryClient, useMutation } from "@tanstack/react-query";
+import { OrderDetailsModal } from "./OrderDetailsModal";
 
 interface OrdersTableProps {
   orders: Order[];
@@ -31,6 +43,80 @@ const statusColors: Record<string, string> = {
 };
 
 const OrdersTable: React.FC<OrdersTableProps> = ({ orders }) => {
+  const queryClient = useQueryClient();
+  const [updatingOrderId, setUpdatingOrderId] = useState<string | null>(null);
+  const [selectedOrder, setSelectedOrder] = useState<Order | null>(null);
+  const [detailsModalOpen, setDetailsModalOpen] = useState(false);
+
+  const updateStatusMutation = useMutation({
+    mutationFn: async ({ orderId, status }: { orderId: string; status: Order["status"] }) => {
+      setUpdatingOrderId(orderId);
+      const success = await updateOrderStatus(orderId, status);
+      if (!success) throw new Error("Failed to update order status");
+      return success;
+    },
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ["admin-orders"] });
+      toast.success("Order status updated successfully");
+      setUpdatingOrderId(null);
+    },
+    onError: (error) => {
+      toast.error("Failed to update order status");
+      console.error(error);
+      setUpdatingOrderId(null);
+    },
+  });
+
+  const processRefundMutation = useMutation({
+    mutationFn: async ({ orderId }: { orderId: string }) => {
+      const result = await processRefund(orderId, true, "Admin approved refund from table");
+      if (!result.success) throw new Error(result.error);
+      return result;
+    },
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ["admin-orders"] });
+      toast.success("Refund approved and processed successfully");
+    },
+    onError: (error) => {
+      toast.error("Failed to process refund");
+      console.error(error);
+    },
+  });
+
+  const getNextStatuses = (currentStatus: Order["status"]): Order["status"][] => {
+    switch (currentStatus) {
+      case "Pending":
+        return ["To Ship", "Cancelled"];
+      case "To Ship":
+        return ["To Receive", "Cancelled"];
+      case "To Receive":
+        return ["Delivered", "To Return/Refund"];
+      case "Delivered":
+        return ["To Return/Refund"];
+      case "To Return/Refund":
+        return ["Cancelled"];
+      default:
+        return [];
+    }
+  };
+
+  const getStatusIcon = (status: Order["status"]) => {
+    switch (status) {
+      case "To Ship":
+        return <Package className="w-4 h-4 mr-2" />;
+      case "To Receive":
+        return <Truck className="w-4 h-4 mr-2" />;
+      case "Delivered":
+        return <PackageCheck className="w-4 h-4 mr-2" />;
+      case "Cancelled":
+        return <XCircle className="w-4 h-4 mr-2" />;
+      case "To Return/Refund":
+        return <RotateCcw className="w-4 h-4 mr-2" />;
+      default:
+        return null;
+    }
+  };
+
   return (
     <div className="rounded-md border">
       <Table>
@@ -53,25 +139,42 @@ const OrdersTable: React.FC<OrdersTableProps> = ({ orders }) => {
               <TableCell>
                 <div>
                   <p className="font-medium">{order.shippingInfo.recipientName}</p>
-                  <p className="text-sm text-gray-500">{order.shippingInfo.contactNumber}</p>
+                  {order.shippingInfo.contactNumber && (
+                    <p className="text-sm text-gray-500">{order.shippingInfo.contactNumber}</p>
+                  )}
                 </div>
               </TableCell>
               <TableCell>
-                <div className="flex items-center gap-2">
-                  {/* Show first item image */}
-                  {order.items[0]?.product.image && (
-                    <div className="relative w-10 h-10">
+                <div className="flex items-center gap-3">
+                  {/* Show first item image with proper card ratio */}
+                  {order.items[0]?.product?.image && (
+                    <div className="relative w-16 h-24 overflow-hidden rounded-lg shadow-sm">
                       <Image
                         src={order.items[0].product.image}
-                        alt={order.items[0].product.title}
+                        alt={order.items[0].product.title || "Product image"}
                         fill
-                        className="object-cover rounded"
+                        className="object-contain"
+                        sizes="64px"
+                        onError={(e) => {
+                          console.error(`Failed to load image for order ${order.orderId}:`, order.items[0].product.image);
+                          console.error(`Product title: ${order.items[0].product.title}`);
+                          // Replace with placeholder image
+                          const target = e.target as HTMLImageElement;
+                          target.src = '/assets/profile_placeholder.png';
+                        }}
                       />
                     </div>
                   )}
-                  <span className="text-sm">
-                    {order.items.length} item{order.items.length > 1 ? "s" : ""}
-                  </span>
+                  <div className="flex flex-col">
+                    <span className="text-sm font-medium">
+                      {order.items.length} item{order.items.length > 1 ? "s" : ""}
+                    </span>
+                    {order.items[0]?.product?.title && (
+                      <span className="text-xs text-gray-500 truncate max-w-[150px]">
+                        {order.items[0].product.title}
+                      </span>
+                    )}
+                  </div>
                 </div>
               </TableCell>
               <TableCell>₱{order.totalAmount.toFixed(2)}</TableCell>
@@ -79,20 +182,40 @@ const OrdersTable: React.FC<OrdersTableProps> = ({ orders }) => {
                 {format(new Date(order.orderDate), "MMM dd, yyyy")}
               </TableCell>
               <TableCell>
-                <Badge
-                  variant="secondary"
-                  className={cn(statusColors[order.status] || "")}
-                >
-                  {order.status}
-                </Badge>
-                {order.returnStatus && (
+                <div className="flex flex-col gap-1">
                   <Badge
-                    variant="outline"
-                    className="ml-2 text-xs"
+                    variant="secondary"
+                    className={cn(statusColors[order.status] || "")}
                   >
-                    {order.returnStatus}
+                    {order.status}
                   </Badge>
-                )}
+                  <div className="flex gap-1">
+                    {order.returnStatus && (
+                      <Badge
+                        variant="outline"
+                        className="text-xs"
+                      >
+                        {order.returnStatus}
+                      </Badge>
+                    )}
+                    {order.refundStatus && (
+                      <Badge
+                        variant={
+                          order.refundStatus === "Pending" 
+                            ? "default" 
+                            : order.refundStatus === "Completed" 
+                            ? "secondary" 
+                            : order.refundStatus === "Rejected"
+                            ? "destructive"
+                            : "outline"
+                        }
+                        className="text-xs"
+                      >
+                        Refund: {order.refundStatus}
+                      </Badge>
+                    )}
+                  </div>
+                </div>
               </TableCell>
               <TableCell>
                 <div className="flex items-center gap-2">
@@ -109,30 +232,72 @@ const OrdersTable: React.FC<OrdersTableProps> = ({ orders }) => {
                 </div>
               </TableCell>
               <TableCell className="text-right">
-                <div className="flex items-center justify-end gap-2">
+                <div className="flex items-center justify-end gap-1">
+                  {/* Quick Refund Approval for Cancelled Orders with Pending Refunds */}
+                  {order.status === "Cancelled" && order.refundStatus === "Pending" && (
+                    <Button
+                      variant="default"
+                      size="sm"
+                      className="h-8 px-2 bg-green-600 hover:bg-green-700"
+                      title="Approve Refund"
+                      onClick={() => processRefundMutation.mutate({ orderId: order.orderId })}
+                    >
+                      <DollarSign className="h-4 w-4 mr-1" />
+                      <span className="text-xs">Approve Refund</span>
+                    </Button>
+                  )}
+                  
+                  {/* Status Update Dropdown */}
+                  {getNextStatuses(order.status).length > 0 && (
+                    <DropdownMenu>
+                      <DropdownMenuTrigger asChild>
+                        <Button
+                          variant="ghost"
+                          size="sm"
+                          className="h-8 px-2"
+                          disabled={updatingOrderId === order.orderId}
+                        >
+                          {updatingOrderId === order.orderId ? (
+                            <span className="animate-spin">⏳</span>
+                          ) : (
+                            <>
+                              <MoreVertical className="h-4 w-4 mr-1" />
+                              <span className="text-xs">Update Status</span>
+                            </>
+                          )}
+                        </Button>
+                      </DropdownMenuTrigger>
+                      <DropdownMenuContent align="end" className="w-48">
+                        <DropdownMenuLabel>Change Status To</DropdownMenuLabel>
+                        <DropdownMenuSeparator />
+                        {getNextStatuses(order.status).map((status) => (
+                          <DropdownMenuItem
+                            key={status}
+                            onClick={() => updateStatusMutation.mutate({ orderId: order.orderId, status })}
+                            className="cursor-pointer"
+                          >
+                            {getStatusIcon(status)}
+                            <span>{status}</span>
+                            {order.status === status && (
+                              <Check className="w-4 h-4 ml-auto" />
+                            )}
+                          </DropdownMenuItem>
+                        ))}
+                      </DropdownMenuContent>
+                    </DropdownMenu>
+                  )}
+                  
                   <Button
                     variant="ghost"
                     size="icon"
                     className="h-8 w-8"
                     title="View Details"
+                    onClick={() => {
+                      setSelectedOrder(order);
+                      setDetailsModalOpen(true);
+                    }}
                   >
                     <Eye className="h-4 w-4" />
-                  </Button>
-                  <Button
-                    variant="ghost"
-                    size="icon"
-                    className="h-8 w-8"
-                    title="Edit Order"
-                  >
-                    <Edit className="h-4 w-4" />
-                  </Button>
-                  <Button
-                    variant="ghost"
-                    size="icon"
-                    className="h-8 w-8 text-red-600 hover:text-red-700"
-                    title="Delete Order"
-                  >
-                    <Trash2 className="h-4 w-4" />
                   </Button>
                 </div>
               </TableCell>
@@ -140,6 +305,13 @@ const OrdersTable: React.FC<OrdersTableProps> = ({ orders }) => {
           ))}
         </TableBody>
       </Table>
+      
+      {/* Order Details Modal */}
+      <OrderDetailsModal
+        order={selectedOrder}
+        open={detailsModalOpen}
+        onOpenChange={setDetailsModalOpen}
+      />
     </div>
   );
 };

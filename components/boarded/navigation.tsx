@@ -84,6 +84,24 @@ const NavigationBoarded = () => {
           <ChevronLeft className="h-3 w-3" />
         </Button>
       )}
+      
+      {/* Role Badge */}
+      {!isMinimized && (isAdmin || isSuperAdmin) && (
+        <div className="mb-4">
+          <p
+            className={cn(
+              "text-xs rounded-full px-3 py-1 text-center capitalize text-white whitespace-nowrap inline-block",
+              {
+                "bg-red-700": isAdmin && !isSuperAdmin,
+                "bg-gradient-to-r from-purple-600 to-pink-600": isSuperAdmin,
+              }
+            )}
+          >
+            {isSuperAdmin ? "super admin" : "admin"}
+          </p>
+        </div>
+      )}
+      
       {isLoadingUserContext ? (
         <NavigationSkeleton />
       ) : (
@@ -108,22 +126,9 @@ const NavigationBoarded = () => {
                   }
                   className="text-sm font-bold border-0 truncate w-full bg-transparent outline-none pr-2"
                 />
-                <div className="flex items-center gap-2 mt-1">
-                  <p className="text-xs text-foreground/60 truncate flex-1">
-                    {user?.email || "anonymous@mail.com"}
-                  </p>
-                  <p
-                    className={cn(
-                      "text-xs rounded-full px-2 py-0.5 text-center capitalize text-white bg-greenColor whitespace-nowrap",
-                      {
-                        "bg-red-700": isAdmin,
-                        "bg-gradient-to-r from-purple-600 to-pink-600": isSuperAdmin,
-                      }
-                    )}
-                  >
-                    {isSuperAdmin ? "super admin" : user?.role}
-                  </p>
-                </div>
+                <p className="text-xs text-foreground/60 truncate mt-1">
+                  {user?.email || "anonymous@mail.com"}
+                </p>
               </div>
               <EditAccountModal />
             </div>
@@ -138,7 +143,6 @@ const NavigationBoarded = () => {
                 className="object-cover rounded-full h-[32px] w-[32px]"
               />
               <div className="flex flex-col items-center gap-2">
-                <ThemeToggle variant="boarded" />
                 {isLoadingUserContext ? (
                   <ShoppingCart className="!size-5 shrink-0" />
                 ) : (

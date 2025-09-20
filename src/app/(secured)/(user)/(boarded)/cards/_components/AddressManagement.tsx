@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useCallback } from "react";
 import { MapPin, Plus, Edit2, Trash2, Loader2 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
@@ -21,6 +21,7 @@ import { PhoneInput } from "@/components/ui/phone-input";
 import { DeliveryAddress } from "@/types/types";
 import { manageUserDeliveryAddress } from "@/lib/firebase/actions/user.action";
 import { toast } from "react-toastify";
+import { CascadingAddressFormAPI, usePhilippinesAddressValidation } from "./CascadingAddressFormAPI";
 
 interface AddressManagementProps {
   userId: string;
@@ -42,32 +43,56 @@ export default function AddressManagement({
   const [isEditMode, setIsEditMode] = useState(false);
   const [editingAddressId, setEditingAddressId] = useState<string | null>(null);
   
-  const [newAddress, setNewAddress] = useState({
+  const [newAddress, setNewAddress] = useState<Partial<DeliveryAddress>>({
     firstName: "",
     lastName: "",
     phone: "",
-    name: "",
     street: "",
     city: "",
     state: "",
     zipCode: "",
+    country: "Philippines",
+    provinceCode: "",
+    provinceName: "",
+    cityCode: "",
+    cityName: "",
+    barangay: "",
   });
 
+  const { errors: addressErrors, isValid: isAddressValid } = usePhilippinesAddressValidation(newAddress);
+
+  const handleAddressFormChange = useCallback((updatedAddress: Partial<DeliveryAddress>) => {
+    setNewAddress((prevAddress) => ({
+      ...prevAddress,
+      ...updatedAddress
+    }));
+  }, []);
+
   const handleAddAddress = async () => {
+    // Check basic fields and Philippines address validation
     if (
-      newAddress.firstName.trim() &&
-      newAddress.lastName.trim() &&
-      newAddress.phone.trim() &&
-      newAddress.name.trim() &&
-      newAddress.street.trim() &&
-      newAddress.city.trim() &&
-      newAddress.state.trim() &&
-      newAddress.zipCode.trim()
+      newAddress.firstName?.trim() &&
+      newAddress.lastName?.trim() &&
+      newAddress.phone?.trim() &&
+      isAddressValid
     ) {
       setIsAddressModalLoading(true);
       const address: DeliveryAddress = {
         id: Date.now().toString(),
-        ...newAddress,
+        firstName: newAddress.firstName || "",
+        lastName: newAddress.lastName || "",
+        phone: newAddress.phone || "",
+        name: "Delivery Address", // Default name since field is removed
+        street: newAddress.street || "",
+        city: newAddress.cityName || newAddress.city || "",
+        state: newAddress.provinceName || newAddress.state || "",
+        zipCode: newAddress.zipCode || "",
+        country: newAddress.country || "Philippines",
+        provinceCode: newAddress.provinceCode,
+        provinceName: newAddress.provinceName,
+        cityCode: newAddress.cityCode,
+        cityName: newAddress.cityName,
+        barangay: newAddress.barangay,
       };
       await manageUserDeliveryAddress(userId, "add", address);
       
@@ -86,12 +111,33 @@ export default function AddressManagement({
   const handleEditAddress = async () => {
     if (!editingAddressId) return;
 
+    // Check validation first
+    if (!newAddress.firstName?.trim() || 
+        !newAddress.lastName?.trim() || 
+        !newAddress.phone?.trim() || 
+        !isAddressValid) {
+      return;
+    }
+
     const addressIndex = addresses.findIndex((a) => a.id === editingAddressId);
     if (addressIndex === -1) return;
 
-    const updatedAddress = {
+    const updatedAddress: DeliveryAddress = {
       id: editingAddressId,
-      ...newAddress,
+      firstName: newAddress.firstName || "",
+      lastName: newAddress.lastName || "",
+      phone: newAddress.phone || "",
+      name: "Delivery Address", // Default name since field is removed
+      street: newAddress.street || "",
+      city: newAddress.cityName || newAddress.city || "",
+      state: newAddress.provinceName || newAddress.state || "",
+      zipCode: newAddress.zipCode || "",
+      country: newAddress.country || "Philippines",
+      provinceCode: newAddress.provinceCode,
+      provinceName: newAddress.provinceName,
+      cityCode: newAddress.cityCode,
+      cityName: newAddress.cityName,
+      barangay: newAddress.barangay,
     };
 
     setIsAddressModalLoading(true);
@@ -128,11 +174,16 @@ export default function AddressManagement({
       firstName: "",
       lastName: "",
       phone: "",
-      name: "",
       street: "",
       city: "",
       state: "",
       zipCode: "",
+      country: "Philippines",
+      provinceCode: "",
+      provinceName: "",
+      cityCode: "",
+      cityName: "",
+      barangay: "",
     });
     setIsAddressModalOpen(false);
     setEditingAddressId(null);
@@ -145,11 +196,16 @@ export default function AddressManagement({
       firstName: address.firstName,
       lastName: address.lastName,
       phone: address.phone,
-      name: address.name,
       street: address.street,
       city: address.city,
       state: address.state,
       zipCode: address.zipCode,
+      country: address.country || "Philippines",
+      provinceCode: address.provinceCode || "",
+      provinceName: address.provinceName || "",
+      cityCode: address.cityCode || "",
+      cityName: address.cityName || "",
+      barangay: address.barangay || "",
     });
     setEditingAddressId(address.id);
     setIsEditMode(true);
@@ -179,8 +235,8 @@ export default function AddressManagement({
                 Add Address
               </Button>
             </DialogTrigger>
-            <DialogContent className="sm:max-w-md">
-              <DialogHeader>
+            <DialogContent className="max-w-[95vw] sm:max-w-lg max-h-[90vh] overflow-hidden flex flex-col">
+              <DialogHeader className="flex-shrink-0">
                 <DialogTitle>
                   {isEditMode ? "Edit Address" : "Add New Delivery Address"}
                 </DialogTitle>
@@ -190,7 +246,7 @@ export default function AddressManagement({
                     : "Enter the details for your new delivery address."}
                 </DialogDescription>
               </DialogHeader>
-              <div className="grid gap-4 py-4">
+              <div className="grid gap-4 py-4 overflow-y-auto flex-1 px-1">
                 <div className="flex gap-4">
                   <div className="flex-1 grid gap-2">
                     <Label htmlFor="first-name">First Name</Label>
@@ -242,90 +298,25 @@ export default function AddressManagement({
                     disabled={isAddressModalLoading}
                   />
                 </div>
-                <div className="grid gap-2">
-                  <Label htmlFor="address-name">Address Name</Label>
-                  <Input
-                    id="address-name"
-                    placeholder="e.g., Home, Office"
-                    value={newAddress.name}
-                    onChange={(e) =>
-                      setNewAddress({
-                        ...newAddress,
-                        name: e.target.value,
-                      })
-                    }
-                    className="placeholder:text-slate-500/60 dark:placeholder:text-slate-500"
-                    disabled={isAddressModalLoading}
-                  />
-                </div>
-                <div className="grid gap-2">
-                  <Label htmlFor="street">Street Address</Label>
-                  <Input
-                    id="street"
-                    placeholder="123 Main Street"
-                    value={newAddress.street}
-                    onChange={(e) =>
-                      setNewAddress({
-                        ...newAddress,
-                        street: e.target.value,
-                      })
-                    }
-                    className="placeholder:text-slate-500/60 dark:placeholder:text-slate-500"
-                    disabled={isAddressModalLoading}
-                  />
-                </div>
-                <div className="grid grid-cols-2 gap-4">
-                  <div className="grid gap-2">
-                    <Label htmlFor="city">City</Label>
-                    <Input
-                      id="city"
-                      placeholder="Manila"
-                      value={newAddress.city}
-                      onChange={(e) =>
-                        setNewAddress({
-                          ...newAddress,
-                          city: e.target.value,
-                        })
-                      }
-                      className="placeholder:text-slate-500/60 dark:placeholder:text-slate-500"
-                      disabled={isAddressModalLoading}
-                    />
+                {/* Philippines Address Form */}
+                <CascadingAddressFormAPI
+                  address={newAddress}
+                  onAddressChange={handleAddressFormChange}
+                  namePrefix="newAddress"
+                />
+                
+                {/* Display validation errors */}
+                {Object.keys(addressErrors).length > 0 && (
+                  <div className="space-y-1">
+                    {Object.entries(addressErrors).map(([field, error]) => (
+                      <p key={field} className="text-sm text-red-500">
+                        {error}
+                      </p>
+                    ))}
                   </div>
-                  <div className="grid gap-2">
-                    <Label htmlFor="state">Province</Label>
-                    <Input
-                      id="state"
-                      placeholder="Metro Manila"
-                      value={newAddress.state}
-                      onChange={(e) =>
-                        setNewAddress({
-                          ...newAddress,
-                          state: e.target.value,
-                        })
-                      }
-                      className="placeholder:text-slate-500/60 dark:placeholder:text-slate-500"
-                      disabled={isAddressModalLoading}
-                    />
-                  </div>
-                </div>
-                <div className="grid gap-2">
-                  <Label htmlFor="zip">ZIP Code</Label>
-                  <Input
-                    id="zip"
-                    placeholder="1000"
-                    value={newAddress.zipCode}
-                    onChange={(e) =>
-                      setNewAddress({
-                        ...newAddress,
-                        zipCode: e.target.value,
-                      })
-                    }
-                    className="placeholder:text-slate-500/60 dark:placeholder:text-slate-500"
-                    disabled={isAddressModalLoading}
-                  />
-                </div>
+                )}
               </div>
-              <DialogFooter>
+              <DialogFooter className="flex-shrink-0 border-t pt-4">
                 <Button
                   variant="outline"
                   onClick={resetAddressForm}
@@ -336,7 +327,7 @@ export default function AddressManagement({
                 <Button
                   className="bg-blue-500 text-white hover:bg-blue-600"
                   onClick={isEditMode ? handleEditAddress : handleAddAddress}
-                  disabled={isAddressModalLoading}
+                  disabled={isAddressModalLoading || !isAddressValid || !newAddress.firstName?.trim() || !newAddress.lastName?.trim() || !newAddress.phone?.trim()}
                 >
                   {isEditMode ? (
                     isAddressModalLoading ? (
@@ -386,11 +377,11 @@ export default function AddressManagement({
                     )}
                   </div>
                   <div className="text-sm text-gray-600">
-                    <span>{address.name}</span>
                     <p>{address.phone}</p>
                     <p>{address.street}</p>
+                    {address.barangay && <p>{address.barangay}</p>}
                     <p>
-                      {address.city}, {address.state} {address.zipCode}
+                      {address.cityName || address.city}, {address.provinceName || address.state} {address.zipCode}
                     </p>
                   </div>
                 </Label>

@@ -18,14 +18,16 @@ const CompanyShowcase = ({
   profilePictureUrl,
   firstName,
   lastName,
-  imageViewer,
+  allImages,
+  openViewer,
   startingIndex,
 }: {
   companies?: Card["companies"];
   profilePictureUrl?: string;
   firstName?: string;
   lastName?: string;
-  imageViewer?: ReturnType<typeof useImageViewer>;
+  allImages?: string[];
+  openViewer?: (images: string[], index: number) => void;
   startingIndex?: number;
 }) => {
   if (!companies || companies.length === 0) {
@@ -174,13 +176,13 @@ const CompanyShowcase = ({
                         <div className="relative group/photo">
                           <div className="rounded-xl overflow-hidden border border-neutral-700 shadow-lg">
                             <ClickableImage
-                              src={company.servicePhotos[0]}
+                              src={company.servicePhotos?.[0]}
                               alt={`${company.company} portfolio`}
                               width={600}
                               height={400}
                               className="w-full h-auto object-cover transition-transform duration-500 group-hover/photo:scale-110"
                               onClick={() => {
-                                if (imageViewer && startingIndex !== undefined) {
+                                if (openViewer && allImages && startingIndex !== undefined) {
                                   let photoIndex = startingIndex;
                                   // Find the index of this specific photo
                                   companies.forEach((comp, compIdx) => {
@@ -188,7 +190,7 @@ const CompanyShowcase = ({
                                       photoIndex += comp.servicePhotos.length;
                                     }
                                   });
-                                  imageViewer.openViewer(photoIndex);
+                                  openViewer(allImages, photoIndex);
                                 }
                               }}
                             />
@@ -214,7 +216,7 @@ const CompanyShowcase = ({
                                 height={200}
                                 className="w-full h-auto object-cover transition-all duration-500 group-hover/photo:scale-110"
                                 onClick={() => {
-                                  if (imageViewer && startingIndex !== undefined) {
+                                  if (openViewer && allImages && startingIndex !== undefined) {
                                     let photoIdx = startingIndex;
                                     // Calculate the correct index
                                     companies.forEach((comp, compIdx) => {
@@ -223,7 +225,7 @@ const CompanyShowcase = ({
                                       }
                                     });
                                     photoIdx += photoIndex;
-                                    imageViewer.openViewer(photoIdx);
+                                    openViewer(allImages, photoIdx);
                                   }
                                 }}
                               />
@@ -274,7 +276,7 @@ const Template13 = ({
   customUrl,
   owner,
 }: Card) => {
-  const imageViewer = useImageViewer();
+  const { viewerState, openViewer, closeViewer } = useImageViewer();
   
   const userProfile = {
     id,
@@ -311,7 +313,7 @@ const Template13 = ({
     });
   }
 
-  imageViewer.setImages(allImages);
+  // Images are now passed directly to openViewer
 
   return (
     <TemplateContainer
@@ -337,10 +339,7 @@ const Template13 = ({
                 width={480}
                 height={160}
                 className="object-cover w-full h-full"
-                onClick={() => imageViewer.openViewer(profilePictureUrl ? 1 : 0)}
-                onError={(e) => {
-                  e.currentTarget.src = "/assets/sampleCoverPhoto.png";
-                }}
+                onClick={() => openViewer(allImages, profilePictureUrl ? 1 : 0)}
               />
             ) : (
               <Image
@@ -356,13 +355,7 @@ const Template13 = ({
           <div className="flex flex-col items-start w-full px-4 -mt-12 z-10">
             <div className="w-24 h-24 flex items-center justify-center mb-4 shadow-lg relative">
               {profilePictureUrl ? (
-                <ClickableImage
-                  src={profilePictureUrl}
-                  alt="avatar"
-                  width={96}
-                  height={96}
-                  className="w-24 h-24 object-cover"
-                  onClick={() => imageViewer.openViewer(0)}
+                <div
                   style={{
                     WebkitMaskImage: "url(/assets/template13profileshape.svg)",
                     maskImage: "url(/assets/template13profileshape.svg)",
@@ -372,9 +365,19 @@ const Template13 = ({
                     maskRepeat: "no-repeat",
                     WebkitMaskPosition: "center",
                     maskPosition: "center",
-                    background: "#fff", // fallback
                   }}
-                />
+                  className="w-24 h-24"
+                >
+                  <ClickableImage
+                    src={profilePictureUrl}
+                    alt="avatar"
+                    width={96}
+                    height={96}
+                    className="w-24 h-24 object-cover"
+                    onClick={() => openViewer(allImages, 0)}
+                    showExpandIcon={false}
+                  />
+                </div>
               ) : (
                 <Image
                   src="/assets/template4samplepic.png"
@@ -479,7 +482,8 @@ const Template13 = ({
                 profilePictureUrl={profilePictureUrl}
                 firstName={firstName}
                 lastName={lastName}
-                imageViewer={imageViewer}
+                allImages={allImages}
+                openViewer={openViewer}
                 startingIndex={
                   (profilePictureUrl ? 1 : 0) + (coverPhotoUrl ? 1 : 0)
                 }
@@ -514,14 +518,13 @@ const Template13 = ({
         </div>
       </TemplateFooter>
       
-      <ImageViewer
-        images={imageViewer.images}
-        isOpen={imageViewer.isOpen}
-        currentIndex={imageViewer.currentIndex}
-        onClose={imageViewer.closeViewer}
-        onNext={imageViewer.nextImage}
-        onPrevious={imageViewer.previousImage}
-      />
+      {viewerState.isOpen && (
+        <ImageViewer
+          images={viewerState.images}
+          initialIndex={viewerState.initialIndex}
+          onClose={closeViewer}
+        />
+      )}
     </TemplateContainer>
   );
 };

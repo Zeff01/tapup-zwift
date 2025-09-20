@@ -28,5 +28,5 @@
     ".next/types/**/*.ts",
     "tailwind.config.ts"
   ],
-  "exclude": ["node_modules", "migrations"]
+  "exclude": ["node_modules", "migrations", "scripts"]
 }

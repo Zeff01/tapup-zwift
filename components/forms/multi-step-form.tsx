@@ -4,7 +4,7 @@ import Image from "next/image";
 import { updateUserProfile, extractCardDataFromForm } from "@/lib/firebase/actions/user-profile.action";
 import { Photo } from "@/types/types";
 import { Loader2, LoaderCircle, X } from "lucide-react";
-import Cropper from "../Cropper";
+import ImageCropper from "../ImageCropper";
 import { useForm } from "react-hook-form";
 import { Form } from "@/components/ui/form";
 import { zodResolver } from "@hookform/resolvers/zod";
@@ -288,7 +288,7 @@ export default function CardsAndUsersCreateFields({
                       <div className="rounded-lg animate-pulse absolute w-full h-full" />
                       <div className="flex flex-col items-center relative w-full">
                         <div className="w-full">
-                          <Cropper
+                          <ImageCropper
                             imageUrl={coverPhotoUrl}
                             setImageUrl={setCoverPhotoUrl}
                             photo={coverPhoto}
@@ -328,7 +328,7 @@ export default function CardsAndUsersCreateFields({
                       <div className="">
                         <h1 className="text-lg font-semibold mt-2">Photos</h1>
                         <div className="w-full mt-2">
-                          <Cropper
+                          <ImageCropper
                             imageUrl={null}
                             setImageUrl={addServiceImageUrl}
                             photo={null}
@@ -393,7 +393,7 @@ export default function CardsAndUsersCreateFields({
                   <div className="">
                     <h2>Profile Photo</h2>
                     <div className="w-full flex justify-center items-center flex-col my-4">
-                      <Cropper
+                      <ImageCropper
                         imageUrl={imageUrl}
                         setImageUrl={setImageUrl}
                         photo={photo}

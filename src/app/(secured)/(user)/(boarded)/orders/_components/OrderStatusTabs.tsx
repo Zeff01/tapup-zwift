@@ -12,6 +12,7 @@ interface OrderStatusTabsProps {
 }
 
 const statusConfig: Record<OrderStatus, { label: string; color: string }> = {
+  "All": { label: "All", color: "bg-gray-100 text-gray-800" },
   "Pending": { label: "Pending", color: "bg-yellow-100 text-yellow-800" },
   "To Ship": { label: "To Ship", color: "bg-blue-100 text-blue-800" },
   "To Receive": { label: "To Receive", color: "bg-purple-100 text-purple-800" },

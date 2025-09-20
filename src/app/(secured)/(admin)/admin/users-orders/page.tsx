@@ -7,6 +7,7 @@ import OrderStatusTabs from "./_components/OrderStatusTabs";
 import OrdersTable from "./_components/OrdersTable";
 import { Order } from "@/types/types";
 import { Loader2 } from "lucide-react";
+import { UserOrderSearch } from "./_components/UserOrderSearch";
 
 export type OrderStatus = 
   | "Pending"
@@ -60,7 +61,10 @@ export default function UsersOrdersPage() {
         </p>
       </div>
 
-      <div className="p-6">
+      <div className="p-6 space-y-6">
+        {/* User Order Search */}
+        <UserOrderSearch />
+
         {/* Status Tabs */}
         <OrderStatusTabs
           selectedStatus={selectedStatus}
@@ -69,7 +73,7 @@ export default function UsersOrdersPage() {
         />
 
         {/* Orders Table */}
-        <div className="mt-6">
+        <div>
           {filteredOrders.length > 0 ? (
             <OrdersTable orders={filteredOrders} />
           ) : (

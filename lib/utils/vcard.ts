@@ -92,8 +92,6 @@ export const getVCardData = (user: Partial<Card>, qrScan?: boolean) => {
     viberUrl && `X-SOCIALPROFILE;TYPE=viber:${viberUrl}`,
     // Add multiple companies as notes
     ...additionalCompanies,
-    // Add a note about the digital portfolio
-    `NOTE:View my digital portfolio at ${digitalPortfolioUrl}`,
     "END:VCARD",
   ];
 

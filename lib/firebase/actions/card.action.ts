@@ -440,8 +440,7 @@ export const transferCardOwnership = async ({
 }) => {
   try {
     if (!cardId || !newOwnerEmail) {
-      toast.error("Parameters Missing");
-      throw new Error("Parameters Missing");
+      return { success: false, message: "Parameters Missing" };
     }
 
     const currentUserId = await authCurrentUser();
@@ -449,13 +448,13 @@ export const transferCardOwnership = async ({
     const cardRef = doc(firebaseDb, "cards", cardId);
     const cardSnap = await getDoc(cardRef);
     if (!cardSnap.exists()) {
-      throw new Error("Card not found");
+      return { success: false, message: "Card not found" };
     }
 
     const cardData = cardSnap.data() as Card;
 
     if (cardData.owner !== currentUserId) {
-      throw new Error("Unauthorized: You don't own this card");
+      return { success: false, message: "Unauthorized: You don't own this card" };
     }
 
     const userAccountRef = collection(firebaseDb, "user-account");
@@ -466,37 +465,68 @@ export const transferCardOwnership = async ({
     const userSnap = await getDocs(userQuery);
 
     if (userSnap.empty) {
-      throw new Error("User with this email not found");
+      return { success: false, message: "User with this email not found" };
     }
 
     const newOwnerId = userSnap.docs[0].id;
 
-    const subscriptionRef = doc(
-      firebaseDb,
-      "subscriptions",
-      cardData.subscription_id ?? ""
-    );
-
-    const subscriptionSnap = await getDoc(subscriptionRef);
-    const subscriptionData = subscriptionSnap.data();
-
-    const subscriptionUpdateData: { user_id: string; dateStarted?: any } = {
-      user_id: newOwnerId,
-    };
-
-    if (!subscriptionData?.dateStarted) {
-      subscriptionUpdateData.dateStarted = serverTimestamp();
-    }
-
+    // Update card ownership
     const updateCardPromise = updateDoc(cardRef, {
       owner: newOwnerId,
       transferCode: crypto.randomUUID().split("-").slice(0, 2).join("-"),
     });
 
-    const updateSubscriptionPromise = updateDoc(
-      subscriptionRef,
-      subscriptionUpdateData
-    );
+    // Update subscription if it exists
+    let updateSubscriptionPromise: Promise<void> = Promise.resolve();
+    
+    // First try to find subscription by card_id (preferred method)
+    const subscriptionCollection = collection(firebaseDb, "subscriptions");
+    const subscriptionQuery = query(subscriptionCollection, where("card_id", "==", cardId));
+    const subscriptionSnapshot = await getDocs(subscriptionQuery);
+    
+    if (!subscriptionSnapshot.empty) {
+      // Update all subscriptions linked to this card
+      const updatePromises = subscriptionSnapshot.docs.map((doc) => {
+        const subscriptionData = doc.data();
+        const subscriptionUpdateData: { user_id: string; dateStarted?: any } = {
+          user_id: newOwnerId,
+        };
+
+        // Only update dateStarted if it doesn't exist
+        if (!subscriptionData?.dateStarted) {
+          subscriptionUpdateData.dateStarted = serverTimestamp();
+        }
+
+        return updateDoc(doc.ref, subscriptionUpdateData);
+      });
+      
+      updateSubscriptionPromise = Promise.all(updatePromises).then(() => {});
+    } else if (cardData.subscription_id) {
+      // Fallback: try to find by subscription_id field
+      const subscriptionRef = doc(
+        firebaseDb,
+        "subscriptions",
+        cardData.subscription_id
+      );
+
+      const subscriptionSnap = await getDoc(subscriptionRef);
+      
+      if (subscriptionSnap.exists()) {
+        const subscriptionData = subscriptionSnap.data();
+        const subscriptionUpdateData: { user_id: string; dateStarted?: any } = {
+          user_id: newOwnerId,
+        };
+
+        if (!subscriptionData?.dateStarted) {
+          subscriptionUpdateData.dateStarted = serverTimestamp();
+        }
+
+        updateSubscriptionPromise = updateDoc(
+          subscriptionRef,
+          subscriptionUpdateData
+        );
+      }
+    }
 
     await Promise.all([updateCardPromise, updateSubscriptionPromise]);
 
@@ -649,43 +679,68 @@ export const transferCardOwnershipUsingCode = async (
     }
 
     const cardRef = doc(firebaseDb, "cards", cardDoc.id);
-    const subscriptionRef = doc(
-      firebaseDb,
-      "subscriptions",
-      cardData.subscription_id
-    );
-
-    const subscriptionSnap = await getDoc(subscriptionRef);
-    const subscriptionData = subscriptionSnap.data();
-
-    const subscriptionUpdateData: { user_id: string; dateStarted?: any } = {
-      user_id: newOwnerId,
-    };
-
-    if (!subscriptionData?.dateStarted) {
-      subscriptionUpdateData.dateStarted = serverTimestamp();
-    }
-
+    
+    // Update card ownership without resetting fields
     const updateCardPromise = updateDoc(cardRef, {
-      ...resetCardFields(),
       owner: newOwnerId,
       transferCode: crypto.randomUUID().split("-").slice(0, 2).join("-"),
     });
 
-    const updateSubscriptionPromise = updateDoc(
-      subscriptionRef,
-      subscriptionUpdateData
-    );
+    // Update subscription if it exists
+    let updateSubscriptionPromise: Promise<void> = Promise.resolve();
+    
+    // First try to find subscription by card_id (preferred method)
+    const subscriptionCollection = collection(firebaseDb, "subscriptions");
+    const subscriptionQuery = query(subscriptionCollection, where("card_id", "==", cardDoc.id));
+    const subscriptionSnapshot = await getDocs(subscriptionQuery);
+    
+    if (!subscriptionSnapshot.empty) {
+      // Update all subscriptions linked to this card
+      const updatePromises = subscriptionSnapshot.docs.map((doc) => {
+        const subscriptionData = doc.data();
+        const subscriptionUpdateData: { user_id: string; dateStarted?: any } = {
+          user_id: newOwnerId,
+        };
 
-    const [updateCardResult, _] = await Promise.all([
-      updateCardPromise,
-      updateSubscriptionPromise,
-    ]);
+        // Only update dateStarted if it doesn't exist
+        if (!subscriptionData?.dateStarted) {
+          subscriptionUpdateData.dateStarted = serverTimestamp();
+        }
 
-    console.log(
-      "Card ownership transferred successfully to:",
-      updateCardResult
-    );
+        return updateDoc(doc.ref, subscriptionUpdateData);
+      });
+      
+      updateSubscriptionPromise = Promise.all(updatePromises).then(() => {});
+    } else if (cardData.subscription_id) {
+      // Fallback: try to find by subscription_id field
+      const subscriptionRef = doc(
+        firebaseDb,
+        "subscriptions",
+        cardData.subscription_id
+      );
+
+      const subscriptionSnap = await getDoc(subscriptionRef);
+      
+      if (subscriptionSnap.exists()) {
+        const subscriptionData = subscriptionSnap.data();
+        const subscriptionUpdateData: { user_id: string; dateStarted?: any } = {
+          user_id: newOwnerId,
+        };
+
+        if (!subscriptionData?.dateStarted) {
+          subscriptionUpdateData.dateStarted = serverTimestamp();
+        }
+
+        updateSubscriptionPromise = updateDoc(
+          subscriptionRef,
+          subscriptionUpdateData
+        );
+      }
+    }
+
+    await Promise.all([updateCardPromise, updateSubscriptionPromise]);
+
+    console.log("Card ownership transferred successfully");
     toast.success("Card transferred successfully!");
     revalidatePath("/admin/print-cards");
     return true;
@@ -991,3 +1046,55 @@ const resetCardFields = () => ({
   userCode: "",
   user_link: "",
 });
+
+export const clearCardData = async (cardId: string) => {
+  try {
+    if (!cardId) throw new Error("Card ID is required");
+
+    const userId = await authCurrentUser();
+    const cardRef = doc(firebaseDb, "cards", cardId);
+    const cardSnap = await getDoc(cardRef);
+
+    if (!cardSnap.exists()) {
+      throw new Error("Card not found");
+    }
+
+    const card = cardSnap.data() as Card;
+
+    // Check if user owns the card
+    if (card.owner !== userId) {
+      throw new Error("Unauthorized: You don't own this card");
+    }
+
+    // Fields to keep (essential card metadata)
+    const fieldsToKeep = {
+      id: cardId,
+      owner: card.owner,
+      createdAt: card.createdAt,
+      transferCode: card.transferCode,
+      expiryDate: card.expiryDate,
+      subscription_id: card.subscription_id,
+      chosenPhysicalCard: card.chosenPhysicalCard,
+      disabled: card.disabled,
+      printStatus: card.printStatus,
+      portfolioStatus: false, // Reset portfolio status since data is cleared
+    };
+
+    // Replace the document with only the fields to keep
+    await setDoc(cardRef, fieldsToKeep);
+
+    // Revalidate paths
+    revalidatePath(`/cards/${cardId}`, "page");
+    revalidatePath(`/site/${cardId}`, "page");
+    revalidatePath(`/cards/update/${cardId}`);
+    revalidatePath("/cards");
+
+    return { success: true, message: "Card data cleared successfully" };
+  } catch (error) {
+    console.error("Error clearing card data:", error);
+    return { 
+      success: false, 
+      message: error instanceof Error ? error.message : "Failed to clear card data" 
+    };
+  }
+};

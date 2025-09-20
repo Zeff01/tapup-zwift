@@ -7,6 +7,7 @@ import {
   duplicateCard,
   toggleCardDisabled,
   transferCardOwnership,
+  clearCardData,
 } from "@/lib/firebase/actions/card.action";
 import { Switch } from "@/components/ui/switch";
 import {
@@ -46,6 +47,7 @@ import {
   GripVertical,
   Loader2Icon,
   QrCode,
+  Eraser,
 } from "lucide-react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
@@ -75,6 +77,7 @@ const DigitalCard = ({ card, confirm, user }: Prop) => {
   const [expiredDialogOpen, setExpiredDialogOpen] = useState(false);
   const [confirmTransferCardDialog, setConfirmTransferCardDialog] =
     useState(false);
+  const [clearCardDialogOpen, setClearCardDialogOpen] = useState(false);
 
   const [openQRCode, setOpenQRCode] = useState(false);
 
@@ -146,13 +149,34 @@ const DigitalCard = ({ card, confirm, user }: Prop) => {
 
   const { mutate: transferOwnershipMutation } = useMutation({
     mutationFn: transferCardOwnership,
-    onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ["cards", user?.uid] });
-      setTransferOpen(false);
-      setNewOwnerEmail("");
+    onSuccess: (data) => {
+      if (data.success) {
+        queryClient.invalidateQueries({ queryKey: ["cards", user?.uid] });
+        toast.success("Ownership transferred successfully");
+        setTransferOpen(false);
+        setNewOwnerEmail("");
+      } else {
+        toast.error(data.message || "Failed to transfer ownership");
+      }
     },
-    onError: () => {
-      toast.error("Something went wrong");
+    onError: (error) => {
+      toast.error(error instanceof Error ? error.message : "Something went wrong");
+    },
+  });
+
+  const { mutate: clearCardMutation, isPending: isPendingClearCard } = useMutation({
+    mutationFn: clearCardData,
+    onSuccess: (data) => {
+      if (data.success) {
+        queryClient.invalidateQueries({ queryKey: ["cards", user?.uid] });
+        toast.success(data.message || "Card data cleared successfully");
+        setClearCardDialogOpen(false);
+      } else {
+        toast.error(data.message || "Failed to clear card data");
+      }
+    },
+    onError: (error) => {
+      toast.error(error instanceof Error ? error.message : "Failed to clear card data");
     },
   });
 
@@ -283,26 +307,19 @@ const DigitalCard = ({ card, confirm, user }: Prop) => {
 
   const handleTransferOwnership = async () => {
     if (!newOwnerEmail || !card.id) return;
-
-    const { success, message } = await transferCardOwnership({
-      cardId: card.id,
-      newOwnerEmail,
-    });
-
-    if (success) {
-      toast.success("Ownership transferred successfully");
-      setTransferOpen(false);
-      setNewOwnerEmail("");
-      transferOwnershipMutation({ cardId: card.id, newOwnerEmail });
-    } else {
-      toast.error(message);
-    }
+    
     setConfirmTransferCardDialog(false);
+    transferOwnershipMutation({ cardId: card.id, newOwnerEmail });
   };
 
   const handleToggleCard = async () => {
     if (!card.id) return;
     toggleCardMutation(card.id);
+  };
+
+  const handleClearCard = async () => {
+    if (!card.id) return;
+    clearCardMutation(card.id);
   };
 
   const formattedExpiryDate = card.expiryDate
@@ -323,15 +340,20 @@ const DigitalCard = ({ card, confirm, user }: Prop) => {
       fn: () => setOpenQRCode(true),
       tooltip: "Share Card",
     },
+    {
+      icon: Eraser,
+      fn: () => setClearCardDialogOpen(true),
+      tooltip: "Clear Card Data",
+    },
   ];
 
   const CardInfo = (
     <div className="flex-grow flex flex-col justify-between">
       <div>
-        <p className="text-[clamp(1rem,1.4vw,1.1rem)] mt-0 font-semibold capitalize text-white">
+        <p className="text-sm sm:text-base mt-0 font-semibold capitalize text-white [text-shadow:_0_1px_3px_rgb(0_0_0_/_80%),_0_0_8px_rgb(0_0_0_/_50%)]">
           {(card.firstName || "") + " " + (card.lastName || "")}
         </p>
-        <p className="text-[clamp(1rem,1.4vw,1.1rem)] pt-2 sm:pt-3 font-semibold capitalize text-white">
+        <p className="text-xs sm:text-sm pt-1 font-semibold capitalize text-white [text-shadow:_0_1px_3px_rgb(0_0_0_/_80%),_0_0_8px_rgb(0_0_0_/_50%)]">
           {card.cardName || ""}
         </p>
       </div>
@@ -348,111 +370,7 @@ const DigitalCard = ({ card, confirm, user }: Prop) => {
       {...attributes}
       className={`w-full relative ${isDragging && "cursor-grab"}`}
     >
-      <div className="w-full flex gap-3">
-        <div
-          className={`flex flex-col justify-center  items-center space-y-1 ${isDragging ? "opacity-20 grayscale" : ""}`}
-        >
-          <Tooltip>
-            <TooltipTrigger asChild>
-              {!isCardExpired(card.expiryDate) &&
-              card.portfolioStatus &&
-              !isCardDisabled ? (
-                <Link
-                  href={`/site/${card.customUrl ? card.customUrl : card.id}`}
-                  className="px-2 py-2 2xl:py-2 hover:opacity-50 cursor-pointer border dark:border-accent border-gray-300 rounded-md"
-                  prefetch
-                  target="_blank"
-                  rel="noopener noreferrer"
-                >
-                  <EyeIcon className="size-4 dark:text-white drop-shadow-md" />
-                </Link>
-              ) : (
-                <span className="p-2 2xl:py-2 opacity-30 cursor-not-allowed">
-                  <EyeIcon className="size-4 dark:text-white drop-shadow-md" />
-                </span>
-              )}
-            </TooltipTrigger>
-            <TooltipPortal>
-              <TooltipContent
-                className="bg-black text-white text-xs px-2 py-1 rounded z-50"
-                side="left"
-              >
-                {!card.portfolioStatus && !isCardDisabled
-                  ? "Setup this card first"
-                  : isCardDisabled
-                    ? "Enable this card first"
-                    : "Preview"}
-                <TooltipArrow className="fill-black" />
-              </TooltipContent>
-            </TooltipPortal>
-          </Tooltip>
-
-          {/* <Tooltip>
-            <TooltipTrigger asChild>
-              <span
-                className="px-3 py-3 2xl:py-2 hover:opacity-50 cursor-pointer"
-                onClick={handleCopy}
-              >
-                <CiLink
-                  size={18}
-                  strokeWidth={0.5}
-                  className="text-white drop-shadow-md"
-                />
-              </span>
-            </TooltipTrigger>
-            <TooltipPortal>
-              <TooltipContent
-                className="bg-black text-white text-xs px-2 py-1 rounded"
-                side="left"
-              >
-                Copy Link
-                <TooltipArrow className="fill-black" />
-              </TooltipContent>
-            </TooltipPortal>
-          </Tooltip> */}
-
-          {iconAndFunctionMap.map((item, index) => {
-            const isToggleButton = item.fn === handleToggleCard;
-
-            const isDisabledState =
-              (isCardDisabled && !isToggleButton) ||
-              (item.tooltip === "Share Card" && !card.portfolioStatus);
-
-            const tooltipText =
-              item.tooltip === "Share Card" && !card.portfolioStatus
-                ? "Setup this card first"
-                : isCardDisabled && !isToggleButton
-                  ? "Enable this card first"
-                  : item.tooltip;
-
-            return (
-              <Tooltip key={index}>
-                <TooltipTrigger asChild>
-                  <span
-                    className={`px-2 py-2 2xl:py-2 border dark:border-accent border-gray-300 rounded-md ${
-                      isDisabledState
-                        ? "opacity-30 cursor-not-allowed"
-                        : "hover:opacity-50 cursor-pointer"
-                    }`}
-                    onClick={!isDisabledState ? item.fn : undefined}
-                  >
-                    <item.icon className="size-4 dark:text-white drop-shadow-md" />
-                  </span>
-                </TooltipTrigger>
-                <TooltipPortal>
-                  <TooltipContent
-                    className="bg-black text-white text-xs px-2 py-1 rounded z-50"
-                    side="left"
-                  >
-                    {tooltipText}
-                    <TooltipArrow className="fill-black" />
-                  </TooltipContent>
-                </TooltipPortal>
-              </Tooltip>
-            );
-          })}
-        </div>
-
+      <div className="w-full flex gap-1">
         <div
           className={`flex-1 w-full aspect-[340/208] transition-transform duration-200 flex justify-between text-secondary bg-transparent rounded-xl overflow-hidden relative [background-size:contain] md:[background_size:cover]
             ${isCardExpired(card.expiryDate) || isCardDisabled || isLoading ? "opacity-50" : ""}
@@ -471,10 +389,9 @@ const DigitalCard = ({ card, confirm, user }: Prop) => {
           onTouchEnd={() => setHovered(false)}
           onTouchCancel={() => setHovered(false)}
         >
-          {/* Overlay for text contrast */}
-          <div className="absolute inset-0 bg-gradient-to-b from-black/30 via-black/10 to-black/50 pointer-events-none" />
+          {/* Removed overlay - using text shadows instead */}
           {/* Enable/Disable Toggle Switch */}
-          <div className="absolute top-3 right-3 z-40">
+          <div className="absolute top-2 right-2 z-40">
             <Tooltip>
               <TooltipTrigger asChild>
                 <div className="flex items-center gap-2">
@@ -484,7 +401,7 @@ const DigitalCard = ({ card, confirm, user }: Prop) => {
                     disabled={isPendingToggleCard}
                     className={`data-[state=checked]:bg-green-600 data-[state=unchecked]:bg-red-600 scale-75`}
                   />
-                  <span className={`text-xs font-medium ${isCardDisabled ? 'text-red-500' : 'text-green-500'} drop-shadow-[0_1px_2px_rgba(0,0,0,0.8)]`}>
+                  <span className={`text-xs font-semibold ${isCardDisabled ? 'text-red-400' : 'text-green-400'} [text-shadow:_0_1px_2px_rgb(0_0_0_/_80%)]`}>
                     {isCardDisabled ? "Disabled" : "Enabled"}
                   </span>
                 </div>
@@ -501,11 +418,11 @@ const DigitalCard = ({ card, confirm, user }: Prop) => {
             </Tooltip>
           </div>
 
-          <div className="absolute w-full top-1/2 right-0 -translate-y-1/2 flex items-center justify-end z-30">
+          <div className="absolute top-1/2 right-2 -translate-y-1/2 z-30">
             <div className="relative flex items-center justify-end group">
               <GripVertical
                 {...listeners}
-                className="z-30 mr-2 md:mr-3.5 peer size-6 sm:size-12 lg:size-8 cursor-grab text-white opacity-80 hover:opacity-100 transition-opacity duration-150 bg-black/20 rounded-md p-1"
+                className="z-30 size-6 sm:size-8 cursor-grab text-white opacity-70 hover:opacity-100 transition-opacity duration-150 bg-black/40 backdrop-blur-sm rounded-md p-1 border border-white/20"
                 style={{ touchAction: "none" }}
               />
             </div>
@@ -556,6 +473,86 @@ const DigitalCard = ({ card, confirm, user }: Prop) => {
               {CardInfo}
             </Link>
           )}
+        </div>
+
+        <div
+          className={`flex flex-col justify-center items-center space-y-1 ${isDragging ? "opacity-20 grayscale" : ""}`}
+        >
+          <Tooltip>
+            <TooltipTrigger asChild>
+              {!isCardExpired(card.expiryDate) &&
+              card.portfolioStatus &&
+              !isCardDisabled ? (
+                <Link
+                  href={`/site/${card.customUrl ? card.customUrl : card.id}`}
+                  className="px-2 py-2 2xl:py-2 hover:opacity-50 cursor-pointer border dark:border-accent border-gray-300 rounded-md"
+                  prefetch
+                  target="_blank"
+                  rel="noopener noreferrer"
+                >
+                  <EyeIcon className="size-4 dark:text-white drop-shadow-md" />
+                </Link>
+              ) : (
+                <span className="p-2 2xl:py-2 opacity-30 cursor-not-allowed border dark:border-accent border-gray-300 rounded-md">
+                  <EyeIcon className="size-4 dark:text-white drop-shadow-md" />
+                </span>
+              )}
+            </TooltipTrigger>
+            <TooltipPortal>
+              <TooltipContent
+                className="bg-black text-white text-xs px-2 py-1 rounded z-50"
+                side="right"
+              >
+                {!card.portfolioStatus && !isCardDisabled
+                  ? "Setup this card first"
+                  : isCardDisabled
+                    ? "Enable this card first"
+                    : "Preview"}
+                <TooltipArrow className="fill-black" />
+              </TooltipContent>
+            </TooltipPortal>
+          </Tooltip>
+
+          {iconAndFunctionMap.map((item, index) => {
+            const isToggleButton = item.fn === handleToggleCard;
+
+            const isDisabledState =
+              (isCardDisabled && !isToggleButton) ||
+              (item.tooltip === "Share Card" && !card.portfolioStatus);
+
+            const tooltipText =
+              item.tooltip === "Share Card" && !card.portfolioStatus
+                ? "Setup this card first"
+                : isCardDisabled && !isToggleButton
+                  ? "Enable this card first"
+                  : item.tooltip;
+
+            return (
+              <Tooltip key={index}>
+                <TooltipTrigger asChild>
+                  <span
+                    className={`px-2 py-2 2xl:py-2 border dark:border-accent border-gray-300 rounded-md ${
+                      isDisabledState
+                        ? "opacity-30 cursor-not-allowed"
+                        : "hover:opacity-50 cursor-pointer"
+                    }`}
+                    onClick={!isDisabledState ? item.fn : undefined}
+                  >
+                    <item.icon className="size-4 dark:text-white drop-shadow-md" />
+                  </span>
+                </TooltipTrigger>
+                <TooltipPortal>
+                  <TooltipContent
+                    className="bg-black text-white text-xs px-2 py-1 rounded z-50"
+                    side="right"
+                  >
+                    {tooltipText}
+                    <TooltipArrow className="fill-black" />
+                  </TooltipContent>
+                </TooltipPortal>
+              </Tooltip>
+            );
+          })}
         </div>
       </div>
       
@@ -805,6 +802,73 @@ const DigitalCard = ({ card, confirm, user }: Prop) => {
         open={openQRCode}
         onClose={() => setOpenQRCode(false)}
       />
+
+      {/* Clear Card Data Dialog */}
+      <Dialog.Root open={clearCardDialogOpen} onOpenChange={setClearCardDialogOpen}>
+        <Dialog.Portal>
+          <Dialog.Overlay className="fixed inset-0 bg-black/50 backdrop-blur-sm z-50" />
+          <Dialog.Content className="fixed inset-0 flex items-center justify-center p-4 z-50">
+            <div className="bg-white dark:bg-gray-900 dark:text-white p-6 rounded-lg shadow-lg max-w-sm w-full">
+              <Dialog.Title className="text-xl font-bold text-red-600">
+                Clear Card Data
+              </Dialog.Title>
+              
+              <div className="mt-4 space-y-3">
+                <p className="text-gray-600 dark:text-gray-300">
+                  Are you sure you want to clear all data from this card?
+                </p>
+                
+                <div className="bg-red-50 dark:bg-red-900/20 border border-red-200 dark:border-red-800 rounded-md p-3">
+                  <p className="text-sm text-red-800 dark:text-red-200 font-medium">
+                    ⚠️ Warning: This action will:
+                  </p>
+                  <ul className="text-sm text-red-700 dark:text-red-300 mt-2 space-y-1 list-disc list-inside">
+                    <li>Remove all personal information</li>
+                    <li>Delete all company data</li>
+                    <li>Clear all social media links</li>
+                    <li>Reset the card to empty state</li>
+                  </ul>
+                  <p className="text-sm text-red-800 dark:text-red-200 font-medium mt-2">
+                    This action cannot be undone!
+                  </p>
+                </div>
+                
+                <div className="bg-gray-100 dark:bg-gray-800 rounded-md p-3">
+                  <p className="text-sm text-gray-700 dark:text-gray-300">
+                    Card: <span className="font-medium">{card.firstName} {card.lastName}</span>
+                  </p>
+                  <p className="text-sm text-gray-700 dark:text-gray-300">
+                    {card.cardName && `Name: ${card.cardName}`}
+                  </p>
+                </div>
+              </div>
+
+              <div className="flex justify-end gap-2 mt-6">
+                <Dialog.Close asChild>
+                  <Button variant="secondary" size="sm" disabled={isPendingClearCard}>
+                    Cancel
+                  </Button>
+                </Dialog.Close>
+                <Button
+                  variant="destructive"
+                  size="sm"
+                  onClick={handleClearCard}
+                  disabled={isPendingClearCard}
+                >
+                  {isPendingClearCard ? (
+                    <>
+                      <Loader2Icon className="mr-2 h-4 w-4 animate-spin" />
+                      Clearing...
+                    </>
+                  ) : (
+                    "Clear Card Data"
+                  )}
+                </Button>
+              </div>
+            </div>
+          </Dialog.Content>
+        </Dialog.Portal>
+      </Dialog.Root>
     </div>
   );
 };

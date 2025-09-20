@@ -13,8 +13,25 @@ import {
   deleteDoc,
   orderBy,
   Timestamp,
+  serverTimestamp,
 } from "firebase/firestore";
 import { Order } from "@/types/types";
+import { carouselCards } from "@/constants";
+
+// Helper function to get card image by title
+function getCardImageByTitle(title: string): string {
+  const normalizedTitle = title.toLowerCase().trim();
+  
+  // Check if title matches any carousel card
+  for (const [key, card] of Object.entries(carouselCards)) {
+    if (card.title.toLowerCase() === normalizedTitle || key === normalizedTitle) {
+      return card.image;
+    }
+  }
+  
+  // Fallback to profile placeholder
+  return '/assets/profile_placeholder.png';
+}
 
 /**
  * Get all orders (admin only)
@@ -22,48 +39,87 @@ import { Order } from "@/types/types";
  */
 export async function getAllOrders(): Promise<Order[]> {
   try {
-    // Try fetching from orders collection first
+    const orders: Order[] = [];
+    
+    // Fetch from both collections
+    // 1. First fetch from orders collection
     const ordersRef = collection(firebaseDb, "orders");
     const ordersQuery = query(ordersRef, orderBy("orderDate", "desc"));
     const ordersSnapshot = await getDocs(ordersQuery);
     
-    const orders: Order[] = [];
+    // Add orders from orders collection
+    ordersSnapshot.forEach((doc) => {
+      const data = doc.data();
+      orders.push({
+        ...data,
+        orderId: doc.id,
+        orderDate: data.orderDate?.toDate() || new Date(),
+      } as Order);
+    });
     
-    // If we have orders in the orders collection
-    if (!ordersSnapshot.empty) {
-      ordersSnapshot.forEach((doc) => {
-        const data = doc.data();
-        orders.push({
-          ...data,
-          orderId: doc.id,
-          orderDate: data.orderDate?.toDate() || new Date(),
-        } as Order);
-      });
-      return orders;
-    }
-    
-    // Otherwise, fetch from transactions collection and transform
+    // 2. Also fetch from transactions collection
     const transactionsRef = collection(firebaseDb, "transactions");
     const transQuery = query(transactionsRef, orderBy("createdAt", "desc"));
     const transSnapshot = await getDocs(transQuery);
     
+    // Create a map of userId to user data for efficient lookup
+    const userIds = new Set<string>();
     transSnapshot.forEach((doc) => {
       const data = doc.data();
+      if (data.userId || data.uid || data.user_id) {
+        userIds.add(data.userId || data.uid || data.user_id);
+      }
+    });
+    
+    // Fetch user data
+    const userDataMap = new Map<string, any>();
+    if (userIds.size > 0) {
+      const userAccountRef = collection(firebaseDb, "user-account");
+      const userAccountSnapshot = await getDocs(userAccountRef);
+      userAccountSnapshot.forEach((doc) => {
+        userDataMap.set(doc.id, doc.data());
+      });
+    }
+
+    transSnapshot.forEach((doc) => {
+      const data = doc.data();
+      const userId = data.userId || data.uid || data.user_id;
+      const userData = userId ? userDataMap.get(userId) : null;
+      
       // Transform transaction to order format
       const order: Order = {
         orderId: data.orderId || doc.id,
-        userId: data.userId,
-        items: data.items || [],
-        shippingInfo: data.shippingInfo || {
+        items: (data.items || []).map((item: any) => ({
+          quantity: item.quantity || 1,
+          physicalCardId: item.physicalCardId || item.id || '',
+          product: {
+            id: item.id || item.product?.id || '',
+            title: item.title || item.product?.title || item.name || 'Unknown Product',
+            description: item.description || item.product?.description || 'No description',
+            price: item.price || item.product?.price || 0,
+            image: item.image || item.product?.image || item.imageUrl || getCardImageByTitle(item.title || item.product?.title || item.name || '')
+          },
+          subscriptionPlan: item.subscriptionPlan || null
+        })),
+        shippingInfo: data.shippingInfo || (userData ? {
+          recipientName: `${userData.firstName || ''} ${userData.lastName || ''}`.trim() || userData.displayName || userData.email || "Unknown",
+          contactNumber: userData.phone || userData.phoneNumber || userData.mobile || data.receiver?.customerPhone || "",
+          address: userData.address || {
+            city: "Unknown",
+            street: "Unknown",
+            unit: "",
+            postalCode: "Unknown"
+          }
+        } : {
           recipientName: "Unknown",
-          contactNumber: "Unknown",
+          contactNumber: data.receiver?.customerPhone || "",
           address: {
             city: "Unknown",
             street: "Unknown",
             unit: "",
             postalCode: "Unknown"
           }
-        },
+        }),
         deliveryOption: data.deliveryOption || {
           name: "Standard Delivery",
           shippingFee: 0,
@@ -71,12 +127,43 @@ export async function getAllOrders(): Promise<Order[]> {
           maxDays: 7
         },
         orderDate: data.createdAt?.toDate() || new Date(),
-        totalAmount: data.totalAmount || 0,
+        totalAmount: data.totalAmount || data.amount || 0,
         status: data.status === "pending-payment" ? "Pending" : 
+                data.status === "pending" ? "Pending" :
                 data.status === "completed" ? "To Ship" : 
+                data.status === "to-ship" ? "To Ship" :
+                data.status === "shipped" ? "To Receive" :
+                data.status === "delivered" ? "Delivered" :
+                data.status === "cancelled" ? "Cancelled" :
                 data.status || "Pending",
-        returnStatus: data.returnStatus
+        returnStatus: data.returnStatus,
+        // Add cancellation and refund fields
+        cancelledAt: data.cancelledAt,
+        cancelReason: data.cancelReason,
+        cancelledBy: data.cancelledBy,
+        refundStatus: data.refundStatus,
+        refundAmount: data.refundAmount,
+        refundReason: data.refundReason,
+        refundMethod: data.refundMethod,
+        refundRequestedAt: data.refundRequestedAt,
+        refundCompletedAt: data.refundCompletedAt
       };
+      
+      // Handle receiver data format if shippingInfo is still unknown
+      if (order.shippingInfo.recipientName === "Unknown" && data.receiver) {
+        const addressParts = data.receiver.customerAddress?.split(',') || [];
+        order.shippingInfo = {
+          recipientName: data.receiver.customerName || userData?.displayName || userData?.email || "Unknown",
+          contactNumber: data.receiver.customerPhone || userData?.phone || "Unknown",
+          address: {
+            city: addressParts[1]?.trim() || "Unknown",
+            street: addressParts[0]?.trim() || "Unknown",
+            unit: "",
+            postalCode: addressParts[3]?.trim() || "Unknown"
+          }
+        };
+      }
+      
       orders.push(order);
     });
     
@@ -93,6 +180,8 @@ export async function getAllOrders(): Promise<Order[]> {
  */
 export async function getOrdersByUserId(userId: string): Promise<Order[]> {
   try {
+    console.log("[getOrdersByUserId] Called with userId:", userId);
+    
     if (!userId) {
       console.error("No userId provided");
       return [];
@@ -110,9 +199,15 @@ export async function getOrdersByUserId(userId: string): Promise<Order[]> {
       );
       const ordersSnapshot = await getDocs(ordersQuery);
       
+      console.log("[getOrdersByUserId] Orders collection query result:", {
+        empty: ordersSnapshot.empty,
+        size: ordersSnapshot.size
+      });
+      
       if (!ordersSnapshot.empty) {
         ordersSnapshot.forEach((doc) => {
           const data = doc.data();
+          console.log("[getOrdersByUserId] Order doc:", doc.id, data);
           orders.push({
             ...data,
             orderId: doc.id,
@@ -126,31 +221,83 @@ export async function getOrdersByUserId(userId: string): Promise<Order[]> {
     }
 
     // Otherwise, fetch from transactions collection
-    const transactionsRef = collection(firebaseDb, "transactions");
-    const transQuery = query(
-      transactionsRef,
-      where("userId", "==", userId),
-      orderBy("createdAt", "desc")
-    );
-    const transSnapshot = await getDocs(transQuery);
+    console.log("[getOrdersByUserId] Checking transactions collection for userId:", userId);
     
-    transSnapshot.forEach((doc) => {
+    const transactionsRef = collection(firebaseDb, "transactions");
+    
+    // Get ALL transactions and filter manually to handle different field names
+    const allTransQuery = query(transactionsRef, orderBy("createdAt", "desc"));
+    const allTransSnapshot = await getDocs(allTransQuery);
+    
+    console.log("[getOrdersByUserId] Total transactions in collection:", allTransSnapshot.size);
+    
+    // Filter for matching transactions (using a Set to avoid duplicates)
+    const seenIds = new Set<string>();
+    const userTransactions: any[] = [];
+    
+    allTransSnapshot.forEach((doc) => {
       const data = doc.data();
+      // Check all possible user ID fields
+      if (data.userId === userId || data.uid === userId || data.user_id === userId) {
+        if (!seenIds.has(doc.id)) {
+          seenIds.add(doc.id);
+          userTransactions.push({ id: doc.id, ...data });
+        }
+      }
+    });
+    
+    console.log("[getOrdersByUserId] Transactions found for user:", userTransactions.length);
+    
+    // Process all matching transactions
+    userTransactions.forEach((transaction) => {
+      const data = transaction;
+      console.log("[getOrdersByUserId] Processing transaction:", transaction.id);
+      
       // Transform transaction to order format
       const order: Order = {
-        orderId: data.orderId || doc.id,
-        userId: data.userId,
-        items: data.items || [],
-        shippingInfo: data.shippingInfo || {
-          recipientName: "Unknown",
-          contactNumber: "Unknown",
-          address: {
-            city: "Unknown",
-            street: "Unknown",
-            unit: "",
-            postalCode: "Unknown"
+        orderId: data.orderId || transaction.id,
+        items: (data.items || []).map((item: any) => ({
+          quantity: item.quantity || 1,
+          physicalCardId: item.physicalCardId || item.id || '',
+          product: {
+            id: item.id || item.product?.id || '',
+            title: item.title || item.name || item.product?.title || 'Unknown Product',
+            description: item.description || item.product?.description || 'No description',
+            price: item.price || item.product?.price || 0,
+            image: item.image || item.product?.image || item.imageUrl || '/assets/profile_placeholder.png'
+          },
+          subscriptionPlan: item.subscriptionPlan || null
+        })),
+        shippingInfo: (() => {
+          // Handle different shipping info structures
+          if (data.shippingInfo) {
+            return data.shippingInfo;
+          } else if (data.receiver) {
+            // Convert receiver format to shippingInfo format
+            const addressParts = data.receiver.customerAddress?.split(',') || [];
+            return {
+              recipientName: data.receiver.customerName || "Unknown",
+              contactNumber: data.receiver.customerPhone || "Unknown",
+              address: {
+                city: addressParts[1]?.trim() || "Unknown",
+                street: addressParts[0]?.trim() || "Unknown",
+                unit: "",
+                postalCode: addressParts[3]?.trim() || "Unknown"
+              }
+            };
+          } else {
+            return {
+              recipientName: "Unknown",
+              contactNumber: "Unknown",
+              address: {
+                city: "Unknown",
+                street: "Unknown",
+                unit: "",
+                postalCode: "Unknown"
+              }
+            };
           }
-        },
+        })(),
         deliveryOption: data.deliveryOption || {
           name: "Standard Delivery",
           shippingFee: 0,
@@ -158,11 +305,29 @@ export async function getOrdersByUserId(userId: string): Promise<Order[]> {
           maxDays: 7
         },
         orderDate: data.createdAt?.toDate() || new Date(),
-        totalAmount: data.totalAmount || 0,
+        totalAmount: data.totalAmount || data.amount || 0,
         status: data.status === "pending-payment" ? "Pending" : 
+                data.status === "pending" ? "Pending" :
                 data.status === "completed" ? "To Ship" : 
+                data.status === "to-ship" ? "To Ship" :
+                data.status === "shipped" ? "To Receive" :
+                data.status === "delivered" ? "Delivered" :
+                data.status === "cancelled" ? "Cancelled" :
                 data.status || "Pending",
-        returnStatus: data.returnStatus
+        returnStatus: data.returnStatus,
+        // Include payment URL for pending orders
+        paymentUrl: data.paymentUrl,
+        xenditPlanId: data.xenditPlanId,
+        // Include cancellation and refund fields
+        cancelledAt: data.cancelledAt?.toDate ? data.cancelledAt.toDate() : data.cancelledAt,
+        cancelReason: data.cancelReason,
+        refundStatus: data.refundStatus,
+        refundRequestedAt: data.refundRequestedAt?.toDate ? data.refundRequestedAt.toDate() : data.refundRequestedAt,
+        refundCompletedAt: data.refundCompletedAt?.toDate ? data.refundCompletedAt.toDate() : data.refundCompletedAt,
+        refundAmount: data.refundAmount,
+        refundReason: data.refundReason,
+        refundMethod: data.refundMethod,
+        userId: data.userId || data.uid || data.user_id
       };
       orders.push(order);
     });
@@ -266,22 +431,330 @@ export async function updateOrderStatus(
   returnStatus?: Order["returnStatus"]
 ): Promise<boolean> {
   try {
-    const orderRef = doc(firebaseDb, "orders", orderId);
-    
-    const updates: any = {
-      status,
-      updatedAt: Timestamp.now(),
-    };
-    
-    if (returnStatus !== undefined) {
-      updates.returnStatus = returnStatus;
+    // First try to update in orders collection
+    try {
+      const orderRef = doc(firebaseDb, "orders", orderId);
+      const orderDoc = await getDoc(orderRef);
+      
+      if (orderDoc.exists()) {
+        const updates: any = {
+          status,
+          updatedAt: Timestamp.now(),
+        };
+        
+        if (returnStatus !== undefined) {
+          updates.returnStatus = returnStatus;
+        }
+        
+        await updateDoc(orderRef, updates);
+        return true;
+      }
+    } catch (e) {
+      console.log("Order not found in orders collection, trying transactions...");
     }
     
-    await updateDoc(orderRef, updates);
+    // If not found in orders, try transactions collection
+    const transactionRef = doc(firebaseDb, "transactions", orderId);
+    const transactionDoc = await getDoc(transactionRef);
     
-    return true;
+    if (transactionDoc.exists()) {
+      // Map Order status back to transaction status format
+      const transactionStatus = status === "To Ship" ? "completed" :
+                              status === "To Receive" ? "shipped" :
+                              status === "Delivered" ? "delivered" :
+                              status === "Cancelled" ? "cancelled" :
+                              status === "To Return/Refund" ? "to-return" :
+                              "pending";
+      
+      const updates: any = {
+        status: transactionStatus,
+        updatedAt: Timestamp.now(),
+      };
+      
+      if (returnStatus !== undefined) {
+        updates.returnStatus = returnStatus;
+      }
+      
+      await updateDoc(transactionRef, updates);
+      return true;
+    }
+    
+    throw new Error("Order not found in any collection");
   } catch (error) {
     console.error("Error updating order status:", error);
     return false;
+  }
+}
+
+/**
+ * Cancel an order - for user side
+ */
+export async function cancelOrder(orderId: string, userId: string, reason?: string) {
+  try {
+    // First, verify the order belongs to the user
+    let orderData: any = null;
+    let isTransaction = false;
+    
+    // Try orders collection first
+    try {
+      const orderRef = doc(firebaseDb, "orders", orderId);
+      const orderSnap = await getDoc(orderRef);
+      if (orderSnap.exists()) {
+        orderData = { ref: orderRef, data: orderSnap.data() };
+      }
+    } catch (e) {
+      console.log("Order not found in orders collection");
+    }
+    
+    // If not found, try transactions collection
+    if (!orderData) {
+      const transactionRef = doc(firebaseDb, "transactions", orderId);
+      const transactionSnap = await getDoc(transactionRef);
+      
+      if (transactionSnap.exists()) {
+        orderData = { ref: transactionRef, data: transactionSnap.data() };
+        isTransaction = true;
+      } else {
+        return { success: false, error: "Order not found" };
+      }
+    }
+    
+    // Verify ownership
+    const data = orderData.data;
+    if (data.userId !== userId && data.uid !== userId && data.user_id !== userId) {
+      return { success: false, error: "Unauthorized: Order does not belong to user" };
+    }
+    
+    // Check if order can be cancelled
+    let currentStatus: string;
+    if (isTransaction) {
+      currentStatus = data.status === "pending" ? "Pending" : 
+                     data.status === "to-ship" ? "To Ship" : 
+                     data.status === "completed" ? "To Ship" :
+                     data.status;
+    } else {
+      currentStatus = data.status;
+    }
+    
+    if (currentStatus !== "Pending" && currentStatus !== "To Ship") {
+      return { success: false, error: "Order cannot be cancelled in current status" };
+    }
+    
+    // Update the document
+    const cancelData = {
+      status: isTransaction ? "cancelled" : "Cancelled",
+      cancelledAt: serverTimestamp(),
+      cancelReason: reason || "Cancelled by customer",
+      updatedAt: serverTimestamp(),
+    };
+    
+    await updateDoc(orderData.ref, cancelData);
+    
+    return { success: true };
+  } catch (error) {
+    console.error("Error cancelling order:", error);
+    return { success: false, error: "Failed to cancel order" };
+  }
+}
+
+/**
+ * Request refund for a cancelled order
+ */
+export async function requestRefund(orderId: string, userId: string, reason: string, refundMethod: string = "Original Payment Method") {
+  try {
+    // First, verify the order belongs to the user
+    let orderData: any = null;
+    let isTransaction = false;
+    
+    // Try orders collection first
+    try {
+      const orderRef = doc(firebaseDb, "orders", orderId);
+      const orderSnap = await getDoc(orderRef);
+      if (orderSnap.exists()) {
+        orderData = { ref: orderRef, data: orderSnap.data() };
+      }
+    } catch (e) {
+      console.log("Order not found in orders collection");
+    }
+    
+    // If not found, try transactions collection
+    if (!orderData) {
+      const transactionRef = doc(firebaseDb, "transactions", orderId);
+      const transactionSnap = await getDoc(transactionRef);
+      
+      if (transactionSnap.exists()) {
+        orderData = { ref: transactionRef, data: transactionSnap.data() };
+        isTransaction = true;
+      } else {
+        return { success: false, error: "Order not found" };
+      }
+    }
+    
+    // Verify ownership
+    const data = orderData.data;
+    if (data.userId !== userId && data.uid !== userId && data.user_id !== userId) {
+      return { success: false, error: "Unauthorized: Order does not belong to user" };
+    }
+    
+    // Check if order is cancelled
+    const currentStatus = isTransaction ? 
+      (data.status === "cancelled" ? "Cancelled" : data.status) : 
+      data.status;
+    
+    if (currentStatus !== "Cancelled") {
+      return { success: false, error: "Refund can only be requested for cancelled orders" };
+    }
+    
+    // Check if refund already requested
+    if (data.refundStatus && data.refundStatus !== "Rejected") {
+      return { success: false, error: "Refund already requested for this order" };
+    }
+    
+    // Calculate refund amount (you can adjust this logic)
+    const refundAmount = data.totalAmount || data.amount || 0;
+    
+    // Update the document with refund request
+    const refundData = {
+      refundStatus: "Pending",
+      refundRequestedAt: serverTimestamp(),
+      refundAmount: refundAmount,
+      refundReason: reason,
+      refundMethod: refundMethod,
+      updatedAt: serverTimestamp(),
+    };
+    
+    await updateDoc(orderData.ref, refundData);
+    
+    // Create a refund request document for admin tracking
+    const refundRequestRef = doc(collection(firebaseDb, "refund-requests"));
+    await setDoc(refundRequestRef, {
+      orderId: orderId,
+      userId: userId,
+      orderData: {
+        totalAmount: refundAmount,
+        items: data.items || data.cards || [],
+        paymentMethod: data.paymentMethod || "Xendit",
+      },
+      reason: reason,
+      refundMethod: refundMethod,
+      status: "Pending",
+      requestedAt: serverTimestamp(),
+      createdAt: serverTimestamp(),
+    });
+    
+    return { success: true, refundRequestId: refundRequestRef.id };
+  } catch (error) {
+    console.error("Error requesting refund:", error);
+    return { success: false, error: "Failed to request refund" };
+  }
+}
+
+/**
+ * Process refund (admin only)
+ */
+export async function processRefund(orderId: string, approved: boolean, adminNotes?: string, transactionId?: string) {
+  try {
+    let orderData: any = null;
+    let isTransaction = false;
+    
+    // Find the order
+    try {
+      const orderRef = doc(firebaseDb, "orders", orderId);
+      const orderSnap = await getDoc(orderRef);
+      if (orderSnap.exists()) {
+        orderData = { ref: orderRef, data: orderSnap.data() };
+      }
+    } catch (e) {
+      console.log("Order not found in orders collection");
+    }
+    
+    if (!orderData) {
+      const transactionRef = doc(firebaseDb, "transactions", orderId);
+      const transactionSnap = await getDoc(transactionRef);
+      
+      if (transactionSnap.exists()) {
+        orderData = { ref: transactionRef, data: transactionSnap.data() };
+        isTransaction = true;
+      } else {
+        return { success: false, error: "Order not found" };
+      }
+    }
+    
+    const updateData: any = {
+      refundStatus: approved ? "Completed" : "Rejected",
+      updatedAt: serverTimestamp(),
+    };
+    
+    if (approved) {
+      updateData.refundCompletedAt = serverTimestamp();
+      updateData.refundTransactionId = transactionId;
+    }
+    
+    if (adminNotes) {
+      updateData.refundAdminNotes = adminNotes;
+    }
+    
+    await updateDoc(orderData.ref, updateData);
+    
+    return { success: true };
+  } catch (error) {
+    console.error("Error processing refund:", error);
+    return { success: false, error: "Failed to process refund" };
+  }
+}
+
+/**
+ * Get all refund requests (admin only)
+ */
+export async function getAllRefundRequests() {
+  try {
+    const refundRequestsRef = collection(firebaseDb, "refund-requests");
+    const q = query(refundRequestsRef, orderBy("requestedAt", "desc"));
+    const snapshot = await getDocs(q);
+    
+    const refundRequests: any[] = [];
+    snapshot.forEach((doc) => {
+      const data = doc.data();
+      refundRequests.push({
+        id: doc.id,
+        ...data,
+        requestedAt: data.requestedAt?.toDate() || new Date(),
+      });
+    });
+    
+    return refundRequests;
+  } catch (error) {
+    console.error("Error getting refund requests:", error);
+    return [];
+  }
+}
+
+/**
+ * Update refund request status (admin only)
+ */
+export async function updateRefundRequestStatus(refundRequestId: string, status: "Pending" | "Approved" | "Rejected", adminNotes?: string) {
+  try {
+    const refundRequestRef = doc(firebaseDb, "refund-requests", refundRequestId);
+    const updateData: any = {
+      status: status,
+      updatedAt: serverTimestamp(),
+    };
+    
+    if (adminNotes) {
+      updateData.adminNotes = adminNotes;
+    }
+    
+    if (status === "Approved") {
+      updateData.approvedAt = serverTimestamp();
+    } else if (status === "Rejected") {
+      updateData.rejectedAt = serverTimestamp();
+    }
+    
+    await updateDoc(refundRequestRef, updateData);
+    
+    return { success: true };
+  } catch (error) {
+    console.error("Error updating refund request:", error);
+    return { success: false, error: "Failed to update refund request" };
   }
 }

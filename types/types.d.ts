@@ -12,8 +12,11 @@ import { FieldValue } from "react-hook-form";
 import { z } from "zod";
 
 export type Company = {
+  id?: string;
+  name?: string;
   company?: string;
   position?: string;
+  description?: string;
   companyBackground?: string;
   serviceDescription?: string;
   servicePhotos?: string[];
@@ -92,12 +95,31 @@ export interface Order {
     | "Delivered"
     | "Return Rejected"
     | "Cancelled";
+  // Cancellation fields
+  cancelledAt?: Date;
+  cancelReason?: string;
+  cancelledBy?: string;
+  // Refund fields
+  refundStatus?: "Pending" | "Processing" | "Completed" | "Rejected";
+  refundRequestedAt?: Date;
+  refundCompletedAt?: Date;
+  refundAmount?: number;
+  refundReason?: string;
+  refundMethod?: string;
+  refundTransactionId?: string;
+  paymentMethod?: string;
+  userId?: string;
+  // Payment continuation fields
+  paymentUrl?: string;
+  xenditPlanId?: string;
 }
 export interface Address {
   city: string;
   street: string;
-  unit: string;
+  unit?: string;
   postalCode: string;
+  state?: string;
+  barangay?: string;
 }
 
 export interface ShippingInfo {
@@ -190,6 +212,15 @@ export interface DeliveryAddress {
   state: string;
   zipCode: string;
   isDefault?: boolean;
+  // New Philippines address fields
+  country?: string;
+  regionCode?: string;
+  regionName?: string;
+  provinceCode?: string;
+  provinceName?: string;
+  cityCode?: string;
+  cityName?: string;
+  barangay?: string;
 }
 
 export interface CardItemTransactionBoard {

@@ -103,12 +103,12 @@ const CompanyShowcase = ({
                     {company.servicePhotos.length === 1 ? (
                       <div className="rounded-xl overflow-hidden shadow-lg">
                         <ClickableImage
-                          src={company.servicePhotos[0]}
+                          src={company.servicePhotos?.[0]}
                           alt={`${company.company} portfolio`}
                           width={600}
                           height={400}
                           className="w-full h-auto object-cover hover:scale-105 transition-transform duration-300"
-                          onClick={() => onImageClick(company.servicePhotos[0])}
+                          onClick={() => onImageClick(company.servicePhotos?.[0] || '')}
                         />
                       </div>
                     ) : (
@@ -268,7 +268,7 @@ const Template7 = ({
           userProfile={userProfile}
           size="md"
           icons="lucide"
-          buttonClassName="text-blue-500 bg-gray-100 border-gray-200 hover:bg-gray-300"
+          buttonClassName="text-gray-100 bg-blue-500 border-blue-500 hover:bg-blue-600"
           className="flex justify-end gap-1 pr-4 pt-4"
         />
 

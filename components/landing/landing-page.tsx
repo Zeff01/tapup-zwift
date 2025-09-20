@@ -32,6 +32,8 @@ const LandingPage = () => {
   }, []);
 
   useEffect(() => {
+    if (!showContent) return;
+
     const observer = new IntersectionObserver(
       (entries) => {
         entries.forEach((entry) => {
@@ -39,17 +41,21 @@ const LandingPage = () => {
             const target = sections.find((s) => s.id === entry.target.id);
             if (!target) return;
 
+            console.log("Section in view:", target);
             const newHash = target.hash ? `#${target.hash}` : "";
 
             if (window.location.hash !== newHash) {
-              const newUrl = newHash ? newHash : window.location.pathname;
+              const newUrl = newHash
+                ? `${window.location.pathname}${newHash}`
+                : window.location.pathname;
+
               history.replaceState(null, "", newUrl);
               window.dispatchEvent(new HashChangeEvent("hashchange"));
             }
           }
         });
       },
-      { threshold: 0.5 }
+      { threshold: 0.25 } // more lenient
     );
 
     sections.forEach((s) => {
@@ -58,7 +64,7 @@ const LandingPage = () => {
     });
 
     return () => observer.disconnect();
-  }, []);
+  }, [showContent]);
 
   // Show loading animation briefly to prevent flash
   if (!showContent) {

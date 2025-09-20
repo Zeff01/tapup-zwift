@@ -36,8 +36,8 @@ import { useForm } from "react-hook-form";
 import { IoMdClose } from "react-icons/io";
 import { toast } from "react-toastify";
 import { z } from "zod";
-import Cropper from "../Cropper";
-import CropperMultiple from "../CropperMultiple";
+import ImageCropper from "../ImageCropper";
+import CropperMultipleNew from "../CropperMultipleNew";
 import TapupLogo from "../svgs/TapupLogo";
 import { Button } from "../ui/button";
 import { Input } from "../ui/input";
@@ -57,9 +57,7 @@ export type ChosenTemplateType =
   | "template1"
   | "template2"
   | "template3"
-  | "template4"
   | "template5"
-  | "template6"
   | "template7"
   | "template8"
   | "template9"
@@ -113,6 +111,9 @@ const MultiStepFormUpdate = ({
   const [coverPhotoUrl, setCoverPhotoUrl] = useState<string | null>(
     userData.coverPhotoUrl || null
   );
+  
+  // Track if we're updating images to prevent redirect
+  const [isUpdatingImage, setIsUpdatingImage] = useState(false);
 
   // State for multiple companies with all schema fields
   const [companies, setCompanies] = useState<
@@ -340,7 +341,7 @@ const MultiStepFormUpdate = ({
 
   const formSubmit = async (data: z.infer<typeof editCardSchema>) => {
     try {
-      console.log("formSubmit");
+      console.log("formSubmit called, currentStep:", currentStep, "total steps:", steps.length, "isUpdatingImage:", isUpdatingImage);
       if (isOnboarding) {
         console.log("Inside onboarding block");
 
@@ -390,7 +391,13 @@ const MultiStepFormUpdate = ({
           },
         });
 
-        router.push("/cards");
+        // Only redirect if user is on the last step (clicked Save button)
+        // Don't redirect when just updating images
+        if (currentStep === steps.length && !isUpdatingImage) {
+          router.push("/cards");
+        }
+        // Reset the flag after form submission
+        setIsUpdatingImage(false);
         return;
       }
 
@@ -474,14 +481,14 @@ const MultiStepFormUpdate = ({
 
   return (
     <main
-      className={`h-full transition-all duration-300 ease-in-out ${previewMinimized ? "lg:pr-16" : "lg:pr-96"}`}
+      className={`h-screen overflow-hidden transition-all duration-300 ease-in-out ${previewMinimized ? "lg:pr-16" : "lg:pr-96"}`}
     >
       <Form {...methods}>
         <form
-          className="space-y-6 h-full"
+          className="space-y-6 h-full overflow-hidden"
           onSubmit={methods.handleSubmit(formSubmit)}
         >
-          <div className="flex flex-col py-8 px-4 sm:px-0 bg-background h-full">
+          <div className="flex flex-col py-8 px-4 sm:px-0 bg-background h-full overflow-y-auto">
             <div className="aspect-[130/48] w-80 mx-auto mb-10">
               <TapupLogo />
             </div>
@@ -528,14 +535,18 @@ const MultiStepFormUpdate = ({
                     <div>
                       <h2 className="text-lg font-semibold mb-2">Profile Photo</h2>
                       <div className="w-full flex justify-center items-center flex-col">
-                        <Cropper
+                        <ImageCropper
                           imageUrl={imageUrl}
-                          setImageUrl={setImageUrl}
+                          setImageUrl={(url: string | null) => {
+                            setIsUpdatingImage(true);
+                            setImageUrl(url);
+                          }}
                           photo={photo}
                           aspect={1}
                           setPhoto={setPhoto}
                           circularCrop
                           className="w-[120px] h-[120px] lg:w-[130px] lg:h-[130px] rounded-full"
+                          data-profile-image-cropper
                           fallback={
                             <div className="relative w-full h-full rounded-full flex items-center justify-center border-2  border-dashed">
                               <Image
@@ -549,10 +560,16 @@ const MultiStepFormUpdate = ({
                           }
                         />
 
-                        <div className="flex flex-col items-center justify-center mt-1">
+                        <div 
+                          className="flex flex-col items-center justify-center mt-1 cursor-pointer"
+                          onClick={() => {
+                            const imageContainer = document.querySelector('[data-profile-image-cropper]') as HTMLElement;
+                            imageContainer?.click();
+                          }}
+                        >
                           <p className="text-[#767676] text-xs">
                             Drop your image here or{" "}
-                            <span className="text-green-500">browse</span>
+                            <span className="text-green-500 underline">browse</span>
                           </p>
                           <p className="text-[#767676] text-[10px]">
                             PNG, JPEG, GIF under 25MB
@@ -571,9 +588,12 @@ const MultiStepFormUpdate = ({
                     <div>
                       <h2 className="text-lg font-semibold mb-2">Cover Photo</h2>
                       <div className="w-full">
-                      <Cropper
+                      <ImageCropper
                         imageUrl={coverPhotoUrl}
-                        setImageUrl={setCoverPhotoUrl}
+                        setImageUrl={(url: string | null) => {
+                          setIsUpdatingImage(true);
+                          setCoverPhotoUrl(url);
+                        }}
                         photo={coverPhoto}
                         aspect={16 / 9}
                         setPhoto={setCoverPhoto}
@@ -590,7 +610,7 @@ const MultiStepFormUpdate = ({
                             />
                             <p className="text-[#767676] text-xs">
                               Drop your image here or{" "}
-                              <span className="text-green-500">browse</span>
+                              <span className="text-green-500 underline cursor-pointer">browse</span>
                             </p>
                             <p className="text-[#767676] text-[10px]">
                               PNG, JPEG, GIF under 25MB
@@ -671,51 +691,64 @@ const MultiStepFormUpdate = ({
                           <h3 className="text-sm leading-none font-medium my-2">
                             Service Photos
                           </h3>
-                          <CropperMultiple
-                            previewImageUrl={null}
-                            imageUrls={company.servicePhotos ?? []}
-                            setImageUrls={(urls: string[]) => {
-                              const updated = [...companies];
-                              updated[idx].servicePhotos = urls;
-                              setCompanies(updated);
-                            }}
-                            previewPhoto={null}
-                            aspect={1}
+                          <CropperMultipleNew
                             photos={servicePhotoFiles[idx] ?? []}
-                            setPhotos={(photos: Photo[]) => {
-                              setServicePhotoFiles((prev) => {
-                                const updated = [...prev];
-                                updated[idx] = photos;
-                                return updated;
-                              });
-                              setServicePhotoPreviews((prev) => {
-                                const updated = [...prev];
-                                updated[idx] = photos.map(
-                                  (p: Photo) => p.preview
-                                );
-                                return updated;
-                              });
+                            setPhotos={(newPhotos) => {
+                              if (typeof newPhotos === 'function') {
+                                setServicePhotoFiles((prev) => {
+                                  const updated = [...prev];
+                                  updated[idx] = newPhotos(servicePhotoFiles[idx] || []);
+                                  return updated;
+                                });
+                                setServicePhotoPreviews((prev) => {
+                                  const updated = [...prev];
+                                  const photos = newPhotos(servicePhotoFiles[idx] || []);
+                                  updated[idx] = photos.map(
+                                    (p: Photo) => p.preview
+                                  );
+                                  return updated;
+                                });
+                              } else {
+                                setServicePhotoFiles((prev) => {
+                                  const updated = [...prev];
+                                  updated[idx] = newPhotos;
+                                  return updated;
+                                });
+                                setServicePhotoPreviews((prev) => {
+                                  const updated = [...prev];
+                                  updated[idx] = newPhotos.map(
+                                    (p: Photo) => p.preview
+                                  );
+                                  return updated;
+                                });
+                              }
                             }}
-                            className="w-full aspect-[2.5/1] rounded-xl overflow-hidden border-dashed border-2"
-                            imageClassName="rounded-2xl"
-                            disableUpload={
-                              (company.servicePhotos?.length ?? 0) >= 5
-                            }
+                            photosUrl={company.servicePhotos ?? []}
+                            setPhotosUrl={(newUrls) => {
+                              if (typeof newUrls === 'function') {
+                                const updatedUrls = newUrls(company.servicePhotos || []);
+                                const updated = [...companies];
+                                updated[idx].servicePhotos = updatedUrls.filter((u): u is string => u !== null);
+                                setCompanies(updated);
+                              } else {
+                                const updated = [...companies];
+                                updated[idx].servicePhotos = newUrls.filter((u): u is string => u !== null);
+                                setCompanies(updated);
+                              }
+                            }}
+                            aspect={1}
+                            maxPhotos={5}
                             fallback={
-                              <div className="w-full aspect-[2.5/1] flex flex-col items-center gap-y-1">
+                              <div className="flex flex-col items-center gap-y-1 justify-center h-full">
                                 <Image
                                   src={"/assets/image-plus.svg"}
                                   width={50}
                                   height={50}
                                   alt="plus"
-                                  className="size-8 mt-2 border p-2 rounded-md cursor-pointer"
+                                  className="size-8 border p-2 rounded-md"
                                 />
-                                <p className="text-[#767676] text-sm">
-                                  Drop your image here or{" "}
-                                  <span className="text-green-500">browse</span>
-                                </p>
-                                <p className="text-[#767676] text-[10px]">
-                                  PNG, JPEG, GIF under 25MB
+                                <p className="text-[#767676] text-xs">
+                                  Add Photo
                                 </p>
                               </div>
                             }
@@ -1009,8 +1042,9 @@ const MultiStepFormUpdate = ({
               )}
 
               {/* Navigation Buttons */}
-              <div className="flex justify-between items-center mt-8 pt-6 border-t">
-                <div className="flex items-center gap-2 text-sm text-gray-500">
+              <div className="mt-8 pt-6 border-t">
+                {/* Step Progress Indicator */}
+                <div className="flex items-center gap-2 text-sm text-gray-500 mb-4">
                   <span>
                     Step {currentStep} of {steps.length}
                   </span>
@@ -1021,7 +1055,8 @@ const MultiStepFormUpdate = ({
                   )}
                 </div>
 
-                <div className="flex gap-3">
+                {/* Navigation Buttons */}
+                <div className="flex justify-end gap-3">
                   <Button
                     type="button"
                     variant="outline"

@@ -59,7 +59,7 @@ export default function QRCodeModalV2({
           <div className="p-3 border dark:border-slate-800 inline-block border-gray-300 rounded-md mt-4">
             <QRCodeCanvas
               value={vCardData}
-              size={200}
+              size={280}
               level="H"
               includeMargin
               id="qrCodeCanvas"

@@ -60,13 +60,13 @@ const CompanyShowcase = ({
           {/* Background Glow Effect */}
           <div className="absolute inset-0 bg-gradient-to-r from-emerald-500/10 via-cyan-500/10 to-blue-500/10 rounded-3xl blur-xl opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
 
-          <div className="relative bg-gradient-to-br from-slate-800 via-slate-900 to-black rounded-3xl border border-slate-700/50 overflow-hidden shadow-2xl hover:shadow-emerald-500/20 transition-all duration-500">
+          <div className="relative bg-gradient-to-br from-slate-800 via-slate-900 to-black rounded-3xl border border-slate-700/50 overflow-hidden shadow-2xl hover:shadow-purple-500/20 transition-all duration-500">
             {/* Header Section */}
             <div className="relative p-4 bg-gradient-to-r from-slate-800/80 to-slate-900/80 backdrop-blur-sm border-b border-slate-700/50">
               <div className="flex items-center space-x-6">
                 {/* Company Logo */}
                 <div className="relative">
-                  <div className="w-20 h-20 rounded-2xl bg-gradient-to-br from-emerald-400 via-cyan-400 to-blue-500 p-0.5">
+                  <div className="w-20 h-20 rounded-2xl bg-gradient-to-br from-purple-400 via-purple-400 to-blue-500 p-0.5">
                     <div className="w-full h-full rounded-2xl bg-slate-900 flex items-center justify-center">
                       <span className="text-2xl font-bold bg-gradient-to-r from-emerald-400 to-cyan-400 bg-clip-text text-transparent">
                         {company.company?.charAt(0) || "C"}
@@ -186,12 +186,12 @@ const CompanyShowcase = ({
                       <div className="relative group/photo">
                         <div className="rounded-2xl overflow-hidden border border-slate-700/50">
                           <ClickableImage
-                            src={company.servicePhotos[0]}
+                            src={company.servicePhotos?.[0]}
                             alt={`${company.company} portfolio`}
                             width={600}
                             height={400}
                             className="w-full h-auto object-cover transition-transform duration-500 group-hover/photo:scale-105"
-                            onClick={() => onImageClick(company.servicePhotos[0])}
+                            onClick={() => onImageClick(company.servicePhotos?.[0] || '')}
                           />
                         </div>
                         <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-transparent opacity-0 group-hover/photo:opacity-100 transition-opacity duration-300"></div>
@@ -381,89 +381,89 @@ const Template10 = ({
                 />
               </div>
             )}
-          </div>
         </div>
 
-        {/* PERSONAL INFORMATION */}
-        <div className="text-center mt-14 space-y-1 ">
-          {firstName ? (
-            <h1
+          {/* PERSONAL INFORMATION */}
+          <div className="text-center mt-14 space-y-1 ">
+            {firstName ? (
+              <h1
+                className={cn(
+                  "text-lg font-normal tracking-wider text-[#FFFBD8] capitalize",
+                  firstName ? "mt-4" : "mt-2",
+                  michroma.className
+                )}
+              >
+                {firstName + " " + lastName}
+              </h1>
+            ) : (
+              <h1 className="text-lg font-bold mt-2 ">Hussain Watkins</h1>
+            )}
+
+            <p
               className={cn(
-                "text-lg font-normal tracking-wider text-[#FFFBD8] capitalize",
-                firstName ? "mt-4" : "mt-2",
-                michroma.className
+                "text-sm tracking-wider text-[#9C9EFFE5] font-bold pt-1",
+                firstName ? "mt-5" : "mt-3",
+                poppins.className
               )}
             >
-              {firstName + " " + lastName}
-            </h1>
-          ) : (
-            <h1 className="text-lg font-bold mt-2 ">Hussain Watkins</h1>
-          )}
+              {position || "Chief Technology Officer"}
+            </p>
 
-          <p
-            className={cn(
-              "text-sm tracking-wider text-[#9C9EFFE5] font-bold pt-1",
-              firstName ? "mt-5" : "mt-3",
-              poppins.className
-            )}
-          >
-            {position || "Chief Technology Officer"}
-          </p>
+            <div className="gap-x-2 w-full text-[#B6BCD2] flex justify-center items-center">
+              <input
+                type="text"
+                value={email}
+                readOnly
+                className="max-w-[120px] truncate bg-transparent border-none outline-none cursor-pointer text-center font-light text-sm text-[#B6BCD2]"
+                onClick={(e) => {
+                  e.currentTarget.select();
+                  navigator.clipboard.writeText(e.currentTarget.value);
+                }}
+              />
+              <span>|</span>
+              <input
+                type="text"
+                value={String(number)}
+                readOnly
+                className="max-w-[120px] truncate bg-transparent border-none outline-none cursor-pointer text-center font-light text-sm text-[#B6BCD2]"
+                onClick={(e) => {
+                  e.currentTarget.select();
+                  navigator.clipboard.writeText(e.currentTarget.value);
+                }}
+              />
+            </div>
+          </div>
 
-          <div className="gap-x-2 w-full text-[#B6BCD2] flex justify-center items-center">
-            <input
-              type="text"
-              value={email}
-              readOnly
-              className="max-w-[120px] truncate bg-transparent border-none outline-none cursor-pointer text-center font-light text-sm text-[#B6BCD2]"
-              onClick={(e) => {
-                e.currentTarget.select();
-                navigator.clipboard.writeText(e.currentTarget.value);
-              }}
-            />
-            <span>|</span>
-            <input
-              type="text"
-              value={String(number)}
-              readOnly
-              className="max-w-[120px] truncate bg-transparent border-none outline-none cursor-pointer text-center font-light text-sm text-[#B6BCD2]"
-              onClick={(e) => {
-                e.currentTarget.select();
-                navigator.clipboard.writeText(e.currentTarget.value);
-              }}
+          {/* SOCIAL MEDIA ICONS */}
+          <div className="flex items-center gap-x-4 py-10 text-2xl text-[#B6BCD2] h-16 justify-center">
+            <SocialLinks
+              facebookUrl={facebookUrl}
+              twitterUrl={twitterUrl}
+              tiktokUrl={tiktokUrl}
+              youtubeUrl={youtubeUrl}
+              instagramUrl={instagramUrl}
+              linkedinUrl={linkedinUrl}
+              viberUrl={viberUrl}
+              whatsappNumber={whatsappNumber}
+              websiteUrl={websiteUrl}
+              cardId={id}
+              ownerId={owner}
+              size="md"
+              iconClassName="text-[#B6BCD2]"
+              iconSet="outline"
             />
           </div>
-        </div>
 
-        {/* SOCIAL MEDIA ICONS */}
-        <div className="flex items-center gap-x-4 py-10 text-2xl text-[#B6BCD2] h-16 justify-center">
-          <SocialLinks
-            facebookUrl={facebookUrl}
-            twitterUrl={twitterUrl}
-            tiktokUrl={tiktokUrl}
-            youtubeUrl={youtubeUrl}
-            instagramUrl={instagramUrl}
-            linkedinUrl={linkedinUrl}
-            viberUrl={viberUrl}
-            whatsappNumber={whatsappNumber}
-            websiteUrl={websiteUrl}
-            cardId={id}
-            ownerId={owner}
-            size="md"
-            iconClassName="text-[#B6BCD2]"
-            iconSet="outline"
-          />
-        </div>
-
-        <hr className="border-[#B6BCD2]" />
-        <div className=" flex flex-col gap-y-3 flex-grow border-t text-white mt-2">
-          <h2 className="text-lg font-bold">Professional Portfolio</h2>
-          <p className="text-sm">
-            Below you&#39;ll find details about my professional experience and
-            the companies I&#39;ve worked with. Each entry highlights my role,
-            responsibilities, and the services offered.
-          </p>
-
+          <hr className="border-[#B6BCD2]" />
+          <div className=" flex flex-col gap-y-3 flex-grow border-t text-white mt-2">
+            <h2 className="text-lg font-bold text-[#9C9EFFE5]">
+              Professional Portfolio
+            </h2>
+            <p className="text-sm">
+              Below you&#39;ll find details about my professional experience and
+              the companies I&#39;ve worked with. Each entry highlights my role,
+              responsibilities, and the services offered.
+            </p>
           <div className="w-full mx-auto mt-4">
             {companies && companies.length > 0 && (
               <CompanyShowcase
@@ -476,8 +476,9 @@ const Template10 = ({
             )}
           </div>
         </div>
-        </div>
 
+        </div>
+        
         {/* FOOTER */}
         <TemplateFooter className="flex flex-col items-center mt-8 gap-1 text-center text-xs">
           <a
@@ -499,6 +500,7 @@ const Template10 = ({
             © {getCopyrightYear()} Zwiftech. All Rights Reserved.
           </span>
         </TemplateFooter>
+      </div>
       </div>
       
       {viewerState.isOpen && (

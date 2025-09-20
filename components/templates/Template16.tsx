@@ -1,3 +1,5 @@
+"use client";
+
 import { getCopyrightYear } from "@/lib/utils";
 import { Card } from "@/types/types";
 import Image from "next/image";
@@ -8,6 +10,8 @@ import {
   TemplateContainer,
   TemplateFooter,
 } from "./templatesComponents";
+import { ImageViewer, useImageViewer } from "@/components/ImageViewer";
+import { ClickableImage } from "./templatesComponents/ClickableImage";
 
 const Template16 = ({
   id,
@@ -35,6 +39,8 @@ const Template16 = ({
   companies,
   owner,
 }: Card) => {
+  const { viewerState, openViewer, closeViewer } = useImageViewer();
+  
   const userProfile = {
     id,
     owner,
@@ -47,6 +53,13 @@ const Template16 = ({
     websiteUrl,
     customUrl,
   };
+  
+  // Collect all images for the viewer
+  const allImages = [
+    profilePictureUrl,
+    coverPhotoUrl,
+    ...(companies?.flatMap(company => company.servicePhotos || []) || [])
+  ].filter(Boolean) as string[];
 
   return (
     <TemplateContainer
@@ -65,20 +78,22 @@ const Template16 = ({
             aria-label="Cover Section"
             className="w-full max-w-md h-40 relative"
           >
-            <Image
+            <ClickableImage
               src={coverPhotoUrl || "/assets/template2coverphoto.png"}
               alt="Cover"
-              fill
-              className="object-cover"
-              priority
+              width={480}
+              height={160}
+              className="w-full h-full object-cover"
+              onClick={() => openViewer(allImages, allImages.indexOf(coverPhotoUrl || "/assets/template2coverphoto.png"))}
             />
             <div className="w-20 h-20 rounded-full border-[5px] border-white overflow-hidden shadow-md flex-shrink-0 absolute z-20 -bottom-10 left-4">
-              <Image
+              <ClickableImage
                 src={profilePictureUrl || "/assets/template4samplepic.png"}
                 alt="Profile"
                 width={96}
                 height={96}
                 className="w-full h-full object-cover"
+                onClick={() => openViewer(allImages, allImages.indexOf(profilePictureUrl || "/assets/template4samplepic.png"))}
               />
             </div>
           </section>
@@ -310,7 +325,7 @@ const Template16 = ({
                                   <div className="relative group/photo">
                                     <div className="rounded-xl overflow-hidden border border-gray-200 shadow-sm">
                                       <img
-                                        src={company.servicePhotos[0]}
+                                        src={company.servicePhotos?.[0]}
                                         alt={`${company.company} portfolio`}
                                         className="w-full h-auto object-cover transition-transform duration-300 group-hover/photo:scale-105"
                                       />
@@ -382,14 +397,13 @@ const Template16 = ({
         </div>
       </TemplateFooter>
       
-      <ImageViewer
-        images={imageViewer.images}
-        isOpen={imageViewer.isOpen}
-        currentIndex={imageViewer.currentIndex}
-        onClose={imageViewer.closeViewer}
-        onNext={imageViewer.nextImage}
-        onPrevious={imageViewer.previousImage}
-      />
+      {viewerState.isOpen && (
+        <ImageViewer
+          images={viewerState.images}
+          initialIndex={viewerState.initialIndex}
+          onClose={closeViewer}
+        />
+      )}
     </TemplateContainer>
   );
 };

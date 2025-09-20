@@ -21,6 +21,8 @@ const nextConfig = {
         pathname: "/**",
       },
     ],
+    // Disable image optimization in development to avoid DNS issues
+    unoptimized: process.env.NODE_ENV === 'development',
   },
   experimental: {
     missingSuspenseWithCSRBailout: false,
